@@ -9,6 +9,7 @@ namespace Trisoft.Configuration.Automation.Cmdlets.Module
         protected override void ProcessRecord()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
+            WriteDebug($"Current version is: {version}");
             WriteObject(version);
         }
     }

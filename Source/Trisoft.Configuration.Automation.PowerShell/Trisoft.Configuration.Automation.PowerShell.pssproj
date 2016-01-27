@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="CmdletsUsage\" />
-    <Folder Include="CmdletsUsage\Module\" />
+    <Folder Include="CmdletsUsage\Info\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CmdletsUsage\Module\Get-Version.ps1" />
+    <Compile Include="CmdletsUsage\Info\Get-Version.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

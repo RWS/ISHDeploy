@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trisoft.Configuration.Autom
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "Trisoft.Configuration.Automation.PowerShell", "Trisoft.Configuration.Automation.PowerShell\Trisoft.Configuration.Automation.PowerShell.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trisoft.Configuration.Automation.Tests", "Trisoft.Configuration.Automation.Tests\Trisoft.Configuration.Automation.Tests.csproj", "{961EE2E2-F794-4B8B-AAAF-9DF18982DC10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,20 +23,12 @@ Global
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961EE2E2-F794-4B8B-AAAF-9DF18982DC10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961EE2E2-F794-4B8B-AAAF-9DF18982DC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961EE2E2-F794-4B8B-AAAF-9DF18982DC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961EE2E2-F794-4B8B-AAAF-9DF18982DC10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://bnltfs2012.global.sdl.corp:8080/tfs/trisoft
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Trisoft.Configuration.Automation\\Trisoft.Configuration.Automation.csproj
-		SccProjectName1 = Trisoft.Configuration.Automation
-		SccLocalPath1 = Trisoft.Configuration.Automation
-		SccProjectUniqueName2 = Trisoft.Configuration.Automation.PowerShell\\Trisoft.Configuration.Automation.PowerShell.pssproj
-		SccProjectName2 = Trisoft.Configuration.Automation.PowerShell
-		SccLocalPath2 = Trisoft.Configuration.Automation.PowerShell
 	EndGlobalSection
 EndGlobal

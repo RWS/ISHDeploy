@@ -1,7 +1,7 @@
 ﻿using System.Management.Automation;
 using System.Reflection;
 
-namespace Trisoft.Configuration.Automation.Cmdlets.Module
+namespace Trisoft.Configuration.Automation.Cmdlets.Info
 {
     [Cmdlet(VerbsCommon.Get, "Version", SupportsShouldProcess = false)]
     public sealed class GetVersion : Cmdlet

@@ -2,7 +2,7 @@
 
 namespace Trisoft.Configuration.Automation.Core.Commands
 {
-    public class XmlUncommentCommand : BaseCommand, ICommandRestorable
+    public class XmlUncommentCommand : BaseCommand, IRestorable
     {
         private readonly string _commentedLineContains;
         private readonly IXmlConfigManager _xmlConfigManager;

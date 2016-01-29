@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Trisoft.Configuration.Automation.Core.Model;
+using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Tests.Cmdlets.ISHUIContentEditor
 {
@@ -10,10 +10,8 @@ namespace Trisoft.Configuration.Automation.Tests.Cmdlets.ISHUIContentEditor
         [TestCategory("Cmdlets")]
         public void ProcessRecord()
         {
-            var cmdlet = new Automation.Cmdlets.ISHUIContentEditor.EnableISHUIContentEditorCmdlet
-            {
-                IshProject = new ISHProject { InstallPath = @"F:\InfoShare" }
-            };
+            var cmdlet = new Automation.Cmdlets.ISHUIContentEditor.EnableISHUIContentEditorCmdlet();
+
             var result = cmdlet.Invoke();
 
             foreach (var item in result)
@@ -21,15 +19,12 @@ namespace Trisoft.Configuration.Automation.Tests.Cmdlets.ISHUIContentEditor
                 Assert.IsTrue(true, "The return value must be version");
             }
         }
+
         [TestMethod]
         [TestCategory("Cmdlets")]
         public void ProcessRecord_WithBackup()
         {
-            var cmdlet = new Automation.Cmdlets.ISHUIContentEditor.EnableISHUIContentEditorCmdlet
-            {
-                IshProject = new ISHProject { InstallPath = @"F:\InfoShare" },
-                RollbackOnFailure = true
-            };
+            var cmdlet = new Automation.Cmdlets.ISHUIContentEditor.EnableISHUIContentEditorCmdlet();
             var result = cmdlet.Invoke();
 
             foreach (var item in result)

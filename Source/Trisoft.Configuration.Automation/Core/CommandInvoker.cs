@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Trisoft.Configuration.Automation.Core.Model;
+using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Core.Invokers
 {
@@ -33,9 +33,9 @@ namespace Trisoft.Configuration.Automation.Core.Invokers
             for (int i = 0; i < _commands.Count; i++)
             {
                 var command = _commands[i];
-                if (IsBackupEnabled && command is ICommandRestorable)
+                if (IsBackupEnabled && command is IRestorable)
                 {
-                    ((ICommandRestorable)command).Backup();
+                    ((IRestorable)command).Backup();
                 }
                 command.Execute();
                 Logger.WriteProgress(ActivityDescription, $"Executed {i}/{_commands.Count}");
@@ -47,9 +47,9 @@ namespace Trisoft.Configuration.Automation.Core.Invokers
             for (int i = _commands.Count - 1; i < _commands.Count; i--)
             {
                 var command = _commands[i];
-                if (IsBackupEnabled && command is ICommandRestorable)
+                if (IsBackupEnabled && command is IRestorable)
                 {
-                    ((ICommandRestorable)command).Rollback();
+                    ((IRestorable)command).Rollback();
                 }
                 Logger.WriteProgress(ActivityDescription, $"Restored {i}/{_commands.Count}");
             }

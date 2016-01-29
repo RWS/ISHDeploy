@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Trisoft.Configuration.Automation.Core.Model
+namespace Trisoft.Configuration.Automation.Core.Models
 {
     public class ISHProject
     {

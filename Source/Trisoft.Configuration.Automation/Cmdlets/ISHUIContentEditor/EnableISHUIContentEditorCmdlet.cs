@@ -1,14 +1,18 @@
 ﻿using System.Management.Automation;
-using Trisoft.Configuration.Automation.Core.Invokers;
+using Trisoft.Configuration.Automation.Core;
+using Trisoft.Configuration.Automation.Core.CmdSets.ISHUIContentEditor;
+using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Cmdlets.ISHUIContentEditor
 {
-    [Cmdlet(VerbsCommonTrisoftConfiguration.Enable, "ISHUIContentEditor", SupportsShouldProcess = false)]
-    public sealed class EnableISHUIContentEditorCmdlet : BaseConfigurationCmdlet
+    [Cmdlet(TrisoftVerbsCommon.Enable, "ISHUIContentEditor", SupportsShouldProcess = false)]
+    public sealed class EnableISHUIContentEditorCmdlet : BaseCmdlet
     {
-        protected override void BeginProcessing()
+        public override void ExecuteCmdlet()
         {
-            SetInvoker(new ISHUIContentEditorInvoker(Logger, IshProject, RollbackOnFailure));
+            var vm = new ISHUIContentEditorCmdSet(this, new ISHProject(), false);
+
+            vm.Run();
         }
     }
 }

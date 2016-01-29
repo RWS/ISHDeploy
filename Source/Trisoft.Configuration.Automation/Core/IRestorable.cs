@@ -1,6 +1,6 @@
 ﻿namespace Trisoft.Configuration.Automation.Core
 {
-    public interface IRestorable : ICommand
+    public interface IRestorable
     {
         void Backup();
         void Rollback();

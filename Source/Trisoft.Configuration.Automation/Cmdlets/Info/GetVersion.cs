@@ -4,11 +4,13 @@ using Trisoft.Configuration.Automation.Core.Commands;
 namespace Trisoft.Configuration.Automation.Cmdlets.Info
 {
     [Cmdlet(VerbsCommon.Get, "Version", SupportsShouldProcess = false)]
-    public sealed class GetVersion : Cmdlet
+    public sealed class GetVersionCmdlet : BaseCmdlet
     {
-        protected override void ProcessRecord()
+        public override void ExecuteCmdlet()
         {
+            // Calling of the command directly
             var command = new GetVersionCommand();
+
             WriteObject(command.Execute());
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace Trisoft.Configuration.Automation.Core
 {
-    public interface ICommand
+    public interface IExecutable
     {
         void Execute();
     }

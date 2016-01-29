@@ -1,8 +1,8 @@
 ﻿namespace Trisoft.Configuration.Automation.Core
 {
-    public interface ICommandInvoker<in T> where T : ICommand
+    public interface ICommandInvoker
     {
-        void AddCommand(T command);
+        void AddCommand(IExecutable command);
         void Invoke();
         void Rollback();
     }

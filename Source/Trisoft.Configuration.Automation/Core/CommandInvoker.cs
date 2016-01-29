@@ -1,29 +1,23 @@
 ﻿using System.Collections.Generic;
-using Trisoft.Configuration.Automation.Core.Models;
 
-namespace Trisoft.Configuration.Automation.Core.Invokers
+namespace Trisoft.Configuration.Automation.Core
 {
 
-    public class CommandInvoker<T> : ICommandInvoker<T>
-        where T : ICommand
+    public class CommandInvoker : ICommandInvoker, IRestorable
     {
         public readonly ILogger Logger;
-        public readonly bool IsBackupEnabled;
         public readonly string ActivityDescription;
-        public readonly ISHProject ISHProject;
-        private readonly List<T> _commands;
+        private readonly List<IExecutable> _commands;
 
 
-        public CommandInvoker(ILogger logger, ISHProject ishProject, bool enableBackup, string activityDescription)
+        public CommandInvoker(ILogger logger, string activityDescription)
         {
             Logger = logger;
-            IsBackupEnabled = enableBackup;
             ActivityDescription = activityDescription;
-            ISHProject = ishProject;
-            _commands = new List<T>();
+            _commands = new List<IExecutable>();
         }
 
-        public void AddCommand(T command)
+        public void AddCommand(IExecutable command)
         {
             _commands.Add(command);
         }
@@ -33,11 +27,22 @@ namespace Trisoft.Configuration.Automation.Core.Invokers
             for (int i = 0; i < _commands.Count; i++)
             {
                 var command = _commands[i];
-                if (IsBackupEnabled && command is IRestorable)
-                {
-                    ((IRestorable)command).Backup();
-                }
+
                 command.Execute();
+
+                Logger.WriteProgress(ActivityDescription, $"Executed {i}/{_commands.Count}");
+            }
+        }
+
+        public void Backup()
+        {
+            for (int i = 0; i < _commands.Count; i++)
+            {
+                var command = _commands[i];
+
+                var restorable = command as IRestorable;
+                restorable?.Backup();
+
                 Logger.WriteProgress(ActivityDescription, $"Executed {i}/{_commands.Count}");
             }
         }
@@ -47,10 +52,10 @@ namespace Trisoft.Configuration.Automation.Core.Invokers
             for (int i = _commands.Count - 1; i < _commands.Count; i--)
             {
                 var command = _commands[i];
-                if (IsBackupEnabled && command is IRestorable)
-                {
-                    ((IRestorable)command).Rollback();
-                }
+
+                var restorable = command as IRestorable;
+                restorable?.Rollback();
+
                 Logger.WriteProgress(ActivityDescription, $"Restored {i}/{_commands.Count}");
             }
         }

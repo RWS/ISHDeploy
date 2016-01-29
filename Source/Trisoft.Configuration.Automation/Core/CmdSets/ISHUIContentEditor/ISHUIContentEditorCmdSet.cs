@@ -1,25 +1,50 @@
-﻿using Trisoft.Configuration.Automation.Core.Commands;
-using Trisoft.Configuration.Automation.Core.Invokers;
+﻿using System;
+using Trisoft.Configuration.Automation.Core.Commands;
 using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Core.CmdSets.ISHUIContentEditor
 {
-    public class ISHUIContentEditorCmdSet
+    public class ISHUIContentEditorCmdSet : IExecutable
     {
-        private readonly ICommandInvoker<ICommand> _invoker; 
+        private readonly ILogger _logger;
+        private readonly CommandInvoker _invoker;
+        private readonly bool _isBackupEnabled;
 
         public ISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup)
         {
-            _invoker = new CommandInvoker<ICommand>(logger, ishProject, enableBackup, "InfoShare ContentEditor activation");
+            _logger = logger;
+            _isBackupEnabled = enableBackup;
+            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
+
+            // The sequence of commands depends on the product version
+            //if (ishProject.Version.CompareTo(specipicVersion))
+            //{
+            //  _invoker.AddCommand(specipicCommand);
+            //}
 
             _invoker.AddCommand(new XmlUncommentCommand(logger, $"{ishProject.AuthorFolderPath}\\ASP\\XSL\\FolderButtonbar.xml", "XOPUS ADD \"CHECK OUT WITH XOPUS\""));
             _invoker.AddCommand(new XmlUncommentCommand(logger, $"{ishProject.AuthorFolderPath}\\ASP\\XSL\\InboxButtonBar.xml", "XOPUS ADD \"UNDO CHECK OUT\""));
             _invoker.AddCommand(new XmlUncommentCommand(logger, $"{ishProject.AuthorFolderPath}\\ASP\\XSL\\LanguageDocumentButtonbar.xml", "XOPUS ADD \"CHECK OUT WITH XOPUS\""));
         }
 
-        public void Run()
+        public void Execute()
         {
-            _invoker.Invoke();
+            try
+            {
+                if (_isBackupEnabled)
+                {
+                    _invoker.Backup();
+                }
+                _invoker.Invoke();
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteError(ex);
+                if (_isBackupEnabled)
+                {
+                    _invoker.Rollback();
+                }
+            }
         }
     }
 }

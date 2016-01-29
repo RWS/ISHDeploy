@@ -1,6 +1,6 @@
-﻿namespace Trisoft.Configuration.Automation.Core
+﻿namespace Trisoft.Configuration.Automation.Core.Commands
 {
-    public interface ICommandWithResult<T>
+    public interface ICommandWithResult<out T>
     {
         T Execute();
     }

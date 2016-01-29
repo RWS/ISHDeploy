@@ -13,7 +13,6 @@ namespace Trisoft.Configuration.Automation.Core.Managers
         {
             Logger = logger;
             _filePath = filePath;
-            _tempFileName = Guid.NewGuid().ToString();
         }
 
         public void Backup()

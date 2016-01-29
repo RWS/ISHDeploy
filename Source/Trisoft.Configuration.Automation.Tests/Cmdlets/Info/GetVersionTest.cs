@@ -11,7 +11,7 @@ namespace Trisoft.Configuration.Automation.Tests.Cmdlets.Info
         [TestCategory("Cmdlets")]
         public void ProcessRecord()
         {
-            var cmdlet = new InfoCmdlets.GetVersion();
+            var cmdlet = new InfoCmdlets.GetVersionCmdlet();
             var result = cmdlet.Invoke();
 
             foreach (var item in result)

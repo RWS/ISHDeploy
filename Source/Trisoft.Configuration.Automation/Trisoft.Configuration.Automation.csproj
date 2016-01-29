@@ -45,11 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmdlets\BaseConfigurationCmdlet.cs" />
+    <Compile Include="Cmdlets\CmdletsLogger.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\VerbsCommonTrisoftConfiguration.cs" />
+    <Compile Include="Core\Commands\BaseCommand.cs" />
+    <Compile Include="Core\Commands\GetVersionCommand.cs" />
+    <Compile Include="Core\Commands\XmlUncommentCommand.cs" />
+    <Compile Include="Core\ICommand.cs" />
+    <Compile Include="Core\ICommandInvoker.cs" />
+    <Compile Include="Core\ICommandRestorable.cs" />
+    <Compile Include="Core\ICommandWithResult.cs" />
+    <Compile Include="Core\ILogger.cs" />
+    <Compile Include="Core\Invokers\CommandInvoker.cs" />
+    <Compile Include="Core\Invokers\ISHUIContentEditorInvoker.cs" />
+    <Compile Include="Core\Managers\IXmlConfigManager.cs" />
+    <Compile Include="Core\Managers\XmlConfigManager.cs" />
+    <Compile Include="Core\Model\ISHProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="Helpers\" />
     <Folder Include="Samples\" />
     <Folder Include="Service References\" />

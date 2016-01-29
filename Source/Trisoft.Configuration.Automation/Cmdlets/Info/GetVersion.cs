@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using System.Reflection;
+using Trisoft.Configuration.Automation.Core.Commands;
 
 namespace Trisoft.Configuration.Automation.Cmdlets.Info
 {
@@ -8,9 +8,8 @@ namespace Trisoft.Configuration.Automation.Cmdlets.Info
     {
         protected override void ProcessRecord()
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            WriteDebug($"Current version is: {version}");
-            WriteObject(version);
+            var command = new GetVersionCommand();
+            WriteObject(command.Execute());
         }
     }
 }

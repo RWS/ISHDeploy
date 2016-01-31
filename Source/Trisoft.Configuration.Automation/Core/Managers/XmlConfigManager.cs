@@ -3,22 +3,22 @@ using System.IO;
 
 namespace Trisoft.Configuration.Automation.Core.Managers
 {
-    public class XmlConfigManager : IXmlConfigManager, IDisposable
+    public class XmlConfigManager : IXmlConfigManager
     {
-        public readonly ILogger Logger;
-        private readonly string _filePath;
-        private string _tempFileName;
+        private readonly ILogger _logger;
 
-        public XmlConfigManager(ILogger logger, string filePath)
+        public XmlConfigManager(ILogger logger)
         {
-            Logger = logger;
-            _filePath = filePath;
+            _logger = logger;
         }
 
-        public void Backup()
+        public string Backup(string filePath)
         {
-            _tempFileName = Guid.NewGuid().ToString();
-            //File.Copy(_filePath, _tempFileName);
+            var backupFilePath;
+
+            File.Copy(filePath, backupFilePath);
+
+            return backupFilePath;
         }
 
         public void CommentNode(string commentedLineContains)
@@ -37,16 +37,6 @@ namespace Trisoft.Configuration.Automation.Core.Managers
         public void RestoreOriginal()
         {
             //File.Copy(_tempFileName, _filePath);
-        }
-
-        ~XmlConfigManager()
-        {
-            Dispose();
-        }
-
-        public void Dispose()
-        {
-            // TODO: Restore file or/and delete temp file?
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public interface IXmlConfigManager
     {
-        void Backup();
+        string Backup();
         void CommentNode(string commentedLineContains);
         void UncommentNode(string commentedLineContains);
         bool IsNodeCommented(string commentedLineContains);

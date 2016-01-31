@@ -1,4 +1,5 @@
 ﻿using System.Management.Automation;
+using System.Windows.Input;
 using Trisoft.Configuration.Automation.Core;
 using Trisoft.Configuration.Automation.Core.CmdSets.ISHUIContentEditor;
 using Trisoft.Configuration.Automation.Core.Models;

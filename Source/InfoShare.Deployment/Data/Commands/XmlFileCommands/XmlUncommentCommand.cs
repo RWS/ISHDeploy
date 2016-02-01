@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
-using InfoShare.Deployment.Core.Managers;
+using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Interfaces.Commands;
 
-namespace InfoShare.Deployment.Core.Commands
+namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {
     public class XmlUncommentCommand : ICommand, IRestorable
     {
-        private readonly ILogger _logger;
         private readonly IEnumerable<string> _commentPatterns;
         private readonly IXmlConfigManager _xmlConfigManager;
 
         public XmlUncommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns)
         {
-            _logger = logger;
             _commentPatterns = commentPatterns;
 
             _xmlConfigManager = new XmlConfigManager(logger, filePath);

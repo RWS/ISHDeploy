@@ -1,6 +1,6 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Core.CmdSets.ISHUIContentEditor;
-using InfoShare.Deployment.Core.Models;
+using InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 {
@@ -17,9 +17,6 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 
         public override void ExecuteCmdlet()
         {
-            IshProject = new ISHProject { AuthorFolderPath = @"e:\Projects\RnDProjects\Trisoft\Dev\Server.Web\Websites" };
-            RollbackOnFailure = true;
-
             // Calling the set of command with entry parameters
             var cmdSet = new EnableISHUIContentEditorCmdSet(this, IshProject, RollbackOnFailure);
 

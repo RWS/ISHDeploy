@@ -1,6 +1,6 @@
 ﻿using InfoShare.Deployment.Cmdlets.ISHUIContentEditor;
+using InfoShare.Deployment.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using InfoShare.Deployment.Core.Models;
 
 namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
 {

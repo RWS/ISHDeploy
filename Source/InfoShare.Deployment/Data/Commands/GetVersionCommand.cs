@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
+using InfoShare.Deployment.Interfaces.Commands;
 
-namespace InfoShare.Deployment.Core.Commands
+namespace InfoShare.Deployment.Data.Commands
 {
     public class GetVersionCommand : ICommand
     {

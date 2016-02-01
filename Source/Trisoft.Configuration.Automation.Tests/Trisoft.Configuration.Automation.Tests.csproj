@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Cmdlets\Info\GetVersionTest.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdletTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

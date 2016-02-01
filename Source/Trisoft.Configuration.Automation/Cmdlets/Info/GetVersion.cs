@@ -1,16 +1,21 @@
-﻿using System.Management.Automation;
-using System.Reflection;
+﻿using System;
+using System.Management.Automation;
+using Trisoft.Configuration.Automation.Core.Commands;
 
 namespace Trisoft.Configuration.Automation.Cmdlets.Info
 {
-    [Cmdlet(VerbsCommon.Get, "Version", SupportsShouldProcess = false)]
-    public sealed class GetVersion : Cmdlet
+    [Cmdlet(VerbsCommon.Get, "Version")]
+    public sealed class GetVersionCmdlet : BaseCmdlet
     {
-        protected override void ProcessRecord()
+        public override void ExecuteCmdlet()
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            WriteDebug($"Current version is: {version}");
-            WriteObject(version);
+            // Calling the command directly
+            Version result = null;
+            var command = new GetVersionCommand(version => result = version);
+            
+            command.Execute();
+
+            WriteObject(result);
         }
     }
 }

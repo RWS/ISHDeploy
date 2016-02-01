@@ -1,5 +1,4 @@
-﻿
-namespace InfoShare.Deployment.Core.Commands
+﻿namespace InfoShare.Deployment.Interfaces.Commands
 {
     public interface ICommand
     {

@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InfoShare.Deployment.Core.Commands;
-using InfoShare.Deployment.Core.Invokers;
-using InfoShare.Deployment.Core.Models;
+using InfoShare.Deployment.Business.Invokers;
+using InfoShare.Deployment.Data;
+using InfoShare.Deployment.Data.Commands.XmlFileCommands;
+using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Models;
 
-namespace InfoShare.Deployment.Core.CmdSets.ISHUIContentEditor
+namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
 {
     public class DisableISHUIContentEditorCmdSet : ICmdSet
     {
-        private readonly ILogger _logger;
         private readonly CommandInvoker _invoker;
 
         public DisableISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup)
         {
-            _logger = logger;
             _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
 
             var commentPatterns = new List<string>

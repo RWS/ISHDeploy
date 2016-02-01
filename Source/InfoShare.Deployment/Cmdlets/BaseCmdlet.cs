@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
-using InfoShare.Deployment.Core;
+using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
 {

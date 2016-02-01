@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using InfoShare.Deployment.Core.Commands;
+using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Interfaces.Commands;
 
-namespace InfoShare.Deployment.Core.Invokers
+namespace InfoShare.Deployment.Business.Invokers
 {
     public class CommandInvoker : ICommandInvoker
     {

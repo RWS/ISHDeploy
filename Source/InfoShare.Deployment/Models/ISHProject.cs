@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoShare.Deployment.Core.Models
+namespace InfoShare.Deployment.Models
 {
     public class ISHProject
     {

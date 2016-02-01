@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoShare.Deployment.Core
+namespace InfoShare.Deployment.Interfaces
 {
     public interface ILogger
     {

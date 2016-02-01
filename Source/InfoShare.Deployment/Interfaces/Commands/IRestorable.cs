@@ -1,4 +1,4 @@
-﻿namespace InfoShare.Deployment.Core
+﻿namespace InfoShare.Deployment.Interfaces.Commands
 {
     public interface IRestorable
     {

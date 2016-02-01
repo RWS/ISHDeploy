@@ -1,5 +1,4 @@
-﻿
-namespace InfoShare.Deployment.Core.Managers
+﻿namespace InfoShare.Deployment.Data.Services
 {
     public interface IXmlConfigManager
     {

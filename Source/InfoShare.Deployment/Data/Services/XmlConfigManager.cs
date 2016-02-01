@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using InfoShare.Deployment.Interfaces;
 
-namespace InfoShare.Deployment.Core.Managers
+namespace InfoShare.Deployment.Data.Services
 {
     public class XmlConfigManager : IXmlConfigManager
     {

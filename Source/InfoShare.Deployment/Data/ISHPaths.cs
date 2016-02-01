@@ -1,5 +1,4 @@
-﻿
-namespace InfoShare.Deployment.Core
+﻿namespace InfoShare.Deployment.Data
 {
     public static class ISHPaths
     {

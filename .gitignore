@@ -25,3 +25,6 @@ bld/
 # IntelliJ
 .idea/
 *.iml
+
+# NuGet Packages Directory
+Source/packages/*

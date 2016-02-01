@@ -1,0 +1,492 @@
+<BUTTONBAR>
+	<SCRIPT LANGUAGE="JAVASCRIPT">
+        <![CDATA[
+		function getSelectedLngVersion() 
+		{
+				
+				if( parent.InboxData.GetCurrent ) 
+				{
+					LngVersionId = parent.InboxData.GetCurrent('lng') ;
+				}
+				else
+				{
+			    LngVersionId = "-1" ;
+				}
+											
+				return LngVersionId ;
+		}
+		function getSelectedTop() 
+		{
+			var LngVersionId = getSelectedLngVersion() 
+			var LngVersionIds = parent.InboxData.LngVersionIds
+			if (LngVersionId  != "-1")
+			{
+				for (i = 0; i < LngVersionIds.length; i++)
+				{
+					if (LngVersionIds[i] == LngVersionId)
+					return parent.InboxData.Tops[i];
+				}
+			}	
+			return 0;
+		}
+		function GetInboxList()
+		{
+			var sCardIdList;
+			sCardIdList = '';
+			collection = parent.InboxData.aDragLngArray ;
+      var sSeparator = parent.InboxData.document.InboxForm.Separator.value;
+			var value ="";
+			      
+			if ( collection ) 
+			{
+				for (i=0; i< collection.length;i++)
+				{
+							if (sCardIdList != "" )
+							{
+								sCardIdList += sSeparator;
+							}
+						  if ( collection[i] != undefined )
+							{	
+							  value = collection[i].split("|" );
+							  sCardIdList += value[1];
+							}
+				}
+			}
+			parent.InboxData.document.InboxForm.CardList.value = sCardIdList;
+			return 0;
+		}
+
+		function getSelectedTopType() 
+		{
+			var LngVersionId = getSelectedLngVersion() 
+			var LngVersionIds = parent.InboxData.LngVersionIds
+			var CardTypes =  parent.InboxData.CardTypes 
+		
+			if (LngVersionId  != "-1")
+			{
+				for (i = 0; i < LngVersionIds.length; i++)
+				{
+					if (LngVersionIds[i] == LngVersionId)
+					{
+						return CardTypes[i].substr(0,CardTypes[i].length-1);
+					}
+					
+				}
+			}	
+			return 0;
+		}
+
+		function getVersionByLngId(lngId)
+		{
+				//var LngVersionIds= LngVersionIds;
+				//var Versions= Versions;
+				var LngVersionIds = parent.InboxData.LngVersionIds
+				for (i = 0; i < LngVersionIds.length; i++)
+				{
+					if (LngVersionIds[i] == lngId)
+						return parent.InboxData.Versions[i];
+				}
+				return 0;
+		}
+
+		function getCurrentUserGroup()
+		{
+			var LngVersionId = getSelectedLngVersion() 
+			var LngVersionIds = parent.InboxData.LngVersionIds
+			if (LngVersionId  != "-1")
+			{
+				for (i = 0; i < LngVersionIds.length; i++)
+				{
+					if (LngVersionIds[i] == LngVersionId)
+					{
+						
+						return parent.InboxData.DocUserGroups[i];
+					}
+				}
+			}	
+			return 0;
+
+			
+		}
+	
+		function selectOnlyOne(cb)
+		{
+			
+		}
+		
+		function GetDocState(pLngId)
+		{
+			for (var i=0; i < parent.InboxData.LngVersionIds.length; i++)
+			{
+				if (parent.InboxData.LngVersionIds[i] == pLngId)
+					return parent.InboxData.DocStates[i];
+			}
+			return "";
+		}
+		function PerformAction()
+		{
+			GetInboxList();
+			if (parent.InboxData.document.InboxForm.CardList.value == "")
+			{
+				alert("Please select at least one object");
+			}
+			else
+			{			
+				if(  document.Inboxbutton.DoAction.options.length > 0)
+				{
+					parent.InboxData.document.InboxForm.ActionToPerform.value = document.Inboxbutton.DoAction.options[ document.Inboxbutton.DoAction.selectedIndex].id;
+					parent.InboxData.document.InboxForm.LabelActionToPerform.value = document.Inboxbutton.DoAction.options[ document.Inboxbutton.DoAction.selectedIndex].text;
+					parent.InboxData.document.InboxForm.action = "InboxPerformAction.asp";
+					parent.InboxData.document.InboxForm.method = "POST";
+					parent.InboxData.document.InboxForm.target = "InboxActionResult";
+					parent.InboxData.document.InboxForm.submit();
+				}
+				else
+				{
+					alert("No actions defined for this inbox.");
+				}
+			}
+		}
+		
+		function deselectAll()
+		{
+			var oColl = parent.InboxData.document.images;
+			if (oColl != null)
+			{
+				if (oColl.length != null)
+				{
+					for (var i=0; i < oColl.length;i++)
+					{
+						if (oColl[i].name != undefined && !isNaN(oColl[i].name))
+						{
+						  oColl[i].src = parent.InboxData.Gifs[0].src;
+						}
+				  }
+				}
+			}
+			
+			//20051109 RS: Clean existing list completely.
+			parent.InboxData.aDragLngArray.splice(0,parent.InboxData.aDragLngArray.length);
+			parent.InboxData.bLngFirst = true;
+			parent.InboxData.LngCurrent = new Image() ;
+			//20051109 RS: END OF Clean existing list completely.
+		}
+		
+	  function selectAll()
+		{
+		  //20051109 RS: First clean existing list before all are selected.
+		  parent.InboxData.aDragLngArray.splice(0,parent.InboxData.aDragLngArray.length);      
+		  parent.InboxData.bLngCurrentPresent = false ; 
+	   	parent.InboxData.bLngFirst= false  ;
+		  parent.InboxData.LngCurrent = "" ;
+		  //20051109 RS: END OF First clean existing list before all are selected.	
+		  
+			var oColl = parent.InboxData.document.images;
+			if (oColl != null)
+			{
+				if (oColl.length != null)
+				{
+					for (var i=0; i < oColl.length;i++)
+					{
+						if (oColl[i].name != undefined && !isNaN(oColl[i].name))
+					  	{
+						  oColl[i].src = parent.InboxData.Gifs[1].src;
+						  parent.InboxData.aDragLngArray[parent.InboxData.aDragLngArray.length] = "lng" + "|" + oColl[i].id;
+						}
+				  }
+				  parent.InboxData.bLngFirst = false;
+					parent.InboxData.LngCurrent = new Image() ;
+				}
+			}	
+		}
+	]]></SCRIPT>
+	<BUTTON>
+		<!-- PREVIEW -->
+		<INPUT type="button" NAME="Preview" onClick="preview()" VALUE="Preview" CLASS="button" ICON="UIFramework/preview.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT">
+        <![CDATA[
+		function preview()
+		{
+			var WindowStr = "dependent=yes,toolbar=yes,width=800,height=600,resizable=yes,scrollbars=auto,menubar=no,status=yes";
+
+			LngVersionId = getSelectedLngVersion();
+			var cardtype = getSelectedTopType();
+			var Top = getSelectedTop() ;
+			if (LngVersionId == "-1")
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+				var sUrl = "WorkArea/Content/ChangeTrackerPreview?languageCardId=" + LngVersionId + "&logicalId=" + Top;
+				if (cardtype == "CTIMG" || cardtype == "CTTEMPLATE") {
+					linkWindow = window.open("LoadingPreview.html","",WindowStr);
+					var doc = $(linkWindow.document);
+					doc.ready(function() {
+						setTimeout(function() {
+							linkWindow.location = sUrl;
+						}, 600);
+					});
+				} else {
+					linkWindow = window.open(sUrl,"",WindowStr);
+				}
+				linkWindow.focus();
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	
+  <!-- XOPUS REMOVE "CHECKOUT & DOWNLOAD" START - The customer might want to remove this button when Xopus is used, if they only want to checkout and edit XML objects via Xopus, not by downloading the file, so comment out this button when appropriate
+	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
+	<BUTTON>
+		<INPUT type="button" NAME="checkOut" onClick="checkOut()" VALUE="Check Out &amp; Download" CLASS="button" ICON="UIFramework/check-out.16x16.png"  SHOWTEXT="Y"/>
+		<SCRIPT language="javascript" type="text/javascript"><![CDATA[
+		function checkOut()	
+		{
+			LngVersionId = getSelectedLngVersion();
+			if (LngVersionId == "-1")
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+				var ishTop = getIShTopWindow();
+				ishTop.DocumentLoad.location = "checkOut.asp?Card=" + LngVersionId ;
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
+	XOPUS REMOVE "CHECKOUT & DOWNLOAD" END -->		
+
+	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" START -->	
+	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
+  <BUTTON>
+    <INPUT type="button" NAME="CheckOutWithXopus" onClick="checkOutXopus(this)" VALUE="Check Out" CLASS="button" ICON="UIFramework/check-out.16x16.png" SHOWTEXT="Y"/>
+    <SCRIPT language="javascript" type="text/javascript">
+       <![CDATA[
+				var ishTop = getIShTopWindow();
+				var InfoShareXopus = ishTop.InfoShareXopus;        			
+				var params = InfoShareXopus.parseMandatoryParams();
+
+     		  function checkOutXopus(button) {
+			       var lngCardId = getSelectedLngVersion();
+			       
+             if (lngCardId != -1) {                
+                var cardtype = getSelectedTopType();
+                if (cardtype != "CTLIB" && cardtype != "CTMAP" && cardtype != "CTMASTER")
+                {
+                  InfoShareXopus.showErrorDialog(0, "This object type cannot be checked out with SDL LiveContent Create.");
+                }
+                else
+                {        
+                   var originalButtonIcon = $(button).find("img").attr("src");
+                   $(button).find("img").attr("src", "UIFramework/loader.gif");
+
+		           InfoShareXopus.canCheckOutFromInbox(lngCardId, "", "", "", function() {
+                     $(button).find("img").attr("src", originalButtonIcon);
+                   });
+                }
+             } else {
+                InfoShareXopus.showErrorDialog(0, "Please select an object.");
+             }
+ 		      }
+	  ]]></SCRIPT>
+  </BUTTON>
+	Xopus is disabled. Please obtain a license from SDL Trisoft -->
+	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" END -->	
+
+  <!-- XOPUS REMOVE "CHECK IN" START - The customer might want to remove this button when Xopus is used, if they only want to check in XML objects from within Xopus, not by downloading and uploading, so comment out this button when appropriate
+	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
+	<BUTTON>
+		<INPUT type="button" NAME="checkIn" onClick="checkIn()" VALUE="Check In" CLASS="button" ICON="UIFramework/check-in.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+		function checkIn()
+		{
+			var card = getSelectedTop();
+			var cardtype = getSelectedTopType();
+			var Usergroup = getCurrentUserGroup();
+			var LngVersionId = getSelectedLngVersion();
+						
+			if (LngVersionId == "-1")
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+				DoDocumentOperation('CHECKIN',cardtype, card, LngVersionId, Usergroup, 'LNG', getVersionByLngId(LngVersionId));
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
+	 XOPUS REMOVE "CHECK IN" END -->	
+
+	
+	<!-- XOPUS REMOVE "UNDO CHECK OUT" START - The customer might want to remove this button when Xopus is used, if they only want to undo check out XML objects from within Xopus, so comment out this button when appropriate -->	
+	<BUTTON>
+		<INPUT type="button" NAME="undoCheckOut" onClick="undoCheckOut()" VALUE="Undo Check Out" CLASS="button" ICON="UIFramework/undo-check-out.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+		function undoCheckOut()
+		{
+			LngVersionId = getSelectedLngVersion();
+			var cardtype = getSelectedTopType();
+			if (LngVersionId == "-1")
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+				var ishTop = getIShTopWindow();
+				ishTop.DocumentLoad.location = "undoCheckOut.asp?Card=" + LngVersionId +  "&CardType=" + cardtype;		
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>	
+	<!-- XOPUS REMOVE "UNDO CHECK OUT" END -->	
+	
+	<BUTTON>
+		<!-- LOCATE -->
+		<INPUT type="button" NAME="Locate" onClick="locate()" VALUE="Go to Location" CLASS="button" ICON="UIFramework/locate.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+		function locate()
+		{
+			var Top = getSelectedTop();
+			var Cardtype = getSelectedTopType();
+			var LngCard = getSelectedLngVersion() ;
+			if (Top == 0)
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+			  if (Cardtype != "CTCATEGORIESL")
+				{
+					LocateInTree(Top, LngCard);
+				}
+				else
+				{
+					alert("Press menu button 'Categories' (if available) and then button 'Category Hierarchy'.");
+				}
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	<BUTTON>
+		<!-- REPORTS -->
+		<INPUT type="button" NAME="Reports" onClick="ShowReports()" VALUE="Reports" CLASS="button" ICON="UIFramework/reports.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+		function ShowReports()
+		{
+			var card = getSelectedTop();
+			var cardtype = getSelectedTopType();
+			var WindowStr = "dependent=yes,toolbar=no,width=" + screen.availWidth +",height=" + screen.availHeight + ",resizable=yes,top=0,left=0,scrollbars=auto,menubar=no,status=yes";
+			if (card == 0)
+			{
+				alert("Please select an object");
+			}
+			else
+			{
+			  if (cardtype != "CTCATEGORIESL")
+				{
+					ReportWindow = window.open("ReportsWindow.asp?TopElement=" + card + "&TopType=" + cardtype, "ReportWindow", WindowStr);
+					ReportWindow.resizeTo(screen.availWidth,screen.availHeight);
+					ReportWindow.focus();
+				}
+				else
+				{
+					alert("Button 'Reports' not applicable to the 'Category Hierarchy'.");
+				}
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	<BUTTON>
+		<!-- EXPORT -->
+		<INPUT type="button" NAME="MassExport" onClick="StartExport()" VALUE="Export" CLASS="button" ICON="UIFramework/export.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+		function StartExport()
+		{
+			var cardtype = getSelectedTopType();
+			var WindowStr = "dependent=yes,toolbar=no,width=800,height=600,resizable=yes,scrollbars=auto,menubar=no,status=no";
+			
+      GetInboxList();
+                    
+			if (parent.InboxData.document.InboxForm.CardList.value == "")
+			{
+				alert("Please select at least one object");
+			}
+			else
+			{
+			  MassExportWindow = window.open("Empty.htm", "MassExportWindow", WindowStr);
+			  
+			  var eventform = document.SubmitEvent;
+			  
+			  eventform.cardids.value = parent.InboxData.document.InboxForm.CardList.value;
+			  eventform.eventname.value = "INBOXEXPORT";
+			  eventform.title.value = "Inbox Export";
+			  eventform.foldername.value = "InboxExport";
+			  
+			  eventform.action = "PerformMassExport.asp";
+			  eventform.target = "MassExportWindow";
+			  eventform.submit();
+				
+				MassExportWindow.focus();
+			}
+		}
+		]]></SCRIPT>
+	</BUTTON>
+	<BUTTON>
+		<!-- DOWNLOAD -->
+		<INPUT type="button" NAME="XML" onClick="getDocument()" VALUE="Download" CLASS="button" ICON="UIFramework/download.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+				function getDocument()
+				{
+					LngVersionId = getSelectedLngVersion();
+					if (LngVersionId == "-1")
+					{
+						alert("Please select an object");
+					}
+					else
+					{
+						var ishTop = getIShTopWindow();
+						ishTop.DocumentLoad.location = "getDocument.asp?Card=" + LngVersionId;
+					}
+				}
+		]]></SCRIPT>
+	</BUTTON>	
+	<BUTTON>
+		<!-- DELETE -->
+		<INPUT type="button" NAME="Delete" onClick="DeleteCard()" VALUE="Delete" CLASS="button" ICON="UIFramework/delete.16x16.png" SHOWTEXT="Y"/>
+		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
+    function DeleteCard()
+		{
+      GetInboxList();
+                    
+			if (parent.InboxData.document.InboxForm.CardList.value == "")
+			{
+				alert("Please select at least one object");
+			}
+			else
+			{
+				var lngcardids = parent.InboxData.document.InboxForm.CardList.value;				
+				var sSeparator = parent.InboxData.document.InboxForm.Separator.value;
+				var lNoOfDoc = lngcardids.split(sSeparator).length;				
+				var selectedLogicalId = '';
+				if (lNoOfDoc == 1)
+				{
+					  var selectedLogicalId = getSelectedTop();
+				}
+				// We take the cardtype of the first selected item, although the selection can have different cardtypes. 
+				// This should be ok as the only thing that happens with the cardtype is to differentiate between publications (CTPUBLICATION) and objects (non CTPUBLICATION)
+				var cardtype = getSelectedTopType();
+
+				Windowparam = { 'Operation' : 'DELETE', 'TopType' : cardtype, 'TopElement' : selectedLogicalId, 'Id' : lngcardids, 'FUserGroup' : '', 'Level' : 'LNG', 'Version' : '', 'SourceFolderName' : 'Inbox', 'NoOfDoc' : lNoOfDoc};
+    		WindowStr = "dependent=yes,toolbar=no,width=450,height=200,resizable=no,scrollbars=no,menubar=no,status=yes,screenX=50,screenY=20";
+		    OpenWindowWithPost("RepConfirmDelete.asp", WindowStr, "RepConfirmDelete", Windowparam);
+			}			
+		}
+		]]></SCRIPT>
+	</BUTTON>
+</BUTTONBAR>
+

@@ -27,12 +27,7 @@ namespace InfoShare.Deployment.Data.Services
 
         public void CommentNode(string commentPattern)
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                //TODO: ????
-            }
-
-            XDocument doc = XDocument.Load(_backupFilePath);
+            XDocument doc = XDocument.Load(_filePath);
             var startPatternNode = doc.DescendantNodes()
                 .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
@@ -72,12 +67,7 @@ namespace InfoShare.Deployment.Data.Services
 
         public void UncommentNode(string commentPattern)
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                //TODO: ????
-            }
-
-            XDocument doc = XDocument.Load(_backupFilePath);
+            XDocument doc = XDocument.Load(_filePath);
             var startPatternNode = doc.DescendantNodes().
                 FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 

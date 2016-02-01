@@ -7,8 +7,8 @@
     <ProjectGuid>{2CE21D0A-4B98-4751-8687-CFF1C0A7A479}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Trisoft.Configuration.Automation</RootNamespace>
-    <AssemblyName>Trisoft.Configuration.Automation</AssemblyName>
+    <RootNamespace>InfoShare.Deployment</RootNamespace>
+    <AssemblyName>InfoShare.Deployment</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -45,21 +45,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cmdlets\Module\GetVersion.cs" />
+    <Compile Include="Cmdlets\BaseCmdlet.cs" />
+    <Compile Include="Cmdlets\Info\GetVersion.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Business\CmdSets\ICmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Interfaces\Commands\ICommand.cs" />
+    <Compile Include="Data\Commands\XmlFileCommands\XmlCommentCommand.cs" />
+    <Compile Include="Data\ISHPaths.cs" />
+    <Compile Include="Data\Services\IXmlConfigManager.cs" />
+    <Compile Include="Data\Commands\GetVersionCommand.cs" />
+    <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
+    <Compile Include="Business\Invokers\ICommandInvoker.cs" />
+    <Compile Include="Interfaces\Commands\IRestorable.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Business\Invokers\CommandInvoker.cs" />
+    <Compile Include="Business\CmdSets\ISHUIContentEditor\EnableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Data\Services\XmlConfigManager.cs" />
+    <Compile Include="Models\ISHProject.cs" />
+    <Compile Include="Data\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="Samples\" />
-    <Folder Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Trisoft.Configuration.Automation.PostBuild.ps1" />
+    <None Include="InfoShare.Deployment.PostBuild.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe $(ProjectDir)Trisoft.Configuration.Automation.PostBuild.ps1 $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe $(ProjectDir)InfoShare.Deployment.PostBuild.ps1 $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

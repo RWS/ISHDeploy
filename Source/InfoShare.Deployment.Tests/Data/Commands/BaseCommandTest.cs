@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands
 
         public const string XPathCheckOutWithXopusButton = "BUTTONBAR/BUTTON/INPUT[@NAME='CheckOutWithXopus']";
         public const string XPathUndoCheckOutButton = "BUTTONBAR/BUTTON/INPUT[@NAME='undoCheckOut']";
-        private const string ProjectRelativePath = @".\TestData\InfoShare\Web";
+        private const string ProjectRelativePath = @".\TestData";
 
         public string GetPathToFile(string relativeFilePath)
         {

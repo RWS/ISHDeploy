@@ -46,19 +46,15 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            if (endPatternNode.ToString().Contains(commentPattern))
+            if (!endPatternNode.ToString().Contains(commentPattern))
             {
                 _logger.WriteWarning($"{_filePath} does not contain ending pattern '{commentPattern}' where it's expected.");
                 return;
             }
 
-            var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
-            var startIndex = commentText.IndexOf('<');
-            var endIndex = commentText.LastIndexOf('>');
+            var commentText = commentedNode.ToString();
 
-            commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
-
-            var uncommentedNode = XElement.Parse(commentText);
+            var uncommentedNode = new XComment(commentText);
 
             commentedNode.ReplaceWith(uncommentedNode);
 

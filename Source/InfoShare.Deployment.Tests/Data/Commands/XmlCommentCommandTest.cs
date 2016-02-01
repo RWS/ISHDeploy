@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
-using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,6 +13,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands
     {
         [TestMethod]
         [TestCategory("Commands")]
+        [DeploymentItem("TestData", "TestData")]
         public void Execute()
         {
             var filePath = GetPathToFile(ISHPaths.FolderButtonbar);

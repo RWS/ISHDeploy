@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2CE21D0A-4B98-4751-8687-CFF1C0A7A479}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InfoShare.Deployment</RootNamespace>
+    <AssemblyName>InfoShare.Deployment</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Management.Automation" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cmdlets\BaseCmdlet.cs" />
+    <Compile Include="Cmdlets\Info\GetVersion.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Core\CmdSets\ICmdSet.cs" />
+    <Compile Include="Core\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Core\Commands\ICommand.cs" />
+    <Compile Include="Core\Commands\XmlCommentCommand.cs" />
+    <Compile Include="Core\ISHPaths.cs" />
+    <Compile Include="Core\Managers\IXmlConfigManager.cs" />
+    <Compile Include="Core\Commands\GetVersionCommand.cs" />
+    <Compile Include="Core\Commands\XmlUncommentCommand.cs" />
+    <Compile Include="Core\Invokers\ICommandInvoker.cs" />
+    <Compile Include="Core\Commands\IRestorable.cs" />
+    <Compile Include="Core\ILogger.cs" />
+    <Compile Include="Core\Invokers\CommandInvoker.cs" />
+    <Compile Include="Core\CmdSets\ISHUIContentEditor\EnableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Core\Managers\XmlConfigManager.cs" />
+    <Compile Include="Core\Models\ISHProject.cs" />
+    <Compile Include="Core\CommentPatterns.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="InfoShare.Deployment.PostBuild.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe $(ProjectDir)InfoShare.Deployment.PostBuild.ps1 $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

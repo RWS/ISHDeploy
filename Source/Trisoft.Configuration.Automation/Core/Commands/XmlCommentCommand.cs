@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using Trisoft.Configuration.Automation.Core.Managers;
+using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Core.Commands
 {
-    public class XmlUncommentCommand : ICommand, IRestorable
+    public class XmlCommentCommand : ICommand, IRestorable
     {
         private readonly ILogger _logger;
         private readonly IEnumerable<string> _commentPatterns;
         private readonly IXmlConfigManager _xmlConfigManager;
 
-        public XmlUncommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns)
+        public XmlCommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns)
         {
             _logger = logger;
             _commentPatterns = commentPatterns;
@@ -26,7 +27,7 @@ namespace Trisoft.Configuration.Automation.Core.Commands
         {
             foreach (var pattern in _commentPatterns)
             {
-                _xmlConfigManager.UncommentNode(pattern);
+                _xmlConfigManager.CommentNode(pattern);
             }
         }
 

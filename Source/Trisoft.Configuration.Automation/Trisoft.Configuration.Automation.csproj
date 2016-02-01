@@ -47,21 +47,24 @@
   <ItemGroup>
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
-    <Compile Include="Core\TrisoftVerbsCommon.cs" />
-    <Compile Include="Core\Commands\BaseCommand.cs" />
+    <Compile Include="Core\CmdSets\ICmdSet.cs" />
+    <Compile Include="Core\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Core\Commands\ICommand.cs" />
+    <Compile Include="Core\Commands\XmlCommentCommand.cs" />
+    <Compile Include="Core\ISHPaths.cs" />
+    <Compile Include="Core\Managers\IXmlConfigManager.cs" />
     <Compile Include="Core\Commands\GetVersionCommand.cs" />
     <Compile Include="Core\Commands\XmlUncommentCommand.cs" />
-    <Compile Include="Core\IExecutable.cs" />
-    <Compile Include="Core\ICommandInvoker.cs" />
-    <Compile Include="Core\IRestorable.cs" />
-    <Compile Include="Core\Commands\ICommandWithResult.cs" />
+    <Compile Include="Core\Invokers\ICommandInvoker.cs" />
+    <Compile Include="Core\Commands\IRestorable.cs" />
     <Compile Include="Core\ILogger.cs" />
-    <Compile Include="Core\CommandInvoker.cs" />
-    <Compile Include="Core\CmdSets\ISHUIContentEditor\ISHUIContentEditorCmdSet.cs" />
-    <Compile Include="Core\Managers\IXmlConfigManager.cs" />
+    <Compile Include="Core\Invokers\CommandInvoker.cs" />
+    <Compile Include="Core\CmdSets\ISHUIContentEditor\EnableISHUIContentEditorCmdSet.cs" />
     <Compile Include="Core\Managers\XmlConfigManager.cs" />
     <Compile Include="Core\Models\ISHProject.cs" />
+    <Compile Include="Core\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

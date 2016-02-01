@@ -3,11 +3,20 @@ using System.Reflection;
 
 namespace Trisoft.Configuration.Automation.Core.Commands
 {
-    public class GetVersionCommand : ICommandWithResult<Version>
+    public class GetVersionCommand : ICommand
     {
-        public Version Execute()
+        private readonly Action<Version> _returnResult;
+
+        public GetVersionCommand(Action<Version> returnResult)
         {
-            return Assembly.GetExecutingAssembly().GetName().Version;
+            _returnResult = returnResult;
+        }
+        
+        public void Execute()
+        {
+            var result = Assembly.GetExecutingAssembly().GetName().Version;
+
+            _returnResult?.Invoke(result);
         }
     }
 }

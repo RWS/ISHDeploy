@@ -4,8 +4,8 @@ using Trisoft.Configuration.Automation.Core.Models;
 
 namespace Trisoft.Configuration.Automation.Cmdlets.ISHUIContentEditor
 {
-    [Cmdlet(VerbsLifecycle.Enable, "ISHUIContentEditor", SupportsShouldProcess = false)]
-    public sealed class EnableISHUIContentEditorCmdlet : BaseCmdlet
+    [Cmdlet(VerbsLifecycle.Disable, "ISHUIContentEditor", SupportsShouldProcess = false)]
+    public sealed class DisableISHUIContentEditorCmdlet : BaseCmdlet
     {
         [Parameter(Mandatory = true, Position = 1, ValueFromPipelineByPropertyName = false, ParameterSetName = "ParameterGroup")]
         [ValidateNotNullOrEmpty]
@@ -17,11 +17,11 @@ namespace Trisoft.Configuration.Automation.Cmdlets.ISHUIContentEditor
 
         public override void ExecuteCmdlet()
         {
-            IshProject = new ISHProject { AuthorFolderPath = @"e:\Projects\RnDProjects\Trisoft\Dev\Server.Web\Websites" };
+            IshProject = new ISHProject {AuthorFolderPath = @"e:\Projects\RnDProjects\Trisoft\Dev\Server.Web\Websites" };
             RollbackOnFailure = true;
 
             // Calling the set of command with entry parameters
-            var cmdSet = new EnableISHUIContentEditorCmdSet(this, IshProject, RollbackOnFailure);
+            var cmdSet = new DisableISHUIContentEditorCmdSet(this, IshProject, RollbackOnFailure);
 
             cmdSet.Run();
         }

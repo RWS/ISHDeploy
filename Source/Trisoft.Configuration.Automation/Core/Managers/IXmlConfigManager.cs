@@ -1,11 +1,11 @@
-﻿namespace Trisoft.Configuration.Automation.Core.Managers
+﻿
+namespace Trisoft.Configuration.Automation.Core.Managers
 {
     public interface IXmlConfigManager
     {
-        string Backup();
-        void CommentNode(string commentedLineContains);
-        void UncommentNode(string commentedLineContains);
-        bool IsNodeCommented(string commentedLineContains);
+        void Backup();
+        void CommentNode(string commentPattern);
+        void UncommentNode(string commentPattern);
         void RestoreOriginal();
     }
 }

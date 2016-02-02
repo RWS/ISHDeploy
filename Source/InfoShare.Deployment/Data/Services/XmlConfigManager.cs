@@ -53,9 +53,9 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentText = uncommentedNode.ToString();
+            var uncommentText = uncommentedNode.ToString();
 
-            var commentedNode = new XComment(commentText);
+            var commentedNode = new XComment(uncommentText);
 
             uncommentedNode.ReplaceWith(commentedNode);
 

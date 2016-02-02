@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
@@ -12,24 +11,27 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
     {
         private readonly CommandInvoker _invoker;
 
-        public DisableISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup)
+        public DisableISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject)
         {
-            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
+            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
 
-            var commentPatterns = new List<string>
+            var commentPatterns = new []
             {
                 CommentPatterns.XopusAddCheckOut,
-                CommentPatterns.XopusAddUndoCheckOut,
+                CommentPatterns.XopusAddUndoCheckOut
+            };
+
+            var uncommentPatterns = new[]
+            {
+                CommentPatterns.XopusRemoveCheckoutDownload,
+                CommentPatterns.XopusRemoveCheckIn
             };
 
             _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), commentPatterns));
-
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckoutDownload);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckIn);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveUndoCheckOut);
-
             _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), commentPatterns));
+            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), uncommentPatterns));
             _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), commentPatterns));
+            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), uncommentPatterns));
         }
 
         public void Run()

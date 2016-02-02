@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.FileCommands;
@@ -12,9 +11,9 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHContentEditor
     {
         private readonly CommandInvoker _invoker;
 
-        public SetISHContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup, string licensePath, bool force)
+        public SetISHContentEditorCmdSet(ILogger logger, ISHProject ishProject, string licensePath, bool force)
         {
-			_invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
+			_invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
 			_invoker.AddCommand(new FileCopyCommand(logger, licensePath, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LicenceFolderPath), force));
 		}
 

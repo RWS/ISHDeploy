@@ -6,27 +6,28 @@ namespace InfoShare.Deployment.Data.Commands.FileCommands
 {
     public class FileCopyCommand : ICommand
     {
-		private readonly string _destinationPath;
-		private readonly IFileManager _fileManager;
-		public FileCopyCommand(ILogger logger, string filePath, string destinationPath, bool force = false)
-		{
-			_destinationPath = destinationPath;
-			_fileManager = new FileManager(logger, filePath);
-		}
+		private readonly string _sourcePath;
+        private readonly string _destinationPath;
+        private readonly IFileManager _fileManager;
 
-		public void Backup()
+        public FileCopyCommand(ILogger logger, string filePath, string destinationPath, bool force = false)
+        {
+            _sourcePath = filePath;
+            _destinationPath = destinationPath;
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
+        }
+
+        public void Backup()
 		{
-			_fileManager.Backup();
 		}
 
 		public void Execute()
 		{
-			_fileManager.Copy(_destinationPath);
+			_fileManager.Copy(_sourcePath, _destinationPath);
 		}
 
 		public void Rollback()
 		{
-			_fileManager.RestoreOriginal();
 		}
 	}
 }

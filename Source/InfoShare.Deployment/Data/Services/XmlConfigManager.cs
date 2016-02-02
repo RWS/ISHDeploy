@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using InfoShare.Deployment.Interfaces;
@@ -11,28 +10,25 @@ namespace InfoShare.Deployment.Data.Services
         private readonly ILogger _logger;
         private readonly string _filePath;
         private string _backupFilePath;
+        private readonly IFileManager _fileManager;
 
         public XmlConfigManager(ILogger logger, string filePath)
         {
             _logger = logger;
             _filePath = filePath;
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         public void Backup()
         {
             _backupFilePath = _filePath + ".backup";
-
-            File.Copy(_filePath, _backupFilePath);
+            _fileManager.Backup(_filePath, _backupFilePath);
         }
 
         public void CommentNode(string commentPattern)
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                //TODO: ????
-            }
-
-            XDocument doc = XDocument.Load(_backupFilePath);
+            var doc = _fileManager.Load(_filePath);
+            
             var startPatternNode = doc.DescendantNodes()
                 .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
@@ -42,42 +38,34 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentedNode = startPatternNode.NextNode;
-            var endPatternNode = commentedNode.NextNode;
+            var uncommentedNode = startPatternNode.NextNode;
+            var endPatternNode = uncommentedNode.NextNode;
 
-            if (commentedNode.NodeType == XmlNodeType.Comment)
+            if (uncommentedNode.NodeType == XmlNodeType.Comment)
             {
                 _logger.WriteDetail($"{_filePath} contains already commented part within the pattern {commentPattern}");
                 return;
             }
 
-            if (endPatternNode.ToString().Contains(commentPattern))
+            if (!endPatternNode.ToString().Contains(commentPattern))
             {
                 _logger.WriteWarning($"{_filePath} does not contain ending pattern '{commentPattern}' where it's expected.");
                 return;
             }
 
-            var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
-            var startIndex = commentText.IndexOf('<');
-            var endIndex = commentText.LastIndexOf('>');
+            var uncommentText = uncommentedNode.ToString();
 
-            commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
+            var commentedNode = new XComment(uncommentText);
 
-            var uncommentedNode = XElement.Parse(commentText);
+            uncommentedNode.ReplaceWith(commentedNode);
 
-            commentedNode.ReplaceWith(uncommentedNode);
-
-            doc.Save(_filePath);
+            _fileManager.Save(_filePath, doc);
         }
 
         public void UncommentNode(string commentPattern)
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                //TODO: ????
-            }
+            var doc = _fileManager.Load(_filePath);
 
-            XDocument doc = XDocument.Load(_backupFilePath);
             var startPatternNode = doc.DescendantNodes().
                 FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
@@ -105,18 +93,12 @@ namespace InfoShare.Deployment.Data.Services
 
             commentedNode.ReplaceWith(uncommentedNode);
 
-            doc.Save(_filePath);
+            _fileManager.Save(_filePath, doc);
         }
         
         public void RestoreOriginal()
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                _logger.WriteWarning("File was not restored because backup file path is empty");
-                return;
-            }
-
-            File.Copy(_backupFilePath, _filePath);
+            _fileManager.RestoreOriginal(_backupFilePath, _filePath);
         }
     }
 }

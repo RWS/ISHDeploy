@@ -11,9 +11,9 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHContentEditor
     {
         private readonly CommandInvoker _invoker;
 
-        public TestISHContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup)
+        public TestISHContentEditorCmdSet(ILogger logger, ISHProject ishProject)
         {
-            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
+            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
 
             _invoker.AddCommand(new FileTestCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LicenceFolderPath)));
         }

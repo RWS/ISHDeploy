@@ -3,7 +3,6 @@ using InfoShare.Deployment.Cmdlets.ISHUIContentEditor;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces.Commands;
-using InfoShare.Deployment.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
@@ -17,7 +16,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
         {
             var cmdlet = new EnableISHUIContentEditorCmdlet
             {
-                IshProject = new ISHProject { InstallPath = TestProjectPath }
+                IshProject = this.IshProject
             };
 
             string filePathFolderButtonbar = GetPathToFile(ISHPaths.FolderButtonbar);
@@ -31,8 +30,8 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
             ICommand commentCommand = new XmlCommentCommand(Logger, filePathFolderButtonbar, commentPatterns);
             commentCommand.Execute();
 
-            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be uncommented!");
-            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be uncommented!");
+            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be commented!");
+            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be commented!");
 
             var result = cmdlet.Invoke();
 

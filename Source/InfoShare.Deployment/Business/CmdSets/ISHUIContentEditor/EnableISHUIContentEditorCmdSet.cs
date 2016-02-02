@@ -24,9 +24,30 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
                 CommentPatterns.XopusAddUndoCheckOut,
             };
 
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), uncommentPatterns));
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), uncommentPatterns));
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), uncommentPatterns));
+            _invoker.AddCommand(
+                new XmlUncommentCommand(
+                    logger,
+                    Path.Combine(ishProject.AuthorFolderPath,
+                    ISHPaths.FolderButtonbar),
+                    new List<string>
+                        {
+                            CommentPatterns.XopusAddCheckOut,
+                            CommentPatterns.XopusAddUndoCheckOut,
+                        }));
+
+            _invoker.AddCommand(
+                new XmlUncommentCommand(
+                    logger,
+                    Path.Combine(ishProject.AuthorFolderPath,
+                    ISHPaths.InboxButtonBar),
+                    CommentPatterns.XopusRemoveCheckoutDownload));
+
+            _invoker.AddCommand(
+                new XmlUncommentCommand(
+                    logger,
+                    Path.Combine(ishProject.AuthorFolderPath,
+                    ISHPaths.LanguageDocumentButtonBar),
+                    CommentPatterns.XopusRemoveCheckoutDownload));
         }
 
         public void Run()

@@ -16,20 +16,30 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
         {
             _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
 
-            var commentPatterns = new List<string>
-            {
-                CommentPatterns.XopusAddCheckOut,
-                CommentPatterns.XopusAddUndoCheckOut,
-            };
+            _invoker.AddCommand(
+                new XmlCommentCommand(
+                    logger, 
+                    Path.Combine(ishProject.AuthorFolderPath, 
+                    ISHPaths.FolderButtonbar), 
+                    new List<string>
+                        {
+                            CommentPatterns.XopusAddCheckOut,
+                            CommentPatterns.XopusAddUndoCheckOut,
+                        }));
 
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), commentPatterns));
+            _invoker.AddCommand(
+                new XmlCommentCommand(
+                    logger,
+                    Path.Combine(ishProject.AuthorFolderPath,
+                    ISHPaths.InboxButtonBar),
+                    CommentPatterns.XopusRemoveCheckoutDownload));
 
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckoutDownload);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckIn);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveUndoCheckOut);
-
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), commentPatterns));
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), commentPatterns));
+            _invoker.AddCommand(
+                new XmlCommentCommand(
+                    logger,
+                    Path.Combine(ishProject.AuthorFolderPath,
+                    ISHPaths.LanguageDocumentButtonBar),
+                    CommentPatterns.XopusRemoveCheckoutDownload));
         }
 
         public void Run()

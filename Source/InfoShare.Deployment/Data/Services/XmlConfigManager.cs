@@ -37,10 +37,10 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentedNode = startPatternNode.NextNode;
-            var endPatternNode = commentedNode.NextNode;
+            var uncommentedNode = startPatternNode.NextNode;
+            var endPatternNode = uncommentedNode.NextNode;
 
-            if (commentedNode.NodeType == XmlNodeType.Comment)
+            if (uncommentedNode.NodeType == XmlNodeType.Comment)
             {
                 _logger.WriteDetail($"{_filePath} contains already commented part within the pattern {commentPattern}");
                 return;
@@ -52,11 +52,11 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentText = commentedNode.ToString();
+            var commentText = uncommentedNode.ToString();
 
-            var uncommentedNode = new XComment(commentText);
+            var commentedNode = new XComment(commentText);
 
-            commentedNode.ReplaceWith(uncommentedNode);
+            uncommentedNode.ReplaceWith(commentedNode);
 
             doc.Save(_filePath);
         }

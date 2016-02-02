@@ -10,14 +10,12 @@ namespace InfoShare.Deployment.Business.Invokers
     {
         private readonly ILogger _logger;
         private readonly string _activityDescription;
-        private readonly bool _isBackupEnabled;
         private readonly List<ICommand> _commands;
         
-        public CommandInvoker(ILogger logger, string activityDescription, bool isBackupEnabled)
+        public CommandInvoker(ILogger logger, string activityDescription)
         {
             _logger = logger;
             _activityDescription = activityDescription;
-            _isBackupEnabled = isBackupEnabled;
             _commands = new List<ICommand>();
         }
 
@@ -38,7 +36,7 @@ namespace InfoShare.Deployment.Business.Invokers
                     var command = _commands[i];
                     var restorableCommand = command as IRestorable;
 
-                    if (_isBackupEnabled && restorableCommand != null)
+                    if (restorableCommand != null)
                     {
                         restorableCommand.Backup();
                         restorableCommands.Add(restorableCommand);
@@ -53,14 +51,11 @@ namespace InfoShare.Deployment.Business.Invokers
             {
                 _logger.WriteWarning("Operation fails. Rolling back all changes...");
 
-                if (_isBackupEnabled)
+                for (var i = restorableCommands.Count - 1; i >= 0; i--)
                 {
-                    for (var i = restorableCommands.Count - 1; i >= 0; i--)
-                    {
-                        restorableCommands[i].Rollback();
-                    }
+                    restorableCommands[i].Rollback();
                 }
-                
+
                 throw;
             }
         }

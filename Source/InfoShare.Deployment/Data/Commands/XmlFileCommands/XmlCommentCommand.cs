@@ -8,11 +8,13 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
     public class XmlCommentCommand : ICommand, IRestorable
     {
         private readonly IEnumerable<string> _commentPatterns;
+        private readonly IEnumerable<string> _uncommentPatterns;
         private readonly IXmlConfigManager _xmlConfigManager;
 
-        public XmlCommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns)
+        public XmlCommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns, IEnumerable<string> uncommentPatterns)
         {
             _commentPatterns = commentPatterns;
+            _uncommentPatterns = uncommentPatterns;
 
             _xmlConfigManager = new XmlConfigManager(logger, filePath);
         }
@@ -24,9 +26,20 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 
         public void Execute()
         {
-            foreach (var pattern in _commentPatterns)
+            if (_commentPatterns != null)
             {
-                _xmlConfigManager.CommentNode(pattern);
+                foreach (var pattern in _commentPatterns)
+                {
+                    _xmlConfigManager.CommentNode(pattern);
+                }
+            }
+
+            if (_uncommentPatterns != null)
+            {
+                foreach (var pattern in _uncommentPatterns)
+                {
+                    _xmlConfigManager.UncommentNode(pattern);
+                }
             }
         }
 

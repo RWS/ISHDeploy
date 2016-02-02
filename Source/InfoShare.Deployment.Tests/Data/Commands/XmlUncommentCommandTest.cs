@@ -23,8 +23,8 @@ namespace InfoShare.Deployment.Tests.Data.Commands
                 CommentPatterns.XopusAddUndoCheckOut,
             };
 
-            ICommand uncommentCommand = new XmlUncommentCommand(Logger, filePath, commentPatterns);
-            ICommand commentCommand = new XmlCommentCommand(Logger, filePath, commentPatterns);
+            ICommand uncommentCommand = new XmlCommentCommand(Logger, filePath, null, commentPatterns);
+            ICommand commentCommand = new XmlCommentCommand(Logger, filePath, commentPatterns, null);
 
             XDocument doc = XDocument.Load(filePath);
             var checkOutWithXopusButton = doc.XPathSelectElement(XPathCheckOutWithXopusButton);

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
+    <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
@@ -56,7 +57,6 @@
     <Compile Include="Data\ISHPaths.cs" />
     <Compile Include="Data\Services\IXmlConfigManager.cs" />
     <Compile Include="Data\Commands\GetVersionCommand.cs" />
-    <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
     <Compile Include="Business\Invokers\ICommandInvoker.cs" />
     <Compile Include="Interfaces\Commands\IRestorable.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
@@ -66,6 +66,7 @@
     <Compile Include="Models\ISHProject.cs" />
     <Compile Include="Data\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ISHProjectProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

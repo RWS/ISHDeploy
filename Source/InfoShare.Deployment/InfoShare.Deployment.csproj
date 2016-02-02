@@ -51,6 +51,7 @@
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
     <Compile Include="Data\Services\IFileManager.cs" />
     <Compile Include="Interfaces\Commands\ICommand.cs" />

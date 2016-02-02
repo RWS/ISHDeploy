@@ -16,7 +16,7 @@ namespace InfoShare.Deployment.Data.Services
         {
             _logger = logger;
             _filePath = filePath;
-            _fileManager = new FileManager(logger);
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         public void Backup()

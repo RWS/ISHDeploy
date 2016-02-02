@@ -14,12 +14,12 @@ namespace InfoShare.Deployment.Data.Services
 
         public void Backup(string originalFilePath, string backupFilePath)
         {
-            File.Copy(originalFilePath, backupFilePath);
+            //File.Copy(originalFilePath, backupFilePath);
         }
 
         public void Copy(string sourceFileName, string destFileName)
         {
-            File.Copy(sourceFileName, destFileName);
+            //File.Copy(sourceFileName, destFileName);
         }
 
         public void RestoreOriginal(string backupFilePath, string originalFilePath)

@@ -18,11 +18,8 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
         }
 
         public XmlCommentCommand(ILogger logger, string filePath, string commentPattern)
-        {
-            _commentPatterns = new []{commentPattern};
-
-            _xmlConfigManager = new XmlConfigManager(logger, filePath);
-        }
+            : this(logger, filePath, new[] {commentPattern})
+        { }
 
         public void Backup()
         {

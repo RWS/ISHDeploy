@@ -17,12 +17,9 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
             _xmlConfigManager = new XmlConfigManager(logger, filePath);
         }
 
-        public XmlUncommentCommand(ILogger logger, string filePath, string commentPatterns)
-        {
-            _commentPatterns = new []{commentPatterns};
-
-            _xmlConfigManager = new XmlConfigManager(logger, filePath);
-        }
+        public XmlUncommentCommand(ILogger logger, string filePath, string commentPattern)
+            : this(logger, filePath, new[] { commentPattern })
+        { }
 
         public void Backup()
         {

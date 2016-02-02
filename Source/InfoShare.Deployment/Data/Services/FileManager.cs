@@ -25,13 +25,13 @@ namespace InfoShare.Deployment.Data.Services
         public void RestoreOriginal(string backupFilePath, string originalFilePath)
         {
 
-            if (string.IsNullOrWhiteSpace(backupFilePath))
-            {
-                _logger.WriteWarning("File was not restored because backup file path is empty");
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(backupFilePath))
+            //{
+            //    _logger.WriteWarning("File was not restored because backup file path is empty");
+            //    return;
+            //}
 
-            File.Copy(backupFilePath, originalFilePath);
+            //File.Copy(backupFilePath, originalFilePath);
         }
 
         public XDocument Load(string filePath)

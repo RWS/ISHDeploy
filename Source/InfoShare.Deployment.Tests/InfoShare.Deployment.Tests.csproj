@@ -72,13 +72,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\Author\ASP\XSL\FolderButtonbar.xml">
+    <Content Include="TestData\Web\Author\ASP\XSL\FolderButtonbar.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Author\ASP\XSL\InboxButtonBar.xml">
+    <Content Include="TestData\Web\Author\ASP\XSL\InboxButtonBar.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Author\ASP\XSL\LanguageDocumentButtonbar.xml">
+    <Content Include="TestData\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

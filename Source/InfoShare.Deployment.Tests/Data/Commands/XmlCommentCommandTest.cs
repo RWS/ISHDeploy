@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces.Commands;
@@ -9,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace InfoShare.Deployment.Tests.Data.Commands
 {
     [TestClass]
-    public class XmlCommentCommandTest : BaseCommandTest
+    public class XmlCommentCommandTest : BaseTest
     {
         [TestMethod]
         [TestCategory("Commands")]
@@ -20,30 +18,27 @@ namespace InfoShare.Deployment.Tests.Data.Commands
             var commentPatterns = new List<string>
             {
                 CommentPatterns.XopusAddCheckOut,
-                CommentPatterns.XopusAddUndoCheckOut,
+                CommentPatterns.XopusAddUndoCheckOut
             };
 
             ICommand uncommentCommand = new XmlUncommentCommand(Logger, filePath, commentPatterns);
             ICommand commentCommand = new XmlCommentCommand(Logger, filePath, commentPatterns);
 
-            XDocument doc = XDocument.Load(filePath);
-            var checkOutWithXopusButton = doc.XPathSelectElement(XPathCheckOutWithXopusButton);
+            var checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
 
             if (checkOutWithXopusButton == null)
             {
                 uncommentCommand.Execute();
-                doc = XDocument.Load(filePath);
-                checkOutWithXopusButton = doc.XPathSelectElement(XPathCheckOutWithXopusButton);
+                checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
                 Assert.IsNotNull(checkOutWithXopusButton, "Uncomment command doesn't work");
             }
 
             commentCommand.Execute();
 
-            doc = XDocument.Load(filePath);
-            checkOutWithXopusButton = doc.XPathSelectElement(XPathCheckOutWithXopusButton);
+            checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
             Assert.IsNull(checkOutWithXopusButton, "Comment command doesn't work");
 
-            var undoCheckOutButton = doc.XPathSelectElement(XPathUndoCheckOutButton);
+            var undoCheckOutButton = GetXElementByXPath(filePath, XPathFolderButtonbarUndoCheckOutButton);
             Assert.IsNull(undoCheckOutButton, "Comment command doesn't work");
         }
     }

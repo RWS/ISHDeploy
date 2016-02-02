@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Management.Automation;
+using InfoShare.Deployment.Data.Services;
 using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
 {
     public abstract class BaseCmdlet : Cmdlet, ILogger
     {
+        protected BaseCmdlet()
+        {
+            ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(this));
+        }
+
         public abstract void ExecuteCmdlet();
 
         protected override void ProcessRecord()

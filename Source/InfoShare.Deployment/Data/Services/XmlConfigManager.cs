@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using InfoShare.Deployment.Interfaces;
@@ -11,23 +10,25 @@ namespace InfoShare.Deployment.Data.Services
         private readonly ILogger _logger;
         private readonly string _filePath;
         private string _backupFilePath;
+        private readonly IFileManager _fileManager;
 
         public XmlConfigManager(ILogger logger, string filePath)
         {
             _logger = logger;
             _filePath = filePath;
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         public void Backup()
         {
             _backupFilePath = _filePath + ".backup";
-
-            File.Copy(_filePath, _backupFilePath);
+            _fileManager.Backup(_filePath, _backupFilePath);
         }
 
         public void CommentNode(string commentPattern)
         {
-            XDocument doc = XDocument.Load(_filePath);
+            var doc = _fileManager.Load(_filePath);
+            
             var startPatternNode = doc.DescendantNodes()
                 .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
@@ -37,10 +38,10 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentedNode = startPatternNode.NextNode;
-            var endPatternNode = commentedNode.NextNode;
+            var uncommentedNode = startPatternNode.NextNode;
+            var endPatternNode = uncommentedNode.NextNode;
 
-            if (commentedNode.NodeType == XmlNodeType.Comment)
+            if (uncommentedNode.NodeType == XmlNodeType.Comment)
             {
                 _logger.WriteDetail($"{_filePath} contains already commented part within the pattern {commentPattern}");
                 return;
@@ -52,18 +53,19 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentText = commentedNode.ToString();
+            var uncommentText = uncommentedNode.ToString();
 
-            var uncommentedNode = new XComment(commentText);
+            var commentedNode = new XComment(uncommentText);
 
-            commentedNode.ReplaceWith(uncommentedNode);
+            uncommentedNode.ReplaceWith(commentedNode);
 
-            doc.Save(_filePath);
+            _fileManager.Save(_filePath, doc);
         }
 
         public void UncommentNode(string commentPattern)
         {
-            XDocument doc = XDocument.Load(_filePath);
+            var doc = _fileManager.Load(_filePath);
+
             var startPatternNode = doc.DescendantNodes().
                 FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
@@ -91,18 +93,12 @@ namespace InfoShare.Deployment.Data.Services
 
             commentedNode.ReplaceWith(uncommentedNode);
 
-            doc.Save(_filePath);
+            _fileManager.Save(_filePath, doc);
         }
         
         public void RestoreOriginal()
         {
-            if (string.IsNullOrWhiteSpace(_backupFilePath))
-            {
-                _logger.WriteWarning("File was not restored because backup file path is empty");
-                return;
-            }
-
-            File.Copy(_backupFilePath, _filePath);
+            _fileManager.RestoreOriginal(_backupFilePath, _filePath);
         }
     }
 }

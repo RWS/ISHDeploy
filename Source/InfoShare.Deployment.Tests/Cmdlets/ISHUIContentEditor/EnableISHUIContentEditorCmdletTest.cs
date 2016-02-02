@@ -1,31 +1,48 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using InfoShare.Deployment.Cmdlets.ISHUIContentEditor;
 using InfoShare.Deployment.Data;
+using InfoShare.Deployment.Data.Commands.XmlFileCommands;
+using InfoShare.Deployment.Interfaces.Commands;
 using InfoShare.Deployment.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
 {
     [TestClass]
-    public class EnableISHUIContentEditorCmdletTest
+    public class EnableISHUIContentEditorCmdletTest : BaseTest
     {
         [TestMethod]
         [TestCategory("Cmdlets")]
         public void ProcessRecord()
         {
-            
-        }
+            var cmdlet = new EnableISHUIContentEditorCmdlet
+            {
+                IshProject = new ISHProject { InstallPath = TestProjectPath }
+            };
 
-        [TestMethod]
-        [TestCategory("Cmdlets")]
-        public void ProcessRecord_WithBackup()
-        {
-            
+            string filePathFolderButtonbar = GetPathToFile(ISHPaths.FolderButtonbar);
+
+            var commentPatterns = new List<string>
+            {
+                CommentPatterns.XopusAddCheckOut,
+                CommentPatterns.XopusAddUndoCheckOut
+            };
+
+            ICommand commentCommand = new XmlCommentCommand(Logger, filePathFolderButtonbar, commentPatterns);
+            commentCommand.Execute();
+
+            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be uncommented!");
+            Assert.IsNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be uncommented!");
+
+            var result = cmdlet.Invoke();
+
+            foreach (var item in result)
+            {
+
+            }
+
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be uncommented!");
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be uncommented!");
         }
     }
 }

@@ -28,3 +28,6 @@ bld/
 
 # NuGet Packages Directory
 Source/packages/*
+
+# TestResults
+Source/TestResults/

@@ -52,7 +52,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -75,6 +77,24 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="TestData\127.0.0.1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\FolderButtonbar.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\InboxButtonBar.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\LanguageDocumentButtonbar.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\FolderButtonbar.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\InboxButtonBar.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\LanguageDocumentButtonbar.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Web\Author\ASP\Editors\Xopus\license\localhost.txt">

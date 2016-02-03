@@ -24,21 +24,21 @@ namespace InfoShare.Deployment.Tests.Data.Commands
             ICommand uncommentCommand = new XmlUncommentCommand(Logger, filePath, commentPatterns);
             ICommand commentCommand = new XmlCommentCommand(Logger, filePath, commentPatterns);
 
-            var checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
+            var checkOutWithXopusButton = GetXElementByXPath(filePath, XPathCheckOutWithXopusButton);
 
             if (checkOutWithXopusButton == null)
             {
                 uncommentCommand.Execute();
-                checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
+                checkOutWithXopusButton = GetXElementByXPath(filePath, XPathCheckOutWithXopusButton);
                 Assert.IsNotNull(checkOutWithXopusButton, "Uncomment command doesn't work");
             }
 
             commentCommand.Execute();
 
-            checkOutWithXopusButton = GetXElementByXPath(filePath, XPathFolderButtonbarCheckOutWithXopusButton);
+            checkOutWithXopusButton = GetXElementByXPath(filePath, XPathCheckOutWithXopusButton);
             Assert.IsNull(checkOutWithXopusButton, "Comment command doesn't work");
 
-            var undoCheckOutButton = GetXElementByXPath(filePath, XPathFolderButtonbarUndoCheckOutButton);
+            var undoCheckOutButton = GetXElementByXPath(filePath, XPathCheckOutWithXopusButton);
             Assert.IsNull(undoCheckOutButton, "Comment command doesn't work");
         }
     }

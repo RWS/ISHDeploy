@@ -1,5 +1,5 @@
 ﻿#Variables
-$directory = $args[0];
+$directory = $args[0].trimend('"');
 
 #Get PS module path
 [array]$modulepath = $env:PSModulePath.Split(";")
@@ -14,8 +14,8 @@ if ((Test-Path -path "$modulepath\InfoShare.Deployment") -ne $True)
 }
 
 #Copy files
-Copy-Item ($directory + "InfoShare.Deployment.dll") "$modulepath/InfoShare.Deployment" -Force
-Copy-Item ($directory + "InfoShare.Deployment.pdb") "$modulepath/InfoShare.Deployment" -Force
+Copy-Item (Join-Path $directory "InfoShare.Deployment.dll") "$modulepath/InfoShare.Deployment" -Force
+Copy-Item (Join-Path $directory "InfoShare.Deployment.pdb") "$modulepath/InfoShare.Deployment" -Force
 
 #TODO: uncomment when help will be available
 #Copy-Item ($directory + "InfoShare.Deployment.dll-help.xml") "$modulepath/InfoShare.Deployment" -Force

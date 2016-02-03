@@ -35,10 +35,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
 
             var result = cmdlet.Invoke();
 
-            foreach (var item in result)
-            {
-
-            }
+            foreach (var item in result) { }
 
             Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be commented!");
             Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be commented!");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.AccessControl;
 using InfoShare.Deployment.Cmdlets.ISHContentEditor;
 using InfoShare.Deployment.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,8 +22,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             if (File.Exists(_newLicenceFilePath))
             {
-                var fileInfo = new FileInfo(_newLicenceFilePath);
-                fileInfo.IsReadOnly = false;
+                File.SetAttributes(_newLicenceFilePath, File.GetAttributes(_newLicenceFilePath) & ~FileAttributes.ReadOnly); // write/read right
                 File.Delete(_newLicenceFilePath);
             }
 
@@ -42,10 +42,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
 
             var result = cmdlet.Invoke();
 
-            foreach (var item in result)
-            {
-
-            }
+            foreach (var item in result) { }
 
             Assert.IsTrue(File.Exists(_newLicenceFilePath), "File has not been copied");
         }
@@ -66,15 +63,12 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
             File.SetLastWriteTime(_newLicenceFilePath, writeTime);
             
             var result = cmdlet.Invoke();
-            foreach (var item in result)
-            {
+            foreach (var item in result) { }
 
-            }
-
-            var newLicenceFileCreationTime2 = new FileInfo(_newLicenceFilePath).LastWriteTime;
+            var newWriteTime = new FileInfo(_newLicenceFilePath).LastWriteTime;
 
             Assert.IsTrue(File.Exists(_newLicenceFilePath), "File has not been copied");
-            Assert.IsTrue(writeTime.CompareTo(newLicenceFileCreationTime2) != 0, "File has not been overwritten");
+            Assert.IsTrue(writeTime.CompareTo(newWriteTime) != 0, "File has not been overwritten");
         }
 
         [TestMethod]
@@ -93,13 +87,9 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
             File.SetLastWriteTime(_newLicenceFilePath, writeTime);
 
             var result = cmdlet.Invoke();
-            foreach (var item in result)
-            {
-
-            }
+            foreach (var item in result) { }
         }
-
-
+        
         [TestMethod]
         [TestCategory("Cmdlets")]
         [ExpectedException(typeof(UnauthorizedAccessException))]
@@ -113,17 +103,12 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
             };
             
             File.Copy(cmdlet.LicensePath, _newLicenceFilePath);
-            var fileInfo = new FileInfo(_newLicenceFilePath);
-            fileInfo.IsReadOnly = true;
+            File.SetAttributes(_newLicenceFilePath, FileAttributes.ReadOnly); // readonly
 
             var result = cmdlet.Invoke();
-            foreach (var item in result)
-            {
-
-            }
+            foreach (var item in result) { }
         }
-
-
+        
         [TestMethod]
         [TestCategory("Cmdlets")]
         [ExpectedException(typeof(IOException))]
@@ -141,10 +126,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
             using (var fs = File.Open(_newLicenceFilePath, FileMode.Open, FileAccess.Read, FileShare.None))
             {
                 var result = cmdlet.Invoke();
-                foreach (var item in result)
-                {
-
-                }
+                foreach (var item in result) { }
             }
         }
     }

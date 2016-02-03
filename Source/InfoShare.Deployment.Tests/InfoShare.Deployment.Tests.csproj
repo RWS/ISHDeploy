@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
     <Compile Include="Cmdlets\Info\GetVersionTest.cs" />
+    <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdletTest.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdletTest.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdletTest.cs" />
     <Compile Include="Data\Commands\XmlCommentCommandTest.cs" />
@@ -71,10 +72,14 @@
       <Name>InfoShare.Deployment</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Cmdlets\ISHContentEditor\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="TestData\127.0.0.1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Web\Author\ASP\Editors\Xopus\license\localhost.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Web\Author\ASP\XSL\FolderButtonbar.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

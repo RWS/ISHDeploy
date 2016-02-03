@@ -8,7 +8,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
     [Cmdlet(VerbsLifecycle.Disable, "ISHUIContentEditor", SupportsShouldProcess = false)]
     public sealed class DisableISHUIContentEditorCmdlet : BaseCmdlet
     {
-        [Parameter(Mandatory = false, Position = 1, ValueFromPipelineByPropertyName = false, ParameterSetName = "ParameterGroup")]
+        [Parameter(Mandatory = false, Position = 0)]
+        [Alias("proj")]
         [ValidateNotNullOrEmpty]
         public ISHProject IshProject { get; set; }
 

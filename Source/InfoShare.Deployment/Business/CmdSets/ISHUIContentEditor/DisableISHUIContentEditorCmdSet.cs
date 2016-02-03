@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
@@ -12,24 +11,19 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
     {
         private readonly CommandInvoker _invoker;
 
-        public DisableISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject, bool enableBackup)
+        private readonly string[] _commentPatterns = { CommentPatterns.XopusAddCheckOut };
+        private readonly string[] _commentPatternsExt = { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut };
+        private readonly string[] _uncommentPatterns = { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn };
+
+        public DisableISHUIContentEditorCmdSet(ILogger logger, ISHProject ishProject)
         {
-            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation", enableBackup);
-
-            var commentPatterns = new List<string>
-            {
-                CommentPatterns.XopusAddCheckOut,
-                CommentPatterns.XopusAddUndoCheckOut,
-            };
-
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), commentPatterns));
-
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckoutDownload);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveCheckIn);
-            //TODO: ask what to do with that? commentPatterns.Add(CommentPatterns.XopusRemoveUndoCheckOut);
-
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), commentPatterns));
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), commentPatterns));
+            _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
+            
+            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), _commentPatternsExt));
+            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _commentPatterns));
+            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _uncommentPatterns));
+            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _commentPatterns));
+            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _uncommentPatterns));
         }
 
         public void Run()

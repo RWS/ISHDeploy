@@ -5,5 +5,6 @@
         public const string FolderButtonbar = @"Author\ASP\XSL\FolderButtonbar.xml";
         public const string InboxButtonBar = @"Author\ASP\XSL\InboxButtonBar.xml";
         public const string LanguageDocumentButtonBar = @"Author\ASP\XSL\LanguageDocumentButtonbar.xml";
-    }
+        public const string LicenceFolderPath = @"Author\ASP\Editors\Xopus\license\";
+	}
 }

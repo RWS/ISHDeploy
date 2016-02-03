@@ -7,6 +7,12 @@ $DebugPreference = "Continue"
 $VerbosePreference = "Continue"
 $WarningPreference = "Continue"
 
+#EXAMPLE
+
+Set-ISHProject "E:\Projects\RnDProjects\Trisoft\Dev\Server.Web" sites
+
+Pause
+
 Enable-ISHUIContentEditor
 
 Pause

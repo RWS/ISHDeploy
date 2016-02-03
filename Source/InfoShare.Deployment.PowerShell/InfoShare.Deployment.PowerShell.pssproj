@@ -35,9 +35,11 @@
     <Folder Include="CmdletsUsage\" />
     <Folder Include="CmdletsUsage\Info\" />
     <Folder Include="CmdletsUsage\ISHUIContentEditor\" />
+    <Folder Include="CmdletsUsage\ISHContentEditor\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdletsUsage\Info\Get-Version.ps1" />
+    <Compile Include="CmdletsUsage\ISHContentEditor\SetTestContentEditor.ps1" />
     <Compile Include="CmdletsUsage\ISHUIContentEditor\EnableDisableContentEditor.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

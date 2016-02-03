@@ -17,9 +17,14 @@ namespace InfoShare.Deployment.Data.Services
             //File.Copy(originalFilePath, backupFilePath);
         }
 
-        public void Copy(string sourceFileName, string destFileName)
+        public void Copy(string sourceFilePath, string destFilePath, bool overwrite = false)
         {
-            //File.Copy(sourceFileName, destFileName);
+            File.Copy(sourceFilePath, destFilePath, overwrite);
+        }
+
+        public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
+        {
+            Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
         }
 
         public void RestoreOriginal(string backupFilePath, string originalFilePath)

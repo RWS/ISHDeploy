@@ -45,13 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\CmdSets\ISHContentEditor\SetISHContentEditorCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHContentEditor\TestISHContentEditorCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
     <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
+    <Compile Include="Data\Commands\FileCommands\FileTestCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
@@ -78,7 +84,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe $(ProjectDir)InfoShare.Deployment.PostBuild.ps1 $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe "$(ProjectDir)InfoShare.Deployment.PostBuild.ps1" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

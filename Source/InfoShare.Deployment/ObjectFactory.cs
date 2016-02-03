@@ -9,7 +9,7 @@ namespace InfoShare.Deployment
         private static readonly IDictionary<Type, Type> _types = new Dictionary<Type, Type>();
         private static readonly IDictionary<Type, object> _typeInstances = new Dictionary<Type, object>();
 
-        public static void SetInstance<TContract, TImplementation>(TImplementation instance)
+        public static void SetInstance<TContract, TImplementation>(TContract instance)
         {
             _typeInstances[typeof(TContract)] = instance;
         }

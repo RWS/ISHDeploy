@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 using InfoShare.Deployment.Cmdlets.ISHUIContentEditor;
 using InfoShare.Deployment.Data;
-using InfoShare.Deployment.Data.Commands.XmlFileCommands;
-using InfoShare.Deployment.Interfaces.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
@@ -19,19 +17,10 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
                 IshProject = this.IshProject
             };
 
-            string filePathFolderButtonbar = GetPathToFile(ISHPaths.FolderButtonbar);
-
-            var uncommentPatterns = new List<string>
+            foreach (var file in Directory.GetFiles(".\\TestData\\ISHUIContentEditor\\XSL\\Enabled"))
             {
-                CommentPatterns.XopusAddCheckOut,
-                CommentPatterns.XopusAddUndoCheckOut
-            };
-
-            ICommand commentCommand = new XmlUncommentCommand(Logger, filePathFolderButtonbar, uncommentPatterns);
-            commentCommand.Execute();
-
-            Assert.IsNotNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be uncommented!");
-            Assert.IsNotNull(GetXElementByXPath(filePathFolderButtonbar, XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be uncommented!");
+                File.Copy(file, Path.Combine(@"TestData\Web\Author\ASP\XSL", Path.GetFileName(file)), true);
+            }
 
             var result = cmdlet.Invoke();
 
@@ -40,8 +29,14 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHUIContentEditor
 
             }
 
-            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarCheckOutWithXopusButton), $"{XPathFolderButtonbarCheckOutWithXopusButton} should be commented!");
-            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathFolderButtonbarUndoCheckOutButton), $"{XPathFolderButtonbarUndoCheckOutButton} should be commented!");
+            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathCheckOutWithXopusButton), $"{XPathCheckOutWithXopusButton} in file {ISHPaths.FolderButtonbar} should be commented!");
+            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.FolderButtonbar), XPathUndoCheckOutButton), $"{XPathUndoCheckOutButton} in file {ISHPaths.FolderButtonbar} should be commented!");
+            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.InboxButtonBar), XPathCheckOutWithXopusButton), $"{XPathCheckOutWithXopusButton} in file {ISHPaths.InboxButtonBar} should be commented!");
+            Assert.IsNull(GetXElementByXPath(GetPathToFile(ISHPaths.LanguageDocumentButtonBar), XPathCheckOutWithXopusButton), $"{XPathCheckOutWithXopusButton} in file {ISHPaths.LanguageDocumentButtonBar} should be commented!");
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.InboxButtonBar), XPathCheckOutButton), $"{XPathCheckOutButton} in file {ISHPaths.InboxButtonBar} should be uncommented!");
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.InboxButtonBar), XPathCheckOutButton), $"{XPathCheckOutButton} in file {ISHPaths.InboxButtonBar} should be uncommented!");
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.LanguageDocumentButtonBar), XPathCheckOutButton), $"{XPathCheckOutButton} in file {ISHPaths.LanguageDocumentButtonBar} should be uncommented!");
+            Assert.IsNotNull(GetXElementByXPath(GetPathToFile(ISHPaths.LanguageDocumentButtonBar), XPathCheckOutButton), $"{XPathCheckOutButton} in file {ISHPaths.LanguageDocumentButtonBar} should be uncommented!");
         }
     }
 }

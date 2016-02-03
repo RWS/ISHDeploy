@@ -13,8 +13,10 @@ namespace InfoShare.Deployment.Tests
         protected readonly ISHProject IshProject;
         public ILogger Logger = Substitute.For<ILogger>();
 
-        public const string XPathFolderButtonbarCheckOutWithXopusButton = "BUTTONBAR/BUTTON/INPUT[@NAME='CheckOutWithXopus']";
-        public const string XPathFolderButtonbarUndoCheckOutButton = "BUTTONBAR/BUTTON/INPUT[@NAME='undoCheckOut']";
+        public const string XPathCheckOutWithXopusButton = "BUTTONBAR/BUTTON/INPUT[@NAME='CheckOutWithXopus']";
+        public const string XPathUndoCheckOutButton = "BUTTONBAR/BUTTON/INPUT[@NAME='undoCheckOut']";
+        public const string XPathCheckOutButton = "BUTTONBAR/BUTTON/INPUT[@NAME='checkOut']";
+        public const string XPathCheckInButton = "BUTTONBAR/BUTTON/INPUT[@NAME='checkIn']";
 
         public BaseTest()
         {

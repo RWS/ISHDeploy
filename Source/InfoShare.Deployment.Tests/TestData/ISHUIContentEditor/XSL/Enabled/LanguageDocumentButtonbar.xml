@@ -209,7 +209,7 @@
 	
 	<!-- XOPUS REMOVE "CHECKOUT & DOWNLOAD" START - The customer might want to remove this button when Xopus is used, if they only want to checkout and edit XML objects via Xopus, not by downloading the file, so comment out this button when appropriate
 	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
-	<BUTTON CHECKACCESS="Y">
+	<!--<BUTTON CHECKACCESS="Y">
 		<CARDTYPE>CTMAP</CARDTYPE>
 		<CARDTYPE>CTMASTER</CARDTYPE>
 		<CARDTYPE>CTLIB</CARDTYPE>		
@@ -245,7 +245,7 @@
 			
 		}
 		]]></SCRIPT>
-	</BUTTON>
+	</BUTTON>-->
 	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
 	XOPUS REMOVE "CHECKOUT & DOWNLOAD" END -->		
 	
@@ -288,7 +288,6 @@
 	</BUTTON>
 	
 	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" START -->	
-	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
 	<BUTTON CHECKACCESS="Y">
 		<CARDTYPE>CTMAP</CARDTYPE>
 		<CARDTYPE>CTMASTER</CARDTYPE>
@@ -342,12 +341,11 @@
 				 }
 			]]></SCRIPT>
 	</BUTTON>
-	Xopus is disabled. Please obtain a license from SDL Trisoft -->
 	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" END -->	
 
 	<!-- XOPUS REMOVE "CHECK IN" START - The customer might want to remove this button when Xopus is used, if they only want to check in XML objects from within Xopus, not by downloading and uploading, so comment out this button when appropriate
 	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
-	<BUTTON CHECKACCESS="Y">
+	<!--<BUTTON CHECKACCESS="Y">
 		<CARDTYPE>CTMAP</CARDTYPE>
 		<CARDTYPE>CTMASTER</CARDTYPE>
 		<CARDTYPE>CTLIB</CARDTYPE>
@@ -369,7 +367,7 @@
 			}
 		}
 		]]></SCRIPT>
-	</BUTTON>
+	</BUTTON>-->
 	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
 	 XOPUS REMOVE "CHECK IN" END -->	
 	
@@ -398,7 +396,7 @@
 	</BUTTON>
 
 	<!-- XOPUS REMOVE "UNDO CHECK OUT" START - The customer might want to remove this button when Xopus is used, if they only want to undo check out XML objects from within Xopus, so comment out this button when appropriate -->	
-	<!--<BUTTON CHECKACCESS="Y">
+	<BUTTON CHECKACCESS="Y">
 		<CARDTYPE>CTMAP</CARDTYPE>
 		<CARDTYPE>CTMASTER</CARDTYPE>
 		<CARDTYPE>CTLIB</CARDTYPE>
@@ -419,7 +417,7 @@
 			}
 		}
 		]]></SCRIPT>
-	</BUTTON>-->		
+	</BUTTON>		
 	<!-- XOPUS REMOVE "UNDO CHECK OUT" END -->	
 	
 	<BUTTON CHECKACCESS="Y">

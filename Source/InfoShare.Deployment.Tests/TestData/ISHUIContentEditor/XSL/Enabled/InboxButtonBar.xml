@@ -238,7 +238,7 @@
 	
   <!-- XOPUS REMOVE "CHECKOUT & DOWNLOAD" START - The customer might want to remove this button when Xopus is used, if they only want to checkout and edit XML objects via Xopus, not by downloading the file, so comment out this button when appropriate
 	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
-	<BUTTON>
+	<!--<BUTTON>
 		<INPUT type="button" NAME="checkOut" onClick="checkOut()" VALUE="Check Out &amp; Download" CLASS="button" ICON="UIFramework/check-out.16x16.png"  SHOWTEXT="Y"/>
 		<SCRIPT language="javascript" type="text/javascript"><![CDATA[
 		function checkOut()	
@@ -255,12 +255,11 @@
 			}
 		}
 		]]></SCRIPT>
-	</BUTTON>
+	</BUTTON>-->
 	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
 	XOPUS REMOVE "CHECKOUT & DOWNLOAD" END -->		
 
 	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" START -->	
-	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
   <BUTTON>
     <INPUT type="button" NAME="CheckOutWithXopus" onClick="checkOutXopus(this)" VALUE="Check Out" CLASS="button" ICON="UIFramework/check-out.16x16.png" SHOWTEXT="Y"/>
     <SCRIPT language="javascript" type="text/javascript">
@@ -293,12 +292,11 @@
  		      }
 	  ]]></SCRIPT>
   </BUTTON>
-	Xopus is disabled. Please obtain a license from SDL Trisoft -->
 	<!-- XOPUS ADD "CHECK OUT WITH XOPUS" END -->	
 
   <!-- XOPUS REMOVE "CHECK IN" START - The customer might want to remove this button when Xopus is used, if they only want to check in XML objects from within Xopus, not by downloading and uploading, so comment out this button when appropriate
 	 Xopus is disabled. Please obtain a license from SDL Trisoft -->
-	<BUTTON>
+	<!--<BUTTON>
 		<INPUT type="button" NAME="checkIn" onClick="checkIn()" VALUE="Check In" CLASS="button" ICON="UIFramework/check-in.16x16.png" SHOWTEXT="Y"/>
 		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
 		function checkIn()
@@ -318,13 +316,13 @@
 			}
 		}
 		]]></SCRIPT>
-	</BUTTON>
+	</BUTTON>-->
 	<!-- Xopus is disabled. Please obtain a license from SDL Trisoft
 	 XOPUS REMOVE "CHECK IN" END -->	
 
 	
 	<!-- XOPUS REMOVE "UNDO CHECK OUT" START - The customer might want to remove this button when Xopus is used, if they only want to undo check out XML objects from within Xopus, so comment out this button when appropriate -->	
-	<!--<BUTTON>
+	<BUTTON>
 		<INPUT type="button" NAME="undoCheckOut" onClick="undoCheckOut()" VALUE="Undo Check Out" CLASS="button" ICON="UIFramework/undo-check-out.16x16.png" SHOWTEXT="Y"/>
 		<SCRIPT LANGUAGE="JAVASCRIPT"><![CDATA[
 		function undoCheckOut()
@@ -342,7 +340,7 @@
 			}
 		}
 		]]></SCRIPT>
-	</BUTTON>-->	
+	</BUTTON>	
 	<!-- XOPUS REMOVE "UNDO CHECK OUT" END -->	
 	
 	<BUTTON>

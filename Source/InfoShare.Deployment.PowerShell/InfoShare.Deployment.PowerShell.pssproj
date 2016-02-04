@@ -36,8 +36,10 @@
     <Folder Include="CmdletsUsage\Info\" />
     <Folder Include="CmdletsUsage\ISHUIContentEditor\" />
     <Folder Include="CmdletsUsage\ISHContentEditor\" />
+    <Folder Include="AutomationTests\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutomationTests\ISHUIContentEditor.ps1" />
     <Compile Include="CmdletsUsage\Info\Get-Version.ps1" />
     <Compile Include="CmdletsUsage\ISHContentEditor\SetTestContentEditor.ps1" />
     <Compile Include="CmdletsUsage\ISHUIContentEditor\EnableDisableContentEditor.ps1" />

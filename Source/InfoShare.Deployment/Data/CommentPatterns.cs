@@ -7,5 +7,11 @@
         public const string XopusRemoveCheckoutDownload = "XOPUS REMOVE \"CHECKOUT & DOWNLOAD\"";
         public const string XopusRemoveCheckIn = "XOPUS REMOVE \"CHECK IN\"";
         public const string XopusRemoveUndoCheckOut = "XOPUS REMOVE \"UNDO CHECK OUT\"";
-    }
+
+		#region 
+
+		public const string EnrichIntegration = "SDL Enrich integration";
+
+		#endregion
+	}
 }

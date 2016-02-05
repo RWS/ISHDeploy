@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data;
-using InfoShare.Deployment.Data.Commands.FileCommands;
+using InfoShare.Deployment.Data.Commands.LicenseCommands;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Models;
 
@@ -11,11 +12,10 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHContentEditor
     {
         private readonly CommandInvoker _invoker;
 
-        public TestISHContentEditorCmdSet(ILogger logger, ISHProject ishProject)
+        public TestISHContentEditorCmdSet(ILogger logger, ISHProject ishProject, string hostname, Action<bool> isValid)
         {
             _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
-
-            _invoker.AddCommand(new FileTestCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LicenceFolderPath)));
+            _invoker.AddCommand(new LicenseTestCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LicenceFolderPath), hostname, isValid));
         }
 
         public void Run()

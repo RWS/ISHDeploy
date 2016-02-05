@@ -24,7 +24,6 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		public override void ExecuteCmdlet()
 		{
 			var cmdSet = new SetISHContentEditorCmdSet(this, IshProject ?? ISHProjectProvider.Instance.IshProject, LicensePath, Force);
-
 			cmdSet.Run();
 		}
 	}

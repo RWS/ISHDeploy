@@ -10,5 +10,7 @@ namespace InfoShare.Deployment.Data.Services
         void RestoreOriginal(string backupFilePath, string originalFilePath);
         XDocument Load(string filePath);
         void Save(string filePath, XDocument doc);
-    }
+
+		bool Exists(string filePath);
+	}
 }

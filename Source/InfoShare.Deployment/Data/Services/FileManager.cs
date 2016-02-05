@@ -22,14 +22,18 @@ namespace InfoShare.Deployment.Data.Services
             File.Copy(sourceFilePath, destFilePath, overwrite);
         }
 
-        public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
+		public bool Exists(string filePath)
+		{
+			return File.Exists(filePath);
+		}
+
+		public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
         {
             Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
         }
 
         public void RestoreOriginal(string backupFilePath, string originalFilePath)
         {
-
             //if (string.IsNullOrWhiteSpace(backupFilePath))
             //{
             //    _logger.WriteWarning("File was not restored because backup file path is empty");

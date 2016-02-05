@@ -1,12 +1,24 @@
 using System;
+using System.Globalization;
+using System.Net;
 using System.Text;
 
-namespace XopusLicense
+namespace  InfoShare.Deployment.Helpers
 {
-    /// <summary>
-    /// Summary description for License.
-    /// </summary>
-    public class LicenseCheckRequest
+	/// <summary>
+	/// Summary description for LicenseParseException.
+	/// </summary>
+	public class XopusLicenseException : Exception
+	{
+		public XopusLicenseException(string msg) : base(msg)
+		{
+		}
+	}
+
+	/// <summary>
+	/// Summary description for License.
+	/// </summary>
+	public class XopusLicenseChecker
     {
         const string LICENSE_HEADER = "4242";
         const string LICENSE_VERSION = "01";
@@ -23,30 +35,28 @@ namespace XopusLicense
         public byte[] licenseFileKey;
         public long userKey;
         public bool verifyUserKey;
-        public bool isDuplicateKey;
-        public string type;
-        public bool expired;
-        public bool cancelled;
         public int revision;
         public string domain;
-        public string userBrowser;
 
-        public string parseError;
-
-        public int userId = 0;
-        public int licenseFileId = 0;
-        public int licenseId = 0;
-        public int disabled = 0;
-
-        public LicenseCheckRequest(string inputString, string userBrowser)
+        public XopusLicenseChecker(string inputString)
         {
-            this.userBrowser = userBrowser;
-
             // Get the individual parts of the input string.
             parseInputString(inputString);
-        }
+		}
 
-        void parseInputString(string input)
+
+		public bool IsValid(string hostName)
+		{
+			return (hostName == domain);
+		}
+
+		public bool IsValid()
+		{
+			// Very simple check if everything was parsed correctly
+			return String.IsNullOrEmpty(domain);
+		}
+
+		void parseInputString(string input)
         {
             int totalLength =
                 LICENSE_HEADER_LENGTH + 
@@ -62,18 +72,22 @@ namespace XopusLicense
                 // Header (4242)
                 string licenseHeaderString = input.Substring(offset, LICENSE_HEADER_LENGTH);
                 if (!licenseHeaderString.Equals(LICENSE_HEADER))
-                    throw new LicenseException("Unknown license header: " + licenseHeaderString + " != " + LICENSE_HEADER);
+                {
+	                throw new XopusLicenseException("Unknown license header: " + licenseHeaderString + " != " + LICENSE_HEADER);
+				}
                 offset += LICENSE_HEADER_LENGTH;
 
                 // Version (01)
                 string licenseVersionString = input.Substring(offset, LICENSE_VERSION_LENGTH);
                 if (!licenseVersionString.Equals(LICENSE_VERSION))
-                    throw new LicenseException("Unsupported license version: " + licenseVersionString + " != " + LICENSE_VERSION);
+                {
+	                throw new XopusLicenseException("Unsupported license version: " + licenseVersionString + " != " + LICENSE_VERSION);
+                }
                 offset += LICENSE_VERSION_LENGTH;
 
                 // File key
                 string licenseFileKeyString = input.Substring(offset, LICENSE_FILE_KEY_LENGTH);
-                licenseFileKey = ByteArrayUtils.hexStringToByteArray(licenseFileKeyString);
+                licenseFileKey = HexStringToByteArray(licenseFileKeyString);
                 offset += LICENSE_FILE_KEY_LENGTH;
 
                 // Revision
@@ -83,8 +97,8 @@ namespace XopusLicense
 
                 // User key
                 string userKeyString = input.Substring(offset, USER_KEY_LENGTH);
-                byte[] userKeyBytes = ByteArrayUtils.hexStringToByteArray(userKeyString);
-                userKey = ByteArrayUtils.byteArrayToLong(userKeyBytes);
+                byte[] userKeyBytes = HexStringToByteArray(userKeyString);
+                userKey = ByteArrayToLong(userKeyBytes);
                 offset += USER_KEY_LENGTH;
 
                 // Verify User key
@@ -94,13 +108,41 @@ namespace XopusLicense
 
                 // Domain
                 string domainString = input.Substring(offset);
-                byte[] domainBytes = ByteArrayUtils.hexStringToByteArray(domainString);
+                byte[] domainBytes = HexStringToByteArray(domainString);
                 domain = (new ASCIIEncoding()).GetString(domainBytes);
             }
             else
             {
-                throw new LicenseException("License too short: " + input.Length + " < " + totalLength);
+                throw new XopusLicenseException("License too short: " + input.Length + " < " + totalLength);
             }
         }
-    }
+
+		private static byte[] HexStringToByteArray(string s)
+		{
+			if (s.Length%2 != 0)
+			{
+				throw new XopusLicenseException("Only even length hex strings can be decoded to bytes: " + s);
+			}
+
+			byte[] buf = new byte[s.Length / 2];
+			for (int offset = 0; offset < s.Length; offset += 2)
+			{
+				buf[offset / 2] = byte.Parse(s.Substring(offset, 2), NumberStyles.HexNumber);
+			}
+
+			return buf;
+		}
+
+		private static long ByteArrayToLong(byte[] buf)
+		{
+			long l = 0L;
+			for (int i = 7; i >= 0; i--)
+			{
+				l <<= 8;
+				l |= buf[i];
+			}
+
+			return l;
+		}
+	}
 }

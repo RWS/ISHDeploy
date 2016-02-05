@@ -57,8 +57,10 @@
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
-    <Compile Include="Data\Commands\FileCommands\FileTestCommand.cs" />
+    <Compile Include="Data\Commands\LicenseCommands\LicenseTestCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
+    <Compile Include="Data\Services\LicenseManager.cs" />
+    <Compile Include="Helpers\XopusLicenseChecker.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
     <Compile Include="Data\Services\IFileManager.cs" />

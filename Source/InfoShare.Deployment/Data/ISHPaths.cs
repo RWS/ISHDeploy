@@ -10,8 +10,8 @@
 
 		#region  UI Quality Assistant definitions
 
-		public const string EnrichConfig = @"Author\ASP\Editors\Xopus\sdl-enrich-config.xml";
-		public const string XopusConfig = @"Author\ASP\Editors\Xopus\config.xml";
+		public const string EnrichConfig = @"Trisoft.InfoShare.Web\ASP\Editors\Xopus\config\bluelion-config.xml";
+		public const string XopusConfig = @"Trisoft.InfoShare.Web\ASP\Editors\Xopus\config\config.xml";
 
 		#endregion
 	}

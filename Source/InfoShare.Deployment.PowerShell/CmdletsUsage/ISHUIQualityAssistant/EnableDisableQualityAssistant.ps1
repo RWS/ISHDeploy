@@ -9,9 +9,7 @@ $WarningPreference = "Continue"
 
 #EXAMPLE
 
-Set-ISHProject "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web\Websites\Trisoft.InfoShare.Web" sites
-
-Pause
+Set-ISHProject "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web" sites
 
 Enable-ISHUIQualityAssistant
 

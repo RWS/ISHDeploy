@@ -10,7 +10,7 @@
 
 		#region 
 
-		public const string EnrichIntegration = "SDL Enrich integration";
+		public const string EnrichIntegration = "Bluelion integration";
 
 		#endregion
 	}

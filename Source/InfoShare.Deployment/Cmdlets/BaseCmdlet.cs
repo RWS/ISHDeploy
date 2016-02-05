@@ -7,6 +7,11 @@ namespace InfoShare.Deployment.Cmdlets
 {
     public abstract class BaseCmdlet : Cmdlet, ILogger
     {
+        private const int ProgressActivityId = 11;
+        private const int ParentProgressActivityId = 22;
+        private ProgressRecord _progressRecord;
+        private ProgressRecord _parentProgressRecord;
+
         protected BaseCmdlet()
         {
             ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(this));
@@ -19,11 +24,12 @@ namespace InfoShare.Deployment.Cmdlets
             try
             {
                 base.ProcessRecord();
+
                 ExecuteCmdlet();
             }
             catch (Exception ex)
             {
-                WriteError(ex);
+                ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
         }
 
@@ -32,14 +38,33 @@ namespace InfoShare.Deployment.Cmdlets
             base.WriteVerbose(message);
         }
 
-        public void WriteProgress(string message, string statusDescription)
+        public void WriteProgress(string activity, string statusDescription, int percentComplete = -1)
         {
-            WriteProgress(new ProgressRecord(0, message, statusDescription));
+            if (_progressRecord == null)
+            {
+                _progressRecord = new ProgressRecord(ProgressActivityId, activity, statusDescription);
+            }
+
+            _progressRecord.ParentActivityId = (_parentProgressRecord != null) ? ParentProgressActivityId : -1;
+            _progressRecord.Activity = activity;
+            _progressRecord.StatusDescription = statusDescription;
+            _progressRecord.PercentComplete = percentComplete;
+            
+            WriteProgress(_progressRecord);
         }
 
-        public void WriteDetail(string message)
+        public void WriteParentProgress(string activity, string statusDescription, int percentComplete)
         {
-            base.WriteCommandDetail(message);
+            if (_parentProgressRecord == null)
+            {
+                _parentProgressRecord = new ProgressRecord(ParentProgressActivityId, activity, statusDescription);
+            }
+
+            _parentProgressRecord.Activity = activity;
+            _parentProgressRecord.StatusDescription = statusDescription;
+            _parentProgressRecord.PercentComplete = percentComplete;
+
+            WriteProgress(_parentProgressRecord);
         }
 
         public new void WriteDebug(string message)
@@ -51,10 +76,10 @@ namespace InfoShare.Deployment.Cmdlets
         {
             base.WriteWarning(message);
         }
-
-        public void WriteError(Exception ex)
+        
+        public void WriteError(Exception ex, object errorObject = null)
         {
-            WriteError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
+            WriteError(new ErrorRecord(ex, string.Empty, ErrorCategory.NotSpecified, errorObject));
         }
     }
 }

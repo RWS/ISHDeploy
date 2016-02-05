@@ -1,5 +1,5 @@
 ﻿#Variables
-$directory = $args[0].trimend('"');
+$directory = $args[0].trim('"');
 
 #Get PS module path
 [array]$modulepath = $env:PSModulePath.Split(";")

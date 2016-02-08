@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using InfoShare.Deployment.Data.Services;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Commands;
@@ -38,9 +39,13 @@ namespace InfoShare.Deployment.Data.Commands.LicenseCommands
                 }
                 catch (XopusLicenseException ex)
                 {
-                    _logger.WriteDebug($"License file: {filePath} is not valid. The following error occurred while checking: {ex.Message}");
+                    _logger.WriteVerbose($"The license file {filePath} is not valid. The following error occurred while checking:\n{ex.Message}");
                     _returnResult?.Invoke(false);
                 }
+            }
+		    else
+            {
+                throw new FileNotFoundException($"The license file for host \"{_hostname}\" not found");
             }
         }
 	}

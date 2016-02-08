@@ -49,11 +49,14 @@ namespace InfoShare.Deployment.Business.Invokers
             }
             catch (Exception ex)
             {
-                _logger.WriteWarning("Operation fails. Rolling back all changes...");
-
-                for (var i = restorableCommands.Count - 1; i >= 0; i--)
+                if (restorableCommands.Count > 0)
                 {
-                    restorableCommands[i].Rollback();
+                    _logger.WriteWarning("Operation fails. Rolling back all changes...");
+
+                    for (var i = restorableCommands.Count - 1; i >= 0; i--)
+                    {
+                        restorableCommands[i].Rollback();
+                    }
                 }
 
                 throw;

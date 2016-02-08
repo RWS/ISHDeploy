@@ -3,6 +3,7 @@ using System.Management.Automation;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.LicenseCommands;
 using InfoShare.Deployment.Models;
+using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
@@ -23,9 +24,11 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		{
 			bool result = false;
 
-		    var command = new LicenseTestCommand(
+            var ishProject = IshProject ?? ISHProjectProvider.Instance.IshProject;
+
+            var command = new LicenseTestCommand(
 		        this,
-		        Path.Combine(IshProject.AuthorFolderPath, ISHPaths.LicenceFolderPath),
+		        Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LicenceFolderPath),
 		        Hostname,
 		        isValid =>
 		        {

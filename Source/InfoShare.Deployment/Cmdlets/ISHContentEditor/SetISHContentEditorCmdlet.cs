@@ -1,7 +1,8 @@
-﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHContentEditor;
+﻿using System.IO;
+using System.Management.Automation;
+using InfoShare.Deployment.Data;
+using InfoShare.Deployment.Data.Commands.FileCommands;
 using InfoShare.Deployment.Models;
-using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
@@ -23,8 +24,12 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 
 		public override void ExecuteCmdlet()
 		{
-			var cmdSet = new SetISHContentEditorCmdSet(this, IshProject ?? ISHProjectProvider.Instance.IshProject, LicensePath, Force);
-			cmdSet.Run();
+		    var command = new FileCopyCommand(this, 
+                LicensePath,
+		        Path.Combine(IshProject.AuthorFolderPath, ISHPaths.LicenceFolderPath), 
+                Force);
+
+            command.Execute();
 		}
 	}
 }

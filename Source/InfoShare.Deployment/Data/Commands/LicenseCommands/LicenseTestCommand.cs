@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Reflection;
 using InfoShare.Deployment.Data.Services;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Commands;
@@ -12,25 +10,38 @@ namespace InfoShare.Deployment.Data.Commands.LicenseCommands
 		public const string LICENSE_FILE_EXTENSION = ".txt";
 
 		private readonly Action<bool> _returnResult;
-		private readonly string _hostname;
-		private readonly LicenseManager _licenseManager;
+        private readonly ILogger _logger;
+        private readonly string _licenseFolderPath;
+        private readonly string _hostname;
+        private readonly IFileManager _fileManager;
 
-		public LicenseTestCommand(ILogger logger, string licenseFolderPath, string hostname, Action<bool> returnResult)
-		{
-			_hostname = hostname;
-			_licenseManager = new LicenseManager(logger, licenseFolderPath);
+        public LicenseTestCommand(ILogger logger, string licenseFolderPath, string hostname, Action<bool> returnResult)
+        {
+            _logger = logger;
+            _licenseFolderPath = licenseFolderPath;
+            _hostname = hostname;
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-			_returnResult = returnResult;
-		}
-
-		public void Backup()
-		{
+            _returnResult = returnResult;
 		}
 
 		public void Execute()
 		{
-			bool result = _licenseManager.IsValid(_hostname);
-			_returnResult?.Invoke(result);
-		}
+		    string filePath;
+		    if (_fileManager.TryToFindLicenseFile(_licenseFolderPath, _hostname, LICENSE_FILE_EXTENSION, out filePath))
+		    {
+		        var licenseContent = _fileManager.ReadAllText(filePath);
+                try
+                {
+                    var checker = new XopusLicenseChecker(licenseContent);
+                    _returnResult?.Invoke(checker.IsValid(_hostname));
+                }
+                catch (XopusLicenseException ex)
+                {
+                    _logger.WriteDebug($"License file: {filePath} is not valid. The following error occurred while checking: {ex.Message}");
+                    _returnResult?.Invoke(false);
+                }
+            }
+        }
 	}
 }

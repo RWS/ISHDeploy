@@ -7,10 +7,10 @@ namespace InfoShare.Deployment.Data.Services
         void Backup(string originalFilePath, string backupFilePath);
         void Copy(string sourceFilePath, string destFilePath, bool overwrite = false);
         void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false);
+        string ReadAllText(string filePath);
         void RestoreOriginal(string backupFilePath, string originalFilePath);
         XDocument Load(string filePath);
         void Save(string filePath, XDocument doc);
-
-		bool Exists(string filePath);
+        bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
 	}
 }

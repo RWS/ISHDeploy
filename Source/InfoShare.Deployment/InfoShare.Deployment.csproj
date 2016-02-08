@@ -45,8 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\CmdSets\ISHContentEditor\SetISHContentEditorCmdSet.cs" />
-    <Compile Include="Business\CmdSets\ISHContentEditor\TestISHContentEditorCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
     <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
@@ -59,8 +57,7 @@
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
     <Compile Include="Data\Commands\LicenseCommands\LicenseTestCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
-    <Compile Include="Data\Services\LicenseManager.cs" />
-    <Compile Include="Helpers\XopusLicenseChecker.cs" />
+    <Compile Include="Data\Services\XopusLicenseChecker.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
     <Compile Include="Data\Services\IFileManager.cs" />

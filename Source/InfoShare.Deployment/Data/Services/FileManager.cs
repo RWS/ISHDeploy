@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Linq;
 using InfoShare.Deployment.Interfaces;
 
@@ -21,12 +22,7 @@ namespace InfoShare.Deployment.Data.Services
         {
             File.Copy(sourceFilePath, destFilePath, overwrite);
         }
-
-		public bool Exists(string filePath)
-		{
-			return File.Exists(filePath);
-		}
-
+        
 		public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
         {
             Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
@@ -51,6 +47,27 @@ namespace InfoShare.Deployment.Data.Services
         public void Save(string filePath, XDocument doc)
         {
             doc.Save(filePath);
+        }
+
+        public string ReadAllText(string filePath)
+        {
+            return File.ReadAllText(filePath);
+        }
+
+        public bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath)
+        {
+            filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
+
+            if (File.Exists(filePath))
+                return true;
+
+            int i = hostName.IndexOf(".", StringComparison.InvariantCulture);
+            if (i > 0)
+            {
+                return TryToFindLicenseFile(licenseFolderPath, hostName.Substring(i + 1), licenseFileExtension, out filePath);
+            }
+            
+            return false;
         }
     }
 }

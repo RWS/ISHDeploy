@@ -1,7 +1,8 @@
-﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHContentEditor;
+﻿using System.IO;
+using System.Management.Automation;
+using InfoShare.Deployment.Data;
+using InfoShare.Deployment.Data.Commands.LicenseCommands;
 using InfoShare.Deployment.Models;
-using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
@@ -22,14 +23,18 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		{
 			bool result = false;
 
-			var cmdSet = new TestISHContentEditorCmdSet(this, IshProject ?? ISHProjectProvider.Instance.IshProject, Hostname,
-				isValid =>
-				{
-					result = isValid;
-				});
-			cmdSet.Run();
+		    var command = new LicenseTestCommand(
+		        this,
+		        Path.Combine(IshProject.AuthorFolderPath, ISHPaths.LicenceFolderPath),
+		        Hostname,
+		        isValid =>
+		        {
+		            result = isValid;
+		        });
 
-			WriteObject(result);
+            command.Execute();
+
+            WriteObject(result);
 		}
 	}
 }

@@ -43,7 +43,7 @@ namespace InfoShare.Deployment.Data.Services
 
             if (uncommentedNode.NodeType == XmlNodeType.Comment)
             {
-                _logger.WriteDetail($"{_filePath} contains already commented part within the pattern {commentPattern}");
+                _logger.WriteVerbose($"{_filePath} contains already commented part within the pattern {commentPattern}");
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace InfoShare.Deployment.Data.Services
 
             if (commentedNode.NodeType != XmlNodeType.Comment)
             {
-                _logger.WriteDetail($"{_filePath} contains already uncommented  part within the pattern {commentPattern}");
+                _logger.WriteVerbose($"{_filePath} contains already uncommented  part within the pattern {commentPattern}");
                 return;
             }
 

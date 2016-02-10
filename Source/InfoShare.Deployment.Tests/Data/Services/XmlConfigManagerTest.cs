@@ -74,7 +74,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_EnableXOPUS_if_dose_not_contain_commented_part_within_the_pattern()
+        public void UncommentNode_EnableXOPUS_dose_not_contain_commented_part_within_the_pattern()
         {
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
@@ -103,7 +103,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_EnableEnrich_if_dose_not_contain_commented_part_within_the_pattern()
+        public void UncommentNode_EnableEnrich_dose_not_contain_commented_part_within_the_pattern()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
@@ -123,6 +123,61 @@ namespace InfoShare.Deployment.Tests.Data.Services
                 );
 
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
+                Assert.IsNotNull);
+
+            new XmlConfigManager(Logger, testFilePath).UncommentNode(testCommentPattern);
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void UncommentNode_EnableXOPUS_does_not_contains_pattern()
+        {
+            string testButtonName = "testDoButton";
+            string testCommentPattern = "testCommentPattern";
+            string testFilePath = "DisabledXOPUS.xml";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR>" +
+                                        "<!--<BUTTON>" +
+                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
+                                        "</BUTTON> -->" +
+                                    "</BUTTONBAR>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+                    x =>
+                    {
+                        Assert.Fail("Saving should not happen");
+                    }
+                );
+
+            Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
+                Assert.IsNotNull);
+
+            new XmlConfigManager(Logger, testFilePath).UncommentNode(testCommentPattern);
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void UncommentNode_EnableEnrich_does_not_contains_pattern()
+        {
+            string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
+            string testCommentPattern = "Begin BlueLion integration";
+            var testFilePath = "DisabledEnrich.xml";
+
+            var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
+                                     "<javascript src='config.js' eval='false' phase='Xopus' />" +
+                                     "<javascript src='enhancements.js' eval='false' phase='Xopus' />" +
+                                     "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
+                                     "<!-- " + testCommentPattern + "--> " +
+                                     "</config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+                    x => Assert.Fail("Saving should not happen")
+                );
+
+            Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
             new XmlConfigManager(Logger, testFilePath).UncommentNode(testCommentPattern);
@@ -215,7 +270,33 @@ namespace InfoShare.Deployment.Tests.Data.Services
                     x => Assert.Fail("Saving should not happen")
                 );
 
-            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contains pattern {testCommentPattern}.")).Do(
+            Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
+                Assert.IsNotNull);
+
+            new XmlConfigManager(Logger, testFilePath).CommentNode(testCommentPattern);
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNode_DisableEnrich_does_not_contains_pattern()
+        {
+            string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
+            string testCommentPattern = "Begin BlueLion integration";
+            var testFilePath = "EnabledEnrich.xml";
+
+            var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
+                                      "<javascript src='config.js' eval='false' phase='Xopus' />" +
+                                      "<javascript src='enhancements.js' eval='false' phase='Xopus' />" +
+                                      "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
+                                      "<!-- " + testCommentPattern + "--> " +
+                                      "</config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+                    x => Assert.Fail("Saving should not happen")
+                );
+
+            Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
             new XmlConfigManager(Logger, testFilePath).CommentNode(testCommentPattern);

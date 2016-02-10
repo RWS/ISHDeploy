@@ -29,15 +29,16 @@ namespace InfoShare.Deployment.Data.Services
         {
             var doc = _fileManager.Load(_filePath);
             
-            var startPatternNode = doc.DescendantNodes()
-                .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
+            var startAndEndNodes = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
-            if (startPatternNode == null)
+            if (startAndEndNodes == null || startAndEndNodes.Count() != 2)
             {
-                _logger.WriteWarning($"{_filePath} does not contains pattern {commentPattern}.");
+                _logger.WriteWarning($"{_filePath} does not contains start or end pattern {commentPattern}.");
                 return;
             }
 
+            var startPatternNode = startAndEndNodes.First();
             var uncommentedNode = startPatternNode.NextNode;
             var endPatternNode = uncommentedNode.NextNode;
 

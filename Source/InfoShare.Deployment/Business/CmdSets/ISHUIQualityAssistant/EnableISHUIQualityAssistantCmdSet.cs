@@ -11,10 +11,7 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant
     {
         private readonly CommandInvoker _invoker;
 
-		private readonly string[] _uncommentPatterns =
-		{
-			CommentPatterns.EnrichIntegration 
-		};
+		private readonly string[] _uncommentPatterns = { CommentPatterns.EnrichIntegration };
 
         public EnableISHUIQualityAssistantCmdSet(ILogger logger, ISHProject ishProject)
         {

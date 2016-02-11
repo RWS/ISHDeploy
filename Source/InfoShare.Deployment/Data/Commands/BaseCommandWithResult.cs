@@ -5,11 +5,11 @@ namespace InfoShare.Deployment.Data.Commands
 {
     public abstract class BaseCommandWithResult<TResult> : BaseCommand
     {
-        protected readonly Action<TResult> GetResult; 
+        protected readonly Action<TResult> ReturnResult; 
 
-        protected BaseCommandWithResult(ILogger logger, Action<TResult> getResult) : base(logger)
+        protected BaseCommandWithResult(ILogger logger, Action<TResult> returnResult) : base(logger)
         {
-            GetResult = getResult;
+            ReturnResult = returnResult;
         }
 
         protected abstract TResult ExecuteWithResult();
@@ -18,7 +18,7 @@ namespace InfoShare.Deployment.Data.Commands
         {
             var result = ExecuteWithResult();
 
-            GetResult(result);
+            ReturnResult(result);
         }
     }
 }

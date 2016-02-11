@@ -9,6 +9,14 @@ namespace InfoShare.Deployment.Data.Services
 {
     public class XmlConfigManager : IXmlConfigManager
     {
+        #region Private constants
+
+        private const string InputConfigParamXmlPath = "inputconfig/param";
+        private const string NameXmlAttr = "name";
+        private const string CurrentValueXmlNode = "currentvalue";
+
+        #endregion
+
         private readonly ILogger _logger;
         private readonly IFileManager _fileManager;
 
@@ -23,12 +31,12 @@ namespace InfoShare.Deployment.Data.Services
             var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
 
-            var paramElements = doc.XPathSelectElements("inputconfig/param");
+            var paramElements = doc.XPathSelectElements(InputConfigParamXmlPath);
 
             foreach (var paramElement in paramElements)
             {
-                var name = paramElement.Attribute(XName.Get("name")).Value;
-                var currentValue = paramElement.XPathSelectElement("currentvalue").Value;
+                var name = paramElement.Attribute(XName.Get(NameXmlAttr)).Value;
+                var currentValue = paramElement.XPathSelectElement(CurrentValueXmlNode).Value;
 
                 dictionary.Add(name, currentValue);
         }

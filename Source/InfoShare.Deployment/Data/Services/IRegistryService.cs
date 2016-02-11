@@ -6,7 +6,7 @@ namespace InfoShare.Deployment.Data.Services
 {
     public interface IRegistryService
     {
-        IEnumerable<RegistryKey> GetInstalledProjectsKeys();
+        IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null);
 
         string GetInstallParamFilePath(RegistryKey projectRegKey);
 

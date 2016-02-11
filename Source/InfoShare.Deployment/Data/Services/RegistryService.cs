@@ -28,31 +28,33 @@ namespace InfoShare.Deployment.Data.Services
             _logger = logger;
         }
 
-        public IEnumerable<RegistryKey> GetInstalledProjectsKeys()
+        public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null)
         {
+            var installedProjectsKeys = new List<RegistryKey>();
             var projectBaseRegKey = GetProjectBaseRegKey();
 
             if (projectBaseRegKey == null || projectBaseRegKey.SubKeyCount == 0)
             {
-                _logger.WriteVerbose("None project instances were found in the registry");
-                return null;
+                _logger.WriteDebug("None project base registry keys were found on the system.");
+                return installedProjectsKeys;
             }
 
             string[] projectsKeyNames = projectBaseRegKey.GetSubKeyNames();
-            var installedProjectsKeys = new List<RegistryKey>();
 
             foreach (var projectName in projectsKeyNames)
             {
-                if (projectName != CoreRegName)
+                if (projectName == CoreRegName || (expectedSuffix != null && expectedSuffix != GetProjectSuffix(projectName) ))
                 {
-                    var projRegKey = projectBaseRegKey.OpenSubKey(projectName);
-                    
-                    var currentValue = projRegKey?.GetValue(CurrentRegName, string.Empty).ToString();
+                    continue;
+                }
 
-                    if (!string.IsNullOrWhiteSpace(currentValue))
-                    {
-                        installedProjectsKeys.Add(projRegKey);
-                    }
+                var projRegKey = projectBaseRegKey.OpenSubKey(projectName);
+                    
+                var currentValue = projRegKey?.GetValue(CurrentRegName, string.Empty).ToString();
+
+                if (!string.IsNullOrWhiteSpace(currentValue))
+                {
+                    installedProjectsKeys.Add(projRegKey);
                 }
             }
 
@@ -122,6 +124,17 @@ namespace InfoShare.Deployment.Data.Services
             }
             
             return installToolRegKey?.OpenSubKey(ProjectBaseRegName);
+        }
+
+        private string GetProjectSuffix(string projectName)
+        {
+            if (projectName.Length < 9)
+            {
+                _logger.WriteWarning($"Unexpected project name in the registry: {projectName}");
+                return null;
+            }
+
+            return projectName.Substring(9);
         }
     }
 }

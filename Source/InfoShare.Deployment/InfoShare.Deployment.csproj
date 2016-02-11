@@ -69,6 +69,8 @@
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
     <Compile Include="Data\Services\IRegistryService.cs" />
     <Compile Include="Data\Services\RegistryService.cs" />
+    <Compile Include="Exceptions\CorruptedInstallationException.cs" />
+    <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
     <Compile Include="Data\Services\IFileManager.cs" />

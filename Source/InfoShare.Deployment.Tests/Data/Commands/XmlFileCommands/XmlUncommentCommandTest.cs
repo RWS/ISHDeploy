@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -32,11 +33,12 @@ namespace InfoShare.Deployment.Tests.Data.Commands.XmlFileCommands
                         Assert.IsNotNull(element, "Uncommented node should NOT be null");
                     }
                 );
-
+            
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
             new XmlUncommentCommand(Logger, testFilePath, testCommentPattern).Execute();
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         [TestMethod]

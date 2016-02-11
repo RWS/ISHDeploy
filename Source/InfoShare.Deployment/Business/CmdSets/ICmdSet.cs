@@ -4,4 +4,9 @@
     {
         void Run();
     }
+
+    public interface ICmdSet<TResult>
+    {
+        TResult Run();
+    }
 }

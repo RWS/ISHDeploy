@@ -1,4 +1,6 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Collections.Generic;
+using System.Management.Automation;
 using InfoShare.Deployment.Models;
 using InfoShare.Deployment.Providers;
 
@@ -18,11 +20,7 @@ namespace InfoShare.Deployment.Cmdlets.Initialization
 
         public override void ExecuteCmdlet()
         {
-            var ishProject = new ISHProject
-            {
-                Suffix = Suffix,
-                InstallPath = InstallPath
-            };
+            var ishProject = new ISHProject(new Dictionary<string, string>(), new Version());
 
             ISHProjectProvider.Instance.InitializeIshProject(ishProject);
         }

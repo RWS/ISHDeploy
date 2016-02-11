@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Services;
@@ -18,10 +20,10 @@ namespace InfoShare.Deployment.Tests
         public const string XPathCheckOutButton = "BUTTONBAR/BUTTON/INPUT[@NAME='checkOut']";
         public const string XPathCheckInButton = "BUTTONBAR/BUTTON/INPUT[@NAME='checkIn']";
 
-        public BaseTest()
+        protected BaseTest()
         {
             ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(Logger));
-            IshProject = new ISHProject {InstallPath = @".\TestData"};
+            IshProject = new ISHProject(new Dictionary<string,string> { { "webpath", @".\TestData" } }, new Version());
         }
 
         public string GetPathToFile(string relativeFilePath)

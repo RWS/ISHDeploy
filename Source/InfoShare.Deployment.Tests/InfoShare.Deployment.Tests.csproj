@@ -60,7 +60,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
-    <Compile Include="Cmdlets\Info\GetVersionTest.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdletTest.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdletTest.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdletTest.cs" />

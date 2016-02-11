@@ -2,9 +2,7 @@
 {
     public interface IXmlConfigManager
     {
-        void Backup();
-        void CommentNode(string commentPattern);
-        void UncommentNode(string commentPattern);
-        void RestoreOriginal();
+        void CommentNode(string filePath, string commentPattern);
+        void UncommentNode(string filePath, string commentPattern);
     }
 }

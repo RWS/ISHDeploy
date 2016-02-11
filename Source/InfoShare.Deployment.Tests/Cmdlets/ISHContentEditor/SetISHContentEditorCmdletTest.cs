@@ -36,7 +36,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             var cmdlet = new SetISHContentEditorCmdlet
             {
-                LicensePath = $"{this.IshProject.InstallPath}\\127.0.0.1.txt",
+                LicensePath = $"{this.IshProject.WebPath}\\127.0.0.1.txt",
                 IshProject = this.IshProject
             };
 
@@ -53,7 +53,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             var cmdlet = new SetISHContentEditorCmdlet
             {
-                LicensePath = $"{this.IshProject.InstallPath}\\127.0.0.1.txt",
+                LicensePath = $"{this.IshProject.WebPath}\\127.0.0.1.txt",
                 Force = true,
                 IshProject = this.IshProject
             };
@@ -78,7 +78,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             var cmdlet = new SetISHContentEditorCmdlet
             {
-                LicensePath = $"{this.IshProject.InstallPath}\\127.0.0.1.txt",
+                LicensePath = $"{this.IshProject.WebPath}\\127.0.0.1.txt",
                 IshProject = this.IshProject
             };
 
@@ -97,7 +97,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             var cmdlet = new SetISHContentEditorCmdlet
             {
-                LicensePath = $"{this.IshProject.InstallPath}\\127.0.0.1.txt",
+                LicensePath = $"{this.IshProject.WebPath}\\127.0.0.1.txt",
                 Force = true,
                 IshProject = this.IshProject
             };
@@ -116,7 +116,7 @@ namespace InfoShare.Deployment.Tests.Cmdlets.ISHContentEditor
         {
             var cmdlet = new SetISHContentEditorCmdlet
             {
-                LicensePath = $"{this.IshProject.InstallPath}\\127.0.0.1.txt",
+                LicensePath = $"{this.IshProject.WebPath}\\127.0.0.1.txt",
                 Force = true,
                 IshProject = this.IshProject
             };

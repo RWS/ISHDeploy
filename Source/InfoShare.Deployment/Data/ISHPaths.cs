@@ -1,10 +1,22 @@
-﻿namespace InfoShare.Deployment.Data
+﻿using InfoShare.Deployment.Models;
+
+namespace InfoShare.Deployment.Data
 {
     public static class ISHPaths
     {
+        #region Content Manager
+
         public const string FolderButtonbar = @"Author\ASP\XSL\FolderButtonbar.xml";
         public const string InboxButtonBar = @"Author\ASP\XSL\InboxButtonBar.xml";
         public const string LanguageDocumentButtonBar = @"Author\ASP\XSL\LanguageDocumentButtonbar.xml";
         public const string LicenceFolderPath = @"Author\ASP\Editors\Xopus\license\";
-	}
+
+        #endregion
+
+        #region InstallTool
+
+        public const string InputParametersFile = "inputparameters.xml";
+
+        #endregion
+    }
 }

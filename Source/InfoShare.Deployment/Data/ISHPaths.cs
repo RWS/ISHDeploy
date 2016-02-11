@@ -6,5 +6,11 @@
         public const string InboxButtonBar = @"Author\ASP\XSL\InboxButtonBar.xml";
         public const string LanguageDocumentButtonBar = @"Author\ASP\XSL\LanguageDocumentButtonbar.xml";
         public const string LicenceFolderPath = @"Author\ASP\Editors\Xopus\license\";
-	}
+
+        #region ISHExternalPreview
+
+        public const string WebConfig = @"Author\ASP\Web.config";
+
+        #endregion
+    }
 }

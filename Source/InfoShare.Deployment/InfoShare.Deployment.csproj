@@ -47,17 +47,22 @@
   <ItemGroup>
     <Compile Include="Business\CmdSets\ISHContentEditor\SetISHContentEditorCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHContentEditor\TestISHContentEditorCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHExternalPreview\DisableISHExternalPreviewCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHExternalPreview\EnableISHExternalPreviewCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Info\GetVersion.cs" />
     <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHExternalPreview\DisableISHExternalPreviewCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
     <Compile Include="Data\Commands\FileCommands\FileTestCommand.cs" />
+    <Compile Include="Data\Commands\XmlFileCommands\XmlSetAttributeCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />

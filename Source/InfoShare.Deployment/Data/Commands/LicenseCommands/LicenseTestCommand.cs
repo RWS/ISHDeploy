@@ -39,7 +39,7 @@ namespace InfoShare.Deployment.Data.Commands.LicenseCommands
                 }
                 catch (XopusLicenseException ex)
                 {
-                    _logger.WriteVerbose($"The license file {filePath} is not valid. The following error occurred while checking:\n{ex.Message}");
+                    _logger.WriteWarning($"The license file {filePath} is not valid. The following error occurred while checking:\n{ex.Message}");
                     _returnResult?.Invoke(false);
                 }
             }

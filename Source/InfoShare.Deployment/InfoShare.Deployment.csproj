@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Business\CmdSets\ISHContentEditor\SetISHContentEditorCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHContentEditor\TestISHContentEditorCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHDeployment\GetISHDeploymentCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
     <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
@@ -57,6 +59,8 @@
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdlet.cs" />
     <Compile Include="Data\Commands\BaseCommand.cs" />
     <Compile Include="Data\Commands\BaseCommandWithResult.cs" />
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />

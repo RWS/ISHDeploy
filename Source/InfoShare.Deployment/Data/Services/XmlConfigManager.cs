@@ -31,7 +31,7 @@ namespace InfoShare.Deployment.Data.Services
                 var currentValue = paramElement.XPathSelectElement("currentvalue").Value;
 
                 dictionary.Add(name, currentValue);
-            }
+        }
 
             return dictionary;
         }
@@ -40,15 +40,16 @@ namespace InfoShare.Deployment.Data.Services
         {
             var doc = _fileManager.Load(filePath);
             
-            var startPatternNode = doc.DescendantNodes()
-                .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
+            var startAndEndNodes = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
 
-            if (startPatternNode == null)
+            if (startAndEndNodes == null || startAndEndNodes.Count() != 2)
             {
-                _logger.WriteWarning($"{filePath} does not contains pattern {commentPattern}.");
+                _logger.WriteWarning($"{filePath} does not contains start or end pattern {commentPattern}.");
                 return;
             }
 
+            var startPatternNode = startAndEndNodes.First();
             var uncommentedNode = startPatternNode.NextNode;
             var endPatternNode = uncommentedNode.NextNode;
 
@@ -58,7 +59,7 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            if (!endPatternNode.ToString().Contains(commentPattern))
+            if (endPatternNode == null || !endPatternNode.ToString().Contains(commentPattern))
             {
                 _logger.WriteWarning($"{filePath} does not contain ending pattern '{commentPattern}' where it's expected.");
                 return;
@@ -86,25 +87,49 @@ namespace InfoShare.Deployment.Data.Services
                 return;
             }
 
-            var commentedNode = startPatternNode.NextNode;
-
-            if (commentedNode.NodeType != XmlNodeType.Comment)
+            XElement uncommentedNode;
+            if (TryParseCommentedNode(startPatternNode, out uncommentedNode))
             {
-                _logger.WriteVerbose($"{filePath} contains already uncommented  part within the pattern {commentPattern}");
+                startPatternNode.ReplaceWith(uncommentedNode);
+            }
+            else if (startPatternNode.NextNode != null && startPatternNode.NextNode.NodeType == XmlNodeType.Comment && TryParseCommentedNode(startPatternNode.NextNode, out uncommentedNode))
+            {
+                startPatternNode.NextNode.AddBeforeSelf(new XComment(commentPattern));
+                startPatternNode.NextNode.ReplaceWith(uncommentedNode);
+                startPatternNode.NextNode.AddAfterSelf(new XComment(commentPattern));
+            }
+            else
+            {
+                _logger.WriteVerbose($"{filePath} dose not contain commented part within the pattern {commentPattern}");
                 return;
             }
 
+            _fileManager.Save(filePath, doc);
+        }
+
+        private bool TryParseCommentedNode(XNode commentedNode, out XElement uncommentedNode)
+        {
+            uncommentedNode = null;
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
             var endIndex = commentText.LastIndexOf('>');
 
+            if (startIndex < 0 || endIndex < 0)
+            {
+                return false;
+            }
+
             commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
 
-            var uncommentedNode = XElement.Parse(commentText);
-
-            commentedNode.ReplaceWith(uncommentedNode);
-
-            _fileManager.Save(filePath, doc);
+            try
+            {
+                uncommentedNode = XElement.Parse(commentText);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

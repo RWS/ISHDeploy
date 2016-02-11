@@ -47,7 +47,7 @@ namespace InfoShare.Deployment.Business.Invokers
                     _logger.WriteProgress(_activityDescription, $"Executed {i} of {_commands.Count} commands");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _logger.WriteWarning("Operation fails. Rolling back all changes...");
 

@@ -14,7 +14,7 @@ namespace InfoShare.Deployment.Cmdlets
 
         protected BaseCmdlet()
         {
-            ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(this));
+            ObjectFactory.SetInstance<IFileManager>(new FileManager(this));
         }
 
         public abstract void ExecuteCmdlet();

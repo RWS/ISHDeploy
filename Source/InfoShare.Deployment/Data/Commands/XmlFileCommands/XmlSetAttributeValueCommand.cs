@@ -4,22 +4,26 @@ using InfoShare.Deployment.Interfaces.Commands;
 
 namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {
-    public class XmlSetAttributeCommand : ICommand
+    public class XmlSetAttributeValueCommand : ICommand
     {
+        private readonly string _filePath;
         private readonly string _xpath;
+        private readonly string _attributeName;
         private readonly string _value;
         private readonly IXmlConfigManager _xmlConfigManager;
 
-        public XmlSetAttributeCommand(ILogger logger, string filePath, string xpath, string value)
+        public XmlSetAttributeValueCommand(ILogger logger, string filePath, string xpath, string attributeName, string value)
         {
+            _filePath = filePath;
             _xpath = xpath;
+            _attributeName = attributeName;
             _value = value;
             _xmlConfigManager = new XmlConfigManager(logger, filePath);
         }
         
         public void Execute()
         {
-            _xmlConfigManager.UncommentNode(_xpath);
+            _xmlConfigManager.SetAttributeValue(_filePath, _xpath, _attributeName, _value);
         }
     }
 }

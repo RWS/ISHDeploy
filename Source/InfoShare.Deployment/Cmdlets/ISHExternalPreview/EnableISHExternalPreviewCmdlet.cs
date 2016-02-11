@@ -5,7 +5,7 @@ using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 {
-    [Cmdlet(VerbsLifecycle.Disable, "ISHUIContentEditor", SupportsShouldProcess = false)]
+    [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview", SupportsShouldProcess = false)]
     public sealed class EnableISHExternalPreviewCmdlet : BaseCmdlet
     {
         [Parameter(Mandatory = false, Position = 0)]
@@ -14,7 +14,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         public ISHProject IshProject { get; set; }
 
         [Parameter(Mandatory = false, Position = 1)]
-        [Alias("proj")]
+        [Alias("extrId")]
         [ValidateNotNullOrEmpty]
         public string ExternalId { get; set; }
 

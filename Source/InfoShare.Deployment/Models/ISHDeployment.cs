@@ -4,9 +4,9 @@ using System.IO;
 
 namespace InfoShare.Deployment.Models
 {
-    public class ISHProject
+    public class ISHDeployment
     {
-        public ISHProject(Dictionary<string, string> parameters, Version version)
+        public ISHDeployment(Dictionary<string, string> parameters, Version version)
         {
             InstallParams = parameters;
             Version = version;

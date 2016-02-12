@@ -1,6 +1,5 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.CmdSets.ISHExternalPreview;
-using InfoShare.Deployment.Models;
 using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
@@ -11,7 +10,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         [Parameter(Mandatory = false, Position = 0)]
         [Alias("proj")]
         [ValidateNotNullOrEmpty]
-        public ISHProject IshProject { get; set; }
+        public Models.ISHDeployment ISHDeployment { get; set; }
 
         [Parameter(Mandatory = false, Position = 1)]
         [Alias("extrId")]
@@ -21,7 +20,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         public override void ExecuteCmdlet()
         {
             // Calling the set of command with entry parameters
-            var cmdSet = new EnableISHExternalPreviewCmdSet(this, IshProject ?? ISHProjectProvider.Instance.IshProject, ExternalId);
+            var cmdSet = new EnableISHExternalPreviewCmdSet(this, ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment, ExternalId);
 
             cmdSet.Run();
         }

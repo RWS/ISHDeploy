@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
@@ -16,7 +17,7 @@ namespace InfoShare.Deployment.Cmdlets
         {
             ObjectFactory.SetInstance<IFileManager>(new FileManager(this));
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(this));
-            ObjectFactory.SetInstance<IRegistryService>(new RegistryService(this));
+            ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(this));
         }
 
         public abstract void ExecuteCmdlet();

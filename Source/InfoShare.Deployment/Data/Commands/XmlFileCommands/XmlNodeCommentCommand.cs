@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
-using InfoShare.Deployment.Interfaces.Commands;
 
 namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {

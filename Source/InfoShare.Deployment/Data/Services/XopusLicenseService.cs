@@ -17,7 +17,7 @@ namespace  InfoShare.Deployment.Data.Services
 	/// <summary>
 	/// Summary description for License.
 	/// </summary>
-	public class XopusLicenseChecker
+	public class XopusLicenseService
     {
         const string LICENSE_HEADER = "4242";
         const string LICENSE_VERSION = "01";
@@ -37,7 +37,7 @@ namespace  InfoShare.Deployment.Data.Services
         public int revision;
         public string domain;
 
-        public XopusLicenseChecker(string inputString)
+        public XopusLicenseService(string inputString)
         {
             // Get the individual parts of the input string.
             parseInputString(inputString);

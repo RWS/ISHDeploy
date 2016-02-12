@@ -1,4 +1,4 @@
-﻿using InfoShare.Deployment.Data.Services;
+﻿using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Commands;
 

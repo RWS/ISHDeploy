@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 
-namespace InfoShare.Deployment.Data.Services
+namespace InfoShare.Deployment.Data.Managers
 {
     public class XmlConfigManager : IXmlConfigManager
     {

@@ -4,7 +4,7 @@ namespace InfoShare.Deployment.Providers
 {
     public class ISHProjectProvider
     {
-        private ISHProject _ishProject;
+        private ISHDeployment _ishDeployment;
 
         static ISHProjectProvider()
         {
@@ -13,11 +13,11 @@ namespace InfoShare.Deployment.Providers
 
         public static ISHProjectProvider Instance { get; }
 
-        public void InitializeIshProject(ISHProject ishProject)
+        public void InitializeIshProject(ISHDeployment ishDeployment)
         {
-            _ishProject = ishProject;
+            _ishDeployment = ishDeployment;
         }
 
-        public ISHProject IshProject => _ishProject;
+        public ISHDeployment ISHDeployment => _ishDeployment;
     }
 }

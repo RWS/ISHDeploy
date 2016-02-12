@@ -14,8 +14,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 
         public override void ExecuteCmdlet()
         {
-            // Calling the set of command with entry parameters
-            var cmdSet = new EnableISHUIQualityAssistantCmdSet(this, ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
+            var cmdSet = new EnableISHUIQualityAssistantCmdSet(this, ishDeployment.AuthorFolderPath);
 
 			cmdSet.Run();
         }

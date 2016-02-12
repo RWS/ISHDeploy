@@ -14,8 +14,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 
         public override void ExecuteCmdlet()
         {
-            // Calling the set of command with entry parameters
-            var cmdSet = new DisableISHUIContentEditorCmdSet(this, ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
+            var cmdSet = new DisableISHUIContentEditorCmdSet(this, ishDeployment.AuthorFolderPath);
 
             cmdSet.Run();
         }

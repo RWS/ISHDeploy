@@ -18,11 +18,11 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
         {
             _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
             
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), _uncommentPatternsExt));
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _uncommentPatterns));
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _commentPatterns));
-            _invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _uncommentPatterns));
-            _invoker.AddCommand(new XmlCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _commentPatterns));
+            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.FolderButtonbar), _uncommentPatternsExt));
+            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _uncommentPatterns));
+            _invoker.AddCommand(new XmlBlockCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.InboxButtonBar), _commentPatterns));
+            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _uncommentPatterns));
+            _invoker.AddCommand(new XmlBlockCommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.LanguageDocumentButtonBar), _commentPatterns));
         }
 
         public void Run()

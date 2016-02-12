@@ -6,14 +6,10 @@ Import-Module "C:\Stash Projects\Infoshare Deployment\Source\InfoShare.Deploymen
 
 #Pause
 
-$info = @{
-  "AuthorFolderPath" = "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web\Websites\Trisoft.InfoShare.Web";
-  "InstallPath" = "F:\InfoShare";
-  "Suffix" = ''
-}
+Set-ISHProject "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web" sites
 
-Set-ISHContentEditor -IshProject $info -LicensePath "C:\temp\localhost.txt"
+#Set-ISHContentEditor -LicensePath "C:\temp\localhost2.txt"
 
 #Pause
 
-#Test-ISHContentEditor
+Test-ISHContentEditor -Hostname "mecdevapp01.global.sdl.corp"

@@ -45,8 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\CmdSets\ISHContentEditor\SetISHContentEditorCmdSet.cs" />
-    <Compile Include="Business\CmdSets\ISHContentEditor\TestISHContentEditorCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHDeployment\GetISHDeploymentCmdSet.cs" />
@@ -68,8 +66,8 @@
     <Compile Include="Data\Commands\BaseCommand.cs" />
     <Compile Include="Data\Commands\BaseCommandWithResult.cs" />
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
-    <Compile Include="Data\Commands\FileCommands\FileTestCommand.cs" />
     <Compile Include="Data\Commands\ISHProjectCommands\GetISHProjectsCommand.cs" />
+    <Compile Include="Data\Commands\LicenseCommands\LicenseTestCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlNodeCommentCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlNodeUncommentCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlSetAttributeValueCommand.cs" />
@@ -78,6 +76,7 @@
     <Compile Include="Data\Services\RegistryService.cs" />
     <Compile Include="Exceptions\CorruptedInstallationException.cs" />
     <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
+    <Compile Include="Data\Services\XopusLicenseChecker.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
     <Compile Include="Data\Services\IFileManager.cs" />

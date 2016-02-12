@@ -17,7 +17,7 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
             _filePath = filePath;
             _xpaths = xpaths;
 
-            _xmlConfigManager = new XmlConfigManager(logger);
+            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
         public XmlNodeCommentCommand(ILogger logger, string filePath, string xpath)

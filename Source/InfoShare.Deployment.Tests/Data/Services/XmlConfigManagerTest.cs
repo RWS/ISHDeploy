@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using InfoShare.Deployment.Business.CmdSets.ISHExternalPreview;
 using InfoShare.Deployment.Data.Services;
-using InfoShare.Deployment.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
@@ -12,6 +10,14 @@ namespace InfoShare.Deployment.Tests.Data.Services
     [TestClass]
     public class XmlConfigManagerTest : BaseUnitTest
     {
+        private IXmlConfigManager _xmlConfigManager;
+
+        [TestInitialize]
+        public void TestInitializer()
+        {
+            _xmlConfigManager = new XmlConfigManager(Logger);
+        }
+
         #region UncommentNode
         [TestMethod]
         [TestCategory("Data handling")]
@@ -41,7 +47,8 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         [TestMethod]
@@ -64,7 +71,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             FileManager.When(x => x.Save(testFilePath, doc)).Do(
                     x =>
                     {
-                        var element = GetXElementByXPath(doc, $"*/javascript[@src='{testSrc}']");
+                        var element = GetXElementByXPath(doc, $"*/*[local-name()='javascript'][@src='{testSrc}']");
                         Assert.IsNotNull(element, "Uncommented node should NOT be null");
                     }
                 );
@@ -73,7 +80,8 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         [TestMethod]
@@ -102,7 +110,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -127,7 +135,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -156,7 +164,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -182,7 +190,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
+           _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
         }
 
         #endregion UncommentNode
@@ -216,7 +224,8 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
 
@@ -225,30 +234,30 @@ namespace InfoShare.Deployment.Tests.Data.Services
         public void CommentNode_DisableEnrich()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
-            string testCommentPattern = "<javascript src=\"" + testSrc + "\"";
-            string testXPath= "config/javascript[@src='" + testSrc + "']";
+            string testXPath= "*/*[local-name()='javascript'][@src='" + testSrc + "']";
             var testFilePath = "EnabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
                                       "<javascript src='enhancements.js' eval='false' phase='Xopus' />" +
-                                      "<javascript src=\"" + testSrc + "\" eval=\"false\" phase=\"Xopus\" />" +
+                                      "<javascript src='" + testSrc + "' eval=\"false\" phase=\"Xopus\" />" +
                                       "</config>");
 
             FileManager.Load(testFilePath).Returns(doc);
             FileManager.When(x => x.Save(testFilePath, doc)).Do(
                     x =>
                     {
-                        var element = GetXElementByXPath(doc, $"*/javascript[@src='{testSrc}']");
+                        var element = GetXElementByXPath(doc, testXPath);
                         Assert.IsNull(element, "Commented node should be null");
                     }
                 );
 
 
-            Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
+            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger).CommentNode(testFilePath, testXPath);
+           _xmlConfigManager.CommentNode(testFilePath, testXPath);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         [TestMethod]
@@ -274,16 +283,15 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void CommentNode_DisableEnrich_does_not_contain_uncommented_node_within_the_pattern()
+        public void CommentNode_DisableEnrich_does_not_contain_uncommented_node_within_the_xpath()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
-            string testCommentPattern = "<javascript src=\"123";
-            string testXPath = "config/javascript[@src='" + testSrc + "']";
+            string testXPath = "*/*[local-name()='javascript'][@src='testtest']";
             var testFilePath = "EnabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
@@ -297,10 +305,10 @@ namespace InfoShare.Deployment.Tests.Data.Services
                     x => Assert.Fail("Saving should not happen")
                 );
 
-            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the pattern {testCommentPattern}.")).Do(
+            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).CommentNode(testFilePath, testXPath);
+           _xmlConfigManager.CommentNode(testFilePath, testXPath);
         }
 
         [TestMethod]
@@ -326,7 +334,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} contains already commented part within the pattern {testCommentPattern}")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -352,7 +360,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain ending pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
+           _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
         }
         #endregion CommentNode
 
@@ -387,7 +395,8 @@ namespace InfoShare.Deployment.Tests.Data.Services
                         }
                     );
 
-            new XmlConfigManager(Logger).SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
+           _xmlConfigManager.SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         #endregion

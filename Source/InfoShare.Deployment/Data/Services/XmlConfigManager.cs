@@ -80,9 +80,16 @@ namespace InfoShare.Deployment.Data.Services
         }
 
         public void CommentNode(string filePath, string xpath)
-            {
-
+        {
             var doc = _fileManager.Load(filePath);
+
+            //var navigator = doc.Root.CreateNavigator();
+            ////var namespaces = navigator.GetNamespacesInScope(XmlNamespaceScope.Local);
+            //var namespaceManager = new XmlNamespaceManager(new NameTable());
+            ////foreach (var ns in namespaces)
+            ////{
+            //    namespaceManager.AddNamespace("xmlns", "http://www.xopus.com/xmlns/config");
+            ////}
 
             var uncommentedNode = doc.XPathSelectElement(xpath);
 
@@ -100,7 +107,7 @@ namespace InfoShare.Deployment.Data.Services
 
             _fileManager.Save(filePath, doc);
         }
-
+        
         public void UncommentBlock(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);

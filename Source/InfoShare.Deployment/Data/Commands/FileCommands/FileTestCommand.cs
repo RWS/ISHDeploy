@@ -9,7 +9,6 @@ namespace InfoShare.Deployment.Data.Commands.FileCommands
     {
 		public FileTestCommand(ILogger logger, string filePath)
         {
-			//_xmlConfigManager = new XmlConfigManager(logger, filePath);
 			//_returnResult = returnResult;
 		}
 

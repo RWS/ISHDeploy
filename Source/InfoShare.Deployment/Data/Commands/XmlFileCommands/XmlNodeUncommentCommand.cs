@@ -17,7 +17,7 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
             _filePath = filePath;
             _searchPatterns = searchPatterns;
 
-            _xmlConfigManager = new XmlConfigManager(logger);
+            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
         public XmlNodeUncommentCommand(ILogger logger, string filePath, string searchPattern)

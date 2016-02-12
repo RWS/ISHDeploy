@@ -1,10 +1,11 @@
-﻿namespace InfoShare.Deployment.Data.Services
+﻿using System.Collections.Generic;
+
+namespace InfoShare.Deployment.Data.Services
 {
     public interface IXmlConfigManager
     {
-        void Backup();
-        void CommentNode(string commentPattern);
-        void UncommentNode(string commentPattern);
-        void RestoreOriginal();
+        Dictionary<string, string> GetAllInstallParamsValues(string filePath);
+        void CommentNode(string filePath, string commentPattern);
+        void UncommentNode(string filePath, string commentPattern);
     }
 }

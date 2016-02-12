@@ -14,7 +14,9 @@ namespace InfoShare.Deployment.Cmdlets
 
         protected BaseCmdlet()
         {
-            ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(this));
+            ObjectFactory.SetInstance<IFileManager>(new FileManager(this));
+            ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(this));
+            ObjectFactory.SetInstance<IRegistryService>(new RegistryService(this));
         }
 
         public abstract void ExecuteCmdlet();

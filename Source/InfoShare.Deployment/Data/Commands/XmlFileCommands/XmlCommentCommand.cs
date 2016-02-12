@@ -5,16 +5,19 @@ using InfoShare.Deployment.Interfaces.Commands;
 
 namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {
-    public class XmlCommentCommand : ICommand, IRestorable
+    public class XmlCommentCommand : BaseCommand, IRestorable
     {
         private readonly IEnumerable<string> _commentPatterns;
         private readonly IXmlConfigManager _xmlConfigManager;
+        private readonly string _filePath;
 
         public XmlCommentCommand(ILogger logger, string filePath, IEnumerable<string> commentPatterns)
+            : base(logger)
         {
             _commentPatterns = commentPatterns;
+            _filePath = filePath;
 
-            _xmlConfigManager = new XmlConfigManager(logger, filePath);
+            _xmlConfigManager = new XmlConfigManager(logger);
         }
 
         public XmlCommentCommand(ILogger logger, string filePath, string commentPattern)
@@ -23,20 +26,18 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 
         public void Backup()
         {
-            _xmlConfigManager.Backup();
         }
 
-        public void Execute()
+        public override void Execute()
         {
             foreach (var pattern in _commentPatterns)
             {
-                _xmlConfigManager.CommentNode(pattern);
+                _xmlConfigManager.CommentNode(_filePath, pattern);
             }
         }
 
         public void Rollback()
         {
-            _xmlConfigManager.RestoreOriginal();
         }
     }
 }

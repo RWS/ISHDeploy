@@ -22,10 +22,15 @@ namespace InfoShare.Deployment.Data.Services
         {
             File.Copy(sourceFilePath, destFilePath, overwrite);
         }
-        
-		public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
+
+        public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
         {
             Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
+        }
+
+        public bool Exists(string path)
+        {
+            return File.Exists(path);
         }
 
         public void RestoreOriginal(string backupFilePath, string originalFilePath)

@@ -45,18 +45,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\CmdSets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdSet.cs" />
+    <Compile Include="Business\CmdSets\ISHDeployment\GetISHDeploymentCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
-    <Compile Include="Cmdlets\Info\GetVersion.cs" />
     <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Business\CmdSets\ICmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHUIContentEditor\DisableISHUIContentEditorCmdSet.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdlet.cs" />
+    <Compile Include="Data\Commands\BaseCommand.cs" />
+    <Compile Include="Data\Commands\BaseCommandWithResult.cs" />
     <Compile Include="Data\Commands\FileCommands\FileCopyCommand.cs" />
+    <Compile Include="Data\Commands\ISHProjectCommands\GetISHProjectsCommand.cs" />
     <Compile Include="Data\Commands\LicenseCommands\LicenseTestCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommand.cs" />
+    <Compile Include="Data\Services\IRegistryService.cs" />
+    <Compile Include="Data\Services\RegistryService.cs" />
+    <Compile Include="Exceptions\CorruptedInstallationException.cs" />
+    <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="Data\Services\XopusLicenseChecker.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Services\FileManager.cs" />
@@ -65,7 +77,6 @@
     <Compile Include="Data\Commands\XmlFileCommands\XmlCommentCommand.cs" />
     <Compile Include="Data\ISHPaths.cs" />
     <Compile Include="Data\Services\IXmlConfigManager.cs" />
-    <Compile Include="Data\Commands\GetVersionCommand.cs" />
     <Compile Include="Business\Invokers\ICommandInvoker.cs" />
     <Compile Include="Interfaces\Commands\IRestorable.cs" />
     <Compile Include="Interfaces\ILogger.cs" />

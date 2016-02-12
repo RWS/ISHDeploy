@@ -59,13 +59,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BaseTest.cs" />
-    <Compile Include="Cmdlets\Info\GetVersionTest.cs" />
-    <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdletTest.cs" />
-    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdletTest.cs" />
-    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdletTest.cs" />
-    <Compile Include="Data\Commands\XmlCommentCommandTest.cs" />
-    <Compile Include="Data\Commands\XmlUncommentCommandTest.cs" />
+    <Compile Include="BaseUnitTest.cs" />
+    <Compile Include="Data\Commands\ISHProjectCommands\GetISHProjectsCommandTest.cs" />
+    <Compile Include="Data\Commands\XmlFileCommands\XmlCommentCommandTest.cs" />
+    <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommandTest.cs" />
+    <Compile Include="Data\Services\XmlConfigManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,41 +73,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="TestData\127.0.0.1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\Editors\Xopus\license\localhost.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

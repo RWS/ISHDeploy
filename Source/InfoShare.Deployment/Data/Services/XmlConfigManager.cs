@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -43,33 +44,25 @@ namespace InfoShare.Deployment.Data.Services
 
             return dictionary;
         }
-
-        public void CommentNode(string filePath, string commentPattern)
+        
+        public void CommentBlock(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
             
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
-            if (startAndEndNodes == null || startAndEndNodes.Count() != 2)
+            if (startAndEndNodes.Count() != 2)
             {
-                _logger.WriteWarning($"{filePath} does not contains start or end pattern {commentPattern}.");
+                _logger.WriteWarning($"{filePath} does not contain start and end pattern '{searchPattern}' where it's expected.");
                 return;
             }
 
-            var startPatternNode = startAndEndNodes.First();
-            var uncommentedNode = startPatternNode.NextNode;
-            var endPatternNode = uncommentedNode.NextNode;
+            XNode uncommentedNode = startAndEndNodes.First().NextNode;
 
             if (uncommentedNode.NodeType == XmlNodeType.Comment)
             {
-                _logger.WriteVerbose($"{filePath} contains already commented part within the pattern {commentPattern}");
-                return;
-            }
-
-            if (endPatternNode == null || !endPatternNode.ToString().Contains(commentPattern))
-            {
-                _logger.WriteWarning($"{filePath} does not contain ending pattern '{commentPattern}' where it's expected.");
+                _logger.WriteVerbose($"{filePath} contains already commented part within the pattern {searchPattern}");
                 return;
             }
 
@@ -82,38 +75,85 @@ namespace InfoShare.Deployment.Data.Services
             _fileManager.Save(filePath, doc);
         }
 
-        public void UncommentNode(string filePath, string commentPattern)
+        public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
+            
+            var uncommentedNode = doc.XPathSelectElement(xpath);
 
-            var startPatternNode = doc.DescendantNodes().
-                FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(commentPattern));
-
-            if (startPatternNode == null)
+            if (uncommentedNode == null)
             {
-                _logger.WriteWarning($"{filePath} does not contains pattern {commentPattern}.");
+                _logger.WriteVerbose($"{filePath} does not contain uncommented node within the xpath {xpath}");
                 return;
             }
 
-            XElement uncommentedNode;
-            if (TryParseCommentedNode(startPatternNode, out uncommentedNode))
+            var uncommentText = uncommentedNode.ToString();
+
+            var commentedNode = new XComment(uncommentText);
+
+            uncommentedNode.ReplaceWith(commentedNode);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        public void UncommentBlock(string filePath, string searchPattern)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var startAndEndNodes = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+
+            if (startAndEndNodes.Count() != 2)
             {
-                startPatternNode.ReplaceWith(uncommentedNode);
+                _logger.WriteWarning($"{filePath} does not contain start and end pattern '{searchPattern}' where it's expected.");
+                return;
             }
-            else if (startPatternNode.NextNode != null && startPatternNode.NextNode.NodeType == XmlNodeType.Comment && TryParseCommentedNode(startPatternNode.NextNode, out uncommentedNode))
+
+            XNode commentedNode = startAndEndNodes.First().NextNode;
+
+            XElement uncommentedNode;
+            if (commentedNode != null && commentedNode.NodeType == XmlNodeType.Comment && TryParseCommentedNode(commentedNode, out uncommentedNode))
             {
-                startPatternNode.NextNode.AddBeforeSelf(new XComment(commentPattern));
-                startPatternNode.NextNode.ReplaceWith(uncommentedNode);
-                startPatternNode.NextNode.AddAfterSelf(new XComment(commentPattern));
+                commentedNode.ReplaceWith(uncommentedNode);
             }
             else
             {
-                _logger.WriteVerbose($"{filePath} dose not contain commented part within the pattern {commentPattern}");
+                _logger.WriteVerbose($"{filePath} dose not contain commented part within the start and end pattern {searchPattern}");
                 return;
             }
 
             _fileManager.Save(filePath, doc);
         }
+
+        public void UncommentNode(string filePath, string searchPattern)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var startAndEndNodes = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+
+            if (!startAndEndNodes.Any())
+            {
+                _logger.WriteWarning($"{filePath} does not contain pattern '{searchPattern}' where it's expected.");
+                return;
+            }
+
+            XNode commentedNode = startAndEndNodes.FirstOrDefault();
+
+            XElement uncommentedNode;
+            if (TryParseCommentedNode(commentedNode, out uncommentedNode))
+            {
+                commentedNode.ReplaceWith(uncommentedNode);
+            }
+            else
+            {
+                _logger.WriteVerbose($"{filePath} could not uncomment {commentedNode}");
+                return;
+            }
+
+            _fileManager.Save(filePath, doc);
+        }
+        
 
         private bool TryParseCommentedNode(XNode commentedNode, out XElement uncommentedNode)
         {
@@ -138,6 +178,22 @@ namespace InfoShare.Deployment.Data.Services
             {
                 return false;
             }
+        }
+
+        public void SetAttributeValue(string filePath, string xpath, string attributeName, string value)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var element = doc.XPathSelectElement(xpath);
+
+            if (element == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
+                return;
+            }
+            element.SetAttributeValue(attributeName, value);
+
+            _fileManager.Save(filePath, doc);
         }
     }
 }

@@ -17,8 +17,8 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant
         {
 			_invoker = new CommandInvoker(logger, "InfoShare Enrich integration for Create");
 
-			_invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.EnrichConfig), _uncommentPatterns));
-			_invoker.AddCommand(new XmlUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.XopusConfig), _uncommentPatterns));
+			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.EnrichConfig), _uncommentPatterns));
+			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.XopusConfig), _uncommentPatterns));
 		}
 
         public void Run()

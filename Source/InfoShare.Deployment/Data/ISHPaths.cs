@@ -25,5 +25,11 @@ namespace InfoShare.Deployment.Data
         public const string InputParametersFile = "inputparameters.xml";
 
         #endregion
+
+        #region Enable/Disable ExternalPreview
+
+        public const string WebConfig = @"Author\ASP\Web.config";
+
+        #endregion
 	}
 }

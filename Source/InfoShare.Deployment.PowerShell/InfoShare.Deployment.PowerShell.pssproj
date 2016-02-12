@@ -38,11 +38,13 @@
     <Folder Include="CmdletsUsage\ISHContentEditor\" />
     <Folder Include="AutomationTests\" />
     <Folder Include="CmdletsUsage\ISHUIQualityAssistant\" />
+    <Folder Include="CmdletsUsage\ISHExternalPreview\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomationTests\ISHUIContentEditor.ps1" />
     <Compile Include="CmdletsUsage\Info\Get-Version.ps1" />
     <Compile Include="CmdletsUsage\ISHContentEditor\SetTestContentEditor.ps1" />
+    <Compile Include="CmdletsUsage\ISHExternalPreview\EnableDisableExternalPreview.ps1" />
     <Compile Include="CmdletsUsage\ISHUIContentEditor\EnableDisableContentEditor.ps1" />
     <Compile Include="CmdletsUsage\ISHUIQualityAssistant\EnableDisableQualityAssistant.ps1" />
   </ItemGroup>

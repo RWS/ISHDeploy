@@ -8,8 +8,8 @@ namespace InfoShare.Deployment.Tests
 {
     public abstract class BaseUnitTest
     {
-        public ILogger Logger = Substitute.For<ILogger>();
-        public IFileManager FileManager = Substitute.For<IFileManager>();
+        protected readonly ILogger Logger = Substitute.For<ILogger>();
+        protected readonly IFileManager FileManager = Substitute.For<IFileManager>();
 
         protected BaseUnitTest()
         {

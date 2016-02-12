@@ -27,35 +27,23 @@ namespace InfoShare.Deployment.Business.Invokers
 
         public void Invoke()
         {
-            var restorableCommands = new List<IRestorable>();
+            ICommand command = null;
 
             try
             {
                 for (var i = 0; i < _commands.Count; i++)
                 {
-                    var command = _commands[i];
-                    var restorableCommand = command as IRestorable;
-
-                    if (restorableCommand != null)
-                    {
-                        restorableCommand.Backup();
-                        restorableCommands.Add(restorableCommand);
-                    }
+                    command = _commands[i];
                     
                     command.Execute();
 
                     _logger.WriteProgress(_activityDescription, $"Executed {i} of {_commands.Count} commands");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _logger.WriteWarning("Operation fails. Rolling back all changes...");
-
-                for (var i = restorableCommands.Count - 1; i >= 0; i--)
-                {
-                    restorableCommands[i].Rollback();
-                }
-
+                _logger.WriteError(ex, command);
+                
                 throw;
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -37,6 +38,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.XmlFileCommands
                 x => Assert.Fail("Commented node has not been uncommented"));
 
             new XmlBlockUncommentCommand(Logger, testFilePath, testCommentPattern).Execute();
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         [TestMethod]

@@ -1,4 +1,6 @@
-﻿namespace InfoShare.Deployment.Data
+﻿using InfoShare.Deployment.Models;
+
+namespace InfoShare.Deployment.Data
 {
     public static class ISHPaths
     {
@@ -15,6 +17,12 @@
 
         public const string EnrichConfig = @"Trisoft.InfoShare.Web\ASP\Editors\Xopus\config\bluelion-config.xml";
 		public const string XopusConfig = @"Trisoft.InfoShare.Web\ASP\Editors\Xopus\config\config.xml";
+
+		#endregion
+        
+        #region InstallTool
+
+        public const string InputParametersFile = "inputparameters.xml";
 
         #endregion
 

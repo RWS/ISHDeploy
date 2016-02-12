@@ -18,7 +18,7 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
             _xpath = xpath;
             _attributeName = attributeName;
             _value = value;
-            _xmlConfigManager = new XmlConfigManager(logger, filePath);
+            _xmlConfigManager = new XmlConfigManager(logger);
         }
         
         public void Execute()

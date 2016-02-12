@@ -41,7 +41,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger, testFilePath).UncommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger, testFilePath).UncommentNode(testCommentPattern);
+            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).UncommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).UncommentNode(testCommentPattern);
+            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -156,7 +156,33 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).UncommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).UncommentBlock(testFilePath, testCommentPattern);
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void UncommentNode_EnableEnrich_does_not_contains_pattern()
+        {
+            string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
+            string testCommentPattern = "Begin BlueLion integration";
+            var testFilePath = "DisabledEnrich.xml";
+
+            var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
+                                     "<javascript src='config.js' eval='false' phase='Xopus' />" +
+                                     "<javascript src='enhancements.js' eval='false' phase='Xopus' />" +
+                                     "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
+                                     "<!-- " + testCommentPattern + "--> " +
+                                     "</config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+                    x => Assert.Fail("Saving should not happen")
+                );
+
+            Logger.When(x => x.WriteVerbose($"{testFilePath}does not contains start or end pattern {testCommentPattern}.")).Do(
+                Assert.IsNotNull);
+
+            new XmlConfigManager(Logger).UncommentNode(testFilePath, testCommentPattern);
         }
 
         #endregion UncommentNode
@@ -190,7 +216,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger, testFilePath).CommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
         }
 
 
@@ -222,7 +248,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
                 x => Assert.Fail("Commented node has not been uncommented"));
 
-            new XmlConfigManager(Logger, testFilePath).CommentNode(testXPath);
+            new XmlConfigManager(Logger).CommentNode(testFilePath, testXPath);
         }
 
         [TestMethod]
@@ -248,7 +274,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).CommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -274,7 +300,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the pattern {testCommentPattern}.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).CommentNode(testXPath);
+            new XmlConfigManager(Logger).CommentNode(testFilePath, testXPath);
         }
 
         [TestMethod]
@@ -300,7 +326,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} contains already commented part within the pattern {testCommentPattern}")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).CommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -326,7 +352,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
             Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain ending pattern '{testCommentPattern}' where it's expected.")).Do(
                 Assert.IsNotNull);
 
-            new XmlConfigManager(Logger, testFilePath).CommentBlock(testCommentPattern);
+            new XmlConfigManager(Logger).CommentBlock(testFilePath, testCommentPattern);
         }
         #endregion CommentNode
 
@@ -361,7 +387,7 @@ namespace InfoShare.Deployment.Tests.Data.Services
                         }
                     );
 
-            new XmlConfigManager(Logger, testFilePath).SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
+            new XmlConfigManager(Logger).SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
         }
 
         #endregion

@@ -1,31 +1,33 @@
 ﻿using System.Collections.Generic;
 using InfoShare.Deployment.Data.Services;
 using InfoShare.Deployment.Interfaces;
-using InfoShare.Deployment.Interfaces.Commands;
 
 namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {
-    public class XmlBlockCommentCommand : ICommand
+    public class XmlBlockCommentCommand : BaseCommand
     {
         private readonly IEnumerable<string> _searchPatterns;
         private readonly IXmlConfigManager _xmlConfigManager;
+        private readonly string _filePath;
 
         public XmlBlockCommentCommand(ILogger logger, string filePath, IEnumerable<string> searchPatterns)
+            : base(logger)
         {
+            _filePath = filePath;
             _searchPatterns = searchPatterns;
 
-            _xmlConfigManager = new XmlConfigManager(logger, filePath);
+            _xmlConfigManager = new XmlConfigManager(logger);
         }
 
         public XmlBlockCommentCommand(ILogger logger, string filePath, string searchPattern)
             : this(logger, filePath, new[] { searchPattern })
         { }
 
-        public void Execute()
+        public override void Execute()
         {
             foreach (var pattern in _searchPatterns)
             {
-                _xmlConfigManager.CommentBlock(pattern);
+                _xmlConfigManager.CommentBlock(_filePath, pattern);
             }
         }
     }

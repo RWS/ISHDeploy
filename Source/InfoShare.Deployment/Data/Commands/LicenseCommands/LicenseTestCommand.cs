@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Data.Services;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Commands;
@@ -34,7 +35,7 @@ namespace InfoShare.Deployment.Data.Commands.LicenseCommands
 		        var licenseContent = _fileManager.ReadAllText(filePath);
                 try
                 {
-                    var checker = new XopusLicenseChecker(licenseContent);
+                    var checker = new XopusLicenseService(licenseContent);
                     _returnResult?.Invoke(checker.IsValid(_hostname));
                 }
                 catch (XopusLicenseException ex)

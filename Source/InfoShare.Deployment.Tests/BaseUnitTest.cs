@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 using NSubstitute;
 

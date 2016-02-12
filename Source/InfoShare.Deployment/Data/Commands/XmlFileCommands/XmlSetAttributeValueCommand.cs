@@ -1,10 +1,9 @@
-﻿using InfoShare.Deployment.Data.Services;
+﻿using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
-using InfoShare.Deployment.Interfaces.Commands;
 
 namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
 {
-    public class XmlSetAttributeValueCommand : ICommand
+    public class XmlSetAttributeValueCommand : BaseCommand
     {
         private readonly string _filePath;
         private readonly string _xpath;
@@ -13,6 +12,7 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
         private readonly IXmlConfigManager _xmlConfigManager;
 
         public XmlSetAttributeValueCommand(ILogger logger, string filePath, string xpath, string attributeName, string value)
+            : base(logger)
         {
             _filePath = filePath;
             _xpath = xpath;
@@ -21,7 +21,7 @@ namespace InfoShare.Deployment.Data.Commands.XmlFileCommands
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
         
-        public void Execute()
+        public override void Execute()
         {
             _xmlConfigManager.SetAttributeValue(_filePath, _xpath, _attributeName, _value);
         }

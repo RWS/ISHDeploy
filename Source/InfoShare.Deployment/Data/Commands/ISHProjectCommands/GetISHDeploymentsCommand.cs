@@ -2,34 +2,34 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Exceptions;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Commands.ISHProjectCommands
 {
-    public class GetISHProjectsCommand : BaseCommandWithResult<IEnumerable<ISHProject>>
+    public class GetISHDeploymentsCommand : BaseCommandWithResult<IEnumerable<ISHDeployment>>
     {
-        private readonly IRegistryService _registryService;
+        private readonly IRegistryManager _registryManager;
         private readonly IXmlConfigManager _xmlConfigManager;
         private readonly IFileManager _fileManager;
         private readonly string _projectSuffix;
 
-        public GetISHProjectsCommand(ILogger logger, string projectSuffix, Action<IEnumerable<ISHProject>> returnResult)
+        public GetISHDeploymentsCommand(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
         {
-            _registryService = ObjectFactory.GetInstance<IRegistryService>();
+            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _projectSuffix = projectSuffix;
         }
 
-        protected override IEnumerable<ISHProject> ExecuteWithResult()
+        protected override IEnumerable<ISHDeployment> ExecuteWithResult()
         {
-            var result = new List<ISHProject>();
+            var result = new List<ISHDeployment>();
 
-            var installProjectsRegKeys = _registryService.GetInstalledProjectsKeys(_projectSuffix).ToArray();
+            var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectSuffix).ToArray();
             
             if (!installProjectsRegKeys.Any())
             {
@@ -49,8 +49,8 @@ namespace InfoShare.Deployment.Data.Commands.ISHProjectCommands
 
             foreach (var projectRegKey in installProjectsRegKeys)
             {
-                var installParamsPath = _registryService.GetInstallParamFilePath(projectRegKey);
-                var version = _registryService.GetInstalledProjectVersion(projectRegKey);
+                var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
+                var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
 
                 if (string.IsNullOrWhiteSpace(installParamsPath))
                 {
@@ -68,7 +68,7 @@ namespace InfoShare.Deployment.Data.Commands.ISHProjectCommands
 
                 var dictionary = _xmlConfigManager.GetAllInstallParamsValues(installParamFile);
 
-                var ishProject = new ISHProject(dictionary, version);
+                var ishProject = new ISHDeployment(dictionary, version);
 
                 result.Add(ishProject);
             }

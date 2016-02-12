@@ -3,7 +3,6 @@ using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces;
-using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant
 {
@@ -13,12 +12,12 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant
 
 		private readonly string[] _uncommentPatterns = { CommentPatterns.EnrichIntegration };
 
-        public EnableISHUIQualityAssistantCmdSet(ILogger logger, ISHProject ishProject)
+        public EnableISHUIQualityAssistantCmdSet(ILogger logger, Models.ISHDeployment ishDeployment)
         {
 			_invoker = new CommandInvoker(logger, "InfoShare Enrich integration for Create");
 
-			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.EnrichConfig), _uncommentPatterns));
-			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishProject.AuthorFolderPath, ISHPaths.XopusConfig), _uncommentPatterns));
+			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishDeployment.AuthorFolderPath, ISHPaths.EnrichConfig), _uncommentPatterns));
+			_invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(ishDeployment.AuthorFolderPath, ISHPaths.XopusConfig), _uncommentPatterns));
 		}
 
         public void Run()

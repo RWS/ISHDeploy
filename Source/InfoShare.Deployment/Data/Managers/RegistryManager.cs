@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 using Microsoft.Win32;
 
-namespace InfoShare.Deployment.Data.Services
+namespace InfoShare.Deployment.Data.Managers
 {
-    public class RegistryService : IRegistryService
+    public class RegistryManager : IRegistryManager
     {
         #region Private constants
 
@@ -23,7 +24,7 @@ namespace InfoShare.Deployment.Data.Services
 
         private readonly ILogger _logger;
 
-        public RegistryService(ILogger logger)
+        public RegistryManager(ILogger logger)
         {
             _logger = logger;
         }

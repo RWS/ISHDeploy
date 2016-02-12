@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 

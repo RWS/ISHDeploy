@@ -2,7 +2,6 @@
 using System.Management.Automation;
 using InfoShare.Deployment.Data;
 using InfoShare.Deployment.Data.Commands.LicenseCommands;
-using InfoShare.Deployment.Models;
 using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
@@ -18,13 +17,13 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		[Parameter(Mandatory = false, Position = 2)]
 		[Alias("proj")]
 		[ValidateNotNullOrEmpty]
-		public ISHProject IshProject { get; set; }
+		public Models.ISHDeployment ISHDeployment { get; set; }
 
 		public override void ExecuteCmdlet()
 		{
 			bool result = false;
 
-            var ishProject = IshProject ?? ISHProjectProvider.Instance.IshProject;
+            var ishProject = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
 
             var command = new LicenseTestCommand(
 		        this,

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace InfoShare.Deployment.Data.Services
+namespace InfoShare.Deployment.Data.Managers.Interfaces
 {
     public interface IXmlConfigManager
     {

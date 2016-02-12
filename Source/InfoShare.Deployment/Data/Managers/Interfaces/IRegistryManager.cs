@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 
-namespace InfoShare.Deployment.Data.Services
+namespace InfoShare.Deployment.Data.Managers.Interfaces
 {
-    public interface IRegistryService
+    public interface IRegistryManager
     {
         IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null);
 

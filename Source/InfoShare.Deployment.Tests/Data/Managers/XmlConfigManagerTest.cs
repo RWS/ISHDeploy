@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace InfoShare.Deployment.Tests.Data.Services
+namespace InfoShare.Deployment.Tests.Data.Managers
 {
     [TestClass]
     public class XmlConfigManagerTest : BaseUnitTest

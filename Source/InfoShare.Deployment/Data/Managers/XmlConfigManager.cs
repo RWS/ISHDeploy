@@ -50,7 +50,7 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
             
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (startAndEndNodes.Count() != 2)
             {
@@ -101,7 +101,7 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (startAndEndNodes.Count() != 2)
             {
@@ -130,7 +130,7 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (!startAndEndNodes.Any())
             {
@@ -141,7 +141,7 @@ namespace InfoShare.Deployment.Data.Managers
             XNode commentedNode = startAndEndNodes.FirstOrDefault();
 
             XElement uncommentedNode;
-            if (TryParseCommentedNode(commentedNode, out uncommentedNode))
+            if (commentedNode != null && TryParseCommentedNode(commentedNode, out uncommentedNode))
             {
                 commentedNode.ReplaceWith(uncommentedNode);
             }

@@ -9,7 +9,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
     {
         [Parameter(Mandatory = false, Position = 0)]
         [Alias("proj")]
-        [ValidateNotNullOrEmpty]
+        [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         [Parameter(Mandatory = false, Position = 1)]

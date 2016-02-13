@@ -51,10 +51,10 @@
     <Compile Include="Business\CmdSets\ISHExternalPreview\DisableISHExternalPreviewCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHExternalPreview\EnableISHExternalPreviewCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
-    <Compile Include="Cmdlets\Initialization\SetISHProjectCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\SetISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\DisableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />

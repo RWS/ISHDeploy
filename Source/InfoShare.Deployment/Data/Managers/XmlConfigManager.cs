@@ -111,10 +111,9 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             XNode commentedNode = startAndEndNodes.First().NextNode;
-
             if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment )
             {
-                _logger.WriteVerbose($"{filePath} dose not contain commented part within the start and end pattern {searchPattern}");
+                _logger.WriteVerbose($"{filePath} does not contain commented part within the start and end pattern {searchPattern}");
                 return;
             }
 
@@ -141,16 +140,12 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             XDocument docWithUncommentedNode;
-            if (TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
+            if (!TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
             {
-                _fileManager.Save(filePath, docWithUncommentedNode);
-            }
-            else
-            {
-                _logger.WriteVerbose($"{filePath} could not uncomment {commentedNode}");
-                return;
+                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
             }
 
+            _fileManager.Save(filePath, docWithUncommentedNode);
         }
         
         private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)

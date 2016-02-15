@@ -10,14 +10,12 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant
     {
         private readonly CommandInvoker _invoker;
 
-        private readonly string[] _uncommentPatterns = { CommentPatterns.EnrichIntegration };
-
         public DisableISHUIQualityAssistantCmdSet(ILogger logger, string authorFolderPath)
         {
             _invoker = new CommandInvoker(logger, "InfoShare Enrich integration for Create");
 
-			_invoker.AddCommand(new XmlNodeCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.EnrichConfig), _uncommentPatterns));
-			_invoker.AddCommand(new XmlNodeCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.XopusConfig), _uncommentPatterns));
+			_invoker.AddCommand(new XmlNodeCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.EnrichConfig), CommentPatterns.EnrichIntegrationBluelionConfigXPath));
+			_invoker.AddCommand(new XmlNodeCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.XopusConfig), CommentPatterns.EnrichIntegrationXPath));
 		}
 
         public void Run()

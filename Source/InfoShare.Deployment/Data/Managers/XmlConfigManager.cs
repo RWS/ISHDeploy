@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using System;
 
 namespace InfoShare.Deployment.Data.Managers
 {
@@ -40,15 +41,15 @@ namespace InfoShare.Deployment.Data.Managers
                 var currentValue = paramElement.XPathSelectElement(CurrentValueXmlNode).Value;
 
                 dictionary.Add(name, currentValue);
-        }
+            }
 
             return dictionary;
         }
-        
+
         public void CommentBlock(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
-            
+
             var startAndEndNodes = doc.DescendantNodes()
                 .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
@@ -78,7 +79,7 @@ namespace InfoShare.Deployment.Data.Managers
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
-            
+
             var uncommentedNode = doc.XPathSelectElement(xpath);
 
             if (uncommentedNode == null)
@@ -111,18 +112,16 @@ namespace InfoShare.Deployment.Data.Managers
 
             XNode commentedNode = startAndEndNodes.First().NextNode;
 
-            XElement uncommentedNode;
-            if (commentedNode != null && commentedNode.NodeType == XmlNodeType.Comment && TryParseCommentedNode(commentedNode, out uncommentedNode))
+            XDocument docWithUncommentedNode;
+            if (commentedNode != null && commentedNode.NodeType == XmlNodeType.Comment && TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
             {
-                commentedNode.ReplaceWith(uncommentedNode);
+                _fileManager.Save(filePath, docWithUncommentedNode);
             }
             else
             {
                 _logger.WriteVerbose($"{filePath} dose not contain commented part within the start and end pattern {searchPattern}");
                 return;
             }
-
-            _fileManager.Save(filePath, doc);
         }
 
         public void UncommentNode(string filePath, string searchPattern)
@@ -140,10 +139,10 @@ namespace InfoShare.Deployment.Data.Managers
 
             XNode commentedNode = startAndEndNodes.FirstOrDefault();
 
-            XElement uncommentedNode;
-            if (TryParseCommentedNode(commentedNode, out uncommentedNode))
+            XDocument docWithUncommentedNode;
+            if (TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
             {
-                commentedNode.ReplaceWith(uncommentedNode);
+                _fileManager.Save(filePath, docWithUncommentedNode);
             }
             else
             {
@@ -151,13 +150,11 @@ namespace InfoShare.Deployment.Data.Managers
                 return;
             }
 
-            _fileManager.Save(filePath, doc);
         }
         
-
-        private bool TryParseCommentedNode(XNode commentedNode, out XElement uncommentedNode)
+        private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)
         {
-            uncommentedNode = null;
+            docWithUncommentedNode = null;
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
             var endIndex = commentText.LastIndexOf('>');
@@ -171,10 +168,12 @@ namespace InfoShare.Deployment.Data.Managers
 
             try
             {
-                uncommentedNode = XElement.Parse(commentText);
+                var commentedDocXmlString = doc.ToString();
+                var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
+                docWithUncommentedNode = XDocument.Parse(replacedDocXmlString);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }

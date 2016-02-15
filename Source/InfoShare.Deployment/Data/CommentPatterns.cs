@@ -14,9 +14,12 @@
 
         #region Enable/Disable Enrich
 
-        public const string EnrichIntegration = "Bluelion integration";
+        public const string EnrichIntegration = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
+        public const string EnrichIntegrationXPath = "*/*[local-name()='javascript'][@src='../BlueLion-Plugin/Bootstrap/bootstrap.js']";
+        public const string EnrichIntegrationBluelionConfig = "../BlueLion-Plugin/create-toolbar.xml";
+        public const string EnrichIntegrationBluelionConfigXPath = "*/*[local-name()='import'][@src='../BlueLion-Plugin/create-toolbar.xml']";
 
-		#endregion
+        #endregion
 
         #region Enable/Disable ExternalPreview
 

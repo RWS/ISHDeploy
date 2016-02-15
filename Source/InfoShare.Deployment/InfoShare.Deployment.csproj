@@ -76,7 +76,6 @@
     <Compile Include="Data\Managers\RegistryManager.cs" />
     <Compile Include="Exceptions\CorruptedInstallationException.cs" />
     <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
-    <Compile Include="Data\Services\XopusLicenseService.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

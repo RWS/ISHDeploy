@@ -1,4 +1,4 @@
-﻿namespace InfoShare.Deployment.Data
+﻿namespace InfoShare.Deployment.Business
 {
     public static class CommentPatterns
     {

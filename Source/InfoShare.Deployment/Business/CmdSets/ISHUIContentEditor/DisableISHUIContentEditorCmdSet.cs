@@ -1,6 +1,4 @@
-﻿using System.IO;
-using InfoShare.Deployment.Business.Invokers;
-using InfoShare.Deployment.Data;
+﻿using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces;
 
@@ -14,15 +12,15 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor
         private readonly string[] _commentPatternsExt = { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut };
         private readonly string[] _uncommentPatterns = { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn };
 
-        public DisableISHUIContentEditorCmdSet(ILogger logger, string authorFolderPath)
+        public DisableISHUIContentEditorCmdSet(ILogger logger, ISHPaths paths)
         {
             _invoker = new CommandInvoker(logger, "InfoShare ContentEditor activation");
             
-            _invoker.AddCommand(new XmlBlockCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.FolderButtonbar), _commentPatternsExt));
-            _invoker.AddCommand(new XmlBlockCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.InboxButtonBar), _commentPatterns));
-            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.InboxButtonBar), _uncommentPatterns));
-            _invoker.AddCommand(new XmlBlockCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.LanguageDocumentButtonBar), _commentPatterns));
-            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.LanguageDocumentButtonBar), _uncommentPatterns));
+            _invoker.AddCommand(new XmlBlockCommentCommand(logger, paths.FolderButtonbar, _commentPatternsExt));
+            _invoker.AddCommand(new XmlBlockCommentCommand(logger, paths.InboxButtonBar, _commentPatterns));
+            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, paths.InboxButtonBar, _uncommentPatterns));
+            _invoker.AddCommand(new XmlBlockCommentCommand(logger, paths.LanguageDocumentButtonBar, _commentPatterns));
+            _invoker.AddCommand(new XmlBlockUncommentCommand(logger, paths.LanguageDocumentButtonBar, _uncommentPatterns));
         }
 
         public void Run()

@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant;
 using InfoShare.Deployment.Providers;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 {
@@ -14,8 +15,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 
         public override void ExecuteCmdlet()
         {
-            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
-            var cmdSet = new DisableISHUIQualityAssistantCmdSet(this, ishDeployment.AuthorFolderPath);
+            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+
+            var cmdSet = new DisableISHUIQualityAssistantCmdSet(this, ishPaths);
 
             cmdSet.Run();
         }

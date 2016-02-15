@@ -15,6 +15,7 @@ namespace InfoShare.Deployment.Data.Commands.ISHProjectCommands
         private readonly IXmlConfigManager _xmlConfigManager;
         private readonly IFileManager _fileManager;
         private readonly string _projectSuffix;
+        private const string InputParametersFileName = "inputparameters.xml";
 
         public GetISHDeploymentsCommand(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
@@ -58,7 +59,7 @@ namespace InfoShare.Deployment.Data.Commands.ISHProjectCommands
                     continue;
                 }
 
-                var installParamFile = Path.Combine(installParamsPath, ISHPaths.InputParametersFile);
+                var installParamFile = Path.Combine(installParamsPath, InputParametersFileName);
 
                 if (!_fileManager.Exists(installParamFile))
                 {

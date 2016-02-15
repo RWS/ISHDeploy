@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
-using System;
 
 namespace InfoShare.Deployment.Data.Managers
 {
@@ -41,17 +40,17 @@ namespace InfoShare.Deployment.Data.Managers
                 var currentValue = paramElement.XPathSelectElement(CurrentValueXmlNode).Value;
 
                 dictionary.Add(name, currentValue);
-            }
+        }
 
             return dictionary;
         }
-
+        
         public void CommentBlock(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
-
+            
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (startAndEndNodes.Count() != 2)
             {
@@ -79,7 +78,7 @@ namespace InfoShare.Deployment.Data.Managers
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
-
+            
             var uncommentedNode = doc.XPathSelectElement(xpath);
 
             if (uncommentedNode == null)
@@ -102,7 +101,7 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (startAndEndNodes.Count() != 2)
             {
@@ -129,7 +128,7 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
             if (!startAndEndNodes.Any())
             {
@@ -173,7 +172,7 @@ namespace InfoShare.Deployment.Data.Managers
                 docWithUncommentedNode = XDocument.Parse(replacedDocXmlString);
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

@@ -9,12 +9,12 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
     {
         [Parameter(Mandatory = false, Position = 0)]
         [Alias("proj")]
-        [ValidateNotNullOrEmpty]
+        [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         [Parameter(Mandatory = false, Position = 1)]
         [Alias("extrId")]
-        [ValidateNotNullOrEmpty]
+        [ValidateNotNull]
         public string ExternalId { get; set; }
 
         public override void ExecuteCmdlet()

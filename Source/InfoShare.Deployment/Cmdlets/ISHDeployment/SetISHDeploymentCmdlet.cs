@@ -7,7 +7,6 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
     public sealed class SetISHDeploymentCmdlet : BaseCmdlet
     {
         [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
-        [ValidateNotNull]
         public Models.ISHDeployment IshDeployment { get; set; }
 
         public override void ExecuteCmdlet()

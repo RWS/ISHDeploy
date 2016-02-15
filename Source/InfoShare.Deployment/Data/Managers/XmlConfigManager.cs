@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Exceptions;
 
 namespace InfoShare.Deployment.Data.Managers
 {
@@ -111,32 +112,33 @@ namespace InfoShare.Deployment.Data.Managers
 
             XNode commentedNode = startAndEndNodes.First().NextNode;
 
-            XDocument docWithUncommentedNode;
-            if (commentedNode != null && commentedNode.NodeType == XmlNodeType.Comment && TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
-            {
-                _fileManager.Save(filePath, docWithUncommentedNode);
-            }
-            else
+            if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment )
             {
                 _logger.WriteVerbose($"{filePath} dose not contain commented part within the start and end pattern {searchPattern}");
                 return;
             }
+
+            XDocument docWithUncommentedNode;
+            if (commentedNode == null || !TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
+            {
+                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
+            }
+
+            _fileManager.Save(filePath, docWithUncommentedNode);
         }
 
         public void UncommentNode(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
 
-            var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
+            var commentedNode = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
 
-            if (!startAndEndNodes.Any())
+            if (commentedNode == null)
             {
                 _logger.WriteWarning($"{filePath} does not contain pattern '{searchPattern}' where it's expected.");
                 return;
             }
-
-            XNode commentedNode = startAndEndNodes.FirstOrDefault();
 
             XDocument docWithUncommentedNode;
             if (TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))

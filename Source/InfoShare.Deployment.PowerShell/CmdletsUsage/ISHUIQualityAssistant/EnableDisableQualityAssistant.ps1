@@ -7,12 +7,15 @@ $DebugPreference = "Continue"
 $VerbosePreference = "Continue"
 $WarningPreference = "Continue"
 
+$info = @{
+  "WebPath" = "F:\InfoShare\";
+  "Suffix" = ''
+}
+
 #EXAMPLE
 
-Set-ISHProject "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web" sites
+#Enable-ISHUIQualityAssistant -ISHDeployment $info
 
-Enable-ISHUIQualityAssistant
+#Pause
 
-Pause
-
-Disable-ISHUIQualityAssistant
+Disable-ISHUIQualityAssistant -ISHDeployment $info

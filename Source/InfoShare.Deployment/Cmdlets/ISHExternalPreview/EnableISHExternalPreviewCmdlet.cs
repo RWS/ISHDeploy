@@ -14,7 +14,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 
         [Parameter(Mandatory = false, Position = 1)]
         [Alias("extrId")]
-        [ValidateNotNullOrEmpty]
+        [ValidateNotNull]
         public string ExternalId { get; set; }
 
         public override void ExecuteCmdlet()

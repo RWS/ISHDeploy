@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Exceptions;
 
 namespace InfoShare.Deployment.Data.Managers
 {
@@ -110,54 +111,46 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             XNode commentedNode = startAndEndNodes.First().NextNode;
-
-            XElement uncommentedNode;
-            if (commentedNode != null && commentedNode.NodeType == XmlNodeType.Comment && TryParseCommentedNode(commentedNode, out uncommentedNode))
+            if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment )
             {
-                commentedNode.ReplaceWith(uncommentedNode);
-            }
-            else
-            {
-                _logger.WriteVerbose($"{filePath} dose not contain commented part within the start and end pattern {searchPattern}");
+                _logger.WriteVerbose($"{filePath} does not contain commented part within the start and end pattern {searchPattern}");
                 return;
             }
 
-            _fileManager.Save(filePath, doc);
+            XDocument docWithUncommentedNode;
+            if (commentedNode == null || !TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
+            {
+                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
+            }
+
+            _fileManager.Save(filePath, docWithUncommentedNode);
         }
 
         public void UncommentNode(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
 
-            var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
+            var commentedNode = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
 
-            if (!startAndEndNodes.Any())
+            if (commentedNode == null)
             {
                 _logger.WriteWarning($"{filePath} does not contain pattern '{searchPattern}' where it's expected.");
                 return;
             }
 
-            XNode commentedNode = startAndEndNodes.FirstOrDefault();
-
-            XElement uncommentedNode;
-            if (commentedNode != null && TryParseCommentedNode(commentedNode, out uncommentedNode))
+            XDocument docWithUncommentedNode;
+            if (!TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
             {
-                commentedNode.ReplaceWith(uncommentedNode);
-            }
-            else
-            {
-                _logger.WriteVerbose($"{filePath} could not uncomment {commentedNode}");
-                return;
+                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
             }
 
-            _fileManager.Save(filePath, doc);
+            _fileManager.Save(filePath, docWithUncommentedNode);
         }
         
-
-        private bool TryParseCommentedNode(XNode commentedNode, out XElement uncommentedNode)
+        private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)
         {
-            uncommentedNode = null;
+            docWithUncommentedNode = null;
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
             var endIndex = commentText.LastIndexOf('>');
@@ -171,7 +164,9 @@ namespace InfoShare.Deployment.Data.Managers
 
             try
             {
-                uncommentedNode = XElement.Parse(commentText);
+                var commentedDocXmlString = doc.ToString();
+                var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
+                docWithUncommentedNode = XDocument.Parse(replacedDocXmlString);
                 return true;
             }
             catch

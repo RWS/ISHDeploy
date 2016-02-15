@@ -11,15 +11,15 @@ $WarningPreference = "Continue"
 
 
 $info = @{
-  "InstallPath" = "F:\InfoShare\";
+  "WebPath" = "F:\InfoShare\";
   "Suffix" = ''
 }
 
 #Pause
 
-#Enable-ISHExternalPreview -IshProject $info -ExternalId "qweqrqwe"
+#Enable-ISHExternalPreview -ISHDeployment $info -ExternalId "qweqrqwe"
 
 #Pause
 
-Disable-ISHExternalPreview -IshProject $info 
+Disable-ISHExternalPreview -ISHDeployment $info 
 

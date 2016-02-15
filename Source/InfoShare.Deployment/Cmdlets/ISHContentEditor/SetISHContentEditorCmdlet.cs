@@ -19,7 +19,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 
 		[Parameter(Mandatory = false, Position = 2)]
         [Alias("proj")]
-		[ValidateNotNullOrEmpty]
+		[ValidateNotNull]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
 		public override void ExecuteCmdlet()

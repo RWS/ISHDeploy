@@ -5,7 +5,7 @@ using InfoShare.Deployment.Data.Managers;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using InfoShare.Deployment.Exceptions;
+using InfoShare.Deployment.Data.Exceptions;
 
 namespace InfoShare.Deployment.Tests.Data.Managers
 {

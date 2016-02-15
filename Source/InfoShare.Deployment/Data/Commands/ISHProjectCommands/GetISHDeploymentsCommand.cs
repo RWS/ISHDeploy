@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using InfoShare.Deployment.Data.Managers.Interfaces;
-using InfoShare.Deployment.Exceptions;
+using InfoShare.Deployment.Data.Exceptions;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Models;
 

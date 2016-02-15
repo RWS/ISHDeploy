@@ -75,9 +75,9 @@
     <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\RegistryManager.cs" />
-    <Compile Include="Exceptions\CorruptedInstallationException.cs" />
-    <Compile Include="Exceptions\WrongXmlStructureException.cs" />
-    <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
+    <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
+    <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
+    <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

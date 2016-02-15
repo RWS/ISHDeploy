@@ -27,7 +27,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_0InstalledProjects()
+        public void ExecuteWithResult_Has_0_installed_projects()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             var cmd = new GetISHDeploymentsCommand(Logger, null, res => ishProjects = res);
@@ -44,7 +44,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_1InstalledProject()
+        public void ExecuteWithResult_Has_1_installed_project()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             var cmd = new GetISHDeploymentsCommand(Logger, null, res => ishProjects = res);
@@ -57,14 +57,14 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
             cmd.Execute();
 
             _registryManager.Received(1).GetInstalledProjectsKeys();
-            Logger.Received(0).WriteVerbose(Arg.Any<string>());
+            Logger.DidNotReceive().WriteVerbose(Arg.Any<string>());
             Assert.IsNotNull(ishProjects, "Return value from the command should not be null");
             Assert.AreEqual(ishProjects.Count(), 1, "Returned projects number should be 1");
         }
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_1From3FilesDoesNotExist()
+        public void ExecuteWithResult_1_of_3_files_does_not_exist()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             var cmd = new GetISHDeploymentsCommand(Logger, null, res => ishProjects = res);
@@ -85,7 +85,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_InstallNotFoundWithSuffix()
+        public void ExecuteWithResult_Project_with_such_suffix_not_found()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             string suffix = "suffix1";
@@ -104,7 +104,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_InstallParamsPathIsNull()
+        public void ExecuteWithResult_Install_parameteres_file_path_is_null()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             var cmd = new GetISHDeploymentsCommand(Logger, null, res => ishProjects = res);
@@ -123,7 +123,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
         
         [TestMethod]
         [TestCategory("Commands")]
-        public void ExecuteWithResult_VersionIsNull()
+        public void ExecuteWithResult_Version_is_null()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
             var cmd = new GetISHDeploymentsCommand(Logger, null, res => ishProjects = res);
@@ -135,7 +135,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.ISHProjectCommands
 
             cmd.Execute();
             
-            Logger.Received(0).WriteError(Arg.Any<Exception>());
+            Logger.DidNotReceive().WriteError(Arg.Any<Exception>());
             Assert.IsNotNull(ishProjects, "Return value from the command should not be null");
             Assert.AreEqual(ishProjects.Count(), 1, "Returned projects number should be 1");
         }

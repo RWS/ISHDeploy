@@ -18,7 +18,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.XmlFileCommands
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void Execute_DisableXOPUS()
+        public void Execute_Disable_XOPUS()
         {
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
@@ -39,17 +39,15 @@ namespace InfoShare.Deployment.Tests.Data.Commands.XmlFileCommands
                         Assert.IsNull(element, "Uncommented node is null");
                     }
                 );
-
-            Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
-                x => Assert.Fail("Commented node has not been uncommented"));
-
+            
             new XmlBlockCommentCommand(Logger, testFilePath, testCommentPattern).Execute();
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
         }
 
         [TestMethod]
         [TestCategory("Commands")]
-        public void Execute_DisableEnrich()
+        public void Execute_Disable_Enrich()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testXPath = "*/*[local-name()='javascript'][@src='" + testSrc + "']";
@@ -72,6 +70,7 @@ namespace InfoShare.Deployment.Tests.Data.Commands.XmlFileCommands
 
             new XmlNodeCommentCommand(Logger, testFilePath, testXPath).Execute();
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
         }
     }
 }

@@ -9,7 +9,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
     {
         [Parameter(Mandatory = false, Position = 0)]
         [Alias("proj")]
-        [ValidateNotNullOrEmpty]
+        [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         [Parameter(Mandatory = false, Position = 1)]
@@ -19,8 +19,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 
         public override void ExecuteCmdlet()
         {
-            // Calling the set of command with entry parameters
-            var cmdSet = new EnableISHExternalPreviewCmdSet(this, ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment, ExternalId);
+            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
+            var cmdSet = new EnableISHExternalPreviewCmdSet(this, ishDeployment.AuthorFolderPath, ExternalId);
 
             cmdSet.Run();
         }

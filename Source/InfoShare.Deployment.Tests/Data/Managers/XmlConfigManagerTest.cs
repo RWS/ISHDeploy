@@ -5,6 +5,7 @@ using InfoShare.Deployment.Data.Managers;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using InfoShare.Deployment.Exceptions;
 
 namespace InfoShare.Deployment.Tests.Data.Managers
 {
@@ -48,6 +49,24 @@ namespace InfoShare.Deployment.Tests.Data.Managers
             _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXmlStructureException))]
+        public void UncommentBlock_The_structure_of_a_file_does_not_match_with_expected()
+        {
+            string testButtonName = "testDoButton";
+            string testCommentPattern = "testCommentPattern";
+            var testFilePath = "DisabledXOPUS.xml";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR><!-- " + testCommentPattern + " START -->" +
+                                    "<!-- " + testCommentPattern + " END --></BUTTONBAR>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+
+            _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
         }
 
         [TestMethod]
@@ -113,10 +132,10 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Enable_Enrich_does_not_contain_pattern()
+        public void UncommentNode_Enable_Enrich_contains_already_uncommented_element()
         {
             string testSrc = "Begin BlueLion integration";
-            string testCommentPattern = "<javascript src='" + testSrc + "'";
+            string testCommentPattern = "<javascript src=\"" + testSrc + "\"";
             var testFilePath = "DisabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
@@ -130,12 +149,9 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                     x => Assert.Fail("Saving should not happen")
                 );
 
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
             
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.");
+            Logger.Received(1).WriteVerbose($"{testFilePath} contains already uncommented element '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -171,6 +187,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXmlStructureException))]
         public void UncommentNode_Enable_Enrich_does_not_contains_pattern()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
@@ -184,9 +201,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                      "</config>");
 
             FileManager.Load(testFilePath).Returns(doc);
-            
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
 
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
 
@@ -217,13 +231,49 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                         Assert.IsNotNull(element, "Uncommented node should NOT be null");
                     }
                 );
+            
+            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
 
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.DidNotReceive().WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}");
+        }
 
-            Logger.When(x => x.WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}")).Do(
-                x => Assert.Fail("Commented node has not been uncommented"));
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void UncommentNode_Twice_uncomment()
+        {
+            string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
+            string testSrcXPath = "*/*[local-name()='import'][@src='" + testCommentPattern + "']";
+            var testFilePath = "bluelion-config.xml";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
+                                        "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
+                                            "<x:import src='" + testCommentPattern + "'/>" +
+                                         "</x:config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
 
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Logger.Received(1).WriteVerbose($"{testFilePath} contains already uncommented element '{testCommentPattern}'.");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXmlStructureException))]
+        public void UncommentNode_Uncomment_if_does_not_contain_pattern()
+        {
+            string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
+            string testSrcXPath = "*/*[local-name()='import'][@src='" + testCommentPattern + "']";
+            var testFilePath = "bluelion-config.xml";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
+                                        "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
+                                         "</x:config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+
+            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
         }
 
         #endregion UncommentNode
@@ -390,12 +440,37 @@ namespace InfoShare.Deployment.Tests.Data.Managers
             FileManager.When(x => x.Save(testFilePath, doc)).Do(
                     x => Assert.Fail("Saving should not happen")
                 );
-
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
+            
             _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
             Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNode_bluelion_config_xml()
+        {
+            string testSrc = "../BlueLion-Plugin/create-toolbar.xml";
+            string testXPath = "*/*[local-name()='import'][@src='" + testSrc + "']";
+
+            var testFilePath = "bluelion-config.xml";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
+                                       "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
+                                               "<x:import src='" + testSrc + "'/>" +
+                                        "</x:config>");
+
+            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+                    x =>
+                    {
+                        var element = GetXElementByXPath(doc, testXPath);
+                        Assert.IsNull(element, "Commented node should be null");
+                    }
+                );
+
+            _xmlConfigManager.CommentNode(testFilePath, testXPath);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.DidNotReceive().WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
         #endregion CommentNode
@@ -431,37 +506,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                     );
 
             _xmlConfigManager.SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-        }
-
-        [TestMethod]
-        [TestCategory("Data handling")]
-        public void CommentNode_bluelion_config_xml()
-        {
-            string testSrc = "../BlueLion-Plugin/create-toolbar.xml";
-            string testXPath = "*/*[local-name()='import'][@src='" + testSrc + "']";
-
-            var testFilePath = "bluelion-config.xml";
-
-            var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
-                                       "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
-                                               "<x:import src='" + testSrc + "'/>" +
-                                        "</x:config>");
-
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, testXPath);
-                        Assert.IsNull(element, "Commented node should be null");
-                    }
-                );
-
-
-            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}")).Do(
-                x => Assert.Fail("Commented node has not been uncommented"));
-
-            _xmlConfigManager.CommentNode(testFilePath, testXPath);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 

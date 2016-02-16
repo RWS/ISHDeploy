@@ -56,7 +56,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
         [ExpectedException(typeof(WrongXmlStructureException))]
         public void UncommentBlock_The_structure_of_a_file_does_not_match_with_expected()
         {
-            string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
             var testFilePath = "DisabledXOPUS.xml";
 

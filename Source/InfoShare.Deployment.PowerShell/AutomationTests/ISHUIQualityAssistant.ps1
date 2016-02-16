@@ -9,7 +9,6 @@ $logFile = "D:\Test4.htm"
 
 $WarningPreference = “Continue"
 
-#sta
 $dict = New-Object "System.Collections.Generic.Dictionary``2[System.String,System.String]"
 $dict.Add('webpath', 'D:\InfoShare')
 $dict.Add('apppath', 'D:\InfoSharer')

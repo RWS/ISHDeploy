@@ -9,7 +9,7 @@ $logFile = "D:\Test3.htm"
 
 
 $WarningPreference = “Continue"
-$VerbosePreference = "COntinue"
+$VerbosePreference = "SilentlyCOntinue"
 $global:logArray = @()
 
 
@@ -135,7 +135,6 @@ function disableContentEditorWithNoXML_test(){
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
 
-
 function enableContentEditorWithWrongXML_test(){
 
     Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
@@ -195,7 +194,6 @@ function disableContentEditorWithWrongXML_test(){
     Remove-Item "$xmlPath\FolderButtonbar.xml"
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
-
 
 function enableEnabledContentEditor_test(){
 
@@ -343,7 +341,6 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
             }
 }
 
-
 function TestContentEditorLicense_test(){
         
       if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
@@ -373,38 +370,6 @@ function TestContentEditorLicense_test(){
             }
 }
 
-function TestContentEditorLicenseWhenNoLicense_test(){
-        
-      if(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"){
-        Remove-Item "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt" -force
-     }   
-          
-         
-    try
-        {
-           $testResponse =  Test-ISHContentEditor -Hostname global.sdl.corp -WarningVariable Warning -ErrorAction Stop
-        
-        }
-    catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
-
-   
-  
-    if($testResponse -Match "False") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "13" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-            Write-Host " Failed"  -foregroundcolor "red"
-            logger "13" $MyInvocation.MyCommand.Name "Failed" " "
-            }
-}
-
 function TestContentEditorLicenseWithWrongHostName_test(){
         
       if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
@@ -420,17 +385,17 @@ function TestContentEditorLicenseWithWrongHostName_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
-    
-    if($ErrorMessage -Match 'The license file for host "global.sdl.cor" not found') {
+ 
+    if($testResponse -match "False") {
         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
         Write-Host " Passed"  -foregroundcolor "green" 
-        logger "14" $MyInvocation.MyCommand.Name "Passed" " "
+        logger "13" $MyInvocation.MyCommand.Name "Passed" " "
     }
 
     else {
             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
             Write-Host " Failed"  -foregroundcolor "red"
-            logger "14" $MyInvocation.MyCommand.Name "Failed" " "
+            logger "13" $MyInvocation.MyCommand.Name "Failed" " "
             }
 }
 
@@ -460,7 +425,6 @@ SetContentEditorLicenseWhenLicenseExists_test
 SetContentEditorLicenseWhenLicenseNotExists_test
 
 TestContentEditorLicense_test
-TestContentEditorLicenseWhenNoLicense_test
 TestContentEditorLicenseWithWrongHostName_test
 
 #endregion

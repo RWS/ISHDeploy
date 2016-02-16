@@ -41,15 +41,15 @@ namespace InfoShare.Deployment.Data.Managers
                 var currentValue = paramElement.XPathSelectElement(CurrentValueXmlNode).Value;
 
                 dictionary.Add(name, currentValue);
-        }
+            }
 
             return dictionary;
         }
-        
+
         public void CommentBlock(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
-            
+
             var startAndEndNodes = doc.DescendantNodes()
                 .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
@@ -79,7 +79,7 @@ namespace InfoShare.Deployment.Data.Managers
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
-            
+
             var uncommentedNode = doc.XPathSelectElement(xpath);
 
             if (uncommentedNode == null)
@@ -111,7 +111,7 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             XNode commentedNode = startAndEndNodes.First().NextNode;
-            if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment )
+            if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment)
             {
                 _logger.WriteVerbose($"{filePath} does not contain commented part within the start and end pattern {searchPattern}");
                 return;
@@ -135,7 +135,16 @@ namespace InfoShare.Deployment.Data.Managers
 
             if (commentedNode == null)
             {
-                _logger.WriteWarning($"{filePath} does not contain pattern '{searchPattern}' where it's expected.");
+                var uncommentedNode = doc.DescendantNodes()
+                    .Where(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+
+                if (uncommentedNode == null)
+                {
+                    throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected.\n\t"+
+                        $"The {filePath} does not contain pattern '{searchPattern}' where it's expected.");
+                }
+
+                _logger.WriteVerbose($"{filePath} contains already uncommented element '{searchPattern}'.");
                 return;
             }
 
@@ -147,7 +156,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             _fileManager.Save(filePath, docWithUncommentedNode);
         }
-        
+
         private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)
         {
             docWithUncommentedNode = null;

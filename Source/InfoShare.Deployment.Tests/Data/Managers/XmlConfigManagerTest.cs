@@ -132,10 +132,10 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Enable_Enrich_does_not_contain_pattern()
+        public void UncommentNode_Enable_Enrich_contains_already_uncommented_element()
         {
             string testSrc = "Begin BlueLion integration";
-            string testCommentPattern = "<javascript src='" + testSrc + "'";
+            string testCommentPattern = "<javascript src=\"" + testSrc + "\"";
             var testFilePath = "DisabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
@@ -149,12 +149,9 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                     x => Assert.Fail("Saving should not happen")
                 );
 
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
             
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.");
+            Logger.Received(1).WriteVerbose($"{testFilePath} contains already uncommented element '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -190,6 +187,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXmlStructureException))]
         public void UncommentNode_Enable_Enrich_does_not_contains_pattern()
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
@@ -203,9 +201,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                      "</config>");
 
             FileManager.Load(testFilePath).Returns(doc);
-            
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
 
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
 
@@ -265,6 +260,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXmlStructureException))]
         public void UncommentNode_Uncomment_if_does_not_contain_pattern()
         {
             string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
@@ -278,8 +274,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
             FileManager.Load(testFilePath).Returns(doc);
 
             _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
-
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.");
         }
 
         #endregion UncommentNode

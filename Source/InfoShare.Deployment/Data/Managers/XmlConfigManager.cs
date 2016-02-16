@@ -135,13 +135,13 @@ namespace InfoShare.Deployment.Data.Managers
 
             if (commentedNode == null)
             {
-
                 var uncommentedNode = doc.DescendantNodes()
                     .Where(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+
                 if (uncommentedNode == null)
                 {
-                    _logger.WriteWarning($"{filePath} does not contain pattern '{searchPattern}' where it's expected.");
-                    return;
+                    throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected.\n\t"+
+                        $"The {filePath} does not contain pattern '{searchPattern}' where it's expected.");
                 }
 
                 _logger.WriteVerbose($"{filePath} contains already uncommented element '{searchPattern}'.");

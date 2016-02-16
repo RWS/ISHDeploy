@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 
@@ -24,12 +23,15 @@ namespace InfoShare.Deployment.Data.Commands.LicenseCommands
         protected override bool ExecuteWithResult()
         {
 		    string filePath;
-		    if (!_fileManager.TryToFindLicenseFile(_licenseFolderPath, _hostname, LICENSE_FILE_EXTENSION, out filePath))
-		    {             
-                throw new FileNotFoundException($"The license file for host \"{_hostname}\" not found");
+
+            bool result = _fileManager.TryToFindLicenseFile(_licenseFolderPath, _hostname, LICENSE_FILE_EXTENSION, out filePath);
+
+            if (!result)
+		    {
+                Logger.WriteVerbose($"The license file for host \"{_hostname}\" not found");
             }
 
-            return true;
+            return result;
         }
 	}
 }

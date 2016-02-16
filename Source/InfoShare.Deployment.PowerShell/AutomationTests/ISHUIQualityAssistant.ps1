@@ -61,7 +61,7 @@ function enableQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "1" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "1" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 }
 
@@ -87,7 +87,7 @@ function disableQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "2" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "2" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 }
 
@@ -116,7 +116,7 @@ function enableEnabledQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "3" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "3" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 }
 
@@ -143,7 +143,7 @@ function disableDisabledQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "4" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "4" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 }
 
@@ -180,7 +180,7 @@ function enableQualityAssistanceWithWrongXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "5" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "5" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -220,7 +220,7 @@ function disableQualityAssistanceWithWrongXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "6" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "6" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -260,7 +260,7 @@ function enableQualityAssistanceWithNoXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "7" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "7" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 
     
@@ -300,7 +300,7 @@ function disableQualityAssistanceWithNoXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "8" $MyInvocation.MyCommand.Name "yellow" " "
+            logger "8" $MyInvocation.MyCommand.Name "BLocked" " "
     }
 
     

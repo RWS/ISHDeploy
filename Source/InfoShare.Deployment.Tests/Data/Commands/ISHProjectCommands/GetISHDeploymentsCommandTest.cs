@@ -4,7 +4,7 @@ using System.Linq;
 using InfoShare.Deployment.Data.Commands.ISHProjectCommands;
 using InfoShare.Deployment.Data.Managers;
 using InfoShare.Deployment.Data.Managers.Interfaces;
-using InfoShare.Deployment.Exceptions;
+using InfoShare.Deployment.Data.Exceptions;
 using InfoShare.Deployment.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Win32;

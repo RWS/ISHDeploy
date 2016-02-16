@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfoShare.Deployment.Exceptions
+namespace InfoShare.Deployment.Data.Exceptions
 {
     public class WrongXmlStructureException : Exception
     {

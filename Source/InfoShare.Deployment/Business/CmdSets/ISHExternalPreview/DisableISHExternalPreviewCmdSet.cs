@@ -1,6 +1,4 @@
-﻿using System.IO;
-using InfoShare.Deployment.Business.Invokers;
-using InfoShare.Deployment.Data;
+﻿using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces;
 
@@ -17,19 +15,19 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHExternalPreview
             CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleXPath
         };
 
-        public DisableISHExternalPreviewCmdSet(ILogger logger, string authorFolderPath)
+        public DisableISHExternalPreviewCmdSet(ILogger logger, ISHPaths paths)
         {
             _invoker = new CommandInvoker(logger, "InfoShare ExternalPreview deactivation");
 
             _invoker.AddCommand(
                 new XmlSetAttributeValueCommand(
-                    logger, 
-                    Path.Combine(authorFolderPath, ISHPaths.WebConfig), 
+                    logger,
+                    paths.AuthorAspWebConfig, 
                     CommentPatterns.TrisoftInfoshareWebExternalXPath, 
                     CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
-            _invoker.AddCommand(new XmlNodeCommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.WebConfig), _commentPatterns));
+            _invoker.AddCommand(new XmlNodeCommentCommand(logger, paths.AuthorAspWebConfig, _commentPatterns));
         }
 
         public void Run()

@@ -72,12 +72,12 @@
     <Compile Include="Data\Commands\XmlFileCommands\XmlNodeUncommentCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlSetAttributeValueCommand.cs" />
     <Compile Include="Data\Commands\XmlFileCommands\XmlBlockUncommentCommand.cs" />
-    <Compile Include="Data\ISHPaths.cs" />
+    <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\RegistryManager.cs" />
-    <Compile Include="Exceptions\CorruptedInstallationException.cs" />
-    <Compile Include="Exceptions\WrongXmlStructureException.cs" />
-    <Compile Include="Exceptions\DeploymentNotFoundException.cs" />
+    <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
+    <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
+    <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="Business\CmdSets\ISHUIContentEditor\EnableISHUIContentEditorCmdSet.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
     <Compile Include="Models\ISHDeployment.cs" />
-    <Compile Include="Data\CommentPatterns.cs" />
+    <Compile Include="Business\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ISHProjectProvider.cs" />
   </ItemGroup>

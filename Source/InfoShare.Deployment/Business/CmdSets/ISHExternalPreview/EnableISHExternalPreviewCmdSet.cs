@@ -1,6 +1,4 @@
-﻿using System.IO;
-using InfoShare.Deployment.Business.Invokers;
-using InfoShare.Deployment.Data;
+﻿using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data.Commands.XmlFileCommands;
 using InfoShare.Deployment.Interfaces;
 
@@ -16,16 +14,16 @@ namespace InfoShare.Deployment.Business.CmdSets.ISHExternalPreview
             CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
         };
 
-        public EnableISHExternalPreviewCmdSet(ILogger logger, string authorFolderPath, string externalId)
+        public EnableISHExternalPreviewCmdSet(ILogger logger, ISHPaths paths, string externalId)
         {
             _invoker = new CommandInvoker(logger, "InfoShare ExternalPreview activation");
             
-            _invoker.AddCommand(new XmlNodeUncommentCommand(logger, Path.Combine(authorFolderPath, ISHPaths.WebConfig), _uncommentPatterns));
+            _invoker.AddCommand(new XmlNodeUncommentCommand(logger, paths.AuthorAspWebConfig, _uncommentPatterns));
 
             _invoker.AddCommand(
                 new XmlSetAttributeValueCommand(
-                    logger, 
-                    Path.Combine(authorFolderPath, ISHPaths.WebConfig), 
+                    logger,
+                    paths.AuthorAspWebConfig, 
                     CommentPatterns.TrisoftInfoshareWebExternalXPath, 
                     CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
                     externalId ?? "ServiceUser"));

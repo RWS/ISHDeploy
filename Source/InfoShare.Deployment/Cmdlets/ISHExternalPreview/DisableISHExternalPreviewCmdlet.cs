@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.CmdSets.ISHExternalPreview;
 using InfoShare.Deployment.Providers;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 {
@@ -14,8 +15,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 
         public override void ExecuteCmdlet()
         {
-            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
-            var cmdSet = new DisableISHExternalPreviewCmdSet(this, ishDeployment.AuthorFolderPath);
+            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+
+            var cmdSet = new DisableISHExternalPreviewCmdSet(this, ishPaths);
 
             cmdSet.Run();
         }

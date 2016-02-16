@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor;
 using InfoShare.Deployment.Providers;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 {
@@ -14,8 +15,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 
         public override void ExecuteCmdlet()
         {
-            var ishDeployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
-            var cmdSet = new EnableISHUIContentEditorCmdSet(this, ishDeployment.AuthorFolderPath);
+            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+
+            var cmdSet = new EnableISHUIContentEditorCmdSet(this, ishPaths);
 
             cmdSet.Run();
         }

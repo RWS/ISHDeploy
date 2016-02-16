@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
-using InfoShare.Deployment.Exceptions;
+using InfoShare.Deployment.Data.Exceptions;
 
 namespace InfoShare.Deployment.Data.Managers
 {

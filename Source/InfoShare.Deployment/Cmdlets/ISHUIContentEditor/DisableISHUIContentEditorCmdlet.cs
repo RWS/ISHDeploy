@@ -17,7 +17,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
         {
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
-            var cmdSet = new DisableISHUIContentEditorCmdSet(this, ishPaths);
+            var cmdSet = new DisableISHUIContentEditorCmdSet(Logger, ishPaths);
 
             cmdSet.Run();
         }

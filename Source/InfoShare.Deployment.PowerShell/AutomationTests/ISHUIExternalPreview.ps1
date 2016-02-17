@@ -5,17 +5,17 @@ CLS
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "D:\Test5.htm"
+$logFile = "C:\Automated_deployment\Test5.htm"
 
 $WarningPreference = “Continue"
 
 $customID = "Default"
 
 $dict = New-Object "System.Collections.Generic.Dictionary``2[System.String,System.String]"
-$dict.Add('webpath', 'D:\InfoShare')
-$dict.Add('apppath', 'D:\InfoSharer')
+$dict.Add('webpath', 'C:\InfoShare')
+$dict.Add('apppath', 'C:\InfoShare')
 $dict.Add('projectsuffix', 'SQL2014')
-$dict.Add('datapath', 'D:\InfoShare')
+$dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)

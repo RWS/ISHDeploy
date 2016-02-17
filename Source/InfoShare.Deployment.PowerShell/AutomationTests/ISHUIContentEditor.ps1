@@ -5,7 +5,7 @@ CLS
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "D:\Test3.htm"
+$logFile = "C:\Automated_deployment\Test3.htm"
 
 
 $WarningPreference = “Continue"
@@ -14,10 +14,10 @@ $global:logArray = @()
 
 
 $dict = New-Object "System.Collections.Generic.Dictionary``2[System.String,System.String]"
-$dict.Add('webpath', 'D:\InfoShare')
-$dict.Add('apppath', 'D:\InfoSharer')
+$dict.Add('webpath', 'C:\InfoShare')
+$dict.Add('apppath', 'C:\InfoShare')
 $dict.Add('projectsuffix', 'SQL2014')
-$dict.Add('datapath', 'D:\InfoShare')
+$dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
@@ -253,7 +253,7 @@ function SetContentEditorLicense_test(){
 
         if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
 
-            Set-ISHContentEditor -LicensePath D:\global.sdl.corp.txt
+            Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt
 
             if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
                 Write-Host $MyInvocation.MyCommand.Name -NoNewline
@@ -278,14 +278,14 @@ function SetContentEditorLicense_test(){
 
 function SetContentEditorLicenseWhenLicenseExists_test(){
      if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
-        Copy-Item D:\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
+        Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
      }       
 
     if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
                 
         try
             {
-                    Set-ISHContentEditor -LicensePath D:\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
+                    Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
         
             }
         catch 
@@ -318,7 +318,7 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
                 
     try
         {
-            Set-ISHContentEditor -LicensePath D:\_global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
+            Set-ISHContentEditor -LicensePath C:\Automated_deployment\_global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
         
         }
     catch 
@@ -344,7 +344,7 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
 function TestContentEditorLicense_test(){
         
       if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
-        Copy-Item D:\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
+        Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
      }          
     try
         {
@@ -373,7 +373,7 @@ function TestContentEditorLicense_test(){
 function TestContentEditorLicenseWithWrongHostName_test(){
         
       if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
-        Copy-Item D:\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
+        Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
      }          
     try
         {

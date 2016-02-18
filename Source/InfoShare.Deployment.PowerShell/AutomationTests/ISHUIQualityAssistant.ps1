@@ -5,15 +5,15 @@ CLS
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "D:\Test4.htm"
+$logFile = "C:\Automated_deployment\Test4.htm"
 
 $WarningPreference = “Continue"
 
 $dict = New-Object "System.Collections.Generic.Dictionary``2[System.String,System.String]"
-$dict.Add('webpath', 'D:\InfoShare')
-$dict.Add('apppath', 'D:\InfoSharer')
+$dict.Add('webpath', 'C:\InfoShare')
+$dict.Add('apppath', 'C:\InfoShare')
 $dict.Add('projectsuffix', 'SQL2014')
-$dict.Add('datapath', 'D:\InfoShare')
+$dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
@@ -61,7 +61,7 @@ function enableQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "1" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "1" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 }
 
@@ -87,7 +87,7 @@ function disableQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "2" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "2" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 }
 
@@ -116,7 +116,7 @@ function enableEnabledQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "3" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "3" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 }
 
@@ -143,7 +143,7 @@ function disableDisabledQualityAssistance_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "4" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "4" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 }
 
@@ -180,7 +180,7 @@ function enableQualityAssistanceWithWrongXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "5" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "5" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -220,7 +220,7 @@ function disableQualityAssistanceWithWrongXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "6" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "6" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -260,7 +260,7 @@ function enableQualityAssistanceWithNoXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "7" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "7" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 
     
@@ -300,7 +300,7 @@ function disableQualityAssistanceWithNoXML_test(){
     else{
         Write-Host $MyInvocation.MyCommand.Name -NoNewline
             Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "8" $MyInvocation.MyCommand.Name "BLocked" " "
+            logger "8" $MyInvocation.MyCommand.Name "Blocked" " "
     }
 
     

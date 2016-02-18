@@ -25,7 +25,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
             var command = new LicenseTestCommand(
-		        this,
+		        Logger,
 		        ishPaths.LicenceFolderPath,
 		        Hostname,
 		        isValid =>

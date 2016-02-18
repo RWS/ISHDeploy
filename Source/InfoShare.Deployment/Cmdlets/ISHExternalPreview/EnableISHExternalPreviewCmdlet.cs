@@ -22,7 +22,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         {
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
-            var cmdSet = new EnableISHExternalPreviewCmdSet(this, ishPaths, ExternalId);
+            var cmdSet = new EnableISHExternalPreviewCmdSet(Logger, ishPaths, ExternalId);
 
             cmdSet.Run();
         }

@@ -25,7 +25,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		{
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
-            var command = new FileCopyCommand(this, 
+            var command = new FileCopyCommand(Logger, 
                 LicensePath,
                 ishPaths.LicenceFolderPath, 
                 Force);

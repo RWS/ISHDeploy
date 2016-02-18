@@ -13,7 +13,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 
         public override void ExecuteCmdlet()
         {
-            var cmdset = new GetISHDeploymentCmdSet(this, Deployment);
+            var cmdset = new GetISHDeploymentCmdSet(Logger, Deployment);
 
             var result = cmdset.Run().ToArray();
 

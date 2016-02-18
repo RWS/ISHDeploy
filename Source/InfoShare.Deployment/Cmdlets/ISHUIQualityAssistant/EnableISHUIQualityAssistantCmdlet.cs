@@ -17,7 +17,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
         {
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
-            var cmdSet = new EnableISHUIQualityAssistantCmdSet(this, ishPaths);
+            var cmdSet = new EnableISHUIQualityAssistantCmdSet(Logger, ishPaths);
 
 			cmdSet.Run();
         }

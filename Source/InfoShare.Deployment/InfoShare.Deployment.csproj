@@ -51,6 +51,7 @@
     <Compile Include="Business\CmdSets\ISHExternalPreview\DisableISHExternalPreviewCmdSet.cs" />
     <Compile Include="Business\CmdSets\ISHExternalPreview\EnableISHExternalPreviewCmdSet.cs" />
     <Compile Include="Cmdlets\BaseCmdlet.cs" />
+    <Compile Include="Cmdlets\CmdletsLogger.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />

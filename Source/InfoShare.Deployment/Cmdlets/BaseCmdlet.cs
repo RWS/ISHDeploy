@@ -6,19 +6,35 @@ using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
 {
+    /// <summary>
+    /// Provides base functionality for all cmdlets
+    /// </summary>
     public abstract class BaseCmdlet : Cmdlet
     {
+        /// <summary>
+        /// Logger
+        /// </summary>
         public readonly ILogger Logger;
+        
+        /// <summary>
+        /// Contructor
+        /// </summary>
         protected BaseCmdlet()
-        {
+        {   
             Logger = CmdletsLogger.Instance();
             ObjectFactory.SetInstance<IFileManager>(new FileManager(Logger));
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
             ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
         }
 
+        /// <summary>
+        /// Method to be overriden in all ancestors instead of process record
+        /// </summary>
         public abstract void ExecuteCmdlet();
 
+        /// <summary>
+        /// Overrides ProcessRecord from base Cmdlet class
+        /// </summary>
         protected override void ProcessRecord()
         {
             try

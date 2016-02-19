@@ -4,7 +4,7 @@ using InfoShare.Deployment.Business.CmdSets.ISHDeployment;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
-    [Cmdlet(VerbsCommon.Get, "ISHDeployment")]
+    [Cmdlet(VerbsCommon.Get, CmdletNames.ISHDeployment)]
     public class GetISHDeploymentCmdlet : BaseCmdlet
     {
         [Parameter(Mandatory = false, Position = 0, HelpMessage = "Suffix of the already deployed Content Manager instance")]

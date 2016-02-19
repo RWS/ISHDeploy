@@ -5,8 +5,8 @@ using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
-	[Cmdlet(VerbsCommon.Set, "ISHContentEditor", SupportsShouldProcess = false)]
-	public sealed class SetISHContentEditorCmdlet : BaseCmdlet
+	[Cmdlet(VerbsCommon.Set, CmdletNames.ISHContentEditor, SupportsShouldProcess = false)]
+	public sealed class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
 	{
 		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]
         [Alias("path")]
@@ -21,7 +21,11 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		[ValidateNotNull]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
-		public override void ExecuteCmdlet()
+	    protected override string HistoryEntry => $"{VerbsCommon.Set}-{CmdletNames.ISHContentEditor} -{nameof(LicensePath)} {LicensePath}";
+
+        protected override string DeploymentSuffix => (ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment).Suffix;
+
+        public override void ExecuteCmdlet()
 		{
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 

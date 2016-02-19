@@ -65,3 +65,23 @@ Out-File $targetHTML
 Foreach-Object {$_ -replace '<td>Blocked</td>',"<td style='color: yellow'>Blocked</td>"}  | 
 Out-File $targetHTML
 }
+
+function Assert_IsTrue($boolValue, $comandName, $testId) {
+    if ($boolValue) {
+        Write-Host $comandName -NoNewline
+        Write-Host " Passed" -foregroundcolor "green" 
+        logger $testId $comandName "Passed" " "
+    }
+
+    else {
+            Write-Host $comandName -NoNewline 
+            Write-Host " Failed"  -foregroundcolor "red"
+            logger $testId $comandName "Failed" " "
+    }
+ }
+ 
+function TestIsBlocked($comandName, $testId, $message) {
+    Write-Host $comandName -NoNewline
+    Write-Host  " blocked"  -foregroundcolor "yellow"
+    logger $testId $comandName "Blocked" $message
+ }

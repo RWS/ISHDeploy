@@ -5,17 +5,17 @@ CLS
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "D:\Test5.htm"
+$logFile = "C:\Automated_deployment\Test5.htm"
 
 $WarningPreference = “Continue"
 
 $customID = "Default"
 
 $dict = New-Object "System.Collections.Generic.Dictionary``2[System.String,System.String]"
-$dict.Add('webpath', 'D:\InfoShare')
-$dict.Add('apppath', 'D:\InfoSharer')
+$dict.Add('webpath', 'C:\InfoShare')
+$dict.Add('apppath', 'C:\InfoShare')
 $dict.Add('projectsuffix', 'SQL2014')
-$dict.Add('datapath', 'D:\InfoShare')
+$dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
@@ -46,27 +46,17 @@ $global:configCustomID = $XmlWebConfig.configuration.'trisoft.infoshare.web.exte
 function enableExternalPreview_test(){
 
     readTargetXML
+    $checkResult = $textConfig -and $configSection -and $module
 
+    
 
    if (Test-Path "$xmlPath\Web.config"){ 
-
-        if ($textConfig -and $configSection -and $module) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "1" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "1" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "1" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "1" "No web.config file"
     }
 }
 
@@ -74,26 +64,14 @@ function disableExternalPreview_test(){
 
     readTargetXML
  
-
+    $checkResult = !$textConfig -and !$configSection -and !$module
    if (Test-Path "$xmlPath\Web.config"){ 
-
-        if (!$textConfig -and !$configSection -and !$module) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "2" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "2" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "2" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "2" "No web.config file"
     }
 }
 
@@ -104,25 +82,16 @@ function enableEnabledExternalPreview_test(){
     Enable-ISHExternalPreview -ISHDeployment $deploy
     readTargetXML
 
+    $checkResult = $textConfig -and $configSection -and $module
+
    if (Test-Path "$xmlPath\Web.config"){ 
 
-        if ($textConfig -and $configSection -and $module) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "3" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "3" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "3" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "3" "No web.config file"
     }
 }
 
@@ -133,26 +102,15 @@ function disableDisabledExternalPreview_test(){
 
     readTargetXML
  
-
+    $checkResult = !$textConfig -and !$configSection -and !$module
    if (Test-Path "$xmlPath\Web.config"){ 
-
-        if (!$textConfig -and !$configSection -and !$module) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "4" $MyInvocation.MyCommand.Name "Passed" " "
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
         }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "4" $MyInvocation.MyCommand.Name "Failed" " "
-        }
-    }
+    
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "4" $MyInvocation.MyCommand.Name "BLocked" " "
+       TestIsBlocked $MyInvocation.MyCommand.Name "4" "No web.config file"
     }
 }
 
@@ -161,26 +119,18 @@ function enableExternalPreviewWithCustomExternalID_test(){
     Enable-ISHExternalPreview -ISHDeployment $deploy -ExternalId $customID
     readTargetXML
 
-
+    
+    $checkResult = !$textConfig -and $configSection -and $module -and $configCustomID
    if (Test-Path "$xmlPath\Web.config"){ 
+    
 
-        if (!$textConfig -and $configSection -and $module -and $configCustomID) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "5" $MyInvocation.MyCommand.Name "Passed" " "
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
         }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "5" $MyInvocation.MyCommand.Name "Failed" " "
-        }
-    }
+    
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "5" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "5" "No web.config file"
     }
 }
 
@@ -188,27 +138,16 @@ function disableExternalPreviewWithCustomExternalID_test(){
 
     Disable-ISHExternalPreview -ISHDeployment $deploy
     readTargetXML
-
+    $checkResult = !$textConfig -and !$configSection -and !$module -and !$configCustomID
 
    if (Test-Path "$xmlPath\Web.config"){ 
 
-        if (!$textConfig -and !$configSection -and !$module -and !$configCustomID) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "6" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "6" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "6" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "6" "No web.config file"
     }
 }
 
@@ -216,7 +155,7 @@ function enableExternalPreviewWithWrongXML_test(){
 
     Rename-Item "$xmlPath\Web.config" "_Web.config"
     New-Item "$xmlPath\Web.config" -type file |Out-Null
-  
+    
         try
         {
               Enable-ISHExternalPreview -WarningVariable Warning -ErrorAction Stop 
@@ -227,25 +166,15 @@ function enableExternalPreviewWithWrongXML_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
+         $checkResult = $ErrorMessage -Match "Root element is missing"
    if (Test-Path "$xmlPath\Web.config"){ 
 
-        if ($ErrorMessage -Match "Root element is missing") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "7" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "7" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+         #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "7" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "7" "No web.config file"
     }
 
     Remove-Item "$xmlPath\Web.config"
@@ -267,25 +196,16 @@ function disableExternalPreviewWithWrongXML_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
+        $checkResult = $ErrorMessage -Match "Root element is missing"
+
    if (Test-Path "$xmlPath\Web.config"){ 
 
-        if ($ErrorMessage -Match "Root element is missing") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "8" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "8" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "8" $MyInvocation.MyCommand.Name "BLocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "8" "No web.config file"
     }
 
     Remove-Item "$xmlPath\Web.config"
@@ -307,25 +227,16 @@ function enableExternalPreviewWithNoXML_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
+        $checkResult = $ErrorMessage -Match "Could not find file"
+
    if (!(Test-Path "$xmlPath\Web.config")){ 
 
-        if ($ErrorMessage -Match "Could not find file") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "9" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "9" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "9"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "9" $MyInvocation.MyCommand.Name "BLocked" " "
+       TestIsBlocked $MyInvocation.MyCommand.Name "9" "Could not rename web.config file"
     }
 
    
@@ -347,25 +258,14 @@ function disableExternalPreviewWithNoXML_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
+        $checkResult = $ErrorMessage -Match "Could not find file"
    if (!(Test-Path "$xmlPath\Web.config")){ 
-
-        if ($ErrorMessage -Match "Could not find file") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "10" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "10" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "10"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "10" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "10" "Could not rename web.config file"
     }
 
    

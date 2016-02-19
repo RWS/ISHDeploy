@@ -50,242 +50,188 @@ function enableContentEditor_test(){
 
     readTargetXML
 
-
-    if ($textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar) {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "1" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "1" $MyInvocation.MyCommand.Name "Failed" " "
-    }
+    $checkResult = $textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar
+    # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
 }
 
 function disableContentEditor_test(){
 
     readTargetXML
 
-    if (!$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar) {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "2" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "2" $MyInvocation.MyCommand.Name "Failed" " "
-    }
+    $checkResult = !$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar
+    # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
+   
 }
 
 function enableContentEditorWithNoXML_test(){
-
+    #Arange
     Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
-        try
-        {
-            Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
 
-    if ($ErrorMessage -Match "Could not find file") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "3" $MyInvocation.MyCommand.Name "Passed" " "
+    #Action       
+    try
+    {
+        Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
+    }
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
     }
 
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "3" $MyInvocation.MyCommand.Name "Failed" " "
-    }
-
+    $checkResult = $ErrorMessage -Match "Could not find file"
+    # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
+    
+    #Rollback
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
 
 function disableContentEditorWithNoXML_test(){
-
+    #Arange
     Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
-        try
-        {
-            Disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
 
-    if ($ErrorMessage -Match "Could not find file") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "4" $MyInvocation.MyCommand.Name "Passed" " "
+    #Action  
+    try
+    {
+        Disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
     }
-
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "4" $MyInvocation.MyCommand.Name "Failed" " "
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
     }
+    $checkResult = $ErrorMessage -Match "Could not find file"
+    # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
 
+    #Rollback
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
 
 function enableContentEditorWithWrongXML_test(){
-
+    #Arange
     Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
     New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
-  
-        try
-        {
-            Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
+
+    #Action 
+    try
+    {
+        Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
         
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
-    if ($ErrorMessage -Match "Root element is missing") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "5" $MyInvocation.MyCommand.Name "Passed" " "
+    }
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
     }
 
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "5" $MyInvocation.MyCommand.Name "Failed" " "
-    }
+     $checkResult = $ErrorMessage -Match "Root element is missing"
 
+     # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
+
+    #Rollback
     Remove-Item "$xmlPath\FolderButtonbar.xml"
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
 
 function disableContentEditorWithWrongXML_test(){
-
+    #Arange
     Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
     New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
   
-        try
-        {
-            disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
+    try
+    {
+        disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
         
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
-    if ($ErrorMessage -Match "Root element is missing") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "6" $MyInvocation.MyCommand.Name "Passed" " "
+    }
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
     }
 
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "6" $MyInvocation.MyCommand.Name "Failed" " "
-    }
+    $checkResult = $ErrorMessage -Match "Root element is missing"
 
+    #Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
+
+    #Rollback
     Remove-Item "$xmlPath\FolderButtonbar.xml"
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
 }
 
 function enableEnabledContentEditor_test(){
-
-Enable-ISHUIContentEditor
-Enable-ISHUIContentEditor
-readTargetXML
-
-
-if ($textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar) {
-    Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-    Write-Host " Passed"  -foregroundcolor "green"
-    logger "7" $MyInvocation.MyCommand.Name "Passed" " " 
-}
-
-else {
-     Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-     Write-Host " Failed"  -foregroundcolor "red"
-     logger "7" $MyInvocation.MyCommand.Name "Failed" " "
-}
+    #Action
+    Enable-ISHUIContentEditor
+    Enable-ISHUIContentEditor
+    readTargetXML
+    
+    $checkResult = $textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar
+    
+    #Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
 }
 
 function disableDisabledContentEditor_test(){
-
+    #Action
     Disable-ISHUIContentEditor
     Disable-ISHUIContentEditor
 
     readTargetXML
 
-    if (!$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar) {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "8" $MyInvocation.MyCommand.Name "Passed" " "
-    }
+    $checkResult = !$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar
 
-    else {
-         Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-         Write-Host " Failed"  -foregroundcolor "red"
-         logger "8" $MyInvocation.MyCommand.Name "Failed" " "
-    }
+    #Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
 }
 
 function SetContentEditorLicense_test(){
             
-
-         if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
-                            try
-                {
-                      Remove-Item "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt" -Force -WarningVariable Warning -ErrorAction Stop 
+    #Action
+    if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
+        try
+        {
+            Remove-Item "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt" -Force -WarningVariable Warning -ErrorAction Stop 
         
-                }
-                catch 
-                {
-                    $ErrorMessage = $_.Exception.Message
+        }
+        catch 
+        {
+            $ErrorMessage = $_.Exception.Message
                       
-                    }
-               }
-
-        if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
-
-            Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt
-
-            if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
-                Write-Host $MyInvocation.MyCommand.Name -NoNewline
-                Write-Host " Passed"  -foregroundcolor "green"
-                logger "9" $MyInvocation.MyCommand.Name "Passed" " "
-
-            }
-
-            else {
-                 Write-Host $MyInvocation.MyCommand.Name -NoNewline
-                 Write-Host  " Failed"  -foregroundcolor "red"
-                 logger "9" $MyInvocation.MyCommand.Name "Failed" " "
-            }
         }
+    }
 
-        else {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host  " blocked"  -foregroundcolor "yellow"
-            logger "9" $MyInvocation.MyCommand.Name "Blocked" "Could not delete license file in specified location"
-        }
+        
+    if((Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")) {
+        TestIsBlocked $MyInvocation.MyCommand.Name "9" "Could not delete license file in specified location"
+    }
+    else {
+
+        Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt
+
+        $checkResult = Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
+
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "9"
+    }
 }
 
 function SetContentEditorLicenseWhenLicenseExists_test(){
-     if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
+    #Arrange
+    if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
         Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
-     }       
+    }       
 
-    if (Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt") {
-                
+    if (!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")) {
+        TestIsBlocked $MyInvocation.MyCommand.Name "10" "Could not find license file in specified location"
+    }
+
+    else
+        {
+         
+        #Action       
         try
             {
-                    Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
+                 Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
         
             }
         catch 
@@ -294,28 +240,15 @@ function SetContentEditorLicenseWhenLicenseExists_test(){
                       
             }
 
-        if($ErrorMessage -Match "already exists") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-            Write-Host " Passed"  -foregroundcolor "green" 
-            logger "10" $MyInvocation.MyCommand.Name "Passed" " "
+            $checkResult = $ErrorMessage -Match "already exists"
+            #Assert
+            Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "10"
         }
 
-        else {
-                Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-                Write-Host " Failed"  -foregroundcolor "red"
-                logger "10" $MyInvocation.MyCommand.Name "Failed" " "
-               }
-    }
-
-    else {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " blocked"  -foregroundcolor "yellow"
-        logger "10" $MyInvocation.MyCommand.Name "Blocked" " "
-    }
 }
 
 function SetContentEditorLicenseWhenLicenseNotExists_test(){
-                
+    #Action         
     try
         {
             Set-ISHContentEditor -LicensePath C:\Automated_deployment\_global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
@@ -327,25 +260,19 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
         }
 
      
-        # -and $Warning -Match $defaultWarning
-    if($ErrorMessage -Match "Could not find file") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "11" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-            Write-Host " Failed"  -foregroundcolor "red"
-            logger "11" $MyInvocation.MyCommand.Name "Failed" $ErrorMessage
-            }
+        $checkResult = $ErrorMessage -Match "Could not find file"
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "11"
 }
 
 function TestContentEditorLicense_test(){
-        
-      if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
+    
+    #Arrange    
+    if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
         Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
-     }          
+     }    
+     
+     #Action      
     try
         {
            $testResponse =  Test-ISHContentEditor -Hostname global.sdl.corp -WarningVariable Warning -ErrorAction Stop
@@ -356,28 +283,22 @@ function TestContentEditorLicense_test(){
             $ErrorMessage = $_.Exception.Message
         }
         
-        
-    if($testResponse -Match "True") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "12" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-            Write-Host " Failed"  -foregroundcolor "red"
-            logger "12" $MyInvocation.MyCommand.Name "Failed" " "
-            }
+    $checkResult = $testResponse -Match "True"
+    #Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "12"
 }
 
 function TestContentEditorLicenseWithWrongHostName_test(){
-        
-      if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
+    
+    #Arrange    
+    if(!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")){
         Copy-Item C:\Automated_deployment\global.sdl.corp.txt "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
-     }          
+     }   
+     
+     #Action       
     try
         {
-           $testResponse =  Test-ISHContentEditor -Hostname global.sdl.cor -WarningVariable Warning -ErrorAction Stop
+            $testResponse =  Test-ISHContentEditor -Hostname global.sdl.cor -WarningVariable Warning -ErrorAction Stop
         
         }
     catch 
@@ -385,18 +306,9 @@ function TestContentEditorLicenseWithWrongHostName_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
- 
-    if($testResponse -match "False") {
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-        Write-Host " Passed"  -foregroundcolor "green" 
-        logger "13" $MyInvocation.MyCommand.Name "Passed" " "
-    }
-
-    else {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-            Write-Host " Failed"  -foregroundcolor "red"
-            logger "13" $MyInvocation.MyCommand.Name "Failed" " "
-            }
+        $checkResult = $testResponse -match "False"
+ #Assert
+  Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "13"
 }
 
 

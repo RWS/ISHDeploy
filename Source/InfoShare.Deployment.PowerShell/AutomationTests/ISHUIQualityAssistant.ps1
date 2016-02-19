@@ -43,25 +43,15 @@ function enableQualityAssistance_test(){
 
     readTargetXML
 
+    $checkResult = $textConfig -and $textBlueLionConfig.Count -eq 1
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($textConfig -and $textBlueLionConfig.Count -eq 1 ) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "1" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "1" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "1" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "1" "No target xml files" 
     }
 }
 
@@ -69,25 +59,15 @@ function disableQualityAssistance_test(){
 
     readTargetXML
 
+      $checkResult = !$textConfig -and $textBlueLionConfig.Count -eq 0
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if (!$textConfig -and $textBlueLionConfig.Count -eq 0 ) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "2" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "2" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "2" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "2" "No target xml files" 
     }
 }
 
@@ -97,26 +77,16 @@ function enableEnabledQualityAssistance_test(){
     Enable-ISHUIQualityAssistant -ISHDeployment $deploy
 
     readTargetXML
+    $checkResult = $textConfig -and $textBlueLionConfig.Count -eq 1
 
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($textConfig -and $textBlueLionConfig.Count -eq 1 ) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "3" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "3" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "3" $MyInvocation.MyCommand.Name "Blocked" " "
+      TestIsBlocked $MyInvocation.MyCommand.Name "3" "No target xml files" 
     }
 }
 
@@ -125,25 +95,15 @@ function disableDisabledQualityAssistance_test(){
     Disable-ISHUIQualityAssistant -ISHDeployment $deploy
     readTargetXML
 
+    $checkResult = !$textConfig -and $textBlueLionConfig.Count -eq 0
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if (!$textConfig -and $textBlueLionConfig.Count -eq 0 ) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "4" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "4" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "4" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "4" "No target xml files" 
     }
 }
 
@@ -161,26 +121,15 @@ function enableQualityAssistanceWithWrongXML_test(){
         {
             $ErrorMessage = $_.Exception.Message
         }
-
+        $checkResult = $ErrorMessage -Match "Root element is missing"
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($ErrorMessage -Match "Root element is missing") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "5" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "5" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+         #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "5" $MyInvocation.MyCommand.Name "Blocked" " "
+       TestIsBlocked $MyInvocation.MyCommand.Name "5" "No target xml files" 
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -192,35 +141,26 @@ function disableQualityAssistanceWithWrongXML_test(){
     Rename-Item "$xmlPath\config.xml" "_config.xml"
     New-Item "$xmlPath\config.xml" -type file |Out-Null
   
-        try
-        {
-            Disable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+    try
+    {
+        Disable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
         
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
+    }
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
+    }
 
+    $checkResult = $ErrorMessage -Match "Root element is missing"
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($ErrorMessage -Match "Root element is missing") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "6" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "6" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        
+         #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "6" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "6" "No target xml files" 
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -232,35 +172,25 @@ function enableQualityAssistanceWithNoXML_test(){
     Rename-Item "$xmlPath\config.xml" "_config.xml"
     
   
-        try
-        {
-            Enable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+    try
+    {
+        Enable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
         
-        }
-        catch 
-        {
-            $ErrorMessage = $_.Exception.Message
-        }
+    }
+    catch 
+    {
+        $ErrorMessage = $_.Exception.Message
+    }
 
+    $checkResult = $ErrorMessage -Match "Could not find file"
    if (!(Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($ErrorMessage -Match "Could not find file") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "7" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "7" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+         #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "7" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "7" "No target xml files"
     }
 
     
@@ -282,25 +212,16 @@ function disableQualityAssistanceWithNoXML_test(){
             $ErrorMessage = $_.Exception.Message
         }
 
+        $checkResult = $ErrorMessage -Match "Could not find file"
+
    if (!(Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
-        if ($ErrorMessage -Match "Could not find file") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "8" $MyInvocation.MyCommand.Name "Passed" " "
-        }
-
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "8" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+         #Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
     }
 
     else{
-        Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Blocked" -foregroundcolor "yellow" 
-            logger "8" $MyInvocation.MyCommand.Name "Blocked" " "
+        TestIsBlocked $MyInvocation.MyCommand.Name "8" "No target xml files"
     }
 
     

@@ -12,43 +12,31 @@ $VerbosePreference = "SilentlyCOntinue"
 $global:logArray = @()
 
 
+
+
 function GetIshDeploymentWithDeploymentParameter_test(){
-
+    #Action
     $deploy = Get-ISHDeployment -Deployment "SQL2014"
- if (($deploy.WebPath -eq "C:\InfoShare") -and($deploy.Count -eq 1)) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "1" $MyInvocation.MyCommand.Name "Passed" " "
-        }
 
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "1" $MyInvocation.MyCommand.Name "Failed" " "
-        }
-
+    $checkResult = (($deploy.WebPath -eq "C:\InfoShare") -and($deploy.Count -eq 1))
+    # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
  }
 
  function GetIshDeploymentWithoutDeploymentParameter_test(){
-
+    #Action
     $deploy = Get-ISHDeployment
- if ($deploy.Count -eq 2) {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "2" $MyInvocation.MyCommand.Name "Passed" " "
-        }
 
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "2" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+    $checkResult = $deploy.Count -eq 2
+     # Assert
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
 
  }
 
  function GetIshDeploymentWithWrongDeploymentParameter_test(){
-
-     try
+        
+        #Action
+        try
         {
             $deploy = Get-ISHDeployment -Deployment "testDummySuffix" -WarningVariable Warning -ErrorAction Stop
         }
@@ -56,17 +44,10 @@ function GetIshDeploymentWithDeploymentParameter_test(){
         {
             $ErrorMessage = $_.Exception.Message
         }
-        if ($ErrorMessage -match "Deployment with suffix testDummySuffix is not found on the system") {
-            Write-Host $MyInvocation.MyCommand.Name -NoNewline
-            Write-Host " Passed" -foregroundcolor "green" 
-            logger "3" $MyInvocation.MyCommand.Name "Passed" " "
-        }
 
-        else {
-             Write-Host $MyInvocation.MyCommand.Name -NoNewline 
-             Write-Host " Failed"  -foregroundcolor "red"
-             logger "3" $MyInvocation.MyCommand.Name "Failed" " "
-        }
+        $checkResult = $ErrorMessage -match "Deployment with suffix testDummySuffix is not found on the system"
+         # Assert
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
 
  }
  

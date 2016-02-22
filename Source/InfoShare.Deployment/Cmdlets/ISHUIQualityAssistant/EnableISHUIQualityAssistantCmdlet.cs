@@ -5,7 +5,7 @@ using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 {
-    [Cmdlet(VerbsLifecycle.Enable, CmdletNames.ISHUIQualityAssistant, SupportsShouldProcess = false)]
+    [Cmdlet(VerbsLifecycle.Enable, "ISHUIQualityAssistant", SupportsShouldProcess = false)]
     public sealed class EnableISHUIQualityAssistantCmdlet : BaseHistoryEntryCmdlet
     {
         [Parameter(Mandatory = false, Position = 0)]
@@ -13,9 +13,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
         [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
-        protected override string HistoryEntry => $"{VerbsLifecycle.Enable}-{CmdletNames.ISHUIQualityAssistant}";
-
-        protected override string DeploymentSuffix => (ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment).Suffix;
+        private ISHPaths _ishPaths;
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
 
         public override void ExecuteCmdlet()
         {

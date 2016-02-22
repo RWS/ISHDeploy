@@ -9,7 +9,7 @@ namespace InfoShare.Deployment.Cmdlets
     /// <summary>
     /// Provides base functionality for all cmdlets
     /// </summary>
-    public abstract class BaseCmdlet : Cmdlet
+    public abstract class BaseCmdlet : PSCmdlet
     {
         /// <summary>
         /// Logger

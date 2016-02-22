@@ -1,42 +1,26 @@
 ﻿using System.IO;
 using System.Management.Automation;
+using InfoShare.Deployment.Business;
+using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
-    [Cmdlet(VerbsCommon.Get, CmdletNames.ISHDeploymentHistory)]
+    [Cmdlet(VerbsCommon.Get, "ISHDeploymentHistory")]
     public class GetISHDeploymentHistoryCmdlet : BaseCmdlet
     {
-        [Parameter(Mandatory = true, Position = 0, HelpMessage = "Suffix of the already deployed Content Manager instance", ParameterSetName = "SuffixParams")]
-        [Alias("Suffix")]
-        public string Deployment { get; set; }
-
-        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "DeploymentParams")]
+        [Parameter(Mandatory = true, Position = 0)]
         [Alias("proj")]
         [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
+        private ISHPaths _ishPaths;
+        protected ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
+
         public override void ExecuteCmdlet()
         {
-            var suffix = (ISHDeployment != null) ? ISHDeployment.Suffix : Deployment;
-            var filePath = BaseHistoryEntryCmdlet.GetHistoryFilePath(suffix);
-
-            if (!File.Exists(filePath))
+            using (var reader = new StreamReader(IshPaths.HistoryFilePath))
             {
-                WriteWarning("There is no customization history for such deployment found!");
-                return;
-            }
-
-            BaseHistoryEntryCmdlet.HistoryFileMutex.WaitOne();
-            try
-            {
-                using (var reader = new StreamReader(filePath))
-                {
-                    WriteObject(reader.ReadToEnd());
-                }
-            }
-            finally
-            {
-                BaseHistoryEntryCmdlet.HistoryFileMutex.ReleaseMutex();
+                WriteObject(reader.ReadToEnd());
             }
         }
     }

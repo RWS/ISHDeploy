@@ -5,7 +5,7 @@ using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 {
-    [Cmdlet(VerbsLifecycle.Enable, CmdletNames.ISHUIContentEditor, SupportsShouldProcess = false)]
+    [Cmdlet(VerbsLifecycle.Enable, "ISHUIContentEditor", SupportsShouldProcess = false)]
     public sealed class EnableISHUIContentEditorCmdlet : BaseHistoryEntryCmdlet
     {
         [Parameter(Mandatory = false, Position = 0)]
@@ -13,9 +13,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
         [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
-        protected override string HistoryEntry => $"{VerbsLifecycle.Enable}-{CmdletNames.ISHUIContentEditor}";
-
-        protected override string DeploymentSuffix => (ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment).Suffix;
+        private ISHPaths _ishPaths;
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
 
         public override void ExecuteCmdlet()
         {

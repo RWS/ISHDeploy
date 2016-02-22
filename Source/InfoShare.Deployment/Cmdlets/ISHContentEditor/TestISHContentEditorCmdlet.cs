@@ -5,7 +5,7 @@ using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
-	[Cmdlet(VerbsDiagnostic.Test, CmdletNames.ISHContentEditor, SupportsShouldProcess = false)]
+	[Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor", SupportsShouldProcess = false)]
 	public sealed class TestISHContentEditorCmdlet : BaseCmdlet
 	{
 		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]

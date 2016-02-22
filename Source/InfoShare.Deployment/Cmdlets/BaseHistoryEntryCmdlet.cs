@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
+using System.Text;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets
 {
@@ -10,36 +11,9 @@ namespace InfoShare.Deployment.Cmdlets
     public abstract class BaseHistoryEntryCmdlet : BaseCmdlet
     {
         /// <summary>
-        /// History file name format
-        /// </summary>
-        private const string HistoryFileFormat = "{0}_history.ps1";
-
-        /// <summary>
-        /// Mutex that prevents several PowerShell processes to write into same history file simultaneously
-        /// </summary>
-        public static readonly Mutex HistoryFileMutex = new Mutex(false, @"Global\InfoShareDeploymentHistory");
-
-        /// <summary>
-        /// Provides the path to history file by deployment suffix
-        /// </summary>
-        /// <param name="deploymentSuffix">Deployment suffix</param>
-        /// <returns>Full path to history file</returns>
-        public static string GetHistoryFilePath(string deploymentSuffix)
-        {
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "InfoShare.Deployment", "CmdletsHistory", HistoryFileFormat);
-
-            return string.Format(filePath, deploymentSuffix);
-        }
-
-        /// <summary>
-        /// Abstract property that describes cmdlet usage and all parameters it was called with
-        /// </summary>
-        protected abstract string HistoryEntry { get; }
-
-        /// <summary>
         /// Deployment Suffix
         /// </summary>
-        protected abstract string DeploymentSuffix { get; }
+        protected abstract ISHPaths IshPaths { get; }
 
         /// <summary>
         /// Overrides ProcessRecord from Cmdlet class
@@ -56,39 +30,51 @@ namespace InfoShare.Deployment.Cmdlets
         /// </summary>
         private void AddHistoryEntry()
         {
-            if (string.IsNullOrEmpty(HistoryEntry))
+            if (IshPaths == null)
             {
-                throw new ArgumentException($"History entry is empty. Cmdlet {this.GetType()} should provide history entry.");
+                throw new ArgumentException($"{nameof(IshPaths)} in {nameof(BaseHistoryEntryCmdlet)} cannot be null.");
             }
 
-            bool isNewFile = !File.Exists(GetHistoryFilePath(DeploymentSuffix));
-
-            if (isNewFile)
+            // don't log if cmdlet what started with WhatIf parameter
+            if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
-                var directory = Path.GetDirectoryName(GetHistoryFilePath(DeploymentSuffix));
+                return;
+            }
 
-                if (directory != null && !Directory.Exists(directory))
+            var isNewHistoryFile = !File.Exists(IshPaths.HistoryFilePath);
+
+            using (var fileStream = new StreamWriter(IshPaths.HistoryFilePath, true))
+            {
+                if (isNewHistoryFile)
                 {
-                    Directory.CreateDirectory(directory);
+                    fileStream.WriteLine($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
                 }
-            }
 
-            HistoryFileMutex.WaitOne();
-            try
+                fileStream.WriteLine(InvocationLine);
+            }
+        }
+
+        /// <summary>
+        /// Describes which cmdlet was executed with which parameters
+        /// </summary>
+        protected virtual string InvocationLine
+        {
+            get
             {
-                using (var fileStream = new StreamWriter(GetHistoryFilePath(DeploymentSuffix), true))
+                var strBldr = new StringBuilder(MyInvocation.MyCommand.Name);
+
+                foreach (var boundParameter in MyInvocation.BoundParameters)
                 {
-                    if (isNewFile)
+                    if (string.Compare(boundParameter.Key, "ISHDeployment", StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        fileStream.WriteLine($"$deployment = Get-ISHDeployment -Deployment '{DeploymentSuffix}'");
+                        strBldr.Append($" -{boundParameter.Key} $deployment");
+                        continue;
                     }
 
-                    fileStream.WriteLine(HistoryEntry + " -ISHDeployment $deployment");
+                    strBldr.Append($" -{boundParameter.Key} {boundParameter.Value}");
                 }
-            }
-            finally
-            {
-                HistoryFileMutex.ReleaseMutex();
+
+                return strBldr.ToString();
             }
         }
     }

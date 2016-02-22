@@ -5,7 +5,7 @@ using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 {
-    [Cmdlet(VerbsLifecycle.Disable, CmdletNames.ISHExternalPreview, SupportsShouldProcess = false)]
+    [Cmdlet(VerbsLifecycle.Disable, "ISHExternalPreview", SupportsShouldProcess = false)]
     public sealed class DisableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet
     {
         [Parameter(Mandatory = false, Position = 0)]
@@ -13,9 +13,8 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         [ValidateNotNull]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
-        protected override string HistoryEntry => $"{VerbsLifecycle.Disable}-{CmdletNames.ISHExternalPreview}";
-
-        protected override string DeploymentSuffix => (ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment).Suffix;
+        private ISHPaths _ishPaths;
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
 
         public override void ExecuteCmdlet()
         {

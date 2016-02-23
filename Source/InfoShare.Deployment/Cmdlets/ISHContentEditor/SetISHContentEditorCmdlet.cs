@@ -6,7 +6,7 @@ using InfoShare.Deployment.Business;
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor", SupportsShouldProcess = false)]
-	public sealed class SetISHContentEditorCmdlet : BaseCmdlet
+	public sealed class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
 	{
 		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]
         [Alias("path")]
@@ -21,13 +21,14 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		[ValidateNotNull]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
-		public override void ExecuteCmdlet()
-		{
-            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+        private ISHPaths _ishPaths;
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
 
+        public override void ExecuteCmdlet()
+		{
             var command = new FileCopyCommand(Logger, 
                 LicensePath,
-                ishPaths.LicenceFolderPath, 
+                IshPaths.LicenceFolderPath, 
                 Force);
 
             command.Execute();

@@ -8,19 +8,15 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIContentEditor
     {
         private readonly IActionInvoker _invoker;
 
-        private readonly string[] _commentPatterns = { CommentPatterns.XopusAddCheckOut };
-        private readonly string[] _commentPatternsExt = { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut };
-        private readonly string[] _uncommentPatterns = { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn };
-
         public DisableISHUIContentEditorOperation(ILogger logger, ISHPaths paths)
         {
             _invoker = new ActionInvoker(logger, "InfoShare ContentEditor activation");
             
-            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.FolderButtonbar, _commentPatternsExt));
-            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.InboxButtonBar, _commentPatterns));
-            _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.InboxButtonBar, _uncommentPatterns));
-            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.LanguageDocumentButtonBar, _commentPatterns));
-            _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.LanguageDocumentButtonBar, _uncommentPatterns));
+            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.FolderButtonbar, new [] { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut }));
+            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.InboxButtonBar, CommentPatterns.XopusAddCheckOut));
+            _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.InboxButtonBar, new [] { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn }));
+            _invoker.AddAction(new XmlBlockCommentAction(logger, paths.LanguageDocumentButtonBar, CommentPatterns.XopusAddCheckOut));
+            _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.LanguageDocumentButtonBar, new[] { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn }));
         }
 
         public void Run()

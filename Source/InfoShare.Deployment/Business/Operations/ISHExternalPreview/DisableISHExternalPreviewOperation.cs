@@ -8,13 +8,6 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
     {
         private readonly IActionInvoker _invoker;
 
-        private readonly string[] _commentPatterns =
-        {
-            CommentPatterns.TrisoftExternalPreviewModuleXPath,
-            CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleXPath,
-            CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleXPath
-        };
-
         public DisableISHExternalPreviewOperation(ILogger logger, ISHPaths paths)
         {
             _invoker = new ActionInvoker(logger, "InfoShare ExternalPreview deactivation");
@@ -27,7 +20,15 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
                     CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
-            _invoker.AddAction(new XmlNodeCommentAction(logger, paths.AuthorAspWebConfig, _commentPatterns));
+            _invoker.AddAction(
+                new XmlNodeCommentAction(
+                    logger,
+                    paths.AuthorAspWebConfig,
+                    new [] {
+                        CommentPatterns.TrisoftExternalPreviewModuleXPath,
+                        CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleXPath,
+                        CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleXPath
+                    }));
         }
 
         public void Run()

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using InfoShare.Deployment.Business;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
 {
@@ -35,23 +35,20 @@ namespace InfoShare.Deployment.Cmdlets
                 throw new ArgumentException($"{nameof(IshPaths)} in {nameof(BaseHistoryEntryCmdlet)} cannot be null.");
             }
 
-            // don't log if cmdlet what started with WhatIf parameter
+            // don't log if cmdlet whas executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
                 return;
             }
 
-            var isNewHistoryFile = !File.Exists(IshPaths.HistoryFilePath);
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            using (var fileStream = new StreamWriter(IshPaths.HistoryFilePath, true))
+            if (!fileManager.Exists(IshPaths.HistoryFilePath))
             {
-                if (isNewHistoryFile)
-                {
-                    fileStream.WriteLine($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
-                }
-
-                fileStream.WriteLine(InvocationLine);
+                fileManager.AppendLine(IshPaths.HistoryFilePath, $"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
             }
+
+            fileManager.AppendLine(IshPaths.HistoryFilePath, InvocationLine);
         }
 
         /// <summary>

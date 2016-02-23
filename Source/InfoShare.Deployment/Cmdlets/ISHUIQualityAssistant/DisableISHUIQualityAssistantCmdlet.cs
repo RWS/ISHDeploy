@@ -18,9 +18,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 
         public override void ExecuteCmdlet()
         {
-            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
-
-            var cmdSet = new DisableISHUIQualityAssistantCmdSet(Logger, ishPaths);
+            var cmdSet = new DisableISHUIQualityAssistantCmdSet(Logger, IshPaths);
 
             cmdSet.Run();
         }

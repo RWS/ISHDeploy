@@ -18,9 +18,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 
         public override void ExecuteCmdlet()
         {
-            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
-
-            var cmdSet = new DisableISHExternalPreviewCmdSet(Logger, ishPaths);
+            var cmdSet = new DisableISHExternalPreviewCmdSet(Logger, IshPaths);
 
             cmdSet.Run();
         }

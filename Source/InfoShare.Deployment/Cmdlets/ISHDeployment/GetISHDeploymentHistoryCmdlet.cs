@@ -20,7 +20,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            fileManager.ReadAllText(IshPaths.HistoryFilePath);
+            var historyContent = fileManager.ReadAllText(IshPaths.HistoryFilePath);
+
+            WriteObject(historyContent);
         }
     }
 }

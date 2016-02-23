@@ -1,6 +1,6 @@
-﻿using System.IO;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using InfoShare.Deployment.Business;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
@@ -18,10 +18,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 
         public override void ExecuteCmdlet()
         {
-            using (var reader = new StreamReader(IshPaths.HistoryFilePath))
-            {
-                WriteObject(reader.ReadToEnd());
-            }
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+
+            fileManager.ReadAllText(IshPaths.HistoryFilePath);
         }
     }
 }

@@ -47,11 +47,11 @@ function enableQualityAssistance_test(){
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "1"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "1" "No target xml files" 
+        TestIsBlocked $MyInvocation.MyAction.Name "1" "No target xml files" 
     }
 }
 
@@ -63,11 +63,11 @@ function disableQualityAssistance_test(){
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "2"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "2" "No target xml files" 
+        TestIsBlocked $MyInvocation.MyAction.Name "2" "No target xml files" 
     }
 }
 
@@ -82,11 +82,11 @@ function enableEnabledQualityAssistance_test(){
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "3"
     }
 
     else{
-      TestIsBlocked $MyInvocation.MyCommand.Name "3" "No target xml files" 
+      TestIsBlocked $MyInvocation.MyAction.Name "3" "No target xml files" 
     }
 }
 
@@ -99,11 +99,11 @@ function disableDisabledQualityAssistance_test(){
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "4"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "4" "No target xml files" 
+        TestIsBlocked $MyInvocation.MyAction.Name "4" "No target xml files" 
     }
 }
 
@@ -125,11 +125,11 @@ function enableQualityAssistanceWithWrongXML_test(){
    if ((Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
          #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "5"
     }
 
     else{
-       TestIsBlocked $MyInvocation.MyCommand.Name "5" "No target xml files" 
+       TestIsBlocked $MyInvocation.MyAction.Name "5" "No target xml files" 
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -156,11 +156,11 @@ function disableQualityAssistanceWithWrongXML_test(){
 
         
          #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "6"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "6" "No target xml files" 
+        TestIsBlocked $MyInvocation.MyAction.Name "6" "No target xml files" 
     }
 
     Remove-Item "$xmlPath\config.xml"
@@ -186,11 +186,11 @@ function enableQualityAssistanceWithNoXML_test(){
    if (!(Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
          #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "7"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "7" "No target xml files"
+        TestIsBlocked $MyInvocation.MyAction.Name "7" "No target xml files"
     }
 
     
@@ -217,11 +217,11 @@ function disableQualityAssistanceWithNoXML_test(){
    if (!(Test-Path "$xmlPath\config.xml") -and ("$xmlPath\bluelion-config.xml")){ 
 
          #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "8"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyCommand.Name "8" "No target xml files"
+        TestIsBlocked $MyInvocation.MyAction.Name "8" "No target xml files"
     }
 
     

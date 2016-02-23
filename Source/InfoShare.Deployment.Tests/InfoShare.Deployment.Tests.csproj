@@ -60,9 +60,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseUnitTest.cs" />
-    <Compile Include="Data\Commands\ISHProjectCommands\GetISHDeploymentsCommandTest.cs" />
-    <Compile Include="Data\Commands\XmlFileCommands\XmlCommentCommandTest.cs" />
-    <Compile Include="Data\Commands\XmlFileCommands\XmlUncommentCommandTest.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\XmlConfigManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

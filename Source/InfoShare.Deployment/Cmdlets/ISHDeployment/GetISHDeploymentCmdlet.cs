@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHDeployment;
+using InfoShare.Deployment.Business.Operations.ISHDeployment;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
@@ -13,9 +13,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 
         public override void ExecuteCmdlet()
         {
-            var cmdset = new GetISHDeploymentCmdSet(Logger, Deployment);
+            var operation = new GetISHDeploymentOperation(Logger, Deployment);
 
-            var result = cmdset.Run().ToArray();
+            var result = operation.Run().ToArray();
 
             if (Deployment != null && result.Count() == 1)
             {

@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHUIContentEditor;
+using InfoShare.Deployment.Business.Operations.ISHUIContentEditor;
 using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
@@ -18,9 +18,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
 
         public override void ExecuteCmdlet()
         {
-            var cmdSet = new EnableISHUIContentEditorCmdSet(Logger, IshPaths);
+            var operation = new EnableISHUIContentEditorOperation(Logger, IshPaths);
 
-            cmdSet.Run();
+            operation.Run();
         }
     }
 }

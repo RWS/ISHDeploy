@@ -42,13 +42,18 @@ namespace InfoShare.Deployment.Cmdlets
             }
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
-
+            var historyEntry = new StringBuilder();
+            
             if (!fileManager.Exists(IshPaths.HistoryFilePath))
             {
-                fileManager.AppendLine(IshPaths.HistoryFilePath, $"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
+                historyEntry.AppendLine($"# {DateTime.Now}");
+                historyEntry.Append($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
             }
+            
+            historyEntry.AppendLine($"# {DateTime.Now}");
+            historyEntry.Append(InvocationLine);
 
-            fileManager.AppendLine(IshPaths.HistoryFilePath, InvocationLine);
+            fileManager.AppendLine(IshPaths.HistoryFilePath, historyEntry.ToString());
         }
 
         /// <summary>

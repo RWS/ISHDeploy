@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIContentEditor
 
         public EnableISHUIContentEditorOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "InfoShare ContentEditor activation");
+            _invoker = new ActionInvoker(logger, "Enabling InfoShare Content Editor");
             
             _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.FolderButtonbar, new [] { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut }));
             _invoker.AddAction(new XmlBlockUncommentAction(logger, paths.InboxButtonBar, CommentPatterns.XopusAddCheckOut));

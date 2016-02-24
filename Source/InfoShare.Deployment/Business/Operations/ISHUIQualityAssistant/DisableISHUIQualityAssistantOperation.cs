@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIQualityAssistant
 
         public DisableISHUIQualityAssistantOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "InfoShare Enrich integration for Create");
+            _invoker = new ActionInvoker(logger, "Disabling InfoShare Enrich integration for Content Editor");
 
 			_invoker.AddAction(new XmlNodeCommentAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfigXPath));
 			_invoker.AddAction(new XmlNodeCommentAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegrationXPath));

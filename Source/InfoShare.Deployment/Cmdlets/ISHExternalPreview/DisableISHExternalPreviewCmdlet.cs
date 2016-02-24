@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHExternalPreview;
+using InfoShare.Deployment.Business.Operations.ISHExternalPreview;
 using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
@@ -18,9 +18,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 
         public override void ExecuteCmdlet()
         {
-            var cmdSet = new DisableISHExternalPreviewCmdSet(Logger, IshPaths);
+            var operation = new DisableISHExternalPreviewOperation(Logger, IshPaths);
 
-            cmdSet.Run();
+            operation.Run();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHUIQualityAssistant;
+using InfoShare.Deployment.Business.Operations.ISHUIQualityAssistant;
 using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
@@ -18,9 +18,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
 
         public override void ExecuteCmdlet()
         {
-            var cmdSet = new DisableISHUIQualityAssistantCmdSet(Logger, IshPaths);
+            var operation = new DisableISHUIQualityAssistantOperation(Logger, IshPaths);
 
-            cmdSet.Run();
+            operation.Run();
         }
     }
 }

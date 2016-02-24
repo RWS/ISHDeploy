@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Data.Commands.FileCommands;
+using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
@@ -26,12 +26,12 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 
         public override void ExecuteCmdlet()
 		{
-            var command = new FileCopyCommand(Logger, 
+            var action = new FileCopyAction(Logger, 
                 LicensePath,
                 IshPaths.LicenceFolderPath, 
                 Force);
 
-            command.Execute();
+            action.Execute();
 		}
 	}
 }

@@ -52,7 +52,7 @@ function enableContentEditor_test(){
 
     $checkResult = $textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar
     # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "1"
 }
 
 function disableContentEditor_test(){
@@ -61,7 +61,7 @@ function disableContentEditor_test(){
 
     $checkResult = !$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar
     # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "2"
    
 }
 
@@ -81,7 +81,7 @@ function enableContentEditorWithNoXML_test(){
 
     $checkResult = $ErrorMessage -Match "Could not find file"
     # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "3"
     
     #Rollback
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
@@ -102,7 +102,7 @@ function disableContentEditorWithNoXML_test(){
     }
     $checkResult = $ErrorMessage -Match "Could not find file"
     # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "4"
 
     #Rollback
     Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
@@ -127,7 +127,7 @@ function enableContentEditorWithWrongXML_test(){
      $checkResult = $ErrorMessage -Match "Root element is missing"
 
      # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "5"
 
     #Rollback
     Remove-Item "$xmlPath\FolderButtonbar.xml"
@@ -152,7 +152,7 @@ function disableContentEditorWithWrongXML_test(){
     $checkResult = $ErrorMessage -Match "Root element is missing"
 
     #Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "6"
 
     #Rollback
     Remove-Item "$xmlPath\FolderButtonbar.xml"
@@ -168,7 +168,7 @@ function enableEnabledContentEditor_test(){
     $checkResult = $textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar
     
     #Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "7"
 }
 
 function disableDisabledContentEditor_test(){
@@ -181,7 +181,7 @@ function disableDisabledContentEditor_test(){
     $checkResult = !$textFolderButtonbar -and !$textInboxButtonBar -and !$textLanguageDocumentButtonbar
 
     #Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "8"
 }
 
 function SetContentEditorLicense_test(){
@@ -202,7 +202,7 @@ function SetContentEditorLicense_test(){
 
         
     if((Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")) {
-        TestIsBlocked $MyInvocation.MyCommand.Name "9" "Could not delete license file in specified location"
+        TestIsBlocked $MyInvocation.MyAction.Name "9" "Could not delete license file in specified location"
     }
     else {
 
@@ -211,7 +211,7 @@ function SetContentEditorLicense_test(){
         $checkResult = Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "9"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "9"
     }
 }
 
@@ -222,7 +222,7 @@ function SetContentEditorLicenseWhenLicenseExists_test(){
     }       
 
     if (!(Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt")) {
-        TestIsBlocked $MyInvocation.MyCommand.Name "10" "Could not find license file in specified location"
+        TestIsBlocked $MyInvocation.MyAction.Name "10" "Could not find license file in specified location"
     }
 
     else
@@ -242,7 +242,7 @@ function SetContentEditorLicenseWhenLicenseExists_test(){
 
             $checkResult = $ErrorMessage -Match "already exists"
             #Assert
-            Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "10"
+            Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "10"
         }
 
 }
@@ -262,7 +262,7 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
      
         $checkResult = $ErrorMessage -Match "Could not find file"
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "11"
+        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "11"
 }
 
 function TestContentEditorLicense_test(){
@@ -285,7 +285,7 @@ function TestContentEditorLicense_test(){
         
     $checkResult = $testResponse -Match "True"
     #Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "12"
+    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "12"
 }
 
 function TestContentEditorLicenseWithWrongHostName_test(){
@@ -308,7 +308,7 @@ function TestContentEditorLicenseWithWrongHostName_test(){
 
         $checkResult = $testResponse -match "False"
  #Assert
-  Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "13"
+  Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "13"
 }
 
 

@@ -1,5 +1,5 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Data.Commands.LicenseCommands;
+using InfoShare.Deployment.Data.Actions.License;
 using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
@@ -24,7 +24,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 
             var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
 
-            var command = new LicenseTestCommand(
+            var action = new LicenseTestAction(
 		        Logger,
 		        ishPaths.LicenceFolderPath,
 		        Hostname,
@@ -33,7 +33,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		            result = isValid;
 		        });
 
-            command.Execute();
+            action.Execute();
 
             WriteObject(result);
 		}

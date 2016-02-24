@@ -25,13 +25,13 @@ namespace InfoShare.Deployment.Business.Invokers
         /// Sequence of the actions that <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/> going to execute
         /// </summary>
         private readonly List<IAction> _actions;
-        
+
         /// <summary>
         /// Constuctor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
         /// </summary>
         /// <param name="logger">Instance of the <see cref="T:InfoShare.Deployment.Interfaces.ILogger"/></param>
         /// <param name="activityDescription">Description of the general activity to be done</param>
-        public ActionInvoker(ILogger logger, string activityDescription)
+		public ActionInvoker(ILogger logger, string activityDescription)
         {
             _logger = logger;
             _activityDescription = activityDescription;
@@ -57,22 +57,23 @@ namespace InfoShare.Deployment.Business.Invokers
             IAction action = null;
 
 			List<IAction> executedActions = new List<IAction>();
-            try
-            {
-                for (var i = 0; i < _actions.Count; i++)
-                {
-                    action = _actions[i];
+	        try
+	        {
+		        for (var i = 0; i < _actions.Count; i++)
+		        {
+			        action = _actions[i];
 
-                    action.Execute();
+			        action.Execute();
 
 				    // If action was executed, we`re adding it to the list to make a rollback if neccesary;
 				    executedActions.Add(action);
 
-			        _logger.WriteProgress(_activityDescription, $"Executed {i} of {_actions.Count} actions");
-                }
-            }
-            catch (Exception ex)
-            {
+                    var actionNumber = i + 1;
+                    _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
+		        }
+	        }
+	        catch (Exception ex)
+	        {
 				// To do a rollback we need to do it in a sequance it was executed, thus we should reverse list.
 
 				if (isRollbackAllowed)
@@ -84,10 +85,10 @@ namespace InfoShare.Deployment.Business.Invokers
 					});
 				}
 
-                _logger.WriteError(ex, action);
-                
-                throw;
-            }
+				_logger.WriteError(ex, action);
+
+		        throw;
+	        }
 	        finally
 	        {
 		        executedActions = null;

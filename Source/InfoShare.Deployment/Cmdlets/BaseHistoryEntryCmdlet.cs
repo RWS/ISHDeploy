@@ -10,11 +10,13 @@ namespace InfoShare.Deployment.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseCmdlet
     {
+        private string CurrentDateTime => DateTime.Now.ToString("yyyyMMdd HH:mm");
+
         /// <summary>
         /// Deployment Suffix
         /// </summary>
         protected abstract ISHPaths IshPaths { get; }
-
+        
         /// <summary>
         /// Overrides ProcessRecord from Cmdlet class
         /// </summary>
@@ -46,11 +48,11 @@ namespace InfoShare.Deployment.Cmdlets
             
             if (!fileManager.Exists(IshPaths.HistoryFilePath))
             {
-                historyEntry.AppendLine($"# {DateTime.Now}");
+                historyEntry.AppendLine($"# {CurrentDateTime}");
                 historyEntry.Append($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
             }
             
-            historyEntry.AppendLine($"# {DateTime.Now}");
+            historyEntry.AppendLine($"# {CurrentDateTime}");
             historyEntry.Append(InvocationLine);
 
             fileManager.AppendLine(IshPaths.HistoryFilePath, historyEntry.ToString());

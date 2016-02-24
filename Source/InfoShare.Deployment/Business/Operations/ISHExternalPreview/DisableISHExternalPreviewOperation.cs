@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
 
         public DisableISHExternalPreviewOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "InfoShare ExternalPreview deactivation");
+            _invoker = new ActionInvoker(logger, "Disabling InfoShare external preview");
 
             _invoker.AddAction(
                 new XmlSetAttributeValueAction(

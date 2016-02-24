@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
 
         public EnableISHExternalPreviewOperation(ILogger logger, ISHPaths paths, string externalId)
         {
-            _invoker = new ActionInvoker(logger, "InfoShare ExternalPreview activation");
+            _invoker = new ActionInvoker(logger, "Enabling InfoShare external preview");
             
             _invoker.AddAction(
                 new XmlNodeUncommentAction(

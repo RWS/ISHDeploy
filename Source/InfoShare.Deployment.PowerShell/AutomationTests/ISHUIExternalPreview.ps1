@@ -5,7 +5,7 @@ CLS
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "C:\Automated_deployment\Test5.htm"
+$logFile = "C:\Automated_deployment\Test4.htm"
 
 $WarningPreference = “Continue"
 
@@ -18,7 +18,8 @@ $dict.Add('projectsuffix', 'SQL2014')
 $dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
-$deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
+#$deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
+$deploy = Get-ISHDeployment -Deployment "SQL2014"
 
 
 $xmlPath = $deploy.WebPath
@@ -52,11 +53,11 @@ function enableExternalPreview_test(){
 
    if (Test-Path "$xmlPath\Web.config"){ 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "1"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "1" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "1" "No web.config file"
     }
 }
 
@@ -67,11 +68,11 @@ function disableExternalPreview_test(){
     $checkResult = !$textConfig -and !$configSection -and !$module
    if (Test-Path "$xmlPath\Web.config"){ 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "2"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "2" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "2" "No web.config file"
     }
 }
 
@@ -87,11 +88,11 @@ function enableEnabledExternalPreview_test(){
    if (Test-Path "$xmlPath\Web.config"){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "3"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "3" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "3" "No web.config file"
     }
 }
 
@@ -105,12 +106,12 @@ function disableDisabledExternalPreview_test(){
     $checkResult = !$textConfig -and !$configSection -and !$module
    if (Test-Path "$xmlPath\Web.config"){ 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "4"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
         }
     
 
     else{
-       TestIsBlocked $MyInvocation.MyAction.Name "4" "No web.config file"
+       TestIsBlocked $MyInvocation.MyCommand.Name "4" "No web.config file"
     }
 }
 
@@ -125,12 +126,12 @@ function enableExternalPreviewWithCustomExternalID_test(){
     
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "5"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
         }
     
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "5" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "5" "No web.config file"
     }
 }
 
@@ -143,11 +144,11 @@ function disableExternalPreviewWithCustomExternalID_test(){
    if (Test-Path "$xmlPath\Web.config"){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "6"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "6" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "6" "No web.config file"
     }
 }
 
@@ -170,11 +171,11 @@ function enableExternalPreviewWithWrongXML_test(){
    if (Test-Path "$xmlPath\Web.config"){ 
 
          #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "7"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "7"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "7" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "7" "No web.config file"
     }
 
     Remove-Item "$xmlPath\Web.config"
@@ -201,11 +202,11 @@ function disableExternalPreviewWithWrongXML_test(){
    if (Test-Path "$xmlPath\Web.config"){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "8"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "8" "No web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "8" "No web.config file"
     }
 
     Remove-Item "$xmlPath\Web.config"
@@ -232,11 +233,11 @@ function enableExternalPreviewWithNoXML_test(){
    if (!(Test-Path "$xmlPath\Web.config")){ 
 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "9"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "9"
     }
 
     else{
-       TestIsBlocked $MyInvocation.MyAction.Name "9" "Could not rename web.config file"
+       TestIsBlocked $MyInvocation.MyCommand.Name "9" "Could not rename web.config file"
     }
 
    
@@ -261,11 +262,11 @@ function disableExternalPreviewWithNoXML_test(){
         $checkResult = $ErrorMessage -Match "Could not find file"
    if (!(Test-Path "$xmlPath\Web.config")){ 
         #Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "10"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "10"
     }
 
     else{
-        TestIsBlocked $MyInvocation.MyAction.Name "10" "Could not rename web.config file"
+        TestIsBlocked $MyInvocation.MyCommand.Name "10" "Could not rename web.config file"
     }
 
    

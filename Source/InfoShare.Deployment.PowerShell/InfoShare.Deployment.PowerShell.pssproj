@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="AutomationTests\Common.ps1" />
     <Compile Include="AutomationTests\GET-ISHDeployment.ps1" />
+    <Compile Include="AutomationTests\History_test.ps1" />
+    <Compile Include="AutomationTests\ISHGetHistory.ps1" />
     <Compile Include="AutomationTests\ISHUIContentEditor.ps1" />
     <Compile Include="AutomationTests\ISHUIExternalPreview.ps1" />
     <Compile Include="AutomationTests\ISHUIQualityAssistant.ps1" />

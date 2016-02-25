@@ -20,7 +20,7 @@ function GetIshDeploymentWithDeploymentParameter_test(){
 
     $checkResult = (($deploy.WebPath -eq "C:\InfoShare") -and($deploy.Count -eq 1))
     # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "1"
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
  }
 
  function GetIshDeploymentWithoutDeploymentParameter_test(){
@@ -29,7 +29,7 @@ function GetIshDeploymentWithDeploymentParameter_test(){
 
     $checkResult = $deploy.Count -eq 2
      # Assert
-    Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "2"
+    Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
 
  }
 
@@ -47,7 +47,7 @@ function GetIshDeploymentWithDeploymentParameter_test(){
 
         $checkResult = $ErrorMessage -match "Deployment with suffix testDummySuffix is not found on the system"
          # Assert
-        Assert_IsTrue $checkResult $MyInvocation.MyAction.Name "3"
+        Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
 
  }
  

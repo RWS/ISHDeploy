@@ -25,7 +25,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// Sequence of the actions that <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/> going to execute
         /// </summary>
         private readonly List<IAction> _actions;
-        
+
         /// <summary>
         /// Constuctor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
         /// </summary>
@@ -48,9 +48,9 @@ namespace InfoShare.Deployment.Business.Invokers
             _actions.Add(action);
         }
 
-		/// <summary>
-		/// Executes sequence of actions one by one
-		/// </summary>
+        /// <summary>
+        /// Executes sequence of actions one by one
+        /// </summary>
 		/// <param name="isRollbackAllowed">flag that determines if rollback is possible for this invocation</param>
 		public void Invoke(bool isRollbackAllowed = true)
         {

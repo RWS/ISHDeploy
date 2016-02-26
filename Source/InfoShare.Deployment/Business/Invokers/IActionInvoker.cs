@@ -11,7 +11,7 @@ namespace InfoShare.Deployment.Business.Invokers
 		/// Adds Action into invocation list
 		/// </summary>
 		/// <param name="action">An action to invoke <see cref="T:InfoShare.Deployment.Interfaces.Actions.IAction"/>.</param>
-		void AddAction(IAction action);
+        void AddAction(IAction action);
 
 		/// <summary>
 		/// Invokes actions sequence execution

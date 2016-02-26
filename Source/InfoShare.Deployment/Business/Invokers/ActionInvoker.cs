@@ -25,7 +25,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// Sequence of the actions that <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/> going to execute
         /// </summary>
         private readonly List<IAction> _actions;
-        
+
         /// <summary>
         /// Constuctor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
         /// </summary>
@@ -48,10 +48,10 @@ namespace InfoShare.Deployment.Business.Invokers
             _actions.Add(action);
         }
 
-		/// <summary>
-		/// Executes sequence of actions one by one
-		/// </summary>
-        public void Invoke()
+        /// <summary>
+        /// Executes sequence of actions one by one
+        /// </summary>
+		public void Invoke()
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
             IAction action = null;
@@ -75,7 +75,9 @@ namespace InfoShare.Deployment.Business.Invokers
             catch (Exception ex)
             {
 				// To do a rollback we need to do it in a sequance it was executed, thus we should reverse list.
-				//if (isRollbackAllowed)
+
+				//	We are doing tollback by defaul, as if we would want to do in on demand, 
+				//	then we`d have to add a flad into method invocation
 		        {
 			        executedActions.Reverse();
 					executedActions.ForEach(x =>

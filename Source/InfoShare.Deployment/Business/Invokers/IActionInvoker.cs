@@ -16,6 +16,6 @@ namespace InfoShare.Deployment.Business.Invokers
         /// <summary>
 		/// Invokes actions sequence execution
         /// </summary>
-        void Invoke(bool isRollbackAllowed);
+        void Invoke();
     }
 }

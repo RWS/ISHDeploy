@@ -51,8 +51,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// <summary>
         /// Executes sequence of actions one by one
         /// </summary>
-		/// <param name="isRollbackAllowed">flag that determines if rollback is possible for this invocation</param>
-		public void Invoke(bool isRollbackAllowed = true)
+		public void Invoke()
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
             IAction action = null;
@@ -77,7 +76,8 @@ namespace InfoShare.Deployment.Business.Invokers
             {
 				// To do a rollback we need to do it in a sequance it was executed, thus we should reverse list.
 
-				if (isRollbackAllowed)
+				//	We are doing tollback by defaul, as if we would want to do in on demand, 
+				//	then we`d have to add a flad into method invocation
 		        {
 			        executedActions.Reverse();
 					executedActions.ForEach(x =>

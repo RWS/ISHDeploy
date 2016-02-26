@@ -57,12 +57,27 @@ namespace InfoShare.Deployment.Data.Managers
             return File.Exists(path);
         }
 
-        /// <summary>
-        /// Opens a text file, reads all lines of the file, and then closes the file.
-        /// </summary>
-        /// <param name="filePath">The file to open for reading.</param>
-        /// <returns>A string array containing all lines of the file.</returns>
-        public string ReadAllText(string filePath)
+		/// <summary>
+		///	Deletes file
+		/// </summary>
+		/// <param name="path">Path to the file to be deleted</param>
+		public void Delete(string path)
+		{
+			FileInfo fileInfo = new FileInfo(path);
+			if (fileInfo.IsReadOnly)
+			{
+				fileInfo.Attributes = FileAttributes.Normal;
+			}
+
+			File.Delete(path);
+		}
+
+		/// <summary>
+		/// Opens a text file, reads all lines of the file, and then closes the file.
+		/// </summary>
+		/// <param name="filePath">The file to open for reading.</param>
+		/// <returns>A string array containing all lines of the file.</returns>
+		public string ReadAllText(string filePath)
         {
             return File.ReadAllText(filePath);
         }

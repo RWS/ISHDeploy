@@ -7,15 +7,15 @@ namespace InfoShare.Deployment.Business.Invokers
     /// </summary>
     public interface IActionInvoker
     {
-        /// <summary>
-        /// Adds action to the sequence
-        /// </summary>
-        /// <param name="action">New action to the sequence</param>
+		/// <summary>
+		/// Adds Action into invocation list
+		/// </summary>
+		/// <param name="action">An action to invoke <see cref="T:InfoShare.Deployment.Interfaces.Actions.IAction"/>.</param>
         void AddAction(IAction action);
 
-        /// <summary>
-        /// Executes sequence of actions one by one
-        /// </summary>
-        void Invoke();
+		/// <summary>
+		/// Invokes actions execution
+		/// </summary>
+        void Invoke(bool isRollbackAllowed);
     }
 }

@@ -2,7 +2,14 @@
 {
     public interface IRestorableAction
     {
+		/// <summary>
+		///	Creates backup of the asset
+		/// </summary>
         void Backup();
-        void Rollback();
+		
+		/// <summary>
+		///	Reverts an asset to initial state
+		/// </summary>
+		void Rollback();
     }
 }

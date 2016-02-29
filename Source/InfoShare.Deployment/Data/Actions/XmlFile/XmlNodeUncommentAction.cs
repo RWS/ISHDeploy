@@ -5,12 +5,12 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
     public class XmlNodeUncommentAction : SingleXmlFileAction
-	{
+    {
         private readonly IEnumerable<string> _searchPatterns;
 
         public XmlNodeUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
 			: base(logger, filePath)
-		{
+        {
             _searchPatterns = searchPatterns;
         }
 

@@ -25,7 +25,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// Sequence of the actions that <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/> going to execute
         /// </summary>
         private readonly List<IAction> _actions;
-
+        
         /// <summary>
         /// Constuctor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
         /// </summary>
@@ -51,7 +51,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// <summary>
         /// Executes sequence of actions one by one
         /// </summary>
-		public void Invoke()
+        public void Invoke()
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
             IAction action = null;

@@ -10,12 +10,12 @@ namespace InfoShare.Deployment.Data.Actions.File
 	/// Implements file copy action
 	/// </summary>
     public class FileCopyAction : BaseAction, IRestorableAction
-	{
+    {
 		private readonly string _sourcePath;
-		private readonly string _destinationPath;
-		private readonly bool _force;
+        private readonly string _destinationPath;
+        private readonly bool _force;
 
-		private readonly IFileManager _fileManager;
+        private readonly IFileManager _fileManager;
 
 		/// <summary>
 		/// Does copy of file to directory
@@ -31,8 +31,8 @@ namespace InfoShare.Deployment.Data.Actions.File
 			_destinationPath = destinationPath.AbsolutePath;
             _force = force;
 
-			_fileManager = ObjectFactory.GetInstance<IFileManager>();
-		}
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
+        }
 
 		/// <summary>
 		/// Executes the action
@@ -50,7 +50,7 @@ namespace InfoShare.Deployment.Data.Actions.File
 			string fileName = Path.GetFileName(_sourcePath);
 			var copiedFileName = Path.Combine(_destinationPath, fileName);
 			if (_fileManager.Exists(copiedFileName))
-			{
+		{
 				_fileManager.Delete(copiedFileName);
 			}
 		}

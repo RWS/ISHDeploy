@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
 
         public XmlNodeCommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> xpaths)
 			: base(logger, filePath)
-		{
+        {
             _xpaths = xpaths;
         }
 

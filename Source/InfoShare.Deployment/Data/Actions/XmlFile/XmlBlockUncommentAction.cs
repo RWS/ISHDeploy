@@ -10,7 +10,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
 
         public XmlBlockUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
 			: base(logger, filePath)
-		{
+        {
             _searchPatterns = searchPatterns;
         }
 

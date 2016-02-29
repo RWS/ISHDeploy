@@ -5,12 +5,12 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
     public class XmlBlockCommentAction : SingleXmlFileAction
-	{
+    {
         private readonly IEnumerable<string> _searchPatterns;
 
         public XmlBlockCommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
 			: base(logger, filePath)
-		{
+        {
             _searchPatterns = searchPatterns;
         }
 

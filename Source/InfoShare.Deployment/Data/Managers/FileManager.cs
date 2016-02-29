@@ -78,10 +78,13 @@ namespace InfoShare.Deployment.Data.Managers
 		/// <param name="folderPath">Path to folder to be cleaned up</param>
 		public void CleanFolder(string folderPath)
 		{
-			// Means there is no backup folder needed, and we just have to clean the related folder on deployment
-			foreach (string filePath in Directory.GetFiles(folderPath))
+			if (Directory.Exists(folderPath))
 			{
-				this.Delete(filePath);
+				// Means there is no backup folder needed, and we just have to clean the related folder on deployment
+				foreach (string filePath in Directory.GetFiles(folderPath))
+				{
+					this.Delete(filePath);
+				}
 			}
 		}
 
@@ -92,10 +95,13 @@ namespace InfoShare.Deployment.Data.Managers
 		/// <param name="destinationPath">Destination folder path</param>
 		public void CopyDirectoryContent(string sourcePath, string destinationPath)
 		{
-			//Copy all the files & Replaces any files with the same name
-			foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+			if (Directory.Exists(sourcePath))
 			{
-				this.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+				//Copy all the files & Replaces any files with the same name
+				foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+				{
+					this.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+				}
 			}
 		}
 

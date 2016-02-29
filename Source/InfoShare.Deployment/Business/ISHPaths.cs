@@ -16,23 +16,23 @@ namespace InfoShare.Deployment.Business
 
 		#region Enable/Disable Content Editor (XOPUS)
 
-		public ISHFilePath FolderButtonbar => GetIshFilePath(IshDeploymentType.App, @"App\ASP\XSL\FolderButtonbar.xml");
-		public ISHFilePath InboxButtonBar => GetIshFilePath(IshDeploymentType.App, @"App\ASP\XSL\InboxButtonBar.xml");
-		public ISHFilePath LanguageDocumentButtonBar => GetIshFilePath(IshDeploymentType.App, @"App\ASP\XSL\LanguageDocumentButtonbar.xml");
-		public ISHFilePath LicenceFolderPath => GetIshFilePath(IshDeploymentType.App, @"App\ASP\Editors\Xopus\license\");
+		public ISHFilePath FolderButtonbar => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\XSL\FolderButtonbar.xml");
+		public ISHFilePath InboxButtonBar => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\XSL\InboxButtonBar.xml");
+		public ISHFilePath LanguageDocumentButtonBar => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\XSL\LanguageDocumentButtonbar.xml");
+		public ISHFilePath LicenceFolderPath => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\Editors\Xopus\license\");
 
 		#endregion
 
 		#region Enable/Disable Enrich
 
-		public ISHFilePath EnrichConfig => GetIshFilePath(IshDeploymentType.App, @"App\ASP\Editors\Xopus\config\bluelion-config.xml");
-		public ISHFilePath XopusConfig => GetIshFilePath(IshDeploymentType.App, @"App\ASP\Editors\Xopus\config\config.xml");
+		public ISHFilePath EnrichConfig => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
+		public ISHFilePath XopusConfig => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\Editors\Xopus\config\config.xml");
 
 		#endregion
 
 		#region Enable/Disable ExternalPreview
 
-		public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.App, @"App\ASP\Web.config");
+		public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.App, @"Author\ASP\Web.config");
 
 		#endregion
 

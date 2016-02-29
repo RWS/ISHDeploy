@@ -40,6 +40,7 @@
     <Folder Include="CmdletsUsage\ISHUIQualityAssistant\" />
     <Folder Include="CmdletsUsage\ISHExternalPreview\" />
     <Folder Include="CmdletsUsage\ISHDeployment\" />
+    <Folder Include="CmdletsUsage\Rollback\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomationTests\Common.ps1" />
@@ -56,6 +57,7 @@
     <Compile Include="CmdletsUsage\ISHExternalPreview\EnableDisableExternalPreview.ps1" />
     <Compile Include="CmdletsUsage\ISHUIContentEditor\EnableDisableContentEditor.ps1" />
     <Compile Include="CmdletsUsage\ISHUIQualityAssistant\EnableDisableQualityAssistant.ps1" />
+    <Compile Include="CmdletsUsage\Rollback\Rollback.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

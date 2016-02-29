@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Actions;
@@ -40,6 +41,9 @@ namespace InfoShare.Deployment.Data.Actions
 			Dispose();
 		}
 
+		/// <summary>
+		/// Rollback the instance
+		/// </summary>
 		public virtual void Rollback()
 		{
 			if (this.BackupPath != null)
@@ -53,6 +57,9 @@ namespace InfoShare.Deployment.Data.Actions
 			}
 		}
 
+		/// <summary>
+		/// Does Back up of the file
+		/// </summary>
 		public void Backup()
 		{
 			if (FileManager.Exists(this.FilePath))
@@ -74,6 +81,9 @@ namespace InfoShare.Deployment.Data.Actions
 			}
 		}
 
+		/// <summary>
+		/// Verify that back up file for vanilla instance is exists
+		/// </summary>
 		public void EnsureVanillaBackUpExists()
 		{
 			if (FileManager.Exists(this.FilePath))
@@ -81,6 +91,12 @@ namespace InfoShare.Deployment.Data.Actions
 				string vanillaFilePath = IshFilePath.VanillaPath;
 				if (!FileManager.Exists(vanillaFilePath))
 				{
+					string directoryName = Path.GetDirectoryName(vanillaFilePath);
+					if (!Directory.Exists(directoryName))
+					{
+						Directory.CreateDirectory(directoryName);
+					}
+
 					FileManager.Copy(this.FilePath, vanillaFilePath);
 				}
 			}
@@ -88,13 +104,17 @@ namespace InfoShare.Deployment.Data.Actions
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// 
 		/// </summary>
 		public void Dispose()
 		{
 			if (this.BackupPath != null)
 			{
-				FileManager.Delete(this.BackupPath);
+				if (FileManager.Exists(this.BackupPath))
+				{
+					FileManager.Delete(this.BackupPath);
+				}
+
+				this.BackupPath = null;
 			}
 		}
 

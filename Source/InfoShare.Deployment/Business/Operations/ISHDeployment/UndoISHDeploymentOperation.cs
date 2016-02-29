@@ -4,6 +4,7 @@ using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Data.Actions.ISHProject;
 using InfoShare.Deployment.Extensions;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 {

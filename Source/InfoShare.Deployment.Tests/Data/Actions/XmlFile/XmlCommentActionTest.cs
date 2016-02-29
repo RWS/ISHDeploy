@@ -22,7 +22,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         {
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
-            var testFilePath = "DisabledXOPUS.xml";
+            var testFilePath = this.GetIshFilePath("DisabledXOPUS.xml");
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<!-- " + testCommentPattern + " START --><BUTTONBAR>" +
@@ -31,8 +31,8 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                         "</BUTTON><!-- " + testCommentPattern + " END -->" +
                                     "</BUTTONBAR>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
                     x =>
                     {
                         var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
@@ -51,7 +51,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testXPath = "*/*[local-name()='javascript'][@src='" + testSrc + "']";
-            var testFilePath = "EnabledEnrich.xml";
+            var testFilePath = this.GetIshFilePath("EnabledEnrich.xml");
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -59,8 +59,8 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                       "<javascript src='" + testSrc + "' eval=\"false\" phase=\"Xopus\" />" +
                                       "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
                     x =>
                     {
                         var element = GetXElementByXPath(doc, testXPath);

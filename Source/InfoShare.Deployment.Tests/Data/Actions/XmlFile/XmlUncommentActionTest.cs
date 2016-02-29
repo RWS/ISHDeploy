@@ -22,7 +22,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         {
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
-            var testFilePath = "DisabledXOPUS.xml";
+            var testFilePath = this.GetIshFilePath("DisabledXOPUS.xml");
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<BUTTONBAR><!-- " + testCommentPattern + " START --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
@@ -32,8 +32,8 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                     "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + testCommentPattern + " END --></BUTTONBAR>");
 
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
                     x =>
                     {
                         var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
@@ -52,7 +52,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         {
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
-            var testFilePath = "DisabledEnrich.xml";
+            var testFilePath = this.GetIshFilePath("DisabledEnrich.xml");
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -62,8 +62,8 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                       testCommentPattern + "--> " +
                                       "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
+            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
                     x =>
                     {
                         var element = GetXElementByXPath(doc, $"*/*[local-name()='javascript'][@src='{testSrc}']");

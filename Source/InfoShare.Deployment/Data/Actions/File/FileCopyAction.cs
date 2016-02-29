@@ -1,11 +1,14 @@
 ﻿using System.IO;
-using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Interfaces.Actions;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.File
 {
+	/// <summary>
+	/// Implements file copy action
+	/// </summary>
     public class FileCopyAction : BaseAction, IRestorableAction
 	{
 		private readonly string _sourcePath;

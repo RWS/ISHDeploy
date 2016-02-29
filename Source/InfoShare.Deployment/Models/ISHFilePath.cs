@@ -1,10 +1,8 @@
-﻿using System;
-using InfoShare.Deployment.Models;
-using System.IO;
-using System.Management.Automation;
+﻿using System.IO;
+using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Extensions;
 
-namespace InfoShare.Deployment.Business
+namespace InfoShare.Deployment.Models
 {
 	public class ISHFilePath
 	{
@@ -12,8 +10,17 @@ namespace InfoShare.Deployment.Business
 
 		private readonly ISHPaths.IshDeploymentType _deploymentType;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public string RelativePath { get; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ishDeployment"></param>
+		/// <param name="deploymentType"></param>
+		/// <param name="path"></param>
 		public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
@@ -21,6 +28,9 @@ namespace InfoShare.Deployment.Business
 			RelativePath = path;
 		}
 
+		/// <summary>
+		/// Absolute path to file or folder
+		/// </summary>
 		public string AbsolutePath
 		{
 			get

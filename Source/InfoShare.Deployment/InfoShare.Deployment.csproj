@@ -73,9 +73,10 @@
     <Compile Include="Cmdlets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdlet.cs" />
     <Compile Include="Data\Actions\BaseAction.cs" />
     <Compile Include="Data\Actions\BaseActionWithResult.cs" />
+    <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
-    <Compile Include="Data\Actions\ISHProject\UndoISHDeploymentsCommand.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
     <Compile Include="Data\Actions\SingleXmlFileAction.cs" />
     <Compile Include="Data\Actions\SingleFileAction.cs" />

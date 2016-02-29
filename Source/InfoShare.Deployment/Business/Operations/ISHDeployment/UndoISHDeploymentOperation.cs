@@ -1,12 +1,15 @@
 ﻿using System.Linq;
 using InfoShare.Deployment.Business.Invokers;
+using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Data.Actions.ISHProject;
-using InfoShare.Deployment.Data.Actions.ISHProjectActions;
 using InfoShare.Deployment.Extensions;
 using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 {
+	/// <summary>
+	/// Operation to revert changes to Vanilla state
+	/// </summary>
     public class UndoISHDeploymentOperation : IOperation
 	{
 		private readonly IActionInvoker _invoker;
@@ -26,17 +29,17 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 			_invoker.AddAction(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishDeployment = result.First()));
 
 			// Rolling back changes for Web folder
-			_invoker.AddAction(new UndoISHDeploymentsAction(logger, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), _ishDeployment.WebPath));
-			
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, _ishDeployment.WebPath, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web)));
+
 			// Rolling back changes for Data folder
-			_invoker.AddAction(new UndoISHDeploymentsAction(logger, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), _ishDeployment.DataPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, _ishDeployment.DataPath, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data)));
 
 			// Rolling back changes for App folder
-			_invoker.AddAction(new UndoISHDeploymentsAction(logger, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), _ishDeployment.AuthorFolderPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, _ishDeployment.AuthorFolderPath, _ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App)));
 
 			// Removing licenses
 			ISHFilePath licenseFolderPath = (new ISHPaths(_ishDeployment)).LicenceFolderPath;
-			_invoker.AddAction(new UndoISHDeploymentsAction(logger, licenseFolderPath.AbsolutePath));
+			_invoker.AddAction(new FileCleanDirectoryAction(logger, licenseFolderPath.AbsolutePath));
 		}
 
 		/// <summary>

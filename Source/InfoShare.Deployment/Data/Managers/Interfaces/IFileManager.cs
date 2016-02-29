@@ -64,6 +64,19 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		/// <param name="filePath">The file to delete.</param>
 		void Delete(string filePath);
 
+	    /// <summary>
+	    /// Cleans up the folder
+	    /// </summary>
+	    /// <param name="folderPath">Path to folder to be cleaned up</param>
+	    void CleanFolder(string folderPath);
+
+	    /// <summary>
+	    /// Copies content from one folder to another
+	    /// </summary>
+	    /// <param name="sourcePath">Source folder path</param>
+	    /// <param name="destinationPath">Destination folder path</param>
+	    void CopyDirectoryContent(string sourcePath, string destinationPath);
+
 		/// <summary>
 		/// Tries to find license file on the system
 		/// </summary>

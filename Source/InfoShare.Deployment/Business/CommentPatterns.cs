@@ -33,5 +33,15 @@
         public const string TrisoftInfoshareWebExternalAttributeName = "externalId";
 
         #endregion
-	}
+
+        #region Enable/Disable Translation Job
+
+        public const string TranslationJobHack = "//Translation Jobs hack";
+        public const string TranslationJobsXPath = "menubar/menuitem[@label='Translation Jobs']";
+        public const string TranslationComment = "TRANSLATION";
+        public static string TranslationInternalCommentXPath => $"BUTTONBAR/BUTTON[comment()[contains(., '{TranslationComment}')]]";
+        public static string TranslationExternalCommentXPath => $"BUTTONBAR/comment()[contains(., '{TranslationComment}')]/following-sibling::BUTTON[1]";
+
+        #endregion
+    }
 }

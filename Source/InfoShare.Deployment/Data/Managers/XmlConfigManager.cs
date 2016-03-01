@@ -75,7 +75,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             _fileManager.Save(filePath, doc);
         }
-
+        
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
@@ -87,6 +87,37 @@ namespace InfoShare.Deployment.Data.Managers
                 _logger.WriteVerbose($"{filePath} does not contain uncommented node within the xpath {xpath}");
                 return;
             }
+
+            var uncommentText = uncommentedNode.ToString();
+
+            var commentedNode = new XComment(uncommentText);
+
+            uncommentedNode.ReplaceWith(commentedNode);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        public void CommentNodeWithInternalPattern(string filePath, string xpath, string internalPatternElem)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var uncommentedNode = doc.XPathSelectElement(xpath);
+
+            if (uncommentedNode == null)
+            {
+                _logger.WriteVerbose($"{filePath} does not contain searched xpath {xpath}");
+                return;
+            }
+
+            // Adds searched pattern before actual node, so next time it will be easier to find this node
+            uncommentedNode.AddBeforeSelf(new XComment(internalPatternElem));
+
+            // Remove internal searched pattern
+            var internalComment =
+                uncommentedNode.DescendantNodes()
+                    .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(internalPatternElem));
+
+            internalComment?.Remove();
 
             var uncommentText = uncommentedNode.ToString();
 
@@ -131,12 +162,12 @@ namespace InfoShare.Deployment.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var commentedNode = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+                .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
             if (commentedNode == null)
             {
                 var uncommentedNode = doc.DescendantNodes()
-                    .Where(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+                    .FirstOrDefault(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
                 if (uncommentedNode == null)
                 {
@@ -155,6 +186,31 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             _fileManager.Save(filePath, docWithUncommentedNode);
+        }
+        
+        public bool XPathExists(string filePath, string xpath)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var node = doc.XPathSelectElement(xpath);
+
+            return node != null;
+        }
+
+        public void SetAttributeValue(string filePath, string xpath, string attributeName, string value)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var element = doc.XPathSelectElement(xpath);
+
+            if (element == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
+                return;
+            }
+            element.SetAttributeValue(attributeName, value);
+
+            _fileManager.Save(filePath, doc);
         }
 
         private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)
@@ -182,22 +238,6 @@ namespace InfoShare.Deployment.Data.Managers
             {
                 return false;
             }
-        }
-
-        public void SetAttributeValue(string filePath, string xpath, string attributeName, string value)
-        {
-            var doc = _fileManager.Load(filePath);
-
-            var element = doc.XPathSelectElement(xpath);
-
-            if (element == null)
-            {
-                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
-                return;
-            }
-            element.SetAttributeValue(attributeName, value);
-
-            _fileManager.Save(filePath, doc);
         }
     }
 }

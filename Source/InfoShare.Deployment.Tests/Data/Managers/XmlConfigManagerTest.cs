@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Data.Managers;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using InfoShare.Deployment.Data.Exceptions;
+using InfoShare.Deployment.Tests.Extensions;
 
 namespace InfoShare.Deployment.Tests.Data.Managers
 {
@@ -13,6 +15,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
     public class XmlConfigManagerTest : BaseUnitTest
     {
         private IXmlConfigManager _xmlConfigManager;
+        private const string _filePath = "C:\\DummyFilePath.txt";
 
         [TestInitialize]
         public void TestInitializer()
@@ -20,7 +23,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
             _xmlConfigManager = new XmlConfigManager(Logger);
         }
 
-        #region UncommentNode
+        #region Uncomment Block/Node
 
         [TestMethod]
         [TestCategory("Data handling")]
@@ -120,10 +123,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                         Assert.Fail("Saving should not happen");
                     }
                 );
-
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
+            
             _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
 
             Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
@@ -176,9 +176,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                     }
                 );
             
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
             _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
 
             Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
@@ -276,8 +273,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
         }
 
         #endregion UncommentNode
-
-
+        
         #region CommentNode
         [TestMethod]
         [TestCategory("Data handling")]
@@ -307,8 +303,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
         }
-
-
+        
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Disable_Enrich()
@@ -357,9 +352,6 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                     x => Assert.Fail("Saving should not happen")
                 );
             
-            Logger.When(x => x.WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.")).Do(
-                Assert.IsNotNull);
-
             _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
 
             Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
@@ -380,15 +372,10 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                       "</config>");
 
             FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x => Assert.Fail("Saving should not happen")
-                );
-
-            Logger.When(x => x.WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}")).Do(
-                Assert.IsNotNull);
 
             _xmlConfigManager.CommentNode(testFilePath, testXPath);
             
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
@@ -408,15 +395,10 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                     "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + testCommentPattern + " END --></BUTTONBAR>");
 
             FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x => Assert.Fail("Saving should not happen")
-                );
-
-            Logger.When(x => x.WriteVerbose($"{testFilePath} contains already commented part within the pattern {testCommentPattern}")).Do(
-                Assert.IsNotNull);
 
             _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
 
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteVerbose($"{testFilePath} contains already commented part within the pattern {testCommentPattern}");
         }
 
@@ -436,11 +418,10 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                     "</BUTTONBAR>");
 
             FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x => Assert.Fail("Saving should not happen")
-                );
             
             _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
+
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
         }
 
@@ -468,14 +449,106 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                 );
 
             _xmlConfigManager.CommentNode(testFilePath, testXPath);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            FileManager.Received(1).Save(testFilePath, doc);
             Logger.DidNotReceive().WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
-        #endregion CommentNode
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNode_Testing_specific_TranslationExternalCommentXPath_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <!-- {CommentPatterns.TranslationComment} -->
+    <BUTTON>
+        <INPUT type=""button""/>
+    </BUTTON>
+</BUTTONBAR>");
+
+            XDocument result = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
+
+            _xmlConfigManager.CommentNode(_filePath, CommentPatterns.TranslationExternalCommentXPath);
+
+            // Assert
+            var expected = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <!-- {CommentPatterns.TranslationComment} -->
+    <!--<BUTTON>
+        <INPUT type=""button"" />
+    </BUTTON>-->
+</BUTTONBAR>");
+
+            Assert.IsTrue(result.IsSameAs(expected), "Expected document is different from actual result");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNodeWithInternalPattern_Internal_paths_exist()
+        {
+            // Arrange
+            var doc = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <BUTTON>
+        <!-- {CommentPatterns.TranslationComment} -->
+        <INPUT type=""button""/>
+    </BUTTON>
+</BUTTONBAR>");
+            XDocument result = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
+
+            // Act
+            _xmlConfigManager.CommentNodeWithInternalPattern(_filePath, CommentPatterns.TranslationInternalCommentXPath, CommentPatterns.TranslationComment);
+
+            // Assert
+            var expected = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <!-- {CommentPatterns.TranslationComment} -->
+    <!--<BUTTON>
+        <INPUT type=""button"" />
+    </BUTTON>-->
+</BUTTONBAR>");
+            
+            Assert.IsTrue(result.IsSameAs(expected), "Expected document is different from actual result");
+        }
+        
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNodeWithInternalPattern_Path_does_not_exist()
+        {
+            // Arrange
+            var doc = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <!-- {CommentPatterns.TranslationComment} -->
+    <BUTTON>
+        <INPUT type=""button""/>
+    </BUTTON>
+</BUTTONBAR>");
+            
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.CommentNodeWithInternalPattern(_filePath, CommentPatterns.TranslationInternalCommentXPath, CommentPatterns.TranslationComment);
+
+            // Assert
+            Logger.Received(1).WriteVerbose($"{_filePath} does not contain searched xpath {CommentPatterns.TranslationInternalCommentXPath}");
+        }
+
+        #endregion Comment Block/Node
 
         #region Set value
-        
+
         [TestMethod]
         [TestCategory("Data handling")]
         public void SetAttributeValue()

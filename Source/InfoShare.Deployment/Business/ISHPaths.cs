@@ -28,6 +28,19 @@ namespace InfoShare.Deployment.Business
 
         #endregion
 
+        #region Enable/Disable Translation Job
+        
+        public string TopDocumentButtonbar => CombineAuthorFolderPath(@"Author\ASP\XSL\TopDocumentButtonbar.xml");
+        public string TreeHtm => CombineAuthorFolderPath(@"Author\ASP\Tree.htm");
+
+        #endregion
+
+        #region Event Monitor
+
+        public string EventMonitorMenuBar => CombineAuthorFolderPath(@"Author\ASP\XSL\EventMonitorMenuBar.xml");
+
+        #endregion
+
         #region InfoShareDeployment folders
 
         public string InfoshareDeploymentDataFolder

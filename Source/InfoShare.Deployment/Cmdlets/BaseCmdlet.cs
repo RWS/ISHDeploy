@@ -24,6 +24,7 @@ namespace InfoShare.Deployment.Cmdlets
             Logger = CmdletsLogger.Instance();
             ObjectFactory.SetInstance<IFileManager>(new FileManager(Logger));
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
+            ObjectFactory.SetInstance<ITextConfigManager>(new TextConfigManager(Logger));
             ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
         }
 

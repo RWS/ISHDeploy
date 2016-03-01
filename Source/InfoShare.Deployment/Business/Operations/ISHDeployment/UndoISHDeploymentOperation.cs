@@ -30,7 +30,6 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 
 			// Retrieveing deployment per suffix
 
-			//_invoker.AddAction(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishDeployment = result.First()));
 			// (!)	We need to retrieve deployment before accessing next action
 			(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishDeployment = result.First())).Execute();
 

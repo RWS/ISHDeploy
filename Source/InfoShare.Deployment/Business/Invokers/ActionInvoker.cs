@@ -92,7 +92,13 @@ namespace InfoShare.Deployment.Business.Invokers
             }
 	        finally
 	        {
-		        executedActions = null;
+				// We need to dispose the command where is is possible as it will clean backed up assets
+				_actions.ForEach(x =>
+				{
+					(x as IDisposable)?.Dispose();
+				});
+
+				executedActions = null;
 	        }
         }
     }

@@ -1,25 +1,20 @@
 ﻿using System.Collections.Generic;
-using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlBlockCommentAction : BaseAction
+    public class XmlBlockCommentAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _searchPatterns;
-        private readonly IXmlConfigManager _xmlConfigManager;
-        private readonly string _filePath;
 
-        public XmlBlockCommentAction(ILogger logger, string filePath, IEnumerable<string> searchPatterns)
-            : base(logger)
+        public XmlBlockCommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
+			: base(logger, filePath)
         {
-            _filePath = filePath;
             _searchPatterns = searchPatterns;
-
-            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
-        public XmlBlockCommentAction(ILogger logger, string filePath, string searchPattern)
+        public XmlBlockCommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
             : this(logger, filePath, new[] { searchPattern })
         { }
 
@@ -27,7 +22,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         {
             foreach (var pattern in _searchPatterns)
             {
-                _xmlConfigManager.CommentBlock(_filePath, pattern);
+                XmlConfigManager.CommentBlock(FilePath, pattern);
             }
         }
     }

@@ -130,13 +130,13 @@ namespace InfoShare.Deployment.Data.Managers
         {
             var doc = _fileManager.Load(filePath);
 
-            var commentedNode = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+            var commentedNode = doc
+                .DescendantNodes().FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
             if (commentedNode == null)
             {
-                var uncommentedNode = doc.DescendantNodes()
-                    .Where(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern)).FirstOrDefault();
+                var uncommentedNode = doc
+                    .DescendantNodes().FirstOrDefault(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern));
 
                 if (uncommentedNode == null)
                 {

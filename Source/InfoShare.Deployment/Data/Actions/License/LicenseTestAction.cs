@@ -1,6 +1,8 @@
 ﻿using System;
+using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.License
 {
@@ -12,10 +14,10 @@ namespace InfoShare.Deployment.Data.Actions.License
         private readonly string _hostname;
         private readonly IFileManager _fileManager;
 
-        public LicenseTestAction(ILogger logger, string licenseFolderPath, string hostname, Action<bool> returnResult)
+        public LicenseTestAction(ILogger logger, ISHFilePath licenseFolderPath, string hostname, Action<bool> returnResult)
             : base(logger, returnResult)
         {
-            _licenseFolderPath = licenseFolderPath;
+            _licenseFolderPath = licenseFolderPath.AbsolutePath;
             _hostname = hostname;
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
 		}

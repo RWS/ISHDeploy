@@ -57,12 +57,60 @@ namespace InfoShare.Deployment.Data.Managers
             return File.Exists(path);
         }
 
-        /// <summary>
-        /// Opens a text file, reads all lines of the file, and then closes the file.
-        /// </summary>
-        /// <param name="filePath">The file to open for reading.</param>
-        /// <returns>A string array containing all lines of the file.</returns>
-        public string ReadAllText(string filePath)
+		/// <summary>
+		///	Deletes file
+		/// </summary>
+		/// <param name="path">Path to the file to be deleted</param>
+		public void Delete(string path)
+		{
+			FileInfo fileInfo = new FileInfo(path);
+			if (fileInfo.IsReadOnly)
+			{
+				fileInfo.Attributes = FileAttributes.Normal;
+			}
+
+			File.Delete(path);
+		}
+
+		/// <summary>
+		/// Cleans up the folder
+		/// </summary>
+		/// <param name="folderPath">Path to folder to be cleaned up</param>
+		public void CleanFolder(string folderPath)
+		{
+			if (Directory.Exists(folderPath))
+			{
+				// Means there is no backup folder needed, and we just have to clean the related folder on deployment
+				foreach (string filePath in Directory.GetFiles(folderPath))
+				{
+					this.Delete(filePath);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Copies content from one folder to another
+		/// </summary>
+		/// <param name="sourcePath">Source folder path</param>
+		/// <param name="destinationPath">Destination folder path</param>
+		public void CopyDirectoryContent(string sourcePath, string destinationPath)
+		{
+			if (Directory.Exists(sourcePath))
+			{
+				//Copy all the files & Replaces any files with the same name
+				foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+				{
+					this.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Opens a text file, reads all lines of the file, and then closes the file.
+		/// </summary>
+		/// <param name="filePath">The file to open for reading.</param>
+		/// <returns>A string array containing all lines of the file.</returns>
+		public string ReadAllText(string filePath)
         {
             return File.ReadAllText(filePath);
         }

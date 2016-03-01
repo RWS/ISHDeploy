@@ -8,13 +8,13 @@ namespace InfoShare.Deployment.Business.Invokers
     public interface IActionInvoker
     {
         /// <summary>
-        /// Adds action to the sequence
+		/// Adds Action into invocation list
         /// </summary>
-        /// <param name="action">New action to the sequence</param>
+		/// <param name="action">An action to invoke <see cref="T:InfoShare.Deployment.Interfaces.Actions.IAction"/>.</param>
         void AddAction(IAction action);
 
         /// <summary>
-        /// Executes sequence of actions one by one
+		/// Invokes actions sequence execution
         /// </summary>
         void Invoke();
     }

@@ -1,25 +1,20 @@
 ﻿using System.Collections.Generic;
-using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlNodeCommentAction : BaseAction
+    public class XmlNodeCommentAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _xpaths;
-        private readonly IXmlConfigManager _xmlConfigManager;
-        private readonly string _filePath;
 
-        public XmlNodeCommentAction(ILogger logger, string filePath, IEnumerable<string> xpaths)
-            : base(logger)
+        public XmlNodeCommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> xpaths)
+			: base(logger, filePath)
         {
-            _filePath = filePath;
             _xpaths = xpaths;
-
-            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
-        public XmlNodeCommentAction(ILogger logger, string filePath, string xpath)
+        public XmlNodeCommentAction(ILogger logger, ISHFilePath filePath, string xpath)
             : this(logger, filePath, new[] { xpath })
         { }
 
@@ -27,7 +22,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         {
             foreach (var xpath in _xpaths)
             {
-                _xmlConfigManager.CommentNode(_filePath, xpath);
+                XmlConfigManager.CommentNode(FilePath, xpath);
             }
         }
     }

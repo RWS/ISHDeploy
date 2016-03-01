@@ -2,6 +2,9 @@
 {
     public interface IAction
     {
+		/// <summary>
+		/// Executes action
+		/// </summary>
         void Execute();
     }
 }

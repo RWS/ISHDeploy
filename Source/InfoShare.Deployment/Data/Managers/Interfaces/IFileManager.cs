@@ -73,14 +73,33 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// <param name="doc">The document to be stored</param>
         void Save(string filePath, XDocument doc);
 
-        /// <summary>
-        /// Tries to find license file on the system
-        /// </summary>
-        /// <param name="licenseFolderPath">License file.</param>
-        /// <param name="hostName">Host name.</param>
-        /// <param name="licenseFileExtension">License file extension.</param>
-        /// <param name="filePath">File path.</param>
-        /// <returns>Returns true if license file is found, otherwise false.</returns>
-        bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
+		/// <summary>
+		/// Deletes file from filesystem
+		/// </summary>
+		/// <param name="filePath">The file to delete.</param>
+		void Delete(string filePath);
+
+	    /// <summary>
+	    /// Cleans up the folder
+	    /// </summary>
+	    /// <param name="folderPath">Path to folder to be cleaned up</param>
+	    void CleanFolder(string folderPath);
+
+	    /// <summary>
+	    /// Copies content from one folder to another
+	    /// </summary>
+	    /// <param name="sourcePath">Source folder path</param>
+	    /// <param name="destinationPath">Destination folder path</param>
+	    void CopyDirectoryContent(string sourcePath, string destinationPath);
+
+		/// <summary>
+		/// Tries to find license file on the system
+		/// </summary>
+		/// <param name="licenseFolderPath">License file.</param>
+		/// <param name="hostName">Host name.</param>
+		/// <param name="licenseFileExtension">License file extension.</param>
+		/// <param name="filePath">File path.</param>
+		/// <returns>Returns true if license file is found, otherwise false.</returns>
+		bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
     }
 }

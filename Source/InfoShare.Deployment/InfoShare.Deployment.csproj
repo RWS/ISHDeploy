@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\InfoShare.Deployment.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\InfoShare.Deployment.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ISHFilePath.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\EnableISHUIQualityAssistantOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentOperation.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\SetISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\UndoISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\DisableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
@@ -72,11 +77,15 @@
     <Compile Include="Cmdlets\ISHUITranslationJob\EnableISHUITranslationJobCmdlet.cs" />
     <Compile Include="Data\Actions\BaseAction.cs" />
     <Compile Include="Data\Actions\BaseActionWithResult.cs" />
+    <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextBlockCommentAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextBlockUncommentAction.cs" />
+    <Compile Include="Data\Actions\SingleXmlFileAction.cs" />
+    <Compile Include="Data\Actions\SingleFileAction.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlNodeCommentAction.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlNodeInternalMarkCommentAction.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlNodeUncommentAction.cs" />
@@ -89,6 +98,7 @@
     <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
     <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
+    <Compile Include="Extensions\DeploymentExtensions.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />

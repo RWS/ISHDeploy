@@ -75,7 +75,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             _fileManager.Save(filePath, doc);
         }
-        
+
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
@@ -187,7 +187,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             _fileManager.Save(filePath, docWithUncommentedNode);
         }
-        
+
         public bool XPathExists(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);

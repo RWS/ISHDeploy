@@ -111,6 +111,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="InfoShare.Deployment.PostBuild.ps1" />
+    <None Include="Layers.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

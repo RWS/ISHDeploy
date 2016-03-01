@@ -28,7 +28,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
         {
 			_invoker = new ActionInvoker(logger, "InfoShare ExternalPreview deactivation");
 
-			// Retrieveing deployment per suffix
+			// Retrieving deployment per suffix
 
 			// (!)	We need to retrieve deployment before accessing next action
 			(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishDeployment = result.First())).Execute();
@@ -48,7 +48,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 		}
 
 		/// <summary>
-		/// Runs commans invocation 
+		/// Runs commands invocation 
 		/// </summary>
 		public void Run()
         {

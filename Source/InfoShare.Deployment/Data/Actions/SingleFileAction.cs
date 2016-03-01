@@ -7,7 +7,10 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions
 {
-    public abstract class SingleFileAction : BaseAction, IRestorableAction
+	/// <summary>
+	/// Class to do single file manipulations
+	/// </summary>
+    public abstract class SingleFileAction : BaseAction, IRestorableAction, IDisposable
 	{
 		const string BACK_UP_FILE_EXTENSION = ".back";
 
@@ -18,6 +21,11 @@ namespace InfoShare.Deployment.Data.Actions
 
 	    protected string FilePath => IshFilePath.AbsolutePath;
 
+		/// <summary>
+		/// Implements single file action constructor
+		/// </summary>
+		/// <param name="logger">Logger</param>
+		/// <param name="ishFilePath">Wrapper for file path</param>
 		protected SingleFileAction(ILogger logger, ISHFilePath ishFilePath)
 			: this(logger)
         {
@@ -30,12 +38,19 @@ namespace InfoShare.Deployment.Data.Actions
 			Backup();
 		}
 
+		/// <summary>
+		/// Implements single file action constructor with no path
+		/// </summary>
+		/// <param name="logger">Logger</param>
 		protected SingleFileAction(ILogger logger)
 			: base(logger)
 		{
 			FileManager = ObjectFactory.GetInstance<IFileManager>();
 		}
 
+		/// <summary>
+		/// Destructor to call dispose
+		/// </summary>
 		~SingleFileAction()
 		{
 			Dispose();

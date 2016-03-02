@@ -89,6 +89,19 @@ namespace InfoShare.Deployment.Data.Managers
 		}
 
 		/// <summary>
+		/// Deletes the folder
+		/// </summary>
+		/// <param name="folderPath">Path to folder to be deleted</param>
+		/// <param name="recursive">true to remove directories, subdirectories, and files in path; otherwise, false.</param>
+		public void DeleteFolder(string folderPath, bool recursive = true)
+		{
+			if (Directory.Exists(folderPath))
+			{
+				Directory.Delete(folderPath, recursive);
+			}
+		}
+
+		/// <summary>
 		/// Copies content from one folder to another
 		/// </summary>
 		/// <param name="sourcePath">Source folder path</param>

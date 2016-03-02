@@ -25,13 +25,13 @@ namespace InfoShare.Deployment.Business.Invokers
         /// Sequence of the actions that <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/> going to execute
         /// </summary>
         private readonly List<IAction> _actions;
-        
-        /// <summary>
-        /// Constuctor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
-        /// </summary>
-        /// <param name="logger">Instance of the <see cref="T:InfoShare.Deployment.Interfaces.ILogger"/></param>
-        /// <param name="activityDescription">Description of the general activity to be done</param>
-        public ActionInvoker(ILogger logger, string activityDescription)
+
+		/// <summary>
+		/// Constructor for <see cref="T:InfoShare.Deployment.Business.Invokers.ActionInvoker"/>
+		/// </summary>
+		/// <param name="logger">Instance of the <see cref="T:InfoShare.Deployment.Interfaces.ILogger"/></param>
+		/// <param name="activityDescription">Description of the general activity to be done</param>
+		public ActionInvoker(ILogger logger, string activityDescription)
         {
             _logger = logger;
             _activityDescription = activityDescription;
@@ -65,8 +65,8 @@ namespace InfoShare.Deployment.Business.Invokers
 
                     action.Execute();
 
-				    // If action was executed, we`re adding it to the list to make a rollback if neccesary;
-				    executedActions.Add(action);
+					// If action was executed, we`re adding it to the list to make a rollback if necessary;
+					executedActions.Add(action);
 
                     var actionNumber = i + 1;
                     _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
@@ -74,12 +74,12 @@ namespace InfoShare.Deployment.Business.Invokers
             }
             catch (Exception ex)
             {
-				// To do a rollback we need to do it in a sequance it was executed, thus we should reverse list.
+				//	To do a rollback we need to do it in a sequence it was executed, thus we should reverse list.
 
-				//	We are doing tollback by defaul, as if we would want to do in on demand, 
-				//	then we`d have to add a flad into method invocation
-		        {
-			        executedActions.Reverse();
+				//	We are doing rollback by default, as if we would want to do in on demand,
+				//	then we`d have to add a flag into method invocation
+				{
+					executedActions.Reverse();
 					executedActions.ForEach(x =>
 					{
 						(x as IRestorableAction)?.Rollback();
@@ -92,7 +92,13 @@ namespace InfoShare.Deployment.Business.Invokers
             }
 	        finally
 	        {
-		        executedActions = null;
+				// We need to dispose the command where it`s possible as it cleans backed up assets
+				_actions.ForEach(x =>
+				{
+					(x as IDisposable)?.Dispose();
+				});
+
+				executedActions = null;
 	        }
         }
     }

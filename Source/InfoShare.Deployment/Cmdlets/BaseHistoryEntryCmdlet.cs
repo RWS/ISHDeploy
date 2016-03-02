@@ -37,7 +37,7 @@ namespace InfoShare.Deployment.Cmdlets
                 throw new ArgumentException($"{nameof(IshPaths)} in {nameof(BaseHistoryEntryCmdlet)} cannot be null.");
             }
 
-            // don't log if cmdlet whas executed with WhatIf parameter
+            // don't log if cmdlet was executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
                 return;

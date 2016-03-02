@@ -4,17 +4,17 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlBlockUncommentAction : SingleXmlFileAction
+    public class XmlNodesByPrecedingPatternUncommentAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _searchPatterns;
 
-        public XmlBlockUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
+        public XmlNodesByPrecedingPatternUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
 			: base(logger, filePath)
         {
             _searchPatterns = searchPatterns;
         }
 
-        public XmlBlockUncommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
+        public XmlNodesByPrecedingPatternUncommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
             : this(logger, filePath, new[] { searchPattern })
         { }
         
@@ -22,7 +22,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         {
             foreach (var pattern in _searchPatterns)
             {
-                XmlConfigManager.UncommentBlock(FilePath, pattern);
+                XmlConfigManager.UncommentNodesByPrecedingPattern(FilePath, pattern);
             }
         }
     }

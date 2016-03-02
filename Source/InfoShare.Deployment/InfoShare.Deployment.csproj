@@ -87,10 +87,11 @@
     <Compile Include="Data\Actions\SingleXmlFileAction.cs" />
     <Compile Include="Data\Actions\SingleFileAction.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlNodeCommentAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\XmlNodeInternalMarkCommentAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\XmlNodeUncommentAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlNodesByInnerPatternUncommentAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlNodesByPrecedingPatternCommentAction.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlSetAttributeValueAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\XmlBlockUncommentAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlNodesByPrecedingPatternUncommentAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlNodesByInnerPatternCommentAction.cs" />
     <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITextConfigManager.cs" />
@@ -104,7 +105,6 @@
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
     <Compile Include="Interfaces\Actions\IAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\XmlBlockCommentAction.cs" />
     <Compile Include="Data\Managers\Interfaces\IXmlConfigManager.cs" />
     <Compile Include="Business\Invokers\IActionInvoker.cs" />
     <Compile Include="Interfaces\Actions\IRestorableAction.cs" />

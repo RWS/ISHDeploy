@@ -20,28 +20,28 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         [TestCategory("Actions")]
         public void Execute_Disable_XOPUS()
         {
+            // Arrange
             string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = this.GetIshFilePath("DisabledXOPUS.xml");
+            string testCommentPattern = "testCommentPattern START";
+            string endCommentPattern = "testCommentPattern END";
+            var testFilePath = GetIshFilePath("DisabledXOPUS.xml");
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<!-- " + testCommentPattern + " START --><BUTTONBAR>" +
+                                    "<!-- " + testCommentPattern + " --><BUTTONBAR>" +
                                         "<BUTTON>" +
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
-                                        "</BUTTON><!-- " + testCommentPattern + " END -->" +
+                                        "</BUTTON><!-- " + endCommentPattern + " -->" +
                                     "</BUTTONBAR>");
-
-            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
-                        Assert.IsNull(element, "Uncommented node is null");
-                    }
-                );
             
-            new XmlBlockCommentAction(Logger, testFilePath, testCommentPattern).Execute();
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            XElement result = null;
+            FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
+            FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
+            
+            // Act
+            new XmlNodesByPrecedingPatternCommentAction(Logger, testFilePath, testCommentPattern).Execute();
+
+            // Assert
+            Assert.IsNull(result, "Uncommented node is null");
             Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
         }
 
@@ -49,9 +49,10 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         [TestCategory("Actions")]
         public void Execute_Disable_Enrich()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testXPath = "*/*[local-name()='javascript'][@src='" + testSrc + "']";
-            var testFilePath = this.GetIshFilePath("EnabledEnrich.xml");
+            var testFilePath = GetIshFilePath("EnabledEnrich.xml");
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -59,17 +60,15 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                       "<javascript src='" + testSrc + "' eval=\"false\" phase=\"Xopus\" />" +
                                       "</config>");
 
+            XElement result = null;
             FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, testXPath);
-                        Assert.IsNull(element, "Comment action doesn't work");
-                    }
-                );
+            FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(doc, testXPath)));
 
+            // Act
             new XmlNodeCommentAction(Logger, testFilePath, testXPath).Execute();
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            // Assert
+            Assert.IsNull(result, "Comment action doesn't work");
             Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
         }
     }

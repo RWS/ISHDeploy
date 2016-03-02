@@ -42,7 +42,7 @@ namespace InfoShare.Deployment.Data.Actions
 		/// Implements single file action constructor with no path
 		/// </summary>
 		/// <param name="logger">Logger</param>
-		protected SingleFileAction(ILogger logger)
+		private SingleFileAction(ILogger logger)
 			: base(logger)
 		{
 			FileManager = ObjectFactory.GetInstance<IFileManager>();

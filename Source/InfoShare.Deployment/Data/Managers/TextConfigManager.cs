@@ -4,6 +4,9 @@ using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Data.Managers
 {
+    /// <summary>
+    /// Performs different kinds of operations with text file
+    /// </summary>
     public class TextConfigManager : ITextConfigManager
     {
         private const string CommentSymbols = "//";
@@ -11,12 +14,21 @@ namespace InfoShare.Deployment.Data.Managers
         private readonly ILogger _logger;
         private readonly IFileManager _fileManager;
         
+        /// <summary>
+        /// Returns new instance of the <see cref="TextConfigManager"/>
+        /// </summary>
+        /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         public TextConfigManager(ILogger logger)
         {
             _logger = logger;
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
-        
+
+        /// <summary>
+        /// Comments block of text file between two <paramref name="searchPattern"/> comments
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void CommentBlock(string filePath, string searchPattern)
         {
             var strLines = _fileManager.ReadAllLines(filePath);
@@ -50,6 +62,11 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.WriteAllLines(filePath, strLines);
         }
 
+        /// <summary>
+        /// Uncomments block of text file between two <paramref name="searchPattern"/> comments
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void UncommentBlock(string filePath, string searchPattern)
         {
             var strLines = _fileManager.ReadAllLines(filePath);

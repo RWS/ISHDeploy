@@ -67,7 +67,7 @@ namespace InfoShare.Deployment.Data.Actions.ISHProject
                     continue;
                 }
 
-                var dictionary = _xmlConfigManager.GetAllInstallParamsValues(installParamFile);
+                var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
                 var ishProject = new ISHDeployment(dictionary, version);
 

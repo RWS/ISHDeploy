@@ -20,36 +20,35 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
         [TestCategory("Actions")]
         public void Execute_Enable_XOPUS()
         {
+            // Arrange
             string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = this.GetIshFilePath("DisabledXOPUS.xml");
+            string testCommentPattern = "testCommentPattern START";
+            string endCommentPattern = "testCommentPattern END";
+            var testFilePath = GetIshFilePath("DisabledXOPUS.xml");
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
+                                    "<BUTTONBAR><!-- " + testCommentPattern + " --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
                                         "<BUTTON>" +
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
                                         "</BUTTON>" +
-                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + testCommentPattern + " END --></BUTTONBAR>");
+                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + endCommentPattern + " --></BUTTONBAR>");
 
-
+            XElement result = null;
             FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
-                        Assert.IsNotNull(element, "Uncommented node should NOT be null");
-                    }
-                );
+            FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
 
-            new XmlBlockUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            // Act
+            new XmlNodesByPrecedingPatternUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
+
+            // Assert
+            Assert.IsNotNull(result, "Uncommented node should NOT be null");
         }
 
         [TestMethod]
         [TestCategory("Actions")]
         public void Execute_Enable_Enrich()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
             var testFilePath = this.GetIshFilePath("DisabledEnrich.xml");
@@ -62,18 +61,15 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
                                       testCommentPattern + "--> " +
                                       "</config>");
 
+            XElement result = null;
             FileManager.Load(testFilePath.AbsolutePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath.AbsolutePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"*/*[local-name()='javascript'][@src='{testSrc}']");
-                        Assert.IsNotNull(element, "Uncommented node should NOT be null");
-                    }
-                );
+            FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"*/*[local-name()='javascript'][@src='{testSrc}']")));
 
-            new XmlNodeUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            // Act
+            new XmlNodesByInnerPatternUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
+
+            // Assert
+            Assert.IsNotNull(result, "Uncommented node should NOT be null");
         }
     }
 }

@@ -27,57 +27,58 @@ namespace InfoShare.Deployment.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentBlock_Enable_XOPUS()
+        public void UncommentNodesByPrecedingPattern_Enable_XOPUS()
         {
+            // Arrange
             string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = "DisabledXOPUS.xml";
-
+            string testCommentPattern = "testCommentPattern START";
+            string endCommentPattern = "testCommentPattern END";
+            
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
+                                    "<BUTTONBAR><!-- " + testCommentPattern + " --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
                                         "<BUTTON>" +
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
                                         "</BUTTON>" +
-                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + testCommentPattern + " END --></BUTTONBAR>");
-            
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
-                        Assert.IsNotNull(element, "Uncommented node should NOT be null");
-                    }
-                );
+                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + endCommentPattern + " --></BUTTONBAR>");
 
-            _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
+
+            // Act
+            _xmlConfigManager.UncommentNodesByPrecedingPattern(_filePath, testCommentPattern);
+
+            // Assert
+            Assert.IsNotNull(result, "Uncommented node should NOT be null");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(WrongXmlStructureException))]
-        public void UncommentBlock_The_structure_of_a_file_does_not_match_with_expected()
+        public void UncommentNodesByPrecedingPattern_The_structure_of_a_file_does_not_match_with_expected()
         {
+            // Arrange
             string testCommentPattern = "testCommentPattern";
-            var testFilePath = "DisabledXOPUS.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START -->" +
-                                    "<!-- " + testCommentPattern + " END --></BUTTONBAR>");
+                                    "<BUTTONBAR></BUTTONBAR><!-- " + testCommentPattern + " -->");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByPrecedingPattern(_filePath, testCommentPattern);
+
+            // Assert
+            Assert.Fail("Should throw exception");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Enable_Enrich()
+        public void UncommentNodesByInnerPattern_Enable_Enrich()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
-            var testFilePath = "DisabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -87,55 +88,24 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                       testCommentPattern + "--> " +
                                       "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"*/*[local-name()='javascript'][@src='{testSrc}']");
-                        Assert.IsNotNull(element, "Uncommented node should NOT be null");
-                    }
-                );
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"*/*[local-name()='javascript'][@src='{testSrc}']")));
             
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
+
+            // Assert
+            Assert.IsNotNull(result, "Uncommented node should NOT be null");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Enable_XOPUS_does_not_contain_commented_part_within_the_pattern()
+        public void UncommentNodesByInnerPattern_Enable_Enrich_contains_already_uncommented_element()
         {
-            string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = "DisabledXOPUS.xml";
-
-            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START -->" +
-                                        "<BUTTON>" +
-                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
-                                        "</BUTTON>" +
-                                    "<!-- XOPUS ADD 'CHECK OUT WITH XOPUS' END --></BUTTONBAR>");
-
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        Assert.Fail("Saving should not happen");
-                    }
-                );
-            
-            _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
-
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
-        }
-
-        [TestMethod]
-        [TestCategory("Data handling")]
-        public void UncommentNode_Enable_Enrich_contains_already_uncommented_element()
-        {
+            // Arrange
             string testSrc = "Begin BlueLion integration";
             string testCommentPattern = "<javascript src=\"" + testSrc + "\"";
-            var testFilePath = "DisabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                      "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -143,23 +113,24 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                      "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
                                      "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x => Assert.Fail("Saving should not happen")
-                );
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
             
-            Logger.Received(1).WriteVerbose($"{testFilePath} contains already uncommented element '{testCommentPattern}'.");
+            // Arrange
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Enable_XOPUS_does_not_contains_start_or_end_pattern()
+        [ExpectedException(typeof(WrongXmlStructureException))]
+        public void UncommentNodesByInnerPattern_Enable_XOPUS_does_not_any_search_pattern()
         {
+            // Arrange
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
-            string testFilePath = "DisabledXOPUS.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<BUTTONBAR>" +
@@ -168,27 +139,23 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                         "</BUTTON> -->" +
                                     "</BUTTONBAR>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        Assert.Fail("Saving should not happen");
-                    }
-                );
+            FileManager.Load(_filePath).Returns(doc);
             
-            _xmlConfigManager.UncommentBlock(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
+            // Assert
+            Assert.Fail("Should throw exception");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(WrongXmlStructureException))]
-        public void UncommentNode_Enable_Enrich_does_not_contains_pattern()
+        public void UncommentNodesByInnerPattern_Enable_Enrich_does_not_contains_pattern()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
-            var testFilePath = "DisabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                      "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -196,21 +163,22 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                      "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
                                      "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
-            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain pattern '{testCommentPattern}' where it's expected.");
+            // Assert
+            Assert.Fail("Should throw exception");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_bluelion_config_xml()
+        public void UncommentNodesByInnerPattern_bluelion_config_xml()
         {
+            // Arrange
             string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
             string testSrcXPath = "*/*[local-name()='import'][@src='" + testCommentPattern + "']";
-            var testFilePath = "bluelion-config.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
                                         "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
@@ -219,57 +187,57 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                            "End Bluelion integration -->" +
                                          "</x:config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, testSrcXPath);
-                        Assert.IsNotNull(element, "Uncommented node should NOT be null");
-                    }
-                );
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, testSrcXPath)));
             
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteVerbose($"{testFilePath} dose not contain commented part within the pattern {testCommentPattern}");
+            // Assert
+            Assert.IsNotNull(result, "Uncommented node should NOT be null");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void UncommentNode_Twice_uncomment()
+        public void UncommentNodesByInnerPattern_Twice_uncomment()
         {
+            // Arrange
             string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
-            string testSrcXPath = "*/*[local-name()='import'][@src='" + testCommentPattern + "']";
-            var testFilePath = "bluelion-config.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
                                         "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
                                             "<x:import src='" + testCommentPattern + "'/>" +
                                          "</x:config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
-            Logger.Received(1).WriteVerbose($"{testFilePath} contains already uncommented element '{testCommentPattern}'.");
+            // Assert
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(WrongXmlStructureException))]
-        public void UncommentNode_Uncomment_if_does_not_contain_pattern()
+        public void UncommentNodesByInnerPattern_Uncomment_if_does_not_contain_pattern()
         {
+            // Arrange
             string testCommentPattern = "../BlueLion-Plugin/create-toolbar.xml";
-            string testSrcXPath = "*/*[local-name()='import'][@src='" + testCommentPattern + "']";
-            var testFilePath = "bluelion-config.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
                                         "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
                                          "</x:config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.UncommentNode(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
+
+            // Assert
+            Assert.Fail("Should throw expection");
         }
 
         #endregion UncommentNode
@@ -277,40 +245,38 @@ namespace InfoShare.Deployment.Tests.Data.Managers
         #region CommentNode
         [TestMethod]
         [TestCategory("Data handling")]
-        public void CommentBlock_Disable_XOPUS()
+        public void CommentNodesByPrecedingPattern_Disable_XOPUS()
         {
+            // Arrange
             string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = "EnabledXOPUS.xml";
+            string testCommentPattern = "testCommentPattern START";
+            string endCommentPattern = "testCommentPattern END";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<!-- " + testCommentPattern + " START --><BUTTONBAR>" +
+                                    "<!-- " + testCommentPattern + " --><BUTTONBAR>" +
                                         "<BUTTON>" +
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
-                                        "</BUTTON><!-- " + testCommentPattern + " END -->" +
+                                        "</BUTTON><!-- " + endCommentPattern + " -->" +
                                     "</BUTTONBAR>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']");
-                        Assert.IsNull(element, "Uncommented node is null");
-                    }
-                );
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
             
-            _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            // Act
+            _xmlConfigManager.CommentNodesByPrecedingPattern(_filePath, testCommentPattern);
+
+            // Assert
+            Assert.IsNull(result, "Uncommented node is null");
         }
         
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Disable_Enrich()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testXPath = "*/*[local-name()='javascript'][@src='" + testSrc + "']";
-            var testFilePath = "EnabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -318,27 +284,25 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                       "<javascript src='" + testSrc + "' eval=\"false\" phase=\"Xopus\" />" +
                                       "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, testXPath);
-                        Assert.IsNull(element, "Commented node should be null");
-                    }
-                );
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, testXPath)));
             
-            _xmlConfigManager.CommentNode(testFilePath, testXPath);
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
+            // Act
+            _xmlConfigManager.CommentNode(_filePath, testXPath);
+
+            // Assert
+            Assert.IsNull(result, "Commented node should be null");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void CommentBlock_Disable_XOPUS_does_not_contains_pattern()
+        [ExpectedException(typeof(WrongXmlStructureException))]
+        public void CommentNodesByPrecedingPattern_Disable_XOPUS_does_not_contains_pattern()
         {
+            // Arrange
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern";
-            var testFilePath = "EnabledXOPUS.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<BUTTONBAR>" +
@@ -347,23 +311,22 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                         "</BUTTON>" +
                                     "</BUTTONBAR>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x => Assert.Fail("Saving should not happen")
-                );
+            FileManager.Load(_filePath).Returns(doc);
             
-            _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.CommentNodesByPrecedingPattern(_filePath, testCommentPattern);
 
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
+            // Assert
+            Assert.Fail("Should throw exception");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Disable_Enrich_does_not_contain_uncommented_node_within_the_xpath()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testXPath = "*/*[local-name()='javascript'][@src='testtest']";
-            var testFilePath = "EnabledEnrich.xml";
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +
@@ -371,160 +334,103 @@ namespace InfoShare.Deployment.Tests.Data.Managers
                                       "<javascript src='" + testSrc + "' eval='false' phase='Xopus' />" +
                                       "</config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.CommentNode(testFilePath, testXPath);
+            // Act
+            _xmlConfigManager.CommentNode(_filePath, testXPath);
             
+            // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}");
+            Logger.Received(1).WriteVerbose($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void CommentBlock_Disable_XOPUS_contains_already_commented_part_within_the_pattern()
+        public void CommentNodesByPrecedingPattern_Disable_XOPUS_contains_already_commented_part_within_the_pattern()
         {
+            // Arrange
             string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = "EnabledXOPUS.xml";
+            string testCommentPattern = "testCommentPattern START";
+            string endCommentPattern = "testCommentPattern END";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
+                                    "<BUTTONBAR><!-- " + testCommentPattern + " --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
                                         "<BUTTON>" +
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
                                         "</BUTTON>" +
-                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + testCommentPattern + " END --></BUTTONBAR>");
+                                    "Xopus is disabled.Please obtain a license from SDL Trisoft --><!-- " + endCommentPattern + " --></BUTTONBAR>");
 
-            FileManager.Load(testFilePath).Returns(doc);
+            FileManager.Load(_filePath).Returns(doc);
 
-            _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
+            // Act
+            _xmlConfigManager.CommentNodesByPrecedingPattern(_filePath, testCommentPattern);
 
+            // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{testFilePath} contains already commented part within the pattern {testCommentPattern}");
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
         }
-
-        [TestMethod]
-        [TestCategory("Data handling")]
-        public void CommentBlock_Disable_XOPUS_does_not_contain_ending_pattern()
-        {
-            string testButtonName = "testDoButton";
-            string testCommentPattern = "testCommentPattern";
-            var testFilePath = "EnabledXOPUS.xml";
-
-            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                                    "<BUTTONBAR><!-- " + testCommentPattern + " START -->" +
-                                        "<BUTTON>" +
-                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
-                                        "</BUTTON>" +
-                                    "</BUTTONBAR>");
-
-            FileManager.Load(testFilePath).Returns(doc);
-            
-            _xmlConfigManager.CommentBlock(testFilePath, testCommentPattern);
-
-            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning($"{testFilePath} does not contain start and end pattern '{testCommentPattern}' where it's expected.");
-        }
-
+        
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_bluelion_config_xml()
         {
+            // Arrange
             string testSrc = "../BlueLion-Plugin/create-toolbar.xml";
             string testXPath = "*/*[local-name()='import'][@src='" + testSrc + "']";
-
-            var testFilePath = "bluelion-config.xml";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\"?>" +
                                        "<x:config xmlns:x=\"http://www.xopus.com/xmlns/config\" version=\"1.0\">" +
                                                "<x:import src='" + testSrc + "'/>" +
                                         "</x:config>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
-                    x =>
-                    {
-                        var element = GetXElementByXPath(doc, testXPath);
-                        Assert.IsNull(element, "Commented node should be null");
-                    }
-                );
-
-            _xmlConfigManager.CommentNode(testFilePath, testXPath);
-
-            FileManager.Received(1).Save(testFilePath, doc);
-            Logger.DidNotReceive().WriteVerbose($"{testFilePath} does not contain uncommented node within the xpath {testXPath}");
-        }
-
-        [TestMethod]
-        [TestCategory("Data handling")]
-        public void CommentNode_Testing_specific_TranslationExternalCommentXPath_xpath()
-        {
-            // Arrange
-            var doc = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <!-- {CommentPatterns.TranslationComment} -->
-    <BUTTON>
-        <INPUT type=""button""/>
-    </BUTTON>
-</BUTTONBAR>");
-
-            XDocument result = null;
-
+            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
-
-            _xmlConfigManager.CommentNode(_filePath, CommentPatterns.TranslationExternalCommentXPath);
-
-            // Assert
-            var expected = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <!-- {CommentPatterns.TranslationComment} -->
-    <!--<BUTTON>
-        <INPUT type=""button"" />
-    </BUTTON>-->
-</BUTTONBAR>");
-
-            Assert.IsTrue(result.IsSameAs(expected), "Expected document is different from actual result");
-        }
-
-        [TestMethod]
-        [TestCategory("Data handling")]
-        public void CommentNodeWithInternalPattern_Internal_paths_exist()
-        {
-            // Arrange
-            var doc = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <BUTTON>
-        <!-- {CommentPatterns.TranslationComment} -->
-        <INPUT type=""button""/>
-    </BUTTON>
-</BUTTONBAR>");
-            XDocument result = null;
-
-            FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
+            FileManager.Save(_filePath, Arg.Do<XDocument>(x => GetXElementByXPath(doc, testXPath)));
 
             // Act
-            _xmlConfigManager.CommentNodeWithInternalPattern(_filePath, CommentPatterns.TranslationInternalCommentXPath, CommentPatterns.TranslationComment);
-
-            // Assert
-            var expected = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <!-- {CommentPatterns.TranslationComment} -->
-    <!--<BUTTON>
-        <INPUT type=""button"" />
-    </BUTTON>-->
-</BUTTONBAR>");
+            _xmlConfigManager.CommentNode(_filePath, testXPath);
             
-            Assert.IsTrue(result.IsSameAs(expected), "Expected document is different from actual result");
+            // Assert
+            Assert.IsNull(result, "Commented node should be null");
         }
         
         [TestMethod]
         [TestCategory("Data handling")]
-        public void CommentNodeWithInternalPattern_Path_does_not_exist()
+        public void MoveOutInnerPattern_Internal_paths_exist()
+        {
+            // Arrange
+            var doc = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <BUTTON>
+        <!--{CommentPatterns.TranslationComment}-->
+        <INPUT type=""button""/>
+    </BUTTON>
+</BUTTONBAR>");
+            XDocument result = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
+
+            // Act
+            _xmlConfigManager.MoveOutInnerPattern(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
+
+            // Assert
+            var expected = XDocument.Parse(
+$@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<BUTTONBAR>
+    <!--{CommentPatterns.TranslationComment}-->
+    <BUTTON>
+        <INPUT type=""button"" />
+    </BUTTON>
+</BUTTONBAR>");
+            
+            Assert.IsTrue(XNode.DeepEquals(result, expected), "Expected document is different from actual result");
+        }
+        
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveOutInnerPattern_Searched_path_does_not_exist()
         {
             // Arrange
             var doc = XDocument.Parse(
@@ -539,10 +445,10 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
-            _xmlConfigManager.CommentNodeWithInternalPattern(_filePath, CommentPatterns.TranslationInternalCommentXPath, CommentPatterns.TranslationComment);
+            _xmlConfigManager.MoveOutInnerPattern(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
 
             // Assert
-            Logger.Received(1).WriteVerbose($"{_filePath} does not contain searched xpath {CommentPatterns.TranslationInternalCommentXPath}");
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
         #endregion Comment Block/Node

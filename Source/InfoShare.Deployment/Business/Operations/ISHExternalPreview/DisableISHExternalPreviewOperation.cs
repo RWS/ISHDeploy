@@ -12,16 +12,14 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
         {
             _invoker = new ActionInvoker(logger, "Disabling InfoShare external preview");
 
-            _invoker.AddAction(
-                new XmlSetAttributeValueAction(
+            _invoker.AddAction(new XmlSetAttributeValueAction(
                     logger,
                     paths.AuthorAspWebConfig, 
                     CommentPatterns.TrisoftInfoshareWebExternalXPath, 
                     CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
-            _invoker.AddAction(
-                new XmlNodeCommentAction(
+            _invoker.AddAction(new XmlNodeCommentAction(
                     logger,
                     paths.AuthorAspWebConfig,
                     new [] {

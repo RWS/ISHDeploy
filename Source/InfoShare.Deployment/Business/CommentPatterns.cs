@@ -37,7 +37,7 @@
         #region Enable/Disable Translation Job
 
         public const string TranslationJobHack = "//Translation Jobs hack";
-        public const string EventMonitorTranslationJobsXPath = "menubar/menuitem[@label='Translation Jobs']";
+        public const string EventMonitorTranslationJobs = "Translation Jobs ===========";
         public const string TranslationComment = "TRANSLATION";
         public static string TopDocumentButtonbarXPath => "BUTTONBAR/BUTTON";
 

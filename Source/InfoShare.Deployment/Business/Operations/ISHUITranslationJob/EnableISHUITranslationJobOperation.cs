@@ -13,7 +13,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHUITranslationJob
         {
             _invoker = new ActionInvoker(logger, "Enabling InfoShare translation job");
             
-            _invoker.AddAction(new XmlNodesByPrecedingPatternUncommentAction(logger, paths.EventMonitorMenuBar, CommentPatterns.EventMonitorTranslationJobsXPath));
+            _invoker.AddAction(new XmlNodesByPrecedingPatternUncommentAction(logger, paths.EventMonitorMenuBar, CommentPatterns.EventMonitorTranslationJobs));
             _invoker.AddAction(new XmlNodesByPrecedingPatternUncommentAction(logger, paths.TopDocumentButtonbar, CommentPatterns.TranslationComment));
             _invoker.AddAction(new TextBlockUncommentAction(logger, paths.TreeHtm, CommentPatterns.TranslationJobHack));
         }

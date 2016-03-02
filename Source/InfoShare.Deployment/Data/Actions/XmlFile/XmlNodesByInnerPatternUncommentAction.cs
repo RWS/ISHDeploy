@@ -1,16 +1,21 @@
-﻿using InfoShare.Deployment.Interfaces;
+﻿using System.Collections.Generic;
+using InfoShare.Deployment.Interfaces;
 using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
     public class XmlNodesByInnerPatternUncommentAction : SingleXmlFileAction
     {
-        private readonly string _searchPattern;
+        private readonly IEnumerable<string> _searchPatterns;
 
         public XmlNodesByInnerPatternUncommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
+            : this(logger, filePath, new [] { searchPattern })
+        { }
+
+        public XmlNodesByInnerPatternUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
             : base(logger, filePath)
         {
-            _searchPattern = searchPattern;
+            _searchPatterns = searchPatterns;
         }
 
         /// <summary>
@@ -18,7 +23,10 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         /// </summary>
         public override void Execute()
         {
-            XmlConfigManager.UncommentNodesByInnerPattern(FilePath, _searchPattern);
+            foreach (var searchPattern in _searchPatterns)
+            {
+                XmlConfigManager.UncommentNodesByInnerPattern(FilePath, searchPattern);
+            }
         }
     }
 }

@@ -9,18 +9,9 @@ namespace InfoShare.Deployment.Models
 		private readonly ISHDeployment _ishDeployment;
 
 		private readonly ISHPaths.IshDeploymentType _deploymentType;
-
-		/// <summary>
-		/// 
-		/// </summary>
+        
 		public string RelativePath { get; }
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="ishDeployment"></param>
-		/// <param name="deploymentType"></param>
-		/// <param name="path"></param>
+        
 		public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
@@ -38,9 +29,9 @@ namespace InfoShare.Deployment.Models
 				switch (_deploymentType)
 				{
 					case ISHPaths.IshDeploymentType.App:
-						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
+						return Path.Combine(_ishDeployment.AppPath, RelativePath);
 					case ISHPaths.IshDeploymentType.Web:
-						return Path.Combine(_ishDeployment.WebPath, RelativePath);
+						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
 					case ISHPaths.IshDeploymentType.Data:
 						return Path.Combine(_ishDeployment.DataPath, RelativePath);
 					default:

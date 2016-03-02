@@ -13,7 +13,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
             _invoker = new ActionInvoker(logger, "Enabling InfoShare external preview");
             
             _invoker.AddAction(
-                new XmlNodesByPrecedingPatternUncommentAction(
+                new XmlNodesByInnerPatternUncommentAction(
                     logger,
                     paths.AuthorAspWebConfig,
                     new [] {

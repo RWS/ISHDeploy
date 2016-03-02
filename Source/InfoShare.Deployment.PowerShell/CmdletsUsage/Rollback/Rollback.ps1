@@ -19,7 +19,7 @@ $version = New-Object System.Version -ArgumentList '1.0.0.0';
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
 
 
-Undo-ISHDeployment -Deployment 'sites'
+Undo-ISHDeployment -ISHDeployment $deploy
 
 #Set-ISHDeployment $deploy
 

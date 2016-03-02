@@ -15,11 +15,11 @@ namespace InfoShare.Deployment.Cmdlets
         /// Logger
         /// </summary>
         public readonly ILogger Logger;
-        
-        /// <summary>
-        /// Contructor
-        /// </summary>
-        protected BaseCmdlet()
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		protected BaseCmdlet()
         {   
             Logger = CmdletsLogger.Instance();
             ObjectFactory.SetInstance<IFileManager>(new FileManager(Logger));
@@ -28,10 +28,10 @@ namespace InfoShare.Deployment.Cmdlets
             ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
         }
 
-        /// <summary>
-        /// Method to be overriden in all ancestors instead of process record
-        /// </summary>
-        public abstract void ExecuteCmdlet();
+		/// <summary>
+		/// Method to be overridden instead of process record
+		/// </summary>
+		public abstract void ExecuteCmdlet();
 
         /// <summary>
         /// Overrides ProcessRecord from base Cmdlet class

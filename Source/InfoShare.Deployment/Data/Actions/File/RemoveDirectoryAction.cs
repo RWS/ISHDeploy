@@ -6,17 +6,17 @@ namespace InfoShare.Deployment.Data.Actions.File
 	/// <summary>
 	/// Action responsible for rolling back changes to vanilla state
 	/// </summary>
-	public class FileCleanDirectoryAction : BaseAction
+	public class RemoveDirectoryAction : BaseAction
 	{
         private readonly IFileManager _fileManager;
         private readonly string _folder;
 
 		/// <summary>
-		/// Reverts changes to vanilla state. If backup folder is not defined, then we do remove all from deployment folder
+		/// Deletes the folder by folderPath
 		/// </summary>
 		/// <param name="logger">Logger Object</param>
 		/// <param name="folderPath">Folder at deployment, where to put the reverted changes</param>
-		public FileCleanDirectoryAction(ILogger logger, string folderPath)
+		public RemoveDirectoryAction(ILogger logger, string folderPath)
 			: base(logger)
 		{
 			_fileManager = ObjectFactory.GetInstance<IFileManager>();
@@ -24,11 +24,11 @@ namespace InfoShare.Deployment.Data.Actions.File
 		}
 
 		/// <summary>
-		/// And cleans up the folder
+		/// Deletes the folder
 		/// </summary>
 		public override void Execute()
 		{
-			_fileManager.CleanFolder(_folder);
+			_fileManager.DeleteFolder(_folder);
 		}
 	}
 }

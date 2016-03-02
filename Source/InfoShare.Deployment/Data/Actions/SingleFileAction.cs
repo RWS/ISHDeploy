@@ -12,13 +12,29 @@ namespace InfoShare.Deployment.Data.Actions
 	/// </summary>
     public abstract class SingleFileAction : BaseAction, IRestorableAction, IDisposable
 	{
+		/// <summary>
+		/// Extension for backup files
+		/// </summary>
 		const string BACK_UP_FILE_EXTENSION = ".back";
 
+		/// <summary>
+		/// IshFilePath instance, containing relative path, deployment and deployment type
+		/// </summary>
 		protected readonly ISHFilePath IshFilePath;
+
+		/// <summary>
+		/// Path to back up file
+		/// </summary>
 		protected string BackupPath;
 
+		/// <summary>
+		/// File Manager instance
+		/// </summary>
 		protected readonly IFileManager FileManager;
 
+		/// <summary>
+		/// Absolute path to file
+		/// </summary>
 	    protected string FilePath => IshFilePath.AbsolutePath;
 
 		/// <summary>
@@ -85,13 +101,9 @@ namespace InfoShare.Deployment.Data.Actions
 				{
 					FileManager.Copy(this.FilePath, this.BackupPath);
 				}
-
-				//	TODO: do we need to make this file hidden?
-				//	File.SetAttributes(this.BackupPath, FileAttributes.Hidden);
 			}
 			else
 			{
-				//	Otherwise backup means removing added item
 				//	So do nothing here
 			}
 		}
@@ -135,20 +147,15 @@ namespace InfoShare.Deployment.Data.Actions
 
 		#region private methods
 
+		/// <summary>
+		/// Returns back up file path
+		/// </summary>
+		/// <returns>Path to backup file</returns>
 		private string GetNewBackUpFileName()
 		{
-			string tmpFilePath = String.Concat(FilePath, BACK_UP_FILE_EXTENSION);
-
-			//int i = 0;
-			//while (FileManager.Exists(tmpFilePath))
-			//{
-			//	tmpFilePath = String.Concat(tmpFilePath, (++i).ToString());
-			//}
-
-			return tmpFilePath;
+			return String.Concat(FilePath, BACK_UP_FILE_EXTENSION);
 		}
 
 		#endregion private methods
-
 	}
 }

@@ -34,8 +34,11 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.AuthorFolderPath));
 
 			// Removing licenses
-			ISHFilePath licenseFolderPath = (new ISHPaths(ishDeployment)).LicenceFolderPath;
+			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;
 			_invoker.AddAction(new FileCleanDirectoryAction(logger, licenseFolderPath.AbsolutePath));
+
+			// Removing Backup folder
+			_invoker.AddAction(new RemoveDirectoryAction(logger, deployment.GetDeploymentAppDataFolder()));
 		}
 
 		/// <summary>

@@ -1,14 +1,12 @@
-﻿using System.IO;
-using System.Linq;
-using InfoShare.Deployment.Data.Managers.Interfaces;
+﻿using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Data.Actions.File
 {
 	/// <summary>
-	/// Action responcible for rollong back changes to vanilla state
+	/// Action responsible for rolling back changes to vanilla state
 	/// </summary>
-    public class FileCopyDirectoryAction : BaseAction
+	public class FileCopyDirectoryAction : BaseAction
 	{
         private readonly IFileManager _fileManager;
         private readonly string _sourceFolder;

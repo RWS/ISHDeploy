@@ -77,6 +77,12 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		/// <param name="recursive">true to remove directories, subdirectories, and files in path; otherwise, false.</param>
 		void DeleteFolder(string folderPath, bool recursive = true);
 
+	    /// <summary>
+	    /// Makes sure directory exists, if not, then creates it
+	    /// </summary>
+	    /// <param name="folderPath">Directory path to verify</param>
+	    void EnsureDirectoryExists(string folderPath);
+
 		/// <summary>
 		/// Copies content from one folder to another
 		/// </summary>

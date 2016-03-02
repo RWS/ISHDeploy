@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="BaseUnitTest.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
+    <Compile Include="Data\Actions\SingleFile\FileBackupRollbackActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\XmlConfigManagerTest.cs" />

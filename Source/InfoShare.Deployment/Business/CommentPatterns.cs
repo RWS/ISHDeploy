@@ -39,7 +39,7 @@
         public const string TranslationJobHack = "//Translation Jobs hack";
         public const string EventMonitorTranslationJobs = "Translation Jobs ===========";
         public const string TranslationComment = "TRANSLATION";
-        public static string TopDocumentButtonbarXPath => "BUTTONBAR/BUTTON";
+        public const string TopDocumentButtonbarXPath = "BUTTONBAR/BUTTON";
 
         #endregion
     }

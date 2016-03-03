@@ -43,12 +43,12 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         void UncommentNodesByInnerPattern(string filePath, string searchPattern);
 
         /// <summary>
-        /// Removes pattern from node inside and put it right before node
+        /// Moves comment node outside of it's parent node found by xpath
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to the searched node</param>
         /// <param name="internalPatternElem">Internal comment pattern that marks searched node</param>
-        void MoveOutInnerPattern(string filePath, string xpath, string internalPatternElem);
+        void MoveOutsideInnerComment(string filePath, string xpath, string internalPatternElem);
 
         /// <summary>
         /// Set attribute value

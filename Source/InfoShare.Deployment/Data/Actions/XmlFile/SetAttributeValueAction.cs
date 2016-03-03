@@ -3,13 +3,13 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlSetAttributeValueAction : SingleXmlFileAction
+    public class SetAttributeValueAction : SingleXmlFileAction
     {
         private readonly string _xpath;
         private readonly string _attributeName;
         private readonly string _value;
 
-        public XmlSetAttributeValueAction(ILogger logger, ISHFilePath filePath, string xpath, string attributeName, string value)
+        public SetAttributeValueAction(ILogger logger, ISHFilePath filePath, string xpath, string attributeName, string value)
             : base(logger, filePath)
         {
             _xpath = xpath;

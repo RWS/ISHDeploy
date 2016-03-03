@@ -23,20 +23,20 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
     ///     </ BUTTON >
     /// </ BUTTONBAR >
     /// ]]></example>
-    public class XmlNodesByInnerPatternCommentAction : SingleFileAction
+    public class CommentNodesByInnerPatternAction : SingleFileAction
     {
         private readonly string _xpath;
         private readonly string _patternElem;
         private readonly IXmlConfigManager _xmlConfigManager;
 
         /// <summary>
-        /// Creates new instance of the <see cref="XmlNodesByInnerPatternCommentAction"/>.
+        /// Creates new instance of the <see cref="CommentNodesByInnerPatternAction"/>.
         /// </summary>
         /// <param name="logger"><see cref="ILogger"/> instance.</param>
         /// <param name="filePath">Path to file that will be modified.</param>
         /// <param name="xpath">XPath to node that contains <paramref name="patternElem"/></param>
         /// <param name="patternElem">Comment pattern, that is used for searching node.</param>
-        public XmlNodesByInnerPatternCommentAction(ILogger logger, ISHFilePath filePath, string xpath, string patternElem)
+        public CommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, string xpath, string patternElem)
             : base(logger, filePath)
         {
             _xpath = xpath;
@@ -51,7 +51,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         public override void Execute()
         {
             // Try to get rid of inner patterns in the file, if there are some. Will be done only once.
-            _xmlConfigManager.MoveOutInnerPattern(FilePath, _xpath, _patternElem);
+            _xmlConfigManager.MoveOutsideInnerComment(FilePath, _xpath, _patternElem);
 
             // Comment nodes in usual way
             _xmlConfigManager.CommentNodesByPrecedingPattern(FilePath, _patternElem);

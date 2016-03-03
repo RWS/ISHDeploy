@@ -4,25 +4,25 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlNodesByPrecedingPatternUncommentAction : SingleXmlFileAction
+    public class CommentNodesByPrecedingPatternAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _searchPatterns;
 
-        public XmlNodesByPrecedingPatternUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
+        public CommentNodesByPrecedingPatternAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
 			: base(logger, filePath)
         {
             _searchPatterns = searchPatterns;
         }
 
-        public XmlNodesByPrecedingPatternUncommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
+        public CommentNodesByPrecedingPatternAction(ILogger logger, ISHFilePath filePath, string searchPattern)
             : this(logger, filePath, new[] { searchPattern })
         { }
-        
+
         public override void Execute()
         {
             foreach (var pattern in _searchPatterns)
             {
-                XmlConfigManager.UncommentNodesByPrecedingPattern(FilePath, pattern);
+                XmlConfigManager.CommentNodesByPrecedingPattern(FilePath, pattern);
             }
         }
     }

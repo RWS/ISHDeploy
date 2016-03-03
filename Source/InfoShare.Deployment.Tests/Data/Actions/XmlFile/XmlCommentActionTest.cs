@@ -38,7 +38,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
             FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(doc, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
             
             // Act
-            new XmlNodesByPrecedingPatternCommentAction(Logger, testFilePath, testCommentPattern).Execute();
+            new CommentNodesByPrecedingPatternAction(Logger, testFilePath, testCommentPattern).Execute();
 
             // Assert
             Assert.IsNull(result, "Uncommented node is null");
@@ -65,7 +65,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
             FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(doc, testXPath)));
 
             // Act
-            new XmlNodeCommentAction(Logger, testFilePath, testXPath).Execute();
+            new CommentNodeByXPathAction(Logger, testFilePath, testXPath).Execute();
 
             // Assert
             Assert.IsNull(result, "Comment action doesn't work");

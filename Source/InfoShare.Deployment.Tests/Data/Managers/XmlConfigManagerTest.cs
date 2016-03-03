@@ -396,7 +396,7 @@ namespace InfoShare.Deployment.Tests.Data.Managers
         
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveOutInnerPattern_Internal_paths_exist()
+        public void MoveOutsideInnerComment_Internal_paths_exist()
         {
             // Arrange
             var doc = XDocument.Parse(
@@ -413,7 +413,7 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
             FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
 
             // Act
-            _xmlConfigManager.MoveOutInnerPattern(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
+            _xmlConfigManager.MoveOutsideInnerComment(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
 
             // Assert
             var expected = XDocument.Parse(
@@ -430,7 +430,7 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
         
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveOutInnerPattern_Searched_path_does_not_exist()
+        public void MoveOutsideInnerComment_Searched_path_does_not_exist()
         {
             // Arrange
             var doc = XDocument.Parse(
@@ -445,7 +445,7 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
-            _xmlConfigManager.MoveOutInnerPattern(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
+            _xmlConfigManager.MoveOutsideInnerComment(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());

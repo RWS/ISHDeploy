@@ -165,7 +165,7 @@ namespace InfoShare.Deployment.Data.Managers
                     continue;
                 }
 
-                UncommentNode(commentedNode, ref doc);
+                UncommentNode(commentedNode, filePath, ref doc);
                 isFileChanged = true;
             }
 
@@ -202,19 +202,19 @@ namespace InfoShare.Deployment.Data.Managers
 
             foreach (var commentedNode in commentedNodes)
             {
-                UncommentNode(commentedNode, ref doc);
+                UncommentNode(commentedNode, filePath, ref doc);
             }
 
             _fileManager.Save(filePath, doc);
         }
 
         /// <summary>
-        /// Removes pattern from node inside and put it right before node
+        /// Moves comment node outside of it's parent node found by xpath
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to the searched node</param>
         /// <param name="internalPatternElem">Internal comment pattern that marks searched node</param>
-        public void MoveOutInnerPattern(string filePath, string xpath, string internalPatternElem)
+        public void MoveOutsideInnerComment(string filePath, string xpath, string internalPatternElem)
         {
             var doc = _fileManager.Load(filePath);
 
@@ -266,7 +266,7 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        private void UncommentNode(XNode commentedNode, ref XDocument doc)
+        private void UncommentNode(XNode commentedNode, string fileName, ref XDocument doc)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
@@ -274,7 +274,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             if (startIndex < 0 || endIndex < 0)
             {
-                throw new WrongXmlStructureException(doc.BaseUri, $"Was not able to uncomment the following node: {commentedNode}");
+                throw new WrongXmlStructureException(fileName, $"Was not able to uncomment the following node: {commentedNode}");
             }
             
             commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
@@ -288,7 +288,7 @@ namespace InfoShare.Deployment.Data.Managers
             }
             catch
             {
-                throw new WrongXmlStructureException(doc.BaseUri, $"Was not able to uncomment the following node: {commentedNode}");
+                throw new WrongXmlStructureException(fileName, $"Was not able to uncomment the following node: {commentedNode}");
             }
         }
     }

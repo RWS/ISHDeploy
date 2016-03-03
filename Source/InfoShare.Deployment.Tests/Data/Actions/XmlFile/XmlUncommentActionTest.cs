@@ -38,7 +38,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
             FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
 
             // Act
-            new XmlNodesByPrecedingPatternUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
+            new UncommentNodesByPrecedingPatternAction(Logger, testFilePath, testCommentPattern).Execute();
 
             // Assert
             Assert.IsNotNull(result, "Uncommented node should NOT be null");
@@ -66,7 +66,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.XmlFile
             FileManager.Save(testFilePath.AbsolutePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"*/*[local-name()='javascript'][@src='{testSrc}']")));
 
             // Act
-            new XmlNodesByInnerPatternUncommentAction(Logger, testFilePath, testCommentPattern).Execute();
+            new UncommentNodesByInnerPatternAction(Logger, testFilePath, testCommentPattern).Execute();
 
             // Assert
             Assert.IsNotNull(result, "Uncommented node should NOT be null");

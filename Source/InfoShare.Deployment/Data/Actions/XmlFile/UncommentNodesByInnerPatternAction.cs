@@ -4,15 +4,15 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlNodesByInnerPatternUncommentAction : SingleXmlFileAction
+    public class UncommentNodesByInnerPatternAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _searchPatterns;
 
-        public XmlNodesByInnerPatternUncommentAction(ILogger logger, ISHFilePath filePath, string searchPattern)
+        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, string searchPattern)
             : this(logger, filePath, new [] { searchPattern })
         { }
 
-        public XmlNodesByInnerPatternUncommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
+        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
             : base(logger, filePath)
         {
             _searchPatterns = searchPatterns;

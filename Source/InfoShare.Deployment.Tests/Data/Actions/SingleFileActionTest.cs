@@ -1,15 +1,21 @@
 ﻿using System;
-using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Data.Actions.XmlFile;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
-namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
+namespace InfoShare.Deployment.Tests.Data.Actions
 {
     [TestClass]
-    public class FileBackupRollbackActionTest : BaseUnitTest
+    public class SingleFileActionTest : BaseUnitTest
     {
-        [TestMethod]
+		[TestInitialize]
+		public void TestInitializer()
+		{
+			ObjectFactory.SetInstance(Substitute.For<IXmlConfigManager>());
+		}
+
+		[TestMethod]
         [TestCategory("Actions")]
         public void Create_Backup_file_created()
         {
@@ -63,55 +69,5 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			FileManager.Received(1).Copy(testFilePath.AbsolutePath, testFilePath.VanillaPath);
 			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
 		}
-
-		#region Undo actions
-
-		[TestMethod]
-		[TestCategory("Actions")]
-		public void Execute_Copy_files()
-		{
-			// Arrange
-			var souceFolder = "Source";
-			var destinationFolder = "Target";
-
-			// Act
-			(new FileCopyDirectoryAction(Logger, souceFolder, destinationFolder)).Execute();
-
-			// Assert
-			FileManager.Received(1).CopyDirectoryContent(souceFolder, destinationFolder);
-			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
-		}
-
-		[TestMethod]
-		[TestCategory("Actions")]
-		public void Execute_Clean_directory()
-		{
-			// Arrange
-			var souceFolder = "Source";
-
-			// Act
-			(new FileCleanDirectoryAction(Logger, souceFolder)).Execute();
-
-			// Assert
-			FileManager.Received(1).CleanFolder(souceFolder);
-			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
-		}
-
-		[TestMethod]
-		[TestCategory("Actions")]
-		public void Execute_Remove_directory()
-		{
-			// Arrange
-			var souceFolder = "Source";
-
-			// Act
-			(new RemoveDirectoryAction(Logger, souceFolder)).Execute();
-
-			// Assert
-			FileManager.Received(1).DeleteFolder(souceFolder);
-			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
-		}
-
-		#endregion
 	}
 }

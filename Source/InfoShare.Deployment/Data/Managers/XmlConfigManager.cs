@@ -165,7 +165,10 @@ namespace InfoShare.Deployment.Data.Managers
                     continue;
                 }
 
-                UncommentNode(commentedNode, filePath, ref doc);
+                if (!TryUncommentNode(commentedNode, ref doc))
+                {
+                    throw new WrongXmlStructureException(filePath, $"Was not able to uncomment the following node: {commentedNode}");
+                }
                 isFileChanged = true;
             }
 
@@ -202,7 +205,10 @@ namespace InfoShare.Deployment.Data.Managers
 
             foreach (var commentedNode in commentedNodes)
             {
-                UncommentNode(commentedNode, filePath, ref doc);
+                if (!TryUncommentNode(commentedNode, ref doc))
+                {
+                    throw new WrongXmlStructureException(filePath, $"Was not able to uncomment the following node: {commentedNode}");
+                }
             }
 
             _fileManager.Save(filePath, doc);
@@ -266,7 +272,7 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        private void UncommentNode(XNode commentedNode, string fileName, ref XDocument doc)
+        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
@@ -274,7 +280,7 @@ namespace InfoShare.Deployment.Data.Managers
 
             if (startIndex < 0 || endIndex < 0)
             {
-                throw new WrongXmlStructureException(fileName, $"Was not able to uncomment the following node: {commentedNode}");
+                return false;
             }
             
             commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
@@ -288,8 +294,10 @@ namespace InfoShare.Deployment.Data.Managers
             }
             catch
             {
-                throw new WrongXmlStructureException(fileName, $"Was not able to uncomment the following node: {commentedNode}");
+                return false;
             }
+
+            return true;
         }
     }
 }

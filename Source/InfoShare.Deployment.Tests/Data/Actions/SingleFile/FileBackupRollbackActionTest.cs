@@ -82,14 +82,11 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			var souceFolder = "Source";
 			var destinationFolder = "Target";
 
-			var testFilePath = this.GetIshFilePath("Test.xml");
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
-
 			// Act
 			(new FileCopyDirectoryAction(Logger, souceFolder, destinationFolder)).Execute();
 
 			// Assert
-			FileManager.Received(1).Copy(testFilePath.AbsolutePath, testFilePath.VanillaPath);
+			FileManager.Received(1).CopyDirectoryContent(souceFolder, destinationFolder);
 			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
 		}
 
@@ -100,14 +97,11 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			// Arrange
 			var souceFolder = "Source";
 
-			var testFilePath = this.GetIshFilePath("Test.xml");
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
-
 			// Act
 			(new FileCleanDirectoryAction(Logger, souceFolder)).Execute();
 
 			// Assert
-			FileManager.Received(1).Copy(testFilePath.AbsolutePath, testFilePath.VanillaPath);
+			FileManager.Received(1).CleanFolder(souceFolder);
 			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
 		}
 
@@ -118,14 +112,11 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			// Arrange
 			var souceFolder = "Source";
 
-			var testFilePath = this.GetIshFilePath("Test.xml");
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
-
 			// Act
 			(new RemoveDirectoryAction(Logger, souceFolder)).Execute();
 
 			// Assert
-			FileManager.Received(1).Copy(testFilePath.AbsolutePath, testFilePath.VanillaPath);
+			FileManager.Received(1).DeleteFolder(souceFolder);
 			Logger.DidNotReceive().WriteWarning(Arg.Any<string>());
 		}
 

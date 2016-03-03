@@ -14,8 +14,9 @@ namespace InfoShare.Deployment.Business.Invokers
         void AddAction(IAction action);
 
         /// <summary>
-		/// Invokes actions sequence execution
+        /// Invokes actions sequence execution
         /// </summary>
-        void Invoke();
+        /// <param name="showProgress">Identifies if progress needs to be reported</param>
+        void Invoke(bool showProgress = false);
     }
 }

@@ -51,28 +51,31 @@ namespace InfoShare.Deployment.Business.Invokers
         /// <summary>
         /// Executes sequence of actions one by one
         /// </summary>
-        public void Invoke()
+        /// <param name="showProgress">Identifies if progress needs to be reported</param>
+        public void Invoke(bool showProgress = false)
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
-            IAction action = null;
 
 			List<IAction> executedActions = new List<IAction>();
             try
             {
                 for (var i = 0; i < _actions.Count; i++)
                 {
-                    action = _actions[i];
+                    var action = _actions[i];
 
                     action.Execute();
 
 					// If action was executed, we`re adding it to the list to make a rollback if necessary;
 					executedActions.Add(action);
 
-                    var actionNumber = i + 1;
-                    _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
+                    if (showProgress)
+                    {
+                        var actionNumber = i + 1;
+                        _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
+                    }
                 }
             }
-            catch (Exception ex)
+            catch
             {
 				//	To do a rollback we need to do it in a sequence it was executed, thus we should reverse list.
 
@@ -95,8 +98,6 @@ namespace InfoShare.Deployment.Business.Invokers
 				{
 					(x as IDisposable)?.Dispose();
 				});
-
-				executedActions = null;
 	        }
         }
     }

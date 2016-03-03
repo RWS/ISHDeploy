@@ -52,11 +52,11 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         void WriteAllLines(string filePath, string[] lines);
 
         /// <summary>
-        /// Appends line to the file. Creates new file if it does not exist.
+        /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
-        /// <param name="line">the line to be appended to the file content.</param>
-        void AppendLine(string filePath, string line);
+        /// <param name="text">the text to be appended to the file content.</param>
+        void Append(string filePath, string text);
 
         /// <summary>
         /// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.

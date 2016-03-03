@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using InfoShare.Deployment.Data.Managers.Interfaces;
@@ -162,15 +161,15 @@ namespace InfoShare.Deployment.Data.Managers
         }
 
         /// <summary>
-        /// Appends line to the file. Creates new file if it does not exist.
+        /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
-        /// <param name="line">the line to be appended to the file content.</param>
-        public void AppendLine(string filePath, string line)
+        /// <param name="text">the text to be appended to the file content.</param>
+        public void Append(string filePath, string text)
         {
             using (var fileStream = new StreamWriter(filePath, true))
             {
-                fileStream.WriteLine(line);
+                fileStream.Write(text);
             }
         }
 

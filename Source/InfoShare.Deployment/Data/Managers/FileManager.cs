@@ -103,6 +103,18 @@ namespace InfoShare.Deployment.Data.Managers
 		}
 
 		/// <summary>
+		/// Makes sure directory exists, if not, then creates it
+		/// </summary>
+		/// <param name="folderPath">Directory path to verify</param>
+		public void EnsureDirectoryExists(string folderPath)
+		{
+			if (!Directory.Exists(folderPath))
+			{
+				Directory.CreateDirectory(folderPath);
+			}
+		}
+
+		/// <summary>
 		/// Copies content from one folder to another
 		/// </summary>
 		/// <param name="sourcePath">Source folder path</param>

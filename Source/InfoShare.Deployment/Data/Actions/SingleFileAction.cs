@@ -109,11 +109,7 @@ namespace InfoShare.Deployment.Data.Actions
 				string vanillaFilePath = IshFilePath.VanillaPath;
 				if (!FileManager.Exists(vanillaFilePath))
 				{
-					string directoryName = Path.GetDirectoryName(vanillaFilePath);
-					if (!Directory.Exists(directoryName))
-					{
-						Directory.CreateDirectory(directoryName);
-					}
+					FileManager.EnsureDirectoryExists(Path.GetDirectoryName(vanillaFilePath));
 
 					FileManager.Copy(this.FilePath, vanillaFilePath);
 				}

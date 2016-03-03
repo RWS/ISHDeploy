@@ -1,25 +1,17 @@
 ﻿using System;
 using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Data.Actions.XmlFile;
-using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
 namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 {
     [TestClass]
-    public class FileBackupRollbackAction : BaseUnitTest
+    public class FileBackupRollbackActionTest : BaseUnitTest
     {
-        [TestInitialize]
-        public void TestInitializer()
-        {
-            ObjectFactory.SetInstance(FileManager);
-			ObjectFactory.SetInstance(Substitute.For<IXmlConfigManager>());
-		}
-
         [TestMethod]
         [TestCategory("Actions")]
-        public void Execute_Backup_File_Creted()
+        public void Create_Backup_file_created()
         {
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
@@ -38,7 +30,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 
 		[TestMethod]
 		[TestCategory("Actions")]
-		public void Execute_Backup_File_Disposed()
+		public void Dispose_Backup_file_disposed()
 		{
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
@@ -58,7 +50,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 
 		[TestMethod]
 		[TestCategory("Actions")]
-		public void Execute_Vanilla_Backup_Created()
+		public void Create_Vanilla_backup_created()
 		{
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
@@ -76,7 +68,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 
 		[TestMethod]
 		[TestCategory("Actions")]
-		public void Execute_Copy_Files()
+		public void Execute_Copy_files()
 		{
 			// Arrange
 			var souceFolder = "Source";
@@ -92,7 +84,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 
 		[TestMethod]
 		[TestCategory("Actions")]
-		public void Execute_Clean_Directory()
+		public void Execute_Clean_directory()
 		{
 			// Arrange
 			var souceFolder = "Source";
@@ -107,7 +99,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 
 		[TestMethod]
 		[TestCategory("Actions")]
-		public void Execute_Remove_Directory()
+		public void Execute_Remove_directory()
 		{
 			// Arrange
 			var souceFolder = "Source";

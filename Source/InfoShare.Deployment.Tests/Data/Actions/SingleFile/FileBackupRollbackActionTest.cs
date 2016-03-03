@@ -29,7 +29,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			FileManager.Exists(testFilePath.VanillaPath).Returns(true);
 
 			// Act
-			new XmlSetAttributeValueAction(Logger, testFilePath, "", "", "");
+			new SetAttributeValueAction(Logger, testFilePath, "", "", "");
 
 			// Assert
 			FileManager.Received(1).Copy(testFilePath.AbsolutePath, backUpFilePath);
@@ -49,7 +49,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			FileManager.Exists(testFilePath.VanillaPath).Returns(true);
 
 			// Act
-			(new XmlSetAttributeValueAction(Logger, testFilePath, "", "", "")).Dispose();
+			(new SetAttributeValueAction(Logger, testFilePath, "", "", "")).Dispose();
 
 			// Assert
 			FileManager.Received(1).Delete(backUpFilePath);
@@ -65,7 +65,7 @@ namespace InfoShare.Deployment.Tests.Data.Actions.SingleFile
 			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
 
 			// Act
-			new XmlSetAttributeValueAction(Logger, testFilePath, "", "", "");
+			new SetAttributeValueAction(Logger, testFilePath, "", "", "");
 
 			// Assert
 			FileManager.Received(1).Copy(testFilePath.AbsolutePath, testFilePath.VanillaPath);

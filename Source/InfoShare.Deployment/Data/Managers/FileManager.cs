@@ -103,9 +103,9 @@ namespace InfoShare.Deployment.Data.Managers
 		}
 
 		/// <summary>
-		/// Deletes the folder
+		/// Makes sure directory exists, if not, then creates it
 		/// </summary>
-		/// <param name="folderPath">Path to folder to be deleted</param>
+		/// <param name="folderPath">Directory path to verify</param>
 		public void EnsureDirectoryExists(string folderPath)
 		{
 			if (!Directory.Exists(folderPath))

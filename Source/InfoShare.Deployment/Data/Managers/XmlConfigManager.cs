@@ -9,6 +9,9 @@ using InfoShare.Deployment.Data.Exceptions;
 
 namespace InfoShare.Deployment.Data.Managers
 {
+    /// <summary>
+    /// Performs different kinds of operations with xml file
+    /// </summary>
     public class XmlConfigManager : IXmlConfigManager
     {
         #region Private constants
@@ -22,13 +25,22 @@ namespace InfoShare.Deployment.Data.Managers
         private readonly ILogger _logger;
         private readonly IFileManager _fileManager;
 
+        /// <summary>
+        /// Returns new instance of the <see cref="XmlConfigManager"/>
+        /// </summary>
+        /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         public XmlConfigManager(ILogger logger)
         {
             _logger = logger;
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
-        public Dictionary<string, string> GetAllInstallParamsValues(string filePath)
+        /// <summary>
+        /// Returns dictionary with all parameters fron inputparameters.xml file
+        /// </summary>
+        /// <param name="filePath">Path to inputparameters.xml file</param>
+        /// <returns>Dictionary with parameters</returns>
+        public Dictionary<string, string> GetAllInputParamsValues(string filePath)
         {
             var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
@@ -45,37 +57,12 @@ namespace InfoShare.Deployment.Data.Managers
 
             return dictionary;
         }
-
-        public void CommentBlock(string filePath, string searchPattern)
-        {
-            var doc = _fileManager.Load(filePath);
-
-            var startAndEndNodes = doc.DescendantNodes()
-                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
-
-            if (startAndEndNodes.Count() != 2)
-            {
-                _logger.WriteWarning($"{filePath} does not contain start and end pattern '{searchPattern}' where it's expected.");
-                return;
-            }
-
-            XNode uncommentedNode = startAndEndNodes.First().NextNode;
-
-            if (uncommentedNode.NodeType == XmlNodeType.Comment)
-            {
-                _logger.WriteVerbose($"{filePath} contains already commented part within the pattern {searchPattern}");
-                return;
-            }
-
-            var uncommentText = uncommentedNode.ToString();
-
-            var commentedNode = new XComment(uncommentText);
-
-            uncommentedNode.ReplaceWith(commentedNode);
-
-            _fileManager.Save(filePath, doc);
-        }
-
+        
+        /// <summary>
+        /// Comments node in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
         public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
@@ -97,93 +84,178 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        public void UncommentBlock(string filePath, string searchPattern)
+        /// <summary>
+        /// Comments all nodes that has <paramref name="searchPattern"/> right above it
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
+        public void CommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
 
-            var startAndEndNodes = doc.DescendantNodes()
+            var patternNodes = doc.DescendantNodes()
                 .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
 
-            if (startAndEndNodes.Count() != 2)
+            if (!patternNodes.Any())
             {
-                _logger.WriteWarning($"{filePath} does not contain start and end pattern '{searchPattern}' where it's expected.");
-                return;
+                throw new WrongXmlStructureException(filePath, $"No searched patterns '{searchPattern}' were found.");
             }
 
-            XNode commentedNode = startAndEndNodes.First().NextNode;
-            if (commentedNode != null && commentedNode.NodeType != XmlNodeType.Comment)
+            XComment commentedNode = null;
+
+            foreach (var patternNode in patternNodes)
             {
-                _logger.WriteVerbose($"{filePath} does not contain commented part within the start and end pattern {searchPattern}");
-                return;
-            }
-
-            XDocument docWithUncommentedNode;
-            if (commentedNode == null || !TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
-            {
-                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
-            }
-
-            _fileManager.Save(filePath, docWithUncommentedNode);
-        }
-
-        public void UncommentNode(string filePath, string searchPattern)
-        {
-            var doc = _fileManager.Load(filePath);
-
-            var commentedNode = doc
-                .DescendantNodes().FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern));
-
-            if (commentedNode == null)
-            {
-                var uncommentedNode = doc
-                    .DescendantNodes().FirstOrDefault(node => node.NodeType != XmlNodeType.Comment && node.ToString().Contains(searchPattern));
+                var uncommentedNode = patternNode.NextNode;
 
                 if (uncommentedNode == null)
                 {
-                    throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected.\n\t"+
-                        $"The {filePath} does not contain pattern '{searchPattern}' where it's expected.");
+                    throw new WrongXmlStructureException(filePath, $"Comment pattern has no following nodes after searched comment '{searchPattern}'");
                 }
 
-                _logger.WriteVerbose($"{filePath} contains already uncommented element '{searchPattern}'.");
+                if (uncommentedNode.NodeType == XmlNodeType.Comment)
+                {
+                    _logger.WriteVerbose($"{filePath} contains already commented node following after pattern {searchPattern}");
+                    continue;
+                }
+
+                var uncommentText = uncommentedNode.ToString();
+
+                commentedNode = new XComment(uncommentText);
+
+                uncommentedNode.ReplaceWith(commentedNode);
+            }
+
+            if (commentedNode != null) // means that file was changed
+            {
+                _fileManager.Save(filePath, doc);
+            }
+        }
+
+        /// <summary>
+        /// Comments all nodes that has <paramref name="searchPattern"/> right above it
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
+        public void UncommentNodesByPrecedingPattern(string filePath, string searchPattern)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var patternNodes = doc.DescendantNodes()
+                .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
+
+            if (!patternNodes.Any())
+            {
+                throw new WrongXmlStructureException(filePath, $"No searched patterns '{searchPattern}' were found.");
+            }
+
+            var isFileChanged = false;
+
+            foreach (var patternNode in patternNodes)
+            {
+                XNode commentedNode = patternNode.NextNode;
+
+                if (commentedNode == null)
+                {
+                    throw new WrongXmlStructureException(filePath, $"Comment pattern has no following nodes after searched comment '{searchPattern}'");
+                }
+
+                if (commentedNode.NodeType != XmlNodeType.Comment)
+                {
+                    _logger.WriteVerbose($"{filePath} contains already uncommented node following after pattern {searchPattern}");
+                    continue;
+                }
+
+                if (!TryUncommentNode(commentedNode, ref doc))
+                {
+                    throw new WrongXmlStructureException(filePath, $"Was not able to uncomment the following node: {commentedNode}");
+                }
+                isFileChanged = true;
+            }
+
+            if (isFileChanged)
+            {
+                _fileManager.Save(filePath, doc);
+            }
+        }
+
+        /// <summary>
+        /// Uncomment multiple nodes that can be found by inner pattern
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">Comment pattern that is inside commented node</param>
+        public void UncommentNodesByInnerPattern(string filePath, string searchPattern)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var searchedNodes = doc.DescendantNodes()
+                .Where(node => node.ToString().Contains(searchPattern)).ToArray();
+
+            if (!searchedNodes.Any())
+            {
+                throw new WrongXmlStructureException(filePath, $"No searched patterns '{searchPattern}' were found.");
+            }
+
+            var commentedNodes = searchedNodes.Where(node => node.NodeType == XmlNodeType.Comment).ToArray();
+
+            if (!commentedNodes.Any())
+            {
+                _logger.WriteVerbose($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
                 return;
             }
 
-            XDocument docWithUncommentedNode;
-            if (!TryUncommentNode(commentedNode, doc, out docWithUncommentedNode))
+            foreach (var commentedNode in commentedNodes)
             {
-                throw new WrongXmlStructureException($"The structure of the file {filePath} does not match with expected");
+                if (!TryUncommentNode(commentedNode, ref doc))
+                {
+                    throw new WrongXmlStructureException(filePath, $"Was not able to uncomment the following node: {commentedNode}");
+                }
             }
 
-            _fileManager.Save(filePath, docWithUncommentedNode);
+            _fileManager.Save(filePath, doc);
         }
 
-        private bool TryUncommentNode(XNode commentedNode, XDocument doc, out XDocument docWithUncommentedNode)
+        /// <summary>
+        /// Moves comment node outside of it's parent node found by xpath
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to the searched node</param>
+        /// <param name="internalPatternElem">Internal comment pattern that marks searched node</param>
+        public void MoveOutsideInnerComment(string filePath, string xpath, string internalPatternElem)
         {
-            docWithUncommentedNode = null;
-            var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
-            var startIndex = commentText.IndexOf('<');
-            var endIndex = commentText.LastIndexOf('>');
+            var doc = _fileManager.Load(filePath);
 
-            if (startIndex < 0 || endIndex < 0)
+            var searchedXPath = $"{xpath}[comment()[contains(., '{internalPatternElem}')]]";
+            var uncommentedNodes = doc.XPathSelectElements(searchedXPath).ToArray();
+
+            if (!uncommentedNodes.Any())
             {
-                return false;
+                // should not throw exception
+                _logger.WriteDebug($"{filePath} does not contain inner patterns any more. Searched xpath: {searchedXPath}");
+                return;
             }
 
-            commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
+            foreach (var uncommentedNode in uncommentedNodes)
+            {
+                // Move internal searched pattern before node
+                var internalComment =
+                    uncommentedNode.DescendantNodes()
+                        .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(internalPatternElem));
 
-            try
-            {
-                var commentedDocXmlString = doc.ToString();
-                var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
-                docWithUncommentedNode = XDocument.Parse(replacedDocXmlString);
-                return true;
+                uncommentedNode.AddBeforeSelf(internalComment);
+
+                internalComment?.Remove();
             }
-            catch
-            {
-                return false;
-            }
+
+            _fileManager.Save(filePath, doc);
         }
 
+        /// <summary>
+        /// Set attribute value
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath that is searched</param>
+        /// <param name="attributeName">Name of the attribute that will be modified</param>
+        /// <param name="value">Attribute new value</param>
         public void SetAttributeValue(string filePath, string xpath, string attributeName, string value)
         {
             var doc = _fileManager.Load(filePath);
@@ -198,6 +270,34 @@ namespace InfoShare.Deployment.Data.Managers
             element.SetAttributeValue(attributeName, value);
 
             _fileManager.Save(filePath, doc);
+        }
+
+        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
+        {
+            var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
+            var startIndex = commentText.IndexOf('<');
+            var endIndex = commentText.LastIndexOf('>');
+
+            if (startIndex < 0 || endIndex < 0)
+            {
+                return false;
+            }
+            
+            commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
+
+            try
+            {
+                // We cannnot use XNode.Replace method to replace just single node, because it cannot resolve namespaces inside uncommented node
+                var commentedDocXmlString = doc.ToString();
+                var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
+                doc = XDocument.Parse(replacedDocXmlString);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using InfoShare.Deployment.Data.Managers.Interfaces;
@@ -126,6 +127,26 @@ namespace InfoShare.Deployment.Data.Managers
 		public string ReadAllText(string filePath)
         {
             return File.ReadAllText(filePath);
+        }
+
+        /// <summary>
+        /// Opens a text file, reads all lines of the file, and then closes the file.
+        /// </summary>
+        /// <param name="filePath">The file to open for reading.</param>
+        /// <returns>A string array containing all lines of the file.</returns>
+        public string[] ReadAllLines(string filePath)
+        {
+            return File.ReadAllLines(filePath);
+        }
+
+        /// <summary>
+        /// Creates a new file, write the specified string array to the file, and then closes the file.
+        /// </summary>
+        /// <param name="filePath">The file to write to.</param>
+        /// <param name="lines">The string array to write to the file.</param>
+        public void WriteAllLines(string filePath, string[] lines)
+        {
+            File.WriteAllLines(filePath, lines);
         }
 
         /// <summary>

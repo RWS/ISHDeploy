@@ -4,11 +4,11 @@
     {
         #region Enable/Disable Content Editor (XOPUS)
 
-        public const string XopusAddCheckOut = "XOPUS ADD \"CHECK OUT WITH XOPUS\"";
-        public const string XopusAddUndoCheckOut = "XOPUS ADD \"UNDO CHECK OUT\"";
-        public const string XopusRemoveCheckoutDownload = "XOPUS REMOVE \"CHECKOUT & DOWNLOAD\"";
-        public const string XopusRemoveCheckIn = "XOPUS REMOVE \"CHECK IN\"";
-        public const string XopusRemoveUndoCheckOut = "XOPUS REMOVE \"UNDO CHECK OUT\"";
+        public const string XopusAddCheckOut = "XOPUS ADD \"CHECK OUT WITH XOPUS\" START";
+        public const string XopusAddUndoCheckOut = "XOPUS ADD \"UNDO CHECK OUT\" START";
+        public const string XopusRemoveCheckoutDownload = "XOPUS REMOVE \"CHECKOUT & DOWNLOAD\" START";
+        public const string XopusRemoveCheckIn = "XOPUS REMOVE \"CHECK IN\" START";
+        public const string XopusRemoveUndoCheckOut = "XOPUS REMOVE \"UNDO CHECK OUT\" START";
 
         #endregion
 
@@ -33,5 +33,14 @@
         public const string TrisoftInfoshareWebExternalAttributeName = "externalId";
 
         #endregion
-	}
+
+        #region Enable/Disable Translation Job
+
+        public const string TranslationJobHack = "//Translation Jobs hack";
+        public const string EventMonitorTranslationJobs = "Translation Jobs ===========";
+        public const string TranslationComment = "TRANSLATION";
+        public const string TopDocumentButtonbarXPath = "BUTTONBAR/BUTTON";
+
+        #endregion
+    }
 }

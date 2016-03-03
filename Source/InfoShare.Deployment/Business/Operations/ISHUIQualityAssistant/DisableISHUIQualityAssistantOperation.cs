@@ -12,8 +12,8 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIQualityAssistant
         {
             _invoker = new ActionInvoker(logger, "Disabling InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new XmlNodeCommentAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfigXPath));
-			_invoker.AddAction(new XmlNodeCommentAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegrationXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfigXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegrationXPath));
 		}
 
         public void Run()

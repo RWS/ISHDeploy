@@ -4,17 +4,17 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
-    public class XmlNodeCommentAction : SingleXmlFileAction
+    public class CommentNodeByXPathAction : SingleXmlFileAction
     {
         private readonly IEnumerable<string> _xpaths;
 
-        public XmlNodeCommentAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> xpaths)
+        public CommentNodeByXPathAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> xpaths)
 			: base(logger, filePath)
         {
             _xpaths = xpaths;
         }
 
-        public XmlNodeCommentAction(ILogger logger, ISHFilePath filePath, string xpath)
+        public CommentNodeByXPathAction(ILogger logger, ISHFilePath filePath, string xpath)
             : this(logger, filePath, new[] { xpath })
         { }
 

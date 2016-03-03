@@ -43,25 +43,16 @@ namespace InfoShare.Deployment.Data.Actions
 		/// <param name="logger">Logger</param>
 		/// <param name="ishFilePath">Wrapper for file path</param>
 		protected SingleFileAction(ILogger logger, ISHFilePath ishFilePath)
-			: this(logger)
+			: base(logger)
         {
 			IshFilePath = ishFilePath;
+            FileManager = ObjectFactory.GetInstance<IFileManager>();
 
-			// Make sure Vanilla backup exists
-			EnsureVanillaBackUpExists();
+            // Make sure Vanilla backup exists
+            EnsureVanillaBackUpExists();
 
 			// Create Backup file
 			Backup();
-		}
-
-		/// <summary>
-		/// Implements single file action constructor with no path
-		/// </summary>
-		/// <param name="logger">Logger</param>
-		protected SingleFileAction(ILogger logger)
-			: base(logger)
-		{
-			FileManager = ObjectFactory.GetInstance<IFileManager>();
 		}
 
 		/// <summary>

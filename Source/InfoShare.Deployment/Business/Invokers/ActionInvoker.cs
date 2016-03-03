@@ -85,8 +85,6 @@ namespace InfoShare.Deployment.Business.Invokers
 						(x as IRestorableAction)?.Rollback();
 					});
 				}
-
-                _logger.WriteError(ex, action);
                 
                 throw;
             }

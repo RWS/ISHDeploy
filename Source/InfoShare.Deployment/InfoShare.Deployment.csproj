@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />

@@ -11,6 +11,8 @@ namespace InfoShare.Deployment.Business.Invokers
     /// </summary>
     public class ActionInvoker : IActionInvoker
     {
+        private readonly bool _showProgress;
+
         /// <summary>
         /// Logger
         /// </summary>
@@ -31,9 +33,11 @@ namespace InfoShare.Deployment.Business.Invokers
 		/// </summary>
 		/// <param name="logger">Instance of the <see cref="T:InfoShare.Deployment.Interfaces.ILogger"/></param>
 		/// <param name="activityDescription">Description of the general activity to be done</param>
-		public ActionInvoker(ILogger logger, string activityDescription)
+		/// <param name="showProgress">Defines if progress should be shown. By default is false</param>
+		public ActionInvoker(ILogger logger, string activityDescription, bool showProgress = false)
         {
             _logger = logger;
+		    _showProgress = showProgress;
             _activityDescription = activityDescription;
             _actions = new List<IAction>();
         }
@@ -54,25 +58,27 @@ namespace InfoShare.Deployment.Business.Invokers
         public void Invoke()
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
-            IAction action = null;
 
 			List<IAction> executedActions = new List<IAction>();
             try
             {
                 for (var i = 0; i < _actions.Count; i++)
                 {
-                    action = _actions[i];
+                    var action = _actions[i];
 
                     action.Execute();
 
 					// If action was executed, we`re adding it to the list to make a rollback if necessary;
 					executedActions.Add(action);
 
-                    var actionNumber = i + 1;
-                    _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
+                    if (_showProgress)
+                    {
+                        var actionNumber = i + 1;
+                        _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
+                    }
                 }
             }
-            catch (Exception ex)
+            catch
             {
 				//	To do a rollback we need to do it in a sequence it was executed, thus we should reverse list.
 
@@ -95,8 +101,6 @@ namespace InfoShare.Deployment.Business.Invokers
 				{
 					(x as IDisposable)?.Dispose();
 				});
-
-				executedActions = null;
 	        }
         }
     }

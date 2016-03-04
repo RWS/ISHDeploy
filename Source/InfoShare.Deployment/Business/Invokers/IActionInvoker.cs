@@ -14,7 +14,7 @@ namespace InfoShare.Deployment.Business.Invokers
         void AddAction(IAction action);
 
         /// <summary>
-		/// Invokes actions sequence execution
+        /// Invokes actions sequence execution
         /// </summary>
         void Invoke();
     }

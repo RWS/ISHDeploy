@@ -6,6 +6,7 @@ using InfoShare.Deployment.Providers;
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
     [Cmdlet(VerbsCommon.Get, "ISHDeploymentHistory")]
+    [OutputType(typeof(string))]
     public class GetISHDeploymentHistoryCmdlet : BaseCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
@@ -19,6 +20,13 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
         public override void ExecuteCmdlet()
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
+
+            string historyFilePath = IshPaths.HistoryFilePath;
+
+            if (!fileManager.Exists(historyFilePath))
+            {
+                return;
+            }
 
             var historyContent = fileManager.ReadAllText(IshPaths.HistoryFilePath);
 

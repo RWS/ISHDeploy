@@ -6,24 +6,36 @@ namespace InfoShare.Deployment.Models
 {
     public class ISHDeployment
     {
-        public ISHDeployment(Dictionary<string, string> parameters, Version version)
+        public ISHDeployment(Dictionary<string, string> parameters, Version softwareVersion)
         {
-            InstallParams = parameters;
-            Version = version;
+            OriginalParameters = parameters;
+            SoftwareVersion = softwareVersion;
         }
         
-        public Dictionary<string, string> InstallParams { get; }
+        public Dictionary<string, string> OriginalParameters { get; }
 
-        public string AppPath => InstallParams["apppath"];
+        public Version SoftwareVersion { get; }
 
-        public string WebPath => InstallParams["webpath"];
+        public string Name => OriginalParameters["projectsuffix"];
+        
+        public string AppPath => OriginalParameters["apppath"];
 
-        public string DataPath => InstallParams["datapath"];
+        public string WebPath => OriginalParameters["webpath"];
 
-        public string AuthorFolderPath => Path.Combine(WebPath, $"Web{Suffix}");
+        public string DataPath => OriginalParameters["datapath"];
 
-        public string Suffix => InstallParams["projectsuffix"];
+        public string ConnectString => OriginalParameters["connectstring"];
 
-        public Version Version { get; }
+        public string DatabaseType => OriginalParameters["databasetype"];
+
+        public string WebNameCM => Path.Combine(GetAuthorFolderPath(), "Author");
+
+        public string WebNameWS => Path.Combine(GetAuthorFolderPath(), "InfoShareWS");
+
+        public string WebNameSTS => Path.Combine(GetAuthorFolderPath(), "InfoShareSTS");
+
+        public string AccessHostName => OriginalParameters["localservicehostname"];
+
+        public string GetAuthorFolderPath() => Path.Combine(WebPath, $"Web{Name}");
     }
 }

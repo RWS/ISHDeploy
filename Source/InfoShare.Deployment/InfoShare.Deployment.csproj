@@ -101,7 +101,7 @@
     <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
     <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
-    <Compile Include="Extensions\DeploymentExtensions.cs" />
+    <Compile Include="Extensions\ISHDeploymentExtension.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />

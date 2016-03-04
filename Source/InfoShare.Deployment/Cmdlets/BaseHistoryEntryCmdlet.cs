@@ -16,7 +16,7 @@ namespace InfoShare.Deployment.Cmdlets
         private string CurrentDateTime => DateTime.Now.ToString("yyyyMMdd");
 
         /// <summary>
-        /// Deployment Suffix
+        /// Deployment Name
         /// </summary>
         protected abstract ISHPaths IshPaths { get; }
         

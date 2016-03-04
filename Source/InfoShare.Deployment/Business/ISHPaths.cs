@@ -124,7 +124,7 @@ namespace InfoShare.Deployment.Business
         /// <summary>
         /// ISHDeployment suffix
         /// </summary>
-        public string DeploymentSuffix => _ishDeployment.Suffix;
+        public string DeploymentSuffix => _ishDeployment.Name;
 
         #endregion
 	}

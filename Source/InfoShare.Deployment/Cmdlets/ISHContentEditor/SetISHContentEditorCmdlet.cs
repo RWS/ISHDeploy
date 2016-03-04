@@ -1,12 +1,12 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHContentEditor;
-using InfoShare.Deployment.Models;
+using InfoShare.Deployment.Data.Actions.File;
 using InfoShare.Deployment.Providers;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor", SupportsShouldProcess = false)]
-	public sealed class SetISHContentEditorCmdlet : BaseCmdlet
+	public sealed class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
 	{
 		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]
         [Alias("path")]
@@ -18,14 +18,20 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 
 		[Parameter(Mandatory = false, Position = 2)]
         [Alias("proj")]
-		[ValidateNotNullOrEmpty]
-		public ISHProject IshProject { get; set; }
+		[ValidateNotNull]
+		public Models.ISHDeployment ISHDeployment { get; set; }
 
-		public override void ExecuteCmdlet()
+        private ISHPaths _ishPaths;
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
+
+        public override void ExecuteCmdlet()
 		{
-			var cmdSet = new SetISHContentEditorCmdSet(this, IshProject ?? ISHProjectProvider.Instance.IshProject, LicensePath, Force);
+            var action = new FileCopyAction(Logger, 
+                LicensePath,
+                IshPaths.LicenceFolderPath, 
+                Force);
 
-			cmdSet.Run();
+            action.Execute();
 		}
 	}
 }

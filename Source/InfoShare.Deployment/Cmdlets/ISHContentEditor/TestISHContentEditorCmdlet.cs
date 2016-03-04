@@ -1,20 +1,41 @@
 ﻿using System.Management.Automation;
-using InfoShare.Deployment.Business.CmdSets.ISHContentEditor;
-using InfoShare.Deployment.Models;
+using InfoShare.Deployment.Data.Actions.License;
+using InfoShare.Deployment.Providers;
+using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
 	[Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor", SupportsShouldProcess = false)]
 	public sealed class TestISHContentEditorCmdlet : BaseCmdlet
 	{
+		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]
+		[Alias("path")]
+		[ValidateNotNullOrEmpty]
+		public string Hostname { get; set; }
+
+		[Parameter(Mandatory = false, Position = 2)]
+		[Alias("proj")]
+		[ValidateNotNull]
+		public Models.ISHDeployment ISHDeployment { get; set; }
+
 		public override void ExecuteCmdlet()
 		{
-			// Calling the command directly
-			//bool result = false;
-			//var command = new TestISHContentEditorCmdSet(this, exists => result = exists);
-			//command.Execute();
+			bool result = false;
 
-			//WriteObject(result);
+            var ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment);
+
+            var action = new LicenseTestAction(
+		        Logger,
+		        ishPaths.LicenceFolderPath,
+		        Hostname,
+		        isValid =>
+		        {
+		            result = isValid;
+		        });
+
+            action.Execute();
+
+            WriteObject(result);
 		}
 	}
 }

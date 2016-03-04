@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InfoShare.Deployment.Tests</RootNamespace>
     <AssemblyName>InfoShare.Deployment.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +36,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
@@ -50,22 +56,20 @@
         <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="BaseTest.cs" />
-    <Compile Include="Cmdlets\Info\GetVersionTest.cs" />
-    <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdletTest.cs" />
-    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdletTest.cs" />
-    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdletTest.cs" />
-    <Compile Include="Data\Commands\XmlCommentCommandTest.cs" />
-    <Compile Include="Data\Commands\XmlUncommentCommandTest.cs" />
+    <Compile Include="BaseUnitTest.cs" />
+    <Compile Include="Data\Actions\File\FileCopyDirectoryActionTest.cs" />
+    <Compile Include="Data\Actions\File\FileCleanDirectoryActionTest.cs" />
+    <Compile Include="Data\Actions\File\RemoveDirectoryActionTest.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
+    <Compile Include="Data\Actions\SingleFileActionTest.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
+    <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
+    <Compile Include="Data\Managers\TextConfigManagerTest.cs" />
+    <Compile Include="Data\Managers\XmlConfigManagerTest.cs" />
+    <Compile Include="Extensions\XDocumentExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,41 +79,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="TestData\127.0.0.1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Disabled\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\ISHUIContentEditor\XSL\Enabled\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\Editors\Xopus\license\localhost.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\FolderButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\InboxButtonBar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,60 +1,54 @@
 ﻿using System;
 using System.Management.Automation;
-using InfoShare.Deployment.Data.Services;
+using InfoShare.Deployment.Data.Managers;
+using InfoShare.Deployment.Data.Managers.Interfaces;
 using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Cmdlets
 {
-    public abstract class BaseCmdlet : Cmdlet, ILogger
+    /// <summary>
+    /// Provides base functionality for all cmdlets
+    /// </summary>
+    public abstract class BaseCmdlet : PSCmdlet
     {
-        protected BaseCmdlet()
-        {
-            ObjectFactory.SetInstance<IFileManager, FileManager>(new FileManager(this));
+        /// <summary>
+        /// Logger
+        /// </summary>
+        public readonly ILogger Logger;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		protected BaseCmdlet()
+        {   
+            Logger = CmdletsLogger.Instance();
+            ObjectFactory.SetInstance<IFileManager>(new FileManager(Logger));
+            ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
+            ObjectFactory.SetInstance<ITextConfigManager>(new TextConfigManager(Logger));
+            ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
         }
 
-        public abstract void ExecuteCmdlet();
+		/// <summary>
+		/// Method to be overridden instead of process record
+		/// </summary>
+		public abstract void ExecuteCmdlet();
 
+        /// <summary>
+        /// Overrides ProcessRecord from base Cmdlet class
+        /// </summary>
         protected override void ProcessRecord()
         {
             try
             {
+                CmdletsLogger.Initialize(this);
                 base.ProcessRecord();
+
                 ExecuteCmdlet();
             }
             catch (Exception ex)
             {
-                WriteError(ex);
+                ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
-        }
-
-        public new void WriteVerbose(string message)
-        {
-            base.WriteVerbose(message);
-        }
-
-        public void WriteProgress(string message, string statusDescription)
-        {
-            WriteProgress(new ProgressRecord(0, message, statusDescription));
-        }
-
-        public void WriteDetail(string message)
-        {
-            base.WriteCommandDetail(message);
-        }
-
-        public new void WriteDebug(string message)
-        {
-            base.WriteDebug(message);
-        }
-
-        public new void WriteWarning(string message)
-        {
-            base.WriteWarning(message);
-        }
-
-        public void WriteError(Exception ex)
-        {
-            WriteError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
         }
     }
 }

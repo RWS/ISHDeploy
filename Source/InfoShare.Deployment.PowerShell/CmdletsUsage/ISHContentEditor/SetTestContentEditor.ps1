@@ -1,19 +1,13 @@
 CLS
-#Import-Module InfoShare.Deployment
-Import-Module "C:\Stash Projects\Infoshare Deployment\Source\InfoShare.Deployment\bin\Debug\InfoShare.Deployment.dll"
-
-#Test-ISHContentEditor
-
-#Pause
+Import-Module InfoShare.Deployment
 
 $info = @{
-  "AuthorFolderPath" = "C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web\Websites\Trisoft.InfoShare.Web";
-  "InstallPath" = "F:\InfoShare";
+  "WebPath" = "F:\InfoShare\";
   "Suffix" = ''
 }
 
-Set-ISHContentEditor -IshProject $info -LicensePath "C:\temp\localhost.txt"
+#Set-ISHContentEditor -LicensePath "C:\temp\localhost.txt"
 
 #Pause
 
-#Test-ISHContentEditor
+Test-ISHContentEditor -Hostname "localhost" -ISHDeployment $info 

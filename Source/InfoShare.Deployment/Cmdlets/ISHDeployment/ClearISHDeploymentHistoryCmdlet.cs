@@ -23,7 +23,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 	        var historyFilePath = IshPaths.HistoryFilePath;
 	        if (fileManager.Exists(historyFilePath))
 	        {
-		        fileManager.Delete(IshPaths.HistoryFilePath);
+		        fileManager.Delete(historyFilePath);
 	        }
         }
     }

@@ -105,6 +105,14 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		void CopyDirectoryContent(string sourcePath, string destinationPath);
 
 		/// <summary>
+		/// Writes text to the file. Creates new file if it does not exist.
+		/// </summary>
+		/// <param name="filePath">The file to open for writing.</param>
+		/// <param name="text">Text to be appended to the file content.</param>
+		/// <param name="append">true to append data to the file; false to overwrite the file</param>
+		void Write(string filePath, string text, bool append = false);
+
+		/// <summary>
 		/// Tries to find license file on the system
 		/// </summary>
 		/// <param name="licenseFolderPath">License file.</param>

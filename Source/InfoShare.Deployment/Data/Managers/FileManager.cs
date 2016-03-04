@@ -167,18 +167,29 @@ namespace InfoShare.Deployment.Data.Managers
         /// <param name="text">the text to be appended to the file content.</param>
         public void Append(string filePath, string text)
         {
-            using (var fileStream = new StreamWriter(filePath, true))
-            {
-                fileStream.Write(text);
-            }
+			this.Write(filePath, text, true);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
-        /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-        /// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
-        public XDocument Load(string filePath)
+		/// <summary>
+		/// Writes text to the file. Creates new file if it does not exist.
+		/// </summary>
+		/// <param name="filePath">The file to open for writing.</param>
+		/// <param name="text">Text to be appended to the file content.</param>
+		/// <param name="append">true to append data to the file; false to overwrite the file</param>
+		public void Write(string filePath, string text, bool append = false)
+		{
+			using (var fileStream = new StreamWriter(filePath, append))
+			{
+				fileStream.Write(text);
+			}
+		}
+
+		/// <summary>
+		/// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
+		/// </summary>
+		/// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
+		/// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
+		public XDocument Load(string filePath)
         {
             return XDocument.Load(filePath);
         }
@@ -206,7 +217,9 @@ namespace InfoShare.Deployment.Data.Managers
             filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
 
             if (File.Exists(filePath))
-                return true;
+            {
+	            return true;
+            }
 
             int i = hostName.IndexOf(".", StringComparison.InvariantCulture);
             if (i > 0)

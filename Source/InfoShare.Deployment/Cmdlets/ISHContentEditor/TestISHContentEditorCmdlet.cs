@@ -11,7 +11,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file")]
 		[Alias("path")]
 		[ValidateNotNullOrEmpty]
-		public string Hostname { get; set; }
+		public string Domain { get; set; }
 
 		[Parameter(Mandatory = false, Position = 2)]
 		[Alias("proj")]
@@ -27,7 +27,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
             var action = new LicenseTestAction(
 		        Logger,
 		        ishPaths.LicenceFolderPath,
-		        Hostname,
+				Domain,
 		        isValid =>
 		        {
 		            result = isValid;

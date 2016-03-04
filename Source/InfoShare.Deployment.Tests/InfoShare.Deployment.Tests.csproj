@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseUnitTest.cs" />
+    <Compile Include="Data\Actions\File\FileCreateActionTest.cs" />
     <Compile Include="Data\Actions\File\FileCopyDirectoryActionTest.cs" />
     <Compile Include="Data\Actions\File\FileCleanDirectoryActionTest.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryActionTest.cs" />

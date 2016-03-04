@@ -31,7 +31,7 @@ namespace InfoShare.Deployment.Models
 					case ISHPaths.IshDeploymentType.App:
 						return Path.Combine(_ishDeployment.AppPath, RelativePath);
 					case ISHPaths.IshDeploymentType.Web:
-						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
+						return Path.Combine(_ishDeployment.GetAuthorFolderPath(), RelativePath);
 					case ISHPaths.IshDeploymentType.Data:
 						return Path.Combine(_ishDeployment.DataPath, RelativePath);
 					default:
@@ -40,7 +40,7 @@ namespace InfoShare.Deployment.Models
 			}
 		}
 
-		public string DeploymentSuffix => _ishDeployment.Suffix;
+		public string DeploymentSuffix => _ishDeployment.Name;
 
 		public string VanillaPath => Path.Combine(DeploymentBackupFolder, RelativePath);
 

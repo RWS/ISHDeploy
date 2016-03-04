@@ -20,7 +20,11 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            fileManager.Delete(IshPaths.HistoryFilePath);
+	        var historyFilePath = IshPaths.HistoryFilePath;
+	        if (fileManager.Exists(historyFilePath))
+	        {
+		        fileManager.Delete(IshPaths.HistoryFilePath);
+	        }
         }
     }
 }

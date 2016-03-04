@@ -11,6 +11,8 @@ namespace InfoShare.Deployment.Business.Invokers
     /// </summary>
     public class ActionInvoker : IActionInvoker
     {
+        private readonly bool _showProgress;
+
         /// <summary>
         /// Logger
         /// </summary>
@@ -31,9 +33,11 @@ namespace InfoShare.Deployment.Business.Invokers
 		/// </summary>
 		/// <param name="logger">Instance of the <see cref="T:InfoShare.Deployment.Interfaces.ILogger"/></param>
 		/// <param name="activityDescription">Description of the general activity to be done</param>
-		public ActionInvoker(ILogger logger, string activityDescription)
+		/// <param name="showProgress">Defines if progress should be shown. By default is false</param>
+		public ActionInvoker(ILogger logger, string activityDescription, bool showProgress = false)
         {
             _logger = logger;
+		    _showProgress = showProgress;
             _activityDescription = activityDescription;
             _actions = new List<IAction>();
         }
@@ -51,8 +55,7 @@ namespace InfoShare.Deployment.Business.Invokers
         /// <summary>
         /// Executes sequence of actions one by one
         /// </summary>
-        /// <param name="showProgress">Identifies if progress needs to be reported</param>
-        public void Invoke(bool showProgress = false)
+        public void Invoke()
         {
             _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
 
@@ -68,7 +71,7 @@ namespace InfoShare.Deployment.Business.Invokers
 					// If action was executed, we`re adding it to the list to make a rollback if necessary;
 					executedActions.Add(action);
 
-                    if (showProgress)
+                    if (_showProgress)
                     {
                         var actionNumber = i + 1;
                         _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));

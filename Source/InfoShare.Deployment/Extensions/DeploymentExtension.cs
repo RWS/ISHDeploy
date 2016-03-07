@@ -8,7 +8,7 @@ namespace InfoShare.Deployment.Extensions
 	/// <summary>
 	/// Infoshare Deployment extensions
 	/// </summary>
-	public static class Deployment
+	public static class DeploymentExtension
 	{
 		/// <summary>
 		/// Retrieves Application data location for deployment
@@ -18,7 +18,7 @@ namespace InfoShare.Deployment.Extensions
 		public static string GetDeploymentAppDataFolder(this ISHDeployment deployment)
 		{
 			var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			var folderPath = $@"InfoShare.Deployment\v{deployment.Version}\ISH{deployment.Suffix}";
+			var folderPath = $@"InfoShare.Deployment\v{deployment.SoftwareVersion}\InfoShare{deployment.Name}";
 			var ishDeploymentFolder = Path.Combine(programData, folderPath);
 
 			if (!Directory.Exists(ishDeploymentFolder))

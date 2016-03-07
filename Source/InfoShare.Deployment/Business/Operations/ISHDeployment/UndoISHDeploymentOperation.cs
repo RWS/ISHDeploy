@@ -29,9 +29,9 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.DataPath));
-
+            
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.AuthorFolderPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAuthorFolderPath()));
 
 			// Removing licenses
 			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;

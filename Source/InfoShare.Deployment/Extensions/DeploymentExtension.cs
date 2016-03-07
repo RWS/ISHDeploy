@@ -8,7 +8,7 @@ namespace InfoShare.Deployment.Extensions
 	/// <summary>
 	/// Infoshare Deployment extensions
 	/// </summary>
-	public static class ISHDeploymentExtension
+	public static class DeploymentExtension
 	{
 		/// <summary>
 		/// Retrieves Application data location for deployment

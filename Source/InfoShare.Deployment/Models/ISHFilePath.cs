@@ -10,12 +10,11 @@ namespace InfoShare.Deployment.Models
 
 		private readonly ISHPaths.IshDeploymentType _deploymentType;
         
-		public string RelativePath { get; }
-        
 		public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
 			_deploymentType = deploymentType;
+
 			RelativePath = path;
 		}
 
@@ -40,14 +39,8 @@ namespace InfoShare.Deployment.Models
 			}
 		}
 
-		public string DeploymentSuffix => _ishDeployment.Name;
+        public string RelativePath { get; }
 
-		public string VanillaPath => Path.Combine(DeploymentBackupFolder, RelativePath);
-
-		#region InfoShareDeployment folders
-
-		public string DeploymentBackupFolder => _ishDeployment.GetDeploymentTypeBackupFolder(_deploymentType);
-
-		#endregion
+        public string VanillaPath => Path.Combine(_ishDeployment.GetDeploymentTypeBackupFolder(_deploymentType), RelativePath);
 	}
 }

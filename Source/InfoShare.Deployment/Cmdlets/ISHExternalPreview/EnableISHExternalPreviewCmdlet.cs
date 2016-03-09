@@ -1,26 +1,49 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.Operations.ISHExternalPreview;
-using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
 
 namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
 {
-    [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview", SupportsShouldProcess = false)]
+    /// <summary>
+    /// <para type="synopsis">Enables external preview for Content Manager deployment for specific user.</para>
+    /// <para type="description">The Enable-ISHExternalPreview cmdlet enables external preview for Content Manager deployment for specific user.</para>
+    /// <para type="description">If user id is not specified, the default value 'ServiceUser' is taken.</para>
+    /// <para type="link">Disable-ISHExternalPreview</para>
+    /// </summary>
+    /// <example>
+    /// <para>Enable external preview for user 'user1':</para>
+    /// <code>Disable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
+    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview")]
     public sealed class EnableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet
     {
-        [Parameter(Mandatory = false, Position = 0)]
-        [Alias("proj")]
-        [ValidateNotNull]
+        /// <summary>
+        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
-        [Parameter(Mandatory = false, Position = 1)]
-        [Alias("extrId")]
-        [ValidateNotNull]
+        /// <summary>
+        /// <para type="description">External user id for which external preview will be enabled. Default value is ServiceUser.</para>
+        /// </summary>
+        [Parameter(Mandatory = false)]
+        [ValidateNotNullOrEmpty]
         public string ExternalId { get; set; }
 
+        /// <summary>
+        /// Cashed value for <see cref="IshPaths"/> property
+        /// </summary>
         private ISHPaths _ishPaths;
-        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
 
+        /// <summary>
+        /// Returns instance of the <see cref="ISHPaths"/>
+        /// </summary>
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment));
+
+        /// <summary>
+        /// Executes cmdlet
+        /// </summary>
         public override void ExecuteCmdlet()
         {
             var operation = new EnableISHExternalPreviewOperation(Logger, IshPaths, ExternalId);

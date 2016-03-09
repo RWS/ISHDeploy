@@ -1,16 +1,41 @@
 ﻿using System.Linq;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
 using InfoShare.Deployment.Business.Operations.ISHDeployment;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
+    /// <summary>
+    /// <para type="synopsis">Gets all installed Content Management deployments.</para>
+    /// <para type="description">The Get-ISHDeployment cmdlet gets all installed Content Management deployments.</para>
+    /// <para type="description">You can get specific instance of the installed Content Manager deployment by specifying the deployment name.</para>
+    /// <para type="description">All Content Manager deployment instances' names start with 'InfoShare' prefix.</para>
+    /// <para type="link">Clear-ISHDeploymentHistory</para>
+    /// <para type="link">Get-ISHDeploymentHistory</para>
+    /// <para type="link">Undo-ISHDeployment</para>
+    /// </summary>
+    /// <example>
+    /// <para>Retrieve a list of all installed Content Manager deployments:</para>
+    /// <code>Get-ISHDeployment</code>
+    /// </example>
+    /// <example>
+    /// <para>Retrieve specific instance of the Content Manager deployment by name 'InfoShare':</para>
+    /// <code>Get-ISHDeployment -Name 'InfoShare'</code>
+    /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHDeployment")]
     public class GetISHDeploymentCmdlet : BaseCmdlet
     {
-        [Parameter(Mandatory = false, Position = 0, HelpMessage = "Name of the already deployed Content Manager instance")]
-        [Alias("Suffix")]
+        /// <summary>
+        /// <para type="description">Specifies the name of the installed Content Manager deployment.</para>
+        /// <para type="description">All names start with InfoShare</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Name of the already installed Content Manager deployment.")]
+        [ValidatePattern("^(InfoShare)", Options = RegexOptions.IgnoreCase)]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Executes cmdlet
+        /// </summary>
         public override void ExecuteCmdlet()
         {
             var operation = new GetISHDeploymentOperation(Logger, Name);

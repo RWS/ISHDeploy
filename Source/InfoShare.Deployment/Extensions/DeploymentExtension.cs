@@ -18,7 +18,7 @@ namespace InfoShare.Deployment.Extensions
 		public static string GetDeploymentAppDataFolder(this ISHDeployment deployment)
 		{
 			var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			var folderPath = $@"InfoShare.Deployment\v{deployment.SoftwareVersion}\InfoShare{deployment.Name}";
+			var folderPath = Path.Combine("InfoShare.Deployment", $"v{deployment.SoftwareVersion}", deployment.Name);
 			var ishDeploymentFolder = Path.Combine(programData, folderPath);
 
 			if (!Directory.Exists(ishDeploymentFolder))

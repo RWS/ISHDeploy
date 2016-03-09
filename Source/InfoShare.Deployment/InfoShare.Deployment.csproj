@@ -66,7 +66,6 @@
     <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentHistoryCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHDeployment\SetISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\UndoISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\DisableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
@@ -118,7 +117,6 @@
     <Compile Include="Models\ISHDeployment.cs" />
     <Compile Include="Business\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ISHProjectProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -127,7 +125,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)InfoShare.Deployment.PostBuild.ps1" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" $(TargetPath)
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)InfoShare.Deployment.PostBuild.ps1" "$(TargetDir)"
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -13,7 +13,10 @@ namespace InfoShare.Deployment.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseCmdlet
     {
-        private string CurrentDateTime => DateTime.Now.ToString("yyyyMMdd");
+        /// <summary>
+        /// Returns current date in format yyyyMMdd
+        /// </summary>
+        private string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
 
         /// <summary>
         /// Deployment Name
@@ -51,12 +54,12 @@ namespace InfoShare.Deployment.Cmdlets
             
             if (!fileManager.Exists(IshPaths.HistoryFilePath)) // create history file with initial record
             {
-                historyEntry.AppendLine($"# {CurrentDateTime}");
+                historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
             }
-            else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDateTime)) // group history records by date inside the file
+            else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
             {
-                historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDateTime}");
+                historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDate}");
             }
             
             historyEntry.AppendLine(InvocationLine);
@@ -87,6 +90,11 @@ namespace InfoShare.Deployment.Cmdlets
             }
         }
 
+        /// <summary>
+        /// Converts boundParameter to the form how it will be presented in the history file.
+        /// </summary>
+        /// <param name="boundParameter">Parameter from cmdlet.</param>
+        /// <returns>Converted boundParameter to history parameter.</returns>
         private KeyValuePair<string, object>? ToHistoryParameter(KeyValuePair<string, object> boundParameter)
         {
             if (string.Compare(boundParameter.Key, "ISHDeployment", StringComparison.OrdinalIgnoreCase) == 0)
@@ -110,6 +118,12 @@ namespace InfoShare.Deployment.Cmdlets
             return boundParameter;
         }
 
+        /// <summary>
+        /// Returns true if current date is same as last history date.
+        /// </summary>
+        /// <param name="historyContent">Whole history file content.</param>
+        /// <param name="currentDate">Current date.</param>
+        /// <returns>True if last date in history content is the same as current date.</returns>
         private bool IsNewDate(string historyContent, string currentDate)
         {
             var lastDate = Regex.Match(historyContent, @"[#]\s\d{8}", RegexOptions.RightToLeft);

@@ -1,77 +1,70 @@
-﻿using System;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using InfoShare.Deployment.Data.Actions.File;
-using InfoShare.Deployment.Providers;
 using InfoShare.Deployment.Business;
-using InfoShare.Deployment.Data.Actions;
 
 namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
 {
-	[Cmdlet(VerbsCommon.Set, "ISHContentEditor", SupportsShouldProcess = false)]
-	public sealed class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
+    /// <summary>
+    /// <para type="synopsis">Sets new license for Content Editor.</para>
+    /// <para type="description">The Set-ISHContentEditor cmdlet sets new license for Content Editor using domain name and license key parameters.</para>
+    /// <para type="link">Test-ISHContentEditor</para>
+    /// </summary>
+    /// <example>
+    /// <para>Set new license for Content Editor using domain name and license key:</para>
+    /// <code>Set-ISHContentEditor -Domain "localhost" -LicenseKey "123445345342331313432423" -ISHDeployment $deployment -Force</code>
+    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <para>Force parameter allows to skip prompt message and confirms to replace license for specific domain if it is already exists.</para>
+    /// </example>
+	[Cmdlet(VerbsCommon.Set, "ISHContentEditor")]
+	public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
 	{
-		const string LICENSE_FILE_EXTENSION = ".txt";
-
-		#region license-path parameters
-
-		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Path to the license file", 
-			ParameterSetName = "license-path")]
-		[Alias("path")]
-		[ValidateNotNullOrEmpty]
-		public string LicensePath { get; set; }
-
-		[Parameter(Mandatory = false, Position = 1,
-			ParameterSetName = "license-path")]
-		public SwitchParameter Force { get; set; }
-
-		#endregion
-
-		#region license-key parameters
-
-		[Parameter(Mandatory = true, Position = 0, HelpMessage = "Domain path",
-			ParameterSetName = "license-key")]
+        /// <summary>
+        /// Hardcoded value of the license file type
+        /// </summary>
+		const string LicenseFileExtension = ".txt";
+        
+		/// <summary>
+        /// <para type="description">Specifies the domain name for license.</para>
+        /// </summary>
+		[Parameter(Mandatory = true, HelpMessage = "Domain name for license")]
 		[ValidateNotNullOrEmpty]
 		public string Domain { get; set; }
 
-		[Parameter(Mandatory = true, Position = 1, HelpMessage = "License key string",
-			ParameterSetName = "license-key")]
+        /// <summary>
+        /// <para type="description">Specifies the license key value.</para>
+        /// </summary>
+		[Parameter(Mandatory = true, HelpMessage = "License key value")]
 		[ValidateNotNullOrEmpty]
 		public string LicenseKey { get; set; }
-
-		#endregion
-
-		#region shared parameters
-
-		[Parameter(Mandatory = false, Position = 2)]
-        [Alias("proj")]
-		[ValidateNotNull]
+        
+        /// <summary>
+        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
-		#endregion
+        /// <summary>
+        /// <para type="description">Allows the cmdlet to replace existing license if there is already registered one for that domain.</para>
+        /// </summary>
+        [Parameter(Mandatory = false)]
+        public SwitchParameter Force { get; set; }
 
-		private ISHPaths _ishPaths;
-        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment));
+        /// <summary>
+        /// Cashed value for <see cref="IshPaths"/> property
+        /// </summary>
+        private ISHPaths _ishPaths;
 
+        /// <summary>
+        /// Returns instance of the <see cref="ISHPaths"/>
+        /// </summary>
+        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment));
+
+        /// <summary>
+        /// Executes cmdlet
+        /// </summary>
         public override void ExecuteCmdlet()
         {
-			BaseAction action;
-			switch (ParameterSetName)
-			{
-				case "license-key":
-					action = new FileCreateAction(Logger,
-									IshPaths.LicenceFolderPath,
-									String.Concat(Domain, LICENSE_FILE_EXTENSION),
-									LicenseKey);
-					break;
-				case "license-path":
-					action = new FileCopyAction(Logger,
-									LicensePath,
-									IshPaths.LicenceFolderPath,
-									Force);
-					break;
-				default:
-					throw new ArgumentException($"Either {nameof(LicensePath)} or {nameof(LicenseKey)} shoule be provided.");
-			}
+			var action = new FileCreateAction(Logger, IshPaths.LicenceFolderPath, string.Concat(Domain, LicenseFileExtension), LicenseKey);
 
             action.Execute();
 		}

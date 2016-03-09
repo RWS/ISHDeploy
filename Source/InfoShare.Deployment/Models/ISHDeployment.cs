@@ -16,7 +16,7 @@ namespace InfoShare.Deployment.Models
 
         public Version SoftwareVersion { get; }
 
-        public string Name => OriginalParameters["projectsuffix"];
+        public string Name => $"InfoShare{GetSuffix()}";
         
         public string AppPath => OriginalParameters["apppath"];
 
@@ -36,6 +36,8 @@ namespace InfoShare.Deployment.Models
 
         public string AccessHostName => OriginalParameters["localservicehostname"];
 
-        public string GetAuthorFolderPath() => Path.Combine(WebPath, $"Web{Name}");
+        public string GetAuthorFolderPath() => Path.Combine(WebPath, $"Web{GetSuffix()}");
+
+        public string GetSuffix() => OriginalParameters["projectsuffix"];
     }
 }

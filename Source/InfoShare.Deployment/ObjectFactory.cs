@@ -1,46 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace InfoShare.Deployment
 {
+    /// <summary>
+    /// Represents the simplest implementation of the IoC container. It can register and return instances of classes.
+    /// </summary>
     public class ObjectFactory
     {
-        private static readonly IDictionary<Type, Type> _types = new Dictionary<Type, Type>();
-        private static readonly IDictionary<Type, object> _typeInstances = new Dictionary<Type, object>();
+        /// <summary>
+        /// The registered type instances.
+        /// </summary>
+        private static readonly IDictionary<Type, object> TypeInstances = new Dictionary<Type, object>();
 
+        /// <summary>
+        /// Registers the instance of the type.
+        /// </summary>
+        /// <typeparam name="TContract">The type of the instance.</typeparam>
+        /// <param name="instance">The instance.</param>
         public static void SetInstance<TContract>(TContract instance)
         {
-            _typeInstances[typeof(TContract)] = instance;
+            TypeInstances[typeof(TContract)] = instance;
         }
 
+        /// <summary>
+        /// Gets the instance by registered type.
+        /// </summary>
+        /// <typeparam name="T">The registered type.</typeparam>
+        /// <returns>Instance of specific type.</returns>
         public static T GetInstance<T>()
         {
             return (T)GetInstance(typeof(T));
         }
 
+        /// <summary>
+        /// Gets the instance by registered type.
+        /// </summary>
+        /// <param name="contract">The registered type.</param>
+        /// <returns>Instance of specific type.</returns>
         private static object GetInstance(Type contract)
         {
-            if (_typeInstances.ContainsKey(contract))
+            if (TypeInstances.ContainsKey(contract))
             {
-                return _typeInstances[contract];
+                return TypeInstances[contract];
             }
-            else
-            {
-                Type implementation = _types[contract];
-                ConstructorInfo constructor = implementation.GetConstructors()[0];
-                ParameterInfo[] constructorParameters = constructor.GetParameters();
-                if (constructorParameters.Length == 0)
-                {
-                    return Activator.CreateInstance(implementation);
-                }
-                List<object> parameters = new List<object>(constructorParameters.Length);
-                foreach (ParameterInfo parameterInfo in constructorParameters)
-                {
-                    parameters.Add(GetInstance(parameterInfo.ParameterType));
-                }
-                return constructor.Invoke(parameters.ToArray());
-            }
+
+            throw new ArgumentException("Such type is not registered.");
         }
     }
 }

@@ -15,7 +15,7 @@ namespace InfoShare.Deployment.Data.Actions
 		/// <summary>
 		/// Extension for backup files
 		/// </summary>
-		const string BACK_UP_FILE_EXTENSION = ".back";
+		private const string BackUpFileExtension = ".back";
 
 		/// <summary>
 		/// IshFilePath instance, containing relative path, deployment and deployment type
@@ -93,10 +93,6 @@ namespace InfoShare.Deployment.Data.Actions
 					FileManager.Copy(this.FilePath, this.BackupPath);
 				}
 			}
-			else
-			{
-				//	So do nothing here
-			}
 		}
 
 		/// <summary>
@@ -140,7 +136,7 @@ namespace InfoShare.Deployment.Data.Actions
 		/// <returns>Path to backup file</returns>
 		private string GetNewBackUpFileName()
 		{
-			return String.Concat(FilePath, BACK_UP_FILE_EXTENSION);
+			return String.Concat(FilePath, BackUpFileExtension);
 		}
 
 		#endregion private methods

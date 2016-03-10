@@ -4,10 +4,22 @@ using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Business.Operations.ISHUIContentEditor
 {
+    /// <summary>
+    /// Enables Content Editor for Content Manager deployment
+    /// </summary>
+    /// <seealso cref="IOperation" />
     public class EnableISHUIContentEditorOperation : IOperation
     {
+        /// <summary>
+        /// The actions invoker.
+        /// </summary>
         private readonly IActionInvoker _invoker;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnableISHUIContentEditorOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="paths">Reference for all files paths.</param>
         public EnableISHUIContentEditorOperation(ILogger logger, ISHPaths paths)
         {
             _invoker = new ActionInvoker(logger, "Enabling InfoShare Content Editor");
@@ -19,6 +31,9 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIContentEditor
             _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, paths.LanguageDocumentButtonBar, new[] { CommentPatterns.XopusRemoveCheckoutDownload, CommentPatterns.XopusRemoveCheckIn }));
         }
 
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
         public void Run()
         {
             _invoker.Invoke();

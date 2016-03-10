@@ -16,7 +16,7 @@ namespace InfoShare.Deployment.Cmdlets
         /// <summary>
         /// Returns current date in format yyyyMMdd
         /// </summary>
-        private string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
+        private static string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
 
         /// <summary>
         /// Deployment Name

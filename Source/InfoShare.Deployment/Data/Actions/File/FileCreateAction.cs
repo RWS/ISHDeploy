@@ -6,26 +6,41 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.File
 {
-	/// <summary>
-	/// Implements file create action
-	/// </summary>
+    /// <summary>
+	/// Action that creates new file with content inside.
+    /// </summary>
+    /// <seealso cref="BaseAction" />
+    /// <seealso cref="IRestorableAction" />
     public class FileCreateAction : BaseAction, IRestorableAction
     {
-		private readonly string _fileName;
-		private readonly string _fileContent;
-		private readonly string _destinationPath;
-
+        /// <summary>
+        /// The file manager.
+        /// </summary>
         private readonly IFileManager _fileManager;
 
-		/// <summary>
-		/// Creates file in directory
-		/// </summary>
-		/// <param name="logger"></param>
-		/// <param name="destinationPath"></param>
-		/// <param name="fileName"></param>
-		/// <param name="fileContent"></param>
-		/// <param name="force"></param>
-		public FileCreateAction(ILogger logger, ISHFilePath destinationPath, string fileName, string fileContent) 
+        /// <summary>
+        /// The file name that will be created.
+        /// </summary>
+        private readonly string _fileName;
+
+        /// <summary>
+        /// The file content
+        /// </summary>
+        private readonly string _fileContent;
+
+        /// <summary>
+        /// The destination path for new file.
+        /// </summary>
+        private readonly string _destinationPath;
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCreateAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="destinationPath">The destination path.</param>
+        /// <param name="fileName">Name of the file that will be created.</param>
+        /// <param name="fileContent">Content of the new file.</param>
+        public FileCreateAction(ILogger logger, ISHFilePath destinationPath, string fileName, string fileContent) 
 			: base(logger)
         {
 			_fileName = fileName;
@@ -35,18 +50,18 @@ namespace InfoShare.Deployment.Data.Actions.File
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
-		/// <summary>
-		/// Executes the action
-		/// </summary>
-		public override void Execute()
+        /// <summary>
+        /// Executes current action.
+        /// </summary>
+        public override void Execute()
 		{
 			_fileManager.Write(GetDestinationFileName(), _fileContent);
 		}
 
-		/// <summary>
-		/// Rollback to initial state
-		/// </summary>
-		public virtual void Rollback()
+        /// <summary>
+        /// Reverts an asset to initial state
+        /// </summary>
+        public virtual void Rollback()
 		{
 			var createdFileName = GetDestinationFileName();
 			if (_fileManager.Exists(createdFileName))
@@ -55,20 +70,19 @@ namespace InfoShare.Deployment.Data.Actions.File
 			}
 		}
 
-		/// <summary>
-		/// Used to create a backup of the file, however, as this command is doing no modification 
-		/// on existing file we keep this method empty
-		/// </summary>
-		public void Backup()
+        /// <summary>
+        /// Creates backup of the asset
+        /// </summary>
+        public void Backup()
 		{
-			//	Otherwise backup means removing added item
-			//	So do nothing here
-		}
+            // This actions does not require backup
+            //	So do nothing here
+        }
 
-		/// <summary>
-		/// Gets name of the file to be created
-		/// </summary>
-		private string GetDestinationFileName()
+        /// <summary>
+        /// Gets name of the file to be created
+        /// </summary>
+        private string GetDestinationFileName()
 		{
 			return Path.Combine(_destinationPath, _fileName);
 		}

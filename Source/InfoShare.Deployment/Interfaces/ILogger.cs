@@ -2,47 +2,50 @@
 
 namespace InfoShare.Deployment.Interfaces
 {
+    /// <summary>
+    /// Represents logging functionality.
+    /// </summary>
     public interface ILogger
     {
         /// <summary>
-        /// Writes verbose message
+        /// Writes verbose message.
         /// </summary>
-        /// <param name="message">Verbose message</param>
+        /// <param name="message">Verbose message.</param>
         void WriteVerbose(string message);
 
         /// <summary>
-        /// Reports progress
+        /// Reports progress.
         /// </summary>
-        /// <param name="activity">Activity that takes place</param>
-        /// <param name="statusDescription">Activity description</param>
-        /// <param name="percentComplete">Complete progress in percent equivalent</param>
+        /// <param name="activity">Activity that takes place.</param>
+        /// <param name="statusDescription">Activity description.</param>
+        /// <param name="percentComplete">Complete progress in percent equivalent.</param>
         void WriteProgress(string activity, string statusDescription, int percentComplete = -1);
 
         /// <summary>
-        /// Reports parent progress
+        /// Reports parent progress.
         /// </summary>
-        /// <param name="activity">Activity that takes place</param>
-        /// <param name="statusDescription">Activity description</param>
-        /// <param name="percentComplete">Complete progress in percent equivalent</param>
+        /// <param name="activity">Activity that takes place.</param>
+        /// <param name="statusDescription">Activity description.</param>
+        /// <param name="percentComplete">Complete progress in percent equivalent.</param>
         void WriteParentProgress(string activity, string statusDescription, int percentComplete);
 
         /// <summary>
-        /// Writes debug-useful information
+        /// Writes debug-useful information.
         /// </summary>
-        /// <param name="message">Debug message</param>
+        /// <param name="message">Debug message.</param>
         void WriteDebug(string message);
 
         /// <summary>
-        /// Writes warning message
+        /// Writes warning message.
         /// </summary>
-        /// <param name="message">Warning message</param>
+        /// <param name="message">Warning message.</param>
         void WriteWarning(string message);
 
         /// <summary>
-        /// Writes non-terminating error
+        /// Writes non-terminating error.
         /// </summary>
-        /// <param name="ex">Exception as a result of the error</param>
-        /// <param name="errorObject">Object that caused error</param>
+        /// <param name="ex">Exception as a result of the error.</param>
+        /// <param name="errorObject">Object that caused error.</param>
         void WriteError(Exception ex, object errorObject = null);
     }
 }

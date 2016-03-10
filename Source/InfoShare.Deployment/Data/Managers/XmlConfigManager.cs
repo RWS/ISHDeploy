@@ -12,17 +12,36 @@ namespace InfoShare.Deployment.Data.Managers
     /// <summary>
     /// Performs different kinds of operations with xml file
     /// </summary>
+    /// <seealso cref="IXmlConfigManager" />
     public class XmlConfigManager : IXmlConfigManager
     {
         #region Private constants
 
+        /// <summary>
+        /// The input configuration parameter xml path
+        /// </summary>
         private const string InputConfigParamXmlPath = "inputconfig/param";
+
+        /// <summary>
+        /// The name xml attribute
+        /// </summary>
         private const string NameXmlAttr = "name";
+
+        /// <summary>
+        /// The current value xml node
+        /// </summary>
         private const string CurrentValueXmlNode = "currentvalue";
 
         #endregion
 
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger _logger;
+
+        /// <summary>
+        /// The file manager
+        /// </summary>
         private readonly IFileManager _fileManager;
 
         /// <summary>
@@ -272,6 +291,12 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
+        /// <summary>
+        /// Tries the uncomment node.
+        /// </summary>
+        /// <param name="commentedNode">The commented node.</param>
+        /// <param name="doc">The document where changes should take place.</param>
+        /// <returns>True if operation succeeded; otherwise false.</returns>
         private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');

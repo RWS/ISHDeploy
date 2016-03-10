@@ -4,13 +4,28 @@ using InfoShare.Deployment.Extensions;
 
 namespace InfoShare.Deployment.Models
 {
-	public class ISHFilePath
+    /// <summary>
+    /// Wrapper for file path that provides relative, absolute and vanilla installation path of the file.
+    /// </summary>
+    public class ISHFilePath
 	{
-		private readonly ISHDeployment _ishDeployment;
+        /// <summary>
+        /// The instance of the deployment.
+        /// </summary>
+        private readonly ISHDeployment _ishDeployment;
 
-		private readonly ISHPaths.IshDeploymentType _deploymentType;
-        
-		public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
+        /// <summary>
+        /// Type of the deployment.
+        /// </summary>
+        private readonly ISHPaths.IshDeploymentType _deploymentType;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
+        /// </summary>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="deploymentType">Type of the deployment.</param>
+        /// <param name="path">The path to the file.</param>
+        public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
 			_deploymentType = deploymentType;
@@ -39,8 +54,14 @@ namespace InfoShare.Deployment.Models
 			}
 		}
 
+        /// <summary>
+        /// Gets the relative path of the file.
+        /// </summary>
         public string RelativePath { get; }
 
+        /// <summary>
+        /// Gets the vanilla installation path.
+        /// </summary>
         public string VanillaPath => Path.Combine(_ishDeployment.GetDeploymentTypeBackupFolder(_deploymentType), RelativePath);
 	}
 }

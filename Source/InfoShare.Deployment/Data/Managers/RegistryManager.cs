@@ -7,28 +7,75 @@ using Microsoft.Win32;
 
 namespace InfoShare.Deployment.Data.Managers
 {
+    /// <summary>
+    /// Manager that do all kinds of operations with registry.
+    /// </summary>
+    /// <seealso cref="IRegistryManager" />
     public class RegistryManager : IRegistryManager
     {
         #region Private constants
 
+        /// <summary>
+        /// The install tool registry path.
+        /// </summary>
         private const string InstallToolRegPath = "SOFTWARE\\Trisoft\\InstallTool";
+
+        /// <summary>
+        /// The install tool registry path for x64 OS.
+        /// </summary>
         private const string InstallToolRegPath64 = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool";
+
+        /// <summary>
+        /// The project base registry name.
+        /// </summary>
         private const string ProjectBaseRegName = "InfoShare";
+
+        /// <summary>
+        /// The core registry key name.
+        /// </summary>
         private const string CoreRegName = "Core";
+
+        /// <summary>
+        /// The current registry key name.
+        /// </summary>
         private const string CurrentRegName = "Current";
+
+        /// <summary>
+        /// The history registry key name.
+        /// </summary>
         private const string HistoryRegName = "History";
+
+        /// <summary>
+        /// The install history path registry value name.
+        /// </summary>
         private const string InstallHistoryPathRegValue = "InstallHistoryPath";
+
+        /// <summary>
+        /// The version registry value name
+        /// </summary>
         private const string VersionRegValue = "Version";
 
         #endregion
 
+        /// <summary>
+        /// The logger.
+        /// </summary>
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegistryManager"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         public RegistryManager(ILogger logger)
         {
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets the installed deployments keys.
+        /// </summary>
+        /// <param name="expectedSuffix">The deployment suffix. If not specified method will return all found deployments.</param>
+        /// <returns>List of found deployments</returns>
         public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null)
         {
             var installedProjectsKeys = new List<RegistryKey>();
@@ -62,6 +109,11 @@ namespace InfoShare.Deployment.Data.Managers
             return installedProjectsKeys;
         }
 
+        /// <summary>
+        /// Gets the inputparameters.xml file path.
+        /// </summary>
+        /// <param name="projectRegKey">The deployment registry key.</param>
+        /// <returns>Path to inputparameters.xml file</returns>
         public string GetInstallParamFilePath(RegistryKey projectRegKey)
         {
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
@@ -69,6 +121,11 @@ namespace InfoShare.Deployment.Data.Managers
             return historyItem?.GetValue(InstallHistoryPathRegValue).ToString();
         }
 
+        /// <summary>
+        /// Gets the installed deployment version.
+        /// </summary>
+        /// <param name="projectRegKey">The deployment registry key.</param>
+        /// <returns>Deployment version.</returns>
         public Version GetInstalledProjectVersion(RegistryKey projectRegKey)
         {
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
@@ -85,6 +142,11 @@ namespace InfoShare.Deployment.Data.Managers
             return version;
         }
 
+        /// <summary>
+        /// Gets the history folder registry key.
+        /// </summary>
+        /// <param name="projectRegKey">The deployment registry key.</param>
+        /// <returns>Registry history folder key.</returns>
         private RegistryKey GetHistoryFolderRegKey(RegistryKey projectRegKey)
         {
             var currentInstallvalue = projectRegKey?.GetValue(CurrentRegName).ToString();
@@ -107,7 +169,11 @@ namespace InfoShare.Deployment.Data.Managers
 
             return historyRegKey.OpenSubKey(installFolderRegKey);
         }
-        
+
+        /// <summary>
+        /// Gets the deployment base registry key.
+        /// </summary>
+        /// <returns>Deployment base registry key.</returns>
         private RegistryKey GetProjectBaseRegKey()
         {
             RegistryKey installToolRegKey = null;
@@ -127,6 +193,11 @@ namespace InfoShare.Deployment.Data.Managers
             return installToolRegKey?.OpenSubKey(ProjectBaseRegName);
         }
 
+        /// <summary>
+        /// Gets the deployment suffix.
+        /// </summary>
+        /// <param name="projectName">Name of the project.</param>
+        /// <returns>Deployment suffix.</returns>
         private string GetProjectSuffix(string projectName)
         {
             if (projectName.Length < 9)

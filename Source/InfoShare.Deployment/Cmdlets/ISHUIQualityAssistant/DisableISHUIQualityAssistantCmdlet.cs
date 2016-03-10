@@ -39,7 +39,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
         public override void ExecuteCmdlet()
         {
             var operation = new DisableISHUIQualityAssistantOperation(Logger, IshPaths);
-
+            
             operation.Run();
         }
     }

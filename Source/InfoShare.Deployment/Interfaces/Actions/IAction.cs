@@ -1,9 +1,12 @@
 ﻿namespace InfoShare.Deployment.Interfaces.Actions
 {
+    /// <summary>
+    /// Provides ability to be executed.
+    /// </summary>
     public interface IAction
     {
 		/// <summary>
-		/// Executes action
+		/// Executes current action.
 		/// </summary>
         void Execute();
     }

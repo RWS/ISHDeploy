@@ -1,0 +1,79 @@
+﻿{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["**.cs"],
+          "cwd": "../InfoShare.Deployment/Cmdlets"
+        }
+      ],
+      "dest": "obj/doc/code/infoshare.deployment" 
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [ "**/*.yml" ],
+        "cwd": "obj/doc/code/infoshare.deployment",
+        "dest": "code/infoshare.deployment"
+      },
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Module",
+        "dest": "module/infoshare.deployment"
+      },
+      {
+        "files": [ "**/*.md" ],
+        "cwd": "obj/doc/module/infoshare.deployment",
+        "dest": "module/infoshare.deployment"
+      },
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Using",
+        "dest": "Using"
+      },
+      {
+        "files": ["**/*.md"],
+        "cwd": "obj/doc/using",
+        "dest": "Using"
+      },
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Articles",
+        "dest": "Articles"
+      },
+      {
+        "files": ["**/*.md"],
+        "cwd": "obj/doc/articles",
+        "dest": "Articles"
+      },
+      {
+        "files": [ "**.md", "toc.yml" ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [ "**/images/**" ]
+      },
+      {
+        "files": ["**/*.ps1"],
+        "cwd": "obj/doc/using",
+        "dest": "Using"
+      },
+      {
+        "files": ["**/*.ps1"],
+        "cwd": "obj/doc/articles",
+        "exclude": [ "**/_nopublish/**"],
+        "dest": "Articles"
+      }
+    ],
+    "externalReference": [
+    ],
+    "globalMetadata": {
+    },
+    "template": [
+      "default"
+    ],
+    "dest" : "_site"
+  }
+}

@@ -12,7 +12,7 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destFilePath">The name of the destination file. This cannot be a directory.</param>
-        /// <param name="overwrite">true if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise, False. </param>
         void Copy(string sourceFilePath, string destFilePath, bool overwrite = false);
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destDir">The name of the destination directory. This cannot be a file name.</param>
-        /// <param name="overwrite">true if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false);
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		/// Delete the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">true to remove directories, subdirectories, and files in path; otherwise, false.</param>
+		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise, False.</param>
 		void DeleteFolder(string folderPath, bool recursive = true);
 
 	    /// <summary>
@@ -119,7 +119,7 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		/// <param name="hostName">Host name.</param>
 		/// <param name="licenseFileExtension">License file extension.</param>
 		/// <param name="filePath">File path.</param>
-		/// <returns>Returns true if license file is found, otherwise false.</returns>
+		/// <returns>Returns True if license file is found, otherwise False.</returns>
 		bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
     }
 }

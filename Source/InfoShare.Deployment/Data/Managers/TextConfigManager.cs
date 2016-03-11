@@ -7,11 +7,22 @@ namespace InfoShare.Deployment.Data.Managers
     /// <summary>
     /// Performs different kinds of operations with text file
     /// </summary>
+    /// <seealso cref="ITextConfigManager" />
     public class TextConfigManager : ITextConfigManager
     {
+        /// <summary>
+        /// The start comment symbols
+        /// </summary>
         private const string CommentSymbols = "//";
 
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger _logger;
+
+        /// <summary>
+        /// The file manager
+        /// </summary>
         private readonly IFileManager _fileManager;
         
         /// <summary>
@@ -100,6 +111,12 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.WriteAllLines(filePath, strLines);
         }
 
+        /// <summary>
+        /// Comments the block of text file.
+        /// </summary>
+        /// <param name="lines">List of lines that represent whole content of the text file.</param>
+        /// <param name="startIndex">The line number at which comment will begin.</param>
+        /// <param name="count">Number of lines that will be commented.</param>
         private void CommentBlock(string[] lines, int startIndex, int count)
         {
             var isAnyUncommented = lines
@@ -119,6 +136,12 @@ namespace InfoShare.Deployment.Data.Managers
             }
         }
 
+        /// <summary>
+        /// Uncomments the block of text file.
+        /// </summary>
+        /// <param name="lines">List of lines that represent whole content of the text file.</param>
+        /// <param name="startIndex">The line number at which will be started to uncomment.</param>
+        /// <param name="count">Number of lines that will be uncommented.</param>
         private void UncommentBlock(string[] lines, int startIndex, int count)
         {
             var isAllCommented = lines

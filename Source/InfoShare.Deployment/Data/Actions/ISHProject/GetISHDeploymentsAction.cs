@@ -9,14 +9,43 @@ using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Data.Actions.ISHProject
 {
+    /// <summary>
+    /// Gets all instances of the installed Content Manager deployment for the current system.
+    /// </summary>
+    /// <seealso cref="BaseActionWithResult{TResult}" />
     public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeployment>>
     {
-        private readonly IRegistryManager _registryManager;
-        private readonly IXmlConfigManager _xmlConfigManager;
-        private readonly IFileManager _fileManager;
-        private readonly string _projectSuffix;
+        /// <summary>
+        /// The input parameters file name
+        /// </summary>
         private const string InputParametersFileName = "inputparameters.xml";
 
+        /// <summary>
+        /// The registry manager.
+        /// </summary>
+        private readonly IRegistryManager _registryManager;
+
+        /// <summary>
+        /// The XML configuration manager.
+        /// </summary>
+        private readonly IXmlConfigManager _xmlConfigManager;
+
+        /// <summary>
+        /// The file manager.
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
+        /// The Content Manager deployment suffix.
+        /// </summary>
+        private readonly string _projectSuffix;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GetISHDeploymentsAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="projectSuffix">The Content Manager deployment suffix.</param>
+        /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
         public GetISHDeploymentsAction(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
         {
@@ -26,10 +55,15 @@ namespace InfoShare.Deployment.Data.Actions.ISHProject
             _projectSuffix = projectSuffix;
         }
 
+        /// <summary>
+        /// Executes current action and returns result.
+        /// </summary>
+        /// <returns>List of Content Manager deployments.</returns>
         protected override IEnumerable<ISHDeployment> ExecuteWithResult()
         {
             var result = new List<ISHDeployment>();
 
+            // Get list of installed deployments from the registry.
             var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectSuffix).ToArray();
             
             if (!installProjectsRegKeys.Any())
@@ -48,6 +82,7 @@ namespace InfoShare.Deployment.Data.Actions.ISHProject
                 return result;
             }
 
+            // For each registry record get deployment version, path to inputparameter.xml file and parse this file.
             foreach (var projectRegKey in installProjectsRegKeys)
             {
                 var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);

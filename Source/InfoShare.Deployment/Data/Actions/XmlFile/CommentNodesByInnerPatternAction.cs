@@ -5,7 +5,7 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.XmlFile
 {
     /// <summary>
-    /// Comments multiple nodes with searched pattern that can be located inside or preced the searched nodes.
+    /// Action that comments multiple nodes with searched pattern that can be located inside or preced the searched nodes.
     /// </summary>
     /// <example> Example of searched node "BUTTON" that contains "Translation" comment inside <![CDATA[
     /// <BUTTONBAR>
@@ -23,14 +23,26 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
     ///     </ BUTTON >
     /// </ BUTTONBAR >
     /// ]]></example>
+    /// <seealso cref="SingleFileAction" />
     public class CommentNodesByInnerPatternAction : SingleFileAction
     {
+        /// <summary>
+        /// The xpath to the searched node.
+        /// </summary>
         private readonly string _xpath;
+
+        /// <summary>
+        /// The pattern that that acts like placeholder.
+        /// </summary>
         private readonly string _patternElem;
+
+        /// <summary>
+        /// The xml configuration manager
+        /// </summary>
         private readonly IXmlConfigManager _xmlConfigManager;
 
         /// <summary>
-        /// Creates new instance of the <see cref="CommentNodesByInnerPatternAction"/>.
+        /// Initializes a new instance of the <see cref="CommentNodesByInnerPatternAction"/> class.
         /// </summary>
         /// <param name="logger"><see cref="ILogger"/> instance.</param>
         /// <param name="filePath">Path to file that will be modified.</param>
@@ -46,7 +58,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         }
 
         /// <summary>
-        /// Executes action
+        /// Executes current action.
         /// </summary>
         public override void Execute()
         {

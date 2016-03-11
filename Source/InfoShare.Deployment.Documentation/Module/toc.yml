@@ -22,8 +22,6 @@
   href: ../obj/doc/module/infoshare.deployment/Get-ISHDeploymentHistory.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/infoshare.deployment/Set-ISHContentEditor.md
-- name: Set-ISHDeployment
-  href: ../obj/doc/module/infoshare.deployment/Set-ISHDeployment.md
 - name: Test-ISHContentEditor
   href: ../obj/doc/module/infoshare.deployment/Test-ISHContentEditor.md
 - name: Undo-ISHDeployment

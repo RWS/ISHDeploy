@@ -6,7 +6,7 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.TextFile
 {
     /// <summary>
-    /// The action the is responsible for commenting block of text inside the text file.
+    /// The action is responsible for commenting the block of text inside the text file.
     /// </summary>
     /// <seealso cref="SingleFileAction" />
     public class CommentBlockAction : SingleFileAction

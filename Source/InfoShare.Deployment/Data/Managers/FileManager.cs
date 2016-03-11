@@ -30,7 +30,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destFilePath">The name of the destination file. This cannot be a directory.</param>
-        /// <param name="overwrite">True if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void Copy(string sourceFilePath, string destFilePath, bool overwrite = false)
         {
             File.Copy(sourceFilePath, destFilePath, overwrite);
@@ -41,7 +41,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destDir">The name of the destination directory. This cannot be a file name.</param>
-        /// <param name="overwrite">True if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
         {
             Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
@@ -92,7 +92,7 @@ namespace InfoShare.Deployment.Data.Managers
 		/// Deletes the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise, false.</param>
+		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
 			if (Directory.Exists(folderPath))
@@ -211,7 +211,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// <param name="hostName">Host name.</param>
         /// <param name="licenseFileExtension">License file extension.</param>
         /// <param name="filePath">File path.</param>
-        /// <returns>Returns true if license file is found, otherwise false.</returns>
+        /// <returns>Returns True if license file is found, otherwise False.</returns>
         public bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath)
         {
             filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));

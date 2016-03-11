@@ -66,9 +66,9 @@
     <!--<PostBuildEvent>powershell -File "$(ProjectDir)Export-Markdown.ps1" -ModulePath "$(TargetDir)InfoShare.Deployment.dll" -ExportPath "$(ProjectDir)obj\doc\module\infoshare.deployment"
 powershell -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\Using" -ExportPath "$(ProjectDir)obj\doc\using"
 powershell -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>-->
-    <PostBuildEvent>powershell -File "$(ProjectDir)Export-Markdown.ps1" -ModulePath "$(TargetDir)InfoShare.Deployment.dll" -ExportPath "$(ProjectDir)obj\doc\module\infoshare.deployment"
-powershell -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
-powershell -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
+    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModulePath "$(TargetDir)InfoShare.Deployment.dll" -ExportPath "$(ProjectDir)obj\doc\module\infoshare.deployment"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)InfoShare.Deployment.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.5.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.5.0\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -15,11 +15,5 @@ $info = @{
   "Suffix" = ''
 }
 
-#Pause
-
-#Enable-ISHExternalPreview -ISHDeployment $info -ExternalId "qweqrqwe"
-
-#Pause
-
 Disable-ISHExternalPreview -ISHDeployment $info 
 

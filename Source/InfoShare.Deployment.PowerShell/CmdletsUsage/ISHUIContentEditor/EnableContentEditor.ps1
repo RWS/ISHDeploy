@@ -20,9 +20,4 @@ $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($d
 
 Set-ISHDeployment $deploy
 
-
 Enable-ISHUIContentEditor
-
-Pause
-
-Disable-ISHUIContentEditor

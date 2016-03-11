@@ -14,8 +14,4 @@ $info = @{
 
 #EXAMPLE
 
-#Enable-ISHUIQualityAssistant -ISHDeployment $info
-
-#Pause
-
 Disable-ISHUIQualityAssistant -ISHDeployment $info

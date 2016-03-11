@@ -1,7 +1,7 @@
-# Using the ContentEditory commandlets
+# Using the ContentEditor commandlets
 
 ##  Enable-ISHUIContentEditor
-CopyCodeBlockAndLink(EnableDisableContentEditor.ps1)
+CopyCodeBlockAndLink(EnableContentEditor.ps1)
 
 ##  Disable-ISHUIContentEditor
-CopyCodeBlockAndLink(EnableDisableContentEditor.ps1)
+CopyCodeBlockAndLink(DisableContentEditor.ps1)

@@ -1,7 +1,7 @@
-# Using the ContentEditory commandlets
+# Using the ContentEditor commandlets
 
 ##  Enable-ISHUIQualityAssistant
-CopyCodeBlockAndLink(EnableDisableQualityAssistant.ps1)
+CopyCodeBlockAndLink(EnableQualityAssistant.ps1)
 
 ##  Disable-ISHUIQualityAssistant
-CopyCodeBlockAndLink(EnableDisableQualityAssistant.ps1)
+CopyCodeBlockAndLink(DisableQualityAssistant.ps1)

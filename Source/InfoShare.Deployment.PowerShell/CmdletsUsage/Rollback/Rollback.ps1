@@ -21,13 +21,6 @@ $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($d
 Set-ISHDeployment $deploy
 
 #Set-ISHContentEditor -ISHDeployment $deploy -Domain "global.sdl.corp" -LicenseKey "blablabkabkabkabkabakbaiuaslc"
-
 #Set-ISHContentEditor -ISHDeployment $deploy -LicensePath "c:\sdl.corp.txt"
 
-#Undo-ISHDeployment -ISHDeployment $deploy
-
-#Enable-ISHUIContentEditor
-
-#Pause
-
-#Disable-ISHUIContentEditor
+Undo-ISHDeployment -ISHDeployment $deploy

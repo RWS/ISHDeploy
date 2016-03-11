@@ -1,5 +1,4 @@
-# Using the ContentEditory commandlets
+# Using the ContentEditor commandlets
 
 ##  Get-ISHDeployment
-CopyCodeBlockAndLink(GetAndSetISHDeploymentCmdlet.ps1)
-
+CopyCodeBlockAndLink(GetISHDeploymentCmdlet.ps1)

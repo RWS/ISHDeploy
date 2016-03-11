@@ -1,22 +1,6 @@
 ﻿{
-  "metadata": [
-    {
-      "src": [
-        {
-          "files": ["**.cs"],
-          "cwd": "../InfoShare.Deployment/Cmdlets"
-        }
-      ],
-      "dest": "obj/doc/code/infoshare.deployment" 
-    }
-  ],
   "build": {
     "content": [
-      {
-        "files": [ "**/*.yml" ],
-        "cwd": "obj/doc/code/infoshare.deployment",
-        "dest": "code/infoshare.deployment"
-      },
       {
         "files": [ "toc.yml" ],
         "cwd": "Module",
@@ -54,17 +38,6 @@
     "resource": [
       {
         "files": [ "**/images/**" ]
-      },
-      {
-        "files": ["**/*.ps1"],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
-      },
-      {
-        "files": ["**/*.ps1"],
-        "cwd": "obj/doc/articles",
-        "exclude": [ "**/_nopublish/**"],
-        "dest": "Articles"
       }
     ],
     "externalReference": [

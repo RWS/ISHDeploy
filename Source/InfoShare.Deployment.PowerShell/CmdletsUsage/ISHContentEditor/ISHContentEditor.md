@@ -1,7 +1,7 @@
-# Using the ContentEditory commandlets
+# Using the ContentEditor commandlets
 
 ##  Set-ISHUContentEditor
-CopyCodeBlockAndLink(SetTestContentEditor.ps1)
+CopyCodeBlockAndLink(SetContentEditor.ps1)
 
 ##  Test-ISHUContentEditor
-CopyCodeBlockAndLink(SetTestContentEditor.ps1)
+CopyCodeBlockAndLink(TestContentEditor.ps1)

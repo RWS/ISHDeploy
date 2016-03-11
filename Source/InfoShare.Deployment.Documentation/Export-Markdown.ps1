@@ -52,10 +52,10 @@ try
 	
 	#To generate the toc.yml we can use some thing like this. But there is a problem with the generated output
 	#Get-Command -Module InfoShare.Deployment |Select-Object -ExpandProperty Name | ForEach-Object {"- name: $_";"- href: $_.md"} |Out-File C:\docfx_walkthrough\docfx_project\infoshare.deployment\tox.yml -Encoding utf8
-	#Get-Command -Module InfoShare.Deployment |Select-Object -ExpandProperty Name | ForEach-Object {
-	#	"- name: $_";
-	#	"- href: " + "../obj/doc/module/infoshare.deployment/" + "$_.md"
-	#} |Out-File toc.yml -Encoding utf8
+	Get-Command -Module InfoShare.Deployment |Select-Object -ExpandProperty Name | ForEach-Object {
+		"- name: $_";
+		"  href: " + "../obj/doc/module/infoshare.deployment/" + "$_.md"
+	} |Out-File $PSScriptRoot/Module/toc.yml -Encoding utf8
 }
 catch
 {

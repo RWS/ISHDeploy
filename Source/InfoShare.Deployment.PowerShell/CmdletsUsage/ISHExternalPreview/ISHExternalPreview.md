@@ -1,7 +1,7 @@
-# Using the ContentEditory commandlets
+# Using the ContentEditor commandlets
 
 ##  Enable-ISHExternalPreview
-CopyCodeBlockAndLink(EnableDisableExternalPreview.ps1)
+CopyCodeBlockAndLink(EnableExternalPreview.ps1)
 
 ##  Disable-ISHExternalPreview
-CopyCodeBlockAndLink(EnableDisableExternalPreview.ps1)
+CopyCodeBlockAndLink(DisableExternalPreview.ps1)

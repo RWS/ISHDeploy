@@ -31,3 +31,6 @@ Source/packages/*
 
 # TestResults
 Source/TestResults/
+/Source/InfoShare.Deployment.Documentation/Module/toc2.yml
+/Source/InfoShare.Deployment.Documentation/log.txt
+/Source/InfoShare.Deployment.Documentation/_site

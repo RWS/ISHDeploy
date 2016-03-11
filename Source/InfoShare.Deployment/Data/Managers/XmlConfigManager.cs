@@ -292,11 +292,11 @@ namespace InfoShare.Deployment.Data.Managers
         }
 
         /// <summary>
-        /// Tries the uncomment node.
+        /// Tries to uncomment node.
         /// </summary>
         /// <param name="commentedNode">The commented node.</param>
         /// <param name="doc">The document where changes should take place.</param>
-        /// <returns>True if operation succeeded; otherwise false.</returns>
+        /// <returns>True if operation succeeded; otherwise False.</returns>
         private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');

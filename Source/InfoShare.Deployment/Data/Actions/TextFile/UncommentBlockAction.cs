@@ -6,7 +6,7 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.TextFile
 {
     /// <summary>
-    /// The action the is responsible for uncommenting block of text inside the text file.
+    /// The action is responsible for uncommenting the block of text inside the text file.
     /// </summary>
     public class UncommentBlockAction : SingleFileAction
     {

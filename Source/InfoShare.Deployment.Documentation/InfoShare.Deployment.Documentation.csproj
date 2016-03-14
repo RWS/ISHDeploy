@@ -48,6 +48,7 @@
     <None Include="Articles\toc.yml" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
+    <None Include="Readme.md" />
     <None Include="Index.md" />
     <None Include="Module\toc.yml" />
     <None Include="packages.config" />

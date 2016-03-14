@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Data.Managers.Interfaces;
+using InfoShare.Deployment.Extensions;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
@@ -33,11 +34,16 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var ishPaths = new ISHPaths(ISHDeployment);
 
-	        var historyFilePath = ishPaths.HistoryFilePath;
+			// Remove history file
+			var historyFilePath = ishPaths.HistoryFilePath;
 	        if (fileManager.Exists(historyFilePath))
 	        {
 		        fileManager.Delete(historyFilePath);
 	        }
-        }
-    }
+
+			// Clean backup directory
+			var backupFolderPath = ISHDeployment.GetDeploymentBackupFolder();
+	        fileManager.CleanFolder(backupFolderPath);
+		}
+	}
 }

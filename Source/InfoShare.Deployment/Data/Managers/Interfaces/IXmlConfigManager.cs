@@ -14,12 +14,19 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// <returns>Dictionary with parameters</returns>
         Dictionary<string, string> GetAllInputParamsValues(string filePath);
 
-        /// <summary>
-        /// Comments node in xml file that can be found by <paramref name="xpath"/>
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath to searched node</param>
-        void CommentNode(string filePath, string xpath);
+		/// <summary>
+		/// Removes node from xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		void RemoveSingleNode(string filePath, string xpath);
+
+		/// <summary>
+		/// Comments node in xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		void CommentNode(string filePath, string xpath);
 
         /// <summary>
         /// Comments all nodes that has <paramref name="searchPattern"/> right above it

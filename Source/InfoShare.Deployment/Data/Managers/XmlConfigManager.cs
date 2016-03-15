@@ -78,6 +78,29 @@ namespace InfoShare.Deployment.Data.Managers
         }
         
         /// <summary>
+        /// Removes node in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        public void RemoveSingleNode(string filePath, string xpath)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var node = doc.XPathSelectElement(xpath);
+
+            if (node == null)
+            {
+                _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+                return;
+            }
+
+			node.Remove();
+
+            _fileManager.Save(filePath, doc);
+        }        
+		
+		
+		/// <summary>
         /// Comments node in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>

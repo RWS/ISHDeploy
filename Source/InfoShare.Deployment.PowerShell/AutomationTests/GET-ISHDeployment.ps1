@@ -1,6 +1,6 @@
 ﻿Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
-CLS
+
 
 $htmlStyle = Set-Style
 

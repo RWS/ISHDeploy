@@ -10,6 +10,11 @@ namespace InfoShare.Deployment.Models
     public class ISHDeployment
     {
         /// <summary>
+        /// The HTTPS prefix
+        /// </summary>
+        private const string HttpsPrefix = "https://";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ISHDeployment"/> class.
         /// </summary>
         /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
@@ -78,7 +83,7 @@ namespace InfoShare.Deployment.Models
         /// <summary>
         /// Gets the name of the access host.
         /// </summary>
-        public string AccessHostName => OriginalParameters["localservicehostname"];
+        public string AccessHostName => OriginalParameters["baseurl"].Substring(HttpsPrefix.Length);
 
         /// <summary>
         /// Gets the path to the Web+Suffix Author folder.

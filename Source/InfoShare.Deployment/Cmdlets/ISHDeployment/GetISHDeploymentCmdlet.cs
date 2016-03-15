@@ -26,11 +26,21 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
     public class GetISHDeploymentCmdlet : BaseCmdlet
     {
         /// <summary>
+        /// The information share prefix
+        /// </summary>
+        private const string InfoSharePrefix = "InfoShare";
+
+        /// <summary>
+        /// The validation pattern
+        /// </summary>
+        private const string ValidationPattern = "^(InfoShare)";
+
+        /// <summary>
         /// <para type="description">Specifies the name of the installed Content Manager deployment.</para>
         /// <para type="description">All names start with InfoShare</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Name of the already installed Content Manager deployment.")]
-        [ValidatePattern("^(InfoShare)", Options = RegexOptions.IgnoreCase)]
+        [ValidatePattern(ValidationPattern, Options = RegexOptions.IgnoreCase)]
         public string Name { get; set; }
 
         /// <summary>
@@ -38,7 +48,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new GetISHDeploymentOperation(Logger, Name);
+            var suffix = Name?.Substring(InfoSharePrefix.Length);
+
+            var operation = new GetISHDeploymentOperation(Logger, suffix);
 
             var result = operation.Run().ToArray();
 

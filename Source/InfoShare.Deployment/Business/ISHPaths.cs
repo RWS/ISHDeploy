@@ -131,9 +131,9 @@ namespace InfoShare.Deployment.Business
         public string HistoryFilePath => Path.Combine(_ishDeployment.GetDeploymentAppDataFolder(), "History.ps1");
 
         /// <summary>
-        /// Deployment suffix
+        /// Deployment name
         /// </summary>
-        public string DeploymentSuffix => _ishDeployment.GetSuffix();
+        public string DeploymentName => _ishDeployment.Name;
 
         #endregion
     }

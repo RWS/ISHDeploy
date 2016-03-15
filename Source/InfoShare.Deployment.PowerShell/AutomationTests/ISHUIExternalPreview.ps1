@@ -1,11 +1,11 @@
 ﻿Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
-CLS
+
 
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "C:\Automated_deployment\Test4.htm"
+$logFile = "C:\Automated_deployment\Test5.htm"
 
 $WarningPreference = “Continue"
 

@@ -28,17 +28,26 @@ namespace InfoShare.Deployment.Business
 			App
         }
 
+        /// <summary>
+        /// The instance of the deployment.
+        /// </summary>
         private readonly ISHDeployment _ishDeployment;
 
         /// <summary>
-        /// Provides absolute paths to all ISH files that are going to be used
+        /// Provides absolute paths to all InfoShare files that are going to be used.
         /// </summary>
-        /// <param name="ishDeployment">ISHDeployment instance</param>
+        /// <param name="ishDeployment">Instance of the current <see cref="ISHDeployment"/>.</param>
         public ISHPaths(ISHDeployment ishDeployment)
         {
             _ishDeployment = ishDeployment;
         }
 
+        /// <summary>
+        /// Gets the file path wrapper.
+        /// </summary>
+        /// <param name="deploymentType">Type of the deployment.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>Wrapper around file path.</returns>
         private ISHFilePath GetIshFilePath(IshDeploymentType deploymentType, string filePath)
         {
             return new ISHFilePath(_ishDeployment, deploymentType, filePath);
@@ -122,10 +131,10 @@ namespace InfoShare.Deployment.Business
         public string HistoryFilePath => Path.Combine(_ishDeployment.GetDeploymentAppDataFolder(), "History.ps1");
 
         /// <summary>
-        /// ISHDeployment suffix
+        /// Deployment suffix
         /// </summary>
-        public string DeploymentSuffix => _ishDeployment.Suffix;
+        public string DeploymentSuffix => _ishDeployment.GetSuffix();
 
         #endregion
-	}
+    }
 }

@@ -1,0 +1,6 @@
+- name: Security Token Service
+  items:
+  - name: ADFS
+    items:
+      - name: On premise
+        href: ../obj/doc/articles/IntegrationSTS/On premise ADFS/Integrate Vanilla with ADFS.md

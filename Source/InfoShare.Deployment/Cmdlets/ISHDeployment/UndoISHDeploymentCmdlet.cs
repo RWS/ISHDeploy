@@ -1,18 +1,29 @@
 ﻿using System.Management.Automation;
 using InfoShare.Deployment.Business.Operations.ISHDeployment;
-using InfoShare.Deployment.Providers;
 
 namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 {
+    /// <summary>
+    /// <para type="synopsis">Reverts all customization done by cmdlets back to original state for specific Content Manager deployment.</para>
+    /// <para type="description">The Undo-ISHDeployment cmdlet reverts all customization done by cmdlets back to original state for specific Content Manager deployment.</para>
+    /// <para type="description">Original state means the state of the system when it was installed and no customization was made.</para>
+    /// <para type="link">Clear-ISHDeploymentHistory</para>
+    /// <para type="link">Get-ISHDeployment</para>
+    /// <para type="link">Get-ISHDeploymentHistory</para>
+    /// </summary>
+    /// <example>
+    /// <para>Revert Content Manager to original state:</para>
+    /// <code>Undo-ISHDeployment -ISHDeployment $deployment</code>
+    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <para></para>
+    /// </example>
     [Cmdlet(VerbsCommon.Undo, "ISHDeployment")]
     public class UndoISHDeploymentCmdlet : BaseCmdlet
     {
-		/// <summary>
-		/// Ish deployment parameter, to identify deployment to be rolled back
-		/// </summary>
-		[Parameter(Mandatory = false, Position = 0, HelpMessage = "Already deployed Content Manager instance, to be rolled back")]
-		[Alias("proj")]
-		[ValidateNotNull]
+        /// <summary>
+        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
@@ -20,8 +31,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
 		/// </summary>
         public override void ExecuteCmdlet()
 		{
-			Models.ISHDeployment deployment = ISHDeployment ?? ISHProjectProvider.Instance.ISHDeployment;
-			var cmdSet = new UndoISHDeploymentOperation(Logger, deployment);
+			var cmdSet = new UndoISHDeploymentOperation(Logger, ISHDeployment);
 			cmdSet.Run();
 		}
     }

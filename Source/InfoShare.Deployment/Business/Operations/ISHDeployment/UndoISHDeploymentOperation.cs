@@ -11,13 +11,16 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 	/// </summary>
     public class UndoISHDeploymentOperation : IOperation
 	{
-		private readonly IActionInvoker _invoker;
+        /// <summary>
+        /// The actions invoker
+        /// </summary>
+        private readonly IActionInvoker _invoker;
 
 		/// <summary>
 		/// Reverts all changes to the vanilla
 		/// </summary>
-		/// <param name="logger">Logger object</param>
-		/// <param name="deployment">Ish deployment instance <see cref="T:InfoShare.Deployment.Models.ISHDeployment"/></param>
+		/// <param name="logger">Logger object.</param>
+		/// <param name="deployment">Deployment instance <see cref="T:InfoShare.Deployment.Models.ISHDeployment"/></param>
 		public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment deployment)
 		{
 			Models.ISHDeployment ishDeployment = deployment;
@@ -29,9 +32,9 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.DataPath));
-
+            
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.AuthorFolderPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAuthorFolderPath()));
 
 			// Removing licenses
 			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;
@@ -41,10 +44,10 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 			_invoker.AddAction(new RemoveDirectoryAction(logger, deployment.GetDeploymentAppDataFolder()));
 		}
 
-		/// <summary>
-		/// Runs commands invocation 
-		/// </summary>
-		public void Run()
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
         {
 			_invoker.Invoke();
 		}

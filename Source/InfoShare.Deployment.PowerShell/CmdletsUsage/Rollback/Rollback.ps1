@@ -18,13 +18,9 @@ $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
 
+Set-ISHDeployment $deploy
+
+#Set-ISHContentEditor -ISHDeployment $deploy -Domain "global.sdl.corp" -LicenseKey "blablabkabkabkabkabakbaiuaslc"
+#Set-ISHContentEditor -ISHDeployment $deploy -LicensePath "c:\sdl.corp.txt"
 
 Undo-ISHDeployment -ISHDeployment $deploy
-
-#Set-ISHDeployment $deploy
-
-#Enable-ISHUIContentEditor
-
-#Pause
-
-#Disable-ISHUIContentEditor

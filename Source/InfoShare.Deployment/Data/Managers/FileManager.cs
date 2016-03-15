@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using InfoShare.Deployment.Data.Managers.Interfaces;
@@ -8,17 +7,17 @@ using InfoShare.Deployment.Interfaces;
 namespace InfoShare.Deployment.Data.Managers
 {
     /// <summary>
-    /// Wrappper around .Net file system operations
+    /// Wrapper around .Net file system operations
     /// </summary>
     public class FileManager : IFileManager
     {
         /// <summary>
-        /// Logger instance
+        /// Logger instance.
         /// </summary>
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Contstuctor that accepts logger instance
+        /// Initializes a new instance of the <see cref="FileManager"/> class.
         /// </summary>
         /// <param name="logger">Logger instance</param>
         public FileManager(ILogger logger)
@@ -31,7 +30,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destFilePath">The name of the destination file. This cannot be a directory.</param>
-        /// <param name="overwrite">true if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void Copy(string sourceFilePath, string destFilePath, bool overwrite = false)
         {
             File.Copy(sourceFilePath, destFilePath, overwrite);
@@ -42,7 +41,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// </summary>
         /// <param name="sourceFilePath">The file to copy.</param>
         /// <param name="destDir">The name of the destination directory. This cannot be a file name.</param>
-        /// <param name="overwrite">true if the destination file can be overwritten; otherwise, false. </param>
+        /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void CopyToDirectory(string sourceFilePath, string destDir, bool overwrite = false)
         {
             Copy(sourceFilePath, Path.Combine(destDir, Path.GetFileName(sourceFilePath)), overwrite);
@@ -52,7 +51,7 @@ namespace InfoShare.Deployment.Data.Managers
         /// Determines whether the specified file exists.
         /// </summary>
         /// <param name="path">The file to check.</param>
-        /// <returns>true if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
+        /// <returns>True if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
         public bool Exists(string path)
         {
             return File.Exists(path);
@@ -93,12 +92,24 @@ namespace InfoShare.Deployment.Data.Managers
 		/// Deletes the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">true to remove directories, subdirectories, and files in path; otherwise, false.</param>
+		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
 			if (Directory.Exists(folderPath))
 			{
 				Directory.Delete(folderPath, recursive);
+			}
+		}
+
+		/// <summary>
+		/// Makes sure directory exists, if not, then creates it
+		/// </summary>
+		/// <param name="folderPath">Directory path to verify</param>
+		public void EnsureDirectoryExists(string folderPath)
+		{
+			if (!Directory.Exists(folderPath))
+			{
+				Directory.CreateDirectory(folderPath);
 			}
 		}
 
@@ -150,24 +161,35 @@ namespace InfoShare.Deployment.Data.Managers
         }
 
         /// <summary>
-        /// Appends line to the file. Creates new file if it does not exist.
+        /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
-        /// <param name="line">the line to be appended to the file content.</param>
-        public void AppendLine(string filePath, string line)
+        /// <param name="text">The text to be appended to the file content.</param>
+        public void Append(string filePath, string text)
         {
-            using (var fileStream = new StreamWriter(filePath, true))
-            {
-                fileStream.WriteLine(line);
-            }
+			this.Write(filePath, text, true);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
-        /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-        /// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
-        public XDocument Load(string filePath)
+		/// <summary>
+		/// Writes text to the file. Creates new file if it does not exist.
+		/// </summary>
+		/// <param name="filePath">The file to open for writing.</param>
+		/// <param name="text">Text to be appended to the file content.</param>
+		/// <param name="append">True to append data to the file; false to overwrite the file.</param>
+		public void Write(string filePath, string text, bool append = false)
+		{
+			using (var fileStream = new StreamWriter(filePath, append))
+			{
+				fileStream.Write(text);
+			}
+		}
+
+		/// <summary>
+		/// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
+		/// </summary>
+		/// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
+		/// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
+		public XDocument Load(string filePath)
         {
             return XDocument.Load(filePath);
         }
@@ -189,13 +211,15 @@ namespace InfoShare.Deployment.Data.Managers
         /// <param name="hostName">Host name.</param>
         /// <param name="licenseFileExtension">License file extension.</param>
         /// <param name="filePath">File path.</param>
-        /// <returns>Returns true if license file is found, otherwise false.</returns>
+        /// <returns>Returns True if license file is found, otherwise False.</returns>
         public bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath)
         {
             filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
 
             if (File.Exists(filePath))
-                return true;
+            {
+	            return true;
+            }
 
             int i = hostName.IndexOf(".", StringComparison.InvariantCulture);
             if (i > 0)

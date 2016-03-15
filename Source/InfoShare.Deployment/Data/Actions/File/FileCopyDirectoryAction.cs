@@ -3,23 +3,34 @@ using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Data.Actions.File
 {
-	/// <summary>
-	/// Action responsible for rolling back changes to vanilla state
+    /// <summary>
+	/// Action responsible for copying directory content from source to destination directory.
 	/// </summary>
-	public class FileCopyDirectoryAction : BaseAction
+    /// <seealso cref="BaseAction" />
+    public class FileCopyDirectoryAction : BaseAction
 	{
+        /// <summary>
+        /// The file manager.
+        /// </summary>
         private readonly IFileManager _fileManager;
+
+        /// <summary>
+        /// The source folder path.
+        /// </summary>
         private readonly string _sourceFolder;
+
+        /// <summary>
+        /// The destination folder path.
+        /// </summary>
         private readonly string _destinationFolder;
 
-
-		/// <summary>
-		/// Reverts changes to vanilla state
-		/// </summary>
-		/// <param name="logger">Logger object</param>
-		/// <param name="sourceFolder">Folder which source content</param>
-		/// <param name="destinationFolder">Destination folder</param>
-		public FileCopyDirectoryAction(ILogger logger, string sourceFolder, string destinationFolder)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCopyDirectoryAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="sourceFolder">Source folder.</param>
+        /// <param name="destinationFolder">Destination folder.</param>
+        public FileCopyDirectoryAction(ILogger logger, string sourceFolder, string destinationFolder)
             : base(logger)
         {
 			_sourceFolder = sourceFolder;
@@ -28,10 +39,10 @@ namespace InfoShare.Deployment.Data.Actions.File
 			_fileManager = ObjectFactory.GetInstance<IFileManager>();
 		}
 
-		/// <summary>
-		/// Copies file from source folder to destination folder.
-		/// </summary>
-		public override void Execute()
+        /// <summary>
+        /// Executes current action.
+        /// </summary>
+        public override void Execute()
 	    {
 			_fileManager.CopyDirectoryContent(_sourceFolder, _destinationFolder);
 		}

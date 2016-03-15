@@ -60,7 +60,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseUnitTest.cs" />
+    <Compile Include="Data\Actions\File\FileCreateActionTest.cs" />
+    <Compile Include="Data\Actions\File\FileCopyDirectoryActionTest.cs" />
+    <Compile Include="Data\Actions\File\FileCleanDirectoryActionTest.cs" />
+    <Compile Include="Data\Actions\File\RemoveDirectoryActionTest.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
+    <Compile Include="Data\Actions\SingleFileActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\TextConfigManagerTest.cs" />

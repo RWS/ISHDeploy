@@ -6,15 +6,22 @@ using InfoShare.Deployment.Models;
 namespace InfoShare.Deployment.Data.Actions.TextFile
 {
     /// <summary>
-    /// Uncomments block of text inside text file
+    /// The action is responsible for uncommenting the block of text inside the text file.
     /// </summary>
     public class UncommentBlockAction : SingleFileAction
     {
+        /// <summary>
+        /// The searched placeholders.
+        /// </summary>
         private readonly IEnumerable<string> _searchPatterns;
+
+        /// <summary>
+        /// The text configuration manager.
+        /// </summary>
         private readonly ITextConfigManager _textConfigManager;
 
         /// <summary>
-        /// Initialized new instance of the <see cref="UncommentBlockAction"/>
+        /// Initializes new instance of the <see cref="UncommentBlockAction"/>
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         /// <param name="filePath">Path to file that will be modified</param>
@@ -24,7 +31,7 @@ namespace InfoShare.Deployment.Data.Actions.TextFile
         { }
 
         /// <summary>
-        /// Initialized new instance of the <see cref="UncommentBlockAction"/>
+        /// Initializes new instance of the <see cref="UncommentBlockAction"/>
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         /// <param name="filePath">Path to file that will be modified</param>
@@ -37,7 +44,7 @@ namespace InfoShare.Deployment.Data.Actions.TextFile
         }
 
         /// <summary>
-        /// Performs action
+        /// Executes current action.
         /// </summary>
         public override void Execute()
         {

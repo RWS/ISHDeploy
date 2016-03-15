@@ -7,15 +7,13 @@ $DebugPreference = "Continue"
 $VerbosePreference = "Continue"
 $WarningPreference = "Continue"
 
+#EXAMPLE
+
+
 $info = @{
   "WebPath" = "F:\InfoShare\";
   "Suffix" = ''
 }
 
-#EXAMPLE
+Disable-ISHExternalPreview -ISHDeployment $info 
 
-#Enable-ISHUIQualityAssistant -ISHDeployment $info
-
-#Pause
-
-Disable-ISHUIQualityAssistant -ISHDeployment $info

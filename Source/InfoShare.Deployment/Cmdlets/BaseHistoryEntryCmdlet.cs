@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Management.Automation;
 using System.Text;
+using System.Text.RegularExpressions;
 using InfoShare.Deployment.Business;
 using InfoShare.Deployment.Data.Managers.Interfaces;
 
@@ -10,10 +13,13 @@ namespace InfoShare.Deployment.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseCmdlet
     {
-        private string CurrentDateTime => DateTime.Now.ToString("yyyyMMdd HH:mm");
+        /// <summary>
+        /// Returns current date in format yyyyMMdd
+        /// </summary>
+        private static string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
 
         /// <summary>
-        /// Deployment Suffix
+        /// Deployment Name
         /// </summary>
         protected abstract ISHPaths IshPaths { get; }
         
@@ -46,22 +52,25 @@ namespace InfoShare.Deployment.Cmdlets
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var historyEntry = new StringBuilder();
             
-            if (!fileManager.Exists(IshPaths.HistoryFilePath))
+            if (!fileManager.Exists(IshPaths.HistoryFilePath)) // create history file with initial record
             {
-                historyEntry.AppendLine($"# {CurrentDateTime}");
-                historyEntry.Append($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
+                historyEntry.AppendLine($"# {CurrentDate}");
+                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
+            }
+            else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
+            {
+                historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDate}");
             }
             
-            historyEntry.AppendLine($"# {CurrentDateTime}");
-            historyEntry.Append(InvocationLine);
+            historyEntry.AppendLine(InvocationLine);
 
-            fileManager.AppendLine(IshPaths.HistoryFilePath, historyEntry.ToString());
+            fileManager.Append(IshPaths.HistoryFilePath, historyEntry.ToString());
         }
 
         /// <summary>
         /// Describes which cmdlet was executed with which parameters
         /// </summary>
-        protected virtual string InvocationLine
+        private string InvocationLine
         {
             get
             {
@@ -69,17 +78,57 @@ namespace InfoShare.Deployment.Cmdlets
 
                 foreach (var boundParameter in MyInvocation.BoundParameters)
                 {
-                    if (string.Compare(boundParameter.Key, "ISHDeployment", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        strBldr.Append($" -{boundParameter.Key} $deployment");
-                        continue;
-                    }
+                    var historyParameter = ToHistoryParameter(boundParameter);
 
-                    strBldr.Append($" -{boundParameter.Key} {boundParameter.Value}");
+                    if (historyParameter.HasValue)
+                    {
+                        strBldr.Append($" -{historyParameter.Value.Key} {historyParameter.Value.Value}");
+                    }
                 }
 
                 return strBldr.ToString();
             }
+        }
+
+        /// <summary>
+        /// Converts boundParameter to the form how it will be presented in the history file.
+        /// </summary>
+        /// <param name="boundParameter">Parameter from cmdlet.</param>
+        /// <returns>Converted boundParameter to history parameter.</returns>
+        private KeyValuePair<string, object>? ToHistoryParameter(KeyValuePair<string, object> boundParameter)
+        {
+            if (string.Compare(boundParameter.Key, "ISHDeployment", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                return new KeyValuePair<string, object>(boundParameter.Key, "$deployment");
+            }
+
+            if (boundParameter.Value is SwitchParameter)
+            {
+                return ((SwitchParameter) boundParameter.Value).IsPresent
+                    ? new KeyValuePair<string, object>(boundParameter.Key, string.Empty)
+                    : (KeyValuePair<string, object>?)null;
+            }
+
+            if (boundParameter.Value is string)
+            {
+                var stringValue = boundParameter.Value.ToString().Replace("\"", "\"\"");
+                return new KeyValuePair<string, object>(boundParameter.Key, $"\"{stringValue}\"");
+            }
+            
+            return boundParameter;
+        }
+
+        /// <summary>
+        /// Returns true if current date is same as last history date.
+        /// </summary>
+        /// <param name="historyContent">Whole history file content.</param>
+        /// <param name="currentDate">Current date.</param>
+        /// <returns>True if last date in history content is the same as current date.</returns>
+        private bool IsNewDate(string historyContent, string currentDate)
+        {
+            var lastDate = Regex.Match(historyContent, @"[#]\s\d{8}", RegexOptions.RightToLeft);
+
+            return !lastDate.Value.EndsWith(currentDate);
         }
     }
 }

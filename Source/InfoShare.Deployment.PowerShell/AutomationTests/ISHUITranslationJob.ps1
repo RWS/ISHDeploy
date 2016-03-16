@@ -13,14 +13,14 @@ $VerbosePreference = "SilentlyCOntinue"
 $global:logArray = @()
 
 
-$deploy = Get-ISHDeployment -Deployment "SQL2014"
+$deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
 
 
 
 $LicensePath = $deploy.WebPath
 $LicensePath = $LicensePath + "\Web" 
-$LicensePath = $LicensePath + $deploy.Suffix 
+$LicensePath = $LicensePath + $deploy.OriginalParameters.projectsuffix  
 $LicensePath = $LicensePath + "\Author\ASP"
 $xmlPath = $LicensePath + "\XSL"
 #endregion
@@ -51,10 +51,7 @@ elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocum
     Return "Disabled"
 
 }
-else {
 
-Return "WTF"
-}
 
 }
 
@@ -88,7 +85,7 @@ function enableTranslationJobWithNoXML_test(){
     #Action       
     try
     {
-        Enable-ISHUITranslationJob -WarningVariable Warning -ErrorAction Stop
+        Enable-ISHUITranslationJob -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop
     }
     catch 
     {
@@ -110,7 +107,7 @@ function disableTranslationJobWithNoXML_test(){
     #Action  
     try
     {
-        Disable-ISHUITranslationJob -WarningVariable Warning -ErrorAction Stop
+        Disable-ISHUITranslationJob -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop
     }
     catch 
     {
@@ -132,7 +129,7 @@ function enableTranslationJobWithWrongXML_test(){
     #Action 
     try
     {
-        Enable-ISHUITranslationJob -WarningVariable Warning -ErrorAction Stop 
+        Enable-ISHUITranslationJob -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -157,7 +154,7 @@ function disableTranslationJobWithWrongXML_test(){
   
     try
     {
-        disable-ISHUITranslationJob -WarningVariable Warning -ErrorAction Stop 
+        disable-ISHUITranslationJob -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -177,8 +174,8 @@ function disableTranslationJobWithWrongXML_test(){
 
 function enableEnabledTranslationJob_test(){
     #Action
-    Enable-ISHUITranslationJob
-    Enable-ISHUITranslationJob
+    Enable-ISHUITranslationJob -ISHDeployment $deploy
+    Enable-ISHUITranslationJob -ISHDeployment $deploy
     
     
     $checkResult = checkTranslationJobEnabled -eq "Enabled"
@@ -189,8 +186,8 @@ function enableEnabledTranslationJob_test(){
 
 function disableDisabledTranslationJob_test(){
     #Action
-    Disable-ISHUITranslationJob
-    Disable-ISHUITranslationJob
+    Disable-ISHUITranslationJob -ISHDeployment $deploy
+    Disable-ISHUITranslationJob -ISHDeployment $deploy
 
     
 
@@ -206,11 +203,11 @@ function disableDisabledTranslationJob_test(){
 #endregion
 
 #region Test Calls
-checkTranslationJobEnabled
-Enable-ISHUITranslationJob
+
+Enable-ISHUITranslationJob -ISHDeployment $deploy
 enableTranslationJob_test
 
-Disable-ISHUITranslationJob
+Disable-ISHUITranslationJob -ISHDeployment $deploy
 disableTranslationJob_test
 
 

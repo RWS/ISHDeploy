@@ -55,7 +55,7 @@ namespace InfoShare.Deployment.Cmdlets
             if (!fileManager.Exists(IshPaths.HistoryFilePath)) // create history file with initial record
             {
                 historyEntry.AppendLine($"# {CurrentDate}");
-                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Deployment '{IshPaths.DeploymentSuffix}'");
+                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{IshPaths.DeploymentName}'");
             }
             else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
             {

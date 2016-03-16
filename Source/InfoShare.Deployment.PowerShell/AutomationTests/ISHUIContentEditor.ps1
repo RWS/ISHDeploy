@@ -13,15 +13,15 @@ $VerbosePreference = "SilentlyCOntinue"
 $global:logArray = @()
 
 
-$deploy = Get-ISHDeployment -Deployment "SQL2014"
+$deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
 
-Set-ISHDeployment $deploy
+
 
 
 $LicensePath = $deploy.WebPath
 $LicensePath = $LicensePath + "\Web" 
-$LicensePath = $LicensePath + $deploy.Suffix 
+$LicensePath = $LicensePath + $deploy.OriginalParameters.projectsuffix  
 $LicensePath = $LicensePath + "\Author\ASP"
 $xmlPath = $LicensePath + "\XSL"
 #endregion
@@ -66,7 +66,7 @@ function enableContentEditorWithNoXML_test(){
     #Action       
     try
     {
-        Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
+        Enable-ISHUIContentEditor -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop
     }
     catch 
     {
@@ -88,7 +88,7 @@ function disableContentEditorWithNoXML_test(){
     #Action  
     try
     {
-        Disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop
+        Disable-ISHUIContentEditor -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop
     }
     catch 
     {
@@ -110,7 +110,7 @@ function enableContentEditorWithWrongXML_test(){
     #Action 
     try
     {
-        Enable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
+        Enable-ISHUIContentEditor -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -135,7 +135,7 @@ function disableContentEditorWithWrongXML_test(){
   
     try
     {
-        disable-ISHUIContentEditor -WarningVariable Warning -ErrorAction Stop 
+        disable-ISHUIContentEditor -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -155,8 +155,8 @@ function disableContentEditorWithWrongXML_test(){
 
 function enableEnabledContentEditor_test(){
     #Action
-    Enable-ISHUIContentEditor
-    Enable-ISHUIContentEditor
+    Enable-ISHUIContentEditor -ISHDeployment $deploy
+    Enable-ISHUIContentEditor -ISHDeployment $deploy
     readTargetXML
     
     $checkResult = $textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar
@@ -167,8 +167,8 @@ function enableEnabledContentEditor_test(){
 
 function disableDisabledContentEditor_test(){
     #Action
-    Disable-ISHUIContentEditor
-    Disable-ISHUIContentEditor
+    Disable-ISHUIContentEditor -ISHDeployment $deploy
+    Disable-ISHUIContentEditor -ISHDeployment $deploy
 
     readTargetXML
 
@@ -200,7 +200,7 @@ function SetContentEditorLicense_test(){
     }
     else {
 
-        Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt
+        Set-ISHContentEditor -ISHDeployment $deploy -LicensePath C:\Automated_deployment\global.sdl.corp.txt
 
         $checkResult = Test-Path "$LicensePath\Editors\Xopus\license\global.sdl.corp.txt"
 
@@ -225,7 +225,7 @@ function SetContentEditorLicenseWhenLicenseExists_test(){
         #Action       
         try
             {
-                 Set-ISHContentEditor -LicensePath C:\Automated_deployment\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
+                 Set-ISHContentEditor -ISHDeployment $deploy -LicensePath C:\Automated_deployment\global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
         
             }
         catch 
@@ -245,7 +245,7 @@ function SetContentEditorLicenseWhenLicenseNotExists_test(){
     #Action         
     try
         {
-            Set-ISHContentEditor -LicensePath C:\Automated_deployment\_global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
+            Set-ISHContentEditor -ISHDeployment $deploy -LicensePath C:\Automated_deployment\_global.sdl.corp.txt -WarningVariable Warning -ErrorAction Stop
         
         }
     catch 
@@ -269,7 +269,7 @@ function TestContentEditorLicense_test(){
      #Action      
     try
         {
-           $testResponse =  Test-ISHContentEditor -Hostname global.sdl.corp -WarningVariable Warning -ErrorAction Stop
+           $testResponse =  Test-ISHContentEditor -ISHDeployment $deploy -Hostname global.sdl.corp -WarningVariable Warning -ErrorAction Stop
         
         }
     catch 
@@ -292,7 +292,7 @@ function TestContentEditorLicenseWithWrongHostName_test(){
      #Action       
     try
         {
-            $testResponse =  Test-ISHContentEditor -Hostname global.sdl.cor -WarningVariable Warning -ErrorAction Stop
+            $testResponse =  Test-ISHContentEditor -ISHDeployment $deploy -Hostname global.sdl.cor -WarningVariable Warning -ErrorAction Stop
         
         }
     catch 
@@ -309,11 +309,11 @@ function TestContentEditorLicenseWithWrongHostName_test(){
 #endregion
 
 #region Test Calls
-Enable-ISHUIContentEditor
+Enable-ISHUIContentEditor -ISHDeployment $deploy
 enableContentEditor_test
 
 
-Disable-ISHUIContentEditor
+Disable-ISHUIContentEditor -ISHDeployment $deploy
 disableContentEditor_test
 
 

@@ -17,12 +17,12 @@ $dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 #$deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
-$deploy = Get-ISHDeployment -Deployment "SQL2014"
+$deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
 
 $xmlPath = $deploy.WebPath
 $xmlPath = $xmlPath + "\Web" 
-$xmlPath = $xmlPath + $deploy.Suffix 
+$xmlPath = $xmlPath + $deploy.OriginalParameters.projectsuffix  
 $xmlPath = $xmlPath + "\Author\ASP\Editors\Xopus\config"
 
 #LogArray for tests results
@@ -115,7 +115,7 @@ function enableQualityAssistanceWithWrongXML_test(){
   
         try
         {
-            Enable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+            Enable-ISHUIQualityAssistant  -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 
@@ -144,7 +144,7 @@ function disableQualityAssistanceWithWrongXML_test(){
   
     try
     {
-        Disable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+        Disable-ISHUIQualityAssistant -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -175,7 +175,7 @@ function enableQualityAssistanceWithNoXML_test(){
   
     try
     {
-        Enable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+        Enable-ISHUIQualityAssistant -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
     }
     catch 
@@ -205,7 +205,7 @@ function disableQualityAssistanceWithNoXML_test(){
   
         try
         {
-            Disable-ISHUIQualityAssistant -WarningVariable Warning -ErrorAction Stop 
+            Disable-ISHUIQualityAssistant -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 

@@ -14,13 +14,13 @@ $WarningPreference = “Continue"
 $VerbosePreference = "SilentlyCOntinue"
 $global:logArray = @()
 
-$deploy = Get-ISHDeployment -Deployment "SQL2014"
+$deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 Write-Host = 
 
 $historyPath = "C:\ProgramData\InfoShare.Deployment\v"
-$historyPath =  $historyPath  + $deploy.Version
+$historyPath =  $historyPath  + $deploy.SoftwareVersion
 
-$historyPath =  $historyPath + "\ISH" + $deploy.Suffix
+$historyPath =  Join-Path $historyPath $deploy.Name
 
 $historyPath = Join-Path $historyPath "\History.ps1"
 
@@ -54,7 +54,7 @@ function getIshHisoryCommandFails_test(){
     
     $xmlPath = $deploy.WebPath
     $xmlPath = $xmlPath + "\Web" 
-    $xmlPath = $xmlPath + $deploy.Suffix 
+    $xmlPath = $xmlPath + $deploy.OriginalParameters.projectsuffix  
     $xmlPath = $xmlPath + "\Author\ASP"
 
     Rename-Item "$xmlPath\Web.config" "_Web.config"

@@ -42,13 +42,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
 		public Models.ISHDeployment ISHDeployment { get; set; }
-
-        /// <summary>
-        /// <para type="description">Allows the cmdlet to replace existing license if there is already registered one for that domain.</para>
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public SwitchParameter Force { get; set; }
-
+        
         /// <summary>
         /// Cashed value for <see cref="IshPaths"/> property
         /// </summary>

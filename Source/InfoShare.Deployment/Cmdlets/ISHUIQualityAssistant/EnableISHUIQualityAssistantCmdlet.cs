@@ -10,9 +10,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIQualityAssistant
     /// <para type="link">Disable-ISHUIQualityAssistant</para>
     /// </summary>
     /// <example>
-    /// <para>Enable Quality Assistant:</para>
-    /// <code>Enable-ISHUIQualityAssistant -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Enable-ISHUIQualityAssistant -ISHDeployment $deployment</code>
+    /// <para>This command enables Quality Assistant.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHUIQualityAssistant")]
     public sealed class EnableISHUIQualityAssistantCmdlet : BaseHistoryEntryCmdlet

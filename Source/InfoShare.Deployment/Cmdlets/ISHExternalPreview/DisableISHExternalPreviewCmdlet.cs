@@ -10,9 +10,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
     /// <para type="link">Enable-ISHExternalPreview</para>
     /// </summary>
     /// <example>
-    /// <para>Disable external preview:</para>
-    /// <code>Disable-ISHExternalPreview -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Disable-ISHExternalPreview -ISHDeployment $deployment</code>
+    /// <para>This command disables the external preview.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHExternalPreview")]
     public sealed class DisableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet

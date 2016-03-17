@@ -11,9 +11,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
     /// <para type="link">Disable-ISHExternalPreview</para>
     /// </summary>
     /// <example>
-    /// <para>Enable external preview for user 'user1':</para>
-    /// <code>Disable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Disable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
+    /// <para>This command enables the external preview for user 'user1'.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview")]
     public sealed class EnableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet
@@ -29,7 +29,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHExternalPreview
         /// </summary>
         [Parameter(Mandatory = false)]
         [ValidateNotNullOrEmpty]
-        public string ExternalId { get; set; }
+        public string ExternalId { get; set; } = "ServiceUser";
 
         /// <summary>
         /// Cashed value for <see cref="IshPaths"/> property

@@ -10,10 +10,10 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
     /// <para type="link">Test-ISHContentEditor</para>
     /// </summary>
     /// <example>
-    /// <para>Set new license for Content Editor using domain name and license key:</para>
-    /// <code>Set-ISHContentEditor -Domain "localhost" -LicenseKey "123445345342331313432423" -ISHDeployment $deployment -Force</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    /// <para>Force parameter allows to skip prompt message and confirms to replace license for specific domain if it is already exists.</para>
+    /// <para></para>
+    /// <code>PS C:\>Set-ISHContentEditor -ISHDeployment $deployment -Domain "localhost" -LicenseKey "123445345342331313432423"</code>
+    /// <para>This command sets new license for Content Editor using domain name and license key.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor")]
 	public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
@@ -42,13 +42,7 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
 		public Models.ISHDeployment ISHDeployment { get; set; }
-
-        /// <summary>
-        /// <para type="description">Allows the cmdlet to replace existing license if there is already registered one for that domain.</para>
-        /// </summary>
-        [Parameter(Mandatory = false)]
-        public SwitchParameter Force { get; set; }
-
+        
         /// <summary>
         /// Cashed value for <see cref="IshPaths"/> property
         /// </summary>

@@ -41,7 +41,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHExternalPreview
                     paths.AuthorAspWebConfig, 
                     CommentPatterns.TrisoftInfoshareWebExternalXPath, 
                     CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
-                    externalId ?? "ServiceUser"));
+                    externalId));
         }
 
         /// <summary>

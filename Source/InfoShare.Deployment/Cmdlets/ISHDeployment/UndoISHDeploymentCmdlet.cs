@@ -12,10 +12,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
     /// <para type="link">Get-ISHDeploymentHistory</para>
     /// </summary>
     /// <example>
-    /// <para>Revert Content Manager to original state:</para>
-    /// <code>Undo-ISHDeployment -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    /// <para></para>
+    /// <code>PS C:\>Undo-ISHDeployment -ISHDeployment $deployment</code>
+    /// <para>This command reverts Content Manager to original state.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Undo, "ISHDeployment")]
     public class UndoISHDeploymentCmdlet : BaseCmdlet

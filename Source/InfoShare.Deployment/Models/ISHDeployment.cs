@@ -91,6 +91,16 @@ namespace InfoShare.Deployment.Models
         public string GetAuthorFolderPath() => Path.Combine(WebPath, $"Web{GetSuffix()}");
 
         /// <summary>
+        /// Gets the path to the App+Suffix Author folder.
+        /// </summary>
+        public string GetAppFolderPath() => Path.Combine(AppPath, $"App{GetSuffix()}");
+
+        /// <summary>
+        /// Gets the path to the Data+Suffix Author folder.
+        /// </summary>
+        public string GetDataFolderPath() => Path.Combine(AppPath, $"Data{GetSuffix()}");
+
+        /// <summary>
         /// Gets the deployment suffix.
         /// </summary>
         public string GetSuffix() => OriginalParameters["projectsuffix"];

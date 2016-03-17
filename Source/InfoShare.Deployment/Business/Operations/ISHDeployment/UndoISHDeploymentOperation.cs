@@ -28,13 +28,13 @@ namespace InfoShare.Deployment.Business.Operations.ISHDeployment
 			_invoker = new ActionInvoker(logger, "InfoShare ExternalPreview deactivation");
 
 			// Rolling back changes for Web folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), ishDeployment.WebPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));
 
 			// Rolling back changes for Data folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.DataPath));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.GetDataFolderPath()));
             
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAuthorFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
 
 			// Removing licenses
 			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;

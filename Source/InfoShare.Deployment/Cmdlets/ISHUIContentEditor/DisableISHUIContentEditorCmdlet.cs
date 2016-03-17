@@ -10,9 +10,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUIContentEditor
     /// <para type="link">Enable-ISHUIContentEditor</para>
     /// </summary>
     /// <example>
-    /// <para>Disable Content Editor:</para>
-    /// <code>Disable-ISHUIContentEditor -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Disable-ISHUIContentEditor -ISHDeployment $deployment</code>
+    /// <para>This command disables Content Editor.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHUIContentEditor")]
     public sealed class DisableISHUIContentEditorCmdlet : BaseHistoryEntryCmdlet

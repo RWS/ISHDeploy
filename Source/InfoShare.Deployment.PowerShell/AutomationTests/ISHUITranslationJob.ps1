@@ -2,87 +2,62 @@
 Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
 
-
+#region Initializing Variables
 $htmlStyle = Set-Style
 
 $logFile = "C:\Automated_deployment\Test9.htm"
-
+$global:logArray = @()
 
 $WarningPreference = “Continue"
 $VerbosePreference = "SilentlyCOntinue"
-$global:logArray = @()
-
 
 $deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
-
-
-
-$LicensePath = $deploy.WebPath
-$LicensePath = $LicensePath + "\Web" 
-$LicensePath = $LicensePath + $deploy.OriginalParameters.projectsuffix  
-$LicensePath = $LicensePath + "\Author\ASP"
-$xmlPath = $LicensePath + "\XSL"
+$LicensePath = Join-Path $deploy.WebPath ("\Web{0}\Author\ASP" -f $deploy.OriginalParameters.projectsuffix)
+$xmlPath = Join-Path $LicensePath "\XSL"
 #endregion
 
 
-
 function checkTranslationJobEnabled{
-[xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
-[xml]$XmlTopDocumentButtonbar = Get-Content "$xmlPath\TopDocumentButtonbar.xml" -ErrorAction SilentlyContinue
-$TreeHtm = Get-Content "$LicensePath\Tree.htm" -ErrorAction SilentlyContinue
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+    [xml]$XmlTopDocumentButtonbar = Get-Content "$xmlPath\TopDocumentButtonbar.xml" -ErrorAction SilentlyContinue
+    $TreeHtm = Get-Content "$LicensePath\Tree.htm" -ErrorAction SilentlyContinue
 
-$global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {$_.label -eq "Translation Jobs"}
-$global:textTopDocumentButtonbar = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "TranslationJob"}
-$global:textTreeHtm = $TreeHtm | Select-String '"Translation Jobs"'
-$global:textFunctionTreeHtm = $TreeHtm | Select-String 'function HighlightTranslationJobs()'
-
-
-
-$commentCheck = $global:textTreeHtm.ToString().Contains("//") -and $global:textFunctionTreeHtm.ToString().Contains("//")
-if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar){
-
-Return "Enabled"
-
+    $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {$_.label -eq "Translation Jobs"}
+    $global:textTopDocumentButtonbar = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "TranslationJob"}
+    $global:textTreeHtm = $TreeHtm | Select-String '"Translation Jobs"'
+    $global:textFunctionTreeHtm = $TreeHtm | Select-String 'function HighlightTranslationJobs()'
+	
+    $commentCheck = $global:textTreeHtm.ToString().StartsWith("//")-and $global:textFunctionTreeHtm.ToString().StartsWith("//")
+    if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar){
+        Return "Enabled"
+    }
+    elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar){
+        Return "Disabled"
+    }
 }
-
-elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar){
-    
-    Return "Disabled"
-
-}
-
-
-}
-
-
 
 #region Tests
 
 function enableTranslationJob_test(){
-
-    
-
     $checkResult = checkTranslationJobEnabled -eq "Enabled"
+
     # Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
 }
 
 function disableTranslationJob_test(){
-
-    
-
     $checkResult = checkTranslationJobEnabled -eq "Disabled"
-    # Assert
+    
+	# Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "2"
-   
 }
 
 function enableTranslationJobWithNoXML_test(){
     #Arange
     Rename-Item "$xmlPath\EventMonitorMenuBar.xml" "_EventMonitorMenuBar.xml"
 
-    #Action       
+    #Action
     try
     {
         Enable-ISHUITranslationJob -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop
@@ -91,8 +66,8 @@ function enableTranslationJobWithNoXML_test(){
     {
         $ErrorMessage = $_.Exception.Message
     }
-
     $checkResult = $ErrorMessage -Match "Could not find file"
+
     # Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "3"
     
@@ -114,7 +89,8 @@ function disableTranslationJobWithNoXML_test(){
         $ErrorMessage = $_.Exception.Message
     }
     $checkResult = $ErrorMessage -Match "Could not find file"
-    # Assert
+    
+	# Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "4"
 
     #Rollback
@@ -136,8 +112,7 @@ function enableTranslationJobWithWrongXML_test(){
     {
         $ErrorMessage = $_.Exception.Message
     }
-
-     $checkResult = $ErrorMessage -Match "Root element is missing"
+	$checkResult = $ErrorMessage -Match "Root element is missing"
 
      # Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "5"
@@ -161,8 +136,7 @@ function disableTranslationJobWithWrongXML_test(){
     {
         $ErrorMessage = $_.Exception.Message
     }
-
-    $checkResult = $ErrorMessage -Match "Root element is missing"
+	$checkResult = $ErrorMessage -Match "Root element is missing"
 
     #Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "6"
@@ -176,8 +150,7 @@ function enableEnabledTranslationJob_test(){
     #Action
     Enable-ISHUITranslationJob -ISHDeployment $deploy
     Enable-ISHUITranslationJob -ISHDeployment $deploy
-    
-    
+        
     $checkResult = checkTranslationJobEnabled -eq "Enabled"
     
     #Assert
@@ -189,16 +162,11 @@ function disableDisabledTranslationJob_test(){
     Disable-ISHUITranslationJob -ISHDeployment $deploy
     Disable-ISHUITranslationJob -ISHDeployment $deploy
 
-    
-
     $checkResult = checkTranslationJobEnabled -eq "Disabled"
 
     #Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "8"
-
 }
-
-
 
 #endregion
 
@@ -219,15 +187,13 @@ disableTranslationJobWithWrongXML_test
 enableEnabledTranslationJob_test
 disableDisabledTranslationJob_test
 
-
 #endregion
 
-
+#region Log and HTML Output
 $global:logArray | ConvertTo-HTML -Head $htmlStyle | Out-File $logFile
-
 
 Edit-LogHtml -targetHTML $logFile
 
-
 Invoke-Expression $logFile
+#endregion
 

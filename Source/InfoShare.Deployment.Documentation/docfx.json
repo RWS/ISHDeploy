@@ -17,7 +17,7 @@
         "dest": "Using"
       },
       {
-        "files": ["**/*.md"],
+        "files": [ "**/*.md" ],
         "cwd": "obj/doc/using",
         "dest": "Using"
       },
@@ -27,7 +27,7 @@
         "dest": "Articles"
       },
       {
-        "files": ["**/*.md"],
+        "files": [ "**/*.md" ],
         "cwd": "obj/doc/articles",
         "dest": "Articles"
       },
@@ -38,6 +38,20 @@
     "resource": [
       {
         "files": [ "**/images/**" ]
+      },
+      {
+        "files": "web.config"
+      },
+      {
+        "files": [ "**/*.ps1" ],
+        "cwd": "obj/doc/using",
+        "dest": "Using"
+      },
+      {
+        "files": [ "**/*.ps1" ],
+        "cwd": "obj/doc/articles",
+        "exclude": [ "**/_nopublish/**" ],
+        "dest": "Articles"
       }
     ],
     "externalReference": [
@@ -47,6 +61,6 @@
     "template": [
       "default"
     ],
-    "dest" : "_site"
+    "dest": "_site"
   }
 }

@@ -80,7 +80,11 @@ namespace InfoShare.Deployment.Data.Managers
 		{
 			if (Directory.Exists(folderPath))
 			{
-				// Means there is no backup folder needed, and we just have to clean the related folder on deployment
+				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
+				{
+					this.DeleteFolder(subFolderPath);
+				}
+
 				foreach (string filePath in Directory.GetFiles(folderPath))
 				{
 					this.Delete(filePath);

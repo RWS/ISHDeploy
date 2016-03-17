@@ -12,11 +12,11 @@ namespace InfoShare.Deployment.Cmdlets.ISHContentEditor
     /// <para type="link">Set-ISHContentEditor</para>
     /// </summary>
     /// <example>
-    /// <para>Test if license for domain name 'localhost' exists:</para>
-    /// <code>Test-ISHContentEditor -Domain "localhost" -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Test-ISHContentEditor -Domain "localhost" -ISHDeployment $deployment</code>
+    /// <para>This command checks if license for domain name 'localhost' exists.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-	[Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor")]
+    [Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor")]
 	public class TestISHContentEditorCmdlet : BaseCmdlet
 	{
         /// <summary>

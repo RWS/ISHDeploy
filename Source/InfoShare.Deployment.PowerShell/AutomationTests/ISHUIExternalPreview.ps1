@@ -1,11 +1,11 @@
 ﻿Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
-CLS
+
 
 #region Variables initoialization
 $htmlStyle = Set-Style
 
-$logFile = "C:\Automated_deployment\Test4.htm"
+$logFile = "C:\Automated_deployment\Test5.htm"
 
 $WarningPreference = “Continue"
 
@@ -19,12 +19,12 @@ $dict.Add('datapath', 'C:\InfoShare')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 #$deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
-$deploy = Get-ISHDeployment -Deployment "SQL2014"
+$deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
 
 $xmlPath = $deploy.WebPath
 $xmlPath = $xmlPath + "\Web" 
-$xmlPath = $xmlPath + $deploy.Suffix 
+$xmlPath = $xmlPath + $deploy.OriginalParameters.projectsuffix  
 $xmlPath = $xmlPath + "\Author\ASP"
 
 #LogArray for tests results
@@ -159,7 +159,7 @@ function enableExternalPreviewWithWrongXML_test(){
     
         try
         {
-              Enable-ISHExternalPreview -WarningVariable Warning -ErrorAction Stop 
+              Enable-ISHExternalPreview -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 
@@ -189,7 +189,7 @@ function disableExternalPreviewWithWrongXML_test(){
   
         try
         {
-              Disable-ISHExternalPreview -WarningVariable Warning -ErrorAction Stop 
+              Disable-ISHExternalPreview -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 
@@ -220,7 +220,7 @@ function enableExternalPreviewWithNoXML_test(){
   
         try
         {
-              Enable-ISHExternalPreview -WarningVariable Warning -ErrorAction Stop 
+              Enable-ISHExternalPreview -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 
@@ -251,7 +251,7 @@ function disableExternalPreviewWithNoXML_test(){
   
         try
         {
-              Disable-ISHExternalPreview -WarningVariable Warning -ErrorAction Stop 
+              Disable-ISHExternalPreview -ISHDeployment $deploy -WarningVariable Warning -ErrorAction Stop 
         
         }
         catch 
@@ -301,7 +301,5 @@ Edit-LogHtml -targetHTML $logFile
 
 Invoke-Expression $logFile
 
-   #$scriptname = split-path $MyInvocation.ScriptName -Leaf
-    #Write-Host " this " $scriptname
 
    

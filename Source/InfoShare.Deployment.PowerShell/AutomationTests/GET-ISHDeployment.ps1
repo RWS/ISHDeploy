@@ -1,6 +1,6 @@
 ﻿Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
-CLS
+
 
 $htmlStyle = Set-Style
 
@@ -16,7 +16,7 @@ $global:logArray = @()
 
 function GetIshDeploymentWithDeploymentParameter_test(){
     #Action
-    $deploy = Get-ISHDeployment -Deployment "SQL2014"
+    $deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
     $checkResult = (($deploy.WebPath -eq "C:\InfoShare") -and($deploy.Count -eq 1))
     # Assert
@@ -38,7 +38,7 @@ function GetIshDeploymentWithDeploymentParameter_test(){
         #Action
         try
         {
-            $deploy = Get-ISHDeployment -Deployment "testDummySuffix" -WarningVariable Warning -ErrorAction Stop
+            $deploy = Get-ISHDeployment -Name "InfoShareTestDummySuffix" -WarningVariable Warning -ErrorAction Stop
         }
         catch 
         {

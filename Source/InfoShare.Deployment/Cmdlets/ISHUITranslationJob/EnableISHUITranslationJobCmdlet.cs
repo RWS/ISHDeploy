@@ -10,9 +10,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHUITranslationJob
     /// <para type="link">Disable-ISHUITranslationJob</para>
     /// </summary>
     /// <example>
-    /// <para>Enable translation job:</para>
-    /// <code>Enable-ISHUITranslationJob -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Enable-ISHUITranslationJob -ISHDeployment $deployment</code>
+    /// <para>This command enables translation job.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHUITranslationJob")]
     public class EnableISHUITranslationJobCmdlet : BaseHistoryEntryCmdlet

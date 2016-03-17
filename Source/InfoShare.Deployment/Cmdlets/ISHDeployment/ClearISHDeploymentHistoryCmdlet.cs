@@ -13,9 +13,9 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
     /// <para type="link">Undo-ISHDeployment</para>
     /// </summary>
     /// <example>
-    /// <para>Clear history information for Content Manager deployment:</para>
-    /// <code>Clear-ISHDeploymentHistory -ISHDeployment $deployment</code>
-    /// <para>Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>Clear-ISHDeploymentHistory -ISHDeployment $deployment</code>
+    /// <para>This command clears the history information for Content Manager deployment.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Clear, "ISHDeploymentHistory")]
     public class ClearISHDeploymentHistoryCmdlet : BaseCmdlet

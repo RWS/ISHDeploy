@@ -15,12 +15,12 @@ namespace InfoShare.Deployment.Cmdlets.ISHDeployment
     /// <para type="link">Undo-ISHDeployment</para>
     /// </summary>
     /// <example>
-    /// <para>Retrieve a list of all installed Content Manager deployments:</para>
-    /// <code>Get-ISHDeployment</code>
+    /// <code>PS C:\>Get-ISHDeployment</code>
+    /// <para>This command retrieves a list of all installed Content Manager deployments.</para>
     /// </example>
     /// <example>
-    /// <para>Retrieve specific instance of the Content Manager deployment by name 'InfoShare':</para>
-    /// <code>Get-ISHDeployment -Name 'InfoShare'</code>
+    /// <code>PS C:\>Get-ISHDeployment -Name 'InfoShare'</code>
+    /// <para>This command retrieves specific instance of the Content Manager deployment by name 'InfoShare'.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHDeployment")]
     public class GetISHDeploymentCmdlet : BaseCmdlet

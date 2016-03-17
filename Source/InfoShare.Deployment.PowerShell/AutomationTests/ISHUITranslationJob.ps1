@@ -2,11 +2,9 @@
 Import-Module InfoShare.Deployment
 . "$PSScriptRoot\Common.ps1"
 
-
 $htmlStyle = Set-Style
 
 $logFile = "C:\Automated_deployment\Test9.htm"
-
 
 $WarningPreference = “Continue"
 $VerbosePreference = "SilentlyCOntinue"
@@ -16,42 +14,37 @@ $global:logArray = @()
 $deploy = Get-ISHDeployment -Name "InfoShareSQL2014"
 
 
-
-
 $LicensePath = $deploy.WebPath
-$LicensePath = $LicensePath + "\Web" 
+$LicensePath = Join-Path $LicensePath "\Web" 
 $LicensePath = $LicensePath + $deploy.OriginalParameters.projectsuffix  
-$LicensePath = $LicensePath + "\Author\ASP"
-$xmlPath = $LicensePath + "\XSL"
+$LicensePath = Join-Path $LicensePath "\Author\ASP"
+$xmlPath = Join -Path $LicensePath "\XSL"
 #endregion
 
 
-
 function checkTranslationJobEnabled{
-[xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
-[xml]$XmlTopDocumentButtonbar = Get-Content "$xmlPath\TopDocumentButtonbar.xml" -ErrorAction SilentlyContinue
-$TreeHtm = Get-Content "$LicensePath\Tree.htm" -ErrorAction SilentlyContinue
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+    [xml]$XmlTopDocumentButtonbar = Get-Content "$xmlPath\TopDocumentButtonbar.xml" -ErrorAction SilentlyContinue
+    $TreeHtm = Get-Content "$LicensePath\Tree.htm" -ErrorAction SilentlyContinue
 
-$global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {$_.label -eq "Translation Jobs"}
-$global:textTopDocumentButtonbar = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "TranslationJob"}
-$global:textTreeHtm = $TreeHtm | Select-String '"Translation Jobs"'
-$global:textFunctionTreeHtm = $TreeHtm | Select-String 'function HighlightTranslationJobs()'
+    $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {$_.label -eq "Translation Jobs"}
+    $global:textTopDocumentButtonbar = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "TranslationJob"}
+    $global:textTreeHtm = $TreeHtm | Select-String '"Translation Jobs"'
+    $global:textFunctionTreeHtm = $TreeHtm | Select-String 'function HighlightTranslationJobs()'
 
 
+    $commentCheck = $global:textTreeHtm.ToString().StartsWith("//")-and $global:textFunctionTreeHtm.ToString().StartsWith("//")
+    if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar){
 
-$commentCheck = $global:textTreeHtm.ToString().Contains("//") -and $global:textFunctionTreeHtm.ToString().Contains("//")
-if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar){
+        Return "Enabled"
 
-Return "Enabled"
+    }
 
-}
-
-elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar){
+    elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar){
     
-    Return "Disabled"
+        Return "Disabled"
 
-}
-
+    }
 
 }
 
@@ -61,16 +54,12 @@ elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocum
 
 function enableTranslationJob_test(){
 
-    
-
     $checkResult = checkTranslationJobEnabled -eq "Enabled"
     # Assert
     Assert_IsTrue $checkResult $MyInvocation.MyCommand.Name "1"
 }
 
 function disableTranslationJob_test(){
-
-    
 
     $checkResult = checkTranslationJobEnabled -eq "Disabled"
     # Assert

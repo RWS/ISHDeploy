@@ -12,11 +12,19 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
 	public class MoveISHUIEventMonitorTabOperation : IOperation
     {
 		/// <summary>
-		/// 
+		/// Operation type enum
 		/// </summary>
 		public enum OperationType
 		{
+
+			/// <summary>
+			/// Flag to insert after 
+			/// </summary>
 			InsertAfter,
+
+			/// <summary>
+			/// Flag to insert before
+			/// </summary>
 			InsertBefore
 		}
 
@@ -26,13 +34,13 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
         private readonly IActionInvoker _invoker;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation"/> class.
+		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
 		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="label">Label of the element</param>
-		/// <param name="operationType"></param>
-		/// <param name="toLabel"></param>
+		/// <param name="operationType">Type of the operation.</param>
+		/// <param name="targetLabel">The target label.</param>
 		public MoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label, OperationType operationType, string targetLabel = null)
         {
             _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");

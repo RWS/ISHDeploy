@@ -20,6 +20,10 @@
   href: ../obj/doc/module/infoshare.deployment/Get-ISHDeployment.md
 - name: Get-ISHDeploymentHistory
   href: ../obj/doc/module/infoshare.deployment/Get-ISHDeploymentHistory.md
+- name: Move-ISHUIEventMonitorTab
+  href: ../obj/doc/module/infoshare.deployment/Move-ISHUIEventMonitorTab.md
+- name: Remove-ISHUIEventMonitorTab
+  href: ../obj/doc/module/infoshare.deployment/Remove-ISHUIEventMonitorTab.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/infoshare.deployment/Set-ISHContentEditor.md
 - name: Test-ISHContentEditor

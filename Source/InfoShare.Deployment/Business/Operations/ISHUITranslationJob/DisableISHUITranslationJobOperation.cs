@@ -24,9 +24,9 @@ namespace InfoShare.Deployment.Business.Operations.ISHUITranslationJob
         public DisableISHUITranslationJobOperation(ILogger logger, ISHPaths paths)
         {
             _invoker = new ActionInvoker(logger, "Disabling InfoShare translation job");
-
+            
             _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, paths.EventMonitorMenuBar, CommentPatterns.EventMonitorTranslationJobs));
-            _invoker.AddAction(new CommentNodesByInnerPatternAction(logger, paths.TopDocumentButtonbar, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment));
+            _invoker.AddAction(new CommentNodeByXPathAction(logger, paths.TopDocumentButtonbar, CommentPatterns.TopDocumentButtonbarXPath, true));
             _invoker.AddAction(new CommentBlockAction(logger, paths.TreeHtm, CommentPatterns.TranslationJobHack));
         }
 

@@ -15,11 +15,12 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         Dictionary<string, string> GetAllInputParamsValues(string filePath);
 
         /// <summary>
-        /// Comments node in xml file that can be found by <paramref name="xpath"/>
+        /// Comments node in xml file that can be found by <paramref name="xpath" />
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched node</param>
-        void CommentNode(string filePath, string xpath);
+        /// <param name="encodeInnerXml">True if content of the comment should be encoded; otherwise False.</param>
+        void CommentNode(string filePath, string xpath, bool encodeInnerXml = false);
 
         /// <summary>
         /// Comments all nodes that has <paramref name="searchPattern"/> right above it
@@ -34,22 +35,15 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
         void UncommentNodesByPrecedingPattern(string filePath, string searchPattern);
-
+        
         /// <summary>
         /// Uncomment multiple nodes that can be found by inner pattern
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="searchPattern">Comment pattern that is inside commented node</param>
-        void UncommentNodesByInnerPattern(string filePath, string searchPattern);
-
-        /// <summary>
-        /// Moves comment node outside of it's parent node found by xpath
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath to the searched node</param>
-        /// <param name="internalPatternElem">Internal comment pattern that marks searched node</param>
-        void MoveOutsideInnerComment(string filePath, string xpath, string internalPatternElem);
-
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false);
+        
         /// <summary>
         /// Set attribute value
         /// </summary>

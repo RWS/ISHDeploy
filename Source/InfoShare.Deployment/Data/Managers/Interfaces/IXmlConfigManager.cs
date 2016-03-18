@@ -22,6 +22,22 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
 		void RemoveSingleNode(string filePath, string xpath);
 
 		/// <summary>
+		/// Removes node from xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		/// <param name="insertBeforeXpath">XPath to searched node</param>
+		void InsertBeforeNode(string filePath, string xpath, string insertBeforeXpath = null);
+
+		/// <summary>
+		/// Removes node from xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		/// <param name="insertAfterXpath">XPath to searched node</param>
+		void InsertAfterNode(string filePath, string xpath, string insertAfterXpath = null);
+
+		/// <summary>
 		/// Comments node in xml file that can be found by <paramref name="xpath"/>
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>

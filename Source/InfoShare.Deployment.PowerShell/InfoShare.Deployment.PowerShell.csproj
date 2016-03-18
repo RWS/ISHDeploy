@@ -73,6 +73,9 @@
     <None Include="CmdletsUsage\ISHUIContentEditor\DisableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\EnableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\ISHUIContentEditor.md" />
+    <None Include="CmdletsUsage\ISHUIEventMonitorTab\ISHUIEventMonitorTab.md" />
+    <None Include="CmdletsUsage\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.ps1" />
+    <None Include="CmdletsUsage\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.ps1" />
     <None Include="CmdletsUsage\ISHUIQualityAssistant\DisableQualityAssistant.ps1" />
     <None Include="CmdletsUsage\ISHUIQualityAssistant\EnableQualityAssistant.ps1" />
     <None Include="CmdletsUsage\ISHUIQualityAssistant\ISHUIQualityAssistant.md" />

@@ -124,6 +124,15 @@
         /// </summary>
         public const string TopDocumentButtonbarXPath = "BUTTONBAR/BUTTON";
 
-        #endregion
-    }
+		#endregion
+
+		#region Event Monitor Tab
+
+		/// <summary>
+		/// The Xopus add check out comment placeholder
+		/// </summary>
+		public const string EventMonitorTab = "/menubar/menuitem[@label='{0}']";
+
+		#endregion
+	}
 }

@@ -97,15 +97,74 @@ namespace InfoShare.Deployment.Data.Managers
 			node.Remove();
 
             _fileManager.Save(filePath, doc);
-        }        
-		
-		
+        }
+
 		/// <summary>
-        /// Comments node in xml file that can be found by <paramref name="xpath"/>
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath to searched node</param>
-        public void CommentNode(string filePath, string xpath)
+		/// Removes node in xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		/// <param name="insertBeforeXpath">XPath to searched node</param>
+		public void InsertBeforeNode(string filePath, string xpath, string insertBeforeXpath)
+		{
+			var doc = _fileManager.Load(filePath);
+
+			var node1 = doc.XPathSelectElement(xpath);
+			if (node1 == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+				return;
+			}
+
+			var node2 = !string.IsNullOrEmpty(insertBeforeXpath) ? doc.XPathSelectElement(insertBeforeXpath) : node1.Parent.FirstNode;
+			if (node2 == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				return;
+			}
+
+			node1.Remove();
+			node2.AddBeforeSelf(node1);
+
+			_fileManager.Save(filePath, doc);
+		}
+
+	    /// <summary>
+	    /// Removes node in xml file that can be found by <paramref name="xpath"/>
+	    /// </summary>
+	    /// <param name="filePath">Path to the file that is modified</param>
+	    /// <param name="xpath">XPath to searched node</param>
+	    /// <param name="insertAfterXpath">XPath to searched node</param>
+	    public void InsertAfterNode(string filePath, string xpath, string insertAfterXpath)
+	    {
+		    var doc = _fileManager.Load(filePath);
+
+		    var node1 = doc.XPathSelectElement(xpath);
+		    if (node1 == null)
+		    {
+			    _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+			    return;
+		    }
+
+			var node2 = !string.IsNullOrEmpty(insertAfterXpath) ? doc.XPathSelectElement(insertAfterXpath) : node1.Parent.LastNode;
+			if (node2 == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				return;
+			}
+
+			node1.Remove();
+			node2.AddAfterSelf(node1);
+
+			_fileManager.Save(filePath, doc);
+		}
+
+		/// <summary>
+		/// Comments node in xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		public void CommentNode(string filePath, string xpath)
         {
             var doc = _fileManager.Load(filePath);
 

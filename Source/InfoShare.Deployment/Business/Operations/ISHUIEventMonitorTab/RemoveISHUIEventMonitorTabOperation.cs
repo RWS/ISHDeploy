@@ -1,4 +1,5 @@
-﻿using InfoShare.Deployment.Business.Invokers;
+﻿using System;
+using InfoShare.Deployment.Business.Invokers;
 using InfoShare.Deployment.Data.Actions.XmlFile;
 using InfoShare.Deployment.Interfaces;
 
@@ -25,7 +26,7 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
         {
             _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
             
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, CommentPatterns.XopusAddCheckOut));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, String.Format(CommentPatterns.EventMonitorTab, label)));
         }
 
         /// <summary>

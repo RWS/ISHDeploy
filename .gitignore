@@ -26,9 +26,6 @@ bld/
 .idea/
 *.iml
 
-# NuGet Packages Directory
-Source/packages/*
-
 # TestResults
 Source/TestResults/
 /Source/InfoShare.Deployment.Documentation/Module/toc2.yml

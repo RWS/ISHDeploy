@@ -16,15 +16,22 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         private readonly IEnumerable<string> _searchPatterns;
 
         /// <summary>
+        /// The identifier to decode inner XML.
+        /// </summary>
+        private readonly bool _decodeInnerXml;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UncommentNodesByInnerPatternAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path.</param>
         /// <param name="searchPatterns">The search placeholders.</param>
-        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns)
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, IEnumerable<string> searchPatterns, bool decodeInnerXml = false)
             : base(logger, filePath)
         {
             _searchPatterns = searchPatterns;
+            _decodeInnerXml = decodeInnerXml;
         }
 
         /// <summary>
@@ -33,8 +40,9 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path.</param>
         /// <param name="searchPattern">Single search placeholder.</param>
-        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, string searchPattern)
-            : this(logger, filePath, new [] { searchPattern })
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        public UncommentNodesByInnerPatternAction(ILogger logger, ISHFilePath filePath, string searchPattern, bool decodeInnerXml = false)
+            : this(logger, filePath, new [] { searchPattern }, decodeInnerXml)
         { }
 
         /// <summary>
@@ -44,7 +52,7 @@ namespace InfoShare.Deployment.Data.Actions.XmlFile
         {
             foreach (var searchPattern in _searchPatterns)
             {
-                XmlConfigManager.UncommentNodesByInnerPattern(FilePath, searchPattern);
+                XmlConfigManager.UncommentNodesByInnerPattern(FilePath, searchPattern, _decodeInnerXml);
             }
         }
     }

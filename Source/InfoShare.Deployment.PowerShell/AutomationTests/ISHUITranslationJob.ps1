@@ -25,15 +25,17 @@ function checkTranslationJobEnabled{
 
     $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {$_.label -eq "Translation Jobs"}
     $global:textTopDocumentButtonbar = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "TranslationJob"}
+	$global:textTopDocumentButtonbarTranslationButton = $XmlTopDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "Translation"}
+    Write-Host $textTopDocumentButtonbarTranslationButton
     $global:textTreeHtm = $TreeHtm | Select-String '"Translation Jobs"'
     $global:textFunctionTreeHtm = $TreeHtm | Select-String 'function HighlightTranslationJobs()'
 	
     $commentCheck = $global:textTreeHtm.ToString().StartsWith("//")-and $global:textFunctionTreeHtm.ToString().StartsWith("//")
-    if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar){
+    if (!$commentCheck -and $global:textEventMenuBar -and $global:textTopDocumentButtonbar -and $global:textTopDocumentButtonbarTranslationButton.Count -eq 2){
         Return "Enabled"
     }
-    elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar){
-        Return "Disabled"
+    elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar -and $global:textTopDocumentButtonbarTranslationButton.Count -eq 2){
+        Return "Disabled" 
     }
 }
 

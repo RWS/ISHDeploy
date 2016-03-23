@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2CE21D0A-4B98-4751-8687-CFF1C0A7A479}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ISHDeploy</RootNamespace>
+    <AssemblyName>ISHDeploy</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ISHDeploy.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ISHDeploy.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Management.Automation" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Data\Actions\File\FileCreateAction.cs" />
+    <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
+    <Compile Include="Models\ISHFilePath.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIQualityAssistant\EnableISHUIQualityAssistantOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentOperation.cs" />
+    <Compile Include="Business\Operations\ISHExternalPreview\DisableISHExternalPreviewOperation.cs" />
+    <Compile Include="Business\Operations\ISHExternalPreview\EnableISHExternalPreviewOperation.cs" />
+    <Compile Include="Business\Operations\ISHUITranslationJob\DisableISHUITranslationJobOperation.cs" />
+    <Compile Include="Business\Operations\ISHUITranslationJob\EnableISHUITranslationJobOperation.cs" />
+    <Compile Include="Cmdlets\BaseCmdlet.cs" />
+    <Compile Include="Cmdlets\BaseHistoryEntryCmdlet.cs" />
+    <Compile Include="Cmdlets\CmdletsLogger.cs" />
+    <Compile Include="Cmdlets\ISHContentEditor\SetISHContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHContentEditor\TestISHContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\UndoISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHExternalPreview\DisableISHExternalPreviewCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
+    <Compile Include="Business\Operations\IOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIContentEditor\DisableISHUIContentEditorOperation.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUITranslationJob\DisableISHUITranslationJobCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUITranslationJob\EnableISHUITranslationJobCmdlet.cs" />
+    <Compile Include="Data\Actions\BaseAction.cs" />
+    <Compile Include="Data\Actions\BaseActionWithResult.cs" />
+    <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
+    <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
+    <Compile Include="Data\Actions\TextFile\CommentBlockAction.cs" />
+    <Compile Include="Data\Actions\TextFile\UncommentBlockAction.cs" />
+    <Compile Include="Data\Actions\SingleXmlFileAction.cs" />
+    <Compile Include="Data\Actions\SingleFileAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\CommentNodeByXPathAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\UncommentNodesByInnerPatternAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\CommentNodesByPrecedingPatternAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\SetAttributeValueAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\UncommentNodesByPrecedingPatternAction.cs" />
+    <Compile Include="Business\ISHPaths.cs" />
+    <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\ITextConfigManager.cs" />
+    <Compile Include="Data\Managers\RegistryManager.cs" />
+    <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
+    <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
+    <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
+    <Compile Include="Extensions\DeploymentExtension.cs" />
+    <Compile Include="Data\Managers\TextConfigManager.cs" />
+    <Compile Include="ObjectFactory.cs" />
+    <Compile Include="Data\Managers\FileManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
+    <Compile Include="Interfaces\Actions\IAction.cs" />
+    <Compile Include="Data\Managers\Interfaces\IXmlConfigManager.cs" />
+    <Compile Include="Business\Invokers\IActionInvoker.cs" />
+    <Compile Include="Interfaces\Actions\IRestorableAction.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Business\Invokers\ActionInvoker.cs" />
+    <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
+    <Compile Include="Data\Managers\XmlConfigManager.cs" />
+    <Compile Include="Models\ISHDeployment.cs" />
+    <Compile Include="Business\CommentPatterns.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="ISHDeploy.PostBuild.ps1" />
+    <None Include="Layers.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" "$(TargetPath)"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)ISHDeploy.PostBuild.ps1" "$(TargetDir)"
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -78,7 +79,7 @@ namespace InfoShare.Deployment.Data.Managers
         }
         
         /// <summary>
-        /// Removes node in xml file that can be found by <paramref name="xpath"/>
+        /// Removes single node or comment in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched node</param>
@@ -86,9 +87,8 @@ namespace InfoShare.Deployment.Data.Managers
         {
             var doc = _fileManager.Load(filePath);
 
-            var node = doc.XPathSelectElement(xpath);
-
-            if (node == null)
+	        var node = this.SelectSingleNode(ref doc, xpath);
+			if (node == null)
             {
                 _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
                 return;
@@ -373,13 +373,56 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        /// <summary>
-        /// Tries to uncomment node.
-        /// </summary>
-        /// <param name="commentedNode">The commented node.</param>
-        /// <param name="doc">The document where changes should take place.</param>
-        /// <returns>True if operation succeeded; otherwise False.</returns>
-        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
+		/// <summary>
+		/// Set attribute value
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath that is searched</param>
+		/// <param name="xNode">The xml node from ISH configuration.</param>
+		public void SetNode(string filePath, string xpath, IISHXmlNode xNode)
+		{
+			var doc = _fileManager.Load(filePath);
+			XNode newNode = xNode.ToXElement();
+			var existingElement = doc.XPathSelectElement(xpath);
+			if (existingElement == null)
+			{
+				// We need to take the parent node
+				var parentXPath = Regex.Replace(xpath, @"\/([^\/])*$", "");
+				var parentNode = doc.XPathSelectElement(parentXPath);
+				if (parentNode == null)
+				{
+					throw new WrongXmlStructureException(filePath, $"There are no parent node for XPath '{xpath}' were found.");
+				}
+
+				parentNode.Add(newNode);
+			}
+			else
+			{
+				existingElement.ReplaceWith(newNode);
+			}
+
+			// Check if node does not have a comment
+			if (newNode.PreviousNode.NodeType != XmlNodeType.Comment)
+			{
+				var comment = xNode.GetNodeComment();
+				if (comment != null)
+				{
+					newNode.AddBeforeSelf(comment);
+				}
+			}
+
+			_fileManager.Save(filePath, doc);
+		}		
+		
+		#region private methods
+
+		/// <summary>
+		/// Tries to uncomment node.
+		/// </summary>
+		/// <param name="commentedNode">The commented node.</param>
+		/// <param name="doc">The document where changes should take place.</param>
+		/// <returns>True if operation succeeded; otherwise False.</returns>
+		private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
@@ -406,5 +449,20 @@ namespace InfoShare.Deployment.Data.Managers
 
             return true;
         }
-    }
+
+		/// <summary>
+		/// Evaluates node from XPath
+		/// </summary>
+		/// <param name="doc">The document to node lookup.</param>
+		/// <param name="xPath">The xPath of node to be evaluated.</param>
+		/// <returns>
+		/// XNode instance from document.
+		/// </returns>
+		private XNode SelectSingleNode(ref XDocument doc, string xPath)
+		{
+			return ((IEnumerable<object>) doc.XPathEvaluate(xPath)).OfType<XNode>().Single();
+		}
+
+		#endregion
+	}
 }

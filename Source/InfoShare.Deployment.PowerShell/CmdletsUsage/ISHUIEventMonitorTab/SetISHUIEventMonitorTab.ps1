@@ -18,8 +18,4 @@ $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-#Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First
-
-#Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last
-
-Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "P1" -After "P3"
+Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "2NewTab" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter "TRANSLATIONJOB, NON-TRANSLATIONJOB" -StatusFilter "All" -SelectedMenuItemTitle "New Tab" -ModifiedSinceMinutesFilter "3600" -SelectedButtonTitle "New Tab Button" -UserRole "Administrator" -Description "New tab added"

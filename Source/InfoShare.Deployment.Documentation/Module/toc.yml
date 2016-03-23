@@ -26,6 +26,8 @@
   href: ../obj/doc/module/infoshare.deployment/Remove-ISHUIEventMonitorTab.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/infoshare.deployment/Set-ISHContentEditor.md
+- name: Set-ISHUIEventMonitorTab
+  href: ../obj/doc/module/infoshare.deployment/Set-ISHUIEventMonitorTab.md
 - name: Test-ISHContentEditor
   href: ../obj/doc/module/infoshare.deployment/Test-ISHContentEditor.md
 - name: Undo-ISHDeployment

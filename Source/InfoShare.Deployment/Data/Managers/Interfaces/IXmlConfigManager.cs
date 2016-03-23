@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using InfoShare.Deployment.Interfaces;
 
 namespace InfoShare.Deployment.Data.Managers.Interfaces
 {
@@ -81,5 +82,13 @@ namespace InfoShare.Deployment.Data.Managers.Interfaces
         /// <param name="attributeName">Name of the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
         void SetAttributeValue(string filePath, string xpath, string attributeName, string value);
-    }
+
+		/// <summary>
+		/// Set attribute value
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath that is searched</param>
+		/// <param name="value">Node fron IshConfiguration.</param>
+		void SetNode(string filePath, string xpath, IISHXmlNode value);
+	}
 }

@@ -48,6 +48,9 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
 			string nodeXPath = String.Format(CommentPatterns.EventMonitorTab, label);
 			string targetNodeXPath = String.IsNullOrEmpty(targetLabel) ? null :  String.Format(CommentPatterns.EventMonitorTab, targetLabel);
 
+			string itemCommentXPath = nodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+			string targetCommentXPath = targetNodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
@@ -57,7 +60,10 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
 					_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodeXPath, targetNodeXPath));
 					break;
 			}
-        }
+
+			// After node is moved, we also should move its comment
+			_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, itemCommentXPath, nodeXPath));
+		}
 
         /// <summary>
         /// Runs current operation.

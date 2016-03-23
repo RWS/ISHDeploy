@@ -129,9 +129,24 @@
 		#region Event Monitor Tab
 
 		/// <summary>
-		/// The Xopus add check out comment placeholder
+		/// Event monitor tab menu item XPath
 		/// </summary>
 		public const string EventMonitorTab = "/menubar/menuitem[@label='{0}']";
+
+		/// <summary>
+		/// Event monitor tab menu item comment XPath
+		/// </summary>
+		public const string EventMonitorPreccedingCommentXPath = "/preceding-sibling::node()[not(self::text())][1][not(local-name())]";
+
+		/// <summary>
+		/// The Xopus add check out comment placeholder
+		/// </summary>
+		public const string EventActionPath = "EventMonitor/Main/Overview?";
+
+		/// <summary>
+		/// The Xopus add check out comment placeholder
+		/// </summary>
+		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
 
 		#endregion
 	}

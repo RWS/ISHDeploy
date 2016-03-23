@@ -6,9 +6,10 @@ using InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab;
 namespace InfoShare.Deployment.Cmdlets.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// 
+	/// Moves tab definitions in EventMonitorTab. Currently only insert First/Last/After functionality is supported.
 	/// </summary>
-    [Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
+	/// <seealso cref="InfoShare.Deployment.Cmdlets.BaseHistoryEntryCmdlet" />
+	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
     public class MoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

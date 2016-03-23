@@ -25,8 +25,15 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
 		public RemoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label)
         {
             _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
-            
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, String.Format(CommentPatterns.EventMonitorTab, label)));
+
+			string itemXPath = String.Format(CommentPatterns.EventMonitorTab, label);
+			string itemCommentXPath = itemXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+
+			// First we should remove comment as it is dependent to its sibling node
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, itemCommentXPath));
+
+			// Then we removing item itself
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, itemXPath));
         }
 
         /// <summary>

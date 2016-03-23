@@ -5,3 +5,6 @@ CopyCodeBlockAndLink(RemoveISHUIEventMonitorTab.ps1)
 
 ##  Move-ISHUIEventMonitorTab
 CopyCodeBlockAndLink(MoveISHUIEventMonitorTab.ps1)
+
+##  Set-ISHUIEventMonitorTab
+CopyCodeBlockAndLink(SetISHUIEventMonitorTab.ps1)

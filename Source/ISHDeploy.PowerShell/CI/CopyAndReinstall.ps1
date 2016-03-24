@@ -6,7 +6,7 @@
 $session = New-PSSession -ComputerName $targetPC
 
 #Set up target path for infoshareserviceuser for dll
-$targetPath = "\\$targetPC\C$\Users\infoshareserviceuser\Documents\WindowsPowerShell\Modules\InfoShare.Deployment"
+$targetPath = "\\$targetPC\C$\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\InfoShare.Deployment"
 #Get local folder with scripts
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 #Copy scripts for installing
@@ -21,9 +21,9 @@ Copy-Item "$executingScriptDirectory\kill_powershell.bat" $testsFolder -force
 
 foreach($testScript in $testScripts){
 	
-	Copy-Item $testsFolder\$testScript \\$targetPC\C$\Users\infoshareserviceuser\Documents\AutomatedTests -Force
+	Copy-Item $testsFolder\$testScript \\$targetPC\C$\Users\$env:USERNAME\Documents\AutomatedTests -Force
     
 }
 
 
-Invoke-Command -ScriptBlock {C:\Users\infoshareserviceuser\Documents\WindowsPowerShell\Modules\InfoShare.Deployment\ISHReinstaller.ps1} -Session $session
+Invoke-Command -ScriptBlock {C:\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\InfoShare.Deployment\ISHReinstaller.ps1} -Session $session

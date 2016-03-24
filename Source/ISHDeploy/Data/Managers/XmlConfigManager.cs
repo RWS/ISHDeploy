@@ -105,7 +105,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath to searched node</param>
 		/// <param name="insertBeforeXpath">XPath to searched node</param>
-		public void InsertBeforeNode(string filePath, string xpath, string insertBeforeXpath)
+		public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
 		{
 			var doc = _fileManager.Load(filePath);
 
@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers
 	    /// <param name="filePath">Path to the file that is modified</param>
 	    /// <param name="xpath">XPath to searched node</param>
 	    /// <param name="insertAfterXpath">XPath to searched node</param>
-	    public void InsertAfterNode(string filePath, string xpath, string insertAfterXpath)
+	    public void MoveAfterNode(string filePath, string xpath, string insertAfterXpath)
 	    {
 		    var doc = _fileManager.Load(filePath);
 

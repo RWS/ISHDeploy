@@ -4,10 +4,10 @@ using ISHDeploy.Models;
 namespace ISHDeploy.Data.Actions.XmlFile
 {
     /// <summary>
-    /// Action that removes single node in xml file found by xpaths.
+    /// Action that moves single node in xml file found by xpaths.
     /// </summary>
     /// <seealso cref="SingleXmlFileAction" />
-    public class InsertAfterNodeAction : SingleXmlFileAction
+    public class MoveAfterNodeAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xpath to the xml node.
@@ -26,7 +26,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
 		/// <param name="filePath">The xml file path.</param>
 		/// <param name="xpath">The xpath to the node that needs to be removed.</param>
 		/// <param name="xpathAfterNode">The xpath to the node that needs to be removed.</param>
-		public InsertAfterNodeAction(ILogger logger, ISHFilePath filePath, string xpath, string xpathAfterNode = null)
+		public MoveAfterNodeAction(ILogger logger, ISHFilePath filePath, string xpath, string xpathAfterNode = null)
 			: base(logger, filePath)
         {
             _xpath = xpath;
@@ -38,7 +38,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// </summary>
         public override void Execute()
         {
-			XmlConfigManager.InsertAfterNode(FilePath, _xpath, _xpathAfterNode);
+			XmlConfigManager.MoveAfterNode(FilePath, _xpath, _xpathAfterNode);
         }
     }
 }

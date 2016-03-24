@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -513,7 +510,6 @@ namespace ISHDeploy.Tests.Data.Managers
             string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
             string testAttributeName = "externalId";
             string testValue = "testValue";
-            var testFilePath = "Tesweb.config";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<configuration>" +
@@ -522,8 +518,8 @@ namespace ISHDeploy.Tests.Data.Managers
                                         "</trisoft.infoshare.web.externalpreviewmodule>" +
                                     "</configuration>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.When(x => x.Save(_filePath, doc)).Do(
                         x =>
                         {
                             IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}/@{testAttributeName}");
@@ -534,13 +530,33 @@ namespace ISHDeploy.Tests.Data.Managers
                         }
                     );
 
-            _xmlConfigManager.SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
+            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testAttributeName, testValue);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
 		#endregion
 
-		#region Set Node
+		#region Nodes Manipulation
+
+		private string testXmlDoc = $@"<?xml version='1.0' encoding='UTF-8'?>
+										<menubar>
+										  <!-- Synchronize To LiveContent ============================================================= -->
+										  <menuitem label='Synch To Collaborative Review' action='EventMonitor/Main/Overview?' icon='~/UIFramework/synchronization.32.color.png'>
+											<userrole>Administrator</userrole>
+											<description>Synchronize To SDL Knowledge Center Collaborative Review</description>
+										  </menuitem>
+										  <!-- Thumbnails ============================================================= -->
+										  <menuitem label='Thumbnails' action='EventMonitor/Main/Overview?' icon='~/UIFramework/thumbnails.32x32.png'>
+											<userrole>Administrator</userrole>
+											<description>Thumbnails</description>
+										  </menuitem>
+										  <!-- Index ================================================================== -->
+										  <menuitem label='All Events' action='EventMonitor/Main/Overview?' icon='~/UIFramework/events.32x32.png'>
+											<userrole>Administrator</userrole>
+											<description>all processes</description>
+										  </menuitem>
+										</menubar>";
+
 
 		[TestMethod]
 		[TestCategory("Data handling")]
@@ -548,21 +564,8 @@ namespace ISHDeploy.Tests.Data.Managers
 		{
 			// Arrange
 			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
-			var testFilePath = "bar.xml";
 
-			var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
-										<menubar label='Event Log'>
-											<!-- Translation Jobs ============================================================= -->
-											<menuitem label='Translation' action='EventMonitor/Main/Overview' icon='icon.png'>
-												<userrole>Administrator</userrole>
-												<description>Translation Jobs</description>
-											</menuitem>
-											<!-- New tab added ================================== -->
-											<menuitem label='Publish' action='EventMonitor/Main/Overview' icon='icon.png'>
-												<userrole>Administrator</userrole>
-												<description>New tab added</description>
-											</menuitem>
-										</menubar>");
+			var doc = XDocument.Parse(testXmlDoc);
 
 			var item = new EventLogMenuItem()
 			{
@@ -584,8 +587,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
 			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
 
-			FileManager.Load(testFilePath).Returns(doc);
-			FileManager.Save(testFilePath, Arg.Do<XDocument>(
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
 					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
@@ -594,7 +597,7 @@ namespace ISHDeploy.Tests.Data.Managers
 				}));
 
 			// Act
-			_xmlConfigManager.SetNode(testFilePath, testXPath, item);
+			_xmlConfigManager.SetNode(_filePath, testXPath, item);
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -617,27 +620,14 @@ namespace ISHDeploy.Tests.Data.Managers
 		public void SetNode_Existing()
 		{
 			// Arrange
-			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
-			var testFilePath = "bar.xml";
+			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
 
-			var commentValue = " New tab added ================================== ";
-			var doc = XDocument.Parse($@"<?xml version='1.0' encoding='UTF-8'?>
-									<menubar label='Event Log'>
-									  <!-- Translation Jobs ============================================================= -->
-									  <menuitem label='Translation' action='EventMonitor/Main/Overview' icon='icon.png'>
-										<userrole>Administrator</userrole>
-										<description>Translation Jobs</description>
-									  </menuitem>
-									  <!--{commentValue}-->
-									  <menuitem label='TEST_Label' action='EventMonitor/Main/Overview' icon='icon.png'>
-										<userrole>Administrator</userrole>
-										<description>New tab added</description>
-									  </menuitem>
-									</menubar>");
+			var commentValue = " Thumbnails ============================================================= ";
+			var doc = XDocument.Parse(testXmlDoc);
 
 			var item = new EventLogMenuItem()
 			{
-				Label = "TEST_Label",
+				Label = "Thumbnails",
 				Description = "TEST_Description",
 				Icon = "TEST_icon.png",
 				UserRole = "TEST_UserRole",
@@ -655,8 +645,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
 			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
 
-			FileManager.Load(testFilePath).Returns(doc);
-			FileManager.Save(testFilePath, Arg.Do<XDocument>(
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
 					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
@@ -665,7 +655,7 @@ namespace ISHDeploy.Tests.Data.Managers
 				}));
 
 			// Act
-			_xmlConfigManager.SetNode(testFilePath, testXPath, item);
+			_xmlConfigManager.SetNode(_filePath, testXPath, item);
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -685,6 +675,162 @@ namespace ISHDeploy.Tests.Data.Managers
 			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
         }
 
-        #endregion
-    }
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveBeforeNode()
+		{
+			// Arrange
+			string testLabel = "All Events";
+			string insertBeforeLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(testXmlDoc);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveBeforeNode(
+				_filePath, 
+				string.Format(CommentPatterns.EventMonitorTab, testLabel), 
+				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[1], testLabel, "Inserted node is not in a correct place");
+			Assert.AreEqual(labels[2], insertBeforeLabel, "Previouse node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveBeforeNode_Top()
+		{
+			// Arrange
+			string testLabel = "All Events";
+
+			var doc = XDocument.Parse(testXmlDoc);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveBeforeNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[0], testLabel, "Inserted node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveAfterNode()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+			string insertBeforeLabel = "All Events";
+
+			var doc = XDocument.Parse(testXmlDoc);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveAfterNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel),
+				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+			Assert.AreEqual(labels[1], insertBeforeLabel, "Previouse node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveAfterNode_Bottom()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(testXmlDoc);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveAfterNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void RemoveNode()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(testXmlDoc);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.RemoveSingleNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+		}
+
+		#endregion
+	}
 }

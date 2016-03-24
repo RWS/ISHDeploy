@@ -56,10 +56,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new InsertAfterNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveAfterNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}

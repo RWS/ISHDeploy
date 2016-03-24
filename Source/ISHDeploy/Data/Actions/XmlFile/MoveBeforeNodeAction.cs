@@ -3,11 +3,11 @@ using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.XmlFile
 {
-    /// <summary>
-    /// Action that removes single node in xml file found by xpaths.
-    /// </summary>
-    /// <seealso cref="SingleXmlFileAction" />
-    public class InsertBeforeNodeAction : SingleXmlFileAction
+	/// <summary>
+	/// Action that moves single node in xml file found by xpaths.
+	/// </summary>
+	/// <seealso cref="SingleXmlFileAction" />
+	public class MoveBeforeNodeAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xpath to the xml node.
@@ -26,7 +26,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
 		/// <param name="filePath">The xml file path.</param>
 		/// <param name="xpath">The xpath to the node that needs to be removed.</param>
 		/// <param name="xpathBeforeNode">The xpath to the node that needs to be removed.</param>
-		public InsertBeforeNodeAction(ILogger logger, ISHFilePath filePath, string xpath, string xpathBeforeNode = null)
+		public MoveBeforeNodeAction(ILogger logger, ISHFilePath filePath, string xpath, string xpathBeforeNode = null)
 			: base(logger, filePath)
         {
             _xpath = xpath;
@@ -38,7 +38,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// </summary>
         public override void Execute()
         {
-			XmlConfigManager.InsertBeforeNode(FilePath, _xpath, _xpathBeforeNode);
+			XmlConfigManager.MoveBeforeNode(FilePath, _xpath, _xpathBeforeNode);
         }
     }
 }

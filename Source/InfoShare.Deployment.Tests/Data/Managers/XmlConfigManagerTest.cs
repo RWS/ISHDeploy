@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Business;
@@ -399,59 +401,105 @@ namespace InfoShare.Deployment.Tests.Data.Managers
         
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveOutsideInnerComment_Internal_paths_exist()
+        public void CommentNode_Commment_with_encoding()
         {
             // Arrange
-            var doc = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <BUTTON>
-        <!--{CommentPatterns.TranslationComment}-->
-        <INPUT type=""button""/>
-    </BUTTON>
-</BUTTONBAR>");
-            XDocument result = null;
+            string testButtonName = "TranslationJob";
 
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR>" +
+                                        "<BUTTON>" +
+                                            @"<!-- Translation\Job -->" +
+                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
+                                        "</BUTTON>" +
+                                    "</BUTTONBAR>");
+
+            XNode result = null;
             FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(docResult => result = docResult));
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = document.DescendantNodes().Single(node => node.NodeType == XmlNodeType.Comment)));
 
             // Act
-            _xmlConfigManager.MoveOutsideInnerComment(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
+            _xmlConfigManager.CommentNode(_filePath, $"BUTTONBAR/BUTTON[INPUT[@NAME='{testButtonName}']]", true);
 
             // Assert
-            var expected = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <!--{CommentPatterns.TranslationComment}-->
-    <BUTTON>
-        <INPUT type=""button"" />
-    </BUTTON>
-</BUTTONBAR>");
+            Assert.IsTrue(result.ToString().Contains(@"<!-\- Translation\\Job -\->"));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void CommentNode_Comment_without_encoding()
+        {
+            // Arrange
+            string testButtonName = "TranslationJob";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR>" +
+                                        "<BUTTON>" +
+                                            @"<!-- Translation\Job -->" +
+                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
+                                        "</BUTTON>" +
+                                    "</BUTTONBAR>");
+
+            XNode result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = document.DescendantNodes().Single(node => node.NodeType == XmlNodeType.Comment)));
+
+            // Act
+            _xmlConfigManager.CommentNode(_filePath, $"BUTTONBAR/BUTTON[INPUT[@NAME='{testButtonName}']]");
+
+            // Assert
+            Assert.IsTrue(result.ToString().Contains(@"<!- - Translation\Job - ->"));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void UncommentNodeByInnerPattern_Uncommment_with_encoding()
+        {
+            // Arrange
+            string testButtonName = "TranslationJob";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR>" +
+                                        "<!--<BUTTON>" +
+                                            @"<!-\- Translation\\Job -\->" +
+                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
+                                        "</BUTTON>-->" +
+                                    "</BUTTONBAR>");
+
+            XNode result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = document.DescendantNodes().Single(node => node.NodeType == XmlNodeType.Comment)));
+
+            // Act
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, $"NAME='{testButtonName}'", true);
             
-            Assert.IsTrue(XNode.DeepEquals(result, expected), "Expected document is different from actual result");
+            // Assert
+            Assert.IsTrue(string.CompareOrdinal(result.ToString(), @"<!-- Translation\Job -->") == 0);
         }
         
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveOutsideInnerComment_Searched_path_does_not_exist()
+        [ExpectedException(typeof(WrongXmlStructureException))]
+        public void UncommentNodeByInnerPattern_Uncomment_without_encoding()
         {
             // Arrange
-            var doc = XDocument.Parse(
-$@"<?xml version=""1.0"" encoding=""UTF-8""?>
-<BUTTONBAR>
-    <!-- {CommentPatterns.TranslationComment} -->
-    <BUTTON>
-        <INPUT type=""button""/>
-    </BUTTON>
-</BUTTONBAR>");
+            string testButtonName = "TranslationJob";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<BUTTONBAR>" +
+                                        "<!--<BUTTON>" +
+                                            @"<!-\- Translation\\Job -\->" +
+                                            "<INPUT type='button' NAME='" + testButtonName + "' />" +
+                                        "</BUTTON>-->" +
+                                    "</BUTTONBAR>");
             
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
-            _xmlConfigManager.MoveOutsideInnerComment(_filePath, CommentPatterns.TopDocumentButtonbarXPath, CommentPatterns.TranslationComment);
+            _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, $"NAME='{testButtonName}'");
 
             // Assert
-            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.Fail("This test should fail with exception because of wrong xml structure!");
         }
 
         #endregion Comment Block/Node
@@ -635,8 +683,8 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
 			Assert.AreEqual(elements.Count, 2, "Elements are not set");
 			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
 			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
-		}
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

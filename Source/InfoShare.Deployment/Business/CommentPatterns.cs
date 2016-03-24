@@ -115,16 +115,16 @@
         public const string EventMonitorTranslationJobs = "Translation Jobs ===========";
 
         /// <summary>
-        /// The translation comment comment placeholder
+        /// The translation job attribute value
         /// </summary>
-        public const string TranslationComment = "TRANSLATION";
+        public const string TranslationJobAttribute = "NAME=\"TranslationJob\"";
 
         /// <summary>
         /// The top document buttonbar xpath
         /// </summary>
-        public const string TopDocumentButtonbarXPath = "BUTTONBAR/BUTTON";
+        public const string TopDocumentTranslationJobXPath = "BUTTONBAR/BUTTON[INPUT[@NAME = 'TranslationJob']]";
 
-		#endregion
+        #endregion
 
 		#region Event Monitor Tab
 
@@ -149,5 +149,5 @@
 		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
 
 		#endregion
-	}
+    }
 }

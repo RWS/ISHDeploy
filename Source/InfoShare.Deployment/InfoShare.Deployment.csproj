@@ -105,7 +105,6 @@
     <Compile Include="Data\Actions\XmlFile\CommentNodesByPrecedingPatternAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetAttributeValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\UncommentNodesByPrecedingPatternAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\CommentNodesByInnerPatternAction.cs" />
     <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITextConfigManager.cs" />

@@ -70,7 +70,6 @@
     <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\TextConfigManagerTest.cs" />
     <Compile Include="Data\Managers\XmlConfigManagerTest.cs" />
-    <Compile Include="Extensions\XDocumentExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

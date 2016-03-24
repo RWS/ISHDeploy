@@ -56,7 +56,7 @@ namespace InfoShare.Deployment.Data.Managers
         }
 
         /// <summary>
-        /// Returns dictionary with all parameters fron inputparameters.xml file
+        /// Returns dictionary with all parameters from inputparameters.xml file
         /// </summary>
         /// <param name="filePath">Path to inputparameters.xml file</param>
         /// <returns>Dictionary with parameters</returns>
@@ -132,7 +132,7 @@ namespace InfoShare.Deployment.Data.Managers
 			_fileManager.Save(filePath, doc);
 		}
 
-	    /// <summary>
+        /// <summary>
 	    /// Removes node in xml file that can be found by <paramref name="xpath"/>
 	    /// </summary>
 	    /// <param name="filePath">Path to the file that is modified</param>
@@ -166,11 +166,12 @@ namespace InfoShare.Deployment.Data.Managers
 		}
 
 		/// <summary>
-		/// Comments node in xml file that can be found by <paramref name="xpath"/>
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="xpath">XPath to searched node</param>
-		public void CommentNode(string filePath, string xpath)
+        /// Comments node in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        /// <param name="encodeInnerXml">True if content of the comment should be encoded; otherwise False.</param>
+        public void CommentNode(string filePath, string xpath, bool encodeInnerXml = false)
         {
             var doc = _fileManager.Load(filePath);
 
@@ -183,6 +184,11 @@ namespace InfoShare.Deployment.Data.Managers
             }
 
             var uncommentText = uncommentedNode.ToString();
+
+            if (encodeInnerXml)
+            {
+                uncommentText = XmlEncode(uncommentText);
+            }
 
             var commentedNode = new XComment(uncommentText);
 
@@ -225,7 +231,7 @@ namespace InfoShare.Deployment.Data.Managers
                     continue;
                 }
 
-                var uncommentText = uncommentedNode.ToString();
+                var uncommentText = XmlEncode(uncommentedNode.ToString());
 
                 commentedNode = new XComment(uncommentText);
 
@@ -239,10 +245,10 @@ namespace InfoShare.Deployment.Data.Managers
         }
 
         /// <summary>
-        /// Comments all nodes that has <paramref name="searchPattern"/> right above it
+        /// Comments all nodes that has <paramref name="searchPattern"/> right above it.
         /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
+        /// <param name="filePath">Path to the file that is modified.</param>
+        /// <param name="searchPattern">Comment pattern that precedes the searched node.</param>
         public void UncommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
             var doc = _fileManager.Load(filePath);
@@ -290,7 +296,8 @@ namespace InfoShare.Deployment.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="searchPattern">Comment pattern that is inside commented node</param>
-        public void UncommentNodesByInnerPattern(string filePath, string searchPattern)
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        public void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false)
         {
             var doc = _fileManager.Load(filePath);
 
@@ -312,45 +319,10 @@ namespace InfoShare.Deployment.Data.Managers
 
             foreach (var commentedNode in commentedNodes)
             {
-                if (!TryUncommentNode(commentedNode, ref doc))
+                if (!TryUncommentNode(commentedNode, ref doc, decodeInnerXml))
                 {
                     throw new WrongXmlStructureException(filePath, $"Was not able to uncomment the following node: {commentedNode}");
                 }
-            }
-
-            _fileManager.Save(filePath, doc);
-        }
-
-        /// <summary>
-        /// Moves comment node outside of it's parent node found by xpath
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath to the searched node</param>
-        /// <param name="internalPatternElem">Internal comment pattern that marks searched node</param>
-        public void MoveOutsideInnerComment(string filePath, string xpath, string internalPatternElem)
-        {
-            var doc = _fileManager.Load(filePath);
-
-            var searchedXPath = $"{xpath}[comment()[contains(., '{internalPatternElem}')]]";
-            var uncommentedNodes = doc.XPathSelectElements(searchedXPath).ToArray();
-
-            if (!uncommentedNodes.Any())
-            {
-                // should not throw exception
-                _logger.WriteDebug($"{filePath} does not contain inner patterns any more. Searched xpath: {searchedXPath}");
-                return;
-            }
-
-            foreach (var uncommentedNode in uncommentedNodes)
-            {
-                // Move internal searched pattern before node
-                var internalComment =
-                    uncommentedNode.DescendantNodes()
-                        .FirstOrDefault(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(internalPatternElem));
-
-                uncommentedNode.AddBeforeSelf(internalComment);
-
-                internalComment?.Remove();
             }
 
             _fileManager.Save(filePath, doc);
@@ -379,7 +351,7 @@ namespace InfoShare.Deployment.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-		/// <summary>
+        /// <summary>
 		/// Set attribute value
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
@@ -423,12 +395,13 @@ namespace InfoShare.Deployment.Data.Managers
 		#region private methods
 
 		/// <summary>
-		/// Tries to uncomment node.
-		/// </summary>
-		/// <param name="commentedNode">The commented node.</param>
-		/// <param name="doc">The document where changes should take place.</param>
-		/// <returns>True if operation succeeded; otherwise False.</returns>
-		private bool TryUncommentNode(XNode commentedNode, ref XDocument doc)
+        /// Tries to uncomment node.
+        /// </summary>
+        /// <param name="commentedNode">The commented node.</param>
+        /// <param name="doc">The document where changes should take place.</param>
+        /// <returns>True if operation succeeded; otherwise False.</returns>
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
@@ -441,11 +414,17 @@ namespace InfoShare.Deployment.Data.Managers
             
             commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
 
+            if (decodeInnerXml)
+            {
+                commentText = XmlDecode(commentText);
+            }
+
             try
             {
-                // We cannnot use XNode.Replace method to replace just single node, because it cannot resolve namespaces inside uncommented node
+                // XElement.Replace cannot be used cause of possible unknown namespaces inside the comment.
                 var commentedDocXmlString = doc.ToString();
                 var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
+                
                 doc = XDocument.Parse(replacedDocXmlString);
             }
             catch
@@ -483,5 +462,25 @@ namespace InfoShare.Deployment.Data.Managers
 		}
 
 		#endregion
-	}
+
+        /// <summary>
+        /// Replaces some characters that might cause issues when commenting/uncommenting xml fragment.
+        /// </summary>
+        /// <param name="text">The string that should be encoded.</param>
+        /// <returns>Encoded string.</returns>
+        private string XmlEncode(string text)
+        {
+            return text.Replace(@"\", @"\\").Replace(@"--", @"-\-");
+        }
+
+        /// <summary>
+        /// Replaces some characters back that where changed by <see cref="XmlEncode"/>.
+        /// </summary>
+        /// <param name="text">The string that should be decoded.</param>
+        /// <returns>Decoded string.</returns>
+        private string XmlDecode(string text)
+        {
+            return text.Replace(@"-\-", @"--").Replace(@"\\", @"\");
+        }
+    }
 }

@@ -11,7 +11,7 @@ using NSubstitute;
 
 namespace ISHDeploy.Tests
 {
-    [TestClass]
+    [TestClass] 
     public abstract class BaseUnitTest
     {
         protected ILogger Logger;

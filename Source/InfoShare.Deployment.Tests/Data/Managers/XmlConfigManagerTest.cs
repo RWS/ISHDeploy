@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using InfoShare.Deployment.Business;
@@ -7,7 +10,7 @@ using InfoShare.Deployment.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using InfoShare.Deployment.Data.Exceptions;
-using InfoShare.Deployment.Tests.Extensions;
+using InfoShare.Deployment.Models;
 
 namespace InfoShare.Deployment.Tests.Data.Managers
 {
@@ -487,6 +490,153 @@ $@"<?xml version=""1.0"" encoding=""UTF-8""?>
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
-        #endregion
-    }
+		#endregion
+
+		#region Set Node
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void SetNode_New()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
+			var testFilePath = "bar.xml";
+
+			var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+										<menubar label='Event Log'>
+											<!-- Translation Jobs ============================================================= -->
+											<menuitem label='Translation' action='EventMonitor/Main/Overview' icon='icon.png'>
+												<userrole>Administrator</userrole>
+												<description>Translation Jobs</description>
+											</menuitem>
+											<!-- New tab added ================================== -->
+											<menuitem label='Publish' action='EventMonitor/Main/Overview' icon='icon.png'>
+												<userrole>Administrator</userrole>
+												<description>New tab added</description>
+											</menuitem>
+										</menubar>");
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "TEST_Label",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = "TEST_EventTypesFilter"
+				}
+			};
+
+			XComment comment = null;
+			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
+
+			FileManager.Load(testFilePath).Returns(doc);
+			FileManager.Save(testFilePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
+				}));
+
+			// Act
+			_xmlConfigManager.SetNode(testFilePath, testXPath, item);
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.IsNotNull(comment, "Comments was not added");
+			Assert.AreEqual(comment.Value, item.GetNodeComment().Value, "Comments was not correctly set");
+
+			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+			Assert.AreEqual(elements.Count, 2, "Elements are not set");
+			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
+			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void SetNode_Existing()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
+			var testFilePath = "bar.xml";
+
+			var commentValue = " New tab added ================================== ";
+			var doc = XDocument.Parse($@"<?xml version='1.0' encoding='UTF-8'?>
+									<menubar label='Event Log'>
+									  <!-- Translation Jobs ============================================================= -->
+									  <menuitem label='Translation' action='EventMonitor/Main/Overview' icon='icon.png'>
+										<userrole>Administrator</userrole>
+										<description>Translation Jobs</description>
+									  </menuitem>
+									  <!--{commentValue}-->
+									  <menuitem label='TEST_Label' action='EventMonitor/Main/Overview' icon='icon.png'>
+										<userrole>Administrator</userrole>
+										<description>New tab added</description>
+									  </menuitem>
+									</menubar>");
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "TEST_Label",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = "TEST_EventTypesFilter"
+				}
+			};
+
+			XComment comment = null;
+			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
+
+			FileManager.Load(testFilePath).Returns(doc);
+			FileManager.Save(testFilePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
+				}));
+
+			// Act
+			_xmlConfigManager.SetNode(testFilePath, testXPath, item);
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.IsNotNull(comment, "Comments was not added");
+
+			Assert.AreNotEqual(comment.Value, item.GetNodeComment().Value, "Comment should not be owerwriten");
+			Assert.AreEqual(comment.Value, commentValue, "Comments was not correctly set");
+
+			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+			Assert.AreEqual(elements.Count, 2, "Elements are not set");
+			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
+			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
+		}
+
+		#endregion
+	}
 }

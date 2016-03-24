@@ -28,6 +28,6 @@ bld/
 
 # TestResults
 Source/TestResults/
-/Source/InfoShare.Deployment.Documentation/Module/toc2.yml
-/Source/InfoShare.Deployment.Documentation/log.txt
-/Source/InfoShare.Deployment.Documentation/_site
+/Source/ISHDeploy.Documentation/Module/toc2.yml
+/Source/ISHDeploy.Documentation/log.txt
+/Source/ISHDeploy.Documentation/_site

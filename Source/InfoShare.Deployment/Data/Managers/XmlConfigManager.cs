@@ -109,22 +109,25 @@ namespace InfoShare.Deployment.Data.Managers
 		{
 			var doc = _fileManager.Load(filePath);
 
-			var node1 = doc.XPathSelectElement(xpath);
-			if (node1 == null)
+			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+			if (nodes.Length == 0)
 			{
-				_logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
 				return;
 			}
 
-			var node2 = !string.IsNullOrEmpty(insertBeforeXpath) ? doc.XPathSelectElement(insertBeforeXpath) : node1.Parent.FirstNode;
+			var node2 = !string.IsNullOrEmpty(insertBeforeXpath) ? doc.XPathSelectElement(insertBeforeXpath) : nodes.First().Parent.FirstNode;
 			if (node2 == null)
 			{
 				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
 				return;
 			}
 
-			node1.Remove();
-			node2.AddBeforeSelf(node1);
+			foreach (var nodeToMove in nodes)
+			{
+				nodeToMove.Remove();
+				node2.AddBeforeSelf(nodeToMove);
+			}
 
 			_fileManager.Save(filePath, doc);
 		}
@@ -139,22 +142,25 @@ namespace InfoShare.Deployment.Data.Managers
 	    {
 		    var doc = _fileManager.Load(filePath);
 
-		    var node1 = doc.XPathSelectElement(xpath);
-		    if (node1 == null)
-		    {
-			    _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
-			    return;
-		    }
+			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+			if (nodes.Length == 0)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+				return;
+			}
 
-			var node2 = !string.IsNullOrEmpty(insertAfterXpath) ? doc.XPathSelectElement(insertAfterXpath) : node1.Parent.LastNode;
+			var node2 = !string.IsNullOrEmpty(insertAfterXpath) ? doc.XPathSelectElement(insertAfterXpath) : nodes.First().Parent.LastNode;
 			if (node2 == null)
 			{
 				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
 				return;
 			}
 
-			node1.Remove();
-			node2.AddAfterSelf(node1);
+			foreach (var nodeToMove in nodes.Reverse())
+			{
+				nodeToMove.Remove();
+				node2.AddAfterSelf(nodeToMove);
+			}
 
 			_fileManager.Save(filePath, doc);
 		}
@@ -460,7 +466,20 @@ namespace InfoShare.Deployment.Data.Managers
 		/// </returns>
 		private XNode SelectSingleNode(ref XDocument doc, string xPath)
 		{
-			return ((IEnumerable<object>) doc.XPathEvaluate(xPath)).OfType<XNode>().Single();
+			return this.SelectNodes(ref doc, xPath).Single();
+		}
+
+		/// <summary>
+		/// Evaluates nodes from XPath
+		/// </summary>
+		/// <param name="doc">The document to node lookup.</param>
+		/// <param name="xPath">The xPath of node to be evaluated.</param>
+		/// <returns>
+		/// IEnumerable of XNodes from document.
+		/// </returns>
+		private IEnumerable<XNode> SelectNodes(ref XDocument doc, string xPath)
+		{
+			return ((IEnumerable<object>)doc.XPathEvaluate(xPath)).OfType<XNode>();
 		}
 
 		#endregion

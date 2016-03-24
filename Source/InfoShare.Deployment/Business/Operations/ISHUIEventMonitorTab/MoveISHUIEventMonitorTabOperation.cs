@@ -46,23 +46,22 @@ namespace InfoShare.Deployment.Business.Operations.ISHUIEventMonitorTab
             _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
 
 			string nodeXPath = String.Format(CommentPatterns.EventMonitorTab, label);
+			string nodeCommentXPath = nodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+
 			string targetNodeXPath = String.IsNullOrEmpty(targetLabel) ? null :  String.Format(CommentPatterns.EventMonitorTab, targetLabel);
 
-			string itemCommentXPath = nodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
-			string targetCommentXPath = targetNodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+			// Combile node and its xPath
+			string nodesToMoveXPath = nodeXPath + "|" + nodeCommentXPath;
 
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new InsertAfterNodeAction(logger, paths.EventMonitorMenuBar, nodeXPath, targetNodeXPath));
+					_invoker.AddAction(new InsertAfterNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodeXPath, targetNodeXPath));
+					_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
-
-			// After node is moved, we also should move its comment
-			_invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EventMonitorMenuBar, itemCommentXPath, nodeXPath));
 		}
 
         /// <summary>

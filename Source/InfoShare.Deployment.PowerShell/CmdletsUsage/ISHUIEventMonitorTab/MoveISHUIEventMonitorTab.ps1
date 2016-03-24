@@ -18,8 +18,8 @@ $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object InfoShare.Deployment.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-#Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First
+Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First
 
-#Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last
+Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last
 
-Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "P1" -After "P3"
+Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "P1" -After "Publish"

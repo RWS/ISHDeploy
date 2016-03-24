@@ -1,0 +1,66 @@
+﻿{
+  "build": {
+    "content": [
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Module",
+        "dest": "module/ISHDeploy"
+      },
+      {
+        "files": [ "**/*.md" ],
+        "cwd": "obj/doc/module/ISHDeploy",
+        "dest": "module/ISHDeploy"
+      },
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Using",
+        "dest": "Using"
+      },
+      {
+        "files": [ "**/*.md" ],
+        "cwd": "obj/doc/using",
+        "dest": "Using"
+      },
+      {
+        "files": [ "toc.yml" ],
+        "cwd": "Articles",
+        "dest": "Articles"
+      },
+      {
+        "files": [ "**/*.md" ],
+        "cwd": "obj/doc/articles",
+        "dest": "Articles"
+      },
+      {
+        "files": [ "**.md", "toc.yml" ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [ "**/images/**" ]
+      },
+      {
+        "files": "web.config"
+      },
+      {
+        "files": [ "**/*.ps1" ],
+        "cwd": "obj/doc/using",
+        "dest": "Using"
+      },
+      {
+        "files": [ "**/*.ps1" ],
+        "cwd": "obj/doc/articles",
+        "exclude": [ "**/_nopublish/**" ],
+        "dest": "Articles"
+      }
+    ],
+    "externalReference": [
+    ],
+    "globalMetadata": {
+    },
+    "template": [
+      "default"
+    ],
+    "dest": "_site"
+  }
+}

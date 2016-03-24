@@ -11,7 +11,7 @@ $targetPath = "\\$targetPC\C$\Users\$env:USERNAME\Documents\WindowsPowerShell\Mo
 $session = New-PSSession -ComputerName $targetPC 
 
 #Kill all powershell instances of powershell on remote PC. It will allow to copy dll. Also kills session
-Invoke-Command -ScriptBlock {C:\Users\$env:USERNAME\Documents\AutomatedTests\kill_powershell.bat} -Session $session
+Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $session
 
 #Create session again
 $session = New-PSSession -ComputerName $targetPC 

@@ -13,11 +13,13 @@ $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition 
 Copy-Item "$executingScriptDirectory\ISHInstall.ps1" $targetPath -force 
 Copy-Item "$executingScriptDirectory\ISHReinstaller.ps1" $targetPath -force 
 Copy-Item "$executingScriptDirectory\ISHUninstall.ps1" $targetPath -force
+Copy-Item "$executingScriptDirectory\kill_powershell.bat" $targetPath -force
 
-#Copy test scripts from CI to remote PC
+#Get folder with automation tests 
 $testsFolder = Join-Path (get-item $executingScriptDirectory ).parent.FullName "AutomationTests"
 $testScripts = gci $testsFolder
-Copy-Item "$executingScriptDirectory\kill_powershell.bat" $testsFolder -force
+
+#Copy test scripts from CI to remote PC
 
 foreach($testScript in $testScripts){
 	

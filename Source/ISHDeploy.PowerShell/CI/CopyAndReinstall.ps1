@@ -1,12 +1,36 @@
 ﻿param(
-[string] $targetPC
+[string] $targetPC,
+[string] $artifactPath
 )
 
 #Create session to remote PC
 $session = New-PSSession -ComputerName $targetPC
 
-#Set up target path for infoshareserviceuser for dll
-$targetPath = "\\$targetPC\C$\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\InfoShare.Deployment"
+#Set up target path for dll
+$targetPath = "\\$targetPC\C$\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\ISHDeploy"
+
+#In case if there is no folder for module - create it
+if (!(Test-Path -path $targetPath)) {New-Item $targetPath -Type Directory}
+
+#Create session to remote PC
+$session = New-PSSession -ComputerName $targetPC 
+
+#Kill all powershell instances of powershell on remote PC. It will allow to copy dll. Also kills session
+Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $session
+
+#Create session again
+$session = New-PSSession -ComputerName $targetPC 
+
+#Get all artifacts in folder
+$artifacts = gci $artifactPath
+
+#Copy artifacts, that match pattern "ISHDeploy*" to remote pc
+foreach ($artifact in $artifacts){
+    Copy-Item  "$artifact" "$targetPath" -force
+	
+}
+
+
 #Get local folder with scripts
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 #Copy scripts for installing
@@ -23,9 +47,11 @@ $testScripts = gci $testsFolder
 
 foreach($testScript in $testScripts){
 	
-	Copy-Item $testsFolder\$testScript \\$targetPC\C$\Users\$env:USERNAME\Documents\AutomatedTests -Force
+	Copy-Item "$testsFolder\$testScript" "\\$targetPC\C$\Users\$env:USERNAME\Documents\AutomatedTests" -Force
     
 }
+ 
+Invoke-Command -ScriptBlock { & "C:\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\InfoShare.Deployment\ISHReinstaller.ps1"} -Session $session
 
-
-Invoke-Command -ScriptBlock {C:\Users\$env:USERNAME\Documents\WindowsPowerShell\Modules\InfoShare.Deployment\ISHReinstaller.ps1} -Session $session
+#Kill session
+Remove-PSSession -Session $session

@@ -538,7 +538,8 @@ namespace ISHDeploy.Tests.Data.Managers
 
 		#region Nodes Manipulation
 
-		private string testXmlDoc = $@"<?xml version='1.0' encoding='UTF-8'?>
+
+		private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
 										<menubar>
 										  <!-- Synchronize To LiveContent ============================================================= -->
 										  <menuitem label='Synch To Collaborative Review' action='EventMonitor/Main/Overview?' icon='~/UIFramework/synchronization.32.color.png'>
@@ -565,7 +566,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Arrange
 			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			var item = new EventLogMenuItem()
 			{
@@ -623,7 +624,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
 
 			var commentValue = " Thumbnails ============================================================= ";
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			var item = new EventLogMenuItem()
 			{
@@ -683,7 +684,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			string testLabel = "All Events";
 			string insertBeforeLabel = "Thumbnails";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			string[] labels = null;
 
@@ -715,7 +716,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Arrange
 			string testLabel = "All Events";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			string[] labels = null;
 
@@ -746,7 +747,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			string testLabel = "Thumbnails";
 			string insertBeforeLabel = "All Events";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			string[] labels = null;
 
@@ -778,7 +779,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Arrange
 			string testLabel = "Thumbnails";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			string[] labels = null;
 
@@ -808,7 +809,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Arrange
 			string testLabel = "Thumbnails";
 
-			var doc = XDocument.Parse(testXmlDoc);
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
 
 			string[] labels = null;
 

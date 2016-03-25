@@ -59,9 +59,11 @@
     <None Include="AutomationTests\ISHUITranslationJob.ps1" />
     <None Include="AutomationTests\TestInitializer.ps1" />
     <None Include="AutomationTests\UndoISHDeployment.ps1" />
+    <None Include="CI\CopyAndReinstall.ps1" />
     <None Include="CI\ISHInstall.ps1" />
     <None Include="CI\ISHReinstaller.ps1" />
     <None Include="CI\ISHUninstall.ps1" />
+    <None Include="CI\kill_powershell.bat" />
     <None Include="CI\TestRuner.ps1" />
     <None Include="CmdletsUsage\Info\Get-Version.ps1" />
     <None Include="CmdletsUsage\Info\Info.md" />

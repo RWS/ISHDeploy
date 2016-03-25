@@ -26,7 +26,8 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
 
 			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfig));
 			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegration));
-		}
+            _invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EnrichWebConfig, CommentPatterns.EnrichBluelionWebConfigJsonMimeMapXPath, CommentPatterns.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
+        }
 
         /// <summary>
         /// Runs current operation.

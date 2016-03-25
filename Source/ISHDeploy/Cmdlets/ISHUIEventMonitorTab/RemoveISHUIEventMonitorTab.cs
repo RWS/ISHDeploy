@@ -5,9 +5,18 @@ using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// 
+	/// <para type="synopsis">Removes tab from EventMonitorTab.</para>
+	/// <para type="description">The Removes-ISHUIEventMonitorTab cmdlet removes Tabs definitions from Content Manager deployment.</para>
+	/// <para type="link">Set-ISHUIEventMonitorTab</para>
+	/// <para type="link">Move-ISHUIEventMonitorTab</para>
 	/// </summary>
-    [Cmdlet(VerbsCommon.Remove, "ISHUIEventMonitorTab")]
+	/// <example>
+	/// <code>PS C:\>Remove-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Translation"</code>
+	/// <para>Removes definition of the tab with label "Translation".</para>
+	/// <para>This command removes XML definitions from EventMonitor.
+	/// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+	/// </example>
+	[Cmdlet(VerbsCommon.Remove, "ISHUIEventMonitorTab")]
     public class RemoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

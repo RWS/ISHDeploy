@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 using ISHDeploy.Models;
@@ -8,9 +6,18 @@ using ISHDeploy.Models;
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// 
+	/// <para type="synopsis">Update or adda new EventMonitor tab.</para>
+	/// <para type="description">The Set-ISHUIEventMonitorTab cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
+	/// <para type="link">Move-ISHUIEventMonitorTab</para>
+	/// <para type="link">Remove-ISHUIEventMonitorTab</para>
 	/// </summary>
-    [Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
+	/// <example>
+	/// <code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "NewTab" -Icon "~/new-tab.job.32x32.png" -EventTypesFilter "TRANSLATIONJOB" -StatusFilter "All" -SelectedMenuItemTitle "Tab" -ModifiedSinceMinutesFilter "3600" -SelectedButtonTitle "Button" -UserRole "Administrator" -Description "Tab added"</code>
+	/// <para>Sets new tab with provided parameters.</para>
+	/// <para>This command sets XML definitions to EventMonitor.
+	/// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+	/// </example>
+	[Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
     public class SetISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

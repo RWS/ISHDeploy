@@ -78,11 +78,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">The file to delete.</param>
 		void Delete(string filePath);
 
-	    /// <summary>
-	    /// Cleans up the folder
-	    /// </summary>
-	    /// <param name="folderPath">Path to folder to be cleaned up</param>
-	    void CleanFolder(string folderPath);
+        /// <summary>
+        /// Create folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be created</param>
+        void CreateDirectory(string folderPath);
+
+        /// <summary>
+        /// Cleans up the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be cleaned up</param>
+        void CleanFolder(string folderPath);
 
 		/// <summary>
 		/// Delete the folder

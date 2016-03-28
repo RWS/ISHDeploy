@@ -29,23 +29,33 @@ namespace ISHDeploy.Extensions
 			return ishDeploymentFolder;
 		}
 
-		/// <summary>
-		/// Retrieves back up folder location for deployment
-		/// </summary>
-		/// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
-		/// <returns>Path to back up folder</returns>
-		public static string GetDeploymentBackupFolder(this ISHDeployment deployment)
+        /// <summary>
+        /// Retrieves path to packages folder for deployment
+        /// </summary>
+        /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
+        /// <returns>Path to back up folder</returns>
+        public static string GetDeploymenPackagesFolderPath(this ISHDeployment deployment)
 		{
-			return Path.Combine(deployment.GetDeploymentAppDataFolder(), "Backup");
-		}
+			return Path.Combine(deployment.GetDeploymentAppDataFolder(), "Packages");
+        }
 
-		/// <summary>
-		/// Retrieves back up folder location for deployment depending from deployment type
-		/// </summary>
-		/// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
-		/// <param name="deploymentType">Deployment type <see cref="T:ISHDeploy.Business.ISHPaths.IshDeploymentType"/>.</param>
-		/// <returns>Path to back up folder depending from deployment type</returns>
-		public static string GetDeploymentTypeBackupFolder(this ISHDeployment deployment, ISHPaths.IshDeploymentType deploymentType)
+        /// <summary>
+        /// Retrieves back up folder location for deployment
+        /// </summary>
+        /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
+        /// <returns>Path to back up folder</returns>
+        public static string GetDeploymentBackupFolder(this ISHDeployment deployment)
+        {
+            return Path.Combine(deployment.GetDeploymentAppDataFolder(), "Backup");
+        }
+
+        /// <summary>
+        /// Retrieves back up folder location for deployment depending from deployment type
+        /// </summary>
+        /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
+        /// <param name="deploymentType">Deployment type <see cref="T:ISHDeploy.Business.ISHPaths.IshDeploymentType"/>.</param>
+        /// <returns>Path to back up folder depending from deployment type</returns>
+        public static string GetDeploymentTypeBackupFolder(this ISHDeployment deployment, ISHPaths.IshDeploymentType deploymentType)
 		{
 			return Path.Combine(deployment.GetDeploymentBackupFolder(), deploymentType.ToString());
 		}

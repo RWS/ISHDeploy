@@ -1,5 +1,6 @@
-﻿using ISHDeploy.Models;
+﻿using System;
 using System.IO;
+using ISHDeploy.Models;
 using ISHDeploy.Extensions;
 
 namespace ISHDeploy.Business
@@ -131,10 +132,30 @@ namespace ISHDeploy.Business
         public string HistoryFilePath => Path.Combine(_ishDeployment.GetDeploymentAppDataFolder(), "History.ps1");
 
         /// <summary>
+        /// Path to packages folder
+        /// </summary>
+        public string PackagesFolderPath => _ishDeployment.GetDeploymenPackagesFolderPath();
+
+        /// <summary>
+        /// UNC path to packages folder
+        /// </summary>
+        public string PackagesFolderUNCPath => ConvertLocalFolderPathToUNCPath(_ishDeployment.GetDeploymenPackagesFolderPath());
+
+        /// <summary>
         /// Deployment name
         /// </summary>
         public string DeploymentName => _ishDeployment.Name;
 
         #endregion
+
+        /// <summary>
+        /// Converts the local folder path to UNC path.
+        /// </summary>
+        /// <param name="localPath">The local path.</param>
+        /// <returns></returns>
+        public string ConvertLocalFolderPathToUNCPath(string localPath)
+        {
+            return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
+        }
     }
 }

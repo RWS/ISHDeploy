@@ -70,13 +70,22 @@ namespace ISHDeploy.Data.Managers
 			}
 
 			File.Delete(path);
-		}
+        }
 
-		/// <summary>
-		/// Cleans up the folder
-		/// </summary>
-		/// <param name="folderPath">Path to folder to be cleaned up</param>
-		public void CleanFolder(string folderPath)
+        /// <summary>
+        /// Create folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be created</param>
+        public void CreateDirectory(string folderPath)
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        /// <summary>
+        /// Cleans up the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be cleaned up</param>
+        public void CleanFolder(string folderPath)
 		{
 			if (Directory.Exists(folderPath))
 			{

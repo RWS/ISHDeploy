@@ -47,16 +47,16 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		public string Label { get; set; }
 
 		/// <summary>
-		/// <para type="description">Label of menu item.</para>
+		/// <para type="description">Menu item move to the last position.</para>
 		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Menu item move position", ParameterSetName = "Last")]
+		[Parameter(Mandatory = false, HelpMessage = "Menu item move to the last position", ParameterSetName = "Last")]
 		[ValidateNotNullOrEmpty]
 		public SwitchParameter Last  { get; set; }
 
 		/// <summary>
-		/// <para type="description">Label of menu item.</para>
+		/// <para type="description">Menu item move to the first position.</para>
 		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Menu item move position", ParameterSetName = "First")]
+		[Parameter(Mandatory = false, HelpMessage = "Menu item move to the first position", ParameterSetName = "First")]
 		[ValidateNotNullOrEmpty]
 		public SwitchParameter First  { get; set; }
 

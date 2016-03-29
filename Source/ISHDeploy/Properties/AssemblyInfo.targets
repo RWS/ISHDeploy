@@ -2,12 +2,12 @@
   <!-- Overriding the Microsoft.CSharp.targets target dependency chain -->
   <!-- Call our custom AssemblyVersion target before build, even from VS -->
 
-  <!--<PropertyGroup>
+  <PropertyGroup>
     <BuildDependsOn>
       AssemblyVersion;
       $(BuildDependsOn)
     </BuildDependsOn>
-  </PropertyGroup>-->
+  </PropertyGroup>
 
   <ItemGroup>
     <AssemblyVersionFiles Include="$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs"/>
@@ -25,8 +25,8 @@
                   AssemblyCompany="$(ModuleCompany)"
                   AssemblyProduct="$(ModuleProduct)"
                   AssemblyCopyright="$(ModuleCopyright)"
-                  AssemblyVersion="$(Version)"
-                  AssemblyFileVersion="$(Version)">
+                  AssemblyVersion="$(ModuleVersion)"
+                  AssemblyFileVersion="$(ModuleVersion)">
       <Output TaskParameter="OutputFile"
               ItemName="UpdatedAssemblyVersionFiles"/>
     </AssemblyInfo>

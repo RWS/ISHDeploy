@@ -1,4 +1,4 @@
-﻿# Working with the InfoShare.Deployment module
+﻿# Working with the ISHDeploy module
  
 This article explains how to work with available deployments on a server
  

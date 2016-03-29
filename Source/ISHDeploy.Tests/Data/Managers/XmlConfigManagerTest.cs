@@ -580,7 +580,7 @@ namespace ISHDeploy.Tests.Data.Managers
 					ModifiedSinceMinutesFilter = 8888,
 					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
 					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = "TEST_EventTypesFilter"
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
 				}
 			};
 
@@ -638,7 +638,7 @@ namespace ISHDeploy.Tests.Data.Managers
 					ModifiedSinceMinutesFilter = 8888,
 					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
 					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = "TEST_EventTypesFilter"
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
 				}
 			};
 

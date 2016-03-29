@@ -18,4 +18,10 @@ $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deploy = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "2NewTab" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter "TRANSLATIONJOB, NON-TRANSLATIONJOB" -StatusFilter "All" -SelectedMenuItemTitle "New Tab" -ModifiedSinceMinutesFilter "3600" -SelectedButtonTitle "New Tab Button" -UserRole "Administrator" -Description "New tab added"
+$filterTypes = @("JOB", "NON-JOB", "UN-JOB")
+
+# Using all parameters
+Set-ISHUIEventMonitorTab -ISHDeployment $deploy  -Label "2NewTab" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter $filterTypes -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "New tab added"
+
+# Using default parameters
+Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "9 New Tab" -EventTypesFilter $filterTypes  -Description "New tab added"

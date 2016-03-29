@@ -25,3 +25,6 @@ Set-ISHUIEventMonitorTab -ISHDeployment $deploy  -Label "2NewTab" -Icon "~/UIFra
 
 # Using default parameters
 Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "9 New Tab" -EventTypesFilter $filterTypes  -Description "New tab added"
+
+#Checking existing Icon
+Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "9 New Tab" -EventTypesFilter $filterTypes  -Description "New tab added" -Icon "C:\Trisoft\RnDProjects\Trisoft\Dev\Resources\UIFramework\warning.32x32.png"

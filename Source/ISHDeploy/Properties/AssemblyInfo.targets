@@ -1,0 +1,34 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Default" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Overriding the Microsoft.CSharp.targets target dependency chain -->
+  <!-- Call our custom AssemblyVersion target before build, even from VS -->
+
+  <!--<PropertyGroup>
+    <BuildDependsOn>
+      AssemblyVersion;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+  </PropertyGroup>-->
+
+  <ItemGroup>
+    <AssemblyVersionFiles Include="$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs"/>
+  </ItemGroup>
+
+  <Target Name="AssemblyVersion"
+          Inputs="@(AssemblyVersionFiles)"
+          Outputs="UpdatedAssemblyVersionFiles">
+    <Attrib Files="%(AssemblyVersionFiles.FullPath)"
+            Normal="true"/>
+    <AssemblyInfo CodeLanguage="CS"
+                  OutputFile="%(AssemblyVersionFiles.FullPath)"
+                  AssemblyTitle="$(ModuleName)"
+                  AssemblyDescription="$(ModuleDescription)"
+                  AssemblyCompany="$(ModuleCompany)"
+                  AssemblyProduct="$(ModuleProduct)"
+                  AssemblyCopyright="$(ModuleCopyright)"
+                  AssemblyVersion="$(Version)"
+                  AssemblyFileVersion="$(Version)">
+      <Output TaskParameter="OutputFile"
+              ItemName="UpdatedAssemblyVersionFiles"/>
+    </AssemblyInfo>
+  </Target>
+</Project>

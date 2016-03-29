@@ -1,20 +1,20 @@
-﻿#Variables
-$directory = $args[0].trim('"');
+﻿param([String]$outputpath, [String]$modulename)
 
-#Get PS module path
+# Remove quotes
+$outputpath = $outputpath.trim("'");
+
+# Get PS module path
 [array]$modulepath = $env:PSModulePath.Split(";")
 if ($modulepath) {
 	$modulepath = $modulepath[0]
 }
 
-#Create directory if necessary
-if ((Test-Path -path "$modulepath\ISHDeploy") -ne $True)
+# Create directory if necessary
+if ((Test-Path -path "$modulepath\$modulename") -ne $True)
 {
-	New-Item "$modulepath\ISHDeploy" -type directory
+	New-Item "$modulepath\$modulename" -type directory
 }
 
-#Copy files
-Copy-Item (Join-Path $directory "ISHDeploy.dll") "$modulepath/ISHDeploy" -Force
-Copy-Item (Join-Path $directory "ISHDeploy.pdb") "$modulepath/ISHDeploy" -Force
-Copy-Item (Join-Path $directory "ISHDeploy.dll-help.xml") "$modulepath/ISHDeploy" -Force
-#Copy-Item (Join-Path $directory "ISHDeploy.psd1") "$modulepath/ISHDeploy/ISHDeploy.psd1" -Force
+# Copy files to WindowsPowerShell directory
+Get-ChildItem -Path $outputpath -Filter ("$modulename*") | Copy-Item -Destination "$modulepath\$modulename" -Force
+

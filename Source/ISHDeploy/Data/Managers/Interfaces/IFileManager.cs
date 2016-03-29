@@ -79,7 +79,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		void Delete(string filePath);
 
         /// <summary>
-        /// Create folder
+        /// Creates folder
         /// </summary>
         /// <param name="folderPath">Path to folder to be created</param>
         void CreateDirectory(string folderPath);

@@ -152,8 +152,8 @@ namespace ISHDeploy.Business
         /// Converts the local folder path to UNC path.
         /// </summary>
         /// <param name="localPath">The local path.</param>
-        /// <returns></returns>
-        public string ConvertLocalFolderPathToUNCPath(string localPath)
+        /// <returns>Path to folder in UTC format</returns>
+        private static string ConvertLocalFolderPathToUNCPath(string localPath)
         {
             return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
         }

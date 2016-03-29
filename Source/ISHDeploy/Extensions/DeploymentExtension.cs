@@ -33,7 +33,7 @@ namespace ISHDeploy.Extensions
         /// Retrieves path to packages folder for deployment
         /// </summary>
         /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
-        /// <returns>Path to back up folder</returns>
+        /// <returns>Path to packages folder</returns>
         public static string GetDeploymenPackagesFolderPath(this ISHDeployment deployment)
 		{
 			return Path.Combine(deployment.GetDeploymentAppDataFolder(), "Packages");

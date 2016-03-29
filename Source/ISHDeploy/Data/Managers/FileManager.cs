@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Create folder
+        /// Creates the folder
         /// </summary>
         /// <param name="folderPath">Path to folder to be created</param>
         public void CreateDirectory(string folderPath)
@@ -87,7 +87,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="folderPath">Path to folder to be cleaned up</param>
         public void CleanFolder(string folderPath)
 		{
-			if (Directory.Exists(folderPath))
+			if (this.Exists(folderPath))
 			{
 				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
 				{
@@ -108,7 +108,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
-			if (Directory.Exists(folderPath))
+			if (this.Exists(folderPath))
 			{
 				Directory.Delete(folderPath, recursive);
 			}
@@ -120,9 +120,9 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="folderPath">Directory path to verify</param>
 		public void EnsureDirectoryExists(string folderPath)
 		{
-			if (!Directory.Exists(folderPath))
+			if (!this.Exists(folderPath))
 			{
-				Directory.CreateDirectory(folderPath);
+                this.CreateDirectory(folderPath);
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="destinationPath">Destination folder path</param>
 		public void CopyDirectoryContent(string sourcePath, string destinationPath)
 		{
-			if (Directory.Exists(sourcePath))
+			if (this.Exists(sourcePath))
 			{
 				//Copy all the files & Replaces any files with the same name
 				foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))

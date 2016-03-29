@@ -48,6 +48,8 @@
     <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
+    <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="AutomationTests\ClearISHDeploymentHistory.ps1" />
     <None Include="AutomationTests\Common.ps1" />
     <None Include="AutomationTests\Get-ISHDeployment.ps1" />

@@ -116,17 +116,36 @@ namespace ISHDeploy.Data.Managers
 				return;
 			}
 
-			var node2 = !string.IsNullOrEmpty(insertBeforeXpath) ? doc.XPathSelectElement(insertBeforeXpath) : nodes.First().Parent.FirstNode;
-			if (node2 == null)
+			XNode insertBeforeNode = null;
+			if (string.IsNullOrEmpty(insertBeforeXpath))
 			{
-				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				// In this case we need to add node to the top of the document
+				var parentNode = nodes.First().Parent;
+				if (parentNode != null)
+				{
+					insertBeforeNode = parentNode.FirstNode;
+				}
+			}
+			else
+			{
+				insertBeforeNode = doc.XPathSelectElement(insertBeforeXpath);
+			}
+
+			if (insertBeforeNode == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert before");
 				return;
 			}
 
-			foreach (var nodeToMove in nodes)
+			foreach (var nodeToMove in nodes.Reverse())
 			{
-				nodeToMove.Remove();
-				node2.AddBeforeSelf(nodeToMove);
+				if (nodeToMove != insertBeforeNode)
+				{
+					nodeToMove.Remove();
+					insertBeforeNode.AddBeforeSelf(nodeToMove);
+
+					insertBeforeNode = nodeToMove;
+				}
 			}
 
 			_fileManager.Save(filePath, doc);
@@ -149,17 +168,36 @@ namespace ISHDeploy.Data.Managers
 				return;
 			}
 
-			var node2 = !string.IsNullOrEmpty(insertAfterXpath) ? doc.XPathSelectElement(insertAfterXpath) : nodes.First().Parent.LastNode;
-			if (node2 == null)
+	        XNode insertAfterNode = null;
+	        if (string.IsNullOrEmpty(insertAfterXpath))
+	        {
+				// In this case we need to add node to the bottom of the document
+		        var parentNode = nodes.First().Parent;
+		        if (parentNode != null)
+		        {
+			        insertAfterNode = parentNode.LastNode;
+		        }
+	        }
+	        else
+	        {
+				insertAfterNode = doc.XPathSelectElement(insertAfterXpath);
+			}
+
+			if (insertAfterNode == null)
 			{
-				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert after");
 				return;
 			}
 
-			foreach (var nodeToMove in nodes.Reverse())
+			foreach (var nodeToMove in nodes)
 			{
-				nodeToMove.Remove();
-				node2.AddAfterSelf(nodeToMove);
+				if (nodeToMove != insertAfterNode)
+				{
+					nodeToMove.Remove();
+					insertAfterNode.AddAfterSelf(nodeToMove);
+
+					insertAfterNode = nodeToMove;
+				}
 			}
 
 			_fileManager.Save(filePath, doc);

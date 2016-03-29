@@ -1,21 +1,10 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-<<<<<<< HEAD
-    <Major>0</Major>
-    <Minor>0</Minor>
-    <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
-    <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
-    <Revision>0</Revision>
-    <ShortModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ShortModuleVersion>
-    <FullModuleVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleVersion>
-=======
-    <ModuleVersion>1.0.0.0</ModuleVersion>
-      <Major>0</Major>
+    <Major>1</Major>
       <Minor>0</Minor>
-      <Build>0</Build>
+    <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
       <Revision>0</Revision>
-    
->>>>>>> Added file Build.props that contains all the variables that might be different for all branches.
+    <ModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ModuleVersion>
     <ModuleName>ISHDeploy.12.0</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>$(ModuleTitle) 2016</ModuleDescription>

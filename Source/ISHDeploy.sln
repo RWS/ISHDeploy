@@ -14,11 +14,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISHDeploy.Documentation", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISHDeploy.PowerShell", "ISHDeploy.PowerShell\ISHDeploy.PowerShell.csproj", "{B45A95C6-90B0-4921-B2D0-6FDA9AE6333B}"
 EndProject
+<<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5592E89-B78B-4FBB-A60B-AACF84C5C99F}"
+=======
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{13CE6D62-C84F-4934-A3C7-4D577CA97E9C}"
+>>>>>>> Added file Build.props that contains all the variables that might be different for all branches.
 	ProjectSection(SolutionItems) = preProject
 		Build.props = Build.props
 	EndProjectSection
 EndProject
+<<<<<<< HEAD
+=======
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{D56CCBE2-7E9C-411B-81EA-E4281256A840}"
+	ProjectSection(SolutionItems) = preProject
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
+EndProject
+>>>>>>> Added file Build.props that contains all the variables that might be different for all branches.
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

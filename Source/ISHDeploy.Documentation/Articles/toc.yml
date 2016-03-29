@@ -4,3 +4,7 @@
     items:
       - name: On premise
         href: ../obj/doc/articles/IntegrationSTS/On premise ADFS/Integrate Vanilla with ADFS.md
+- name: Work with deployments
+  href: ../obj/doc/articles/Module/Work with deployments.md
+- name: Work with UI Features
+  href: ../obj/doc/articles/FeatureToggle/Work with UI Features.md

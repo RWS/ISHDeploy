@@ -48,6 +48,8 @@
     <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
+    <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="AutomationTests\ClearISHDeploymentHistory.ps1" />
     <None Include="AutomationTests\Common.ps1" />
     <None Include="AutomationTests\Get-ISHDeployment.ps1" />
@@ -59,10 +61,12 @@
     <None Include="AutomationTests\ISHUITranslationJob.ps1" />
     <None Include="AutomationTests\TestInitializer.ps1" />
     <None Include="AutomationTests\UndoISHDeployment.ps1" />
+    <None Include="CI\CopyAndReinstall.ps1" />
     <None Include="CI\ISHInstall.ps1" />
     <None Include="CI\ISHReinstaller.ps1" />
     <None Include="CI\ISHUninstall.ps1" />
-    <None Include="CI\TestRuner.ps1" />
+    <None Include="CI\kill_powershell.bat" />
+    <None Include="CI\TestRunner.ps1" />
     <None Include="CmdletsUsage\Info\Get-Version.ps1" />
     <None Include="CmdletsUsage\Info\Info.md" />
     <None Include="CmdletsUsage\ISHContentEditor\ISHContentEditor.md" />
@@ -73,6 +77,8 @@
     <None Include="CmdletsUsage\ISHExternalPreview\DisableExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\EnableExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\ISHExternalPreview.md" />
+    <None Include="CmdletsUsage\ISHPackage\GetISHPackageFolderPathCmdlet.ps1" />
+    <None Include="CmdletsUsage\ISHPackage\ISHISHPackageFolderPath.md" />
     <None Include="CmdletsUsage\ISHUIContentEditor\DisableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\EnableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\ISHUIContentEditor.md" />

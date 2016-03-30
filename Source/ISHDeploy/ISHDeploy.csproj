@@ -54,6 +54,7 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTab.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.cs" />
+    <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />

@@ -28,7 +28,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="path">The file to check.</param>
         /// <returns>true if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
-        bool Exists(string path);
+        bool FileExists(string path);
+
+        /// <summary>
+        /// Determines whether the specified folder exists.
+        /// </summary>
+        /// <param name="path">The folder to check.</param>
+        /// <returns>True if folder exists</returns>
+        bool FolderExists(string path);
 
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.

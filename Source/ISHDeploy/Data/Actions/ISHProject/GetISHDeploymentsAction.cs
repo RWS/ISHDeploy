@@ -96,7 +96,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
                 var installParamFile = Path.Combine(installParamsPath, InputParametersFileName);
 
-                if (!_fileManager.Exists(installParamFile))
+                if (!_fileManager.FileExists(installParamFile))
                 {
                     Logger.WriteError(new CorruptedInstallationException($"{ installParamFile } file does not exist on the system"), installParamFile);
                     continue;

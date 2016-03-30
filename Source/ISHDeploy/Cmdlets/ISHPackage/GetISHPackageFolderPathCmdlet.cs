@@ -6,7 +6,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
     /// <para type="synopsis">Gets the path of a folder where the commandlets output files or packages or use them as input.</para>
-    /// <para type="description">The Get-ISHPackageFolderPath cmdlet gets the path to packages folder used by module. This folder is specific per deployment.
+    /// <para type="description">The Get-ISHPackageFolderPath cmdlet gets the path of a folder where the commandlets output files or packages or use them as input. This folder is specific per deployment.
     /// The folder contains archives or files that were created as output of other cmdlets of the module.
     /// The folder contains also archives or files that are used as input to other cmdlets of the module.</para>
     /// </summary>

@@ -35,7 +35,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var historyFilePath = new ISHPaths(ISHDeployment).HistoryFilePath;
 
-            if (!fileManager.Exists(historyFilePath))
+            if (!fileManager.FileExists(historyFilePath))
             {
                 return;
             }

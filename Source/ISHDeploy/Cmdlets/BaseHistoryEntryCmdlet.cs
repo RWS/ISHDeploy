@@ -52,7 +52,7 @@ namespace ISHDeploy.Cmdlets
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var historyEntry = new StringBuilder();
             
-            if (!fileManager.Exists(IshPaths.HistoryFilePath)) // create history file with initial record
+            if (!fileManager.FileExists(IshPaths.HistoryFilePath)) // create history file with initial record
             {
                 historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{IshPaths.DeploymentName}'");

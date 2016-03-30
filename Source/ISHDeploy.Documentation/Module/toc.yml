@@ -20,6 +20,8 @@
   href: ../obj/doc/module/ISHDeploy/Get-ISHDeployment.md
 - name: Get-ISHDeploymentHistory
   href: ../obj/doc/module/ISHDeploy/Get-ISHDeploymentHistory.md
+- name: Get-ISHPackageFolderPath
+  href: ../obj/doc/module/ISHDeploy/Get-ISHPackageFolderPath.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/ISHDeploy/Set-ISHContentEditor.md
 - name: Test-ISHContentEditor

@@ -52,16 +52,26 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="path">The file to check.</param>
         /// <returns>True if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
-        public bool Exists(string path)
+        public bool FileExists(string path)
         {
             return File.Exists(path);
         }
 
-		/// <summary>
-		///	Deletes file
-		/// </summary>
-		/// <param name="path">Path to the file to be deleted</param>
-		public void Delete(string path)
+        /// <summary>
+        /// Determines whether the specified folder exists.
+        /// </summary>
+        /// <param name="path">The folder to check.</param>
+        /// <returns>True if folder exists</returns>
+        public bool FolderExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        /// <summary>
+        ///	Deletes file
+        /// </summary>
+        /// <param name="path">Path to the file to be deleted</param>
+        public void Delete(string path)
 		{
 			FileInfo fileInfo = new FileInfo(path);
 			if (fileInfo.IsReadOnly)
@@ -70,15 +80,24 @@ namespace ISHDeploy.Data.Managers
 			}
 
 			File.Delete(path);
-		}
+        }
 
-		/// <summary>
-		/// Cleans up the folder
-		/// </summary>
-		/// <param name="folderPath">Path to folder to be cleaned up</param>
-		public void CleanFolder(string folderPath)
+        /// <summary>
+        /// Creates the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be created</param>
+        public void CreateDirectory(string folderPath)
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        /// <summary>
+        /// Cleans up the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be cleaned up</param>
+        public void CleanFolder(string folderPath)
 		{
-			if (Directory.Exists(folderPath))
+			if (this.FolderExists(folderPath))
 			{
 				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
 				{
@@ -99,7 +118,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
-			if (Directory.Exists(folderPath))
+			if (this.FolderExists(folderPath))
 			{
 				Directory.Delete(folderPath, recursive);
 			}
@@ -111,9 +130,9 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="folderPath">Directory path to verify</param>
 		public void EnsureDirectoryExists(string folderPath)
 		{
-			if (!Directory.Exists(folderPath))
+			if (!this.FolderExists(folderPath))
 			{
-				Directory.CreateDirectory(folderPath);
+                this.CreateDirectory(folderPath);
 			}
 		}
 
@@ -124,7 +143,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="destinationPath">Destination folder path</param>
 		public void CopyDirectoryContent(string sourcePath, string destinationPath)
 		{
-			if (Directory.Exists(sourcePath))
+			if (this.FolderExists(sourcePath))
 			{
 				//Copy all the files & Replaces any files with the same name
 				foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))

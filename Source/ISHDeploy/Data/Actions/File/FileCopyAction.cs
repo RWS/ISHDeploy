@@ -70,7 +70,7 @@ namespace ISHDeploy.Data.Actions.File
 
 			var copiedFileName = Path.Combine(_destinationPath, fileName);
 
-			if (_fileManager.Exists(copiedFileName))
+			if (_fileManager.FileExists(copiedFileName))
 		    {
 				_fileManager.Delete(copiedFileName);
 			}

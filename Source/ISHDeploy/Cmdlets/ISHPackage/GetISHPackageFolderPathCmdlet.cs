@@ -5,9 +5,10 @@ using ISHDeploy.Business;
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
-    /// <para type="synopsis">Gets the path to Packages folder for Content Manager deployment.</para>
-    /// <para type="description">The Get-ISHPackageFolderPath cmdlet returns the path to folder to use by the module specific to a deployment. The folder contains archives or 
-    /// files that were created as output of other cmdlets of the module. The folder contains also archives or files that are used as input to other cmdlets of the module.</para>
+    /// <para type="synopsis">Gets the path of a folder where the commandlets output files or packages or use them as input.</para>
+    /// <para type="description">The Get-ISHPackageFolderPath cmdlet gets the path to packages folder used by module. This folder is specific per deployment.
+    /// The folder contains archives or files that were created as output of other cmdlets of the module.
+    /// The folder contains also archives or files that are used as input to other cmdlets of the module.</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHPackageFolderPath -ISHDeployment $deployment -UNC</code>
@@ -26,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// <summary>
         /// <para type="description">Return path in UNC format.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Result path format", ParameterSetName = "UNC")]
+        [Parameter(Mandatory = false, HelpMessage = "Result path format")]
         public SwitchParameter UNC { get; set; }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
             // Create "Packages" folder if folder not exists
             fileManager.EnsureDirectoryExists(ishPaths.PackagesFolderPath);
 
-            var result = ParameterSetName == "UNC" ? ishPaths.PackagesFolderUNCPath : ishPaths.PackagesFolderPath;
+            var result = UNC ? ishPaths.PackagesFolderUNCPath : ishPaths.PackagesFolderPath;
 
             WriteObject(result);
         }

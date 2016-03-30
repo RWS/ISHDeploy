@@ -41,14 +41,14 @@ namespace ISHDeploy.Models
 		/// <returns>XElement</returns>
 		public string ToQueryString()
 		{
-			return Uri.EscapeUriString(CommentPatterns.EventActionPath + String.Join("&", new string[]
+			return CommentPatterns.EventActionPath + String.Join("&", new string[]
 			{
-				"eventTypesFilter=" + String.Join(",", EventTypesFilter),
+				"eventTypesFilter=" + String.Join(", ", EventTypesFilter),
 				"statusFilter=" + StatusFilter,
 				"selectedMenuItemTitle=" + SelectedMenuItemTitle,
 				"modifiedSinceMinutesFilter=" + ModifiedSinceMinutesFilter,
-				"selectedButtonTitle=" + SelectedButtonTitle
-			}));
+				"selectedButtonTitle=" + Uri.EscapeUriString(SelectedButtonTitle)
+			});
 		}
 	}
 

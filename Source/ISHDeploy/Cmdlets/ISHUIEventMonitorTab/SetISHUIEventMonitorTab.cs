@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
@@ -32,21 +34,15 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		/// </summary>
 		public enum StatusFilter
 		{
-
-			/// <summary>
-			/// Show recent tasks
-			/// </summary>
-			Recent,
-
-			/// <summary>
-			/// Show failed
-			/// </summary>
-			Failed,
-
 			/// <summary>
 			/// Show busy tasks
 			/// </summary>
 			Busy,
+
+			/// <summary>
+			/// Show success tasks
+			/// </summary>
+			Recent,
 
 			/// <summary>
 			/// Show tasks with warnings
@@ -54,10 +50,27 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 			Warning,
 
 			/// <summary>
+			/// Show failed
+			/// </summary>
+			Failed,
+
+			/// <summary>
 			/// Show All
 			/// </summary>
 			All
 		}
+
+		/// <summary>
+		/// The status filter desctiptions
+		/// </summary>
+		private readonly Dictionary<StatusFilter, string> _statusFilterDesctiptions = new Dictionary<StatusFilter, string>
+		{
+			{ StatusFilter.Recent, "Show Recent" },
+			{ StatusFilter.Failed, "Show Failed"},
+			{ StatusFilter.Busy, "Show Busy"},
+			{ StatusFilter.Warning, "Show Warning"},
+			{ StatusFilter.All, "Show All"}
+		};
 
 		/// <summary>
 		/// Cashed value for <see cref="IshPaths"/> property
@@ -129,13 +142,6 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-			var fileManager = ObjectFactory.GetInstance<IFileManager>();
-
-	        if (!fileManager.Exists(Icon))
-	        {
-		        Logger.WriteWarning($"No icon were found at '{Icon}' at '{Path.GetFullPath(Icon)}'");
-			}
-
 	        var operation = new SetISHUIEventMonitorTabOperation(Logger, IshPaths, new EventLogMenuItem()
 			{
 				Label = Label,
@@ -144,10 +150,10 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 				UserRole = UserRole,
 				Action = new EventLogMenuItemAction()
 				{
-					SelectedButtonTitle = "Show Recent",
+					SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],
 					ModifiedSinceMinutesFilter = ModifiedSinceMinutesFilter,
 					SelectedMenuItemTitle = Label,
-					StatusFilter = SelectedStatusFilter.ToString(),
+					StatusFilter = StatusFilter.All.ToString(), // By default 'All' is used
 					EventTypesFilter = EventTypesFilter
 				}
 			});

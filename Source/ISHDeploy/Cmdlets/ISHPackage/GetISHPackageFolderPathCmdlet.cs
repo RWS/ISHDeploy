@@ -6,10 +6,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
     /// <para type="synopsis">Gets the path to Packages folder for Content Manager deployment.</para>
-    /// <para type="description">The Get-ISHPackageFolderPath cmdlet returns the path to Packages folder for Content Manager deployment. 
-    /// The Packages folder contains archives or files that were created as output of other cmdlets of ISHDeploy module, such as:
-    /// - Save-ISHDeploymentCustomPackage cmdlet - makes a snapshot of the system(the difference between the vanilla version of the product and its current state) and puts it as zip-archives to the Package folder
-    /// - Copy-ISHCustomPackage cmdlet - uploads package to the Packages folder for future use</para>
+    /// <para type="description">The Get-ISHPackageFolderPath cmdlet returns the path to folder to use by the module specific to a deployment. The folder contains archives or 
+    /// files that were created as output of other cmdlets of the module. The folder contains also archives or files that are used as input to other cmdlets of the module.</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHPackageFolderPath -ISHDeployment $deployment -UNC</code>

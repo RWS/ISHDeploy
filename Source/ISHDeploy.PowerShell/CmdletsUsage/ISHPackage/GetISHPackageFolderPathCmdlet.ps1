@@ -7,7 +7,8 @@ $WarningPreference = "Continue"
 
 $deployment = Get-ISHDeployment
 
-Get-ISHPackageFolderPath -ISHDeployment $deployment[0] -UNC
+#Get-ISHPackageFolderPath -ISHDeployment $deployment[0] -UNC
+Get-Help Get-ISHPackageFolderPath
 
 
 

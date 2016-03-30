@@ -41,7 +41,7 @@
     </Task>
   </UsingTask>
 
-  <Target Name="AssemblyVersion">
+  <Target Name="AssemblyVersion" Condition="'$(Configuration)' == 'Release'">
     <PropertyGroup>
       <AssemblyInfoFile>$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs</AssemblyInfoFile>
     </PropertyGroup>

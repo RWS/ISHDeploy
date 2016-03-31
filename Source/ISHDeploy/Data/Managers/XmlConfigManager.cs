@@ -390,7 +390,7 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-		/// Set attribute value
+		/// Set xml node
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>

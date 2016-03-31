@@ -6,25 +6,26 @@ using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// <para type="synopsis">Manipulates with definitions in EventMonitorTab.</para>
-	/// <para type="description">The Move-ISHUIEventMonitorTab cmdlet moves Tabs definitions in Content Manager deployment.</para>
-	/// <para type="link">Set-ISHUIEventMonitorTab</para>
-	/// <para type="link">Remove-ISHUIEventMonitorTab</para>
+	///		<para type="synopsis">Manipulates with definitions in EventMonitorTab.</para>
+	///		<para type="description">The Move-ISHUIEventMonitorTab cmdlet moves Tabs definitions in Content Manager deployment.</para>
+	///		<para type="link">Set-ISHUIEventMonitorTab</para>
+	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
 	/// </summary>
 	/// <example>
-	/// <code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First</code>
-	/// <para>Moves definition of the "Publish" to the top.</para>
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First</code>
+	///		<para>Moves definition of the "Publish" to the top.</para>
 	/// </example>
 	/// <example>
-	/// <code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last</code>
-	/// <para>Moves definition of the "Publish" to the bottom.</para>
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last</code>
+	///		<para>Moves definition of the "Publish" to the bottom.</para>
 	/// </example>
 	/// <example>
-	/// <code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Translation" -After "Publish"</code>
-	/// <para>Moves definition of the "Translation" after "Publish".</para> 
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Translation" -After "Publish"</code>
+	///		<para>Moves definition of the "Translation" after "Publish".</para> 
 	/// </example>
 	/// <para>This command manipulates XML definitions nodes in EventMonitor.
-	/// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+	///		Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+	/// </para>
 	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
     public class MoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {

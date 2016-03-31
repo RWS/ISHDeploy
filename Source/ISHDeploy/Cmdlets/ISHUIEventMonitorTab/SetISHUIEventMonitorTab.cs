@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
-using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Models;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab

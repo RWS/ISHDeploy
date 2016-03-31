@@ -193,6 +193,11 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\$(ModuleName).xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartAction>Program</StartAction>
+    <StartArguments>-NoExit -Command "&amp; {Import-Module .\$(ModuleName).dll}"</StartArguments>
+    <StartProgram>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</StartProgram>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

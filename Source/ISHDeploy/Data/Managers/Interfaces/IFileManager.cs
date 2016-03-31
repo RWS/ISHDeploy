@@ -28,7 +28,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="path">The file to check.</param>
         /// <returns>true if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
-        bool Exists(string path);
+        bool FileExists(string path);
+
+        /// <summary>
+        /// Determines whether the specified folder exists.
+        /// </summary>
+        /// <param name="path">The folder to check.</param>
+        /// <returns>True if folder exists</returns>
+        bool FolderExists(string path);
 
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
@@ -78,11 +85,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">The file to delete.</param>
 		void Delete(string filePath);
 
-	    /// <summary>
-	    /// Cleans up the folder
-	    /// </summary>
-	    /// <param name="folderPath">Path to folder to be cleaned up</param>
-	    void CleanFolder(string folderPath);
+        /// <summary>
+        /// Creates folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be created</param>
+        void CreateDirectory(string folderPath);
+
+        /// <summary>
+        /// Cleans up the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be cleaned up</param>
+        void CleanFolder(string folderPath);
 
 		/// <summary>
 		/// Delete the folder

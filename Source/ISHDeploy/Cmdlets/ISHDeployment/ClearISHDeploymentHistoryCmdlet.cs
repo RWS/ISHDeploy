@@ -36,7 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
 			// Remove history file
 			var historyFilePath = ishPaths.HistoryFilePath;
-	        if (fileManager.Exists(historyFilePath))
+	        if (fileManager.FileExists(historyFilePath))
 	        {
 		        fileManager.Delete(historyFilePath);
 	        }

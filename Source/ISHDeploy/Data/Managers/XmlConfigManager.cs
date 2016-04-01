@@ -483,7 +483,7 @@ namespace ISHDeploy.Data.Managers
 		/// </returns>
 		private XNode SelectSingleNode(ref XDocument doc, string xPath)
 		{
-			return this.SelectNodes(ref doc, xPath).Single();
+			return this.SelectNodes(ref doc, xPath).SingleOrDefault();
 		}
 
 		/// <summary>

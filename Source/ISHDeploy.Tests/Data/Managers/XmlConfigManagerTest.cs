@@ -588,7 +588,6 @@ namespace ISHDeploy.Tests.Data.Managers
 
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, removeNodeXPath)));
 
             // Act
             _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
@@ -619,10 +618,12 @@ namespace ISHDeploy.Tests.Data.Managers
 
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, removeNodeXPath)));
 
             // Act
             _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
         }
 
 
@@ -647,10 +648,12 @@ namespace ISHDeploy.Tests.Data.Managers
 
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
-            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, removeNodeXPath)));
 
             // Act
             _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
         }
         #endregion
     }

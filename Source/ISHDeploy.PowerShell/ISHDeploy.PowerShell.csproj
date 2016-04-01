@@ -87,6 +87,7 @@
     <None Include="CmdletsUsage\ISHUIQualityAssistant\ISHUIQualityAssistant.md" />
     <None Include="CmdletsUsage\Rollback\Rollback.md" />
     <None Include="CmdletsUsage\Rollback\Rollback.ps1" />
+    <None Include="Publish\Publish-Module.ps1" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -13,4 +13,4 @@ if ((Test-Path -path "$modulepath\$modulename") -ne $True)
 }
 
 # Copy files to WindowsPowerShell directory
-Get-ChildItem -Path $outputpath -Filter ("$modulename*") | Copy-Item -Destination "$modulepath\$modulename" -Force
+#Get-ChildItem -Path $outputpath -Filter ("$modulename*") | Copy-Item -Destination "$modulepath\$modulename" -Force

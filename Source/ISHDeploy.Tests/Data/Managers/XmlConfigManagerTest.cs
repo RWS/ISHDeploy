@@ -832,6 +832,41 @@ namespace ISHDeploy.Tests.Data.Managers
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
 		}
 
-		#endregion
-	}
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNode_if_node_has_been_already_removed()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            // Assert
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+            Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
+
+        #endregion
+    }
 }

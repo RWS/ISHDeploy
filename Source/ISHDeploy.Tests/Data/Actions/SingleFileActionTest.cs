@@ -23,8 +23,8 @@ namespace ISHDeploy.Tests.Data.Actions
 			var testFilePath = this.GetIshFilePath("Test.xml");
 	        var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".back");
 
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
-			FileManager.Exists(testFilePath.VanillaPath).Returns(true);
+			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
+			FileManager.FileExists(testFilePath.VanillaPath).Returns(true);
 
 			// Act
 			new SetAttributeValueAction(Logger, testFilePath, "", "", "");
@@ -42,9 +42,9 @@ namespace ISHDeploy.Tests.Data.Actions
 			var testFilePath = this.GetIshFilePath("Test.xml");
 			var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".back");
 
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
-			FileManager.Exists(backUpFilePath).Returns(true);
-			FileManager.Exists(testFilePath.VanillaPath).Returns(true);
+			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
+			FileManager.FileExists(backUpFilePath).Returns(true);
+			FileManager.FileExists(testFilePath.VanillaPath).Returns(true);
 
 			// Act
 			(new SetAttributeValueAction(Logger, testFilePath, "", "", "")).Dispose();
@@ -60,7 +60,7 @@ namespace ISHDeploy.Tests.Data.Actions
 		{
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
-			FileManager.Exists(testFilePath.AbsolutePath).Returns(true);
+			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
 
 			// Act
 			new SetAttributeValueAction(Logger, testFilePath, "", "", "");

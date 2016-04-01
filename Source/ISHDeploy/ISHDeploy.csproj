@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />

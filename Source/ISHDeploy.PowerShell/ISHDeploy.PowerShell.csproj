@@ -48,6 +48,8 @@
     <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
+    <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="AutomationTests\ClearISHDeploymentHistory.ps1" />
     <None Include="AutomationTests\Common.ps1" />
     <None Include="AutomationTests\Get-ISHDeployment.ps1" />
@@ -75,6 +77,8 @@
     <None Include="CmdletsUsage\ISHExternalPreview\DisableExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\EnableExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\ISHExternalPreview.md" />
+    <None Include="CmdletsUsage\ISHPackage\GetISHPackageFolderPathCmdlet.ps1" />
+    <None Include="CmdletsUsage\ISHPackage\ISHISHPackageFolderPath.md" />
     <None Include="CmdletsUsage\ISHUIContentEditor\DisableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\EnableContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\ISHUIContentEditor.md" />

@@ -1,8 +1,5 @@
 ﻿param([String]$outputpath, [String]$modulename)
 
-# Remove quotes
-$outputpath = $outputpath.trim("'");
-
 # Get PS module path
 [array]$modulepath = $env:PSModulePath.Split(";")
 if ($modulepath) {
@@ -17,4 +14,3 @@ if ((Test-Path -path "$modulepath\$modulename") -ne $True)
 
 # Copy files to WindowsPowerShell directory
 Get-ChildItem -Path $outputpath -Filter ("$modulename*") | Copy-Item -Destination "$modulepath\$modulename" -Force
-

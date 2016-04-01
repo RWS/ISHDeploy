@@ -281,11 +281,10 @@ namespace ISHDeploy.Data.Managers
             }
 
             var newElement = XElement.Parse(xmlString);
-            var previousNode = relativeElement.PreviousNode;
-            if (previousNode != null)
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+            foreach (var node in relativeElement.Parent.Nodes())
             {
-                XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
-                if (equalityComparer.Equals(previousNode, newElement))
+                if (equalityComparer.Equals(node, newElement))
                 {
                     _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
                     return;

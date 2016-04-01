@@ -6,6 +6,7 @@ using System.Xml.XPath;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace ISHDeploy.Data.Managers
 {

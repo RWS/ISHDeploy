@@ -52,5 +52,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="attributeName">Name of the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
         void SetAttributeValue(string filePath, string xpath, string attributeName, string value);
+
+        /// <summary>
+        /// Inserts a new node before specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        void InsertBeforeNode(string filePath, string xpath, string xmlString);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -260,6 +259,39 @@ namespace ISHDeploy.Data.Managers
                 return;
             }
             element.SetAttributeValue(attributeName, value);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        /// <summary>
+        /// Inserts a new node before specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        /// <exception cref="WrongXPathException"></exception>
+        public void InsertBeforeNode(string filePath, string xpath, string xmlString)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var relativeElement = doc.XPathSelectElement(xpath);
+            if (relativeElement == null)
+            {
+                throw new WrongXPathException(filePath, xpath);
+            }
+
+            var newElement = XElement.Parse(xmlString);
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+            foreach (var node in relativeElement.Parent.Nodes())
+            {
+                if (equalityComparer.Equals(node, newElement))
+                {
+                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
+                    return;
+                }
+            }
+
+            relativeElement.AddBeforeSelf(newElement);
 
             _fileManager.Save(filePath, doc);
         }

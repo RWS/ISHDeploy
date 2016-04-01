@@ -90,14 +90,19 @@ namespace ISHDeploy.Business
         /// </summary>
 		public ISHFilePath XopusConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Editors\Xopus\config\config.xml");
 
-		#endregion
-        
+        /// <summary>
+        /// Path to BlueLion-Plugin\web.config file
+        /// </summary>
+        public ISHFilePath EnrichWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
+
+        #endregion
+
         #region Enable/Disable ExternalPreview
 
         /// <summary>
         /// Path to Web.config file
         /// </summary>
-		public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Web.config");
+        public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Web.config");
 
         #endregion
 

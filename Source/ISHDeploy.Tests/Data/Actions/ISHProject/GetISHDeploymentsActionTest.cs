@@ -52,7 +52,7 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
             _registryManager.GetInstalledProjectsKeys().Returns(new RegistryKey[1]);
             _registryManager.GetInstallParamFilePath(Arg.Any<RegistryKey>()).Returns(@"E:\SomeFakeFolder");
             _registryManager.GetInstalledProjectVersion(Arg.Any<RegistryKey>()).Returns(Version.Parse("1.1.1.0"));
-            FileManager.Exists(Arg.Any<string>()).Returns(true);
+            FileManager.FileExists(Arg.Any<string>()).Returns(true);
 
             cmd.Execute();
 
@@ -72,7 +72,7 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
             var i = 0;
             _registryManager.GetInstalledProjectsKeys().Returns(new RegistryKey[3]);
             _registryManager.GetInstallParamFilePath(Arg.Any<RegistryKey>()).Returns(@"E:\SomeFakeFolder");
-            FileManager.Exists(Arg.Any<string>()).Returns(_ => i++ != 2);
+            FileManager.FileExists(Arg.Any<string>()).Returns(_ => i++ != 2);
 
             cmd.Execute();
 
@@ -92,7 +92,7 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
             var cmd = new GetISHDeploymentsAction(Logger, suffix, res => ishProjects = res);
 
             _registryManager.GetInstalledProjectsKeys(suffix).Returns(new RegistryKey[0]);
-            FileManager.Exists(Arg.Any<string>()).Returns(true);
+            FileManager.FileExists(Arg.Any<string>()).Returns(true);
 
             cmd.Execute();
 
@@ -131,7 +131,7 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
             _registryManager.GetInstalledProjectsKeys().Returns(new RegistryKey[1]);
             _registryManager.GetInstallParamFilePath(Arg.Any<RegistryKey>()).Returns(@"E:\SomeFakeFolder");
             _registryManager.GetInstalledProjectVersion(Arg.Any<RegistryKey>()).Returns(_ => null);
-            FileManager.Exists(Arg.Any<string>()).Returns(true);
+            FileManager.FileExists(Arg.Any<string>()).Returns(true);
 
             cmd.Execute();
             

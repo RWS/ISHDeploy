@@ -54,6 +54,7 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTab.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.cs" />
+    <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Models\EventLogMenuItem.cs" />
+    <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Data\Managers\RegistryManager.cs" />
     <Compile Include="Data\Exceptions\CorruptedInstallationException.cs" />
     <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
+    <Compile Include="Data\Exceptions\WrongXPathException.cs" />
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="Extensions\DeploymentExtension.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />

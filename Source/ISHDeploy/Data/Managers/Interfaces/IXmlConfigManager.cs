@@ -60,7 +60,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
         void UncommentNodesByPrecedingPattern(string filePath, string searchPattern);
-
+        
         /// <summary>
         /// Uncomment multiple nodes that can be found by inner pattern
         /// </summary>
@@ -68,7 +68,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="searchPattern">Comment pattern that is inside commented node</param>
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false);
-
+        
         /// <summary>
         /// Set attribute value
         /// </summary>
@@ -85,5 +85,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="xpath">XPath that is searched</param>
 		/// <param name="value">Node fron IshConfiguration.</param>
 		void SetNode(string filePath, string xpath, IISHXmlNode value);
+
+        /// <summary>
+        /// Inserts a new node before specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        void InsertBeforeNode(string filePath, string xpath, string xmlString);
     }
 }

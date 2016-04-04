@@ -580,7 +580,7 @@ namespace ISHDeploy.Tests.Data.Managers
 					ModifiedSinceMinutesFilter = 8888,
 					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
 					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = "TEST_EventTypesFilter"
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
 				}
 			};
 
@@ -638,7 +638,7 @@ namespace ISHDeploy.Tests.Data.Managers
 					ModifiedSinceMinutesFilter = 8888,
 					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
 					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = "TEST_EventTypesFilter"
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
 				}
 			};
 
@@ -832,6 +832,164 @@ namespace ISHDeploy.Tests.Data.Managers
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
 		}
 
-		#endregion
-	}
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNode_if_node_has_been_already_removed()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+
+            Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+            Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
+
+        #endregion
+
+        #region Insert new node
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertBeforeNode()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, removeNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.IsNotNull(result, "Node has not been added");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertBeforeNode_element_has_been_already_added()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <remove fileExtension='.json'/>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is($"The element with xpath '{relativeNodeXPath}' already contains element '{nodeAsXmlString}' before it."));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(XmlException))]
+        public void InsertBeforeNode_XmlException_if_xml_string_of_new_Node_is_empty()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXPathException))]
+        public void InsertBeforeNode_WrongXPathException()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json2' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+        #endregion
+    }
 }

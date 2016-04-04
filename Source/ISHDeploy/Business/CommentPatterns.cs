@@ -56,6 +56,16 @@
         /// </summary>
         public const string EnrichIntegrationBluelionConfigXPath = "*/*[local-name()='import'][@src='../BlueLion-Plugin/create-toolbar.xml']";
 
+        /// <summary>
+        /// The XPath to Json mimeMap in enrich bluelion web.config file
+        /// </summary>
+        public const string EnrichBluelionWebConfigJsonMimeMapXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+
+        /// <summary>
+        /// The XPath to Json mimeMap in enrich bluelion web.config file
+        /// </summary>
+        public const string EnrichBluelionWebConfigRemoveJsonMimeMapXmlString = "<remove fileExtension=\".json\"/>";
+
         #endregion
 
         #region Enable/Disable ExternalPreview

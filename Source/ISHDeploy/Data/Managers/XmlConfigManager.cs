@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -77,7 +77,7 @@ namespace ISHDeploy.Data.Managers
 
             return dictionary;
         }
-        
+
         /// <summary>
         /// Removes single node or comment in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
@@ -116,17 +116,36 @@ namespace ISHDeploy.Data.Managers
 				return;
 			}
 
-			var node2 = !string.IsNullOrEmpty(insertBeforeXpath) ? doc.XPathSelectElement(insertBeforeXpath) : nodes.First().Parent.FirstNode;
-			if (node2 == null)
+			XNode insertBeforeNode = null;
+			if (string.IsNullOrEmpty(insertBeforeXpath))
 			{
-				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				// In this case we need to add node to the top of the document
+				var parentNode = nodes.First().Parent;
+				if (parentNode != null)
+				{
+					insertBeforeNode = parentNode.FirstNode;
+				}
+			}
+			else
+			{
+				insertBeforeNode = doc.XPathSelectElement(insertBeforeXpath);
+			}
+
+			if (insertBeforeNode == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert before");
 				return;
 			}
 
-			foreach (var nodeToMove in nodes)
+			foreach (var nodeToMove in nodes.Reverse())
 			{
-				nodeToMove.Remove();
-				node2.AddBeforeSelf(nodeToMove);
+				if (nodeToMove != insertBeforeNode)
+				{
+					nodeToMove.Remove();
+					insertBeforeNode.AddBeforeSelf(nodeToMove);
+
+					insertBeforeNode = nodeToMove;
+				}
 			}
 
 			_fileManager.Save(filePath, doc);
@@ -149,17 +168,36 @@ namespace ISHDeploy.Data.Managers
 				return;
 			}
 
-			var node2 = !string.IsNullOrEmpty(insertAfterXpath) ? doc.XPathSelectElement(insertAfterXpath) : nodes.First().Parent.LastNode;
-			if (node2 == null)
+	        XNode insertAfterNode = null;
+	        if (string.IsNullOrEmpty(insertAfterXpath))
+	        {
+				// In this case we need to add node to the bottom of the document
+		        var parentNode = nodes.First().Parent;
+		        if (parentNode != null)
+		        {
+			        insertAfterNode = parentNode.LastNode;
+		        }
+	        }
+	        else
+	        {
+				insertAfterNode = doc.XPathSelectElement(insertAfterXpath);
+			}
+
+			if (insertAfterNode == null)
 			{
-				_logger.WriteVerbose($"{filePath} does not contain node to insert after");
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert after");
 				return;
 			}
 
-			foreach (var nodeToMove in nodes.Reverse())
+			foreach (var nodeToMove in nodes)
 			{
-				nodeToMove.Remove();
-				node2.AddAfterSelf(nodeToMove);
+				if (nodeToMove != insertAfterNode)
+				{
+					nodeToMove.Remove();
+					insertAfterNode.AddAfterSelf(nodeToMove);
+
+					insertAfterNode = nodeToMove;
+				}
 			}
 
 			_fileManager.Save(filePath, doc);
@@ -290,7 +328,7 @@ namespace ISHDeploy.Data.Managers
                 _fileManager.Save(filePath, doc);
             }
         }
-
+        
         /// <summary>
         /// Uncomment multiple nodes that can be found by inner pattern
         /// </summary>
@@ -352,7 +390,7 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-		/// Set attribute value
+		/// Set xml node
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>
@@ -391,10 +429,43 @@ namespace ISHDeploy.Data.Managers
 
 			_fileManager.Save(filePath, doc);
 		}		
-		
+
 		#region private methods
 
-		/// <summary>
+        /// <summary>
+        /// Inserts a new node before specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        /// <exception cref="WrongXPathException"></exception>
+        public void InsertBeforeNode(string filePath, string xpath, string xmlString)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var relativeElement = doc.XPathSelectElement(xpath);
+            if (relativeElement == null)
+            {
+                throw new WrongXPathException(filePath, xpath);
+            }
+
+            var newElement = XElement.Parse(xmlString);
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+            foreach (var node in relativeElement.Parent.Nodes())
+            {
+                if (equalityComparer.Equals(node, newElement))
+                {
+                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
+                    return;
+                }
+            }
+
+            relativeElement.AddBeforeSelf(newElement);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        /// <summary>
         /// Tries to uncomment node.
         /// </summary>
         /// <param name="commentedNode">The commented node.</param>
@@ -445,7 +516,7 @@ namespace ISHDeploy.Data.Managers
 		/// </returns>
 		private XNode SelectSingleNode(ref XDocument doc, string xPath)
 		{
-			return this.SelectNodes(ref doc, xPath).Single();
+			return this.SelectNodes(ref doc, xPath).SingleOrDefault();
 		}
 
 		/// <summary>

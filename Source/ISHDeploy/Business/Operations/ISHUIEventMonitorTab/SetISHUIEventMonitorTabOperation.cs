@@ -7,10 +7,9 @@ using ISHDeploy.Models;
 namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// Sets Event Monitor Tab".
+	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	/// <seealso cref="IOperation" />
 	public class SetISHUIEventMonitorTabOperation : IOperation
 	{
 		/// <summary>

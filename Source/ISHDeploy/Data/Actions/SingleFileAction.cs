@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Actions
 				// TODO: think of failed rollback. As it might fail, and backups would get removed in disposed.
 				FileManager.Copy(this.BackupPath, this.FilePath, true);
 			}
-			else if (FileManager.Exists(this.FilePath))
+			else if (FileManager.FileExists(this.FilePath))
 			{
 				FileManager.Delete(this.FilePath);
 			}
@@ -84,11 +84,11 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
-			if (FileManager.Exists(this.FilePath))
+			if (FileManager.FileExists(this.FilePath))
 			{
 				this.BackupPath = GetNewBackUpFileName();
 
-				if (!FileManager.Exists(this.BackupPath))
+				if (!FileManager.FileExists(this.BackupPath))
 				{
 					FileManager.Copy(this.FilePath, this.BackupPath);
 				}
@@ -100,10 +100,10 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void EnsureVanillaBackUpExists()
 		{
-			if (FileManager.Exists(this.FilePath))
+			if (FileManager.FileExists(this.FilePath))
 			{
 				string vanillaFilePath = IshFilePath.VanillaPath;
-				if (!FileManager.Exists(vanillaFilePath))
+				if (!FileManager.FileExists(vanillaFilePath))
 				{
 					FileManager.EnsureDirectoryExists(Path.GetDirectoryName(vanillaFilePath));
 
@@ -119,7 +119,7 @@ namespace ISHDeploy.Data.Actions
 		{
 			if (this.BackupPath != null)
 			{
-				if (FileManager.Exists(this.BackupPath))
+				if (FileManager.FileExists(this.BackupPath))
 				{
 					FileManager.Delete(this.BackupPath);
 				}

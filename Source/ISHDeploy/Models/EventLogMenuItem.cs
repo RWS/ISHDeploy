@@ -33,7 +33,7 @@ namespace ISHDeploy.Models
 		/// <summary>
 		/// Gets or sets the description.
 		/// </summary>
-		public string EventTypesFilter { get; set; }
+		public string[] EventTypesFilter { get; set; }
 
 		/// <summary>
 		/// Converts object to XElement.
@@ -43,11 +43,11 @@ namespace ISHDeploy.Models
 		{
 			return CommentPatterns.EventActionPath + String.Join("&", new string[]
 			{
-				"eventTypesFilter=" + EventTypesFilter,
+				"eventTypesFilter=" + String.Join(", ", EventTypesFilter),
 				"statusFilter=" + StatusFilter,
 				"selectedMenuItemTitle=" + SelectedMenuItemTitle,
 				"modifiedSinceMinutesFilter=" + ModifiedSinceMinutesFilter,
-				"selectedButtonTitle=" + SelectedButtonTitle
+				"selectedButtonTitle=" + Uri.EscapeUriString(SelectedButtonTitle)
 			});
 		}
 	}

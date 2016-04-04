@@ -17,12 +17,19 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "NewTab" -Icon "~/new-tab.job.32x32.png" -EventTypesFilter "TRANSLATIONJOB" -StatusFilter "All" -SelectedMenuItemTitle "Tab" -ModifiedSinceMinutesFilter "3600" -SelectedButtonTitle "Button" -UserRole "Administrator" -Description "Tab added"</code>
-	///		<para>Sets new tab with provided parameters.</para>
+	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter $filterTypes -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "Tab using all available parameters"</code>
+	///		<para>Sets new tab with all sets of available and provided parameters.</para>
 	///		<para>This command sets XML definitions to EventMonitor.
 	///			Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	///		</para>
 	/// </example>
+	/// <example>
+	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
+	///		<para>Sets new tab with default set of provided parameters.</para>
+	///		<para>This command sets XML definitions to EventMonitor.
+	///			Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+	///		</para>
+	/// </example>/// 
 	[Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
     public class SetISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {

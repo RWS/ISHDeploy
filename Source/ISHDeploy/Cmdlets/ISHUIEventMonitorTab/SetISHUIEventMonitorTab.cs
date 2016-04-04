@@ -17,7 +17,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter $filterTypes -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "Tab using all available parameters"</code>
+	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "Tab using all available parameters"</code>
 	///		<para>Sets new tab with all sets of available and provided parameters.</para>
 	///		<para>This command sets XML definitions to EventMonitor.
 	///			Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.

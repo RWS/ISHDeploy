@@ -15,8 +15,6 @@ try
 
 	if ($repository.Count -eq 0)
 	{
-		Invoke-Command -ScriptBlock { & "\ISHReinstaller.ps1"} -Session $session
-
 		Write-Host "Repository is not registered"
 
 		$registerScriptBlock=

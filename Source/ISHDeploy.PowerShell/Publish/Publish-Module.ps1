@@ -42,16 +42,30 @@ try
 
 	if (-not $manifestFile)
 	{
-		throw [System.IO.FileNotFoundException] "Manifest file $manifestFile was not found."
+		throw [System.IO.FileNotFoundException] "Manifest file ""$manifestFile"" was not found."
 	}
 
+	Write-Host "Manifest files is found at module location."
+
+	# Copying files in temporary directory. As manifest name should match the name of the folder it`s in.
 	$moduleName = [System.IO.Path]::GetFileNameWithoutExtension($manifestFile)
 	$tmpModulePath = New-Item -Force -Path "$modulePath\$moduleName" -ItemType directory
 
 	Copy-Item "$modulePath\$moduleName.*" $tmpModulePath
 
+	if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) 
+	{
+		Write-Host "PSScriptAnalyzer module is not installed."
+		Write-Host "Installing PSScriptAnalyzer module.."
+
+		Install-Module -Name PSScriptAnalyzer -force
+	} 
+	else
+	{
+		Write-Host "PSScriptAnalyzer module is installed."
+	}
+
     # Run PSScriptAnalyzer against the module to make sure it's not failing any tests
-    Install-Module -Name PSScriptAnalyzer -force
     Invoke-ScriptAnalyzer -Path $tmpModulePath
 
 	# Publishing module to Powershell gallery
@@ -73,6 +87,3 @@ catch
 
     Write-Error $_
 }
-
-
-

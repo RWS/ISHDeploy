@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -79,6 +79,131 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Removes single node or comment in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        public void RemoveSingleNode(string filePath, string xpath)
+        {
+            var doc = _fileManager.Load(filePath);
+
+	        var node = this.SelectSingleNode(ref doc, xpath);
+			if (node == null)
+            {
+                _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+                return;
+            }
+
+			node.Remove();
+
+            _fileManager.Save(filePath, doc);
+        }
+
+		/// <summary>
+		/// Removes node in xml file that can be found by <paramref name="xpath"/>
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath to searched node</param>
+		/// <param name="insertBeforeXpath">XPath to searched node</param>
+		public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
+		{
+			var doc = _fileManager.Load(filePath);
+
+			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+			if (nodes.Length == 0)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+				return;
+			}
+
+			XNode insertBeforeNode = null;
+			if (string.IsNullOrEmpty(insertBeforeXpath))
+			{
+				// In this case we need to add node to the top of the document
+				var parentNode = nodes.First().Parent;
+				if (parentNode != null)
+				{
+					insertBeforeNode = parentNode.FirstNode;
+				}
+			}
+			else
+			{
+				insertBeforeNode = doc.XPathSelectElement(insertBeforeXpath);
+			}
+
+			if (insertBeforeNode == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert before");
+				return;
+			}
+
+			foreach (var nodeToMove in nodes.Reverse())
+			{
+				if (nodeToMove != insertBeforeNode)
+				{
+					nodeToMove.Remove();
+					insertBeforeNode.AddBeforeSelf(nodeToMove);
+
+					insertBeforeNode = nodeToMove;
+				}
+			}
+
+			_fileManager.Save(filePath, doc);
+		}
+
+        /// <summary>
+	    /// Removes node in xml file that can be found by <paramref name="xpath"/>
+	    /// </summary>
+	    /// <param name="filePath">Path to the file that is modified</param>
+	    /// <param name="xpath">XPath to searched node</param>
+	    /// <param name="insertAfterXpath">XPath to searched node</param>
+	    public void MoveAfterNode(string filePath, string xpath, string insertAfterXpath)
+	    {
+		    var doc = _fileManager.Load(filePath);
+
+			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+			if (nodes.Length == 0)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+				return;
+			}
+
+	        XNode insertAfterNode = null;
+	        if (string.IsNullOrEmpty(insertAfterXpath))
+	        {
+				// In this case we need to add node to the bottom of the document
+		        var parentNode = nodes.First().Parent;
+		        if (parentNode != null)
+		        {
+			        insertAfterNode = parentNode.LastNode;
+		        }
+	        }
+	        else
+	        {
+				insertAfterNode = doc.XPathSelectElement(insertAfterXpath);
+			}
+
+			if (insertAfterNode == null)
+			{
+				_logger.WriteVerbose($"{filePath} does not contain target node to insert after");
+				return;
+			}
+
+			foreach (var nodeToMove in nodes)
+			{
+				if (nodeToMove != insertAfterNode)
+				{
+					nodeToMove.Remove();
+					insertAfterNode.AddAfterSelf(nodeToMove);
+
+					insertAfterNode = nodeToMove;
+				}
+			}
+
+			_fileManager.Save(filePath, doc);
+		}
+
+		/// <summary>
         /// Comments node in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
@@ -265,6 +390,82 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+		/// Set xml node
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="xpath">XPath that is searched</param>
+		/// <param name="xNode">The xml node from ISH configuration.</param>
+		public void SetNode(string filePath, string xpath, IISHXmlNode xNode)
+		{
+			var doc = _fileManager.Load(filePath);
+			XNode newNode = xNode.ToXElement();
+			var existingElement = doc.XPathSelectElement(xpath);
+			if (existingElement == null)
+			{
+				// We need to take the parent node
+				var parentXPath = Regex.Replace(xpath, @"\/([^\/])*$", "");
+				var parentNode = doc.XPathSelectElement(parentXPath);
+				if (parentNode == null)
+				{
+					throw new WrongXmlStructureException(filePath, $"There are no parent node for XPath '{xpath}' were found.");
+				}
+
+				parentNode.Add(newNode);
+			}
+			else
+			{
+				existingElement.ReplaceWith(newNode);
+			}
+
+			// Check if node does not have a comment
+			if (newNode.PreviousNode.NodeType != XmlNodeType.Comment)
+			{
+				var comment = xNode.GetNodeComment();
+				if (comment != null)
+				{
+					newNode.AddBeforeSelf(comment);
+				}
+			}
+
+			_fileManager.Save(filePath, doc);
+		}		
+
+		#region private methods
+
+        /// <summary>
+        /// Inserts a new node before specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        /// <exception cref="WrongXPathException"></exception>
+        public void InsertBeforeNode(string filePath, string xpath, string xmlString)
+        {
+            var doc = _fileManager.Load(filePath);
+
+            var relativeElement = doc.XPathSelectElement(xpath);
+            if (relativeElement == null)
+            {
+                throw new WrongXPathException(filePath, xpath);
+            }
+
+            var newElement = XElement.Parse(xmlString);
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+            foreach (var node in relativeElement.Parent.Nodes())
+            {
+                if (equalityComparer.Equals(node, newElement))
+                {
+                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
+                    return;
+                }
+            }
+
+            relativeElement.AddBeforeSelf(newElement);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        /// <summary>
         /// Tries to uncomment node.
         /// </summary>
         /// <param name="commentedNode">The commented node.</param>
@@ -304,6 +505,34 @@ namespace ISHDeploy.Data.Managers
 
             return true;
         }
+
+		/// <summary>
+		/// Evaluates node from XPath
+		/// </summary>
+		/// <param name="doc">The document to node lookup.</param>
+		/// <param name="xPath">The xPath of node to be evaluated.</param>
+		/// <returns>
+		/// XNode instance from document.
+		/// </returns>
+		private XNode SelectSingleNode(ref XDocument doc, string xPath)
+		{
+			return this.SelectNodes(ref doc, xPath).SingleOrDefault();
+		}
+
+		/// <summary>
+		/// Evaluates nodes from XPath
+		/// </summary>
+		/// <param name="doc">The document to node lookup.</param>
+		/// <param name="xPath">The xPath of node to be evaluated.</param>
+		/// <returns>
+		/// IEnumerable of XNodes from document.
+		/// </returns>
+		private IEnumerable<XNode> SelectNodes(ref XDocument doc, string xPath)
+		{
+			return ((IEnumerable<object>)doc.XPathEvaluate(xPath)).OfType<XNode>();
+		}
+
+		#endregion
 
         /// <summary>
         /// Replaces some characters that might cause issues when commenting/uncommenting xml fragment.

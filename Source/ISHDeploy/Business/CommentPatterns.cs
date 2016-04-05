@@ -56,6 +56,16 @@
         /// </summary>
         public const string EnrichIntegrationBluelionConfigXPath = "*/*[local-name()='import'][@src='../BlueLion-Plugin/create-toolbar.xml']";
 
+        /// <summary>
+        /// The XPath to Json mimeMap in enrich bluelion web.config file
+        /// </summary>
+        public const string EnrichBluelionWebConfigJsonMimeMapXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+
+        /// <summary>
+        /// The XPath to Json mimeMap in enrich bluelion web.config file
+        /// </summary>
+        public const string EnrichBluelionWebConfigRemoveJsonMimeMapXmlString = "<remove fileExtension=\".json\"/>";
+
         #endregion
 
         #region Enable/Disable ExternalPreview
@@ -113,7 +123,7 @@
         /// The event monitor translation jobs comment placeholder
         /// </summary>
         public const string EventMonitorTranslationJobs = "Translation Jobs ===========";
-        
+
         /// <summary>
         /// The translation job attribute value
         /// </summary>
@@ -125,5 +135,29 @@
         public const string TopDocumentTranslationJobXPath = "BUTTONBAR/BUTTON[INPUT[@NAME = 'TranslationJob']]";
 
         #endregion
+
+		#region Event Monitor Tab
+
+		/// <summary>
+		/// Event monitor tab menu item XPath
+		/// </summary>
+		public const string EventMonitorTab = "/menubar/menuitem[@label='{0}']";
+
+		/// <summary>
+		/// Event monitor tab menu item comment XPath
+		/// </summary>
+		public const string EventMonitorPreccedingCommentXPath = "/preceding-sibling::node()[not(self::text())][1][not(local-name())]";
+
+		/// <summary>
+		/// The Xopus add check out comment placeholder
+		/// </summary>
+		public const string EventActionPath = "EventMonitor/Main/Overview?";
+
+		/// <summary>
+		/// The Xopus add check out comment placeholder
+		/// </summary>
+		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
+
+		#endregion
     }
 }

@@ -3,11 +3,13 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using ISHDeploy.Business;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -393,7 +395,7 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             Assert.IsNull(result, "Commented node should be null");
         }
-
+        
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Commment_with_encoding()
@@ -467,11 +469,11 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, $"NAME='{testButtonName}'", true);
-
+            
             // Assert
             Assert.IsTrue(string.CompareOrdinal(result.ToString(), @"<!-- Translation\Job -->") == 0);
         }
-
+        
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(WrongXmlStructureException))]
@@ -508,7 +510,6 @@ namespace ISHDeploy.Tests.Data.Managers
             string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
             string testAttributeName = "externalId";
             string testValue = "testValue";
-            var testFilePath = "Tesweb.config";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<configuration>" +
@@ -517,8 +518,8 @@ namespace ISHDeploy.Tests.Data.Managers
                                         "</trisoft.infoshare.web.externalpreviewmodule>" +
                                     "</configuration>");
 
-            FileManager.Load(testFilePath).Returns(doc);
-            FileManager.When(x => x.Save(testFilePath, doc)).Do(
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.When(x => x.Save(_filePath, doc)).Do(
                         x =>
                         {
                             IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}/@{testAttributeName}");
@@ -529,10 +530,466 @@ namespace ISHDeploy.Tests.Data.Managers
                         }
                     );
 
-            _xmlConfigManager.SetAttributeValue(testFilePath, testXPath, testAttributeName, testValue);
+            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testAttributeName, testValue);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
+		#endregion
+
+		#region Nodes Manipulation
+
+
+		private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
+										<menubar>
+										  <!-- Synchronize To LiveContent ============================================================= -->
+										  <menuitem label='Synch To Collaborative Review' action='EventMonitor/Main/Overview?' icon='~/UIFramework/synchronization.32.color.png'>
+											<userrole>Administrator</userrole>
+											<description>Synchronize To SDL Knowledge Center Collaborative Review</description>
+										  </menuitem>
+										  <!-- Thumbnails ============================================================= -->
+										  <menuitem label='Thumbnails' action='EventMonitor/Main/Overview?' icon='~/UIFramework/thumbnails.32x32.png'>
+											<userrole>Administrator</userrole>
+											<description>Thumbnails</description>
+										  </menuitem>
+										  <!-- Index ================================================================== -->
+										  <menuitem label='All Events' action='EventMonitor/Main/Overview?' icon='~/UIFramework/events.32x32.png'>
+											<userrole>Administrator</userrole>
+											<description>all processes</description>
+										  </menuitem>
+										</menubar>";
+
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void SetNode_New()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "TEST_Label",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+				}
+			};
+
+			XComment comment = null;
+			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
+				}));
+
+			// Act
+			_xmlConfigManager.SetNode(_filePath, testXPath, item);
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.IsNotNull(comment, "Comments was not added");
+			Assert.AreEqual(comment.Value, item.GetNodeComment().Value, "Comments was not correctly set");
+
+			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+			Assert.AreEqual(elements.Count, 2, "Elements are not set");
+			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
+			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void SetNode_Existing()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
+
+			var commentValue = " Thumbnails ============================================================= ";
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "Thumbnails",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+				}
+			};
+
+			XComment comment = null;
+			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
+				}));
+
+			// Act
+			_xmlConfigManager.SetNode(_filePath, testXPath, item);
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.IsNotNull(comment, "Comments was not added");
+
+			Assert.AreNotEqual(comment.Value, item.GetNodeComment().Value, "Comment should not be owerwriten");
+			Assert.AreEqual(comment.Value, commentValue, "Comments was not correctly set");
+
+			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+			Assert.AreEqual(elements.Count, 2, "Elements are not set");
+			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
+			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
+        }
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveBeforeNode()
+		{
+			// Arrange
+			string testLabel = "All Events";
+			string insertBeforeLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveBeforeNode(
+				_filePath, 
+				string.Format(CommentPatterns.EventMonitorTab, testLabel), 
+				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[1], testLabel, "Inserted node is not in a correct place");
+			Assert.AreEqual(labels[2], insertBeforeLabel, "Previouse node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveBeforeNode_Top()
+		{
+			// Arrange
+			string testLabel = "All Events";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveBeforeNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[0], testLabel, "Inserted node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveAfterNode()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+			string insertBeforeLabel = "All Events";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveAfterNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel),
+				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+			Assert.AreEqual(labels[1], insertBeforeLabel, "Previouse node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void MoveAfterNode_Bottom()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.MoveAfterNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void RemoveNode()
+		{
+			// Arrange
+			string testLabel = "Thumbnails";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			string[] labels = null;
+
+			FileManager.Load(_filePath).Returns(doc);
+			FileManager.Save(_filePath, Arg.Do<XDocument>(
+				xdoc =>
+				{
+					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+				}));
+
+			// Act
+			_xmlConfigManager.RemoveSingleNode(
+				_filePath,
+				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+		}
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNode_if_node_has_been_already_removed()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+
+            Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+            Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
+
+        #endregion
+
+        #region Insert new node
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertBeforeNode()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, removeNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.IsNotNull(result, "Node has not been added");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertBeforeNode_element_has_been_already_added()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <remove fileExtension='.json'/>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is($"The element with xpath '{relativeNodeXPath}' already contains element '{nodeAsXmlString}' before it."));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(XmlException))]
+        public void InsertBeforeNode_XmlException_if_xml_string_of_new_Node_is_empty()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXPathException))]
+        public void InsertBeforeNode_WrongXPathException()
+        {
+            // Arrange
+            string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
+            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
+            string nodeAsXmlString = "<remove fileExtension='.json'/>";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <configuration>
+                                            <system.webServer>                                                
+                                              <staticContent>
+                                                <mimeMap fileExtension='.json2' mimeType='text/json' />
+                                              </staticContent>
+                                            </system.webServer>
+                                        </configuration>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.InsertBeforeNode(_filePath, relativeNodeXPath, nodeAsXmlString);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
         #endregion
     }
 }

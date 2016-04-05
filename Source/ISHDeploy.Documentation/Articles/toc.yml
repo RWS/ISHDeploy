@@ -6,3 +6,5 @@
         href: ../obj/doc/articles/IntegrationSTS/On premise ADFS/Integrate Vanilla with ADFS.md
 - name: Work with deployment
   href: ../obj/doc/articles/module/Work with deployments.md
+- name: Publishing Module
+  href: ../obj/doc/articles/publish/publish-module.md

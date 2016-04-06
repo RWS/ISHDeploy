@@ -15,7 +15,6 @@ Table of Contents
   * [Requirements](#requirements)
   * [Usage](#usage)
   * [Contributing](#contributing)
-  * [Support and Migration](#support-and-migration)
   * [License](#license)
 
 
@@ -46,11 +45,6 @@ Contributing
 
 { Contribution section }
 
-
-Support and Migration
----------------------
-
-{ Contribution section }
 
 License
 -------

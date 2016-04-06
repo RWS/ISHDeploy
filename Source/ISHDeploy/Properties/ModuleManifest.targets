@@ -14,11 +14,7 @@
       <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
       <ManifestPath>$(TargetDir)\$(ModuleName).psd1</ManifestPath>
       <RootModule>$(ModuleName)</RootModule>
-<<<<<<< HEAD
       <ModuleVersion>$(FullModuleVersion)</ModuleVersion>
-=======
-      <ModuleVersion>$(ModuleVersion)</ModuleVersion>
->>>>>>> Added file Build.props that contains all the variables that might be different for all branches.
       <Guid>$(ModuleGuid)</Guid>
       <Author>$(ModuleCompany)</Author>
       <CompanyName>$(ModuleCompany)</CompanyName>

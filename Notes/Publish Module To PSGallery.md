@@ -94,7 +94,3 @@ $repoName = "TestNuGetServer"
 
 Publish-Module -Path $modulePath -NuGetApiKey $apiKey -Repository $repoName
 ```
-
-## Publish-Module script
-CopyCodeBlockAndLink(Publish-Module.ps1)
-

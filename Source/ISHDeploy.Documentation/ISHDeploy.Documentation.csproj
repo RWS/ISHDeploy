@@ -64,8 +64,7 @@
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModulePath "$(SolutionDir)ISHDeploy\$(OutDir)\$(ModuleName).dll" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Publish" -ExportPath "$(ProjectDir)obj\doc\articles\Publish"</PostBuildEvent>
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

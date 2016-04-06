@@ -14,7 +14,7 @@
       <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
       <ManifestPath>$(TargetDir)\$(ModuleName).psd1</ManifestPath>
       <RootModule>$(ModuleName)</RootModule>
-      <ModuleVersion>$(ModuleVersion)</ModuleVersion>
+      <ModuleVersion>$(FullModuleVersion)</ModuleVersion>
       <Guid>$(ModuleGuid)</Guid>
       <Author>$(ModuleCompany)</Author>
       <CompanyName>$(ModuleCompany)</CompanyName>

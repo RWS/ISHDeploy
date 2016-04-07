@@ -28,18 +28,19 @@ The correct pattern with semantic version:
 `$build=[string](1200 * ($date.Year -2015) + $date.Month*100 + $date.Day)`
 
  
-## Signing the assembly
+## Digital and Strong Name Assembly Signing
 
-Before publishing assembly to the server, it should be signer using SDL's signing server. It should be done only with Jenkins. 
+Before publishing assembly to the gallery, it should be signed with a strong name and digital signature. 
 
-Signing is done via `Trisoft.SignTool.SignFiles` on a Jenkins as a build step
+Signing is done via `Trisoft.SignTool.SignFiles` on Jenkins as a step of daily build.
 
 ```
 $fileToSign = Get-ChildItem "${ENV:WORKSPACE}\Source\ISHDeploy\bin\Release\ISHDeploy*.dll"
 &"${ENV:WORKSPACE}\Tools\SignTool\Trisoft.SignTool.SignFiles.exe" "${ENV:WORKSPACE}\Tools\SignTool\InfoShare.snk" "$fileToSign"
 ```
 
-{ ----- FILL/UPDATE THIS SECTION by **Volodymyr** ------ }
+The above command performs both actions by adding to the assembly a strong name and signing it by digital key. That guarantees the uniqueness of the assembly, confirms SDL ownership and protects against tampering of the asset.
+
 
 ## Generating Manifest file `InfoShare.Deployment.*.0.psd1`
 

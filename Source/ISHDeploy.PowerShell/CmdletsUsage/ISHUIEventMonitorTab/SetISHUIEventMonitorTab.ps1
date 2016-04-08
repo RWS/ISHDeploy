@@ -16,12 +16,15 @@ $dict.Add('projectsuffix', 'sites')
 $dict.Add('datapath', 'C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
-$deploy = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
+$deployment = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
 
 $filterTypes = @("JOB", "NON-JOB", "UN-JOB")
 
 # Using all parameters
-Set-ISHUIEventMonitorTab -ISHDeployment $deploy  -Label "2NewTab" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter $filterTypes -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "New tab added"
+Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter $filterTypes -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "Tab using all available parameters"
+
+# Using default parameters with filter types
+Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults and Filter" -EventTypesFilter $filterTypes -Description "Using default parameters with filtered types"
 
 # Using default parameters
-Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "9 New Tab" -EventTypesFilter $filterTypes  -Description "New tab added"
+Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"

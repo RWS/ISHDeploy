@@ -43,7 +43,7 @@ namespace ISHDeploy.Models
 		{
 			return CommentPatterns.EventActionPath + String.Join("&", new string[]
 			{
-				"eventTypesFilter=" + String.Join(", ", EventTypesFilter),
+				"eventTypesFilter=" + ((EventTypesFilter == null) ? "" : String.Join(", ", EventTypesFilter)),
 				"statusFilter=" + StatusFilter,
 				"selectedMenuItemTitle=" + SelectedMenuItemTitle,
 				"modifiedSinceMinutesFilter=" + ModifiedSinceMinutesFilter,

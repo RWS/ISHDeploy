@@ -2,7 +2,7 @@
     [Parameter(Mandatory=$true)]
     [string]
     $ModuleDir,
-	[Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     $ModuleName,
     [Parameter(Mandatory=$true)]
@@ -13,7 +13,7 @@
 #$VerbosePreference="Continue"
 $MamlFilePath = Join-Path $ModuleDir ($ModuleName + ".dll-Help.xml")
 
-Write-Debug "Module Directory: $ModuleDir"
+Write-Debug "Module Directory: $ModuleName"
 Write-Debug "Module Name: $ModuleName"
 Write-Debug "Module Maml File Path: $MamlFilePath"
 Write-Debug "Export Path: $ExportPath"
@@ -42,7 +42,7 @@ try
 	# Generating markdown form maml file
 	[string]$mamlContent = Get-Content $MamlFilePath
 	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
-		
+
 	# Generating context for all markdown files generated from maml
 	Get-ChildItem -Path $ExportPath | ForEach-Object {
 		"- name: " + $_.BaseName;

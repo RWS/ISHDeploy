@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -114,17 +116,26 @@ namespace ISHDeploy.Cmdlets
                 var stringValue = boundParameter.Value.ToString().Replace("\"", "\"\"");
                 return new KeyValuePair<string, object>(boundParameter.Key, $"\"{stringValue}\"");
             }
-            
-            return boundParameter;
+
+			if (boundParameter.Value is IEnumerable)
+			{
+				var arrayStringValue = String.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
+				return String.IsNullOrEmpty(arrayStringValue)
+					? (KeyValuePair<string, object>?) null
+					: new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");
+
+			}
+
+			return boundParameter;
         }
 
-        /// <summary>
-        /// Returns true if current date is same as last history date.
-        /// </summary>
-        /// <param name="historyContent">Whole history file content.</param>
-        /// <param name="currentDate">Current date.</param>
-        /// <returns>True if last date in history content is the same as current date.</returns>
-        private bool IsNewDate(string historyContent, string currentDate)
+		/// <summary>
+		/// Returns true if current date is same as last history date.
+		/// </summary>
+		/// <param name="historyContent">Whole history file content.</param>
+		/// <param name="currentDate">Current date.</param>
+		/// <returns>True if last date in history content is the same as current date.</returns>
+		private bool IsNewDate(string historyContent, string currentDate)
         {
             var lastDate = Regex.Match(historyContent, @"[#]\s\d{8}", RegexOptions.RightToLeft);
 

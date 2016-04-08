@@ -1,0 +1,22 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Major>0</Major>
+    <Minor>0</Minor>
+    <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
+    <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
+    <Revision>0</Revision>
+    <ShortModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ShortModuleVersion>
+    <FullModuleVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleVersion>
+    <ModuleName>ISHDeploy.12.0</ModuleName>
+    <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
+    <ModuleDescription>$(ModuleTitle) 2016</ModuleDescription>
+    <ModuleCompany>SDL</ModuleCompany>
+    <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
+    <ModuleCopyright>Copyright © 2003-2016 SDL Group. All rights reserved.</ModuleCopyright>
+    <ModuleGuid>68ae5b26-edc0-453a-a720-ecc99d9b603e</ModuleGuid>
+    <MinPowerShellVersion>3.0</MinPowerShellVersion>
+    <MinCLRVersion>4.0</MinCLRVersion>
+    <MinDotNetVersion>4.5</MinDotNetVersion>
+    <DocPortalLink>http://kiev-green-bld.global.sdl.corp:8081/12.0</DocPortalLink>
+  </PropertyGroup>
+</Project>

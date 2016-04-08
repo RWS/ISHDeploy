@@ -26,8 +26,12 @@ bld/
 .idea/
 *.iml
 
+# Generated files
+/Source/ISHDeploy/Properties/AssemblyInfo.cs
+
 # TestResults
 Source/TestResults/
 /Source/ISHDeploy.Documentation/Module/toc2.yml
 /Source/ISHDeploy.Documentation/log.txt
 /Source/ISHDeploy.Documentation/_site
+

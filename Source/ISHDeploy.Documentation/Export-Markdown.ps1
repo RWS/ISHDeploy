@@ -13,7 +13,7 @@
 #$VerbosePreference="Continue"
 $MamlFilePath = Join-Path $ModuleDir ($ModuleName + ".dll-Help.xml")
 
-Write-Debug "Module Directory: $ModuleName"
+Write-Debug "Module Directory: $ModuleDir"
 Write-Debug "Module Name: $ModuleName"
 Write-Debug "Module Maml File Path: $MamlFilePath"
 Write-Debug "Export Path: $ExportPath"

@@ -2,9 +2,7 @@
     [Parameter(Position=0,Mandatory=$true)][string] $deployment,
 	[Parameter(Position=1,Mandatory=$true)][string] $inputparameters,
     [Parameter(Position=2,Mandatory=$true)][string] $deploymentfolder
-	)
-
-
+)
 
 $folder = Get-ChildItem $deploymentFolder | where {$_.Attributes -eq 'Directory'}
 

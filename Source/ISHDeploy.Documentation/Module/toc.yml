@@ -26,6 +26,12 @@
   href: ../obj/doc/module/ISHDeploy/Move-ISHUIEventMonitorTab.md
 - name: Remove-ISHUIEventMonitorTab
   href: ../obj/doc/module/ISHDeploy/Remove-ISHUIEventMonitorTab.md
+- name: Get-ISHPackageFolderPath
+  href: ../obj/doc/module/ISHDeploy/Get-ISHPackageFolderPath.md
+- name: Move-ISHUIEventMonitorTab
+  href: ../obj/doc/module/ISHDeploy/Move-ISHUIEventMonitorTab.md
+- name: Remove-ISHUIEventMonitorTab
+  href: ../obj/doc/module/ISHDeploy/Remove-ISHUIEventMonitorTab.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/ISHDeploy/Set-ISHContentEditor.md
 - name: Set-ISHUIEventMonitorTab

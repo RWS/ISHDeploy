@@ -116,7 +116,7 @@ namespace ISHDeploy.Cmdlets
                 var stringValue = boundParameter.Value.ToString().Replace("\"", "\"\"");
                 return new KeyValuePair<string, object>(boundParameter.Key, $"\"{stringValue}\"");
             }
-            
+
 			if (boundParameter.Value is IEnumerable)
 			{
 				var arrayStringValue = String.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
@@ -126,16 +126,16 @@ namespace ISHDeploy.Cmdlets
 
 			}
 
-            return boundParameter;
+			return boundParameter;
         }
 
-        /// <summary>
-        /// Returns true if current date is same as last history date.
-        /// </summary>
-        /// <param name="historyContent">Whole history file content.</param>
-        /// <param name="currentDate">Current date.</param>
-        /// <returns>True if last date in history content is the same as current date.</returns>
-        private bool IsNewDate(string historyContent, string currentDate)
+		/// <summary>
+		/// Returns true if current date is same as last history date.
+		/// </summary>
+		/// <param name="historyContent">Whole history file content.</param>
+		/// <param name="currentDate">Current date.</param>
+		/// <returns>True if last date in history content is the same as current date.</returns>
+		private bool IsNewDate(string historyContent, string currentDate)
         {
             var lastDate = Regex.Match(historyContent, @"[#]\s\d{8}", RegexOptions.RightToLeft);
 

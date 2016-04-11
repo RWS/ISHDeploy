@@ -1,4 +1,4 @@
-﻿# Working with the ISHDeploy module
+﻿# Work with deployments
  
 This article explains how to work with available deployments on a server
  

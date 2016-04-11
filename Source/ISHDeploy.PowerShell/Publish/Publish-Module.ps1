@@ -8,10 +8,10 @@ param(
 #Install the packages
 try
 {
+	Write-Host "Checking if repository '$repositoryName' is registered"
+
 	# Check if repository exists
 	$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
-
-	Write-Host "Checking if repository is registered"
 
 	if ($repository.Count -eq 0)
 	{
@@ -23,13 +23,13 @@ try
 			$sourceLocation = $repositoryPath + "nuget/"
 			$publishLocation = $repositoryPath
 
-			Write-Host "Registering repository.."
+			Write-Host "Registering repository '$sourceName' at '$publishLocation'"
 			$repository = Register-PSRepository -Name $sourceName -SourceLocation $sourceLocation -PublishLocation  $publishLocation -InstallationPolicy Trusted
 		}
 
         Invoke-Command -ScriptBlock $registerScriptBlock
 
-        Write-Host ".. registered!"
+        Write-Host "New repository is registered"
 	}
 	else 
 	{

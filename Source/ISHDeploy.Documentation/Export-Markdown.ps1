@@ -1,16 +1,22 @@
 ﻿param (
     [Parameter(Mandatory=$true)]
     [string]
-    $ModulePath,
+    $ModuleDir,
+    [Parameter(Mandatory=$true)]
+    [string]
+    $ModuleName,
     [Parameter(Mandatory=$true)]
     [string]
     $ExportPath
 )
 #$DebugPreference="Continue"
 #$VerbosePreference="Continue"
+$MamlFilePath = Join-Path $ModuleDir ($ModuleName + ".dll-Help.xml")
 
-Write-Debug "ModulePath=$ModulePath"
-Write-Debug "ExportPath=$ExportPath"
+Write-Debug "Module Directory: $ModuleDir"
+Write-Debug "Module Name: $ModuleName"
+Write-Debug "Module Maml File Path: $MamlFilePath"
+Write-Debug "Export Path: $ExportPath"
 
 
 # https://blogs.msdn.microsoft.com/powershell/2016/02/05/platyps-write-external-help-files-in-markdown/
@@ -26,36 +32,22 @@ if (-not (Get-Module -ListAvailable -Name platyPS))
 	For powershell version smaller or equal to 4 you need to install PackageManagement https://www.microsoft.com/en-us/download/details.aspx?id=49186"
     exit 1
 }
+
 try
 {
 	Import-Module platyPS
 	Get-Command -Module platyPS | Select-Object -ExpandProperty Name
 
-	Import-Module –Name $ModulePath -Verbose
-	$commandletNames=Get-Command -Module ISHDeploy | Select-Object -ExpandProperty Name 
-	Write-Verbose "Processing $($commandletNames.Count) commandlets"
+	Write-Verbose "Processing maml file ($MamlFilePath)"
+	# Generating markdown form maml file
+	[string]$mamlContent = Get-Content $MamlFilePath
+	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
 
-	if(-not (Test-Path $ExportPath))
-	{
-		New-Item $ExportPath -ItemType Directory
-	}
-	Get-ChildItem -Path $ExportPath -Include * | Remove-Item -recurse 
-
-	$commandletNames | ForEach-Object {
-		$mdPath=Join-Path $ExportPath "$_.md"
-		Write-Verbose "Processing $_"
-		$markDown=Get-platyPSMarkdown -Command $_
-		Write-Debug $markDown
-		Write-Verbose "Exporting to $mdPath"     
-		$markDown |Out-File  $mdPath -Encoding UTF8
-	}
-	
-	#To generate the toc.yml we can use some thing like this. But there is a problem with the generated output
-	#Get-Command -Module ISHDeploy |Select-Object -ExpandProperty Name | ForEach-Object {"- name: $_";"- href: $_.md"} |Out-File C:\docfx_walkthrough\docfx_project\ISHDeploy\tox.yml -Encoding utf8
-	Get-Command -Module ISHDeploy |Select-Object -ExpandProperty Name | ForEach-Object {
-		"- name: $_";
-		"  href: " + "../obj/doc/module/ISHDeploy/" + "$_.md"
-	} |Out-File $PSScriptRoot/Module/toc.yml -Encoding utf8
+	# Generating context for all markdown files generated from maml
+	Get-ChildItem -Path $ExportPath | ForEach-Object {
+		"- name: " + $_.BaseName;
+		"  href: " + "../obj/doc/module/ISHDeploy/" + $_.Name
+	} | Out-File $PSScriptRoot/Module/toc.yml -Encoding utf8
 }
 catch
 {

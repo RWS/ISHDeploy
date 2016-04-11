@@ -53,10 +53,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTab.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
+    <Compile Include="Interfaces\IISHXmlNode.cs" />
+    <Compile Include="Models\EventLogMenuItem.cs" />
+    <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />

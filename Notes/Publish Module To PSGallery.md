@@ -20,12 +20,7 @@ This outputs the following
 
 ## Version plan
 
-All modules starts on their first release with `Major.Minor=1.0`. On every new release of each module we increase the Minor.
-
-We need to use AssemblyInformationalVersion to get versions such as
-The correct pattern with semantic version:
-
-`$build=[string](1200 * ($date.Year -2015) + $date.Month*100 + $date.Day)`
+All modules starts on their first release with `Major.Minor=1.0`. For more information please see [Maintaining Versions][versions]
 
  
 ## Digital and Strong Name Assembly Signing
@@ -42,12 +37,9 @@ $fileToSign = Get-ChildItem "${ENV:WORKSPACE}\Source\ISHDeploy\bin\Release\ISHDe
 The above command performs both actions by adding to the assembly a strong name and signing it by digital key. That guarantees the uniqueness of the assembly, confirms SDL ownership and protects against tampering of the asset.
 
 
-## Generating Manifest file `InfoShare.Deployment.*.0.psd1`
+## Generating Manifest file `ISHDeploy.xx.x.psd1`
 
-~~Add `AssemblyVersion` and `AssemblyFileVersion` and `AssemblyInformationalVersion` attributes
-Create the manifest file. It must match the module name (ISHDeploy.12.0.psd1)~~
-
-{ ----- FILL/UPDATE THIS SECTION by **Andrey** ------ }
+Instructions how we provide module name and version per branches can be found in [Maintaining Versions][versions].
 
 
 ## Creating temporary NuGet server to host packages
@@ -95,3 +87,5 @@ $repoName = "TestNuGetServer"
 
 Publish-Module -Path $modulePath -NuGetApiKey $apiKey -Repository $repoName
 ```
+
+[versions]: ./Notes/Maintain%20versions.md

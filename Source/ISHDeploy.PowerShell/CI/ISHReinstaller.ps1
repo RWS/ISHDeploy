@@ -1,27 +1,18 @@
-﻿Import-Module ISHDeploy
+﻿$executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+$installationPath = "C:\Automated_deployment"
 
-$executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$remotePCUserDocFolder = join-path $env:USERPROFILE 'Documents'
+$installScript = Join-Path $executingScriptDirectory "ISHInstall.ps1"
+$uninstallScript = Join-Path $executingScriptDirectory "ISHUninstall.ps1"
 
-$ISHInstall = Join-Path $executingScriptDirectory "ISHInstall.ps1"
-$ISHUninstall = Join-Path $executingScriptDirectory "ISHUninstall.ps1"
+$inputParametersDir = Join-Path $executingScriptDirectory "InputParameters"
 
-$ISHUninstallSQL2014= $ISHUninstall + " InfoShareSQL2014 $remotePCUserDocFolder\inputparameters_SQL2014.xml C:\Automated_deployment"
-$ISHUninstallORA12= $ISHUninstall + " InfoShareORA12 $remotePCUserDocFolder\inputparameters_ORA12.xml C:\Automated_deployment"
+# For each inputparameters.xml files unistall and install environment
+Get-ChildItem $inputParametersDir | ForEach-Object {
+	$instance = Get-ISHDeployment -Name $_.BaseName
 
-$ISHInstallSQL2014 = $ISHInstall +" C:\Automated_deployment $remotePCUserDocFolder\inputparameters_SQL_2014.xml"
-$ISHInstallORA12 = $ISHInstall +" C:\Automated_deployment $remotePCUserDocFolder\inputparameters_ORA12.xml"
+	if($instance) {
+		Invoke-Command -ScriptBlock { & ([ScriptBlock]::Create("$uninstallScript -deployment $($_.BaseName) -inputparameters $($_.FullName) -deploymentfolder $installationPath")) }
+	}
 
-$ORA = Get-ISHDeployment -Name "InfoShareORA12"
-$SQL = Get-ISHDeployment -Name "InfoShareSQL2014"
-if($ORA){
-Invoke-Expression $ISHUninstallORA12
+	Invoke-Command -ScriptBlock { & ([ScriptBlock]::Create("$installScript -deploymentFolder $installationPath -inputparameters $($_.FullName)")) }
 }
-
-Invoke-Expression $ISHInstallORA12
-
-if($SQL){
-Invoke-Expression $ISHUninstallSQL2014
-}
-
-Invoke-Expression $ISHInstallSQL2014

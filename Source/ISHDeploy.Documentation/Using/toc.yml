@@ -1,14 +1,14 @@
 - name: ISHContentEditor
   href: ../obj/doc/using/ISHContentEditor/ISHContentEditor.md
 - name: ISHUIContentEditor
-  href: ../obj/doc/using//ISHUIContentEditor/ISHUIContentEditor.md
+  href: ../obj/doc/using/ISHUIContentEditor/ISHUIContentEditor.md
 - name: ISHDeployment
-  href: ../obj/doc/using//ISHDeployment/ISHDeployment.md
+  href: ../obj/doc/using/ISHDeployment/ISHDeployment.md
 - name: ISHExternalPreview
-  href: ../obj/doc/using//ISHExternalPreview/ISHExternalPreview.md
+  href: ../obj/doc/using/ISHExternalPreview/ISHExternalPreview.md
 - name: ISHUIContentEditor
-  href: ../obj/doc/using//ISHUIContentEditor/ISHUIContentEditor.md
+  href: ../obj/doc/using/ISHUIContentEditor/ISHUIContentEditor.md
 - name: ISHUIQualityAssistant
-  href: ../obj/doc/using//ISHUIQualityAssistant/ISHUIQualityAssistant.md
+  href: ../obj/doc/using/ISHUIQualityAssistant/ISHUIQualityAssistant.md
 - name: Rollback
-  href: ../obj/doc/using//Rollback/Rollback.md
+  href: ../obj/doc/using/Rollback/Rollback.md

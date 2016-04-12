@@ -83,6 +83,26 @@ $scriptBlockEnableContentEditor = {
   
 }
 
+$scriptBlockGetPackageFolder = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName,
+        [Parameter(Mandatory=$false)]
+        $uncSwitch 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    if($uncSwitch){
+        Get-ISHPackageFolderPath -ISHDeployment $ishDeploy -UNC
+    }
+    else{
+        Get-ISHPackageFolderPath -ISHDeployment $ishDeploy
+    }
+}
+
 $scriptBlockUndoDeployment = {
     param (
         [Parameter(Mandatory=$false)]
@@ -131,10 +151,12 @@ Describe "Testing Get-ISHDeploymentHistory"{
 
     }
 
-    It "Commandlets that implements base class write bo historty"{
+    It "Commandlets that implements base class write no history"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName
 
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         $fakeHistory =  createFakeHistory

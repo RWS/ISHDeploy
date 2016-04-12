@@ -84,6 +84,7 @@
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
+    <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />

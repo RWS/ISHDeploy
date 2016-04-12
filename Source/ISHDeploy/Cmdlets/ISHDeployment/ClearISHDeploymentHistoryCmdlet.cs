@@ -1,7 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
-using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Extensions;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -31,19 +31,16 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var ishPaths = new ISHPaths(ISHDeployment);
 
-			// Remove history file
-			var historyFilePath = ishPaths.HistoryFilePath;
-	        if (fileManager.FileExists(historyFilePath))
-	        {
-		        fileManager.Delete(historyFilePath);
-	        }
+            // Remove history file
+            var historyFilePath = ishPaths.HistoryFilePath;
 
 			// Clean backup directory
 			var backupFolderPath = ISHDeployment.GetDeploymentBackupFolder();
-	        fileManager.CleanFolder(backupFolderPath);
+
+            var operation = new ClearISHDeploymentHistoryOperation(Logger, historyFilePath, backupFolderPath);
+            operation.Run();
 		}
 	}
 }

@@ -80,6 +80,8 @@ namespace ISHDeploy.Business.Invokers
                         _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
                     }
                 }
+
+                _logger.WriteVerbose($"{_activityDescription} completed");
             }
             catch
             {
@@ -93,8 +95,8 @@ namespace ISHDeploy.Business.Invokers
 					{
 						(x as IRestorableAction)?.Rollback();
 					});
-				}
-                
+                }
+
                 throw;
             }
 	        finally

@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
         /// <param name="paths">Reference for all files paths.</param>
         public DisableISHUIContentEditorOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "Disabling InfoShare Content Editor");
+            _invoker = new ActionInvoker(logger, "Disabling of InfoShare Content Editor");
             
             _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, paths.FolderButtonbar, new [] { CommentPatterns.XopusAddCheckOut, CommentPatterns.XopusAddUndoCheckOut }));
             _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, paths.InboxButtonBar, CommentPatterns.XopusAddCheckOut));

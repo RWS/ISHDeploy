@@ -88,4 +88,4 @@ $repoName = "TestNuGetServer"
 Publish-Module -Path $modulePath -NuGetApiKey $apiKey -Repository $repoName
 ```
 
-[versions]: ./Notes/Maintain%20versions.md
+[versions]: ./Maintain%20versions.md

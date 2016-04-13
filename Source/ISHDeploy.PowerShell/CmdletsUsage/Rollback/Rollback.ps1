@@ -16,12 +16,12 @@ $dict.Add('projectsuffix', 'sites')
 $dict.Add('datapath', 'C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
-$deploy = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
+$deployment = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-#Enable-ISHUIContentEditor -ISHDeployment $deploy
+#Enable-ISHUIContentEditor -ISHDeployment $deployment 
 
-#Set-ISHContentEditor -ISHDeployment $deploy -Domain "global.sdl.corp" -LicenseKey "blablabkabkabkabkabakbaiuaslc"
+#Set-ISHContentEditor -ISHDeployment $deployment -Domain "global.sdl.corp" -LicenseKey "blablabkabkabkabkabakbaiuaslc"
 
-#Undo-ISHDeployment -ISHDeployment $deploy
+#Undo-ISHDeployment -ISHDeployment $deployment 
 
-Clear-ISHDeploymentHistory -ISHDeployment $deploy
+Clear-ISHDeploymentHistory -ISHDeployment $deployment

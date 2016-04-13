@@ -16,8 +16,8 @@ $dict.Add('projectsuffix', 'SQL2014')
 $dict.Add('datapath', 'E:\New folder')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
-$deploy = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
+$deployment = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-Set-ISHDeployment $deploy
+Set-ISHDeployment $deployment 
 
 Enable-ISHUIContentEditor

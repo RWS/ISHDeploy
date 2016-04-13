@@ -11,7 +11,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	///		<para type="link">Move-ISHUIEventMonitorTab</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Translation"</code>
+	///		<code>PS C:\>Remove-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Translation"</code>
 	///		<para>Removes definition of the tab with label "Translation".</para>
 	///		<para>This command removes XML definitions from EventMonitor.
 	///			Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.

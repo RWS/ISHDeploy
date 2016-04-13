@@ -16,6 +16,6 @@ $dict.Add('projectsuffix', 'sites')
 $dict.Add('datapath', 'C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
-$deploy = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
+$deployment = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
 
-Remove-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "P4"
+Remove-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "P4"

@@ -2,8 +2,6 @@
 ISHDeploy
 ==========
 
-A small library for padding strings in JavaScript. Marmalade-free.
-
 [![Powershell version support][shield-ps]](#)
 [![Build status][shield-build]](#)
 [![Code coverage][shield-coverage]](#)
@@ -36,9 +34,9 @@ To use this module, it should me imported.
 ```powershell
 Import-Module "ISHDeploy"
 
-$deploy = Get-ISHDeployment -Name 'InfoShareORA12'
+$deployment = Get-ISHDeployment -Name 'InfoShareORA12'
 
-Set-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "EventTab" -Description "New Event Tab"
+Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "EventTab" -Description "New Event Tab"
 ```
 
 Contributing

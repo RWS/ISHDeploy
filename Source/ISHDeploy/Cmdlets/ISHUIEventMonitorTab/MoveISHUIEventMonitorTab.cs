@@ -12,15 +12,15 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -First</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Publish" -First</code>
 	///		<para>Moves definition of the "Publish" to the top.</para>
 	/// </example>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Publish" -Last</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Publish" -Last</code>
 	///		<para>Moves definition of the "Publish" to the bottom.</para>
 	/// </example>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deploy -Label "Translation" -After "Publish"</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
 	///		<para>Moves definition of the "Translation" after "Publish".</para> 
 	/// </example>
 	/// <para>This command manipulates XML definitions nodes in EventMonitor.

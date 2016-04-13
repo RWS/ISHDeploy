@@ -75,7 +75,7 @@ Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $sessio
 $session = New-PSSession -ComputerName $targetPC
 
 # Reinstall ISHDeploy module
-#Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $moduleName.BaseName, $repositoryName, $repositoryPath -Session $session 
+Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $moduleName.BaseName, $repositoryName, $repositoryPath -Session $session 
 
 # ------------------------------------------------------------------------------------------------
 # --------------- Reinstall Content Manager instances on the test environment --------------------

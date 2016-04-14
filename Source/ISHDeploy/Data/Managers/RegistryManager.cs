@@ -78,7 +78,9 @@ namespace ISHDeploy.Data.Managers
         /// <returns>List of found deployments</returns>
         public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null)
         {
-            var installedProjectsKeys = new List<RegistryKey>();
+			_logger.WriteDebug($"Retrieveing installed registry keys {(expectedSuffix == null ? "" : ("with suffix " + expectedSuffix))}");
+
+			var installedProjectsKeys = new List<RegistryKey>();
             var projectBaseRegKey = GetProjectBaseRegKey();
 
             if (projectBaseRegKey == null || projectBaseRegKey.SubKeyCount == 0)
@@ -116,7 +118,9 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Path to inputparameters.xml file</returns>
         public string GetInstallParamFilePath(RegistryKey projectRegKey)
         {
-            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+			_logger.WriteDebug($"Retrieveing the inputparameters.xml file path by project key `{projectRegKey.Name}`");
+
+			var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
             return historyItem?.GetValue(InstallHistoryPathRegValue).ToString();
         }
@@ -128,14 +132,16 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Deployment version.</returns>
         public Version GetInstalledProjectVersion(RegistryKey projectRegKey)
         {
-            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+			_logger.WriteDebug($"Retrieveing installed deployment version by project key `{projectRegKey.Name}`");
+
+			var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
             var versionStr = historyItem?.GetValue(VersionRegValue).ToString();
             Version version;
 
             if (string.IsNullOrWhiteSpace(versionStr) || !Version.TryParse(versionStr, out version))
             {
-                _logger.WriteDebug($"{projectRegKey} registry key does not contain correct {VersionRegValue} value");
+                _logger.WriteDebug($"`{projectRegKey}` registry key does not contain correct `{VersionRegValue}` value");
                 return null;
             }
             
@@ -149,11 +155,11 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Registry history folder key.</returns>
         private RegistryKey GetHistoryFolderRegKey(RegistryKey projectRegKey)
         {
-            var currentInstallvalue = projectRegKey?.GetValue(CurrentRegName).ToString();
+			var currentInstallvalue = projectRegKey?.GetValue(CurrentRegName).ToString();
 
             if (string.IsNullOrWhiteSpace(currentInstallvalue))
             {
-                _logger.WriteDebug($"{projectRegKey} does not contain {CurrentRegName} key");
+                _logger.WriteDebug($"`{projectRegKey}` does not contain `{CurrentRegName}` key");
                 return null;
             }
 
@@ -163,7 +169,7 @@ namespace ISHDeploy.Data.Managers
 
             if (installFolderRegKey == null)
             {
-                _logger.WriteDebug($"{projectRegKey} does not contain {HistoryRegName} key that named {currentInstallvalue}");
+                _logger.WriteDebug($"`{projectRegKey}` does not contain `{HistoryRegName}` key that named `{currentInstallvalue}`");
                 return null;
             }
 
@@ -180,13 +186,13 @@ namespace ISHDeploy.Data.Managers
 
             if (Environment.Is64BitOperatingSystem)
             {
-                _logger.WriteDebug($"Try to open registry key {InstallToolRegPath64}");
+                _logger.WriteDebug($"Try to open registry key `{InstallToolRegPath64}`");
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath64);
             }
 
             if (installToolRegKey == null)
             {
-                _logger.WriteDebug($"Try to open registry key {InstallToolRegPath}");
+                _logger.WriteDebug($"Try to open registry key `{InstallToolRegPath}`");
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath);
             }
             
@@ -202,7 +208,7 @@ namespace ISHDeploy.Data.Managers
         {
             if (projectName.Length < 9)
             {
-                _logger.WriteWarning($"Unexpected project name in the registry: {projectName}");
+                _logger.WriteWarning($"Unexpected project name in the registry: `{projectName}`");
                 return null;
             }
 

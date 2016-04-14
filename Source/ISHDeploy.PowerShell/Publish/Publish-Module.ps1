@@ -1,8 +1,8 @@
 param(
-[string] $modulePath = 'C:\Program Files (x86)\Jenkins\workspace\ISHDeploy Daily Develop.12.0.0\Source\ISHDeploy\bin\Release',
-[string] $apiKey = "kiev-green-bld",
-[string] $repositoryName = "KievGreenNuGetServer",
-[string] $repositoryPath =  "http://kiev-green-bld.global.sdl.corp:8088/"
+[string] $modulePath,
+[string] $apiKey,
+[string] $repositoryName,
+[string] $repositoryPath
 )
 
 #Install the packages

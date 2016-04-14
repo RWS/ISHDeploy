@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <BuildDependsOn>
-      ModuleManifest;
-      $(BuildDependsOn)
+      $(BuildDependsOn);
+      ModuleManifest
     </BuildDependsOn>
   </PropertyGroup>
 

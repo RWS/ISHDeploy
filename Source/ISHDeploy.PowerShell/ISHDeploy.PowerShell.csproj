@@ -55,7 +55,6 @@
     <None Include="CI\ISHReinstaller.ps1" />
     <None Include="CI\ISHUninstall.ps1" />
     <None Include="CI\kill_powershell.bat" />
-    <None Include="CI\TestRunner.ps1" />
     <None Include="CmdletsUsage\Info\Get-Version.ps1" />
     <None Include="CmdletsUsage\Info\Info.md" />
     <None Include="CmdletsUsage\ISHContentEditor\ISHContentEditor.md" />

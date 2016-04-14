@@ -1,8 +1,8 @@
 ﻿param(
 	$session = $null,
 	$testingDeployment = "InfoShare",
-	$outputFile = "C:\results.xml"
-)
+	$outputFile
+	)
 
 $DebugPreference="SilentlyContinue"
 $VerbosePreference="SilentlyContinue"

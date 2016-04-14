@@ -38,7 +38,7 @@ $scriptBlockClean = {
 }
 
 # Script block for Enable-ISHUIQualityAssistant. Added here for generating backup files
-$scriptBlocDisable = {
+$scriptBlockDisable = {
     param (
         [Parameter(Mandatory=$true)]
         $ishDeployName 

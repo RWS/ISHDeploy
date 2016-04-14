@@ -9,9 +9,9 @@ $folder = Get-ChildItem $deploymentFolder | where {$_.Attributes -eq 'Directory'
 $installToolPath = Join-Path $deploymentFolder $folder 
 $installToolPath = Join-Path $installToolPath '\__InstallTool'
 
-Write-Host $installToolPath
+Write-Host "InstallTool path: $installToolPath"
 
-$commandUninstall = 'cmd.exe /C '+ $installToolPath + '\InstallTool.exe -Uninstall -project '+ $deployment +' -inputparameters "C:\Users\infoshareserviceuser\Documents\inputparameters_ORA12.xml" '
-Write-Host $commandUninstall
+$commandUninstall = 'cmd.exe /C '+ $installToolPath + '\InstallTool.exe -Uninstall -project '+ $deployment +' -inputparameters' + $inputparameters
+Write-Host "Uninstall command: $commandUninstall"
 
 Invoke-Expression $commandUninstall

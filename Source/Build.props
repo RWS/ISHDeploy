@@ -7,7 +7,7 @@
     <Revision>0</Revision>
     <ShortModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ShortModuleVersion>
     <FullModuleVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleVersion>
-    <ModuleName>ISHDeploy.12.0</ModuleName>
+    <ModuleName>ISHDeploy.12.0.0</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>$(ModuleTitle) 2016</ModuleDescription>
     <ModuleCompany>SDL</ModuleCompany>

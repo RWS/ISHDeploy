@@ -16,25 +16,18 @@ try
 	if ($repository.Count -eq 0)
 	{
 		Write-Host "Repository is not registered"
+        Write-Host "Registering repository '$repositoryName' at '$repositoryPath'"
+        
+        $sourceLocation = $repositoryPath + "nuget/"
+		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation $repositoryPath -InstallationPolicy Trusted
 
-		$registerScriptBlock=
-		{
-			$sourceName = $repositoryName
-			$sourceLocation = $repositoryPath + "nuget/"
-			$publishLocation = $repositoryPath
-
-			Write-Host "Registering repository '$sourceName' at '$publishLocation'"
-			$repository = Register-PSRepository -Name $sourceName -SourceLocation $sourceLocation -PublishLocation  $publishLocation -InstallationPolicy Trusted
-		}
-
-        Invoke-Command -ScriptBlock $registerScriptBlock
-
-        Write-Host "New repository is registered"
+        $repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
+        if ($repository.Count -eq 0) {
+            throw "Cannot register repository $repositoryName"
+        }
 	}
-	else 
-	{
-		Write-Host "Repository is registered"
-	}
+
+    Write-Host "Repository is registered"
 
 	# Creating temporary Module directory
 

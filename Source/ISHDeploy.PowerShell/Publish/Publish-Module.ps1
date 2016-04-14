@@ -1,8 +1,8 @@
 param(
-[string] $modulePath,
-[string] $apiKey,
-[string] $repositoryName,
-[string] $repositoryPath
+[string] $modulePath = 'C:\Program Files (x86)\Jenkins\workspace\ISHDeploy Daily Develop.12.0.0\Source\ISHDeploy\bin\Release',
+[string] $apiKey = "kiev-green-bld",
+[string] $repositoryName = "KievGreenNuGetServer",
+[string] $repositoryPath =  "http://kiev-green-bld.global.sdl.corp:8088/"
 )
 
 #Install the packages
@@ -16,25 +16,18 @@ try
 	if ($repository.Count -eq 0)
 	{
 		Write-Host "Repository is not registered"
+        Write-Host "Registering repository '$repositoryName' at '$repositoryPath'"
+        
+        $sourceLocation = $repositoryPath + "nuget/"
+		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation $repositoryPath -InstallationPolicy Trusted
 
-		$registerScriptBlock=
-		{
-			$sourceName = $repositoryName
-			$sourceLocation = $repositoryPath + "nuget/"
-			$publishLocation = $repositoryPath
-
-			Write-Host "Registering repository '$sourceName' at '$publishLocation'"
-			$repository = Register-PSRepository -Name $sourceName -SourceLocation $sourceLocation -PublishLocation  $publishLocation -InstallationPolicy Trusted
-		}
-
-        Invoke-Command -ScriptBlock $registerScriptBlock
-
-        Write-Host "New repository is registered"
+        $repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
+        if ($repository.Count -eq 0) {
+            throw "Cannot register repository $repositoryName"
+        }
 	}
-	else 
-	{
-		Write-Host "Repository is registered"
-	}
+
+    Write-Host "Repository is registered"
 
 	# Creating temporary Module directory
 

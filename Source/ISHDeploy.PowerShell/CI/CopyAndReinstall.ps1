@@ -6,7 +6,7 @@
 )
 
 # Defining variables
-$automationTestsFolderName = "AutomationTests"
+$automationTestsFolderName = "Pester"
 $remoteBaseDir = "\\$targetPC\C$\Users\$env:USERNAME\Documents\"
 $remoteAutomationTestsDir = Join-Path $remoteBaseDir $automationTestsFolderName
 $remoteReinstallScriptsDir = Join-Path $remoteBaseDir "ReinstallScripts"
@@ -42,27 +42,27 @@ $scriptBlock = {
 
 	# Uninstall previous ISHDeploy modules
 	$installedModules = Get-Module -ListAvailable | Select-Object Name | ? Name -like "ISHDeploy*"
-	$installedModules | ForEach-Object { Write-Host "Uninstalling " $_.Name; Uninstall-Module -Name $_.Name }
+	if ($installedModules.Count -ge 1) {
+		$installedModules | ForEach-Object { Write-Host "Uninstalling " $_.Name; Uninstall-Module -Name $_.Name }
+	}
 
 	# Registry repository if it's not registered
 	$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
 
 	if ($repository.Count -eq 0) {
 		Write-Host "Repository is not registered"
+		Write-Host "Registering repository $repositoryName"
 
-		$registerScriptBlock=
-		{
-			$sourceName = $repositoryName
-			$sourceLocation = $repositoryPath + "nuget/"
-			$publishLocation = $repositoryPath
+		$sourceLocation = $repositoryPath + "nuget/"
+		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation  $repositoryPath -InstallationPolicy Trusted
 
-			Write-Host "Registering repository.."
-			$repository = Register-PSRepository -Name $sourceName -SourceLocation $sourceLocation -PublishLocation  $publishLocation -InstallationPolicy Trusted
-		}
-
-		Invoke-Command -ScriptBlock $registerScriptBlock
-		Write-Host ".. registered!"
+		$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
+        if ($repository.Count -eq 0) {
+            throw "Cannot register repository $repositoryName"
+        }
 	}
+
+	Write-Host "Repository is registered!"
 	
 	# Install new module
 	Write-Host "Installing " $moduleName

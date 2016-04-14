@@ -6,29 +6,20 @@
 )
 
 # Defining variables
-$automationTestsFolderName = "Pester"
 $remoteBaseDir = "\\$targetPC\C$\Users\$env:USERNAME\Documents\"
-$remoteAutomationTestsDir = Join-Path $remoteBaseDir $automationTestsFolderName
 $remoteReinstallScriptsDir = Join-Path $remoteBaseDir "ReinstallScripts"
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$localAutomationTests = Join-Path (get-item $executingScriptDirectory ).parent.FullName $automationTestsFolderName
 $moduleName = Get-ChildItem $moduleFilePath
 
-Write-Host "RemoteAutomationTestsDir: $remoteAutomationTestsDir"
 Write-Host "RemoteReinstallScriptsDir: $remoteReinstallScriptsDir"
 Write-Host "ExecutingScriptDirectory: $executingScriptDirectory"
-Write-Host "LocalAutomationTests: $localAutomationTests"
 Write-Host "Module Name: $moduleName"
 
 # In case if there is no folder for module - create it
-if (!(Test-Path -path $remoteAutomationTestsDir)) { New-Item $remoteAutomationTestsDir -Type Directory }
 if (!(Test-Path -path $remoteReinstallScriptsDir)) { New-Item $remoteReinstallScriptsDir -Type Directory }
 
 # Copy all scripts for uninstalling and installing Content Manager
 Get-ChildItem $executingScriptDirectory | Copy-Item -Destination $remoteReinstallScriptsDir -Recurse -Force
-
-# Copy all automation tests to target pc
-Get-ChildItem $localAutomationTests | Copy-Item -Destination $remoteAutomationTestsDir -Recurse -Force
 
 # ------------------------------------------------------------------------------------------------
 # ------------------------------ Reinstall ISHDeploy.xx.x module ---------------------------------

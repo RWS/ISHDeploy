@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(SolutionDir)Build.props" />
@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Configure-IIS.ps1" />
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />
@@ -150,7 +151,8 @@
   <PropertyGroup>
     <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" "$(TargetPath)"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)ISHDeploy.PostBuild.ps1" -outputpath "$(TargetDir)." -modulename $(TargetName)
-</PostBuildEvent>
+
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Configure-IIS.ps1" -docpath "$(SolutionDir)ISHDeploy.Documentation\_site" -docversion "$(TargetName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

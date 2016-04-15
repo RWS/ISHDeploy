@@ -88,13 +88,15 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
+			Logger.WriteVerbose($"Creating back up for `{this.GetType().Name}`");
+
 			if (FileManager.FileExists(this.FilePath))
 			{
 				this.BackupPath = GetNewBackUpFileName();
 
 				if (!FileManager.FileExists(this.BackupPath))
 				{
-					Logger.WriteDebug($"Back up does not exists. Creating temporary back up file for `{this.FilePath}`.");
+					Logger.WriteDebug($"Back up file `{this.BackupPath}` does not exists. Creating temporary back up file for `{this.FilePath}`.");
                     FileManager.Copy(this.FilePath, this.BackupPath);
 				}
 			}
@@ -110,8 +112,8 @@ namespace ISHDeploy.Data.Actions
 				string vanillaFilePath = IshFilePath.VanillaPath;
 				if (!FileManager.FileExists(vanillaFilePath))
 				{
+					Logger.WriteDebug($"Creating vanilla back up of file `{this.GetType().Name}`");
 					FileManager.EnsureDirectoryExists(Path.GetDirectoryName(vanillaFilePath));
-
 					FileManager.Copy(this.FilePath, vanillaFilePath);
 				}
 			}

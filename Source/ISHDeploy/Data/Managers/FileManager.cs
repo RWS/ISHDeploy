@@ -55,7 +55,6 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
         public bool FileExists(string path)
         {
-			_logger.WriteDebug($"Checking if file `{path}` exists");
 			return File.Exists(path);
         }
 
@@ -66,7 +65,6 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if folder exists</returns>
         public bool FolderExists(string path)
         {
-			_logger.WriteDebug($"Checking if directory `{path}` exists");
 			return Directory.Exists(path);
         }
 
@@ -137,10 +135,9 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="folderPath">Directory path to verify</param>
 		public void EnsureDirectoryExists(string folderPath)
 		{
-			_logger.WriteDebug($"Making sure that directory `{folderPath}` exists");
 			if (!this.FolderExists(folderPath))
 			{
-				_logger.WriteDebug($"Directory `{folderPath}` does not exist, creating it");
+				_logger.WriteDebug($"Directory `{folderPath}` does not exist, creating it.");
 				this.CreateDirectory(folderPath);
 			}
 			else

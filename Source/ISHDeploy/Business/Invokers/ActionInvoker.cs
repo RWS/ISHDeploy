@@ -60,7 +60,7 @@ namespace ISHDeploy.Business.Invokers
         /// </summary>
         public void Invoke()
         {
-            _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
+            _logger.WriteDebug($"Entered Invoke method for `{nameof(ActionInvoker)}`");
 
 			List<IAction> executedActions = new List<IAction>();
             try
@@ -81,7 +81,7 @@ namespace ISHDeploy.Business.Invokers
                     }
                 }
 
-                _logger.WriteVerbose($"{_activityDescription} completed");
+                _logger.WriteVerbose($"`{_activityDescription}` completed");
             }
             catch
             {

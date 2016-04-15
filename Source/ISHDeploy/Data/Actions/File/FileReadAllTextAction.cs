@@ -42,7 +42,8 @@ namespace ISHDeploy.Data.Actions.File
 		{
             if (!_fileManager.FileExists(_filePath))
             {
-                return string.Empty;
+				Logger.WriteDebug($"File `{_filePath}` was not found.");
+				return string.Empty;
             }
 
             return _fileManager.ReadAllText(_filePath);

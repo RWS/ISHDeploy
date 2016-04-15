@@ -41,7 +41,8 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             if (string.IsNullOrEmpty(historyContent))
             {
-                return;
+				Logger.WriteVerbose($"History file is empty.");
+				return;
             }
 
             WriteObject(historyContent);

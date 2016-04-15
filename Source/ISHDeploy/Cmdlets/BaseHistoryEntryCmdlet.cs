@@ -48,15 +48,18 @@ namespace ISHDeploy.Cmdlets
             // don't log if cmdlet was executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
-                return;
+				Logger.WriteVerbose($"Commandlet was executed with `-WhatIf` parameter, no history logging required.");
+				return;
             }
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var historyEntry = new StringBuilder();
             
             if (!fileManager.FileExists(IshPaths.HistoryFilePath)) // create history file with initial record
-            {
-                historyEntry.AppendLine($"# {CurrentDate}");
+			{
+				Logger.WriteVerbose($"Creating history file.");
+
+				historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{IshPaths.DeploymentName}'");
             }
             else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file

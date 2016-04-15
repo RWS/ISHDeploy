@@ -130,19 +130,23 @@ function checkEventMonitorTabExist{
         $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
         
 
-        $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label) -and ($_.action -eq $actionLine) -and ($_.icon -eq $Icon)}
+        $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
+        if (($textEventMenuBar.action -ne $actionLine) -or ($textEventMenuBar.icon -ne $Icon)){
+           # Return "Failed"
+        }
 
-        $commentCheck = ($global:textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($global:textEventMenuBar.PreviousSibling.Value -match $Description)
-        $userCheck = ($global:textEventMenuBar.userrole -eq $UserRole) -and ($global:textEventMenuBar.description -eq $Description)
+        $commentCheck = ($textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($textEventMenuBar.PreviousSibling.Value -match $Description)
+        $userCheck = ($textEventMenuBar.userrole -eq $UserRole) -and ($textEventMenuBar.description -eq $Description)
 
-   
-        if ($global:textEventMenuBar -and $commentCheck -and $userCheck){
+        
+        if ($textEventMenuBar -and $commentCheck -and $userCheck){
             Return "Added"
         }
         else  {
             Return "Deleted" 
         }
 }
+
 
 $scriptBlockSetEventMonitor = {
     param (
@@ -352,8 +356,11 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0
-		Write-Verbose "Comparing arrays differense: $checkResult"
+
+        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
+        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+		Write-Verbose "Comparing arrays differense: $compareArrayResult"
+        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
         #Assert
         $checkResult | Should Be "True"
     }

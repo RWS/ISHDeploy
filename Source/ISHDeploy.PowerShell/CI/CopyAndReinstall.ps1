@@ -58,8 +58,6 @@ $scriptBlock = {
 	# Install new module
 	Write-Host "Installing " $moduleName
 	Install-Module -Name $moduleName -Force
-
-	Import-Module -Name $moduleName
 }
 
 # Create session to targetPC, kill all powershell instances, that might lock ISHDeploy

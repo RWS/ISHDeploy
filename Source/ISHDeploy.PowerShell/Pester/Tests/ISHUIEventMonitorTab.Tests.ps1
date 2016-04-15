@@ -317,7 +317,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0
     
         #Assert
         $CheckResult | Should Be "True"
@@ -352,10 +352,10 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
-    
+        $checkResult = $compareArrayResult -eq 0
+		Write-Verbose "Comparing arrays differense: $checkResult"
         #Assert
-        $CheckResult | Should Be "True"
+        $checkResult | Should Be "True"
     }
 
     It "Move After itsels"{
@@ -377,7 +377,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -399,7 +399,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -421,7 +421,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0)| Should Be "True"
     }
 
     It "Move First"{
@@ -453,7 +453,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0 
         $CheckResult | Should Be "True"
      }
 

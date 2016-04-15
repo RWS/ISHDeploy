@@ -4,8 +4,8 @@
 	$outputFile
 	)
 
-$DebugPreference="SilentlyContinue"
-$VerbosePreference="SilentlyContinue"
+$DebugPreference = "SilentlyContinue"
+$VerbosePreference = "SilentlyContinue"
 
 $session = $null
 if($targetPC){

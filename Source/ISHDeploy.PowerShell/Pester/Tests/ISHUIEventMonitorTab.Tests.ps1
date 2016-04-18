@@ -124,27 +124,31 @@ function checkEventMonitorTabExist{
     [int]$ModifiedSinceMinutesFilter,
     [string]$SelectedButtonTitle = "Show%20Recent", 
     [string]$UserRole = "Administrator", 
-    [string]$Description 
-     )
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
-        $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
+    [string]$Description)
+
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+    $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
         
+    $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
+    $commentCheck = ($textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($textEventMenuBar.PreviousSibling.Value -match $Description)    
 
-        $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
-        if (($textEventMenuBar.action -ne $actionLine) -or ($textEventMenuBar.icon -ne $Icon)){
-           # Return "Failed"
-        }
+    if (!$textEventMenuBar -and !$commentCheck){
+        Return "Deleted"
+    }
+    elseif ($textEventMenuBar -and $commentCheck){
+        $userCheck = $textEventMenuBar.userrole -eq $UserRole
+        $descriptionCheck = $textEventMenuBar.description -eq $Description 
+        $actionCheck = $textEventMenuBar.action -eq $actionLine
+        $iconCheck = $textEventMenuBar.icon -eq $Icon
 
-        $commentCheck = ($textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($textEventMenuBar.PreviousSibling.Value -match $Description)
-        $userCheck = ($textEventMenuBar.userrole -eq $UserRole) -and ($textEventMenuBar.description -eq $Description)
+        if(!$userCheck -or !$descriptionCheck -or !$actionCheck -or !$iconCheck ){
+            Throw "Xml structure is wrong. Label found, but it has invalid elements. User: = $userCheck, Description:= $descriptionCheck, Action:= $actionCheck, Icon:= $iconCheck"
+        }
+            
+    }
 
-        
-        if ($textEventMenuBar -and $commentCheck -and $userCheck){
-            Return "Added"
-        }
-        else  {
-            Return "Deleted" 
-        }
+    Return "Added"
+
 }
 
 

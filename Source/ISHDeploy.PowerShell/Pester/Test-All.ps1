@@ -5,7 +5,7 @@
 	)
 
 $DebugPreference = "SilentlyContinue"
-$VerbosePreference = "Continue"
+$VerbosePreference = "SilentlyContinue"
 
 $session = $null
 if($targetPC){
@@ -14,4 +14,4 @@ if($targetPC){
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 $testsFolder = Join-Path $executingScriptDirectory "Tests"
 
-Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile -TestName "Testing ISHUIEventMonitorTab"
+Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile

@@ -25,7 +25,7 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path.</param>
-        /// <param name="returnResult">The delegate that returns if license is found for host name.</param>
+        /// <param name="returnResult">The delegate that returns all text of file.</param>
         public FileReadAllTextAction(ILogger logger, string filePath, Action<string> returnResult)
 			: base(logger, returnResult)
         {

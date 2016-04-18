@@ -124,25 +124,33 @@ function checkEventMonitorTabExist{
     [int]$ModifiedSinceMinutesFilter,
     [string]$SelectedButtonTitle = "Show%20Recent", 
     [string]$UserRole = "Administrator", 
-    [string]$Description 
-     )
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
-        $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
+    [string]$Description)
+
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+    $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
         
+    $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
+    $commentCheck = ($textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($textEventMenuBar.PreviousSibling.Value -match $Description)    
 
-        $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label) -and ($_.action -eq $actionLine) -and ($_.icon -eq $Icon)}
+    if (!$textEventMenuBar -and !$commentCheck){
+        Return "Deleted"
+    }
+    elseif ($textEventMenuBar -and $commentCheck){
+        $userCheck = $textEventMenuBar.userrole -eq $UserRole
+        $descriptionCheck = $textEventMenuBar.description -eq $Description 
+        $actionCheck = $textEventMenuBar.action -eq $actionLine
+        $iconCheck = $textEventMenuBar.icon -eq $Icon
 
-        $commentCheck = ($global:textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($global:textEventMenuBar.PreviousSibling.Value -match $Description)
-        $userCheck = ($global:textEventMenuBar.userrole -eq $UserRole) -and ($global:textEventMenuBar.description -eq $Description)
-
-   
-        if ($global:textEventMenuBar -and $commentCheck -and $userCheck){
-            Return "Added"
+        if(!$userCheck -or !$descriptionCheck -or !$actionCheck -or !$iconCheck ){
+            Throw "Xml structure is wrong. Label found, but it has invalid elements. User: = $userCheck, Description:= $descriptionCheck, Action:= $actionCheck, Icon:= $iconCheck"
         }
-        else  {
-            Return "Deleted" 
-        }
+        Return "Added"    
+    }
+
+    Throw "Found label without comment or comment without label. Label = $textEventMenuBar, comment = $commentCheck"    
+
 }
+
 
 $scriptBlockSetEventMonitor = {
     param (
@@ -317,7 +325,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0
     
         #Assert
         $CheckResult | Should Be "True"
@@ -352,10 +360,13 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
+
+        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
         $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
-    
+		Write-Verbose "Comparing arrays differense: $compareArrayResult"
+        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
         #Assert
-        $CheckResult | Should Be "True"
+        $checkResult | Should Be "True"
     }
 
     It "Move After itsels"{
@@ -377,7 +388,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -399,7 +410,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -421,7 +432,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0)| Should Be "True"
     }
 
     It "Move First"{
@@ -453,7 +464,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0 
         $CheckResult | Should Be "True"
      }
 

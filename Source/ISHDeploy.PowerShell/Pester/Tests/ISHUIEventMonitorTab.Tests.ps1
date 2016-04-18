@@ -360,11 +360,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-
-        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
-		Write-Verbose "Comparing arrays differense: $compareArrayResult"
-        Write-Verbose "Check result: $(checkEventMonitorTabExist)"
+        $checkResult = $compareArrayResult -eq 0 
         #Assert
         $checkResult | Should Be "True"
     }

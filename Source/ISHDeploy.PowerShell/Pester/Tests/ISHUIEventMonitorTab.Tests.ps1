@@ -317,8 +317,8 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
 
         #read the updated xml file
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
-        #[xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     
         #Compare 2 arrays
@@ -353,6 +353,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params, "Last"
 
         #read the updated xml file
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     
@@ -379,6 +380,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
@@ -401,6 +403,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
@@ -423,6 +426,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
@@ -453,6 +457,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params, "First"
 
         #read the updated xml file
+        Start-Sleep -Milliseconds 7000
         [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     

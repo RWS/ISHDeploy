@@ -144,10 +144,10 @@ function checkEventMonitorTabExist{
         if(!$userCheck -or !$descriptionCheck -or !$actionCheck -or !$iconCheck ){
             Throw "Xml structure is wrong. Label found, but it has invalid elements. User: = $userCheck, Description:= $descriptionCheck, Action:= $actionCheck, Icon:= $iconCheck"
         }
-            
+        Return "Added"    
     }
 
-    Return "Added"
+    Throw "Found label without comment or comment without label. Label = $textEventMenuBar, comment = $commentCheck"    
 
 }
 

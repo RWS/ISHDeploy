@@ -26,7 +26,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="licenceFolderPath">The destination path for licence file.</param>
-        /// <param name="domain">Name of the file that will be created.</param>
+        /// <param name="domain">The host name is checked for the existence of the license file.</param>
         public TestISHContentEditorOperation(ILogger logger, ISHFilePath licenceFolderPath, string domain)
         {
             _invoker = new ActionInvoker(logger, "Testing of license for specific host name");

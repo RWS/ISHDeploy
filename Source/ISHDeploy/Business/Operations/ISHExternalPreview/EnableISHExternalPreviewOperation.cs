@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <param name="externalId">The external user identifier.</param>
         public EnableISHExternalPreviewOperation(ILogger logger, ISHPaths paths, string externalId)
         {
-            _invoker = new ActionInvoker(logger, "Enabling InfoShare external preview");
+            _invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
             
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(

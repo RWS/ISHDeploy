@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
-using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Data.Actions.File;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -31,16 +32,18 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
-
             var historyFilePath = new ISHPaths(ISHDeployment).HistoryFilePath;
 
-            if (!fileManager.FileExists(historyFilePath))
-            {
-                return;
-            }
+            var historyContent = string.Empty;
 
-            var historyContent = fileManager.ReadAllText(historyFilePath);
+            var action = new FileReadAllTextAction(Logger, historyFilePath, result => historyContent = result);
+            action.Execute();
+
+            if (string.IsNullOrEmpty(historyContent))
+            {
+				Logger.WriteVerbose($"History file is empty.");
+				return;
+            }
 
             WriteObject(historyContent);
         }

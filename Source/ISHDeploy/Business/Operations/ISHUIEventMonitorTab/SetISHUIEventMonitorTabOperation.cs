@@ -25,7 +25,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <param name="menuItem">The menu item object.</param>
 		public SetISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, EventLogMenuItem menuItem)
 		{
-			_invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
+			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
 			_invoker.AddAction(new SetNodeAction(logger, paths.EventMonitorMenuBar, String.Format(CommentPatterns.EventMonitorTab, menuItem.Label), menuItem));
 		}

@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Business.Invokers;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
     /// <summary>
-    /// Gets the list of installed Content Manager deployments found on the current system.
+    /// Gets a list of installed Content Manager deployments found on the current system.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
     public class GetISHDeploymentOperation : IOperation<IEnumerable<Models.ISHDeployment>>
     {
         /// <summary>
-        /// The action to be executed.
+        /// The actions invoker
         /// </summary>
-        private readonly IAction _action;
+        private readonly IActionInvoker _invoker;
 
         /// <summary>
         /// The list of installed Content Manager deployments found on the current system.
@@ -28,7 +28,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="projectSuffix">The deployment suffix.</param>
         public GetISHDeploymentOperation(ILogger logger, string projectSuffix)
         {
-            _action = new GetISHDeploymentsAction(logger, projectSuffix, result => _ishProjects = result);
+            _invoker = new ActionInvoker(logger, "Getting a list of installed Content Manager deployments");
+            _invoker.AddAction(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishProjects = result));
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <returns>List of installed Content Manager deployments.</returns>
         public IEnumerable<Models.ISHDeployment> Run()
         {
-            _action.Execute();
+            _invoker.Invoke();
 
             return _ishProjects;
         }

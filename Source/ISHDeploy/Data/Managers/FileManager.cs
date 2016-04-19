@@ -33,7 +33,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void Copy(string sourceFilePath, string destFilePath, bool overwrite = false)
         {
-            File.Copy(sourceFilePath, destFilePath, overwrite);
+			_logger.WriteDebug($"Copying file `{sourceFilePath}` to `{destFilePath}`, with `overwrite` option set to `{overwrite}`");
+			File.Copy(sourceFilePath, destFilePath, overwrite);
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
         public bool FileExists(string path)
         {
-            return File.Exists(path);
+			return File.Exists(path);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if folder exists</returns>
         public bool FolderExists(string path)
         {
-            return Directory.Exists(path);
+			return Directory.Exists(path);
         }
 
         /// <summary>
@@ -79,6 +80,7 @@ namespace ISHDeploy.Data.Managers
 				fileInfo.Attributes = FileAttributes.Normal;
 			}
 
+			_logger.WriteDebug($"Deliting file `{path}`");
 			File.Delete(path);
         }
 
@@ -88,7 +90,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="folderPath">Path to folder to be created</param>
         public void CreateDirectory(string folderPath)
         {
-            Directory.CreateDirectory(folderPath);
+			_logger.WriteDebug($"Creating directory `{folderPath}`");
+			Directory.CreateDirectory(folderPath);
         }
 
         /// <summary>
@@ -97,6 +100,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="folderPath">Path to folder to be cleaned up</param>
         public void CleanFolder(string folderPath)
 		{
+			_logger.WriteDebug($"Cleaning up folder `{folderPath}`");
 			if (this.FolderExists(folderPath))
 			{
 				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
@@ -118,6 +122,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
+			_logger.WriteDebug($"Deleting folder `{folderPath}`{(recursive ? " recursively" : "")}");
 			if (this.FolderExists(folderPath))
 			{
 				Directory.Delete(folderPath, recursive);
@@ -132,7 +137,12 @@ namespace ISHDeploy.Data.Managers
 		{
 			if (!this.FolderExists(folderPath))
 			{
-                this.CreateDirectory(folderPath);
+				_logger.WriteDebug($"Directory `{folderPath}` does not exist, creating it.");
+				this.CreateDirectory(folderPath);
+			}
+			else
+			{
+				_logger.WriteDebug($"Directory `{folderPath}` exists");
 			}
 		}
 
@@ -143,6 +153,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="destinationPath">Destination folder path</param>
 		public void CopyDirectoryContent(string sourcePath, string destinationPath)
 		{
+			_logger.WriteDebug($"Copying `{sourcePath}` directory content to {destinationPath}");
 			if (this.FolderExists(sourcePath))
 			{
 				//Copy all the files & Replaces any files with the same name
@@ -160,7 +171,8 @@ namespace ISHDeploy.Data.Managers
 		/// <returns>A string array containing all lines of the file.</returns>
 		public string ReadAllText(string filePath)
         {
-            return File.ReadAllText(filePath);
+			_logger.WriteDebug($"Reading all text from file `{filePath}`");
+			return File.ReadAllText(filePath);
         }
 
         /// <summary>
@@ -170,7 +182,8 @@ namespace ISHDeploy.Data.Managers
         /// <returns>A string array containing all lines of the file.</returns>
         public string[] ReadAllLines(string filePath)
         {
-            return File.ReadAllLines(filePath);
+			_logger.WriteDebug($"Reading all lines from file `{filePath}`");
+			return File.ReadAllLines(filePath);
         }
 
         /// <summary>
@@ -180,7 +193,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="lines">The string array to write to the file.</param>
         public void WriteAllLines(string filePath, string[] lines)
         {
-            File.WriteAllLines(filePath, lines);
+			_logger.WriteDebug($"Writing all lines to file `{filePath}`");
+			File.WriteAllLines(filePath, lines);
         }
 
         /// <summary>
@@ -201,6 +215,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="append">True to append data to the file; false to overwrite the file.</param>
 		public void Write(string filePath, string text, bool append = false)
 		{
+			_logger.WriteDebug($"{(append? "Appending" : "Writing")} content to file `{filePath}`");
 			using (var fileStream = new StreamWriter(filePath, append))
 			{
 				fileStream.Write(text);
@@ -214,7 +229,8 @@ namespace ISHDeploy.Data.Managers
 		/// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
 		public XDocument Load(string filePath)
         {
-            return XDocument.Load(filePath);
+			_logger.WriteDebug($"Loading XML document at `{filePath}`");
+			return XDocument.Load(filePath);
         }
 
         /// <summary>
@@ -224,7 +240,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="doc">The document to be stored</param>
         public void Save(string filePath, XDocument doc)
         {
-            doc.Save(filePath);
+			_logger.WriteDebug($"Saving XML document to `{filePath}`");
+			doc.Save(filePath);
         }
 
         /// <summary>
@@ -237,11 +254,13 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Returns True if license file is found, otherwise False.</returns>
         public bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath)
         {
-            filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
+			_logger.WriteDebug($"Looking for `{hostName}` license file");
+			filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
 
             if (File.Exists(filePath))
             {
-	            return true;
+				_logger.WriteDebug($"License file `{filePath}` found for `{hostName}`");
+				return true;
             }
 
             int i = hostName.IndexOf(".", StringComparison.InvariantCulture);
@@ -249,8 +268,9 @@ namespace ISHDeploy.Data.Managers
             {
                 return TryToFindLicenseFile(licenseFolderPath, hostName.Substring(i + 1), licenseFileExtension, out filePath);
             }
-            
-            return false;
+
+			_logger.WriteDebug($"License file for `{hostName}` is not found.");
+			return false;
         }
     }
 }

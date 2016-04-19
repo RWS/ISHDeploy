@@ -68,13 +68,17 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public virtual void Rollback()
 		{
+			Logger.WriteVerbose($"Rolling back result of `{this.GetType().Name}`");
+
 			if (this.BackupPath != null)
 			{
 				// TODO: think of failed rollback. As it might fail, and backups would get removed in disposed.
+				Logger.WriteDebug($"Replacing file `{this.FilePath}` with its back up `{this.BackupPath}`.");
 				FileManager.Copy(this.BackupPath, this.FilePath, true);
 			}
 			else if (FileManager.FileExists(this.FilePath))
 			{
+				Logger.WriteDebug($"Removing action result `{this.FilePath}`.");
 				FileManager.Delete(this.FilePath);
 			}
 		}
@@ -84,13 +88,16 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
+			Logger.WriteVerbose($"Creating back up for `{this.GetType().Name}`");
+
 			if (FileManager.FileExists(this.FilePath))
 			{
 				this.BackupPath = GetNewBackUpFileName();
 
 				if (!FileManager.FileExists(this.BackupPath))
 				{
-					FileManager.Copy(this.FilePath, this.BackupPath);
+					Logger.WriteDebug($"Back up file `{this.BackupPath}` does not exists. Creating temporary back up file for `{this.FilePath}`.");
+                    FileManager.Copy(this.FilePath, this.BackupPath);
 				}
 			}
 		}
@@ -105,8 +112,8 @@ namespace ISHDeploy.Data.Actions
 				string vanillaFilePath = IshFilePath.VanillaPath;
 				if (!FileManager.FileExists(vanillaFilePath))
 				{
+					Logger.WriteDebug($"Creating vanilla back up of file `{this.GetType().Name}`");
 					FileManager.EnsureDirectoryExists(Path.GetDirectoryName(vanillaFilePath));
-
 					FileManager.Copy(this.FilePath, vanillaFilePath);
 				}
 			}
@@ -121,6 +128,7 @@ namespace ISHDeploy.Data.Actions
 			{
 				if (FileManager.FileExists(this.BackupPath))
 				{
+					Logger.WriteDebug($"Temporary backup file `{this.BackupPath}` does not need anymore. Removing it.");
 					FileManager.Delete(this.BackupPath);
 				}
 

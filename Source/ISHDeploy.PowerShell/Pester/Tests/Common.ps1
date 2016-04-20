@@ -47,3 +47,21 @@ Function Log($Message)
 }
 
 
+function retryReadXML{
+    param($numberOfRetries,$xmlFile)
+    for($i=0; $i -lt $numberOfRetries; $i++) {
+       try{
+          [xml]$actualResult = Get-Content $xmlFile -ErrorAction Stop
+       } 
+       catch{
+          $ErrorMessage = $_.Exception.Message
+       }
+       if(!$ErrorMessage){
+           $i = $numberOfRetries 
+       }
+       else{
+           Start-Sleep -Milliseconds 1000
+       }
+    }
+    return $actualResult
+}

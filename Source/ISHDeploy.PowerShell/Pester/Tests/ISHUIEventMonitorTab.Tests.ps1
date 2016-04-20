@@ -83,9 +83,9 @@ $scriptBlockUndoDeployment = {
 # Function reads target files and their content, searches for specified nodes in xm
 function readTargetXML() {
 	[xml]$XmlConfig = Get-Content "$xmlPath\EventMonitorMenuBar.xml" -ErrorAction SilentlyContinue
-Write-Debug "COnfig path $xmlPath\EventMonitorMenuBar.xml"
+
     [xml]$XmlBlueLionConfig = Get-Content "$xmlPath\bluelion-EventMonitorMenuBar.xml" -ErrorAction SilentlyContinue
-    Write-Debug "COnfig path $xmlPath\bluelion-EventMonitorMenuBar.xml"
+
     [xml]$XmlEnrichWebConfig = Get-Content "$configPath\BlueLion-Plugin\web.config" -ErrorAction SilentlyContinue
 
     $global:textConfig = $XmlConfig.config.javascript | ? {$_.src -eq "../BlueLion-Plugin/Bootstrap/bootstrap.js"}
@@ -124,25 +124,33 @@ function checkEventMonitorTabExist{
     [int]$ModifiedSinceMinutesFilter,
     [string]$SelectedButtonTitle = "Show%20Recent", 
     [string]$UserRole = "Administrator", 
-    [string]$Description 
-     )
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
-        $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
+    [string]$Description)
+
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+    $actionLine = "EventMonitor/Main/Overview?eventTypesFilter=$EventTypesFilter&statusFilter=$StatusFilter&selectedMenuItemTitle=$SelectedMenuItemTitle&modifiedSinceMinutesFilter=$ModifiedSinceMinutesFilter&selectedButtonTitle=$SelectedButtonTitle"
         
+    $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
+    $commentCheck = ($textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($textEventMenuBar.PreviousSibling.Value -match $Description)    
 
-        $global:textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label) -and ($_.action -eq $actionLine) -and ($_.icon -eq $Icon)}
+    if (!$textEventMenuBar -and !$commentCheck){
+        Return "Deleted"
+    }
+    elseif ($textEventMenuBar -and $commentCheck){
+        $userCheck = $textEventMenuBar.userrole -eq $UserRole
+        $descriptionCheck = $textEventMenuBar.description -eq $Description 
+        $actionCheck = $textEventMenuBar.action -eq $actionLine
+        $iconCheck = $textEventMenuBar.icon -eq $Icon
 
-        $commentCheck = ($global:textEventMenuBar.PreviousSibling.Name -match "#comment") -and ($global:textEventMenuBar.PreviousSibling.Value -match $Description)
-        $userCheck = ($global:textEventMenuBar.userrole -eq $UserRole) -and ($global:textEventMenuBar.description -eq $Description)
-
-   
-        if ($global:textEventMenuBar -and $commentCheck -and $userCheck){
-            Return "Added"
+        if(!$userCheck -or !$descriptionCheck -or !$actionCheck -or !$iconCheck ){
+            Throw "Xml structure is wrong. Label found, but it has invalid elements. User: = $userCheck, Description:= $descriptionCheck, Action:= $actionCheck, Icon:= $iconCheck"
         }
-        else  {
-            Return "Deleted" 
-        }
+        Return "Added"    
+    }
+
+    Throw "Found label without comment or comment without label. Label = $textEventMenuBar, comment = $commentCheck"    
+
 }
+
 
 $scriptBlockSetEventMonitor = {
     param (
@@ -209,14 +217,14 @@ Describe "Testing ISHUIEventMonitorTab"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description | Should be "Added"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Added"| Should be "Added"
     }
 
     It "Remove monitor tab"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         #Assert
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description | Should be "Deleted"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted" | Should be "Deleted"
     }
        
     It "Sets monitor tab with no XML"{
@@ -272,7 +280,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description | Should be "Added"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Added" | Should be "Added"
     }
 
     It "Remove unexisting monitor tab"{
@@ -281,11 +289,11 @@ Describe "Testing ISHUIEventMonitorTab"{
         if($nodeExist -eq "Added"){
             Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         }
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description | Should be "Deleted"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted"| Should be "Deleted"
         $params = @{label = $testLabelName; Description = $testDescription}
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName} | Should Not Throw
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description | Should be "Deleted"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted" | Should be "Deleted"
     }
 
     It "Move After"{
@@ -309,7 +317,8 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
 
         #read the updated xml file
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     
         #Compare 2 arrays
@@ -317,7 +326,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0
     
         #Assert
         $CheckResult | Should Be "True"
@@ -344,7 +353,8 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params, "Last"
 
         #read the updated xml file
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     
         #Compare 2 arrays
@@ -352,10 +362,9 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
-    
+        $checkResult = $compareArrayResult -eq 0 
         #Assert
-        $CheckResult | Should Be "True"
+        $checkResult | Should Be "True"
     }
 
     It "Move After itsels"{
@@ -371,13 +380,14 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -393,13 +403,14 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0) | Should Be "True"
     }
 
     It "Move After non-existing label"{
@@ -415,13 +426,14 @@ Describe "Testing ISHUIEventMonitorTab"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
         #Get updated array with labels
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $compareArray =$XmlEventMonitorBar.menubar.menuitem.label
         #Compare 2 arrays - before move and after - they should be same
         $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
         #Assert
-        ($compareArrayResult -eq 0) -and (checkEventMonitorTabExist -eq "Added") | Should Be "True"
+        ($compareArrayResult -eq 0)| Should Be "True"
     }
 
     It "Move First"{
@@ -445,7 +457,8 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params, "First"
 
         #read the updated xml file
-        [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+        Start-Sleep -Milliseconds 7000
+        [xml]$XmlEventMonitorBar = retryReadXML -numberOfRetries 10 -xmlFile "$xmlPath\EventMonitorMenuBar.xml"
         $thirdArray =$XmlEventMonitorBar.menubar.menuitem.label 
     
         #Compare 2 arrays
@@ -453,7 +466,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         for ($i=0; $i -le $arrayLength - 1;$i++){
             if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
         }
-        $checkResult = $compareArrayResult -eq 0 -and (checkEventMonitorTabExist -eq "Added")
+        $checkResult = $compareArrayResult -eq 0 
         $CheckResult | Should Be "True"
      }
 
@@ -463,7 +476,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
-        checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"| Should be "Added"
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"} -expectedResult "Added" | Should be "Added"
     }
 
 }

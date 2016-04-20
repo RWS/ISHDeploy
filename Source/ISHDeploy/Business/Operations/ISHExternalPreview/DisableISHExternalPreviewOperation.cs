@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <param name="paths">Reference for all files paths.</param>
         public DisableISHExternalPreviewOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "Disabling InfoShare external preview");
+            _invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
 
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,

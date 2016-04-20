@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations.ISHContentEditor;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor
 {
@@ -41,6 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
 		public Models.ISHDeployment ISHDeployment { get; set; }
         
         /// <summary>
@@ -58,9 +60,9 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// </summary>
         public override void ExecuteCmdlet()
         {
-			var action = new FileCreateAction(Logger, IshPaths.LicenceFolderPath, string.Concat(Domain, LicenseFileExtension), LicenseKey);
+			var operation = new SetISHContentEditorOperation(Logger, IshPaths.LicenceFolderPath, string.Concat(Domain, LicenseFileExtension), LicenseKey);
 
-            action.Execute();
+            operation.Run();
 		}
 	}
 }

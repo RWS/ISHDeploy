@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// <param name="paths">Reference for all files paths.</param>
         public EnableISHUIQualityAssistantOperation(ILogger logger, ISHPaths paths)
         {
-			_invoker = new ActionInvoker(logger, "Enabling InfoShare Enrich integration for Content Editor");
+			_invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
 
 			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfig));
 			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegration));

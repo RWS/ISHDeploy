@@ -119,12 +119,14 @@ Describe "Testing ISHExternalPreview"{
         if ($precondition -eq "Enabled"){Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName }
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
         $precondition | Should Be "Disabled"
 		#Act
         # Try enabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName
-        $result = readTargetXML
+        Start-Sleep -Milliseconds 7000
+        $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
 		#Assert
         $result | Should Be "Enabled"
     }
@@ -139,12 +141,13 @@ Describe "Testing ISHExternalPreview"{
 		}
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        Start-Sleep -Milliseconds 7000
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
         $precondition | Should Be "Enabled"
 		#Act
         # Try disabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName
-		$result = readTargetXML
+		$result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
 		#Assert
         $result | Should Be "Disabled"
     }
@@ -203,13 +206,14 @@ Describe "Testing ISHExternalPreview"{
         if ($precondition -eq "Disabled"){Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName }
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
         $precondition | Should Be "Enabled"
 		#Act
         # Try enabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop } | Should Not Throw
-        $result = readTargetXML
+        Start-Sleep -Milliseconds 7000
+        $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
 		#Assert
         $result | Should Be "Enabled"
     }
@@ -221,13 +225,14 @@ Describe "Testing ISHExternalPreview"{
         if ($precondition -eq "Enabled"){Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName }
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
         $precondition | Should Be "Disabled"
 		#Act
         # Try disabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop } | Should Not Throw
-        $result = readTargetXML
+        Start-Sleep -Milliseconds 7000
+        $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
 		#Assert
         $result | Should Be "Disabled"
     }
@@ -239,12 +244,13 @@ Describe "Testing ISHExternalPreview"{
         if ($precondition -eq "Disabled"){Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName}
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        Start-Sleep -Milliseconds 7000
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
         $precondition | Should Be "Enabled"
 		#Act
         # Try enabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName, $customID  -ErrorAction Stop
-        $result = readTargetXML
+        $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "CustomIdEnabled"
 		#Assert
         $result | Should Be "CustomIdEnabled"
     }
@@ -259,12 +265,13 @@ Describe "Testing ISHExternalPreview"{
 		}
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        $precondition = readTargetXML
+        $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "CustomIdEnabled"
         $precondition | Should Be "CustomIdEnabled"
 		#Act
         # Try disabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName
-		$result = readTargetXML
+        Start-Sleep -Milliseconds 7000
+		$result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
 		#Assert
         $result | Should Be "Disabled"
     }

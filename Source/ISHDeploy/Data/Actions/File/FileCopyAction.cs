@@ -63,13 +63,13 @@ namespace ISHDeploy.Data.Actions.File
 		{
 			var fileName = Path.GetFileName(_sourcePath);
 
-		    if (string.IsNullOrEmpty(fileName))
+			Logger.WriteVerbose($"Rolling back file `{fileName}` copy action.");
+			if (string.IsNullOrEmpty(fileName))
 		    {
 		        return;
 		    }
 
 			var copiedFileName = Path.Combine(_destinationPath, fileName);
-
 			if (_fileManager.FileExists(copiedFileName))
 		    {
 				_fileManager.Delete(copiedFileName);

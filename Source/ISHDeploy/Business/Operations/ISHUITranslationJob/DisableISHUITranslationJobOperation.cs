@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// <param name="paths">Reference for all files paths.</param>
         public DisableISHUITranslationJobOperation(ILogger logger, ISHPaths paths)
         {
-            _invoker = new ActionInvoker(logger, "Disabling InfoShare translation job");
+            _invoker = new ActionInvoker(logger, "Disabling of InfoShare translation job");
             
             _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, paths.EventMonitorMenuBar, CommentPatterns.EventMonitorTranslationJobs));
             _invoker.AddAction(new CommentNodeByXPathAction(logger, paths.TopDocumentButtonbar, CommentPatterns.TopDocumentTranslationJobXPath, true));

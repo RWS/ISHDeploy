@@ -6,29 +6,20 @@
 )
 
 # Defining variables
-$automationTestsFolderName = "AutomationTests"
 $remoteBaseDir = "\\$targetPC\C$\Users\$env:USERNAME\Documents\"
-$remoteAutomationTestsDir = Join-Path $remoteBaseDir $automationTestsFolderName
 $remoteReinstallScriptsDir = Join-Path $remoteBaseDir "ReinstallScripts"
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$localAutomationTests = Join-Path (get-item $executingScriptDirectory ).parent.FullName $automationTestsFolderName
 $moduleName = Get-ChildItem $moduleFilePath
 
-Write-Host "RemoteAutomationTestsDir: $remoteAutomationTestsDir"
 Write-Host "RemoteReinstallScriptsDir: $remoteReinstallScriptsDir"
 Write-Host "ExecutingScriptDirectory: $executingScriptDirectory"
-Write-Host "LocalAutomationTests: $localAutomationTests"
 Write-Host "Module Name: $moduleName"
 
 # In case if there is no folder for module - create it
-if (!(Test-Path -path $remoteAutomationTestsDir)) { New-Item $remoteAutomationTestsDir -Type Directory }
 if (!(Test-Path -path $remoteReinstallScriptsDir)) { New-Item $remoteReinstallScriptsDir -Type Directory }
 
 # Copy all scripts for uninstalling and installing Content Manager
 Get-ChildItem $executingScriptDirectory | Copy-Item -Destination $remoteReinstallScriptsDir -Recurse -Force
-
-# Copy all automation tests to target pc
-Get-ChildItem $localAutomationTests | Copy-Item -Destination $remoteAutomationTestsDir -Recurse -Force
 
 # ------------------------------------------------------------------------------------------------
 # ------------------------------ Reinstall ISHDeploy.xx.x module ---------------------------------
@@ -42,27 +33,27 @@ $scriptBlock = {
 
 	# Uninstall previous ISHDeploy modules
 	$installedModules = Get-Module -ListAvailable | Select-Object Name | ? Name -like "ISHDeploy*"
-	$installedModules | ForEach-Object { Write-Host "Uninstalling " $_.Name; Uninstall-Module -Name $_.Name }
+	if ($installedModules.Count -ge 1) {
+		$installedModules | ForEach-Object { Write-Host "Uninstalling " $_.Name; Uninstall-Module -Name $_.Name }
+	}
 
 	# Registry repository if it's not registered
 	$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
 
 	if ($repository.Count -eq 0) {
 		Write-Host "Repository is not registered"
+		Write-Host "Registering repository $repositoryName"
 
-		$registerScriptBlock=
-		{
-			$sourceName = $repositoryName
-			$sourceLocation = $repositoryPath + "nuget/"
-			$publishLocation = $repositoryPath
+		$sourceLocation = $repositoryPath + "nuget/"
+		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation  $repositoryPath -InstallationPolicy Trusted
 
-			Write-Host "Registering repository.."
-			$repository = Register-PSRepository -Name $sourceName -SourceLocation $sourceLocation -PublishLocation  $publishLocation -InstallationPolicy Trusted
-		}
-
-		Invoke-Command -ScriptBlock $registerScriptBlock
-		Write-Host ".. registered!"
+		$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
+        if ($repository.Count -eq 0) {
+            throw "Cannot register repository $repositoryName"
+        }
 	}
+
+	Write-Host "Repository is registered!"
 	
 	# Install new module
 	Write-Host "Installing " $moduleName
@@ -75,7 +66,7 @@ Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $sessio
 $session = New-PSSession -ComputerName $targetPC
 
 # Reinstall ISHDeploy module
-#Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $moduleName.BaseName, $repositoryName, $repositoryPath -Session $session 
+Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $moduleName.BaseName, $repositoryName, $repositoryPath -Session $session 
 
 # ------------------------------------------------------------------------------------------------
 # --------------- Reinstall Content Manager instances on the test environment --------------------

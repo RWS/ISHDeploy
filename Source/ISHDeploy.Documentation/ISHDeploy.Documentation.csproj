@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Articles\toc.yml" />
+    <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
     <None Include="Readme.md" />

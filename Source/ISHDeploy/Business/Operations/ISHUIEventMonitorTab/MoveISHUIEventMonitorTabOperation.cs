@@ -6,7 +6,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 {
 	/// <summary>
-	/// Removes Event Monitor Tab".
+	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
 	public class MoveISHUIEventMonitorTabOperation : IOperation
@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <param name="targetLabel">The target label.</param>
 		public MoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label, OperationType operationType, string targetLabel = null)
         {
-            _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
 
 			string nodeXPath = String.Format(CommentPatterns.EventMonitorTab, label);
 			string nodeCommentXPath = nodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;

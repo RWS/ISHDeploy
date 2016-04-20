@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIQualityAssistant;
 using ISHDeploy.Business;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
 {
@@ -21,6 +22,7 @@ namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>

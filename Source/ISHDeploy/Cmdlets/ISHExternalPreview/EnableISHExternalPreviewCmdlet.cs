@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHExternalPreview;
 using ISHDeploy.Business;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHExternalPreview
 {
@@ -22,6 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>

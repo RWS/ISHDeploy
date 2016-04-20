@@ -55,7 +55,6 @@
     <None Include="CI\ISHReinstaller.ps1" />
     <None Include="CI\ISHUninstall.ps1" />
     <None Include="CI\kill_powershell.bat" />
-    <None Include="CI\TestRunner.ps1" />
     <None Include="CmdletsUsage\Info\Get-Version.ps1" />
     <None Include="CmdletsUsage\Info\Info.md" />
     <None Include="CmdletsUsage\ISHContentEditor\ISHContentEditor.md" />
@@ -99,6 +98,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Articles\IntegrationSTS\On premise ADFS\Initial.ps1" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="CI\InputParameters\InfoShareORA12.xml" />
+    <Content Include="CI\InputParameters\InfoShareSQL2014.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -7,9 +7,9 @@
     <Revision>0</Revision>
     <ShortModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ShortModuleVersion>
     <FullModuleVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleVersion>
-    <ModuleName>ISHDeploy.12.0</ModuleName>
+    <ModuleName>ISHDeploy.12.0.0</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
-    <ModuleDescription>$(ModuleTitle) 2016</ModuleDescription>
+    <ModuleDescription>Deployment automation module for SDL Knowledge Center Content Manager 12.0.0</ModuleDescription>
     <ModuleCompany>SDL</ModuleCompany>
     <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>Copyright © 2003-2016 SDL Group. All rights reserved.</ModuleCopyright>
@@ -17,6 +17,6 @@
     <MinPowerShellVersion>3.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>
-    <DocPortalLink>http://kiev-green-bld.global.sdl.corp:8081/12.0</DocPortalLink>
+    <DocPortalLink>http://kiev-green-bld.global.sdl.corp:8081/$(ModuleName)</DocPortalLink>
   </PropertyGroup>
 </Project>

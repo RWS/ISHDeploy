@@ -53,14 +53,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
+    <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTab.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Data\Actions\File\FileReadAllTextAction.cs" />
+    <Compile Include="Data\Actions\File\FileDeleteAction.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
@@ -137,6 +142,7 @@
     <Compile Include="Models\ISHDeployment.cs" />
     <Compile Include="Business\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

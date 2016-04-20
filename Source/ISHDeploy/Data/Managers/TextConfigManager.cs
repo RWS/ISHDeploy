@@ -42,7 +42,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void CommentBlock(string filePath, string searchPattern)
         {
-            var strLines = _fileManager.ReadAllLines(filePath);
+			_logger.WriteDebug($"Commenting blocks matched to `{searchPattern}` in file `{filePath}`");
+
+			var strLines = _fileManager.ReadAllLines(filePath);
 
             var patternIndex = -2;
 
@@ -80,7 +82,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void UncommentBlock(string filePath, string searchPattern)
         {
-            var strLines = _fileManager.ReadAllLines(filePath);
+			_logger.WriteDebug($"Uncommenting blocks matched to `{searchPattern}` in file `{filePath}`");
+
+			var strLines = _fileManager.ReadAllLines(filePath);
 
             var patternIndex = -2;
 

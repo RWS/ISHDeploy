@@ -60,8 +60,6 @@ namespace ISHDeploy.Business.Invokers
         /// </summary>
         public void Invoke()
         {
-            _logger.WriteDebug($"Entered Invoke method for {nameof(ActionInvoker)}");
-
 			List<IAction> executedActions = new List<IAction>();
             try
             {
@@ -80,6 +78,8 @@ namespace ISHDeploy.Business.Invokers
                         _logger.WriteProgress(_activityDescription, $"Executed {actionNumber} of {_actions.Count} actions", (int)(actionNumber / (double)_actions.Count * 100));
                     }
                 }
+
+                _logger.WriteVerbose($"`{_activityDescription}` completed");
             }
             catch
             {
@@ -93,8 +93,8 @@ namespace ISHDeploy.Business.Invokers
 					{
 						(x as IRestorableAction)?.Rollback();
 					});
-				}
-                
+                }
+
                 throw;
             }
 	        finally

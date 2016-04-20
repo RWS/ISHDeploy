@@ -1,6 +1,8 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
-using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -24,6 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
         
         /// <summary>
@@ -31,16 +34,18 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
-
             var historyFilePath = new ISHPaths(ISHDeployment).HistoryFilePath;
 
-            if (!fileManager.FileExists(historyFilePath))
+            var historyContent = string.Empty;
+
+            var action = new FileReadAllTextAction(Logger, historyFilePath, result => historyContent = result);
+            action.Execute();
+
+            if (string.IsNullOrEmpty(historyContent))
             {
+				Logger.WriteVerbose($"History file is empty.");
                 return;
             }
-
-            var historyContent = fileManager.ReadAllText(historyFilePath);
 
             WriteObject(historyContent);
         }

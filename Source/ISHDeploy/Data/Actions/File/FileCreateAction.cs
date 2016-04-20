@@ -64,8 +64,9 @@ namespace ISHDeploy.Data.Actions.File
         public virtual void Rollback()
 		{
 			var createdFileName = GetDestinationFileName();
+			Logger.WriteDebug($"Rolling back file creatiog {createdFileName}.");
 			if (_fileManager.FileExists(createdFileName))
-		{
+			{
 				_fileManager.Delete(createdFileName);
 			}
 		}

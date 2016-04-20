@@ -20,9 +20,9 @@ $scriptBlockGetDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$backupPath = "C:\ProgramData\ISHDeploy\v{0}\{1}\Backup" -f $testingDeployment.SoftwareVersion,  $testingDeployment.Name
-$backupPath = $backupPath.ToString().replace(":", "$")
-$backupPath = "\\$computerName\$backupPath"
+
+$moduleName = (Get-Module "ISHDeploy.*").Name
+$backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
 $scriptBlockClean = {
     param (
@@ -38,7 +38,7 @@ $scriptBlockClean = {
 }
 
 # Script block for Enable-ISHUIQualityAssistant. Added here for generating backup files
-$scriptBlocDisable = {
+$scriptBlockDisable = {
     param (
         [Parameter(Mandatory=$true)]
         $ishDeployName 

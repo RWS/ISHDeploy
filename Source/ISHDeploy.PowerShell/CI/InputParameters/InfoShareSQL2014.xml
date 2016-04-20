@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inputconfig>
   <param name="osuser">
-    <currentvalue>GLOBAL\infoshareserviceuser</currentvalue>
+    <currentvalue>GLOBAL\TrisoftServiceUser</currentvalue>
     <defaultvalue>.\InfoShare</defaultvalue>
     <description>The username of the designated OS user.  This user must be local administrator and have the correct regional settings</description>
     <validate />
   </param>
   <param name="ospassword">
-    <currentvalue>!nfoshar3</currentvalue>
+    <currentvalue>Tr!s0FTP</currentvalue>
     <defaultvalue> </defaultvalue>
     <description>The password of the designated OS user</description>
     <validate>askpasswordtwiceifempty</validate>

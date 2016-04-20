@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <param name="label">Label of the element</param>
 		public RemoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label)
         {
-            _invoker = new ActionInvoker(logger, "Removing Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Removing of Event Monitor Tab");
 
 			string itemXPath = String.Format(CommentPatterns.EventMonitorTab, label);
 			string itemCommentXPath = itemXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;

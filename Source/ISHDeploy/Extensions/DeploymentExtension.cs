@@ -18,8 +18,8 @@ namespace ISHDeploy.Extensions
 		public static string GetDeploymentAppDataFolder(this ISHDeployment deployment)
 		{
 			var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			var folderPath = Path.Combine("ISHDeploy", $"v{deployment.SoftwareVersion}", deployment.Name);
-			var ishDeploymentFolder = Path.Combine(programData, folderPath);
+            var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+			var ishDeploymentFolder = Path.Combine(programData, moduleName, deployment.Name);
 
 			if (!Directory.Exists(ishDeploymentFolder))
 			{

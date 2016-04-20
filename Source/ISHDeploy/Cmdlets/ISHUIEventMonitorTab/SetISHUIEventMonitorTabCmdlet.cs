@@ -125,7 +125,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		[Parameter(Mandatory = true, HelpMessage = "User role description")]
 		public string Description { get; set; }
 
-        /// <summary>
+		/// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()

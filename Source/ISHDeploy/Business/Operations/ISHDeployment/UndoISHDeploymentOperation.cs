@@ -25,7 +25,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
 			Models.ISHDeployment ishDeployment = deployment;
 
-			_invoker = new ActionInvoker(logger, "InfoShare ExternalPreview deactivation");
+			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
 			// Rolling back changes for Web folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));

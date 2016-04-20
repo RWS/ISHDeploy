@@ -1,5 +1,4 @@
 # Instructions and notes for each version of ISHDeploy module
-===========================================================
 
 # Pulling a branch into multiple develop branches
 

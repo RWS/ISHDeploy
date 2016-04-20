@@ -1,6 +1,6 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Data.Actions.License;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations.ISHContentEditor;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor
@@ -39,13 +39,11 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var result = false;
-
             var ishPaths = new ISHPaths(ISHDeployment);
 
-            var action = new LicenseTestAction(Logger, ishPaths.LicenceFolderPath, Domain, isValid => { result = isValid; });
+            var operation = new TestISHContentEditorOperation(Logger, ishPaths.LicenceFolderPath, Domain);
 
-            action.Execute();
+            var result = operation.Run();
 
             WriteObject(result);
 		}

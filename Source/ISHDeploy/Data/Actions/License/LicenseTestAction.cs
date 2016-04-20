@@ -1,5 +1,4 @@
 ﻿using System;
-using ISHDeploy.Business;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
@@ -50,7 +49,7 @@ namespace ISHDeploy.Data.Actions.License
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Result of testin of license file</returns>
         protected override bool ExecuteWithResult()
         {
 		    string filePath;

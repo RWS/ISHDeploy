@@ -158,6 +158,35 @@
 		/// </summary>
 		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
 
-		#endregion
+        #endregion
+
+        #region STS WS Trust configuration
+
+        /// <summary>
+        /// The xpath of "connectionconfiguration/issuer/authenticationtype" element in file Web\InfoShareWS\connectionconfiguration.xml
+        /// </summary>
+        public const string WSTrustEndpointAuthenticationTypeXPath = "connectionconfiguration/issuer/authenticationtype";
+
+        /// <summary>
+        /// The xpath of "connectionconfiguration/issuer/url" element in file Web\InfoShareWS\connectionconfiguration.xml
+        /// </summary>
+        public const string WSTrustEndpointUrlXPath = "connectionconfiguration/issuer/url";
+
+        /// <summary>
+        /// The xpath of "configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata" element in Web\InfoShareWS\Web.config file
+        /// </summary>
+        public const string WSTrustMexEndpointBindingHttpUrlXPath = "configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata";
+
+        /// <summary>
+        /// The xpath of "configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata" element in Web\InfoShareWS\Web.config file
+        /// </summary>
+        public const string WSTrustMexEndpointBindingHttpsUrlXPath = "configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata";
+
+        /// <summary>
+        /// The attribute name of WSTrustMexEndpointBinding element in Web\InfoShareWS\Web.config file where we store mexEndpoint url
+        /// </summary>
+        public const string WSTrustMexEndpointBindingIssuerMetadataAttributeName = "address";
+
+        #endregion
     }
 }

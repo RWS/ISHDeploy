@@ -2,7 +2,7 @@
 ================================================
 
 ## Host Server
-DocPortal is hosted at [ISHDeploy.12.0.0](http://kiev-green-bld.global.sdl.corp:8081/12.0.0/)
+DocPortal is hosted at [ISHDeploy.13.0.0](http://kiev-green-bld.global.sdl.corp:8081/ISHDeploy.13.0.0/)
 
 
 ## Dependencies

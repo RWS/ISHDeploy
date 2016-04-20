@@ -26,8 +26,8 @@ namespace ISHDeploy.Validators
         /// </exception>
         protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
         {
-            ISHDeployment deployment;
-            if ((deployment = arguments as ISHDeployment) == null)
+            ISHDeployment deployment = arguments as ISHDeployment;
+            if (deployment == null)
             {
                 throw new ValidationMetadataException($"Validation {nameof(ValidateDeploymentVersion)} should be only applied to parameter with type {nameof(ISHDeployment)}");
             }

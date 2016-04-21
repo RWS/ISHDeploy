@@ -152,20 +152,7 @@ namespace ISHDeploy.Business
         public string DeploymentName => _ishDeployment.Name;
 
         #endregion
-
-        #region STS WS Trust Operation 
-
-        /// <summary>
-        /// Path to Web\InfoShareWS\connectionconfiguration.xml file
-        /// </summary>
-        public ISHFilePath InfoShareWSConnectionConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareWS\connectionconfiguration.xml");
-
-        /// <summary>
-        /// Path to Web\InfoShareWS\Web.config file
-        /// </summary>
-        public ISHFilePath InfoShareWSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareWS\Web.config");
-
-        #endregion
+        
 
         /// <summary>
         /// Converts the local folder path to UNC path.

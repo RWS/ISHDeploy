@@ -93,14 +93,15 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWSTrust
         public override void ExecuteCmdlet()
         {
             IOperation operation = null;
+            OperationPaths.Initialize(ISHDeployment);
 
             switch (ParameterSetName)
             {
                 case MANDATORY_PARAMETER_SET:
-                    operation = new SetISHIntegrationSTSWSTrustOperation(Logger, IshPaths, Endpoint, MexEndpoint, BindingType);
+                    operation = new SetISHIntegrationSTSWSTrustOperation(Logger, Endpoint, MexEndpoint, BindingType);
                     break;
                 case INTERNAL_PARAMETER_SET:
-                    // TODO: Implement SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation
+                    operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, Endpoint, MexEndpoint, BindingType, ActorUsername, ActorPassword);
                     break;
             }
 

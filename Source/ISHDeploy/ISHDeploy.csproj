@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\OperationPaths.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWSTrust\BindingTypes.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />

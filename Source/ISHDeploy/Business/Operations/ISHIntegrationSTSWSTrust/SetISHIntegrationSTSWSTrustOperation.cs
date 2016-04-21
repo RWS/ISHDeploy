@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust
     /// <summary>
     /// Sets WSTrust configuration.
     /// </summary>
-    public class SetISHIntegrationSTSWSTrustOperation : IOperation
+    public class SetISHIntegrationSTSWSTrustOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -23,14 +23,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust
         /// <param name="endpoint">The URL to issuer WSTrust endpoint.</param>
         /// <param name="mexEndpoint">The URL to issuer WSTrust mexEndpoint.</param>
         /// <param name="bindingType">The STS issuer authentication type.</param>
-        public SetISHIntegrationSTSWSTrustOperation(ILogger logger, ISHPaths paths, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType)
+        public SetISHIntegrationSTSWSTrustOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration");
 
-            _invoker.AddAction(new SetElementValueAction(logger, paths.InfoShareWSConnectionConfig, CommentPatterns.WSTrustEndpointUrlXPath, endpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, paths.InfoShareWSConnectionConfig, CommentPatterns.WSTrustEndpointAuthenticationTypeXPath, bindingType.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, paths.InfoShareWSWebConfig, CommentPatterns.WSTrustMexEndpointBindingHttpUrlXPath, CommentPatterns.WSTrustMexEndpointBindingIssuerMetadataAttributeName, mexEndpoint.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, paths.InfoShareWSWebConfig, CommentPatterns.WSTrustMexEndpointBindingHttpsUrlXPath, CommentPatterns.WSTrustMexEndpointBindingIssuerMetadataAttributeName, mexEndpoint.ToString()));
+            // endpoint
+            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, endpoint.ToString()));
+            // mexEndpoint
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpsXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
+            // bindingType
+            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, bindingType.ToString()));
         }
 
         /// <summary>

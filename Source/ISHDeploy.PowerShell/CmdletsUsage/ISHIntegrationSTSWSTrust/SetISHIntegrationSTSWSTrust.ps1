@@ -1,5 +1,3 @@
-﻿#Import-Module F:\Projects\ishdeploy\Source\ISHDeploy\bin\Debug\ISHDeploy.12.0.0.dll
+﻿#$deployment = Get-ISHDeployment
 
-#$deploy = Get-ISHDeployment
-
-Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploy[0] -Endpoint "google.com" -MexEndpoint "google.com.ua" -BindingType "WindowsMixed" -Verbose
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment[0] -Endpoint "google.com" -MexEndpoint "google.com.ua" -BindingType "WindowsMixed" -ActorUsername "Test User Name" -ActorPassword "123123123123" -Verbose -Debug

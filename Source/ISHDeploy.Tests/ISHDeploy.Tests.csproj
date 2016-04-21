@@ -69,6 +69,9 @@
     <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\TextConfigManagerTest.cs" />
+    <Compile Include="Data\Managers\TemplateManagerTest.cs" />
+    <Compile Include="Data\Managers\PackageManagerTest.cs" />
+    <Compile Include="Data\Managers\CertificateManagerTest.cs" />
     <Compile Include="Data\Managers\XmlConfigManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

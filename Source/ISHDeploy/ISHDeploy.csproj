@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(SolutionDir)Build.props" />
@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Management.Automation" />
@@ -72,6 +73,13 @@
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
+    <Compile Include="Data\Managers\CertificateManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\IResourceManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
+    <Compile Include="Data\Managers\PackageManager.cs" />
+    <Compile Include="Data\Managers\ResourceManager.cs" />
+    <Compile Include="Data\Managers\TemplateManager.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Models\EventLogMenuItem.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
@@ -149,6 +157,7 @@
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />
+    <EmbeddedResource Include="Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />

@@ -17,6 +17,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWSTrust
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
+    /// <example>
+    ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mixed/username" -MexEndpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mex" -BindingType "WindowsMixed" -IncludeInternalClients -ActorUsername "STSUser" -ActorPassword "somepassword" -Verbose</code>
+    ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server, sets type of authentication as WindowsMixed and sets internal clients credentials.
+    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///     </para>
+    /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSTrust")]
     [CmdletBinding(DefaultParameterSetName = MANDATORY_PARAMETER_SET)]
     public class SetISHIntegrationSTSWSTrustCmdlet : BaseHistoryEntryCmdlet

@@ -935,7 +935,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -948,7 +947,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -966,7 +964,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -978,7 +975,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -996,7 +992,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -1008,7 +1003,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act

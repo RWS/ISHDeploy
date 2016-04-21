@@ -114,7 +114,7 @@ namespace ISHDeploy.Cmdlets
         /// <param name="message">Debug message.</param>
         public void WriteDebug(string message)
         {
-            _cmdlet.WriteDebug(message);
+            _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {message}");
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -25,6 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
         
         /// <summary>
@@ -42,7 +44,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
             if (string.IsNullOrEmpty(historyContent))
             {
 				Logger.WriteVerbose($"History file is empty.");
-				return;
+                return;
             }
 
             WriteObject(historyContent);

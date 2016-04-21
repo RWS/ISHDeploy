@@ -20,9 +20,9 @@ $scriptBlockGetDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$backupPath = "C:\ProgramData\ISHDeploy\v{0}\{1}\Backup" -f $testingDeployment.SoftwareVersion,  $testingDeployment.Name
-$backupPath = $backupPath.ToString().replace(":", "$")
-$backupPath = "\\$computerName\$backupPath"
+
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+$backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
 $scriptBlockClean = {
     param (

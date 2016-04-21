@@ -20,13 +20,11 @@ $scriptBlockGetDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$backup = "C:\ProgramData\ISHDeploy\v{0}\{1}" -f $testingDeployment.SoftwareVersion,  $testingDeployment.Name
-$backup = $backup.ToString().replace(":", "$")
-$backup = "\\$computerName\$backup"
-$backupPath = Join-Path $backup "History.ps1"
 
-$xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author" -f $testingDeployment.OriginalParameters.projectsuffix )
-$xmlPath = $xmlPath.ToString().replace(":", "$")
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+$backup = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)"
+
+$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author" -f $testingDeployment.OriginalParameters.projectsuffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
 $CEXmlPath = Join-Path $xmlPath "ASP\XSL"
@@ -100,18 +98,17 @@ $scriptBlockUndoDeployment = {
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
-   
 
 function fileExist(){
-$exist =     
-    (Test-Path ("$backup\Backup\Web\Author\ASP\Editors\Xopus\config\config.xml")) -and
-    (Test-Path ("$backup\Backup\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml")) -and
-    (Test-Path ("$backup\Backup\Web\Author\ASP\XSL\FolderButtonbar.xml")) -and
-    (Test-Path ("$backup\Backup\Web\Author\ASP\XSL\InboxButtonBar.xml")) -and
-    (Test-Path ("$backup\Backup\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml")) -and
-    (Test-Path ("$backup\Backup\Web\Author\ASP\Web.config"))
+	$exist =
+		(Test-Path ("$backup\Backup\Web\Author\ASP\Editors\Xopus\config\config.xml")) -and
+		(Test-Path ("$backup\Backup\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml")) -and
+		(Test-Path ("$backup\Backup\Web\Author\ASP\XSL\FolderButtonbar.xml")) -and
+		(Test-Path ("$backup\Backup\Web\Author\ASP\XSL\InboxButtonBar.xml")) -and
+		(Test-Path ("$backup\Backup\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml")) -and
+		(Test-Path ("$backup\Backup\Web\Author\ASP\Web.config"))
 
- return $exist   
+	return $exist   
 }
 
 function readTargetXML(){
@@ -143,13 +140,13 @@ function readTargetXML(){
     $EPCheck = $textWebConfig -and $configSection -and $module
 
     $initialCheckResult = !$CECheck -and !$QACheck -and !$EPCheck
-    if($initialCheckResult){
+    
+	if($initialCheckResult){
         return "VanilaState"
     }
     else{
         return "changedState"
     }
-        
 }
 
 $scriptBlockEnableExternalPreview = {
@@ -195,11 +192,8 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         readTargetXML | Should Be "VanilaState"
     }
 
-
-
     It "Undo-IshHistory works when there is no backup"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
-        
     }
 }
 

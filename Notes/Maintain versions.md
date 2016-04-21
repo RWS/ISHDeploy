@@ -15,8 +15,10 @@
 
 # When releasing a branch
 
-* Make sure that all software version in the documentation are accurate
-* Make sure that the module depends on the correct version of the released product
+* Make sure that `Build.props` file contains correct information: version, module name, description, etc.
+* Make sure that `ModuleGuid` value in `Build.props` is different from previous module versions.
+* Make sure that all software version in the documentation are accurate.
+* Make sure that the module depends on the correct version of the released product.
 
 # How we handle build versions and module name
 

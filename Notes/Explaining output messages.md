@@ -1,5 +1,5 @@
-# Explaining **ISHDeploy** User Messages
-This article explains the notification layers used in **ISHDeploy** module.
+# Explaining **ISHDeploy** Output Messages
+This article explains the output messages layers used in **ISHDeploy** module.
 ***
 
 ## Verbose Message 
@@ -7,7 +7,7 @@ Verbose messages contain general user information.
 
 Helps monitor the actions of commands at a finer level than the default. You can use the Write-Verbose cmdlet to produce this type of output in a script or the WriteVerbose() method to produce this type of output in a cmdlet. PowerShell displays this output in yellow, unless you customize it through the $host.PrivateData.Verbose* color configuration variables.
 
-**ISHDeploy** Implements Verbose notification in ILogger interface.
+**ISHDeploy** Implements Verbose messages in ILogger interface.
 ```csharp
 public interface ILogger
 {
@@ -30,7 +30,7 @@ Debug messages contain troubleshooting information.
 
 Helps diagnose problems that may arise and can provide a view into the inner workings of a command. You can use the Write-Debug cmdlet to produce this type of output in a script or the WriteDebug() method to produce this type of output in a cmdlet. PowerShell displays this output in yellow, unless you customize it through the $host.PrivateData.Debug* color configuration variables.
 
-**ISHDeploy** Implements Debug notification in ILogger interface.
+**ISHDeploy** Implements Debug messages in ILogger interface.
 ```csharp
 public interface ILogger
 {
@@ -55,7 +55,7 @@ Progress report messages contain information about how much work the cmdlet has 
 
 Helps you monitor the status of long-running commands. You can use the Write-Progress cmdlet to produce this type of output in a script or the WriteProgress() method to produce this type of output in a cmdlet. PowerShell displays this output in yellow, unless you customize it through the $host.PrivateData.Progress* color configuration variables.
 
-**ISHDeploy** Implements Progress notification in ILogger interface.
+**ISHDeploy** Implements Progress messages in ILogger interface.
 ```csharp
 public interface ILogger
 {
@@ -80,7 +80,7 @@ Get-Progress.ps1
 ## Warning Message 
 Warning messages contain a notification that the cmdlet is about to perform an operation that can have unexpected results.
 
-**ISHDeploy** Implements Warnings notification in ILogger interface.
+**ISHDeploy** Implements Warnings messages in ILogger interface.
 ```csharp
 public interface ILogger
 {

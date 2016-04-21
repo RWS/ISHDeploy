@@ -20,10 +20,11 @@ $scriptBlockGetDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$packagePath = "C:\ProgramData\ISHDeploy\v{0}\{1}\Packages" -f $testingDeployment.SoftwareVersion,  $testingDeployment.Name
-$uncPackagePath = $packagePath.ToString().replace(":", "$")
+
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+$packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
-$uncPackagePath = "\\$computerName\$uncPackagePath"
+$uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 
 $scriptBlockUndoDeployment = {
     param (

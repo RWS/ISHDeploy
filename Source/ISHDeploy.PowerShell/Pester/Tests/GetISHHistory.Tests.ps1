@@ -20,12 +20,11 @@ $scriptBlockGetDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$backupPath = "C:\ProgramData\ISHDeploy\v{0}\{1}\History.ps1" -f $testingDeployment.SoftwareVersion,  $testingDeployment.Name
-$backupPath = $backupPath.ToString().replace(":", "$")
-$backupPath = "\\$computerName\$backupPath"
 
-$xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $testingDeployment.OriginalParameters.projectsuffix )
-$xmlPath = $xmlPath.ToString().replace(":", "$")
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+$backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
+
+$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $testingDeployment.OriginalParameters.projectsuffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
 $scriptBlockGet = {
@@ -144,11 +143,12 @@ Describe "Testing Get-ISHDeploymentHistory"{
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableContentEditor -Session $session -ArgumentList $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Throw "Could not find file"
-        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
+        
+		$history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         $fakeHistory =  createFakeHistory
         $history.EndsWith($fakeHistory) | Should be "True"
-        Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
-
+        
+		Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
     }
 
     It "Commandlets that implements base class write no history"{
@@ -161,7 +161,6 @@ Describe "Testing Get-ISHDeploymentHistory"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         $fakeHistory =  createFakeHistory
         $history.EndsWith($fakeHistory) | Should be "True"
-
     }
 
     It "Get-IshHistory works when there is no history"{
@@ -169,7 +168,6 @@ Describe "Testing Get-ISHDeploymentHistory"{
 
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         !$history | Should be "True"
-
     }
 }
 

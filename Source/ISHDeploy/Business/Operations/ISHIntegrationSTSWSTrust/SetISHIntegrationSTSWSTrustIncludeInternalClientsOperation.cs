@@ -19,7 +19,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust
         /// Initializes a new instance of the <see cref="SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
         /// <param name="endpoint">The URL to issuer WSTrust endpoint.</param>
         /// <param name="mexEndpoint">The URL to issuer WSTrust mexEndpoint.</param>
         /// <param name="bindingType">The STS issuer authentication type.</param>

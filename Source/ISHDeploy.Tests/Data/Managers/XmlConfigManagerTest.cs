@@ -534,12 +534,39 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
-		#endregion
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void SetElementValue()
+        {
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
+            string testValue = "testValue";
 
-		#region Nodes Manipulation
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<configuration>" +
+                                        "<trisoft.infoshare.web.externalpreviewmodule>" +
+                                            "<identity>THE_FISHEXTERNALID_TO_USE</identity>" +
+                                        "</trisoft.infoshare.web.externalpreviewmodule>" +
+                                    "</configuration>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.When(x => x.Save(_filePath, doc)).Do(
+                        x =>
+                        {
+                            var element = doc.XPathSelectElement(testXPath);
+                            Assert.AreEqual(element.Value, testValue, "Setting does NOT work");
+                        }
+                    );
+
+            _xmlConfigManager.SetElementValue(_filePath, testXPath, testValue);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+        }
+
+        #endregion
+
+        #region Nodes Manipulation
 
 
-		private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
+        private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
 										<menubar>
 										  <!-- Synchronize To LiveContent ============================================================= -->
 										  <menuitem label='Synch To Collaborative Review' action='EventMonitor/Main/Overview?' icon='~/UIFramework/synchronization.32.color.png'>

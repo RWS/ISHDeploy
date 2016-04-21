@@ -2,7 +2,7 @@
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
-using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {

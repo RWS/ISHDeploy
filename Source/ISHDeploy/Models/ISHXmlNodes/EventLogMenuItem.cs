@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using ISHDeploy.Business;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Models
+namespace ISHDeploy.Models.ISHXmlNodes
 {
 	/// <summary>
 	/// Represents menu item xml node

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Management.Automation" />
@@ -56,10 +57,12 @@
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\SetISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificate.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
@@ -73,7 +76,6 @@
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
-    <Compile Include="Models\EventLogMenuItem.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
@@ -128,6 +130,8 @@
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="Extensions\DeploymentExtension.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
+    <Compile Include="Models\ISHXmlNodes\EventLogMenuItem.cs" />
+    <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

@@ -9,7 +9,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -678,6 +678,40 @@ namespace ISHDeploy.Tests.Data.Managers
 
 		[TestMethod]
 		[TestCategory("Data handling")]
+		public void SetNode_Existing_SkipReplace()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "Thumbnails",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+				}
+			};
+
+			FileManager.Load(_filePath).Returns(doc);
+
+			// Act
+			_xmlConfigManager.SetNode(_filePath, testXPath, item, false);
+
+			// Assert
+			FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+		}
+
+		[TestMethod]
+		[TestCategory("Data handling")]
 		public void MoveBeforeNode()
 		{
 			// Arrange
@@ -908,7 +942,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -921,7 +954,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -939,7 +971,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -951,7 +982,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -969,7 +999,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -981,7 +1010,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act

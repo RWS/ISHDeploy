@@ -159,5 +159,14 @@
 		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
 
 		#endregion
-    }
+
+		#region STS
+
+		/// <summary>
+		/// STS identity trusted issuers path
+		/// </summary>
+		public const string STSIdentityTrustedIssuers = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+
+		#endregion
+	}
 }

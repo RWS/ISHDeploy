@@ -84,7 +84,8 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>
 		/// <param name="value">Node fron IshConfiguration.</param>
-		void SetNode(string filePath, string xpath, IISHXmlNode value);
+		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+		void SetNode(string filePath, string xpath, IISHXmlNode value, bool replaceIfExists = true);
 
         /// <summary>
         /// Inserts a new node before specified one.

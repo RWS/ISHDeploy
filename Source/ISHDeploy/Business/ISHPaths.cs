@@ -97,21 +97,31 @@ namespace ISHDeploy.Business
 
         #endregion
 
-        #region Enable/Disable ExternalPreview
+        #region Web Folders Configurations
 
         /// <summary>
-        /// Path to Web.config file
+        /// Path to Author Web.config file
         /// </summary>
         public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Web.config");
 
-        #endregion
+		/// <summary>
+		/// Path to WS Web.config file
+		/// </summary>
+		public ISHFilePath WSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareWS\Web.config");
 
-        #region Enable/Disable Translation Job
-        
-        /// <summary>
-        /// Path to TopDocumentButtonbar.xml file
-        /// </summary>
-        public ISHFilePath TopDocumentButtonbar => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
+		/// <summary>
+		/// Path to STS Web.config file
+		/// </summary>
+		public ISHFilePath STSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareSTS\Web.config");
+
+		#endregion
+
+		#region Enable/Disable Translation Job
+
+		/// <summary>
+		/// Path to TopDocumentButtonbar.xml file
+		/// </summary>
+		public ISHFilePath TopDocumentButtonbar => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
 
         /// <summary>
         /// Path to Tree.htm file
@@ -151,14 +161,14 @@ namespace ISHDeploy.Business
         /// </summary>
         public string DeploymentName => _ishDeployment.Name;
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// Converts the local folder path to UNC path.
-        /// </summary>
-        /// <param name="localPath">The local path.</param>
-        /// <returns>Path to folder in UTC format</returns>
-        private static string ConvertLocalFolderPathToUNCPath(string localPath)
+		/// <summary>
+		/// Converts the local folder path to UNC path.
+		/// </summary>
+		/// <param name="localPath">The local path.</param>
+		/// <returns>Path to folder in UTC format</returns>
+		private static string ConvertLocalFolderPathToUNCPath(string localPath)
         {
             return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
         }

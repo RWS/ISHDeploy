@@ -4,13 +4,13 @@ using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models.ISHXmlNodes;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
+namespace ISHDeploy.Business.Operations.ISHSTS
 {
 	/// <summary>
 	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHUIEventMonitorTabOperation : IOperation
+	public class SetISHIntegrationSTSCertificateOperation : IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -18,16 +18,17 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		private readonly IActionInvoker _invoker;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SetISHUIEventMonitorTabOperation" /> class.
+		/// Initializes a new instance of the class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
 		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="menuItem">The menu item object.</param>
-		public SetISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, EventLogMenuItem menuItem)
+		public SetISHIntegrationSTSCertificateOperation(ILogger logger, ISHPaths paths, IssuerThumbprintItem menuItem)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, paths.EventMonitorMenuBar, String.Format(CommentPatterns.EventMonitorTab, menuItem.Label), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, paths.AuthorAspWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
+			_invoker.AddAction(new SetNodeAction(logger, paths.WSWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
 		}
 
 		/// <summary>

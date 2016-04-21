@@ -407,13 +407,14 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        /// <summary>
+		/// <summary>
 		/// Set xml node
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>
 		/// <param name="xNode">The xml node from ISH configuration.</param>
-		public void SetNode(string filePath, string xpath, IISHXmlNode xNode)
+		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+		public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
 		{
 			_logger.WriteDebug($"Setting node `{xpath}` to `{filePath}`");
 
@@ -432,9 +433,14 @@ namespace ISHDeploy.Data.Managers
 
 				parentNode.Add(newNode);
 			}
-			else
+			else if (replaceIfExists)
 			{
 				existingElement.ReplaceWith(newNode);
+			}
+			else
+			{
+				_logger.WriteDebug($"No modifications was done to the file `{filePath}`");
+				return;
 			}
 
 			// Check if node does not have a comment

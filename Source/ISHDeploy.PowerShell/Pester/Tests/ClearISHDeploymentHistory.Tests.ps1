@@ -21,7 +21,7 @@ $scriptBlockGetDeployment = {
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
-$moduleName = (Get-Module "ISHDeploy.*").Name
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
 $scriptBlockClean = {

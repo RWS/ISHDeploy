@@ -21,7 +21,7 @@ $scriptBlockGetDeployment = {
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
-$moduleName = (Get-Module "ISHDeploy.*").Name
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backup = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)"
 
 $xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author" -f $testingDeployment.OriginalParameters.projectsuffix )

@@ -17,7 +17,6 @@ Write-Host "Module Name: $moduleName"
 
 # In case if there is no folder for module - create it
 if (!(Test-Path -path $remoteReinstallScriptsDir)) { New-Item $remoteReinstallScriptsDir -Type Directory }
-l
 # Copy all scripts for uninstalling and installing Content Manager
 Get-ChildItem $executingScriptDirectory | Copy-Item -Destination $remoteReinstallScriptsDir -Recurse -Force
 

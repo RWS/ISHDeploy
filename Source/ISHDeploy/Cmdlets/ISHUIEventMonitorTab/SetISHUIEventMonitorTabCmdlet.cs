@@ -35,6 +35,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
     {
 		/// <summary>
 		/// Status filter enum
+		///	<para type="description">Enumeration of status filters.</para>
 		/// </summary>
 		public enum StatusFilter
 		{

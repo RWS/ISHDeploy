@@ -74,7 +74,9 @@ namespace ISHDeploy.Validators
 			}
 	        else
 	        {
-				errorMessage = $"Module name `{moduleName}` has different definition than expected.";
+				// As if this method can be not only used in `ISHDeploy.Validators.ValidateDeploymentVersion.Validate` 
+				// it is not enought to return error message in case of not valid module.
+				throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
 			}
 
 			return String.IsNullOrEmpty(errorMessage);

@@ -17,7 +17,7 @@ Write-Host "Module Name: $moduleName"
 
 # In case if there is no folder for module - create it
 if (!(Test-Path -path $remoteReinstallScriptsDir)) { New-Item $remoteReinstallScriptsDir -Type Directory }
-
+l
 # Copy all scripts for uninstalling and installing Content Manager
 Get-ChildItem $executingScriptDirectory | Copy-Item -Destination $remoteReinstallScriptsDir -Recurse -Force
 
@@ -62,7 +62,7 @@ $scriptBlock = {
 
 # Create session to targetPC, kill all powershell instances, that might lock ISHDeploy
 $session = New-PSSession -ComputerName $targetPC 
-Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $session
+Invoke-Command -ScriptBlock {"$Using:targetPath\kill_powershell.bat"} -Session $session
 $session = New-PSSession -ComputerName $targetPC
 
 # Reinstall ISHDeploy module

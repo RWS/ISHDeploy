@@ -62,7 +62,7 @@ $scriptBlock = {
 
 # Create session to targetPC, kill all powershell instances, that might lock ISHDeploy
 $session = New-PSSession -ComputerName $targetPC 
-Invoke-Command -ScriptBlock {"$Using:targetPath\kill_powershell.bat"} -Session $session
+Invoke-Command -ScriptBlock {Invoke-Expression "cmd.exe /c C:\Users\$env:USERNAME\Documents\ReinstallScripts\kill_powershell.bat"} -Session $session
 $session = New-PSSession -ComputerName $targetPC
 
 # Reinstall ISHDeploy module

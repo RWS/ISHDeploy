@@ -24,63 +24,63 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWSTrust
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSTrust")]
-    [CmdletBinding(DefaultParameterSetName = MANDATORY_PARAMETER_SET)]
+    [CmdletBinding(DefaultParameterSetName = MandatoryParameterSet)]
     public class SetISHIntegrationSTSWSTrustCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// The name of Mandatory parameter sets
         /// </summary>
-        private const string MANDATORY_PARAMETER_SET = "Mandatory";
+        private const string MandatoryParameterSet = "Mandatory";
 
         /// <summary>
         /// The name of Internal parameter sets
         /// </summary>
-        private const string INTERNAL_PARAMETER_SET = "Internal";
+        private const string InternalParameterSet = "Internal";
 
         /// <summary>
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = MANDATORY_PARAMETER_SET)]
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = MandatoryParameterSet)]
+        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = InternalParameterSet)]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>
         /// <para type="description">Specifies the URL to issuer WSTrust endpoint.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust endpoint", ParameterSetName = MANDATORY_PARAMETER_SET)]
-        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust endpoint", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust endpoint", ParameterSetName = MandatoryParameterSet)]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust endpoint", ParameterSetName = InternalParameterSet)]
         public Uri Endpoint { get; set; }
 
         /// <summary>
         /// <para type="description">Specifies the URL to issuer WSTrust mexEndpoint.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust mexEndpoint", ParameterSetName = MANDATORY_PARAMETER_SET)]
-        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust mexEndpoint", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust mexEndpoint", ParameterSetName = MandatoryParameterSet)]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WSTrust mexEndpoint", ParameterSetName = InternalParameterSet)]
         public Uri MexEndpoint { get; set; }
 
         /// <summary>
         /// <para type="description">Specifies the STS issuer authentication type.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Type of STS issuer authentication", ParameterSetName = MANDATORY_PARAMETER_SET)]
-        [Parameter(Mandatory = true, HelpMessage = "Type of STS issuer authentication", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "Type of STS issuer authentication", ParameterSetName = MandatoryParameterSet)]
+        [Parameter(Mandatory = true, HelpMessage = "Type of STS issuer authentication", ParameterSetName = InternalParameterSet)]
         public BindingTypes BindingType { get; set; }
 
         /// <summary>
-        /// <para type="description">xxxxxx xxxx.</para>
+        /// <para type="description">Specifies that STS -ActorUsername and -ActorPassword need to be updated.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "xxx", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = false, HelpMessage = "When -IncludeInternalClients is switched on then -ActorUsername and -ActorPassword have meaning", ParameterSetName = InternalParameterSet)]
         public SwitchParameter IncludeInternalClients { get; set; }
 
         /// <summary>
-        /// <para type="description">xxxxxx xxxx.</para>
+        /// <para type="description">Specifies the STS actor Username.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "xxx", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "Username of STS actor", ParameterSetName = InternalParameterSet)]
         public string ActorUsername { get; set; }
 
         /// <summary>
-        /// <para type="description">xxxxxx xxxx.</para>
+        /// <para type="description">Specifies the STS actor password.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "xxx", ParameterSetName = INTERNAL_PARAMETER_SET)]
+        [Parameter(Mandatory = true, HelpMessage = "Password of STS actor", ParameterSetName = InternalParameterSet)]
         public string ActorPassword { get; set; }
 
         /// <summary>
@@ -103,10 +103,10 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWSTrust
 
             switch (ParameterSetName)
             {
-                case MANDATORY_PARAMETER_SET:
+                case MandatoryParameterSet:
                     operation = new SetISHIntegrationSTSWSTrustOperation(Logger, Endpoint, MexEndpoint, BindingType);
                     break;
-                case INTERNAL_PARAMETER_SET:
+                case InternalParameterSet:
                     operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, Endpoint, MexEndpoint, BindingType, ActorUsername, ActorPassword);
                     break;
             }

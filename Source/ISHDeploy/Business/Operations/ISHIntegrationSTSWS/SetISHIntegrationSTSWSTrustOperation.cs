@@ -3,7 +3,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 {
     /// <summary>
     /// Sets WSTrust configuration.

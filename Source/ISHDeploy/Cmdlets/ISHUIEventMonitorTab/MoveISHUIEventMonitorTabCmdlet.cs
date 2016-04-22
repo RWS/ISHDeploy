@@ -2,6 +2,7 @@
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
@@ -33,6 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         public override void ExecuteCmdlet()
         {
 	        MoveISHUIEventMonitorTabOperation operation;
-
+            
 			switch (ParameterSetName)
 	        {
 				case "Last":

@@ -94,5 +94,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
         /// <param name="xmlString">The new node as a XML string.</param>
         void InsertBeforeNode(string filePath, string xpath, string xmlString);
+
+        /// <summary>
+        /// Set element value.
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified.</param>
+        /// <param name="xpath">XPath of searched element.</param>
+        /// <param name="value">The new value of element.</param>
+        void SetElementValue(string filePath, string xpath, string value);
     }
 }

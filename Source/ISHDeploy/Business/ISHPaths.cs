@@ -114,14 +114,14 @@ namespace ISHDeploy.Business
 		/// </summary>
 		public ISHFilePath STSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareSTS\Web.config");
 
-		#endregion
+        #endregion
 
-		#region Enable/Disable Translation Job
-
-		/// <summary>
-		/// Path to TopDocumentButtonbar.xml file
-		/// </summary>
-		public ISHFilePath TopDocumentButtonbar => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
+        #region Enable/Disable Translation Job
+        
+        /// <summary>
+        /// Path to TopDocumentButtonbar.xml file
+        /// </summary>
+        public ISHFilePath TopDocumentButtonbar => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
 
         /// <summary>
         /// Path to Tree.htm file
@@ -161,14 +161,15 @@ namespace ISHDeploy.Business
         /// </summary>
         public string DeploymentName => _ishDeployment.Name;
 
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// Converts the local folder path to UNC path.
-		/// </summary>
-		/// <param name="localPath">The local path.</param>
-		/// <returns>Path to folder in UTC format</returns>
-		private static string ConvertLocalFolderPathToUNCPath(string localPath)
+
+        /// <summary>
+        /// Converts the local folder path to UNC path.
+        /// </summary>
+        /// <param name="localPath">The local path.</param>
+        /// <returns>Path to folder in UTC format</returns>
+        private static string ConvertLocalFolderPathToUNCPath(string localPath)
         {
             return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
         }

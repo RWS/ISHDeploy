@@ -168,5 +168,5 @@
 		public const string STSIdentityTrustedIssuers = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
 
 		#endregion
-	}
+    }
 }

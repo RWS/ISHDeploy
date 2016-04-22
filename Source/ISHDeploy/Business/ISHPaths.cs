@@ -97,25 +97,6 @@ namespace ISHDeploy.Business
 
         #endregion
 
-        #region Web Folders Configurations
-
-        /// <summary>
-        /// Path to Author Web.config file
-        /// </summary>
-        public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Web.config");
-
-		/// <summary>
-		/// Path to WS Web.config file
-		/// </summary>
-		public ISHFilePath WSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareWS\Web.config");
-
-		/// <summary>
-		/// Path to STS Web.config file
-		/// </summary>
-		public ISHFilePath STSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareSTS\Web.config");
-
-        #endregion
-
         #region Enable/Disable Translation Job
         
         /// <summary>

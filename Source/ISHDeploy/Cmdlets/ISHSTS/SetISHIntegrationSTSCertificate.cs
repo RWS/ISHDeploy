@@ -1,4 +1,7 @@
-﻿using System.IdentityModel.Selectors;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Selectors;
+using System.Linq;
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHSTS;
@@ -27,29 +30,44 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 	public sealed class SetISHIntegrationSTSCertificate : BaseHistoryEntryCmdlet
 	{
 		/// <summary>
+		/// Cashed and normalized Thumbprint value
+		/// </summary>
+		private string _thumbprint;
+
+		/// <summary>
 		/// <para type="description">Specifies the instance of the Content Manager deployment.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
 		public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
-		/// <para type="description">Action of menu item. Default value is 'Administrator'.</para>
+		/// <para type="description">Certificate normalized Thumbprint.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-		public string Thumbprint { get; set; }
+		public string Thumbprint
+		{
+			get
+			{
+				return _thumbprint; 
+			}
+			set
+			{
+				_thumbprint = new string(value.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+			}
+		}
 
 		/// <summary>
-		/// <para type="description">Action of menu item. Default value is 'Administrator'.</para>
+		/// <para type="description">Issuer name.</para>
 		/// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
+		[Parameter(Mandatory = true, HelpMessage = "Issuer name")]
 		[ValidateNotNullOrEmpty]
 		public string Issuer { get; set; }
-		
+
 		/// <summary>
-		/// <para type="description">Selected Status filter. Default value is 'Recent'.</para>
+		/// <para type="description">Selected validation mode. Default value is 'ChainTrust'.</para>
 		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Selected Status filter")]
+		[Parameter(Mandatory = false, HelpMessage = "Selected validation mode")]
 		public X509CertificateValidator ValidationMode { get; set; } = X509CertificateValidator.ChainTrust;
 
 		/// <summary>
@@ -67,7 +85,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, IshPaths, new IssuerThumbprintItem()
+			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, new IssuerThumbprintItem()
 			{
 				Thumbprint = Thumbprint,
 				Issuer = Issuer,
@@ -76,6 +94,5 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 
 			operation.Run();
 		}
-
 	}
 }

@@ -40,7 +40,7 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHExternalPreviewOperation(Logger, IshPaths);
+            var operation = new DisableISHExternalPreviewOperation(Logger);
 
             operation.Run();
         }

@@ -21,14 +21,31 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// Initializes a new instance of the class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
-		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="menuItem">The menu item object.</param>
-		public SetISHIntegrationSTSCertificateOperation(ILogger logger, ISHPaths paths, IssuerThumbprintItem menuItem)
+		public SetISHIntegrationSTSCertificateOperation(ILogger logger, IssuerThumbprintItem menuItem)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, paths.AuthorAspWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
-			_invoker.AddAction(new SetNodeAction(logger, paths.WSWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
+			// Author web Config
+			_invoker.AddAction(new SetNodeAction(logger, OperationPaths.InfoShareAuthorWebConfig.Path, 
+				String.Format(OperationPaths.InfoShareAuthorWebConfig.IdentityTrustedIssuersPath, menuItem.Thumbprint), menuItem, false));
+
+			_invoker.AddAction(new SetAttributeValueAction(logger, OperationPaths.InfoShareAuthorWebConfig.Path,
+				OperationPaths.InfoShareAuthorWebConfig.CertificateValidationModePath, menuItem.ValidationMode.ToString()));
+
+			// WS web Config
+			_invoker.AddAction(new SetNodeAction(logger, OperationPaths.InfoShareWSWebConfig.Path, 
+				String.Format(OperationPaths.InfoShareAuthorWebConfig.IdentityTrustedIssuersPath, menuItem.Thumbprint), menuItem, false));
+
+			_invoker.AddAction(new SetAttributeValueAction(logger, OperationPaths.InfoShareWSWebConfig.Path,
+				OperationPaths.InfoShareWSWebConfig.CertificateValidationModePath, menuItem.ValidationMode.ToString()));
+
+			// STS web Config
+			_invoker.AddAction(new SetNodeAction(logger, OperationPaths.InfoShareSTSWebConfig.Path,
+				String.Format(OperationPaths.InfoShareSTSWebConfig.STSServiceBehaviorsTrustedUser, menuItem.Thumbprint), (ActAsTrustedIssuerThumbprintItem)menuItem, false));
+
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, OperationPaths.InfoShareSTSWebConfig.Path,
+				OperationPaths.InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 		}
 
 		/// <summary>

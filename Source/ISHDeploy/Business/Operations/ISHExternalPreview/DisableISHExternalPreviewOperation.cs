@@ -19,25 +19,24 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// Initializes a new instance of the <see cref="DisableISHExternalPreviewOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
-        public DisableISHExternalPreviewOperation(ILogger logger, ISHPaths paths)
+        public DisableISHExternalPreviewOperation(ILogger logger)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
 
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,
-                    paths.AuthorAspWebConfig, 
-                    CommentPatterns.TrisoftInfoshareWebExternalXPath, 
-                    CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
+					OperationPaths.InfoShareAuthorWebConfig.Path,
+					OperationPaths.InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalXPath,
+					OperationPaths.InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
             _invoker.AddAction(new CommentNodeByXPathAction(
                     logger,
-                    paths.AuthorAspWebConfig,
+					OperationPaths.InfoShareAuthorWebConfig.Path,
                     new [] {
-                        CommentPatterns.TrisoftExternalPreviewModuleXPath,
-                        CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleXPath,
-                        CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleXPath
+						OperationPaths.InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleXPath,
+						OperationPaths.InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleXPath,
+						OperationPaths.InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalPreviewModuleXPath
                     }));
         }
 

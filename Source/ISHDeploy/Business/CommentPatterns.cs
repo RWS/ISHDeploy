@@ -68,50 +68,6 @@
 
         #endregion
 
-        #region Enable/Disable ExternalPreview
-
-        /// <summary>
-        /// The Trisoft external preview module search placeholder
-        /// </summary>
-        public const string TrisoftExternalPreviewModuleSearchPattern = "<add name=\"TrisoftExternalPreviewModule\"";
-
-        /// <summary>
-        /// The section Trisoft InfoShare web external preview module search placeholder
-        /// </summary>
-        public const string SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern = "<section name=\"trisoft.infoshare.web.externalpreviewmodule\"";
-
-        /// <summary>
-        /// The Trisoft InfoShare web external preview module search placeholder
-        /// </summary>
-        public const string TrisoftInfoshareWebExternalPreviewModuleSearchPattern = "<trisoft.infoshare.web.externalpreviewmodule>";
-
-        /// <summary>
-        /// The Trisoft external preview module xpath
-        /// </summary>
-        public const string TrisoftExternalPreviewModuleXPath = "configuration/system.webServer/modules/add[@name='TrisoftExternalPreviewModule']";
-
-        /// <summary>
-        /// The section Trisoft Infoshare web external preview module xpath
-        /// </summary>
-        public const string SectionTrisoftInfoshareWebExternalPreviewModuleXPath = "configuration/configSections/section[@name='trisoft.infoshare.web.externalpreviewmodule']";
-
-        /// <summary>
-        /// The Trisoft InfoShare web external preview module xpath
-        /// </summary>
-        public const string TrisoftInfoshareWebExternalPreviewModuleXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule";
-
-        /// <summary>
-        /// The Trisoft InfoShare web external x path
-        /// </summary>
-        public const string TrisoftInfoshareWebExternalXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
-
-        /// <summary>
-        /// The Trisoft InfoShare web external attribute name
-        /// </summary>
-        public const string TrisoftInfoshareWebExternalAttributeName = "externalId";
-
-        #endregion
-
         #region Enable/Disable Translation Job
 
         /// <summary>
@@ -160,13 +116,5 @@
 
 		#endregion
 
-		#region STS
-
-		/// <summary>
-		/// STS identity trusted issuers path
-		/// </summary>
-		public const string STSIdentityTrustedIssuers = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
-
-		#endregion
     }
 }

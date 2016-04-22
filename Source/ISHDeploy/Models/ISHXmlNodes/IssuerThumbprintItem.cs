@@ -10,6 +10,11 @@ namespace ISHDeploy.Models.ISHXmlNodes
 	public class IssuerThumbprintItem : IISHXmlNode
 	{
 		/// <summary>
+		/// Xml node name.
+		/// </summary>
+		protected virtual string XmlElementName => "add";
+
+		/// <summary>
 		/// Gets or sets the thumbprint.
 		/// </summary>
 		/// <value>
@@ -45,9 +50,9 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		/// Converts object to XElement.
 		/// </summary>
 		/// <returns>XElement</returns>
-		public XElement ToXElement()
+		public virtual XElement ToXElement()
 		{
-			return new XElement("add",
+			return new XElement(XmlElementName,
 				new XAttribute("thumbprint", Thumbprint),
 				//new XAttribute("action", ValidationMode.ToString()),
 				new XAttribute("name", Issuer));

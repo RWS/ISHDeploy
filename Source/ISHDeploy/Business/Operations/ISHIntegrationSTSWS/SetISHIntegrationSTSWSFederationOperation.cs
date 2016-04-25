@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="endpoint">The URL to issuer endpoint.</param>
         public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Uri endpoint)
         {
-            _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration");
+            _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
         }

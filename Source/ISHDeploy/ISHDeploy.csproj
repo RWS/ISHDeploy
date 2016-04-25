@@ -63,22 +63,22 @@
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TrisoftInfoShareClientConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareWSConnectionConfig.cs">
-        <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificate.cs" />
+    <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />

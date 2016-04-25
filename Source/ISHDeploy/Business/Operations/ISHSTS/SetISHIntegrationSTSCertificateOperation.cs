@@ -10,7 +10,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHIntegrationSTSCertificateOperation : IOperation
+	public class SetISHIntegrationSTSCertificateOperation : OperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -23,12 +23,12 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// <param name="logger">The logger.</param>
 		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="menuItem">The menu item object.</param>
-		public SetISHIntegrationSTSCertificateOperation(ILogger logger, ISHPaths paths, IssuerThumbprintItem menuItem)
+		public SetISHIntegrationSTSCertificateOperation(ILogger logger, IssuerThumbprintItem menuItem)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, paths.AuthorAspWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
-			_invoker.AddAction(new SetNodeAction(logger, paths.WSWebConfig, String.Format(CommentPatterns.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
+			_invoker.AddAction(new SetNodeAction(logger, AuthorAspWebConfig.Path, String.Format(AuthorAspWebConfig.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, String.Format(InfoShareWSWebConfig.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
 		}
 
 		/// <summary>

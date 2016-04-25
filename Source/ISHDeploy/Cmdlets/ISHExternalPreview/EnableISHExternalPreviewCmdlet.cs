@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHExternalPreview;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHExternalPreview
@@ -48,7 +49,8 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHExternalPreviewOperation(Logger, IshPaths, ExternalId);
+            OperationPaths.Initialize(ISHDeployment);
+            var operation = new EnableISHExternalPreviewOperation(Logger, ExternalId);
 
             operation.Run();
         }

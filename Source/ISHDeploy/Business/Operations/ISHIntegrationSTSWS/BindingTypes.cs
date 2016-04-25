@@ -1,4 +1,4 @@
-﻿namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust
+﻿namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 {
     /// <summary>
     /// STS issuer authentication types.

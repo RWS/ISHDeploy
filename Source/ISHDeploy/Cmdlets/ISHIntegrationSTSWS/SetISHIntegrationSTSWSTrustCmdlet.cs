@@ -2,9 +2,9 @@
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWSTrust;
+using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
 
-namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWSTrust
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
 {
     /// <summary>
     ///		<para type="synopsis">Sets WSTrust configuration.</para>

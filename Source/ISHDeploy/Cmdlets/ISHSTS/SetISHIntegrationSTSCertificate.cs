@@ -67,7 +67,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, IshPaths, new IssuerThumbprintItem()
+			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, new IssuerThumbprintItem()
 			{
 				Thumbprint = Thumbprint,
 				Issuer = Issuer,

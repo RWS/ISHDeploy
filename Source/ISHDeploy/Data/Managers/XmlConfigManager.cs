@@ -382,38 +382,36 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-        /// <summary>
-        /// Set attribute value
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath that is searched</param>
-        /// <param name="attributeName">Name of the attribute that will be modified</param>
-        /// <param name="value">Attribute new value</param>
-        public void SetAttributeValue(string filePath, string xpath, string attributeName, string value)
-        {
-			_logger.WriteDebug($"Setting node `{xpath}` attribute `{attributeName}` value to `{value}` in file `{filePath}`");
+		/// <summary>
+		/// Set attribute value by attribute XPath
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="attributeXpath">XPath the attribute that will be modified</param>
+		/// <param name="value">Attribute new value</param>
+		public void SetAttributeValue(string filePath, string attributeXpath, string value)
+		{
+			_logger.WriteDebug($"Setting attribute `{attributeXpath}` value to `{value}` in file `{filePath}`");
 
 			var doc = _fileManager.Load(filePath);
+			var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
+			if (attr == null)
+			{
+				_logger.WriteWarning($"{filePath} does not contain attribute at '{attributeXpath}'.");
+				return;
+			}
 
-            var element = doc.XPathSelectElement(xpath);
+			attr.SetValue(value);
+			_fileManager.Save(filePath, doc);
+		}
 
-            if (element == null)
-            {
-                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
-                return;
-            }
-            element.SetAttributeValue(attributeName, value);
-
-            _fileManager.Save(filePath, doc);
-        }
-
-        /// <summary>
+		/// <summary>
 		/// Set xml node
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>
 		/// <param name="xNode">The xml node from ISH configuration.</param>
-		public void SetNode(string filePath, string xpath, IISHXmlNode xNode)
+		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+		public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
 		{
 			_logger.WriteDebug($"Setting node `{xpath}` to `{filePath}`");
 
@@ -432,9 +430,14 @@ namespace ISHDeploy.Data.Managers
 
 				parentNode.Add(newNode);
 			}
-			else
+			else if (replaceIfExists)
 			{
 				existingElement.ReplaceWith(newNode);
+			}
+			else
+			{
+				_logger.WriteDebug($"No modifications was done to the file `{filePath}`");
+				return;
 			}
 
 			// Check if node does not have a comment
@@ -583,8 +586,6 @@ namespace ISHDeploy.Data.Managers
 			return ((IEnumerable<object>)doc.XPathEvaluate(xPath)).OfType<XNode>();
 		}
 
-		#endregion
-
         /// <summary>
         /// Replaces some characters that might cause issues when commenting/uncommenting xml fragment.
         /// </summary>
@@ -604,5 +605,7 @@ namespace ISHDeploy.Data.Managers
         {
             return text.Replace(@"-\-", @"--").Replace(@"\\", @"\");
         }
-    }
+
+		#endregion
+	}
 }

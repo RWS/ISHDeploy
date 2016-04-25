@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Disables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHExternalPreviewOperation : IOperation
+    public class DisableISHExternalPreviewOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,25 +19,24 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// Initializes a new instance of the <see cref="DisableISHExternalPreviewOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
-        public DisableISHExternalPreviewOperation(ILogger logger, ISHPaths paths)
+        public DisableISHExternalPreviewOperation(ILogger logger)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
 
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,
-                    paths.AuthorAspWebConfig, 
-                    CommentPatterns.TrisoftInfoshareWebExternalXPath, 
-                    CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
+                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
             _invoker.AddAction(new CommentNodeByXPathAction(
                     logger,
-                    paths.AuthorAspWebConfig,
+                    InfoShareAuthorWebConfig.Path,
                     new [] {
-                        CommentPatterns.TrisoftExternalPreviewModuleXPath,
-                        CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleXPath,
-                        CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleXPath
+                        InfoShareAuthorWebConfig.SystemWebServerModulesAddTrisoftExternalPreviewModuleXPath,
+                        InfoShareAuthorWebConfig.SectionExternalPreviewModuleXPath,
+                        InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalPreviewModuleXPath
                     }));
         }
 

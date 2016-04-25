@@ -2,8 +2,8 @@
 using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
-using ISHDeploy.Models;
 using ISHDeploy.Validators;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
@@ -36,6 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
     {
 		/// <summary>
 		/// Status filter enum
+		///	<para type="description">Enumeration of status filters.</para>
 		/// </summary>
 		public enum StatusFilter
 		{

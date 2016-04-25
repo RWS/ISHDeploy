@@ -9,7 +9,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -507,8 +507,7 @@ namespace ISHDeploy.Tests.Data.Managers
         [TestCategory("Data handling")]
         public void SetAttributeValue()
         {
-            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
-            string testAttributeName = "externalId";
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity/@externalId";
             string testValue = "testValue";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -522,7 +521,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.When(x => x.Save(_filePath, doc)).Do(
                         x =>
                         {
-                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}/@{testAttributeName}");
+                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate(testXPath);
                             foreach (XAttribute attribute in attributes)
                             {
                                 Assert.AreEqual(attribute.Value, testValue, "Setting does NOT work");
@@ -530,7 +529,7 @@ namespace ISHDeploy.Tests.Data.Managers
                         }
                     );
 
-            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testAttributeName, testValue);
+            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testValue);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
@@ -722,6 +721,40 @@ namespace ISHDeploy.Tests.Data.Managers
 			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
 			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
         }
+
+		[TestMethod]
+		[TestCategory("Data handling")]
+		public void SetNode_Existing_SkipReplace()
+		{
+			// Arrange
+			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
+
+			var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+			var item = new EventLogMenuItem()
+			{
+				Label = "Thumbnails",
+				Description = "TEST_Description",
+				Icon = "TEST_icon.png",
+				UserRole = "TEST_UserRole",
+				Action = new EventLogMenuItemAction()
+				{
+					SelectedButtonTitle = "TEST_SelectedButtonTitle",
+					ModifiedSinceMinutesFilter = 8888,
+					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+					StatusFilter = "TEST_StatusFilter",
+					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+				}
+			};
+
+			FileManager.Load(_filePath).Returns(doc);
+
+			// Act
+			_xmlConfigManager.SetNode(_filePath, testXPath, item, false);
+
+			// Assert
+			FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+		}
 
 		[TestMethod]
 		[TestCategory("Data handling")]

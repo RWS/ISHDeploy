@@ -2,7 +2,7 @@
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 {
@@ -18,7 +18,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		private readonly IActionInvoker _invoker;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
+		/// Initializes a new instance of the <see cref="SetISHUIEventMonitorTabOperation" /> class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
 		/// <param name="paths">Reference for all files paths.</param>

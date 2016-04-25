@@ -10,14 +10,9 @@ namespace ISHDeploy.Data.Actions.XmlFile
     public class SetAttributeValueAction : SingleXmlFileAction
     {
         /// <summary>
-        /// The xpath to the searched node.
+        /// The attribute xPath.
         /// </summary>
-        private readonly string _xpath;
-
-        /// <summary>
-        /// The attribute name.
-        /// </summary>
-        private readonly string _attributeName;
+        private readonly string _attributeXpath;
 
         /// <summary>
         /// The attribute value.
@@ -33,19 +28,29 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// <param name="attributeName">Name of the attribute.</param>
         /// <param name="value">The attribute new value.</param>
         public SetAttributeValueAction(ILogger logger, ISHFilePath filePath, string xpath, string attributeName, string value)
-            : base(logger, filePath)
-        {
-            _xpath = xpath;
-            _attributeName = attributeName;
-            _value = value;
-        }
+            : this(logger, filePath, string.Concat(xpath, "\\@", attributeName), value)
+		{ }
 
-        /// <summary>
-        /// Executes current action.
-        /// </summary>
-        public override void Execute()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SetAttributeValueAction"/> class.
+		/// </summary>
+		/// <param name="logger">The logger.</param>
+		/// <param name="filePath">The file path.</param>
+		/// <param name="attributeXpath">The xpath to the node.</param>
+		/// <param name="value">The attribute new value.</param>
+		public SetAttributeValueAction(ILogger logger, ISHFilePath filePath, string attributeXpath, string value)
+			: base(logger, filePath)
+		{
+			_attributeXpath = attributeXpath;
+			_value = value;
+		}
+
+		/// <summary>
+		/// Executes current action.
+		/// </summary>
+		public override void Execute()
         {
-            XmlConfigManager.SetAttributeValue(FilePath, _xpath, _attributeName, _value);
+            XmlConfigManager.SetAttributeValue(FilePath, _attributeXpath, _value);
         }
     }
 }

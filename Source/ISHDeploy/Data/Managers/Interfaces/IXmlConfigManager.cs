@@ -69,14 +69,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false);
         
-        /// <summary>
-        /// Set attribute value
-        /// </summary>
-        /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath that is searched</param>
-        /// <param name="attributeName">Name of the attribute that will be modified</param>
-        /// <param name="value">Attribute new value</param>
-        void SetAttributeValue(string filePath, string xpath, string attributeName, string value);
+		/// <summary>
+		/// Set attribute value by attribute xPath
+		/// </summary>
+		/// <param name="filePath">Path to the file that is modified</param>
+		/// <param name="attributeXpath">XPath the attribute that will be modified</param>
+		/// <param name="value">Attribute new value</param>
+		void SetAttributeValue(string filePath, string attributeXpath, string value);
 
 		/// <summary>
 		/// Set attribute value

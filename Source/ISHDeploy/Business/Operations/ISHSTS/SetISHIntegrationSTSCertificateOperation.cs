@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
@@ -21,14 +22,45 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// Initializes a new instance of the class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
-		/// <param name="paths">Reference for all files paths.</param>
-		/// <param name="menuItem">The menu item object.</param>
-		public SetISHIntegrationSTSCertificateOperation(ILogger logger, IssuerThumbprintItem menuItem)
+		/// <param name="thumbprint">The certificate thumbprint.</param>
+		/// <param name="issuer">The certificate issuer.</param>
+		/// <param name="validationMode">The certificate validation mode.</param>
+		public SetISHIntegrationSTSCertificateOperation(ILogger logger, string thumbprint, string issuer, X509CertificateValidationMode validationMode)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, AuthorAspWebConfig.Path, String.Format(AuthorAspWebConfig.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, String.Format(InfoShareWSWebConfig.STSIdentityTrustedIssuers, menuItem.Thumbprint), menuItem, false));
+			var menuItem = new IssuerThumbprintItem()
+			{
+				Thumbprint = thumbprint,
+				Issuer = issuer
+			};
+
+			// Author web Config
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
+				String.Format(InfoShareAuthorWebConfig.STSIdentityTrustedIssuersXPath, menuItem.Thumbprint), menuItem, false));
+
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
+				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+
+			// WS web Config
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
+				String.Format(InfoShareAuthorWebConfig.STSIdentityTrustedIssuersXPath, menuItem.Thumbprint), menuItem, false));
+
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
+				InfoShareWSWebConfig.CertificateValidationModePath, validationMode.ToString()));
+
+			// STS web Config
+			var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
+			{
+				Thumbprint = thumbprint,
+				Issuer = issuer
+			};
+
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
+				String.Format(InfoShareSTSWebConfig.STSServiceBehaviorsTrustedUser, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem, false));
+
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
+				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 		}
 
 		/// <summary>

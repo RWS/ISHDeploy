@@ -97,15 +97,6 @@ namespace ISHDeploy.Business
 
         #endregion
 
-        #region Web Folders Configurations
-
-		/// <summary>
-		/// Path to STS Web.config file
-		/// </summary>
-		public ISHFilePath STSWebConfig => GetIshFilePath(IshDeploymentType.Web, @"InfoShareSTS\Web.config");
-
-        #endregion
-
         #region Enable/Disable Translation Job
         
         /// <summary>
@@ -152,7 +143,7 @@ namespace ISHDeploy.Business
         public string DeploymentName => _ishDeployment.Name;
 
         #endregion
-        
+
 
         /// <summary>
         /// Converts the local folder path to UNC path.

@@ -19,7 +19,6 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// Initializes a new instance of the <see cref="EnableISHExternalPreviewOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
         /// <param name="externalId">The external user identifier.</param>
         public EnableISHExternalPreviewOperation(ILogger logger, string externalId)
         {
@@ -28,19 +27,19 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    AuthorAspWebConfig.Path,
+                    InfoShareAuthorWebConfig.Path,
                     new [] {
-                        AuthorAspWebConfig.TrisoftExternalPreviewModuleSearchPattern,
-                        AuthorAspWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
-                        AuthorAspWebConfig.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
+                        InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleSearchPattern,
+                        InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
+                        InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
                     }));
 
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    AuthorAspWebConfig.Path,
-                    AuthorAspWebConfig.ExternalPreviewModuleXPath,
-                    AuthorAspWebConfig.ExternalPreviewModuleAttributeName, 
+                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));
         }
 

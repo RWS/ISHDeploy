@@ -8,11 +8,12 @@ namespace ISHDeploy.Business.Operations
     /// </summary>
     public partial class OperationPaths
     {
-        /// <summary>
-        /// The path to ~\Web\Author\ASP\Web.config
-        /// </summary>
-        public static class AuthorAspWebConfig
+		/// <summary>
+		/// The path to ~\Web\Author\ASP\Web.config
+		/// </summary>
+		public static class InfoShareAuthorWebConfig
         {
+
             /// <summary>
             /// The path to ~\Web\Author\ASP\Web.config
             /// </summary>
@@ -68,11 +69,16 @@ namespace ISHDeploy.Business.Operations
             /// The attribute name of "configuration/system.identityModel.services/federationConfiguration/wsFederation" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string FederationConfigurationAttributeName = "issuer";
-            
+
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
-            public const string STSIdentityTrustedIssuers = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
-        }
-    }
+            public const string STSIdentityTrustedIssuersXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+
+            /// <summary>
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\Author\ASP\Web.config file
+            /// </summary>
+            public const string CertificateValidationModeXPath = "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode";
+		}
+	}
 }

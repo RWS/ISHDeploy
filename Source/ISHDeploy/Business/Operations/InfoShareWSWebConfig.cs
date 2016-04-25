@@ -34,6 +34,16 @@ namespace ISHDeploy.Business.Operations
             /// </summary>
             public const string WSTrustMexEndpointAttributeName = "address";
 
+			/// <summary>
+			/// STS identity trusted issuers path
+			/// </summary>
+			public const string IdentityTrustedIssuersPath = InfoShareAuthorWebConfig.STSIdentityTrustedIssuersXPath;
+
+			/// <summary>
+			/// STS identity trusted issuers path
+			/// </summary>
+			public const string CertificateValidationModePath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
+
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
             /// </summary>

@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration");
 
-            _invoker.AddAction(new SetAttributeValueAction(logger, AuthorAspWebConfig.Path, AuthorAspWebConfig.FederationConfigurationXPath, AuthorAspWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
         }
 
         /// <summary>

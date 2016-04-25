@@ -67,7 +67,7 @@
         public const string EnrichBluelionWebConfigRemoveJsonMimeMapXmlString = "<remove fileExtension=\".json\"/>";
 
         #endregion
-        
+
         #region Enable/Disable Translation Job
 
         /// <summary>

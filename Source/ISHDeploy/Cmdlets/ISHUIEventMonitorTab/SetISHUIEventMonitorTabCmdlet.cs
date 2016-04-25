@@ -8,7 +8,7 @@ using ISHDeploy.Validators;
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
 	/// <summary>
-	///		<para type="synopsis">Update or add new EventMonitor tab.</para>
+	///		<para type="synopsis">Update or add a new EventMonitor tab.</para>
 	///		<para type="description">The Set-ISHUIEventMonitorTab cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
 	///		<para type="description">If Icon is not specified, the default value '~/UIFramework/events.32x32.png' is taken.</para>
 	///		<para type="description">If UserRole is not specified, the default value 'Administrator' is taken.</para>
@@ -87,7 +87,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
         [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
+		public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
 		/// <para type="description">Label of menu item.</para>

@@ -152,6 +152,7 @@ namespace ISHDeploy.Business
         public string DeploymentName => _ishDeployment.Name;
 
         #endregion
+        
 
         /// <summary>
         /// Converts the local folder path to UNC path.

@@ -46,10 +46,9 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            IOperation operation = null;
             OperationPaths.Initialize(ISHDeployment);
 
-            operation = new SetISHIntegrationSTSWSFederationOperation(Logger, Endpoint);
+            IOperation operation = new SetISHIntegrationSTSWSFederationOperation(Logger, Endpoint);
 
             operation.Run();
         }

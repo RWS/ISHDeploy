@@ -88,6 +88,7 @@ function readTargetXML() {
         $actorpass
         
     )
+    #read all files that are touched with commandlet
     [xml]$connectionconfiguration = get-content ("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $testingDeployment.OriginalParameters.projectsuffix )
     [xml]$feedSDLLiveContent = get-content ("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $testingDeployment.OriginalParameters.projectsuffix )       
     [xml]$translationOrganizer = get-content ("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $testingDeployment.OriginalParameters.projectsuffix )   
@@ -95,6 +96,7 @@ function readTargetXML() {
     [xml]$trisoftInfoShareClientconfig = get-content ("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $testingDeployment.OriginalParameters.projectsuffix )  
     [xml]$wsWebConfig = get-content ("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix )  
 
+    #get variables and nodes from files
     $issuerwstrustedendpoint = $connectionconfiguration.connectionconfiguration.issuer.url
     $issuerwstrustbindingtype = $connectionconfiguration.connectionconfiguration.issuer.authenticationtype
 
@@ -113,6 +115,7 @@ function readTargetXML() {
     $issueractorusername = $trisoftInfoShareClientconfig.configuration.'trisoft.infoshare.client.settings'.datasources.datasource.actor.credentials.username
     $issueractoruserpass = $trisoftInfoShareClientconfig.configuration.'trisoft.infoshare.client.settings'.datasources.datasource.actor.credentials.password
 
+    #check conditions
     $connectionConfigCheck = $false
     if($issuerwstrustedendpoint -eq $endpoint -and $issuerwstrustbindingtype -eq $bindingType){
         $connectionConfigCheck = $true
@@ -127,7 +130,8 @@ function readTargetXML() {
     if($issueractorusername -eq $actorUser -and $issueractoruserpass -eq $actorpass){
         $actorCheck = $true
     }
-
+    
+    #return
 	if($connectionConfigCheck -and $webConfigMexNodes.Count -eq 2 -and $includeCheck -and $actorCheck)
     {
 		Return "With Actor And Internal clients"
@@ -175,6 +179,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         #Arrange
         $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
+        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
         Rename-Item "$filepath\Web.config"  "_web.config"
         New-Item "$filepath\Web.config" -type file |Out-Null

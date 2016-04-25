@@ -21,7 +21,7 @@ $scriptBlockGetDeployment = {
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
-$moduleName = $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))

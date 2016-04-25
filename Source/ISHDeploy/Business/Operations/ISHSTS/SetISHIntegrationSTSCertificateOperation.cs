@@ -7,11 +7,11 @@ using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
-	/// <summary>
-	/// Sets Event Monitor Tab.
-	/// </summary>
-	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHIntegrationSTSCertificateOperation : OperationPaths, IOperation
+    /// <summary>
+    /// Sets Thumbprint and issuers values to configuration.
+    /// </summary>
+    /// <seealso cref="IOperation" />
+    public class SetISHIntegrationSTSCertificateOperation : OperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -27,7 +27,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// <param name="validationMode">The certificate validation mode.</param>
 		public SetISHIntegrationSTSCertificateOperation(ILogger logger, string thumbprint, string issuer, X509CertificateValidationMode validationMode)
 		{
-			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
+			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
 			var menuItem = new IssuerThumbprintItem()
 			{

@@ -43,13 +43,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Remove Old Token Signing Certificate.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Add New Token Signing Certificate.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
-    <None Include="Articles\Module\FeatureToggle.ps1" />
-    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="CI\CopyAndReinstall.ps1" />
     <None Include="CI\ISHInstall.ps1" />
     <None Include="CI\ISHReinstaller.ps1" />
@@ -97,9 +90,8 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Initial.ps1" />
+    <Folder Include="Articles\" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="CI\InputParameters\InfoShareORA12.xml" />
     <Content Include="CI\InputParameters\InfoShareSQL2014.xml" />

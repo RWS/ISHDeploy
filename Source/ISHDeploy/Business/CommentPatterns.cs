@@ -158,6 +158,6 @@
 		/// </summary>
 		public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
 
-		#endregion
+        #endregion
     }
 }

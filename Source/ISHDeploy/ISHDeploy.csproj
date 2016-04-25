@@ -54,13 +54,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\OperationPaths.cs" />
+    <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TrisoftInfoShareClientConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\InfoShareWSConnectionConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
@@ -72,6 +95,7 @@
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Data\Managers\CertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />

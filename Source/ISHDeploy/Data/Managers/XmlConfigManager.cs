@@ -485,7 +485,31 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-		#region private methods
+        /// <summary>
+        /// Set element value.
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified.</param>
+        /// <param name="xpath">XPath of searched element.</param>
+        /// <param name="value">The new value of element.</param>
+        public void SetElementValue(string filePath, string xpath, string value)
+        {
+            _logger.WriteDebug($"Setting `{xpath}` element new value `{value}` in file `{filePath}`");
+
+            var doc = _fileManager.Load(filePath);
+
+            var element = doc.XPathSelectElement(xpath);
+
+            if (element == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
+                return;
+            }
+            element.SetValue(value);
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        #region private methods
 
 		/// <summary>
 		/// Tries to uncomment node.

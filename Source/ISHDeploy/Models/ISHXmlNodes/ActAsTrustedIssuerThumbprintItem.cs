@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace ISHDeploy.Models.ISHXmlNodes
+﻿namespace ISHDeploy.Models.ISHXmlNodes
 {
 	/// <summary>
 	/// Represents menu item xml node
@@ -8,7 +6,7 @@ namespace ISHDeploy.Models.ISHXmlNodes
 	public class ActAsTrustedIssuerThumbprintItem : IssuerThumbprintItem
 	{
 		/// <summary>
-		/// Xml node name.
+		///		Xml node name.
 		/// </summary>
 		protected override string XmlElementName => "addActAsTrustedIssuer";
 	}

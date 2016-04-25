@@ -10,11 +10,6 @@ namespace ISHDeploy.Data.Actions.XmlFile
     public class SetAttributeValueAction : SingleXmlFileAction
     {
         /// <summary>
-        /// The xpath to the searched node.
-        /// </summary>
-        private readonly string _xpath;
-
-        /// <summary>
         /// The attribute xPath.
         /// </summary>
         private readonly string _attributeXpath;

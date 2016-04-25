@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Selectors;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Models.ISHXmlNodes
@@ -31,14 +30,6 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		public string Issuer { get; set; }
 
 		/// <summary>
-		/// Gets or sets the validation mode.
-		/// </summary>
-		/// <value>
-		/// The validation mode.
-		/// </value>
-		public X509CertificateValidator ValidationMode { get; set; }
-
-		/// <summary>
 		/// Gets node comemnt if exiss
 		/// </summary>
 		public XComment GetNodeComment()
@@ -54,7 +45,6 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		{
 			return new XElement(XmlElementName,
 				new XAttribute("thumbprint", Thumbprint),
-				//new XAttribute("action", ValidationMode.ToString()),
 				new XAttribute("name", Issuer));
 		}
 	}

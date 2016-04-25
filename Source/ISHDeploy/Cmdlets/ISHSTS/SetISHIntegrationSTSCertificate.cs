@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Selectors;
-using System.Linq;
+﻿using System.Linq;
 using System.Management.Automation;
+using System.ServiceModel.Security;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHSTS;
-using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -68,7 +66,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// <para type="description">Selected validation mode. Default value is 'ChainTrust'.</para>
 		/// </summary>
 		[Parameter(Mandatory = false, HelpMessage = "Selected validation mode")]
-		public X509CertificateValidator ValidationMode { get; set; } = X509CertificateValidator.ChainTrust;
+		public X509CertificateValidationMode ValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
 
 		/// <summary>
 		/// Cashed value for <see cref="IshPaths"/> property
@@ -85,13 +83,9 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, new IssuerThumbprintItem()
-			{
-				Thumbprint = Thumbprint,
-				Issuer = Issuer,
-				ValidationMode = ValidationMode
-			});
+			OperationPaths.Initialize(ISHDeployment);
 
+			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, Thumbprint, Issuer, ValidationMode);
 			operation.Run();
 		}
 	}

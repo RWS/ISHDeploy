@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
+    <None Include="Articles\FeatureToggle\Work with UI Features.md" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\Add New Token Signing Certificate.ps1" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\Initial.ps1" />
     <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />

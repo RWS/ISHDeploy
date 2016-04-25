@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Enables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHExternalPreviewOperation : IOperation
+    public class EnableISHExternalPreviewOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -21,26 +21,26 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <param name="logger">The logger.</param>
         /// <param name="paths">Reference for all files paths.</param>
         /// <param name="externalId">The external user identifier.</param>
-        public EnableISHExternalPreviewOperation(ILogger logger, ISHPaths paths, string externalId)
+        public EnableISHExternalPreviewOperation(ILogger logger, string externalId)
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
             
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    paths.AuthorAspWebConfig,
+                    AuthorAspWebConfig.Path,
                     new [] {
-                        CommentPatterns.TrisoftExternalPreviewModuleSearchPattern,
-                        CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
-                        CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
+                        AuthorAspWebConfig.TrisoftExternalPreviewModuleSearchPattern,
+                        AuthorAspWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
+                        AuthorAspWebConfig.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
                     }));
 
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    paths.AuthorAspWebConfig, 
-                    CommentPatterns.TrisoftInfoshareWebExternalXPath, 
-                    CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
+                    AuthorAspWebConfig.Path,
+                    AuthorAspWebConfig.ExternalPreviewModuleXPath,
+                    AuthorAspWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));
         }
 

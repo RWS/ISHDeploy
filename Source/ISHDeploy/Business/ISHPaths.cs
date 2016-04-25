@@ -97,15 +97,6 @@ namespace ISHDeploy.Business
 
         #endregion
 
-        #region Enable/Disable ExternalPreview
-
-        /// <summary>
-        /// Path to Web.config file
-        /// </summary>
-        public ISHFilePath AuthorAspWebConfig => GetIshFilePath(IshDeploymentType.Web, @"Author\ASP\Web.config");
-
-        #endregion
-
         #region Enable/Disable Translation Job
         
         /// <summary>

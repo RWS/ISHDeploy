@@ -4,7 +4,6 @@ using System.ServiceModel.Security;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHSTS;
-using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {

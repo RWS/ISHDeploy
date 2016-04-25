@@ -49,6 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
         /// </summary>
         public override void ExecuteCmdlet()
         {
+            OperationPaths.Initialize(ISHDeployment);
             var operation = new EnableISHExternalPreviewOperation(Logger, ExternalId);
 
             operation.Run();

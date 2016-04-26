@@ -1,11 +1,14 @@
 ﻿param (
-    [Parameter(Mandatory=$true)]
+    #[Parameter(Mandatory=$true)]
     [string]
     $InputDir,
-    [Parameter(Mandatory=$true)]
+    #[Parameter(Mandatory=$true)]
     [string]
     $ExportPath
 )
+
+$InputDir ="C:\Stash Projects\ishdeploy\Source\ISHDeploy.PowerShell\CmdletsUsage"
+$ExportPath ="C:\Stash Projects\ishdeploy\Source\ISHDeploy.Documentation\Using"
 
 #$DebugPreference="Continue"
 #$VerbosePreference="Continue"
@@ -15,38 +18,36 @@ Write-Debug "Export Path: $ExportPath"
 
 try
 {
-    $cmdletsUsage = @{};
+    # Celaning Export path
+    Remove-Item  $ExportPath\* -Recurse -Force
 
-    $ymlFile = Join-Path $ExportPath "toc.yml"
+    # Copy Cmdlet samples to Export folder
+    Copy-Item  $InputDir\* $ExportPath -Recurse -Force
 
-    If (Test-Path $ymlFile){
-	    Remove-Item $ymlFile
-    }
-    
-    Get-ChildItem -Path $InputDir | ForEach-Object {
+    $ymlFileContent = @();
+
+    Get-ChildItem -Path $ExportPath | % {
 
         $folderName = $_.Name
         $folderPath = Join-Path $ExportPath $folderName
 
-        New-Item -ItemType Directory -Force -Path $folderPath
+        $mdFileContent = @("# Using the $folderName commandlets");
 
-        $mdFile = Join-Path $folderPath ($folderName + ".md")
-
-        "- name: $folderName"| Out-File $ymlFile -Encoding utf8 -Append
-        "  href: " + "../obj/doc/using/$folderName/$folderName.md"| Out-File $ymlFile -Encoding utf8 -Append
-
-        "# Using the $folderName commandlets" | Out-File $mdFile -Encoding utf8
-
-        Get-ChildItem $_.FullName -Filter *.ps1  | ForEach-Object {
-            Copy-Item $_.FullName $folderPath -Force
+        Get-ChildItem $_.FullName -Filter *.ps1  | % {
             $name = $_.BaseName
             $cmdletName = $name -creplace "^([A-Z]+)([a-z]+)", '$1$2-'
             $fileName = $_.Name
-            ""
-            "##  $cmdletName"
-            "CopyCodeBlockAndLink($fileName)"
-        } | Out-String | Out-File $mdFile -Encoding utf8 -Append
+            $mdFileContent += ""
+            $mdFileContent += "##  $cmdletName"
+            $mdFileContent += "CopyCodeBlockAndLink($fileName)"
+        } 
+        $mdFileContent | Out-String | Out-File (Join-Path $folderPath "$folderName.md") -Encoding utf8
+
+        $ymlFileContent += "- name: $folderName"
+        $ymlFileContent += "  href: " + "../obj/doc/using/$folderName/$folderName.md"
     }
+
+    $ymlFileContent | Out-String | Out-File (Join-Path $ExportPath "toc.yml") -Encoding utf8 
 }
 catch
 {

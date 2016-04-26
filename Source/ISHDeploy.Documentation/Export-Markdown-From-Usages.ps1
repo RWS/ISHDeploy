@@ -1,7 +1,7 @@
 ﻿param (
     [Parameter(Mandatory=$true)]
     [string]
-    $UsagesDir,
+    $InputDir,
     [Parameter(Mandatory=$true)]
     [string]
     $ExportPath
@@ -10,7 +10,7 @@
 #$DebugPreference="Continue"
 #$VerbosePreference="Continue"
 
-Write-Debug "Usage Directory: $UsagesDir"
+Write-Debug "Usage Directory: $InputDir"
 Write-Debug "Export Path: $ExportPath"
 
 try
@@ -23,7 +23,7 @@ try
 	    Remove-Item $ymlFile
     }
     
-    Get-ChildItem -Path $UsagesDir | ForEach-Object {
+    Get-ChildItem -Path $InputDir | ForEach-Object {
 
         $folderName = $_.Name
         $folderPath = Join-Path $ExportPath $folderName

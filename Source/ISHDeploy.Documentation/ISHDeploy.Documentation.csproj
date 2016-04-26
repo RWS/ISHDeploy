@@ -65,7 +65,6 @@
     <None Include="Export-Markdown.ps1" />
     <None Include="Readme.md" />
     <None Include="Index.md" />
-    <None Include="Module\toc.yml" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -74,12 +73,13 @@
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Module\" />
     <Folder Include="Using\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -ExportPath "$(ProjectDir)Using" -UsagesDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)Using"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
   </PropertyGroup>

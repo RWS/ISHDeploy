@@ -872,8 +872,8 @@ namespace ISHDeploy.Tests.Data.Managers
 				_filePath,
 				string.Format(CommentPatterns.EventMonitorTab, testLabel));
 
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
 
 			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -913,6 +913,61 @@ namespace ISHDeploy.Tests.Data.Managers
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNodes()
+        {
+            // Arrange
+            string testXPath = "/menubar/menuitem/userrole";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            XElement[] elements = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    elements = xdoc.Root.Elements("menuitem").Elements("userrole").ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.AreEqual(elements.Length, 0, "Nodes was not removed.");
+        }
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNodes_if_nodes_are_not_exists()
+        {
+            // Arrange
+            string testXPath = "/tabbar/menuitem/userrole";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            XElement[] elements = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    elements = xdoc.Root.Elements("menuitem").Elements("userrole").ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+
+            // Assert
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+
+            Assert.IsNull(elements, "Wrong node was removed.");
         }
 
         #endregion

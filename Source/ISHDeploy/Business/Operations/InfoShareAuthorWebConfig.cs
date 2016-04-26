@@ -46,17 +46,17 @@ namespace ISHDeploy.Business.Operations
             public const string TrisoftInfoshareWebExternalPreviewModuleXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule";
 
             /// <summary>
-            /// The xpath of "<add name='TrisoftExternalPreviewModule'" element in ~\Web\Author\ASP\Web.config file
+            /// The xpath of "&lt;add name='TrisoftExternalPreviewModule'" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string TrisoftExternalPreviewModuleSearchPattern = "<add name=\"TrisoftExternalPreviewModule\"";
 
             /// <summary>
-            /// The xpath of "<section name='trisoft.infoshare.web.externalpreviewmodule'" element in ~\Web\Author\ASP\Web.config file
+            /// The xpath of "&lt;section name='trisoft.infoshare.web.externalpreviewmodule'" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern = "<section name=\"trisoft.infoshare.web.externalpreviewmodule\"";
 
             /// <summary>
-            /// The xpath of "<trisoft.infoshare.web.externalpreviewmodule>" element in ~\Web\Author\ASP\Web.config file
+            /// The xpath of "&lt;trisoft.infoshare.web.externalpreviewmodule&gt;" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string TrisoftInfoshareWebExternalPreviewModuleSearchPattern = "<trisoft.infoshare.web.externalpreviewmodule>";
 
@@ -73,7 +73,12 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
-            public const string STSIdentityTrustedIssuersXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+            public const string IdentityTrustedIssuersPathByThumbprint = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+
+            /// <summary>
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
+            /// </summary>
+            public const string IdentityTrustedIssuersPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='{0}']";
 
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\Author\ASP\Web.config file

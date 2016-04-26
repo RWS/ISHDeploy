@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\OperationPaths.cs" />
     <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
@@ -93,6 +94,7 @@
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\RemoveNodesAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />

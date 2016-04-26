@@ -59,6 +59,7 @@
     <None Include="Articles\Module\FeatureToggle.ps1" />
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
+    <None Include="Export-Markdown-From-Usages.ps1" />
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
@@ -70,14 +71,17 @@
     </None>
     <None Include="Resolve-Markdown.ps1" />
     <None Include="toc.yml" />
-    <None Include="Using\toc.yml" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Using\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -ExportPath "$(ProjectDir)Using" -UsagesDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

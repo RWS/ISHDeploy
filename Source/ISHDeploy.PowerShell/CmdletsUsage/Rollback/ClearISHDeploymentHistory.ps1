@@ -1,5 +1,4 @@
 CLS
-Import-Module "C:\Stash Projects\ISHDeploy\Source\ISHDeploy\bin\Debug\ISHDeploy.12.0.0.dll"
 
 # $DebugPreference = "SilentlyContinue"
 
@@ -17,11 +16,5 @@ $dict.Add('datapath', 'C:\Trisoft\RnDProjects\Trisoft\Test\Server.Web')
 $version = New-Object System.Version -ArgumentList '1.0.0.0';
 
 $deployment = New-Object ISHDeploy.Models.ISHDeployment -ArgumentList ($dict, $version)
-
-Enable-ISHUIContentEditor -ISHDeployment $deployment 
-
-#Set-ISHContentEditor -ISHDeployment $deployment -Domain "global.sdl.corp" -LicenseKey "blablabkabkabkabkabakbaiuaslc"
-
-#Undo-ISHDeployment -ISHDeployment $deployment 
 
 Clear-ISHDeploymentHistory -ISHDeployment $deployment

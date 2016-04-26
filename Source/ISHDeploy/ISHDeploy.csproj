@@ -44,7 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-	<Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
@@ -57,9 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
-	<Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\OperationPaths.cs" />
-	<Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
+    <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareAuthorWebConfig.cs">
@@ -71,7 +71,7 @@
     <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
-	<Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
+    <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
@@ -98,7 +98,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
-	<Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
@@ -119,9 +119,7 @@
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Data\Managers\CertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
-    <Compile Include="Data\Managers\Interfaces\IResourceManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
-    <Compile Include="Data\Managers\ResourceManager.cs" />
     <Compile Include="Data\Managers\TemplateManager.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />

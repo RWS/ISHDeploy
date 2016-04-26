@@ -151,9 +151,28 @@ namespace ISHDeploy.Business
         /// </summary>
         public string DeploymentName => _ishDeployment.Name;
 
+        /// <summary>
+        /// Gets the name of the CM web application.
+        /// </summary>
+        public string CMWebAppName => _ishDeployment.GetCMWebAppName();
+
+        /// <summary>
+        /// Gets the name of the WS web application.
+        /// </summary>
+        public string WSWebAppName => _ishDeployment.GetWSWebAppName();
+
+        /// <summary>
+        /// Gets the name of the STS web application.
+        /// </summary>
+        public string STSWebAppName => _ishDeployment.GetSTSWebAppName();
+
+        /// <summary>
+        /// Gets the name of the access host.
+        /// </summary>
+        public string AccessHostName => _ishDeployment.AccessHostName;
+
         #endregion
         
-
         /// <summary>
         /// Converts the local folder path to UNC path.
         /// </summary>

@@ -101,5 +101,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="xpath">XPath of searched element.</param>
         /// <param name="value">The new value of element.</param>
         void SetElementValue(string filePath, string xpath, string value);
+
+        /// <summary>
+        /// Gets the value from element found by xpath.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the element.</param>
+        /// <returns>The element value.</returns>
+        string GetValue(string filePath, string xpath);
     }
 }

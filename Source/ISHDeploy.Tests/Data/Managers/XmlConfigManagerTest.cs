@@ -581,6 +581,70 @@ namespace ISHDeploy.Tests.Data.Managers
             Logger.Received(1).WriteWarning(Arg.Is($"{_filePath} does not contain element '{testXPath}'."));
         }
 
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_attribute_value_by_xpath()
+        {
+            // Arrange
+            var doc = new XmlDocument();
+            doc.LoadXml("<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.LoadXmlDoc(_filePath).Returns(doc);
+
+            // Act
+            var attributeValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/@nodeAttribute");
+
+            // Assert
+            Assert.AreEqual(attributeValue, "AttributeValue1");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_node_value_by_xpath()
+        {
+            // Arrange
+            var doc = new XmlDocument();
+            doc.LoadXml("<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.LoadXmlDoc(_filePath).Returns(doc);
+
+            // Act
+            var elementValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/someNode");
+
+            // Assert
+            Assert.AreEqual(elementValue, "SomeNodeValue");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXPathException))]
+        public void GetValue_Invalid_xpath()
+        {
+            // Arrange
+            var doc = new XmlDocument();
+            doc.LoadXml("<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.LoadXmlDoc(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.GetValue(_filePath, "/node/wrongNodeName");
+
+            // Assert
+            Assert.Fail("This method should throw exception");
+        }
+
         #endregion
 
         #region Nodes Manipulation

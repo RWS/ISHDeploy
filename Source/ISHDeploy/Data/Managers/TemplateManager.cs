@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,12 +8,20 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Managers
 {
     /// <summary>
-    /// 
+    /// Generates documents from resource templates.
     /// </summary>
-    public class TemplateManager
+    /// <seealso cref="ITemplateManager" />
+    public class TemplateManager : ITemplateManager
     {
+        /// <summary>
+        /// The templates resource folder.
+        /// </summary>
+        private const string TemplateBaseFolder = "ISHDeploy.Resources.Templates";
+
+        /// <summary>
+        /// The logger.
+        /// </summary>
         private readonly ILogger _logger;
-        private readonly IFileManager _fileManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemplateManager"/> class.
@@ -23,38 +30,51 @@ namespace ISHDeploy.Data.Managers
         public TemplateManager(ILogger logger)
         {
             _logger = logger;
-            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
+        #region Template files        
         /// <summary>
-        /// Saves the cm security token service.
+        /// The CM security token service template
         /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <param name="cmId">The cm identifier.</param>
-        /// <param name="wsIds">The ws ids.</param>
-        /// <param name="serviceCertThumbprint">The service cert thumbprint.</param>
-        public void SaveCMSecurityTokenService(string filePath, string cmId, string[] wsIds, string serviceCertThumbprint)
+        public const string CMSecurityTokenServiceTemplate = "CM Security Token Service Requirements.md";
+
+        #endregion
+
+        /// <summary>
+        /// Generates the CM security token service document.
+        /// </summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="cmWebAppName">Name of the CM web application.</param>
+        /// <param name="wsWebAppName">Name of the WS web application.</param>
+        /// <param name="certificateFileName">Name of the certificate file.</param>
+        /// <param name="certificateContent">Content of the certificate file.</param>
+        /// <returns>Content of the generated document.</returns>
+        public string GetCMSecurityTokenServiceDoc(string hostName, string cmWebAppName, string wsWebAppName, string certificateFileName, string certificateContent)
         {
-            const string templateFile = "ISHDeploy.Resources.Templates.CM Security Token Service Requirements.md";
             var parameters = new Dictionary<string, string>
             {
-                {"[token:CM_id]", cmId},
-                {"[token:WS_ids]", string.Join(Environment.NewLine, wsIds)},
-                {"[token:ServiceCertificateThumbprint]", serviceCertThumbprint}
+                {"$ishhostname", hostName},
+                {"$ishcmwebappname", cmWebAppName},
+                {"$ishwswebappname", wsWebAppName},
+                {"$ishwscertificate", certificateFileName},
+                {"$ishwscontent", certificateContent}
             };
 
-            SaveTemplate(filePath, templateFile, parameters);
+            return GenerateDocument(CMSecurityTokenServiceTemplate, parameters);
         }
 
         /// <summary>
-        /// Saves the template.
+        /// Generate output document from the template.
         /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <param name="templateFile">The template file.</param>
-        /// <param name="parameters">The parameters.</param>
-        private void SaveTemplate(string filePath, string templateFile, IDictionary<string, string> parameters)
+        /// <param name="templateFileName">Name of the template file.</param>
+        /// <param name="parameters">All parameters that need to be filled out in the template.</param>
+        /// <returns></returns>
+        private string GenerateDocument(string templateFileName, IDictionary<string, string> parameters)
         {
+            string templateFile = $"{TemplateBaseFolder}.{templateFileName}";
             string templateContent;
+
+            _logger.WriteDebug($"Reading the resource template: {templateFile}");
             using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream(templateFile))
             {
                 using (var reader = new StreamReader(resourceReader))
@@ -63,9 +83,10 @@ namespace ISHDeploy.Data.Managers
                 }
             }
 
+            _logger.WriteDebug("Replacing all parameters in template: " + string.Join("; ", parameters.Select(param => $"{param.Key}={param.Value}").ToArray()));
             templateContent = parameters.Aggregate(templateContent, (current, parameter) => current.Replace(parameter.Key, parameter.Value));
 
-            _fileManager.Write(filePath, templateContent);
+            return templateContent;
         }
     }
 }

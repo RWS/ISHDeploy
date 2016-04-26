@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Xml;
 using System.Xml.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -222,21 +225,34 @@ namespace ISHDeploy.Data.Managers
 			}
 		}
 
-		/// <summary>
-		/// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
-		/// </summary>
-		/// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-		/// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
-		public XDocument Load(string filePath)
+        /// <summary>
+        /// Creates a new <see cref="XDocument" /> instance by using the specified file path.
+        /// </summary>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument" />.</param>
+        /// <returns>New instance of <see cref="XDocument" /> with loaded file content</returns>
+        public XDocument Load(string filePath)
         {
 			_logger.WriteDebug($"Loading XML document at `{filePath}`");
 			return XDocument.Load(filePath);
         }
 
         /// <summary>
-        /// Saves <see cref="T:System.Xml.Linq.XDocument"/> content to file
+        /// Creates a new <see cref="XmlDocument" /> instance by using the specified file path.
         /// </summary>
-        /// <param name="filePath">The file where <see cref="T:System.Xml.Linq.XDocument"/> content will be stored.</param>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XmlDocument" />.</param>
+        /// <returns>New instance of <see cref="XmlDocument" /> with loaded file content</returns>
+        public XmlDocument LoadXmlDoc(string filePath)
+        {
+            var doc = new XmlDocument();
+            doc.Load(filePath);
+
+            return doc;
+        }
+
+        /// <summary>
+        /// Saves <see cref="XDocument" /> content to file
+        /// </summary>
+        /// <param name="filePath">The file where <see cref="XDocument" /> content will be stored.</param>
         /// <param name="doc">The document to be stored</param>
         public void Save(string filePath, XDocument doc)
         {
@@ -271,6 +287,32 @@ namespace ISHDeploy.Data.Managers
 
 			_logger.WriteDebug($"License file for `{hostName}` is not found.");
 			return false;
+        }
+
+        /// <summary>
+        /// Packages list of files to single archive.
+        /// Overwrites archive file if it already exists.
+        /// </summary>
+        /// <param name="packagePath">The output archive path.</param>
+        /// <param name="filesToPack">The files to pack.</param>
+        public void PackageFiles(string packagePath, IEnumerable<string> filesToPack)
+        {
+            _logger.WriteDebug("File will be packed: " + string.Join(";", filesToPack));
+
+            if (FileExists(packagePath))
+            {
+                _logger.WriteWarning($"Package file {Path.GetFileName(packagePath)} is overwritten.");
+                Delete(packagePath);
+            }
+
+            using (var zipFile = ZipFile.Open(packagePath, ZipArchiveMode.Create))
+            {
+                foreach (var file in filesToPack)
+                {
+                    zipFile.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                }
+            }
+            _logger.WriteDebug($"The output package is: {packagePath}");
         }
     }
 }

@@ -101,6 +101,21 @@ namespace ISHDeploy.Models
         public string GetDataFolderPath() => Path.Combine(AppPath, $"Data{GetSuffix()}");
 
         /// <summary>
+        /// Gets the name of the CM main url folder.
+        /// </summary>
+        public string GetCMWebAppName() => OriginalParameters["infoshareauthorwebappname"];
+
+        /// <summary>
+        /// Gets the name of the WS main url folder.
+        /// </summary>
+        public string GetWSWebAppName() => OriginalParameters["infosharewswebappname"];
+
+        /// <summary>
+        /// Gets the name of the STS main url folder.
+        /// </summary>
+        public string GetSTSWebAppName() => OriginalParameters["infosharestswebappname"];
+
+        /// <summary>
         /// Gets the deployment suffix.
         /// </summary>
         public string GetSuffix() => OriginalParameters["projectsuffix"];

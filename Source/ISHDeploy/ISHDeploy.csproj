@@ -44,6 +44,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,11 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\OperationPaths.cs" />
     <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
@@ -83,6 +88,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
@@ -92,6 +98,9 @@
     <Compile Include="Data\Actions\File\FileDeleteAction.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\File\RemoveDirectoryAction.cs" />
+    <Compile Include="Data\Actions\File\SaveCertificateAction.cs" />
+    <Compile Include="Data\Actions\File\SavePackageAction.cs" />
+    <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
@@ -101,7 +110,6 @@
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IResourceManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
-    <Compile Include="Data\Managers\PackageManager.cs" />
     <Compile Include="Data\Managers\ResourceManager.cs" />
     <Compile Include="Data\Managers\TemplateManager.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
@@ -150,6 +158,7 @@
     <Compile Include="Data\Actions\XmlFile\CommentNodesByPrecedingPatternAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetAttributeValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\UncommentNodesByPrecedingPatternAction.cs" />
+    <Compile Include="Data\Actions\Template\SaveCMSecurityTokenServiceAction.cs" />
     <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITextConfigManager.cs" />
@@ -176,7 +185,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />

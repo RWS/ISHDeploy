@@ -4,10 +4,10 @@ using System.IO;
 
 namespace ISHDeploy.Models
 {
-    /// <summary>
-    /// Represents the installed Content Manager deployment.
-    /// </summary>
-    public class ISHDeployment
+	/// <summary>
+	///	<para type="description">Represents the installed Content Manager deployment.</para>
+	/// </summary>
+	public class ISHDeployment
     {
         /// <summary>
         /// The HTTPS prefix

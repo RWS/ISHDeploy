@@ -33,7 +33,21 @@ namespace ISHDeploy.Business.Operations
             /// The attribute name of WSTrustMexEndpointBinding element in Web\InfoShareWS\Web.config file where mexEndpoint url should be updated
             /// </summary>
             public const string WSTrustMexEndpointAttributeName = "address";
-        }
 
+			/// <summary>
+			/// STS identity trusted issuers path
+			/// </summary>
+			public const string IdentityTrustedIssuersPath = InfoShareAuthorWebConfig.STSIdentityTrustedIssuersXPath;
+
+			/// <summary>
+			/// STS identity trusted issuers path
+			/// </summary>
+			public const string CertificateValidationModePath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
+
+            /// <summary>
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
+            /// </summary>
+            public const string STSIdentityTrustedIssuers = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+        }
     }
 }

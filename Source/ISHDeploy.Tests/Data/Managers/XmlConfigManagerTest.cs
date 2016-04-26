@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -507,8 +508,7 @@ namespace ISHDeploy.Tests.Data.Managers
         [TestCategory("Data handling")]
         public void SetAttributeValue()
         {
-            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
-            string testAttributeName = "externalId";
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity/@externalId";
             string testValue = "testValue";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -522,7 +522,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.When(x => x.Save(_filePath, doc)).Do(
                         x =>
                         {
-                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}/@{testAttributeName}");
+                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}");
                             foreach (XAttribute attribute in attributes)
                             {
                                 Assert.AreEqual(attribute.Value, testValue, "Setting does NOT work");
@@ -530,7 +530,7 @@ namespace ISHDeploy.Tests.Data.Managers
                         }
                     );
 
-            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testAttributeName, testValue);
+            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testValue);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 

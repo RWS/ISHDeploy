@@ -28,7 +28,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// <param name="attributeName">Name of the attribute.</param>
         /// <param name="value">The attribute new value.</param>
         public SetAttributeValueAction(ILogger logger, ISHFilePath filePath, string xpath, string attributeName, string value)
-            : this(logger, filePath, string.Concat(xpath, "\\@", attributeName), value)
+            : this(logger, filePath, string.Concat(xpath, "/@", attributeName), value)
 		{ }
 
 		/// <summary>

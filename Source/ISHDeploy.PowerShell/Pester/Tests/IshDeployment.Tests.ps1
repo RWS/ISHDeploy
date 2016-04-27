@@ -95,23 +95,23 @@ Describe "Testing Get-ISHDeployment"{
     It "returns warning when CM version doesnot match"{
         #Arrange
         $current = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetVersionValue -Session $session -ArgumentList $testingDeploymentName
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlocksetVersionValue -Session $session -ArgumentList $testingDeploymentName, "9.0.2417.0"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, "9.0.2417.0"
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName  -WarningVariable Warning
         #Asssert
         $Warning | Should Match "does not correspond to deployment version"
         #Rollback
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlocksetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
     }
 
     It "Commandlets that accept ISHDeployment throw exception when CM version doesnot match"{
         #Arrange
         $current = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetVersionValue -Session $session -ArgumentList $testingDeploymentName
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlocksetVersionValue -Session $session -ArgumentList $testingDeploymentName, "9.0.2417.0"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, "9.0.2417.0"
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName} | Should Throw "does not correspond to deployment version "
 		#Rollback
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlocksetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
     }
 
 }

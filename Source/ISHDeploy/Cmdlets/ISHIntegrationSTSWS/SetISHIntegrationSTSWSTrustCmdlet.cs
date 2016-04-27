@@ -3,6 +3,7 @@ using System.Management.Automation;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
 {
@@ -42,6 +43,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = MandatoryParameterSet)]
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.", ParameterSetName = InternalParameterSet)]
+        [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>

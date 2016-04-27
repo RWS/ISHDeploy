@@ -91,10 +91,13 @@
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSWSTrust .Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
     <None Include="Pester\Tests\ISHUITranslationJob.Tests.ps1" />
+    <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />
     <None Include="Publish\Publish-Module.ps1" />
   </ItemGroup>

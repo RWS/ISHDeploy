@@ -4,6 +4,7 @@ using System.ServiceModel.Security;
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -36,7 +37,8 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// <para type="description">Specifies the instance of the Content Manager deployment.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-		public Models.ISHDeployment ISHDeployment { get; set; }
+        [ValidateDeploymentVersion]
+        public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
 		/// <para type="description">Certificate normalized Thumbprint.</para>

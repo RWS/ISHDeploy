@@ -9,7 +9,6 @@ using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models;
 using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Tests.Data.Managers

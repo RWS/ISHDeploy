@@ -2,11 +2,12 @@
 using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
     /// <summary>
-    ///		<para type="synopsis">Removes STS sertificate.</para>
+    ///		<para type="synopsis">Removes STS certificate.</para>
     ///		<para type="description">The Remove-ISHIntegrationSTSCertificate cmdlet removes certificate based on a issuer name.</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
@@ -23,7 +24,8 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// <para type="description">Specifies the instance of the Content Manager deployment.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-		public Models.ISHDeployment ISHDeployment { get; set; }
+        [ValidateDeploymentVersion]
+        public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
 		/// <para type="description">Issuer name.</para>

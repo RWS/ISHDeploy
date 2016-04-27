@@ -35,19 +35,19 @@ namespace ISHDeploy.Business.Operations
             public const string WSTrustMexEndpointAttributeName = "address";
 
             /// <summary>
-            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>
-            public const string IdentityTrustedIssuersPath = InfoShareAuthorWebConfig.IdentityTrustedIssuersPath;
+            public const string IdentityTrustedIssuersPath = InfoShareAuthorWebConfig.IdentityTrustedIssuersXPath;
 
             /// <summary>
-            /// STS identity trusted issuers path by humbprint 
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>
-            public const string IdentityTrustedIssuersPathByThumbprint = InfoShareAuthorWebConfig.IdentityTrustedIssuersPathByThumbprint;
+            public const string IdentityTrustedIssuersPathByThumbprintXPath = InfoShareAuthorWebConfig.IdentityTrustedIssuersPathByThumbprintXPath;
 
             /// <summary>
-            /// STS identity trusted issuers path
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>
-            public const string CertificateValidationModePath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
+            public const string CertificateValidationModeXPath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
         }
     }
 }

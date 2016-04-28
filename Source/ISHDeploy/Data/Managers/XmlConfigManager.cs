@@ -103,13 +103,36 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
-		/// <summary>
-		/// Removes node in xml file that can be found by <paramref name="xpath"/>
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="xpath">XPath to searched node</param>
-		/// <param name="insertBeforeXpath">XPath to searched node</param>
-		public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
+        /// <summary>
+        /// Removes nodes in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched nodes</param>
+        public void RemoveNodes(string filePath, string xpath)
+        {
+            _logger.WriteDebug($"Removing nodes at `{xpath}` from file `{filePath}`");
+
+            var doc = _fileManager.Load(filePath);
+
+            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            if (nodes.Length == 0)
+            {
+                _logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+                return;
+            }
+
+            nodes.Remove();
+
+            _fileManager.Save(filePath, doc);
+        }
+
+        /// <summary>
+        /// Removes node in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        /// <param name="insertBeforeXpath">XPath to searched node</param>
+        public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
 		{
 			_logger.WriteDebug($"Moving node at `{xpath}` before `{insertBeforeXpath}` node in file `{filePath}`");
 

@@ -24,10 +24,15 @@ namespace ISHDeploy.Business.Operations
 			/// </summary>
 			public const string TrustedIssuerBehaviorExtensions = "<add name=\"addActAsTrustedIssuer\"";
 
-			/// <summary>
-			/// STS identity act as trusted issuers path
-			/// </summary>
-			public const string STSServiceBehaviorsTrustedUser = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']";
+            /// <summary>
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// </summary>
+            public const string ServiceBehaviorsTrustedUserXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
+
+            /// <summary>
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// </summary>
+            public const string ServiceBehaviorsTrustedUserPathByThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']";
 		}
 	}
 }

@@ -25,6 +25,7 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
+$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
 #endregion
 
 #region Script Blocks 
@@ -69,7 +70,7 @@ $scriptBlockRemoveISHIntegrationSTSCertificate = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHIntegrationSTSCertificate -ISHDeployment $ishDeploy  -Issuer $issuer
+    Remove-ISHIntegrationSTSCertificate -ISHDeployment $ishDeploy -Issuer $issuer
 
 }
 
@@ -135,7 +136,12 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        if(Test-Path "$filepath\_Web.config")
+        {
+            Rename-Item "$filepath\_Web.config" "Web.config"
+        }
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSCertificate"{       
@@ -150,28 +156,26 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Set ISHIntegrationSTSCertificate with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
-        Rename-Item "$filepath\Web.config"  "_web.config"
+        Rename-Item "$filepath\Web.config"  "_Web.config"
         New-Item "$filepath\Web.config" -type file |Out-Null
         
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust" -ErrorAction Stop }| Should Throw "Root element is missing"
         #Rollback
         Remove-Item "$filepath\Web.config"
-        Rename-Item "$filepath\_Web.config" "web.config"
+        Rename-Item "$filepath\_Web.config" "Web.config"
     }
 
     It "Set ISHIntegrationSTSCertificate with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
-        Rename-Item "$filepath\Web.config"  "_web.config"
+        Rename-Item "$filepath\Web.config"  "_Web.config"
 
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust" -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
-        Rename-Item "$filepath\_Web.config" "web.config"
+        Rename-Item "$filepath\_Web.config" "Web.config"
     }
 
     It "Set ISHIntegrationSTSCertificate several times"{        
@@ -220,28 +224,26 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Remove ISHIntegrationSTSCertificate with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName,"testIssuer"
-        Rename-Item "$filepath\Web.config"  "_web.config"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
+        Rename-Item "$filepath\Web.config"  "_Web.config"
         New-Item "$filepath\Web.config" -type file |Out-Null
         
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName "testIssuer" -ErrorAction Stop }| Should Throw "Root element is missing"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer" -ErrorAction Stop }| Should Throw "Root element is missing"
         #Rollback
         Remove-Item "$filepath\Web.config"
-        Rename-Item "$filepath\_Web.config" "web.config"
+        Rename-Item "$filepath\_Web.config" "Web.config"
     }
 
     It "Remove ISHIntegrationSTSCertificate with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
-        Rename-Item "$filepath\Web.config"  "_web.config"
+        Rename-Item "$filepath\Web.config"  "_Web.config"
 
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer" -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
-        Rename-Item "$filepath\_Web.config" "web.config"
+        Rename-Item "$filepath\_Web.config" "Web.config"
     }
 
     It "Set ISHIntegrationSTSCertificate writes proper history"{        
@@ -255,14 +257,14 @@ Describe "Testing ISHIntegrationSTSCertificate"{
               
     }
 
-    It "Remove ISHIntegrationSTSCertificate"{       
+    It "Remove ISHIntegrationSTSCertificate 2"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
         #Assert
         Start-Sleep -Milliseconds 7000
         readTargetXML -Thumbprint "testThumbprint" -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" | Should be $true
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
-        readTargetXML -Thumbprint "testThumbprint" -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" | Should be $true
+        readTargetXML -Thumbprint "testThumbprint" -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" | Should be $false
 
     }
 }

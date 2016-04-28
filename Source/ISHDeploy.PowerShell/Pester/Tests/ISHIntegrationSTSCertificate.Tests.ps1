@@ -138,6 +138,10 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
         if(Test-Path "$filepath\_Web.config")
         {
+            if (Test-Path "$filepath\Web.config")
+            {
+                Remove-Item "$filepath\Web.config"
+            }
             Rename-Item "$filepath\_Web.config" "Web.config"
         }
 

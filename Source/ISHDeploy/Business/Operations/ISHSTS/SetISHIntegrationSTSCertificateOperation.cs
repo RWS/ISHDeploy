@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -29,7 +30,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-			var menuItem = new IssuerThumbprintItem()
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+		    if (normalizedThumbprint.Length != thumbprint.Length)
+		    {
+                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+		        thumbprint = normalizedThumbprint;
+		    }
+
+		    var menuItem = new IssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer
@@ -63,10 +72,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 		}
 
-		/// <summary>
-		/// Runs current operation.
-		/// </summary>
-		public void Run()
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
 		{
 			_invoker.Invoke();
 		}

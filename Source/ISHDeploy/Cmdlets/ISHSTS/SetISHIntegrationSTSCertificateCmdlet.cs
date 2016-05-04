@@ -41,26 +41,16 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         public Models.ISHDeployment ISHDeployment { get; set; }
 
 		/// <summary>
-		/// <para type="description">Certificate normalized Thumbprint.</para>
+		/// <para type="description">Certificate Thumbprint.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-		public string Thumbprint
-		{
-			get
-			{
-				return _thumbprint; 
-			}
-			set
-			{
-				_thumbprint = new string(value.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-			}
-		}
+		public string Thumbprint { get; set; }
 
-		/// <summary>
-		/// <para type="description">Issuer name.</para>
-		/// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Issuer name")]
+        /// <summary>
+        /// <para type="description">Issuer name.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Issuer name")]
 		[ValidateNotNullOrEmpty]
 		public string Issuer { get; set; }
 		

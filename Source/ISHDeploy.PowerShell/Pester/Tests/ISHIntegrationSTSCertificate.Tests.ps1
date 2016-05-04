@@ -134,7 +134,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Set ISHIntegrationSTSCertificate"{       
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
         #Assert
         Start-Sleep -Milliseconds 7000
         readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" 
@@ -146,6 +146,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint"
         $wsWebConfigNodesValidationMode.Count | Should be 1
         $stswebConfigNodes.Count | Should be 1
+        $Warning | Should be $null 
     }
 
 
@@ -192,20 +193,40 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint"{       
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test T h u m b p rint", "testIssuer", "PeerOrChainTrust"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test T h u m b p rint  2", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
         #Assert
         Start-Sleep -Milliseconds 7000
         
+        $Warning | Should Match "has been normalized to 'testThumbprint2'"
+
         readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
         $authorWebConfigNodes.Count | Should be 1
         $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint"
+        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint2"
         $wsWebConfigNodes.Count | Should be 1
         $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint"
+        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint2"
         $stswebConfigNodes.Count | Should be 1
        
+    }
+
+    It "Set ISHIntegrationSTSCertificate normalizes thumbprint with wrong symbols"{       
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test ,T h u> m<{ b! [p] rint  3", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
+        #Assert
+        Start-Sleep -Milliseconds 7000
+        ($Warning-join -'') | Should Match "has been normalized to 'testThumbprint3'"
+
+        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        
+        $authorWebConfigNodes.Count | Should be 1
+        $authorWbConfigValidationMode.Count | Should be 1
+        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
+        $wsWebConfigNodes.Count | Should be 1
+        $wsWebConfigNodesValidationMode.Count | Should be 1
+        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
+        $stswebConfigNodes.Count | Should be 1
     }
 
     It "Set ISHIntegrationSTSCertificate writes proper history"{        

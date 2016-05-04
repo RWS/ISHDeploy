@@ -22,9 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="endpoint">The URL to issuer WSTrust endpoint.</param>
         /// <param name="mexEndpoint">The URL to issuer WSTrust mexEndpoint.</param>
         /// <param name="bindingType">The STS issuer authentication type.</param>
-        /// <param name="actorUsername">The STS user.</param>
-        /// <param name="actorPassword">The password of STS user.</param>
-        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType, string actorUsername, string actorPassword)
+        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration including internal clients");
 
@@ -43,8 +41,25 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfig.Path, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingType.ToString()));
             _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingType.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustBindingTypeXPath, bindingType.ToString()));
-            // actorUsername and actorPassword
+        }
+
+        /// <summary>
+        /// Sets new STS user name.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="actorUsername">The STS user.</param>
+        public void SetActorUsername(ILogger logger, string actorUsername)
+        {
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, actorUsername));
+        }
+
+        /// <summary>
+        /// Sets new actor password.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="actorPassword">The password of STS user.</param>
+        public void SetActorPassword(ILogger logger, string actorPassword)
+        {
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, actorPassword));
         }
 

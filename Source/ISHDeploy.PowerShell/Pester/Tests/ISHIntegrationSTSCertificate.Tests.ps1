@@ -140,8 +140,10 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" 
         
         $authorWebConfigNodes.Count | Should be 1
+        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint"
         $authorWbConfigValidationMode.Count | Should be 1
         $wsWebConfigNodes.Count | Should be 1
+        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint"
         $wsWebConfigNodesValidationMode.Count | Should be 1
         $stswebConfigNodes.Count | Should be 1
     }

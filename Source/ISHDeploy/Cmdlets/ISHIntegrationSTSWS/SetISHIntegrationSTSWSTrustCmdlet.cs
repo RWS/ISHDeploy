@@ -93,21 +93,11 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
 
                 if (MyInvocation.BoundParameters.ContainsKey("ActorUsername"))
                 {
-                    if (ActorUsername == null)
-                    {
-                        ActorUsername = string.Empty;
-                    }
-
                     operation.SetActorUsername(Logger, ActorUsername);
                 }
 
                 if (MyInvocation.BoundParameters.ContainsKey("ActorPassword"))
                 {
-                    if (ActorPassword == null)
-                    {
-                        ActorPassword = string.Empty;
-                    }
-
                     operation.SetActorPassword(Logger, ActorPassword);
                 }
 

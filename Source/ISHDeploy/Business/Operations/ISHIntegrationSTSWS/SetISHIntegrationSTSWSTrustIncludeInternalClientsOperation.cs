@@ -50,6 +50,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="actorUsername">The STS user.</param>
         public void SetActorUsername(ILogger logger, string actorUsername)
         {
+            if (actorUsername == null)
+            {
+                actorUsername = string.Empty;
+            }
+
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, actorUsername));
         }
 
@@ -60,6 +65,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="actorPassword">The password of STS user.</param>
         public void SetActorPassword(ILogger logger, string actorPassword)
         {
+            if (actorPassword == null)
+            {
+                actorPassword = string.Empty;
+            }
+
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, actorPassword));
         }
 

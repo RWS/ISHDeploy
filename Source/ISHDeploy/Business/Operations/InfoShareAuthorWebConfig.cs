@@ -71,9 +71,9 @@ namespace ISHDeploy.Business.Operations
             public const string FederationConfigurationAttributeName = "issuer";
 
             /// <summary>
-            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='{0}']" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
-            public const string IdentityTrustedIssuersPathByThumbprintXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+            public const string IdentityTrustedIssuersByNameXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='{0}']";
 
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file

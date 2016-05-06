@@ -30,9 +30,9 @@ namespace ISHDeploy.Business.Operations
             public const string ServiceBehaviorsTrustedUserXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
-            public const string ServiceBehaviorsTrustedUserPathByThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']";
+            public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
 		}
 	}
 }

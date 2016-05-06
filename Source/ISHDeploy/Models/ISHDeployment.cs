@@ -5,7 +5,6 @@ using System.IO;
 namespace ISHDeploy.Models
 {
 	/// <summary>
-	/// Represents the installed Content Manager deployment.
 	///	<para type="description">Represents the installed Content Manager deployment.</para>
 	/// </summary>
 	public class ISHDeployment
@@ -100,6 +99,21 @@ namespace ISHDeploy.Models
         /// Gets the path to the Data+Suffix Author folder.
         /// </summary>
         public string GetDataFolderPath() => Path.Combine(AppPath, $"Data{GetSuffix()}");
+
+        /// <summary>
+        /// Gets the name of the CM main url folder.
+        /// </summary>
+        public string GetCMWebAppName() => OriginalParameters["infoshareauthorwebappname"];
+
+        /// <summary>
+        /// Gets the name of the WS main url folder.
+        /// </summary>
+        public string GetWSWebAppName() => OriginalParameters["infosharewswebappname"];
+
+        /// <summary>
+        /// Gets the name of the STS main url folder.
+        /// </summary>
+        public string GetSTSWebAppName() => OriginalParameters["infosharestswebappname"];
 
         /// <summary>
         /// Gets the deployment suffix.

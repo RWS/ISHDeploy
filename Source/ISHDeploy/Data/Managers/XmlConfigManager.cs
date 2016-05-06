@@ -535,6 +535,35 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
+        /// <summary>
+        /// Gets the value from element found by xpath.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the element.</param>
+        /// <returns>The element value.</returns>
+        public string GetValue(string filePath, string xpath)
+        {
+            _logger.WriteDebug($"Getting value by xpath: `{xpath}` in file `{filePath}`");
+
+            var doc = _fileManager.LoadXmlDoc(filePath);
+
+            var node = doc.SelectSingleNode(xpath);
+
+            if (node == null)
+            {
+                throw new WrongXPathException(filePath, xpath);
+            }
+
+            if (node is XmlAttribute)
+            {
+                _logger.WriteDebug($"Retrieved value of attribute node is: {node.Value}");
+                return node.Value;
+            }
+
+            _logger.WriteDebug($"Retrieved value of {node.NodeType} node is: {node.InnerText}");
+            return node.InnerText;
+        }
+
         #region private methods
 
 		/// <summary>

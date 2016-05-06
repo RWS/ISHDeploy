@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -66,16 +68,23 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void Append(string filePath, string text);
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
+        /// Creates a new <see cref="XDocument"/> instance by using the specified file path.
         /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-        /// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument"/>.</param>
+        /// <returns>New instance of <see cref="XDocument"/> with loaded file content</returns>
         XDocument Load(string filePath);
+
+        /// <summary>
+        /// Creates a new <see cref="XmlDocument"/> instance by using the specified file path.
+        /// </summary>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XmlDocument"/>.</param>
+        /// <returns>New instance of <see cref="XmlDocument"/> with loaded file content</returns>
+        XmlDocument LoadXmlDoc(string filePath);
         
         /// <summary>
-        /// Saves <see cref="T:System.Xml.Linq.XDocument"/> content to file
+        /// Saves <see cref="XDocument"/> content to file
         /// </summary>
-        /// <param name="filePath">The file where <see cref="T:System.Xml.Linq.XDocument"/> content will be stored.</param>
+        /// <param name="filePath">The file where <see cref="XDocument"/> content will be stored.</param>
         /// <param name="doc">The document to be stored</param>
         void Save(string filePath, XDocument doc);
 
@@ -134,5 +143,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">File path.</param>
 		/// <returns>Returns True if license file is found, otherwise False.</returns>
 		bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
+
+        /// <summary>
+        /// Packages list of files to single archive.
+        /// Overwrites archive file if it already exists.
+        /// </summary>
+        /// <param name="packagePath">The output archive path.</param>
+        /// <param name="filesToPack">The files to pack.</param>
+        void PackageFiles(string packagePath, IEnumerable<string> filesToPack);
     }
 }

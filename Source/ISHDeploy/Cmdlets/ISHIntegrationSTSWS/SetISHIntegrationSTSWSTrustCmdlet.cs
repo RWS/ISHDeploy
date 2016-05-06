@@ -89,18 +89,18 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
 
             if (MyInvocation.BoundParameters.ContainsKey("IncludeInternalClients"))
             {
-                var operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, Endpoint, MexEndpoint, BindingType);
 
-                if (MyInvocation.BoundParameters.ContainsKey("ActorUsername"))
+                if (MyInvocation.BoundParameters.ContainsKey("ActorUsername") && ActorUsername == null)
                 {
-                    operation.SetActorUsername(Logger, ActorUsername);
+                    ActorUsername = string.Empty;
                 }
 
-                if (MyInvocation.BoundParameters.ContainsKey("ActorPassword"))
+                if (MyInvocation.BoundParameters.ContainsKey("ActorPassword") && ActorPassword == null)
                 {
-                    operation.SetActorPassword(Logger, ActorPassword);
+                    ActorPassword = string.Empty;
                 }
 
+                var operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, Endpoint, MexEndpoint, BindingType, ActorUsername, ActorPassword);
                 operation.Run();
             }
             else

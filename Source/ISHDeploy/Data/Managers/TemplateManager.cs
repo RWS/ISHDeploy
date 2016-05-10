@@ -38,6 +38,11 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         public const string CMSecurityTokenServiceTemplate = "CM Security Token Service Requirements.md";
 
+        /// <summary>
+        /// The template for ADFS invocation script
+        /// </summary>
+        public const string ADFSInvokeTemplate = "Invoke-ADFSIntegrationISH.ps1";
+
         #endregion
 
         /// <summary>

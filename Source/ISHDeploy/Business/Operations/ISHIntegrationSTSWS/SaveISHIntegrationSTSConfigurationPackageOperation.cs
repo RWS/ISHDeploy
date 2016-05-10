@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.File;
@@ -21,12 +23,13 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation"/> class.
+        /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">The instance of <see cref="ISHPaths"/>.</param>
+        /// <param name="paths">The instance of <see cref="ISHPaths" />.</param>
         /// <param name="fileName">Name of the file.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, ISHPaths paths, string fileName)
+        /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, ISHPaths paths, string fileName, bool packAdfsInvokeScript = false)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
@@ -34,10 +37,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var packageFilePath = Path.Combine(paths.PackagesFolderPath, packageFileName);
             var certificateFilePath = Path.Combine(paths.PackagesFolderPath, "ishws.cer");
             var docFilePath = Path.Combine(paths.PackagesFolderPath, TemplateManager.CMSecurityTokenServiceTemplate);
+            var adfsInvokeScriptPath = Path.Combine(paths.PackagesFolderPath, TemplateManager.ADFSInvokeTemplate);
 
             _invoker.AddAction(new SaveCertificateAction(logger, certificateFilePath, InfoShareSTSConfig.Path.AbsolutePath, InfoShareSTSConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new SaveCMSecurityTokenServiceAction(logger, docFilePath, certificateFilePath, paths.AccessHostName, paths.CMWebAppName, paths.WSWebAppName));
-            _invoker.AddAction(new SavePackageAction(logger, packageFilePath, new [] {certificateFilePath, docFilePath}, true));
         }
 
         /// <summary>

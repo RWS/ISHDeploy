@@ -17,6 +17,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
+    /// </example>    
+    /// <example>
+    ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -ADFS -FileName packageFile.zip</code>
+    ///     <para>Creates a zip archive in package folder with current STS integration configurations for ADFS.
+    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///     </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationSTSConfigurationPackage")]
     public class SaveISHIntegrationSTSConfigurationPackageCmdlet : BaseHistoryEntryCmdlet
@@ -26,6 +32,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Name of the output package file.")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// <para type="description">Specifies that ADFS configuration should be packed.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Used to export ADFS configuration.")]
+        public SwitchParameter ADFS { get; set; }
 
         /// <summary>
         /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
@@ -51,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         {
             OperationPaths.Initialize(ISHDeployment);
 
-            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, IshPaths, FileName);
+            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, IshPaths, FileName, ADFS.IsPresent);
 
             operation.Run();
         }

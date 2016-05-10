@@ -51,7 +51,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         {
             OperationPaths.Initialize(ISHDeployment);
 
-            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, IshPaths, FileName);
+            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, ISHDeployment, FileName);
 
             operation.Run();
         }

@@ -1,7 +1,7 @@
-﻿using System.IO;
-using ISHDeploy.Data.Managers;
+﻿using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -9,7 +9,7 @@ namespace ISHDeploy.Data.Actions.File
     /// Saves certificate public key to file.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SaveCertificateAction : SingleFileCreationAction
+    public class FileSaveThumbprintAsCertificateAction : SingleFileCreationAction
     {
         /// <summary>
         /// The certificate file path.
@@ -37,14 +37,14 @@ namespace ISHDeploy.Data.Actions.File
         private readonly ICertificateManager _certificateManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SaveCertificateAction"/> class.
+        /// Initializes a new instance of the <see cref="FileSaveThumbprintAsCertificateAction"/> class.
         /// Reads certificate thumbprint from xml file by xpath and uses it to retrieve certificate public key from X509Store.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="certificateFilePath">The certificate file path</param>
         /// <param name="thumbprintFilePath">The certificate thumbprint file path.</param>
         /// <param name="thumbprintXPath">The certificate thumbprint xpath.</param>
-        public SaveCertificateAction(ILogger logger, string certificateFilePath, string thumbprintFilePath, string thumbprintXPath):
+        public FileSaveThumbprintAsCertificateAction(ILogger logger, string certificateFilePath, string thumbprintFilePath, string thumbprintXPath):
             base(logger, certificateFilePath)
         {
             _certificateFilePath = certificateFilePath;
@@ -62,12 +62,6 @@ namespace ISHDeploy.Data.Actions.File
         {
             var thumbprint = _xmlConfigManager.GetValue(_thumbprintFilePath, _thumbprintXPath);
             var cerFileContent = _certificateManager.GetCertificatePublicKey(thumbprint);
-
-            var certificateFolder = Path.GetDirectoryName(_certificateFilePath);
-            if (!_fileManager.FolderExists(certificateFolder))
-            {
-                _fileManager.CreateDirectory(certificateFolder);
-            }
 
             _fileManager.Write(_certificateFilePath, cerFileContent);
         }

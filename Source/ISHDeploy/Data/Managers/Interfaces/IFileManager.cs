@@ -75,13 +75,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
         XDocument Load(string filePath);
 
         /// <summary>
-        /// Creates a new <see cref="XmlDocument"/> instance by using the specified file path.
-        /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XmlDocument"/>.</param>
-        /// <returns>New instance of <see cref="XmlDocument"/> with loaded file content</returns>
-        XmlDocument LoadXmlDoc(string filePath);
-        
-        /// <summary>
         /// Saves <see cref="XDocument"/> content to file
         /// </summary>
         /// <param name="filePath">The file where <see cref="XDocument"/> content will be stored.</param>
@@ -145,11 +138,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
 
         /// <summary>
-        /// Packages list of files to single archive.
-        /// Overwrites archive file if it already exists.
+        /// Creates a zip archive that contains the files and directories from the specified directory, uses the Optimal compression level, and optionally includes the base directory.
         /// </summary>
-        /// <param name="packagePath">The output archive path.</param>
-        /// <param name="filesToPack">The files to pack.</param>
-        void PackageFiles(string packagePath, IEnumerable<string> filesToPack);
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. True by default</param>
+        void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath,
+            bool includeBaseDirectory = true);
     }
 }

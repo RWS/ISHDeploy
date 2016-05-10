@@ -1,4 +1,5 @@
 ﻿using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
@@ -41,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker.AddAction(new FileCleanDirectoryAction(logger, licenseFolderPath.AbsolutePath));
 
 			// Removing Backup folder
-			_invoker.AddAction(new RemoveDirectoryAction(logger, deployment.GetDeploymentAppDataFolder()));
+			_invoker.AddAction(new DirectoryRemoveAction(logger, deployment.GetDeploymentAppDataFolder()));
 		}
 
         /// <summary>

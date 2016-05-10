@@ -16,7 +16,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// The templates resource folder.
         /// </summary>
-        private const string TemplateBaseFolder = "ISHDeploy.Resources.Templates";
+        private const string TemplateBaseFolder = "ISHDeploy.Data.Resources.Templates";
 
         /// <summary>
         /// The logger.
@@ -32,44 +32,13 @@ namespace ISHDeploy.Data.Managers
             _logger = logger;
         }
 
-        #region Template files        
-        /// <summary>
-        /// The CM security token service template
-        /// </summary>
-        public const string CMSecurityTokenServiceTemplate = "CM Security Token Service Requirements.md";
-
-        #endregion
-
-        /// <summary>
-        /// Generates the CM security token service document.
-        /// </summary>
-        /// <param name="hostName">Name of the host.</param>
-        /// <param name="cmWebAppName">Name of the CM web application.</param>
-        /// <param name="wsWebAppName">Name of the WS web application.</param>
-        /// <param name="certificateFileName">Name of the certificate file.</param>
-        /// <param name="certificateContent">Content of the certificate file.</param>
-        /// <returns>Content of the generated document.</returns>
-        public string GetCMSecurityTokenServiceDoc(string hostName, string cmWebAppName, string wsWebAppName, string certificateFileName, string certificateContent)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                {"$ishhostname", hostName},
-                {"$ishcmwebappname", cmWebAppName},
-                {"$ishwswebappname", wsWebAppName},
-                {"$ishwscertificate", certificateFileName},
-                {"$ishwscontent", certificateContent}
-            };
-
-            return GenerateDocument(CMSecurityTokenServiceTemplate, parameters);
-        }
-
         /// <summary>
         /// Generate output document from the template.
         /// </summary>
         /// <param name="templateFileName">Name of the template file.</param>
         /// <param name="parameters">All parameters that need to be filled out in the template.</param>
         /// <returns></returns>
-        private string GenerateDocument(string templateFileName, IDictionary<string, string> parameters)
+        public string GenerateDocument(string templateFileName, IDictionary<string, string> parameters)
         {
             string templateFile = $"{TemplateBaseFolder}.{templateFileName}";
             string templateContent;

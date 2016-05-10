@@ -281,8 +281,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
         /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
-        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. True by default</param>
-        public void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = true)
+        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. False by default</param>
+        public void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false)
         {
             _logger.WriteDebug($"Directory '{sourceDirectoryPath}' will be packed");
 
@@ -291,6 +291,9 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteWarning($"Package file '{destinationArchiveFilePath}' is overwritten.");
                 Delete(destinationArchiveFilePath);
             }
+
+            var destinationArchiveFolderPath = Path.GetDirectoryName(destinationArchiveFilePath);
+            EnsureDirectoryExists(destinationArchiveFolderPath);
 
             ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
 

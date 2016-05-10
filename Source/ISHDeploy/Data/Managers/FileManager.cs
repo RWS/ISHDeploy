@@ -83,7 +83,7 @@ namespace ISHDeploy.Data.Managers
 				fileInfo.Attributes = FileAttributes.Normal;
 			}
 
-			_logger.WriteDebug($"Deliting file `{path}`");
+			_logger.WriteDebug($"Deleting file `{path}`");
 			File.Delete(path);
         }
 

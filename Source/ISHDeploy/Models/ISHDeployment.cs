@@ -113,7 +113,12 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Gets the name of the STS main url folder.
         /// </summary>
-        public string GetSTSWebAppName() => OriginalParameters["infosharestswebappname"];
+        public string GetSTSWebAppName() => OriginalParameters["infosharestswebappname"];        
+        
+        /// <summary>
+        /// Gets the name of the OS user.
+        /// </summary>
+        public string GetOSUser() => OriginalParameters["osuser"];
 
         /// <summary>
         /// Gets the deployment suffix.

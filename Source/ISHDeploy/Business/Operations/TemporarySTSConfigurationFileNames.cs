@@ -1,7 +1,4 @@
-﻿using System.IO;
-using ISHDeploy.Models;
-
-namespace ISHDeploy.Business.Operations
+﻿namespace ISHDeploy.Business.Operations
 {
     /// <summary>
     /// Provides absolute paths to all ISH files that are going to be used
@@ -23,6 +20,11 @@ namespace ISHDeploy.Business.Operations
             /// The CM security token service template
             /// </summary>
             public const string CMSecurityTokenServiceTemplateFileName = "CM Security Token Service Requirements.md";
+
+            /// <summary>
+            /// The template for ADFS invocation script
+            /// </summary>
+            public const string ADFSInvokeTemplate = "Invoke-ADFSIntegrationISH.ps1";
         }
     }
 }

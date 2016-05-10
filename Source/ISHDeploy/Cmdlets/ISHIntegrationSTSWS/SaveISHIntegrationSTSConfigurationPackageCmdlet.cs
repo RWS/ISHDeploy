@@ -63,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         {
             OperationPaths.Initialize(ISHDeployment);
 
-            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, IshPaths, FileName, ADFS.IsPresent);
+            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, ISHDeployment, FileName, ADFS.IsPresent);
 
             operation.Run();
         }

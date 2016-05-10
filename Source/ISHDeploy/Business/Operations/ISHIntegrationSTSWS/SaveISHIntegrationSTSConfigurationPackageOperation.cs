@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.Template;
-using ISHDeploy.Data.Managers;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
 
@@ -22,25 +22,54 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation"/> class.
+        /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="deployment">The instance of <see cref="ISHDeployment"/>.</param>
+        /// <param name="deployment">The instance of <see cref="ISHDeployment" />.</param>
         /// <param name="fileName">Name of the file.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment deployment, string fileName)
+        /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment deployment, string fileName, bool packAdfsInvokeScript = false)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             var packageFilePath = Path.Combine(deployment.GetDeploymenPackagesFolderPath(), fileName);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
-            var temporaryDocFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName);
+
             var certificateContent = string.Empty;
 
             _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
             _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareSTSConfig.Path.AbsolutePath, InfoShareSTSConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => certificateContent = result));
-            _invoker.AddAction(new SaveCMSecurityTokenServiceAction(logger, temporaryDocFilePath, deployment.AccessHostName, deployment.GetCMWebAppName(), deployment.GetWSWebAppName(), TemporarySTSConfigurationFileNames.ISHWSCertificateFileName, certificateContent));
+
+            _invoker.AddAction(new GenerateFromTemplateAction(logger, 
+                TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
+                Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
+                new Dictionary<string, string>
+                {
+                    {"$ishhostname", deployment.AccessHostName},
+                    {"$ishcmwebappname", deployment.GetCMWebAppName()},
+                    {"$ishwswebappname", deployment.GetWSWebAppName()},
+                    {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
+                    {"$ishwscontent", certificateContent}
+                }));
+
+            if (packAdfsInvokeScript)
+            {
+                _invoker.AddAction(new GenerateFromTemplateAction(logger,
+                    TemporarySTSConfigurationFileNames.ADFSInvokeTemplate,
+                    Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
+                    new Dictionary<string, string>
+                    {
+                        {"#!#installtool:BASEHOSTNAME#!#", deployment.AccessHostName},
+                        {"#!#installtool:LOCALSERVICEHOSTNAME#!#", deployment.AccessHostName}, // We don`t actually need `localservicehostname` variable as it is not used in *.ps1 script
+                        {"#!#installtool:PROJECTSUFFIX#!#", deployment.GetSuffix()},
+                        {"#!#installtool:OSUSER#!#", deployment.GetOSUser()},
+                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.GetCMWebAppName()},
+                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", deployment.GetWSWebAppName()}
+                    }));
+            }
+
             _invoker.AddAction(new DirectoryCreateZipPackageAction(logger, packageFilePath, temporaryFolder));
             _invoker.AddAction(new DirectoryRemoveAction(logger, temporaryFolder));
         }

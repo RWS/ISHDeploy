@@ -66,7 +66,7 @@
     <Compile Include="Data\Actions\File\DirectoryRemoveActionTest.cs" />
     <Compile Include="Data\Actions\File\SavePackageActionTest.cs" />
     <Compile Include="Data\Actions\File\SaveCertificateActionTest.cs" />
-    <Compile Include="Data\Actions\File\SaveCMSecurityTokenServiceActionTest.cs" />
+    <Compile Include="Data\Actions\File\GenerateFromTemplateActionTest.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
     <Compile Include="Data\Actions\SingleFileActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />

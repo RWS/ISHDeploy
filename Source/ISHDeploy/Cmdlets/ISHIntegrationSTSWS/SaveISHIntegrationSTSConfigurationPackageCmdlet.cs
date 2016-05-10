@@ -17,7 +17,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
-    /// </example>    
+    /// </example>
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -ADFS -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations for ADFS.

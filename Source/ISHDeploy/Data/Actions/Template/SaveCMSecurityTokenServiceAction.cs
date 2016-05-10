@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 
@@ -11,14 +11,14 @@ namespace ISHDeploy.Data.Actions.Template
     public class SaveCMSecurityTokenServiceAction : SingleFileCreationAction
     {
         /// <summary>
+        /// The CM security token service template
+        /// </summary>
+        public const string CMSecurityTokenServiceTemplate = "CM Security Token Service Requirements.md";
+
+        /// <summary>
         /// The output file path.
         /// </summary>
         private readonly string _outputFilePath;
-
-        /// <summary>
-        /// The certificate file path.
-        /// </summary>
-        private readonly string _certificateFilePath;
 
         /// <summary>
         /// The CM web application name.
@@ -36,6 +36,16 @@ namespace ISHDeploy.Data.Actions.Template
         private readonly string _wsWebAppName;
 
         /// <summary>
+        /// The certificate file name.
+        /// </summary>
+        private readonly string _certificateFileName;
+
+        /// <summary>
+        /// The certificate content.
+        /// </summary>
+        private readonly string _certificateContent;
+
+        /// <summary>
         /// The template manager
         /// </summary>
         private readonly ITemplateManager _templateManager;
@@ -45,23 +55,26 @@ namespace ISHDeploy.Data.Actions.Template
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="outputFilePath">The output file path.</param>
-        /// <param name="certificateFilePath">The certificate file path.</param>
         /// <param name="hostname">The hostname.</param>
         /// <param name="cmWebAppName">Name of the CM web application.</param>
         /// <param name="wsWebAppname">The WS web appname.</param>
+        /// <param name="certificateFileName">Name of the certificate file.</param>
+        /// <param name="certificateContent">Content of the certificate file.</param>
         public SaveCMSecurityTokenServiceAction(ILogger logger,
             string outputFilePath,
-            string certificateFilePath,
             string hostname,
             string cmWebAppName,
-            string wsWebAppname) : base(logger, outputFilePath)
+            string wsWebAppname,
+            string certificateFileName,
+            string certificateContent) : base(logger, outputFilePath)
         {
             _templateManager = ObjectFactory.GetInstance<ITemplateManager>();
             _outputFilePath = outputFilePath;
-            _certificateFilePath = certificateFilePath;
             _hostName = hostname;
             _cmWebAppName = cmWebAppName;
             _wsWebAppName = wsWebAppname;
+            _certificateFileName = certificateFileName;
+            _certificateContent = certificateContent;
         }
 
         /// <summary>
@@ -69,16 +82,16 @@ namespace ISHDeploy.Data.Actions.Template
         /// </summary>
         public override void Execute()
         {
-            var certificateContent = _fileManager.ReadAllText(_certificateFilePath);
-            var certificateFileName = Path.GetFileName(_certificateFilePath);
-
-            var outputContent = _templateManager.GetCMSecurityTokenServiceDoc(_hostName, _cmWebAppName, _wsWebAppName, certificateFileName, certificateContent);
-
-            var outputFolder = Path.GetDirectoryName(_outputFilePath);
-            if (!_fileManager.FolderExists(outputFolder))
+            var parameters = new Dictionary<string, string>
             {
-                _fileManager.CreateDirectory(outputFolder);
-            }
+                {"$ishhostname", _hostName},
+                {"$ishcmwebappname", _cmWebAppName},
+                {"$ishwswebappname", _wsWebAppName},
+                {"$ishwscertificate", _certificateFileName},
+                {"$ishwscontent", _certificateContent}
+            };
+
+            var outputContent = _templateManager.GenerateDocument(CMSecurityTokenServiceTemplate, parameters);
 
             _fileManager.Write(_outputFilePath, outputContent);
         }

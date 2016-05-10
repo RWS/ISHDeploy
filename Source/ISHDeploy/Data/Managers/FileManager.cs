@@ -225,12 +225,12 @@ namespace ISHDeploy.Data.Managers
 			}
 		}
 
-        /// <summary>
+		/// <summary>
         /// Creates a new <see cref="XDocument" /> instance by using the specified file path.
-        /// </summary>
+		/// </summary>
         /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument" />.</param>
         /// <returns>New instance of <see cref="XDocument" /> with loaded file content</returns>
-        public XDocument Load(string filePath)
+		public XDocument Load(string filePath)
         {
 			_logger.WriteDebug($"Loading XML document at `{filePath}`");
 			return XDocument.Load(filePath);
@@ -290,29 +290,24 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Packages list of files to single archive.
-        /// Overwrites archive file if it already exists.
+        /// Creates a zip archive that contains the files and directories from the specified directory, uses the Optimal compression level, and optionally includes the base directory.
         /// </summary>
-        /// <param name="packagePath">The output archive path.</param>
-        /// <param name="filesToPack">The files to pack.</param>
-        public void PackageFiles(string packagePath, IEnumerable<string> filesToPack)
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. True by default</param>
+        public void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = true)
         {
-            _logger.WriteDebug("File will be packed: " + string.Join(";", filesToPack));
+            _logger.WriteDebug($"Directory '{sourceDirectoryPath}' will be packed");
 
-            if (FileExists(packagePath))
+            if (FileExists(destinationArchiveFilePath))
             {
-                _logger.WriteWarning($"Package file {Path.GetFileName(packagePath)} is overwritten.");
-                Delete(packagePath);
+                _logger.WriteWarning($"Package file '{destinationArchiveFilePath}' is overwritten.");
+                Delete(destinationArchiveFilePath);
             }
 
-            using (var zipFile = ZipFile.Open(packagePath, ZipArchiveMode.Create))
-            {
-                foreach (var file in filesToPack)
-                {
-                    zipFile.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
-                }
-            }
-            _logger.WriteDebug($"The output package is: {packagePath}");
+            ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
+
+            _logger.WriteDebug($"The output package is: '{destinationArchiveFilePath}'");
         }
     }
 }

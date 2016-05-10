@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
@@ -7,14 +8,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
     public interface ITemplateManager
     {
         /// <summary>
-        /// Generates the CM security token service document.
+        /// Generate output document from the template.
         /// </summary>
-        /// <param name="hostName">Name of the host.</param>
-        /// <param name="cmWebAppName">Name of the CM web application.</param>
-        /// <param name="wsWebAppName">Name of the WS web application.</param>
-        /// <param name="certificateFileName">Name of the certificate file.</param>
-        /// <param name="certificateContent">Content of the certificate file.</param>
-        /// <returns>Content of the generated document.</returns>
-        string GetCMSecurityTokenServiceDoc(string hostName, string cmWebAppName, string wsWebAppName, string certificateFileName, string certificateContent);
+        /// <param name="templateFileName">Name of the template file.</param>
+        /// <param name="parameters">All parameters that need to be filled out in the template.</param>
+        /// <returns></returns>
+        string GenerateDocument(string templateFileName, IDictionary<string, string> parameters);
     }
 }

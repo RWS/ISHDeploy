@@ -1,11 +1,12 @@
-﻿using ISHDeploy.Data.Actions.File;
+﻿using ISHDeploy.Data.Actions.Directory;
+using ISHDeploy.Data.Actions.File;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
 namespace ISHDeploy.Tests.Data.Actions.File
 {
 	[TestClass]
-	public class RemoveDirectoryActionTest : BaseUnitTest
+	public class DirectoryRemoveActionTest : BaseUnitTest
 	{
 		[TestMethod]
 		[TestCategory("Actions")]
@@ -15,7 +16,7 @@ namespace ISHDeploy.Tests.Data.Actions.File
 			var souceFolder = "Source";
 
 			// Act
-			(new RemoveDirectoryAction(Logger, souceFolder)).Execute();
+			(new DirectoryRemoveAction(Logger, souceFolder)).Execute();
 
 			// Assert
 			FileManager.Received(1).DeleteFolder(souceFolder);

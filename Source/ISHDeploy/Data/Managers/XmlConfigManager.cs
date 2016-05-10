@@ -545,23 +545,23 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug($"Getting value by xpath: `{xpath}` in file `{filePath}`");
 
-            var doc = _fileManager.LoadXmlDoc(filePath);
-
-            var node = doc.SelectSingleNode(xpath);
-
+            var doc = _fileManager.Load(filePath);
+            var node = ((IEnumerable<object>)doc.XPathEvaluate(xpath)).SingleOrDefault();
             if (node == null)
             {
                 throw new WrongXPathException(filePath, xpath);
             }
 
-            if (node is XmlAttribute)
+            if (node is XAttribute)
             {
-                _logger.WriteDebug($"Retrieved value of attribute node is: {node.Value}");
-                return node.Value;
+                var attr = (XAttribute) node;
+                _logger.WriteDebug($"Retrieved value of attribute node is: {attr.Value}");
+                return attr.Value;
             }
 
-            _logger.WriteDebug($"Retrieved value of {node.NodeType} node is: {node.InnerText}");
-            return node.InnerText;
+            var element = (XElement)node;
+            _logger.WriteDebug($"Retrieved value of element node is: {element.Value}");
+            return element.Value;
         }
 
         #region private methods

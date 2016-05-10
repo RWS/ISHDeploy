@@ -22,13 +22,20 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="xpath">XPath to searched node</param>
 		void RemoveSingleNode(string filePath, string xpath);
 
-		/// <summary>
-		/// Removes node from xml file that can be found by <paramref name="xpath"/>
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="xpath">XPath to searched node</param>
-		/// <param name="insertBeforeXpath">XPath to searched node</param>
-		void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath = null);
+        /// <summary>
+        /// Removes nodes in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched nodes</param>
+        void RemoveNodes(string filePath, string xpath);
+
+        /// <summary>
+        /// Removes node from xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        /// <param name="insertBeforeXpath">XPath to searched node</param>
+        void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath = null);
 
 		/// <summary>
 		/// Removes node from xml file that can be found by <paramref name="xpath"/>

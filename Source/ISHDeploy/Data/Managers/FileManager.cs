@@ -237,19 +237,6 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Creates a new <see cref="XmlDocument" /> instance by using the specified file path.
-        /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XmlDocument" />.</param>
-        /// <returns>New instance of <see cref="XmlDocument" /> with loaded file content</returns>
-        public XmlDocument LoadXmlDoc(string filePath)
-        {
-            var doc = new XmlDocument();
-            doc.Load(filePath);
-
-            return doc;
-        }
-
-        /// <summary>
         /// Saves <see cref="XDocument" /> content to file
         /// </summary>
         /// <param name="filePath">The file where <see cref="XDocument" /> content will be stored.</param>

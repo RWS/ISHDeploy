@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -29,7 +30,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-			var menuItem = new IssuerThumbprintItem()
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+		    if (normalizedThumbprint.Length != thumbprint.Length)
+		    {
+                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+		        thumbprint = normalizedThumbprint;
+		    }
+
+		    var menuItem = new IssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer
@@ -37,14 +46,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
 			// Author web Config
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
-				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersPathByThumbprintXPath, menuItem.Thumbprint), menuItem, false));
+				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
 			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
 				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// WS web Config
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
-				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersPathByThumbprintXPath, menuItem.Thumbprint), menuItem, false));
+				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
 			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
@@ -57,16 +66,16 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			};
 
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
-				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserPathByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem, false));
+				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
 
 			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
 				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 		}
 
-		/// <summary>
-		/// Runs current operation.
-		/// </summary>
-		public void Run()
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
 		{
 			_invoker.Invoke();
 		}

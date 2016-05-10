@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="bindingType">The STS issuer authentication type.</param>
         /// <param name="actorUsername">The STS user.</param>
         /// <param name="actorPassword">The password of STS user.</param>
-        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType, string actorUsername, string actorPassword)
+        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType, string actorUsername = null, string actorPassword = null)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration including internal clients");
 
@@ -43,9 +43,16 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfig.Path, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingType.ToString()));
             _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingType.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustBindingTypeXPath, bindingType.ToString()));
-            // actorUsername and actorPassword
-            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, actorUsername));
-            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, actorPassword));
+            // actorUsername
+            if (actorUsername != null)
+            {
+                _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, actorUsername));
+            }
+            // actorPassword
+            if (actorPassword != null)
+            {
+                _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, actorPassword));
+            }
         }
 
         /// <summary>

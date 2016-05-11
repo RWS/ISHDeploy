@@ -535,16 +535,45 @@ namespace ISHDeploy.Data.Managers
             _fileManager.Save(filePath, doc);
         }
 
+        /// <summary>
+        /// Gets the value from element found by xpath.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the element.</param>
+        /// <returns>The element value.</returns>
+        public string GetValue(string filePath, string xpath)
+        {
+            _logger.WriteDebug($"Getting value by xpath: `{xpath}` in file `{filePath}`");
+
+            var doc = _fileManager.Load(filePath);
+            var node = ((IEnumerable<object>)doc.XPathEvaluate(xpath)).SingleOrDefault();
+            if (node == null)
+            {
+                throw new WrongXPathException(filePath, xpath);
+            }
+
+            if (node is XAttribute)
+            {
+                var attr = (XAttribute) node;
+                _logger.WriteDebug($"Retrieved value of attribute node is: {attr.Value}");
+                return attr.Value;
+            }
+
+            var element = (XElement)node;
+            _logger.WriteDebug($"Retrieved value of element node is: {element.Value}");
+            return element.Value;
+        }
+
         #region private methods
 
-		/// <summary>
-		/// Tries to uncomment node.
-		/// </summary>
-		/// <param name="commentedNode">The commented node.</param>
-		/// <param name="doc">The document where changes should take place.</param>
-		/// <returns>True if operation succeeded; otherwise False.</returns>
-		/// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
-		private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
+        /// <summary>
+        /// Tries to uncomment node.
+        /// </summary>
+        /// <param name="commentedNode">The commented node.</param>
+        /// <param name="doc">The document where changes should take place.</param>
+        /// <returns>True if operation succeeded; otherwise False.</returns>
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');

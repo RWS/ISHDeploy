@@ -580,6 +580,70 @@ namespace ISHDeploy.Tests.Data.Managers
             Logger.Received(1).WriteWarning(Arg.Is($"{_filePath} does not contain element '{testXPath}'."));
         }
 
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_attribute_value_by_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            var attributeValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/@nodeAttribute");
+
+            // Assert
+            Assert.AreEqual(attributeValue, "AttributeValue1");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_node_value_by_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            var elementValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/someNode");
+
+            // Assert
+            Assert.AreEqual(elementValue, "SomeNodeValue");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXPathException))]
+        public void GetValue_Invalid_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.GetValue(_filePath, "/node/wrongNodeName");
+
+            // Assert
+            Assert.Fail("This method should throw exception");
+        }
+
         #endregion
 
         #region Nodes Manipulation
@@ -871,8 +935,8 @@ namespace ISHDeploy.Tests.Data.Managers
 				_filePath,
 				string.Format(CommentPatterns.EventMonitorTab, testLabel));
 
-            // Assert
-            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+			// Assert
+			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
 
 			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");

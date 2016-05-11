@@ -68,7 +68,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     }));
             }
 
-            _invoker.AddAction(new DirectoryCreateZipPackageAction(logger, packageFilePath, temporaryFolder));
+            _invoker.AddAction(new DirectoryCreateZipPackageAction(logger, temporaryFolder, packageFilePath));
             _invoker.AddAction(new DirectoryRemoveAction(logger, temporaryFolder));
         }
 

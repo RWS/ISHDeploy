@@ -25,14 +25,10 @@ namespace ISHDeploy.Tests.Data.Actions.File
             // Arrange
             var templateFilePath = "input.template";
             var outputFilePath = "out.txt";
-            var content = "Generated {0} Content";
-            var contentValue = "Document";
-            var inputParam = new Dictionary<string, string>()
-            {
-                {"{0}", contentValue}
-            };
+            var contentValue = "Generated Document Content";
+            var inputParam = new Dictionary<string, string>() {};
 
-            _templateManager.GenerateDocument(templateFilePath, inputParam).Returns("Generated Document Content");
+            _templateManager.GenerateDocument(templateFilePath, inputParam).Returns(contentValue);
 
             var action = new GenerateFromTemplateAction(Logger, templateFilePath, outputFilePath, inputParam);
 
@@ -40,7 +36,7 @@ namespace ISHDeploy.Tests.Data.Actions.File
             action.Execute();
 
             // Assert
-            FileManager.Received().Write(outputFilePath, "Generated Document Content");
+            FileManager.Received().Write(outputFilePath, contentValue);
         }
     }
 }

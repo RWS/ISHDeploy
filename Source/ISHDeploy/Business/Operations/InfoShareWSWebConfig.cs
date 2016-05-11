@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations
             public const string CertificateValidationModeXPath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/serviceBehaviors[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate/@findValue" attribute in ~\Web\InfoShareWS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate/@findValue" attribute in ~\Web\InfoShareWS\Web.config file
             /// </summary>
             public const string CertificateThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate/@findValue";
         }

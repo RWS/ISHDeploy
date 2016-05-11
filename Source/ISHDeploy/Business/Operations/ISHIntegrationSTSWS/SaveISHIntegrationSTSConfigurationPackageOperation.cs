@@ -1,9 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.Template;
-using ISHDeploy.Data.Managers;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
 
@@ -40,7 +39,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
             _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareSTSConfig.Path.AbsolutePath, InfoShareSTSConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => certificateContent = result));
-            _invoker.AddAction(new SaveCMSecurityTokenServiceAction(logger, temporaryDocFilePath, deployment.AccessHostName, deployment.GetCMWebAppName(), deployment.GetWSWebAppName(), TemporarySTSConfigurationFileNames.ISHWSCertificateFileName, certificateContent));
+
+            var parameters = new Dictionary<string, string>
+            {
+                {"$ishhostname", deployment.AccessHostName},
+                {"$ishcmwebappname", deployment.GetCMWebAppName()},
+                {"$ishwswebappname", deployment.GetWSWebAppName()},
+                {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
+                {"$ishwscontent", certificateContent}
+            };
+
+            _invoker.AddAction(new FileTemplateFillInAndSaveAction(logger, temporaryDocFilePath, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName, parameters));
             _invoker.AddAction(new DirectoryCreateZipPackageAction(logger, temporaryFolder, packageFilePath));
             _invoker.AddAction(new DirectoryRemoveAction(logger, temporaryFolder));
         }

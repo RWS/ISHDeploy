@@ -43,48 +43,32 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Remove Old Token Signing Certificate.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Add New Token Signing Certificate.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
-    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
-    <None Include="Articles\Module\FeatureToggle.ps1" />
-    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="CI\CopyAndReinstall.ps1" />
     <None Include="CI\ISHInstall.ps1" />
     <None Include="CI\ISHReinstaller.ps1" />
     <None Include="CI\ISHUninstall.ps1" />
     <None Include="CI\kill_powershell.bat" />
-    <None Include="CmdletsUsage\Info\Get-Version.ps1" />
-    <None Include="CmdletsUsage\Info\Info.md" />
-    <None Include="CmdletsUsage\ISHContentEditor\ISHContentEditor.md" />
+    <None Include="CmdletsUsage\Info\GetVersion.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\TestContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\SetContentEditor.ps1" />
-    <None Include="CmdletsUsage\ISHDeployment\GetISHDeploymentCmdlet.ps1" />
-    <None Include="CmdletsUsage\ISHDeployment\ISHDeployment.md" />
-    <None Include="CmdletsUsage\ISHExternalPreview\DisableExternalPreview.ps1" />
-    <None Include="CmdletsUsage\ISHExternalPreview\EnableExternalPreview.ps1" />
-    <None Include="CmdletsUsage\ISHExternalPreview\ISHExternalPreview.md" />
-    <None Include="CmdletsUsage\ISHIntegrationSTSWS\ISHIntegrationSTSConfigurationPackage.ps1" />
-    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.ps1" />
+    <None Include="CmdletsUsage\ISHDeployment\GetISHDeployment.ps1" />
+    <None Include="CmdletsUsage\ISHExternalPreview\DisableISHExternalPreview.ps1" />
+    <None Include="CmdletsUsage\ISHExternalPreview\EnableISHExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackage.ps1" />
+    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.ps1" />
     <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrust.ps1" />
-    <None Include="CmdletsUsage\ISHPackage\GetISHPackageFolderPathCmdlet.ps1" />
-    <None Include="CmdletsUsage\ISHPackage\ISHISHPackageFolderPath.md" />
+    <None Include="CmdletsUsage\ISHPackage\GetISHPackageFolderPath.ps1" />
     <None Include="CmdletsUsage\ISHSTS\RemoveISHIntegrationSTSCertificate.ps1" />
     <None Include="CmdletsUsage\ISHSTS\SetISHIntegrationSTSCertificate.ps1" />
-    <None Include="CmdletsUsage\ISHUIContentEditor\DisableContentEditor.ps1" />
-    <None Include="CmdletsUsage\ISHUIContentEditor\EnableContentEditor.ps1" />
-    <None Include="CmdletsUsage\ISHUIContentEditor\ISHUIContentEditor.md" />
-    <None Include="CmdletsUsage\ISHUIEventMonitorTab\ISHUIEventMonitorTab.md" />
+    <None Include="CmdletsUsage\ISHUIContentEditor\DisableISHUIContentEditor.ps1" />
+    <None Include="CmdletsUsage\ISHUIContentEditor\EnableISHUIContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.ps1" />
     <None Include="CmdletsUsage\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTab.ps1" />
     <None Include="CmdletsUsage\ISHUIEventMonitorTab\SetISHUIEventMonitorTab.ps1" />
-    <None Include="CmdletsUsage\ISHUIQualityAssistant\DisableQualityAssistant.ps1" />
-    <None Include="CmdletsUsage\ISHUIQualityAssistant\EnableQualityAssistant.ps1" />
-    <None Include="CmdletsUsage\ISHUIQualityAssistant\ISHUIQualityAssistant.md" />
-    <None Include="CmdletsUsage\Rollback\Rollback.md" />
-    <None Include="CmdletsUsage\Rollback\Rollback.ps1" />
+    <None Include="CmdletsUsage\ISHUIQualityAssistant\DisableISHUIQualityAssistant.ps1" />
+    <None Include="CmdletsUsage\ISHUIQualityAssistant\EnableISHUIQualityAssistant.ps1" />
+    <None Include="CmdletsUsage\Rollback\UndoISHDeployment.ps1" />
+    <None Include="CmdletsUsage\Rollback\ClearISHDeploymentHistory.ps1" />
     <None Include="Pester\Test-All.ps1" />
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
@@ -93,7 +77,7 @@
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
-    <None Include="Pester\Tests\ISHIntegrationSTSWSTrust .Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
@@ -104,9 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Articles\IntegrationSTS\On premise ADFS\Initial.ps1" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

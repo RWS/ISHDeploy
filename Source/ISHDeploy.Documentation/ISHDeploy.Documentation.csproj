@@ -46,26 +46,42 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
+    <None Include="Articles\FeatureToggle\Work with UI Features.md" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\Add New Token Signing Certificate.ps1" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\Initial.ps1" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\Integrate Vanilla with ADFS.md" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\Remove Old Token Signing Certificate.ps1" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS Initial Values.ps1" />
+    <None Include="Articles\IntegrationSTS\On premise ADFS\_nopublish\ADFS New Values.ps1" />
+    <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
+    <None Include="Export-Markdown-From-Usages.ps1" />
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
     <None Include="Readme.md" />
     <None Include="Index.md" />
-    <None Include="Module\toc.yml" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Resolve-Markdown.ps1" />
     <None Include="toc.yml" />
-    <None Include="Using\toc.yml" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Module\" />
+    <Folder Include="Using\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)Using"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

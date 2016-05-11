@@ -31,7 +31,8 @@ bld/
 
 # TestResults
 Source/TestResults/
-/Source/ISHDeploy.Documentation/Module/toc.yml
+/Source/ISHDeploy.Documentation/Module/*
+/Source/ISHDeploy.Documentation/Using/*
 /Source/ISHDeploy.Documentation/log.txt
 /Source/ISHDeploy.Documentation/_site
 

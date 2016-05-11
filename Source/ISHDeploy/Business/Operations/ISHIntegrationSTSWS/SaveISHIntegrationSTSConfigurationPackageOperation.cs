@@ -38,7 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var certificateContent = string.Empty;
 
             _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
-            _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareSTSConfig.Path.AbsolutePath, InfoShareSTSConfig.CertificateThumbprintXPath));
+            _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => certificateContent = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 

@@ -48,6 +48,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>
             public const string CertificateValidationModeXPath = InfoShareAuthorWebConfig.CertificateValidationModeXPath;
+
+            /// <summary>
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate/@findValue" attribute in ~\Web\InfoShareWS\Web.config file
+            /// </summary>
+            public const string CertificateThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate/@findValue";
         }
     }
 }

@@ -54,7 +54,12 @@
     <None Include="CmdletsUsage\ISHDeployment\GetISHDeployment.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\DisableISHExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\EnableISHExternalPreview.ps1" />
+    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackage.ps1" />
+    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.ps1" />
+    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrust.ps1" />
     <None Include="CmdletsUsage\ISHPackage\GetISHPackageFolderPath.ps1" />
+    <None Include="CmdletsUsage\ISHSTS\RemoveISHIntegrationSTSCertificate.ps1" />
+    <None Include="CmdletsUsage\ISHSTS\SetISHIntegrationSTSCertificate.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\DisableISHUIContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIContentEditor\EnableISHUIContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHUIEventMonitorTab\MoveISHUIEventMonitorTab.ps1" />

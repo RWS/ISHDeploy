@@ -566,14 +566,14 @@ namespace ISHDeploy.Data.Managers
 
         #region private methods
 
-        /// <summary>
-        /// Tries to uncomment node.
-        /// </summary>
-        /// <param name="commentedNode">The commented node.</param>
-        /// <param name="doc">The document where changes should take place.</param>
-        /// <returns>True if operation succeeded; otherwise False.</returns>
-        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
-        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
+		/// <summary>
+		/// Tries to uncomment node.
+		/// </summary>
+		/// <param name="commentedNode">The commented node.</param>
+		/// <param name="doc">The document where changes should take place.</param>
+		/// <returns>True if operation succeeded; otherwise False.</returns>
+		/// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+		private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');

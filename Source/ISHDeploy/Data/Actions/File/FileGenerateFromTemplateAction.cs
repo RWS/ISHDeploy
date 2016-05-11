@@ -8,7 +8,7 @@ namespace ISHDeploy.Data.Actions.File
     /// Saves document generated from resource template.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class FileTemplateFillInAndSaveAction : SingleFileCreationAction
+    public class FileGenerateFromTemplateAction : SingleFileCreationAction
     {
         /// <summary>
         /// The path to template file.
@@ -31,15 +31,15 @@ namespace ISHDeploy.Data.Actions.File
         private readonly ITemplateManager _templateManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileTemplateFillInAndSaveAction"/> class.
+        /// Initializes a new instance of the <see cref="FileGenerateFromTemplateAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="outputFilePath">The output file path.</param>
         /// <param name="templateFilePath">The path to template file.</param>
         /// <param name="parameters">The set of parameters.</param>
-        public FileTemplateFillInAndSaveAction(ILogger logger,
-            string outputFilePath,
+        public FileGenerateFromTemplateAction(ILogger logger,
             string templateFilePath,
+            string outputFilePath,
             Dictionary<string, string> parameters) : base(logger, outputFilePath)
         {
             _templateManager = ObjectFactory.GetInstance<ITemplateManager>();

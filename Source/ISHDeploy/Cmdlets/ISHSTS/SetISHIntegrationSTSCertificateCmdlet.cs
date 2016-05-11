@@ -9,7 +9,7 @@ using ISHDeploy.Validators;
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
 	/// <summary>
-	///		<para type="synopsis">Sets STS sertificate.</para>
+	///		<para type="synopsis">Sets STS certificate.</para>
 	///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
@@ -28,11 +28,6 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 	[Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSCertificate")]
 	public sealed class SetISHIntegrationSTSCertificateCmdlet : BaseHistoryEntryCmdlet
 	{
-		/// <summary>
-		/// Cashed and normalized Thumbprint value
-		/// </summary>
-		private string _thumbprint;
-
 		/// <summary>
 		/// <para type="description">Specifies the instance of the Content Manager deployment.</para>
 		/// </summary>

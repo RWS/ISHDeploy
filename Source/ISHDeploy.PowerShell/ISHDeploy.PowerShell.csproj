@@ -51,6 +51,12 @@
     <None Include="CmdletsUsage\Info\GetVersion.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\TestContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\SetContentEditor.ps1" />
+    <None Include="CmdletsUsage\ISHDeployment\GetISHDeploymentCmdlet.ps1" />
+    <None Include="CmdletsUsage\ISHDeployment\ISHDeployment.md" />
+    <None Include="CmdletsUsage\ISHExternalPreview\DisableExternalPreview.ps1" />
+    <None Include="CmdletsUsage\ISHExternalPreview\EnableExternalPreview.ps1" />
+    <None Include="CmdletsUsage\ISHExternalPreview\ISHExternalPreview.md" />
+    <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.ps1" />
     <None Include="CmdletsUsage\ISHDeployment\GetISHDeployment.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\DisableISHExternalPreview.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\EnableISHExternalPreview.ps1" />
@@ -78,6 +84,8 @@
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSWSTrust .Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />

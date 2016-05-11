@@ -935,8 +935,8 @@ namespace ISHDeploy.Tests.Data.Managers
 				_filePath,
 				string.Format(CommentPatterns.EventMonitorTab, testLabel));
 
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
 
 			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");

@@ -7,9 +7,6 @@
     $ExportPath
 )
 
-$InputDir ="C:\Stash Projects\ishdeploy\Source\ISHDeploy.PowerShell\CmdletsUsage"
-$ExportPath ="C:\Stash Projects\ishdeploy\Source\ISHDeploy.Documentation\Using"
-
 #$DebugPreference="Continue"
 #$VerbosePreference="Continue"
 

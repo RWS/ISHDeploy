@@ -63,7 +63,7 @@ namespace ISHDeploy.Data.Actions.File
             var thumbprint = _xmlConfigManager.GetValue(_thumbprintFilePath, _thumbprintXPath);
             var cerFileContent = _certificateManager.GetCertificatePublicKey(thumbprint);
 
-            _fileManager.Write(_certificateFilePath, cerFileContent);
+            FileManager.Write(_certificateFilePath, cerFileContent);
         }
     }
 }

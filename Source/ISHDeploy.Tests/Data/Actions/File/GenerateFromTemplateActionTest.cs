@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ISHDeploy.Data.Actions.Template;
+using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -30,8 +30,8 @@ namespace ISHDeploy.Tests.Data.Actions.File
 
             _templateManager.GenerateDocument(templateFilePath, inputParam).Returns(contentValue);
 
-            var action = new GenerateFromTemplateAction(Logger, templateFilePath, outputFilePath, inputParam);
-
+            var action = new FileGenerateFromTemplateAction(Logger, templateFilePath, outputFilePath, inputParam);
+            
             // Act
             action.Execute();
 

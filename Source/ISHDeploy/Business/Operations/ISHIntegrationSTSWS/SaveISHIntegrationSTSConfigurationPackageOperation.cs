@@ -3,7 +3,6 @@ using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.Template;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
 
@@ -42,7 +41,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareSTSConfig.Path.AbsolutePath, InfoShareSTSConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => certificateContent = result));
 
-            _invoker.AddAction(new GenerateFromTemplateAction(logger, 
+            _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
                 TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
                 Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
                 new Dictionary<string, string>
@@ -56,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 
             if (packAdfsInvokeScript)
             {
-                _invoker.AddAction(new GenerateFromTemplateAction(logger,
+                _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     TemporarySTSConfigurationFileNames.ADFSInvokeTemplate,
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>

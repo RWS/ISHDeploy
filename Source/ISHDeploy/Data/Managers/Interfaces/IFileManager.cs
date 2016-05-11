@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument"/>.</param>
         /// <returns>New instance of <see cref="XDocument"/> with loaded file content</returns>
         XDocument Load(string filePath);
-        
+
         /// <summary>
         /// Saves <see cref="XDocument"/> content to file
         /// </summary>
@@ -142,8 +142,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
         /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
-        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. True by default</param>
-        void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath,
-            bool includeBaseDirectory = true);
+        /// <param name="includeBaseDirectory">'True' to include the directory name from sourceDirectoryName at the root of the archive; 'False' to include only the contents of the directory. 'False' by default</param>
+        void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false);
     }
 }

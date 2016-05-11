@@ -24,16 +24,20 @@
   href: ../obj/doc/module/ISHDeploy/Get-ISHPackageFolderPath.md
 - name: Move-ISHUIEventMonitorTab
   href: ../obj/doc/module/ISHDeploy/Move-ISHUIEventMonitorTab.md
+- name: Remove-ISHIntegrationSTSCertificate
+  href: ../obj/doc/module/ISHDeploy/Remove-ISHIntegrationSTSCertificate.md
 - name: Remove-ISHUIEventMonitorTab
   href: ../obj/doc/module/ISHDeploy/Remove-ISHUIEventMonitorTab.md
-- name: Get-ISHPackageFolderPath
-  href: ../obj/doc/module/ISHDeploy/Get-ISHPackageFolderPath.md
-- name: Move-ISHUIEventMonitorTab
-  href: ../obj/doc/module/ISHDeploy/Move-ISHUIEventMonitorTab.md
-- name: Remove-ISHUIEventMonitorTab
-  href: ../obj/doc/module/ISHDeploy/Remove-ISHUIEventMonitorTab.md
+- name: Save-ISHIntegrationSTSConfigurationPackage
+  href: ../obj/doc/module/ISHDeploy/Save-ISHIntegrationSTSConfigurationPackage.md
 - name: Set-ISHContentEditor
   href: ../obj/doc/module/ISHDeploy/Set-ISHContentEditor.md
+- name: Set-ISHIntegrationSTSCertificate
+  href: ../obj/doc/module/ISHDeploy/Set-ISHIntegrationSTSCertificate.md
+- name: Set-ISHIntegrationSTSWSFederation
+  href: ../obj/doc/module/ISHDeploy/Set-ISHIntegrationSTSWSFederation.md
+- name: Set-ISHIntegrationSTSWSTrust
+  href: ../obj/doc/module/ISHDeploy/Set-ISHIntegrationSTSWSTrust.md
 - name: Set-ISHUIEventMonitorTab
   href: ../obj/doc/module/ISHDeploy/Set-ISHUIEventMonitorTab.md
 - name: Test-ISHContentEditor

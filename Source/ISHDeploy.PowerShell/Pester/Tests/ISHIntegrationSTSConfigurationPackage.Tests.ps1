@@ -131,7 +131,6 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
         Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
-        Write-Host "https://$computerName/ISHWSSQL2014/Wcf/API25/Application.svc"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
     }

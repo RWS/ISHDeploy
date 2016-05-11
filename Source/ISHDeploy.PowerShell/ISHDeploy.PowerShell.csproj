@@ -92,6 +92,7 @@
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust .Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />

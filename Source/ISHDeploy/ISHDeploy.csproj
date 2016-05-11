@@ -204,6 +204,7 @@
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />

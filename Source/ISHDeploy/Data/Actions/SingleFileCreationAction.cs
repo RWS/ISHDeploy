@@ -13,12 +13,12 @@ namespace ISHDeploy.Data.Actions
         /// <summary>
         /// The file path.
         /// </summary>
-        protected string _filePath;
+        protected string FilePath;
 
         /// <summary>
         /// The file manager.
         /// </summary>
-        protected readonly IFileManager _fileManager;
+        protected readonly IFileManager FileManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleFileCreationAction"/> class.
@@ -28,8 +28,8 @@ namespace ISHDeploy.Data.Actions
         protected SingleFileCreationAction(ILogger logger, string filePath)
             : base(logger)
         {
-            _filePath = filePath;
-            _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            FilePath = filePath;
+            FileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace ISHDeploy.Data.Actions
         /// </summary>
         public void Rollback()
         {
-            Logger.WriteDebug($"Reverting changes. Removing file {_filePath}.");
-            if (_fileManager.FileExists(_filePath))
+            Logger.WriteDebug($"Reverting changes. Removing file {FilePath}.");
+            if (FileManager.FileExists(FilePath))
             {
-                _fileManager.Delete(_filePath);
-                Logger.WriteDebug($"File {_filePath} removed.");
+                FileManager.Delete(FilePath);
+                Logger.WriteDebug($"File {FilePath} removed.");
             }
         }
     }

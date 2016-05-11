@@ -93,7 +93,7 @@ namespace ISHDeploy.Data.Actions.Template
 
             var outputContent = _templateManager.GenerateDocument(CMSecurityTokenServiceTemplate, parameters);
 
-            _fileManager.Write(_outputFilePath, outputContent);
+            FileManager.Write(_outputFilePath, outputContent);
         }
     }
 }

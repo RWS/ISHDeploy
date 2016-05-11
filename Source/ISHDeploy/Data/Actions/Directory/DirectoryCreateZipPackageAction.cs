@@ -22,12 +22,12 @@ namespace ISHDeploy.Data.Actions.Directory
         /// Initializes a new instance of the <see cref="DirectoryCreateZipPackageAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="filePath">The file path.</param>
+        /// <param name="sourcePath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
         /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
-        /// <param name="includeBaseDirectory">true to include the directory name from sourceDirectoryName at the root of the archive; false to include only the contents of the directory. False by default</param>
-        public DirectoryCreateZipPackageAction(ILogger logger, string filePath, string destinationArchiveFilePath,
+        /// <param name="includeBaseDirectory">'True' to include the directory name from sourceDirectoryName at the root of the archive; 'False' to include only the contents of the directory. 'False' by default</param>
+        public DirectoryCreateZipPackageAction(ILogger logger, string sourcePath, string destinationArchiveFilePath,
             bool includeBaseDirectory = false)
-            : base(logger, filePath)
+            : base(logger, sourcePath)
         {
             _destinationArchiveFilePath = destinationArchiveFilePath;
             _includeBaseDirectory = includeBaseDirectory;
@@ -38,7 +38,7 @@ namespace ISHDeploy.Data.Actions.Directory
         /// </summary>
         public override void Execute()
         {
-            _fileManager.PackageDirectory(_filePath, _destinationArchiveFilePath, _includeBaseDirectory);
+            FileManager.PackageDirectory(FilePath, _destinationArchiveFilePath, _includeBaseDirectory);
         }
     }
 }

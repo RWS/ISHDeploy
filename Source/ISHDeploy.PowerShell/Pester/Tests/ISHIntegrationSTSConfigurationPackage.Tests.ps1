@@ -147,8 +147,35 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
     }
 
+    It "Save package ADFS"{
+        $tempFolder = $PSScriptRoot
+        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
+        Test-Path $packagePath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
+        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
+        Start-Sleep -Milliseconds 7000
+        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
+        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
+        Test-Path "$tempFolder\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
+        $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
+        $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
+        $scriptFile = Get-Content "$tempFolder\tmp\Invoke-ADFSIntegrationISH.ps1"
+        $scriptFile -contains '$projectsuffix="' + $testingDeployment.OriginalParameters.projectsuffix +'"' | Should be $true
+        $scriptFile -contains '$osuser="' + $testingDeployment.OriginalParameters.osuser +'"' | Should be $true
+    }
 
-
+    It "Save same package with adfs switch"{
+        $tempFolder = $PSScriptRoot
+        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
+        Test-Path $packagePath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
+        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
+        Start-Sleep -Milliseconds 7000
+        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
+        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
+    }
     AfterEach {
         if(Test-Path ("$tempFolder\tmp")){
             Remove-Item "$tempFolder\tmp" -Recurse -Force 

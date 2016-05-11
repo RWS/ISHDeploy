@@ -61,7 +61,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     new Dictionary<string, string>
                     {
                         {"#!#installtool:BASEHOSTNAME#!#", deployment.AccessHostName},
-                        {"#!#installtool:LOCALSERVICEHOSTNAME#!#", deployment.AccessHostName}, // We don`t actually need `localservicehostname` variable as it is not used in *.ps1 script
                         {"#!#installtool:PROJECTSUFFIX#!#", deployment.GetSuffix()},
                         {"#!#installtool:OSUSER#!#", deployment.GetOSUser()},
                         {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.GetCMWebAppName()},

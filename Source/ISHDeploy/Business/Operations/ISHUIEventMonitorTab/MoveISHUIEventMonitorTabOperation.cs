@@ -10,10 +10,11 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// <seealso cref="IOperation" />
 	public class MoveISHUIEventMonitorTabOperation : OperationPaths, IOperation
     {
-		/// <summary>
-		/// Operation type enum
-		/// </summary>
-		public enum OperationType
+        /// <summary>
+        /// Operation type enum
+        ///	<para type="description">Enumeration of Operations Types.</para>
+        /// </summary>
+        public enum OperationType
 		{
 
 			/// <summary>

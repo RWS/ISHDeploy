@@ -1,8 +1,6 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Business;
-using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -20,25 +18,16 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHDeploymentHistory")]
     [OutputType(typeof(string))]
-    public class GetISHDeploymentHistoryCmdlet : BaseCmdlet
+    public class GetISHDeploymentHistoryCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-        
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var historyFilePath = new ISHPaths(ISHDeployment).HistoryFilePath;
-
             var historyContent = string.Empty;
 
-            var action = new FileReadAllTextAction(Logger, historyFilePath, result => historyContent = result);
+            var action = new FileReadAllTextAction(Logger, OperationPaths.HistoryFilePath, result => historyContent = result);
             action.Execute();
 
             if (string.IsNullOrEmpty(historyContent))

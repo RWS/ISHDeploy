@@ -1,5 +1,5 @@
 ﻿
-namespace ISHDeploy.Data.Managers
+namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
     /// Operates on registered certificates.

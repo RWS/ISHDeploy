@@ -1,5 +1,4 @@
 ﻿using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Data.Actions.File;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 

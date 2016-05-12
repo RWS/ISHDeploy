@@ -1,7 +1,6 @@
 ﻿using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.File
 {

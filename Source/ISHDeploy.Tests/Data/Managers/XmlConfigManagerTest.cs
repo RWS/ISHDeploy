@@ -3,7 +3,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -702,7 +702,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -760,7 +760,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -808,8 +808,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath, 
-				string.Format(CommentPatterns.EventMonitorTab, testLabel), 
-				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel), 
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -840,7 +840,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -871,8 +871,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel),
-				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel),
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -903,7 +903,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -933,7 +933,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.RemoveSingleNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -964,11 +964,11 @@ namespace ISHDeploy.Tests.Data.Managers
             // Act
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());

@@ -1,10 +1,6 @@
-﻿using System.Linq;
-using System.Management.Automation;
+﻿using System.Management.Automation;
 using System.ServiceModel.Security;
-using ISHDeploy.Business;
-using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHSTS;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -29,13 +25,6 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 	public sealed class SetISHIntegrationSTSCertificateCmdlet : BaseHistoryEntryCmdlet
 	{
 		/// <summary>
-		/// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-		/// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-
-		/// <summary>
 		/// <para type="description">Certificate Thumbprint.</para>
 		/// </summary>
 		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
@@ -56,22 +45,10 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		public X509CertificateValidationMode ValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
 
 		/// <summary>
-		/// Cashed value for <see cref="IshPaths"/> property
-		/// </summary>
-		private ISHPaths _ishPaths;
-
-		/// <summary>
-		/// Returns instance of the <see cref="ISHPaths"/>
-		/// </summary>
-		protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment));
-
-		/// <summary>
 		/// Executes cmdlet
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			OperationPaths.Initialize(ISHDeployment);
-
 			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, Thumbprint, Issuer, ValidationMode);
 
 			operation.Run();

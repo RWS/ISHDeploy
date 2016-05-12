@@ -17,7 +17,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to ~\Web\Author\ASP\Web.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHPaths.IshDeploymentType.Web,
+            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\Web.config");
 
             /// <summary>

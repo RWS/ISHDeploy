@@ -1,6 +1,5 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHDeployment;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -18,15 +17,8 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Undo, "ISHDeployment")]
-    public class UndoISHDeploymentCmdlet : BaseCmdlet
+    public class UndoISHDeploymentCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-
 		/// <summary>
 		/// Executes revert changes cmdLet
 		/// </summary>

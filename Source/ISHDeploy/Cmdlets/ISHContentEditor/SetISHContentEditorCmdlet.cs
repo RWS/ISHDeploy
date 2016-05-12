@@ -1,8 +1,6 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHContentEditor;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor
 {
@@ -40,29 +38,10 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
 		public string LicenseKey { get; set; }
         
         /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-		public Models.ISHDeployment ISHDeployment { get; set; }
-        
-        /// <summary>
-        /// Cashed value for <see cref="IshPaths"/> property
-        /// </summary>
-        private ISHPaths _ishPaths;
-
-        /// <summary>
-        /// Returns instance of the <see cref="ISHPaths"/>
-        /// </summary>
-        protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment));
-
-        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            OperationPaths.Initialize(ISHDeployment);
-
             var operation = new SetISHContentEditorOperation(Logger, OperationPaths.FoldersPaths.LicenceFolderPath, string.Concat(Domain, LicenseFileExtension), LicenseKey);
 
             operation.Run();

@@ -3,7 +3,6 @@ using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
@@ -31,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
-            var packageFilePath = Path.Combine(deployment.GetDeploymenPackagesFolderPath(), fileName);
+            var packageFilePath = Path.Combine(FoldersPaths.PackagesFolderPath, fileName);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 

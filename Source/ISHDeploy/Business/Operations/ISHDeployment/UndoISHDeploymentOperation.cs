@@ -29,13 +29,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
 			// Rolling back changes for Web folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));
 
 			// Rolling back changes for Data folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.GetDataFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ishDeployment.GetDataFolderPath()));
             
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
 
 			// Removing licenses
 			_invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));

@@ -16,7 +16,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHPaths.IshDeploymentType.Data,
+            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Data,
                 @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
 
             /// <summary>

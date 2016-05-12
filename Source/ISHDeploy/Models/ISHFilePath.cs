@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ISHDeploy.Business;
 using ISHDeploy.Extensions;
 
 namespace ISHDeploy.Models
@@ -10,6 +9,25 @@ namespace ISHDeploy.Models
     public class ISHFilePath
 	{
         /// <summary>
+        /// Specifies Content Manager main folders
+        /// </summary>
+		public enum IshDeploymentType
+        {
+            /// <summary>
+            /// Content Manager Web folder
+            /// </summary>
+			Web,
+            /// <summary>
+            /// Content Manager Data folder
+            /// </summary>
+			Data,
+            /// <summary>
+            /// Content Manager App folder
+            /// </summary>
+			App
+        }
+
+        /// <summary>
         /// The instance of the deployment.
         /// </summary>
         private readonly ISHDeployment _ishDeployment;
@@ -17,7 +35,7 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Type of the deployment.
         /// </summary>
-        private readonly ISHPaths.IshDeploymentType _deploymentType;
+        private readonly IshDeploymentType _deploymentType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
@@ -25,7 +43,7 @@ namespace ISHDeploy.Models
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="deploymentType">Type of the deployment.</param>
         /// <param name="path">The path to the file.</param>
-        public ISHFilePath(ISHDeployment ishDeployment, ISHPaths.IshDeploymentType deploymentType, string path)
+        public ISHFilePath(ISHDeployment ishDeployment, IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
 			_deploymentType = deploymentType;
@@ -42,11 +60,11 @@ namespace ISHDeploy.Models
 			{
 				switch (_deploymentType)
 				{
-					case ISHPaths.IshDeploymentType.App:
+					case IshDeploymentType.App:
 						return Path.Combine(_ishDeployment.GetAppFolderPath(), RelativePath);
-					case ISHPaths.IshDeploymentType.Web:
+					case IshDeploymentType.Web:
 						return Path.Combine(_ishDeployment.GetAuthorFolderPath(), RelativePath);
-					case ISHPaths.IshDeploymentType.Data:
+					case IshDeploymentType.Data:
 						return Path.Combine(_ishDeployment.GetDataFolderPath(), RelativePath);
 					default:
 						return null;

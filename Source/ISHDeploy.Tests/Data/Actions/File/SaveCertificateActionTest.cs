@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using ISHDeploy.Business.Operations;
-using ISHDeploy.Data.Actions.File;
+﻿using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +9,6 @@ namespace ISHDeploy.Tests.Data.Actions.File
     [TestClass]
     public class SaveCertificateActionTest : BaseUnitTest
     {
-        private const string _filePath = "C:\\DummyFilePath.txt";
         private ICertificateManager _certificateManager;
         private IXmlConfigManager _xmlConfigManager;
 

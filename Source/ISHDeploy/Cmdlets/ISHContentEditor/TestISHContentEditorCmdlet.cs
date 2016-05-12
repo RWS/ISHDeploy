@@ -1,8 +1,6 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Business;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHContentEditor;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor
 {
@@ -19,8 +17,8 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor")]
-	public class TestISHContentEditorCmdlet : BaseCmdlet
-	{
+	public class TestISHContentEditorCmdlet : BaseISHDeploymentCmdlet
+    {
         /// <summary>
         /// <para type="description">Specifies the domain name to be verified.</para>
         /// </summary>
@@ -29,20 +27,10 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
 		public string Domain { get; set; }
 
         /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-
-        /// <summary>
         /// Executes cmdlet
         /// </summary>
 		public override void ExecuteCmdlet()
 		{
-
-            OperationPaths.Initialize(ISHDeployment);
-
             var operation = new TestISHContentEditorOperation(Logger, OperationPaths.FoldersPaths.LicenceFolderPath, Domain);
 
             var result = operation.Run();

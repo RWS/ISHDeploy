@@ -16,7 +16,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHPaths.IshDeploymentType.App,
+            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.App,
                 @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
 
             /// <summary>

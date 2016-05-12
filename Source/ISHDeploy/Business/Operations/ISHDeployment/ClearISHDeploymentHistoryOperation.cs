@@ -18,14 +18,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// Initializes a new instance of the <see cref="ClearISHDeploymentHistoryOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="historyFilePath">The path to history file.</param>
-        /// <param name="backupFolderPath">The path to backup file.</param>
-        public ClearISHDeploymentHistoryOperation(ILogger logger, string historyFilePath, string backupFolderPath)
+        public ClearISHDeploymentHistoryOperation(ILogger logger)
         {
             _invoker = new ActionInvoker(logger, "Customization history clean up");
 
-            _invoker.AddAction(new FileDeleteAction(logger, historyFilePath));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, backupFolderPath));
+            _invoker.AddAction(new FileDeleteAction(logger, OperationPaths.HistoryFilePath));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, OperationPaths.FoldersPaths.BackupFolderPath));
         }
 
         /// <summary>

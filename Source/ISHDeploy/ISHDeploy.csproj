@@ -130,6 +130,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
+    <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
@@ -204,7 +205,6 @@
     <Compile Include="Data\Actions\XmlFile\SetAttributeValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\UncommentNodesByPrecedingPatternAction.cs" />
     <Compile Include="Data\Actions\File\FileGenerateFromTemplateAction.cs" />
-    <Compile Include="Business\ISHPaths.cs" />
     <Compile Include="Data\Managers\Interfaces\IRegistryManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITextConfigManager.cs" />
     <Compile Include="Data\Managers\RegistryManager.cs" />
@@ -214,6 +214,7 @@
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="Extensions\DeploymentExtension.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
+    <Compile Include="Models\ISHXmlNodes\EventLogMenuItemAction.cs" />
     <Compile Include="Models\ISHXmlNodes\EventLogMenuItem.cs" />
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
@@ -229,7 +230,6 @@
     <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
     <Compile Include="Models\ISHDeployment.cs" />
-    <Compile Include="Business\CommentPatterns.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>

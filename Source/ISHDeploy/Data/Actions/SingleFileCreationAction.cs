@@ -1,5 +1,4 @@
-﻿using System;
-using ISHDeploy.Data.Managers.Interfaces;
+﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
 

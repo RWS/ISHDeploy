@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Linq;
-using ISHDeploy.Business;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Models.ISHXmlNodes
@@ -8,59 +7,17 @@ namespace ISHDeploy.Models.ISHXmlNodes
 	/// <summary>
 	/// Represents menu item xml node
 	/// </summary>
-	public class EventLogMenuItemAction
-	{
-		/// <summary>
-		/// Gets or sets the label.
-		/// </summary>
-		public string SelectedButtonTitle { get; set; }
-
-		/// <summary>
-		/// Gets or sets the action.
-		/// </summary>
-		public int ModifiedSinceMinutesFilter { get; set; }
-
-		/// <summary>
-		/// Gets or sets the icon.
-		/// </summary>
-		public string SelectedMenuItemTitle { get; set; }
-
-		/// <summary>
-		/// Gets or sets the userrole.
-		/// </summary>
-		public string StatusFilter { get; set; }
-
-		/// <summary>
-		/// Gets or sets the description.
-		/// </summary>
-		public string[] EventTypesFilter { get; set; }
-
-		/// <summary>
-		/// Converts object to XElement.
-		/// </summary>
-		/// <returns>XElement</returns>
-		public string ToQueryString()
-		{
-			return CommentPatterns.EventActionPath + String.Join("&", new string[]
-			{
-				"eventTypesFilter=" + ((EventTypesFilter == null) ? "" : String.Join(", ", EventTypesFilter)),
-				"statusFilter=" + StatusFilter,
-				"selectedMenuItemTitle=" + SelectedMenuItemTitle,
-				"modifiedSinceMinutesFilter=" + ModifiedSinceMinutesFilter,
-				"selectedButtonTitle=" + Uri.EscapeUriString(SelectedButtonTitle)
-			});
-		}
-	}
-
-	/// <summary>
-	/// Represents menu item xml node
-	/// </summary>
 	public class EventLogMenuItem : IISHXmlNode
-	{
-		/// <summary>
-		/// Gets or sets the label.
-		/// </summary>
-		public string Label { get; set; }
+    {
+        /// <summary>
+        /// The Xopus add check out comment placeholder
+        /// </summary>
+        public const string EventMonitorTabCommentMarkup = " {0} ================================== ";
+
+        /// <summary>
+        /// Gets or sets the label.
+        /// </summary>
+        public string Label { get; set; }
 
 		/// <summary>
 		/// Gets or sets the action.
@@ -90,7 +47,7 @@ namespace ISHDeploy.Models.ISHXmlNodes
 			var commentLabel = Description ?? Label;
 			if (!String.IsNullOrEmpty(commentLabel))
 			{
-				return new XComment(String.Format(CommentPatterns.EventMonitorTabCommentMarkup, commentLabel));
+				return new XComment(string.Format(EventMonitorTabCommentMarkup, commentLabel));
 			}
 
 			return null;

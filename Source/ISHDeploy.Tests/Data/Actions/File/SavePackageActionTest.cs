@@ -1,5 +1,4 @@
 ﻿using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Data.Actions.File;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 
@@ -16,7 +15,6 @@ namespace ISHDeploy.Tests.Data.Actions.File
         public void Execute_Package_correct_files_to_correct_package_name()
         {
             // Arrange
-            var filesToPack = new [] {"file1.txt", "file2.txt"};
             var action = new DirectoryCreateZipPackageAction(Logger, _filePath, _destinationArchiveFilePath);
 
             // Act

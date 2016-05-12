@@ -464,7 +464,7 @@ namespace ISHDeploy.Data.Managers
 			}
 
 			// Check if node does not have a comment
-			if (newNode.PreviousNode.NodeType != XmlNodeType.Comment)
+			if (newNode.PreviousNode == null || newNode.PreviousNode.NodeType != XmlNodeType.Comment)
 			{
 				var comment = xNode.GetNodeComment();
 				if (comment != null)

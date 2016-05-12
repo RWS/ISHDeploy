@@ -34,23 +34,23 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
-            var certificateContent = string.Empty;
+            var stsConfigParams = new Dictionary<string, string>
+                    {
+                        {"$ishhostname", deployment.AccessHostName},
+                        {"$ishcmwebappname", deployment.GetCMWebAppName()},
+                        {"$ishwswebappname", deployment.GetWSWebAppName()},
+                        {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
+                        {"$ishwscontent", string.Empty}
+                    };
 
             _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
             _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
-            _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => certificateContent = result));
+            _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
                 TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
                 Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
-                new Dictionary<string, string>
-                {
-                    {"$ishhostname", deployment.AccessHostName},
-                    {"$ishcmwebappname", deployment.GetCMWebAppName()},
-                    {"$ishwswebappname", deployment.GetWSWebAppName()},
-                    {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
-                    {"$ishwscontent", certificateContent}
-                }));
+                stsConfigParams));
 
             if (packAdfsInvokeScript)
             {

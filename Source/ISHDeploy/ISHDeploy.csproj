@@ -60,34 +60,64 @@
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\OperationPaths.cs" />
-    <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
+    <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\InfoShareAuthorWebConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
+    <Compile Include="Business\Operations\EventMonitorMenuBarXml.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
+    <Compile Include="Business\Operations\FolderButtonBarXml.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
+    <Compile Include="Business\Operations\FoldersPaths.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\TrisoftInfoShareClientConfig.cs">
+    <Compile Include="Business\Operations\InboxButtonBarXml.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\InfoShareAuthorWebConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareWSConnectionConfig.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\TemporarySTSConfigurationFileNames.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TopDocumentButtonBarXml.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TrisoftInfoShareClientConfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\XopusBluelionConfigXml.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\XopusBlueLionPluginWebCconfig.cs">
+      <DependentUpon>OperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\XopusConfigXml.cs">
       <DependentUpon>OperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Data.Managers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -104,7 +105,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
 
             // Act
-            _textConfigManager.CommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.CommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
@@ -121,7 +122,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
 
             // Act
-            _textConfigManager.CommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.CommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
@@ -136,7 +137,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.ReadAllLines(FilePath).Returns(NoPatternBlock);
 
             // Act
-            _textConfigManager.CommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.CommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.DidNotReceive().WriteAllLines(Arg.Any<string>(), Arg.Any<string[]>());
@@ -153,11 +154,11 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
 
             // Act
-            _textConfigManager.CommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.CommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
-            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{CommentPatterns.TranslationJobHack}' in the file: {FilePath}"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{OperationPaths.AuthorASPTreeHtm.TranslationJobHack}' in the file: {FilePath}"));
             Assert.IsTrue(result.SequenceEqual(CommentedBrokenPatternBlock));
         }
 
@@ -171,7 +172,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
 
             // Act
-            _textConfigManager.UncommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.UncommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
@@ -188,7 +189,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
 
             // Act
-            _textConfigManager.UncommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.UncommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
@@ -203,7 +204,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.ReadAllLines(FilePath).Returns(NoPatternBlock);
             
             // Act
-            _textConfigManager.UncommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.UncommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.DidNotReceive().WriteAllLines(Arg.Any<string>(), Arg.Any<string[]>());
@@ -220,11 +221,11 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.WriteAllLines(FilePath, Arg.Do<string[]>(lines => result = lines));
             
             // Act
-            _textConfigManager.UncommentBlock(FilePath, CommentPatterns.TranslationJobHack);
+            _textConfigManager.UncommentBlock(FilePath, OperationPaths.AuthorASPTreeHtm.TranslationJobHack);
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
-            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{CommentPatterns.TranslationJobHack}' in the file: {FilePath}"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{OperationPaths.AuthorASPTreeHtm.TranslationJobHack}' in the file: {FilePath}"));
             Assert.IsTrue(result.SequenceEqual(UncommentedBrokenPatternBlock));
         }
     }

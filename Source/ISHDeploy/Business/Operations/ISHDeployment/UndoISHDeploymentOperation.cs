@@ -10,7 +10,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 	/// <summary>
 	/// Operation to revert changes to Vanilla state
 	/// </summary>
-    public class UndoISHDeploymentOperation : IOperation
+    public class UndoISHDeploymentOperation : OperationPaths, IOperation
 	{
         /// <summary>
         /// The actions invoker
@@ -38,8 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
 
 			// Removing licenses
-			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;
-			_invoker.AddAction(new FileCleanDirectoryAction(logger, licenseFolderPath.AbsolutePath));
+			_invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, deployment.GetDeploymentAppDataFolder()));

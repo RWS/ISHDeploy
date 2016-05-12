@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Business;
+using ISHDeploy.Extensions;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
@@ -40,10 +41,12 @@ namespace ISHDeploy.Cmdlets.ISHPackage
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var ishPaths = new ISHPaths(ISHDeployment);
 
-            // Create "Packages" folder if folder not exists
-            fileManager.EnsureDirectoryExists(ishPaths.PackagesFolderPath);
+            var packagesFolderPath = ISHDeployment.GetDeploymenPackagesFolderPath();
 
-            var result = UNC ? ishPaths.PackagesFolderUNCPath : ishPaths.PackagesFolderPath;
+            // Create "Packages" folder if folder not exists
+            fileManager.EnsureDirectoryExists(packagesFolderPath);
+
+            var result = UNC ? ishPaths.PackagesFolderUNCPath : packagesFolderPath;
 
             WriteObject(result);
         }

@@ -1,5 +1,6 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 using ISHDeploy.Validators;
 
@@ -50,7 +51,8 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new RemoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label);
+            OperationPaths.Initialize(ISHDeployment);
+            var operation = new RemoveISHUIEventMonitorTabOperation(Logger, Label);
 
 			operation.Run();
         }

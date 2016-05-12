@@ -1,5 +1,6 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHContentEditor;
 using ISHDeploy.Validators;
 
@@ -39,9 +40,10 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// </summary>
 		public override void ExecuteCmdlet()
 		{
-            var ishPaths = new ISHPaths(ISHDeployment);
 
-            var operation = new TestISHContentEditorOperation(Logger, ishPaths.LicenceFolderPath, Domain);
+            OperationPaths.Initialize(ISHDeployment);
+
+            var operation = new TestISHContentEditorOperation(Logger, OperationPaths.FoldersPaths.LicenceFolderPath, Domain);
 
             var result = operation.Run();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 using ISHDeploy.Validators;
 
@@ -80,18 +81,20 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
+            OperationPaths.Initialize(ISHDeployment);
+
 	        MoveISHUIEventMonitorTabOperation operation;
             
 			switch (ParameterSetName)
 	        {
 				case "Last":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
 					break;
 				case "First":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
 					break;
 				case "After":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
 					break;
 				default:
 					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorTabCmdlet)} should be defined.");

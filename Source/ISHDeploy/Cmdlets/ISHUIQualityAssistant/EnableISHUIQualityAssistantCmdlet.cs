@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIQualityAssistant;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
@@ -40,7 +41,9 @@ namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHUIQualityAssistantOperation(Logger, IshPaths);
+            OperationPaths.Initialize(ISHDeployment);
+
+            var operation = new EnableISHUIQualityAssistantOperation(Logger);
 
             operation.Run();
         }

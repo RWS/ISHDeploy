@@ -1,6 +1,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIContentEditor;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHUIContentEditor
@@ -40,7 +41,9 @@ namespace ISHDeploy.Cmdlets.ISHUIContentEditor
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHUIContentEditorOperation(Logger, IshPaths);
+            OperationPaths.Initialize(ISHDeployment);
+
+            var operation = new DisableISHUIContentEditorOperation(Logger);
 
             operation.Run();
         }

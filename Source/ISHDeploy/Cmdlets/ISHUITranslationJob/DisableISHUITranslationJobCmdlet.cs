@@ -1,5 +1,6 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHUITranslationJob;
 using ISHDeploy.Validators;
 
@@ -40,7 +41,8 @@ namespace ISHDeploy.Cmdlets.ISHUITranslationJob
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHUITranslationJobOperation(Logger, IshPaths);
+            OperationPaths.Initialize(ISHDeployment);
+            var operation = new DisableISHUITranslationJobOperation(Logger);
 
             operation.Run();
         }

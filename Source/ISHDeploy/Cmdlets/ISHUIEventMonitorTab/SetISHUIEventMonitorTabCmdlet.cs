@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Management.Automation;
 using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 using ISHDeploy.Validators;
 using ISHDeploy.Models.ISHXmlNodes;
@@ -149,7 +150,8 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        var operation = new SetISHUIEventMonitorTabOperation(Logger, IshPaths, new EventLogMenuItem()
+            OperationPaths.Initialize(ISHDeployment);
+	        var operation = new SetISHUIEventMonitorTabOperation(Logger, new EventLogMenuItem()
 			{
 				Label = Label,
 				Description = Description,

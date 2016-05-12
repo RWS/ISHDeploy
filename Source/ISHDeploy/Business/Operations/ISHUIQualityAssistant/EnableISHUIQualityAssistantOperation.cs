@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
     /// Enables quality assistant plugin for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUIQualityAssistantOperation : IOperation
+    public class EnableISHUIQualityAssistantOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,14 +19,13 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// Initializes a new instance of the <see cref="EnableISHUIQualityAssistantOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
-        public EnableISHUIQualityAssistantOperation(ILogger logger, ISHPaths paths)
+        public EnableISHUIQualityAssistantOperation(ILogger logger)
         {
 			_invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.EnrichConfig, CommentPatterns.EnrichIntegrationBluelionConfig));
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, paths.XopusConfig, CommentPatterns.EnrichIntegration));
-            _invoker.AddAction(new InsertBeforeNodeAction(logger, paths.EnrichWebConfig, CommentPatterns.EnrichBluelionWebConfigJsonMimeMapXPath, CommentPatterns.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusBluelionConfigXml.Path, XopusBluelionConfigXml.EnrichIntegrationBluelionConfig));
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusConfigXml.Path, XopusConfigXml.EnrichIntegration));
+            _invoker.AddAction(new InsertBeforeNodeAction(logger, XopusBlueLionPluginWebCconfig.Path, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigJsonMimeMapXPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
-            var stsConfigPparams = new Dictionary<string, string>
+            var stsConfigParams = new Dictionary<string, string>
                     {
                         {"$ishhostname", deployment.AccessHostName},
                         {"$ishcmwebappname", deployment.GetCMWebAppName()},
@@ -45,12 +45,12 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 
             _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
             _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
-            _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigPparams["$ishwscontent"] = result));
+            _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
                 TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
                 Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
-                stsConfigPparams));
+                stsConfigParams));
 
             if (packAdfsInvokeScript)
             {

@@ -19,11 +19,6 @@ namespace ISHDeploy.Business.Operations
             public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\XSL\FolderButtonbar.xml");
 
-            ///// <summary>
-            ///// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\Web\Author\ASP\XSL\FolderButtonbar.xml
-            ///// </summary>
-            //public const string WSTrustEndpointUrlXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer";
-
             /// <summary>
             /// The Xopus add check out comment placeholder
             /// </summary>

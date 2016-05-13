@@ -336,7 +336,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $stswebConfigNodes.Count | Should be 0
     }
 
-    It "Set works after last issuer was removed"{       
+    It "Set-ISHIntegrationSTSCertificate works after last issuer was removed"{       
       #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "Issuer"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "Issuer", "PeerOrChainTrust"} | Should not Throw

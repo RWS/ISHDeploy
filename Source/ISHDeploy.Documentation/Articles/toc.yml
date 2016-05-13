@@ -14,4 +14,3 @@
     items:
     - name: Implementing issuer certificate rollover
       href: ../obj/doc/articles/IntegrationSTS/IssuerCertificateRollover/Implementing issuer certificate rollover.md
-

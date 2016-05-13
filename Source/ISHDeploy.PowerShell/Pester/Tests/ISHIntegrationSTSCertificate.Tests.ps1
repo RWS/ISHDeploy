@@ -338,11 +338,11 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Set works after last issuer was removed"{       
       #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "testIssuer", "PeerOrChainTrust"} | Should not Throw
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "Issuer"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "Issuer", "PeerOrChainTrust"} | Should not Throw
         #Assert
         Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        readTargetXML -Issuer "Issuer" -ValidationMode "PeerOrChainTrust"
         
         $authorWebConfigNodes.Count | Should be 1
         $authorWbConfigValidationMode.Count | Should be 1

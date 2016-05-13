@@ -50,10 +50,6 @@
     <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
     <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
     <None Include="Articles\FeatureToggle\Work with UI Features.md" />
-    <None Include="Articles\IntegrationSTS\CertificateRollover\Implementing issuer certificate rollover.md" />
-    <None Include="Articles\IntegrationSTS\CertificateRollover\_nopublish\20160101.Set-ISHIntegrationSTSCertificate.ps1" />
-    <None Include="Articles\IntegrationSTS\CertificateRollover\_nopublish\20161215.Set-ISHIntegrationSTSCertificate.ps1" />
-    <None Include="Articles\IntegrationSTS\CertificateRollover\_nopublish\20170101.Remove-ISHIntegrationSTSCertificate.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Windows.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Username.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.User.ps1" />
@@ -64,6 +60,10 @@
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.ADFS.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.Windows.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\UserZoneClients.plantuml" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\Implementing issuer certificate rollover.md" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20160101.Set-ISHIntegrationSTSCertificate.ps1" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20161215.Set-ISHIntegrationSTSCertificate.ps1" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20170101.Remove-ISHIntegrationSTSCertificate.ps1" />
     <None Include="Articles\Module\FeatureToggle.ps1" />
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />

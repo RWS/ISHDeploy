@@ -6,7 +6,12 @@
   items:
   - name: Integrating with Security Token Service
     href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with Security Token Service.md
-- name: ADFS
-  items:
-  - name: Integrating with Security Token Service
-    href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with ADFS.md
+  - name: ADFS
+    items:
+    - name: Integrating with Security Token Service
+      href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with ADFS.md
+  - name: Certificates
+    items:
+    - name: Implementing issuer certificate rollover
+      href: ../obj/doc/articles/IntegrationSTS/IssuerCertificateRollover/Implementing issuer certificate rollover.md
+

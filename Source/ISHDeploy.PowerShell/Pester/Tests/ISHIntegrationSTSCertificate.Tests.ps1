@@ -335,4 +335,21 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesValidationMode.Count | Should be 1
         $stswebConfigNodes.Count | Should be 0
     }
+
+    It "Set-ISHIntegrationSTSCertificate works after last issuer was removed"{       
+      #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "Issuer"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "Issuer", "PeerOrChainTrust"} | Should not Throw
+        #Assert
+        Start-Sleep -Milliseconds 7000
+        readTargetXML -Issuer "Issuer" -ValidationMode "PeerOrChainTrust"
+        
+        $authorWebConfigNodes.Count | Should be 1
+        $authorWbConfigValidationMode.Count | Should be 1
+        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
+        $wsWebConfigNodes.Count | Should be 1
+        $wsWebConfigNodesValidationMode.Count | Should be 1
+        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
+        $stswebConfigNodes.Count | Should be 1
+    }
 }

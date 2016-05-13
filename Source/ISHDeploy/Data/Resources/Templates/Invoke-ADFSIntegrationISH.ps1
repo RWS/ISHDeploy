@@ -1,3 +1,39 @@
+<#
+    .SYNOPSIS
+        Performs Set or Remove relying parties
+
+    .DESCRIPTION
+        This commandlet provides basic functionality to set or remove relying parties based on generated information from input parameters.
+
+    .PARAMETER  Computer
+        Specifies computer name to open a persistent connection (PSSession) to. The default is the local computer.
+
+    .PARAMETER  Session
+        Specifies [PSSession] session object to use.
+
+    .PARAMETER  Action
+        Either `Set` or `Remove`
+
+    .EXAMPLE
+        $s01 = New-PSSession -ComputerName "10.91.5.39"
+        Invoke-ADFSIntegrationISH -Session $s01 -Action "Set"
+
+    .EXAMPLE
+        Invoke-ADFSIntegrationISH -Computer "10.91.5.39" -Action "Set"
+
+    .EXAMPLE
+         $s03 = New-PSSession -ComputerName "10.91.5.39"
+        Invoke-ADFSIntegrationISH -Session $s03 -Action "Remove"
+
+    .EXAMPLE
+        Invoke-ADFSIntegrationISH -Computer "10.91.5.39" -Action "Remove"
+
+    .INPUTS
+        None. You cannot pipe objects to Invoke-ADFSIntegrationISH.ps1.
+
+    .OUTPUTS
+        None. Invoke-ADFSIntegrationISH.ps1 does not generate any output.
+#>
 Param(
 	[parameter(Mandatory=$false)]
 	$Computer=$null,

@@ -1,10 +1,14 @@
-param([String]$docpath, [String]$docversion)
+param(
+    [Parameter(Mandatory=$true)]
+    [String]$DocPath, 
+    [Parameter(Mandatory=$true)]
+    [String]$DocVersion,
+    [String]$WebSitePath = "$Env:systemdrive\inetpub\ishdeploy-doc",
+    [String]$WebSiteName = "ISHDeploy Documentation Portal",
+    [String]$WebSitePort = 8081
+)
 
 Import-Module WebAdministration
-
-$wspath = "$Env:systemdrive\inetpub\ishdeploy-doc"
-$wsname = "ISHDeploy Documentation Portal"
-$wsport = 8081
 
 # Create web folder for documentation portal
 function CreateWebFolderStructure($indexName, $folderPath)
@@ -19,7 +23,7 @@ function CreateWebFolderStructure($indexName, $folderPath)
 	if(!(Test-Path -Path $indexHtmlFilePath ))
 	{
 		Write-Host "Creating 'index.html' file."
-	$htmlContent = "<!DOCTYPE html>
+	    $htmlContent = "<!DOCTYPE html>
 <html><head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
     <title>ISHDeploy Documentation Portal</title>
@@ -84,16 +88,16 @@ function AddDocPortalSite($hostname, $siteRoot, $port)
 }
 
 #Import the IIS Web Administration module
-function AddVFAndUpdateIndexFile($vfName, $docpath)
+function AddVFAndUpdateIndexFile($vfName, $DocPath)
 {
 	#Check the site exists
-	if (!(Test-Path iis:\Sites\$wsname\$vfName)) 
+	if (!(Test-Path iis:\Sites\$WebSiteName\$vfName)) 
 	{
-		Write-Host "Creating wirtual directory '$vfName' for '$docpath'"
-		New-WebVirtualDirectory -Site $wsname -Name $vfName -PhysicalPath $docpath -Force
+		Write-Host "Creating wirtual directory '$vfName' for '$DocPath'"
+		New-WebVirtualDirectory -Site $WebSiteName -Name $vfName -PhysicalPath $DocPath -Force
 	}
 
-	$indexHtml = "$wspath\index.html";
+	$indexHtml = "$WebSitePath\index.html";
 	$indexContent = (Get-Content $indexHtml);
 	$signature = "<li id=\'$([Regex]::Escape($vfName))'.*?\/li>"
 	$liRow = "<li id='$vfName'><a href='./$vfName'>$vfName</a></li>"
@@ -112,8 +116,8 @@ function AddVFAndUpdateIndexFile($vfName, $docpath)
 	}
 }
 
-AddDocPortalSite $wsname $wspath $wsport
+AddDocPortalSite $WebSiteName $WebSitePath $WebSitePort
 
-AddVFAndUpdateIndexFile $docversion $docpath
+AddVFAndUpdateIndexFile $DocVersion $DocPath
 
 

@@ -42,6 +42,10 @@
     <StartProgram>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</StartProgram>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
@@ -149,13 +153,16 @@
     <Compile Include="Data\Actions\File\FileSaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\RecycleApplicationPoolAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveNodesAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
+    <Compile Include="Data\Managers\WebAdministrationManager.cs" />
     <Compile Include="Data\Managers\CertificateManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\IWebAdministrationManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
     <Compile Include="Data\Managers\TemplateManager.cs" />

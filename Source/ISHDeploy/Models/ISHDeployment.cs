@@ -15,6 +15,11 @@ namespace ISHDeploy.Models
         private const string HttpsPrefix = "https://";
 
         /// <summary>
+        /// Trisoft Application Pool Prefix
+        /// </summary>
+        private const string TrisoftAppPoolPrefix = "TrisoftAppPool";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ISHDeployment"/> class.
         /// </summary>
         /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
@@ -84,6 +89,21 @@ namespace ISHDeploy.Models
         /// Gets the path to the InfoShareSTS Application Data folder.
         /// </summary>
         public string WebNameSTSAppData => Path.Combine(WebNameSTS, "App_Data");
+
+        /// <summary>
+        /// WS Application pool name
+        /// </summary>
+        public string WSAppPoolName => $"{TrisoftAppPoolPrefix}ISHWS{GetSuffix()}";
+
+        /// <summary>
+        /// STS Application pool name
+        /// </summary>
+        public string STSAppPoolName => $"{TrisoftAppPoolPrefix}ISHSTS{GetSuffix()}";
+
+        /// <summary>
+        /// CM Application pool name
+        /// </summary>
+        public string CMAppPoolName => $"{TrisoftAppPoolPrefix}ISHCM{GetSuffix()}";
 
         /// <summary>
         /// Gets the name of the access host.

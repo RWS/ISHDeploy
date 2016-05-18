@@ -1,6 +1,7 @@
 ﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
@@ -45,6 +46,15 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, deployment.WebNameSTSAppData));
+
+            // Recycling Application pool for WS
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.WSAppPoolName));
+
+            // Recycling Application pool for STS
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.STSAppPoolName));
+
+            // Recycling Application pool for CM
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.CMAppPoolName));
         }
 
         /// <summary>

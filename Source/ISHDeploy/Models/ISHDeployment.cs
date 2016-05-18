@@ -81,6 +81,11 @@ namespace ISHDeploy.Models
         public string WebNameSTS => Path.Combine(GetAuthorFolderPath(), "InfoShareSTS");
 
         /// <summary>
+        /// Gets the path to the InfoShareSTS Application Data folder.
+        /// </summary>
+        public string WebNameSTSAppData => Path.Combine(WebNameSTS, "App_Data");
+
+        /// <summary>
         /// Gets the name of the access host.
         /// </summary>
         public string AccessHostName => OriginalParameters["baseurl"].Substring(HttpsPrefix.Length);

@@ -42,7 +42,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, deployment.GetDeploymentAppDataFolder()));
-		}
+
+            // Cleaning up STS App_Data folder
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, deployment.WebNameSTSAppData));
+        }
 
         /// <summary>
         /// Runs current operation.

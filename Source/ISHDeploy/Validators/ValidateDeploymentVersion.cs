@@ -63,7 +63,7 @@ namespace ISHDeploy.Validators
 					errorMessage = $"Module version `{moduleVersion}` does not correspond to deployment version `{deploymentVersion}`.";
 
 					if (cmVersion.CompareTo(ModuleInitVersion) < 0)
-					{
+				{
 						errorMessage += "\r\nPlease install newer Content Manager version.";
 					}
 					else

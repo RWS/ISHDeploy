@@ -1,4 +1,5 @@
 ﻿using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
@@ -9,7 +10,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 	/// <summary>
 	/// Operation to revert changes to Vanilla state
 	/// </summary>
-    public class UndoISHDeploymentOperation : IOperation
+    public class UndoISHDeploymentOperation : OperationPaths, IOperation
 	{
         /// <summary>
         /// The actions invoker
@@ -28,20 +29,19 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
 			// Rolling back changes for Web folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ishDeployment.GetAuthorFolderPath()));
 
 			// Rolling back changes for Data folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.Data), ishDeployment.GetDataFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ishDeployment.GetDataFolderPath()));
             
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHPaths.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, ishDeployment.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ishDeployment.GetAppFolderPath()));
 
 			// Removing licenses
-			ISHFilePath licenseFolderPath = new ISHPaths(ishDeployment).LicenceFolderPath;
-			_invoker.AddAction(new FileCleanDirectoryAction(logger, licenseFolderPath.AbsolutePath));
+			_invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
 
 			// Removing Backup folder
-			_invoker.AddAction(new RemoveDirectoryAction(logger, deployment.GetDeploymentAppDataFolder()));
+			_invoker.AddAction(new DirectoryRemoveAction(logger, deployment.GetDeploymentAppDataFolder()));
 		}
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using System;
-using ISHDeploy.Business.Invokers;
+﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
@@ -9,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Removes Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class RemoveISHUIEventMonitorTabOperation : IOperation
+	public class RemoveISHUIEventMonitorTabOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -20,20 +19,19 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation"/> class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
-		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="label">Label of the element</param>
-		public RemoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label)
+		public RemoveISHUIEventMonitorTabOperation(ILogger logger, string label)
         {
             _invoker = new ActionInvoker(logger, "Removing of Event Monitor Tab");
 
-			string itemXPath = String.Format(CommentPatterns.EventMonitorTab, label);
-			string itemCommentXPath = itemXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+			string itemXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
+			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
 			// First we should remove comment as it is dependent to its sibling node
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, itemCommentXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXml.Path, itemCommentXPath));
 
 			// Then we removing item itself
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, paths.EventMonitorMenuBar, itemXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXml.Path, itemXPath));
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Xml.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -80,7 +81,7 @@ namespace ISHDeploy.Data.Managers
 				fileInfo.Attributes = FileAttributes.Normal;
 			}
 
-			_logger.WriteDebug($"Deliting file `{path}`");
+			_logger.WriteDebug($"Deleting file `{path}`");
 			File.Delete(path);
         }
 
@@ -222,21 +223,21 @@ namespace ISHDeploy.Data.Managers
 			}
 		}
 
-		/// <summary>
-		/// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
-		/// </summary>
-		/// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-		/// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
-		public XDocument Load(string filePath)
+        /// <summary>
+        /// Creates a new <see cref="XDocument" /> instance by using the specified file path.
+        /// </summary>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument" />.</param>
+        /// <returns>New instance of <see cref="XDocument" /> with loaded file content</returns>
+        public XDocument Load(string filePath)
         {
 			_logger.WriteDebug($"Loading XML document at `{filePath}`");
 			return XDocument.Load(filePath);
         }
 
         /// <summary>
-        /// Saves <see cref="T:System.Xml.Linq.XDocument"/> content to file
+        /// Saves <see cref="XDocument" /> content to file
         /// </summary>
-        /// <param name="filePath">The file where <see cref="T:System.Xml.Linq.XDocument"/> content will be stored.</param>
+        /// <param name="filePath">The file where <see cref="XDocument" /> content will be stored.</param>
         /// <param name="doc">The document to be stored</param>
         public void Save(string filePath, XDocument doc)
         {
@@ -271,6 +272,30 @@ namespace ISHDeploy.Data.Managers
 
 			_logger.WriteDebug($"License file for `{hostName}` is not found.");
 			return false;
+        }
+
+        /// <summary>
+        /// Creates a zip archive that contains the files and directories from the specified directory, uses the Optimal compression level, and optionally includes the base directory.
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="includeBaseDirectory">'True' to include the directory name from sourceDirectoryName at the root of the archive; 'False' to include only the contents of the directory. 'False' by default</param>
+        public void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false)
+        {
+            _logger.WriteDebug($"Directory '{sourceDirectoryPath}' will be packed");
+
+            if (FileExists(destinationArchiveFilePath))
+            {
+                _logger.WriteWarning($"Package file '{destinationArchiveFilePath}' is overwritten.");
+                Delete(destinationArchiveFilePath);
+            }
+
+            var destinationArchiveFolderPath = Path.GetDirectoryName(destinationArchiveFilePath);
+            EnsureDirectoryExists(destinationArchiveFolderPath);
+
+            ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
+
+            _logger.WriteDebug($"The output package is: '{destinationArchiveFilePath}'");
         }
     }
 }

@@ -46,33 +46,61 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
+    <None Include="Articles\FeatureToggle\Work with UI Features.md" />
+    <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Windows.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Username.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\Implementation.User.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\Integrating with ADFS.md" />
+    <None Include="Articles\IntegrationSTS\Integration\Integrating with Security Token Service.md" />
+    <None Include="Articles\IntegrationSTS\Integration\_nopublish\AllZoneClients.plantuml" />
+    <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.ADFS.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.Windows.ps1" />
+    <None Include="Articles\IntegrationSTS\Integration\_nopublish\UserZoneClients.plantuml" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\Implementing issuer certificate rollover.md" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20160101.Set-ISHIntegrationSTSCertificate.ps1" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20161215.Set-ISHIntegrationSTSCertificate.ps1" />
+    <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20170101.Remove-ISHIntegrationSTSCertificate.ps1" />
+    <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
+    <None Include="Export-Markdown-From-Usages.ps1" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
     <None Include="Readme.md" />
     <None Include="Index.md" />
-    <None Include="Module\toc.yml" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Resolve-Markdown.ps1" />
     <None Include="toc.yml" />
-    <None Include="Using\toc.yml" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Module\" />
+    <Folder Include="Using\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Articles\IntegrationSTS\Integration\All.Zone.Clients.png" />
+    <Content Include="Articles\IntegrationSTS\Integration\User.Zone.Clients.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(SolutionDir)ISHDeploy.PowerShell\Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)Using"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets')" />
+  <Import Project="..\packages\docfx.msbuild.1.8.4\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.8.4\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.1.6.1\build\docfx.msbuild.targets'))" />
+    <Error Condition="!Exists('..\packages\docfx.msbuild.1.8.4\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.1.8.4\build\docfx.msbuild.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

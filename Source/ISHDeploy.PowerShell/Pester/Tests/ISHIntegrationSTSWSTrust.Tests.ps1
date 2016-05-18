@@ -78,9 +78,12 @@ $scriptBlockGetHistory = {
 
 
 
-# Function reads target files and their content, searches for specified nodes in xm
-function readTargetXML() {
-    
+# Function reads target files and their content, searches for specified nodes in xml
+$scriptBlockReadTargetXML = {
+    param(
+        $xmlPath,
+        $testingDeployment
+    )
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $testingDeployment.OriginalParameters.projectsuffix)
@@ -95,24 +98,46 @@ function readTargetXML() {
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
     $infoShareWSWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix)
 
+    $result = @{}
 
     #get variables and nodes from files
-    $global:connectionConfigWSTrustBindingTypeNode = $connectionConfig.SelectNodes("connectionconfiguration/issuer/authenticationtype")[0]
-    $global:connectionConfigWSTrustEndpointUrlNode = $connectionConfig.SelectNodes("connectionconfiguration/issuer/url")[0]
+    $result["connectionConfigWSTrustBindingType"] = $connectionConfig.SelectNodes("connectionconfiguration/issuer/authenticationtype")[0].InnerText
+    $result["connectionConfigWSTrustEndpointUrl"] = $connectionConfig.SelectNodes("connectionconfiguration/issuer/url")[0].InnerText
+    $result["feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint"] = $feedSDLLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustEndpoint
+    $result["feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustBindingType"] = $feedSDLLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustBindingType
+    $result["translationOrganizerConfigWSTrustIssuerNodeWsTrustEndpoint"] = $translationOrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustEndpoint
+    $result["translationOrganizerConfigWSTrustIssuerNodeWsTrustBindingType"] = $translationOrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustBindingType
+    $result["synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint"] = $synchronizeToLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustEndpoint
+    $result["synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustBindingType"] = $synchronizeToLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0].wsTrustBindingType
+    $result["trisoftInfoShareClientConfigWSTrustEndpointUrl"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/uri")[0].InnerText
+    $result["trisoftInfoShareClientConfigWSTrustBindingType"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/bindingtype")[0].InnerText
+    $result["trisoftInfoShareClientConfigWSTrustActorUserName"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/username")[0].InnerText
+    $result["trisoftInfoShareClientConfigWSTrustActorPassword"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/password")[0].InnerText
+    $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
+    $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
+    
+    return $result
+}
+function readTargetXML() {
+    
+    #read all files that are touched with commandlet
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $testingDeployment
 
-    $global:feedSDLLiveContentConfigWSTrustIssuerNode = $feedSDLLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0]
-    
-    $global:translationOrganizerConfigWSTrustIssuerNode = $translationOrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0]
-    
-    $global:synchronizeToLiveContentConfigWSTrustIssuerNode = $synchronizeToLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer")[0]
-
-    $global:trisoftInfoShareClientConfigWSTrustEndpointUrlNode = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/uri")[0]
-    $global:trisoftInfoShareClientConfigWSTrustBindingTypeNode = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/bindingtype")[0]
-    $global:trisoftInfoShareClientConfigWSTrustActorUserNameNode = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/username")[0]
-    $global:trisoftInfoShareClientConfigWSTrustActorPasswordNode = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/password")[0]
-    
-    $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttpNode = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0]
-    $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttpsNode = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0]
+    #get variables and nodes from files
+    $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]
+    $global:connectionConfigWSTrustEndpointUrl = $result["connectionConfigWSTrustEndpointUrl"]
+    $global:feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint = $result["feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint"]
+    $global:feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustBindingType = $result["feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustBindingType"]
+    $global:translationOrganizerConfigWSTrustIssuerNodeWsTrustEndpoint = $result["translationOrganizerConfigWSTrustIssuerNodeWsTrustEndpoint"]
+    $global:translationOrganizerConfigWSTrustIssuerNodeWsTrustBindingType = $result["translationOrganizerConfigWSTrustIssuerNodeWsTrustBindingType"]
+    $global:synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint = $result["synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint"]
+    $global:synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustBindingType = $result["synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustBindingType"]
+    $global:trisoftInfoShareClientConfigWSTrustEndpointUrl = $result["trisoftInfoShareClientConfigWSTrustEndpointUrl"]
+    $global:trisoftInfoShareClientConfigWSTrustBindingType = $result["trisoftInfoShareClientConfigWSTrustBindingType"]
+    $global:trisoftInfoShareClientConfigWSTrustActorUserName = $result["trisoftInfoShareClientConfigWSTrustActorUserName"]
+    $global:trisoftInfoShareClientConfigWSTrustActorPassword = $result["trisoftInfoShareClientConfigWSTrustActorPassword"]
+    $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttp = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"]
+    $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttps = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"]
 }
 
 
@@ -135,29 +160,29 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $connectionConfigWSTrustBindingTypeNode.InnerText | Should be "UserNameMixed"
-        $connectionConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint"
+        $connectionConfigWSTrustBindingType | Should be "UserNameMixed"
+        $connectionConfigWSTrustEndpointUrl | Should be "testEndpoint"
 
-        $feedSDLLiveContentConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $feedSDLLiveContentConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
     
-        $translationOrganizerConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $translationOrganizerConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $translationOrganizerConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $translationOrganizerConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
     
-        $synchronizeToLiveContentConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $synchronizeToLiveContentConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
 
-        $trisoftInfoShareClientConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint"
-        $trisoftInfoShareClientConfigWSTrustBindingTypeNode.InnerText | Should be "UserNameMixed"
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword"
+        $trisoftInfoShareClientConfigWSTrustEndpointUrl | Should be "testEndpoint"
+        $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
     
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpNode.address | Should be "testMexEndpoint"
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpsNode.address | Should be "testMexEndpoint"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint"
     }
 
     It "Set ISHIntegrationSTSWSTrust with mandatory parameters"{
@@ -166,15 +191,15 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $connectionConfigWSTrustBindingTypeNode.InnerText | Should be "UserNameMixed"
-        $connectionConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint"
+        $connectionConfigWSTrustBindingType | Should be "UserNameMixed"
+        $connectionConfigWSTrustEndpointUrl | Should be "testEndpoint"
 
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpNode.address | Should be "testMexEndpoint"
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpsNode.address | Should be "testMexEndpoint"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint"
     }
 
     It "Set ISHIntegrationSTSWSTrust with wrong XML"{
@@ -214,15 +239,15 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params} | Should not Throw
         $params2 = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"}
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params2} | Should not Throw
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $connectionConfigWSTrustBindingTypeNode.InnerText | Should be "WindowsMixed"
-        $connectionConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint2"
+        $connectionConfigWSTrustBindingType | Should be "WindowsMixed"
+        $connectionConfigWSTrustEndpointUrl | Should be "testEndpoint2"
     
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpNode.address | Should be "testMexEndpoint2"
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpsNode.address | Should be "testMexEndpoint2"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint2"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint2"
     }
 
     It "Set ISHIntegrationSTSWSTrust without -IncludeInternalClients parameter"{
@@ -234,29 +259,29 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = "testActorUsername2"; ActorPassword = "testActorPassword2"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $false
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $connectionConfigWSTrustBindingTypeNode.InnerText | Should be "WindowsMixed"
-        $connectionConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint2"
+        $connectionConfigWSTrustBindingType | Should be "WindowsMixed"
+        $connectionConfigWSTrustEndpointUrl | Should be "testEndpoint2"
 
-        $feedSDLLiveContentConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $feedSDLLiveContentConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $feedSDLLiveContentConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
     
-        $translationOrganizerConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $translationOrganizerConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $translationOrganizerConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $translationOrganizerConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
     
-        $synchronizeToLiveContentConfigWSTrustIssuerNode.wsTrustEndpoint | Should be "testEndpoint"
-        $synchronizeToLiveContentConfigWSTrustIssuerNode.wsTrustBindingType | Should be "UserNameMixed"
+        $synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustEndpoint | Should be "testEndpoint"
+        $synchronizeToLiveContentConfigWSTrustIssuerNodeWsTrustBindingType | Should be "UserNameMixed"
 
-        $trisoftInfoShareClientConfigWSTrustEndpointUrlNode.InnerText | Should be "testEndpoint"
-        $trisoftInfoShareClientConfigWSTrustBindingTypeNode.InnerText | Should be "UserNameMixed"
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword"
+        $trisoftInfoShareClientConfigWSTrustEndpointUrl | Should be "testEndpoint"
+        $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
     
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpNode.address | Should be "testMexEndpoint2"
-        $infoShareWSWebConfigWSTrustMexEndpointUrlHttpsNode.address | Should be "testMexEndpoint2"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint2"
+        $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint2"
     }
 
     It "Set ISHIntegrationSTSWSTrust change only ActorUsername"{
@@ -268,12 +293,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = "testActorUsername2"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername2"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
     }
 
     It "Set ISHIntegrationSTSWSTrust change only ActorPassword"{
@@ -285,12 +310,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorPassword = "testActorPassword2"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword2"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorUsername as empty string"{
@@ -302,12 +327,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = ""; ActorPassword = "testActorPassword2"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be ""
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword2"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as empty string"{
@@ -319,12 +344,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = "testActorUsername2"; ActorPassword = ""}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername2"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be ""
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorUsername as NULL"{
@@ -336,12 +361,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = $null; ActorPassword = "testActorPassword2"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be ""
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be "testActorPassword2"
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as NULL"{
@@ -353,12 +378,12 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $params = @{Endpoint = "testEndpoint2"; MexEndpoint = "testMexEndpoint2"; BindingType  = "WindowsMixed"; ActorUsername = "testActorUsername2"; ActorPassword = $null}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML
 
-        $trisoftInfoShareClientConfigWSTrustActorUserNameNode.InnerText | Should be "testActorUsername2"
-        $trisoftInfoShareClientConfigWSTrustActorPasswordNode.InnerText | Should be ""
+        $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
+        $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust writes proper history"{

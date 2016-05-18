@@ -85,8 +85,6 @@ $scriptBlockUndoDeployment = {
 #endregion
 
 
-
-# Function reads target files and their content, searches for specified nodes in xml
 # Function reads target files and their content, searches for specified nodes in xml
 $scriptBlockReadTargetXML = {
     param(

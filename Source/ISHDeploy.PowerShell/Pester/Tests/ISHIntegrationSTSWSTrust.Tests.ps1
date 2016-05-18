@@ -143,13 +143,13 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
-        if(Test-Path "$filepath\_Web.config")
+        if(RemotePathCheck "$filepath\_Web.config")
         {
-            if (Test-Path "$filepath\Web.config")
+            if (RemotePathCheck "$filepath\Web.config")
             {
-                Remove-Item "$filepath\Web.config"
+                RemoteRemoveItem "$filepath\Web.config"
             }
-            Rename-Item "$filepath\_Web.config" "Web.config"
+            RemoteRenameItem "$filepath\_Web.config" "Web.config"
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }

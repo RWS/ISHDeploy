@@ -5,7 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Text.RegularExpressions;
-using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Cmdlets
@@ -13,17 +13,12 @@ namespace ISHDeploy.Cmdlets
     /// <summary>
     /// Base cmdlet class that writes cmdlet usage into history info
     /// </summary>
-    public abstract class BaseHistoryEntryCmdlet : BaseCmdlet
+    public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Returns current date in format yyyyMMdd
         /// </summary>
         private static string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
-
-        /// <summary>
-        /// Deployment Name
-        /// </summary>
-        protected abstract ISHPaths IshPaths { get; }
         
         /// <summary>
         /// Overrides ProcessRecord from Cmdlet class
@@ -40,11 +35,6 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         private void AddHistoryEntry()
         {
-            if (IshPaths == null)
-            {
-                throw new ArgumentException($"{nameof(IshPaths)} in {nameof(BaseHistoryEntryCmdlet)} cannot be null.");
-            }
-
             // don't log if cmdlet was executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
@@ -55,21 +45,21 @@ namespace ISHDeploy.Cmdlets
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var historyEntry = new StringBuilder();
             
-            if (!fileManager.FileExists(IshPaths.HistoryFilePath)) // create history file with initial record
+            if (!fileManager.FileExists(OperationPaths.HistoryFilePath)) // create history file with initial record
 			{
 				Logger.WriteVerbose($"Creating history file.");
 
 				historyEntry.AppendLine($"# {CurrentDate}");
-                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{IshPaths.DeploymentName}'");
+                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{ISHDeployment.Name}'");
             }
-            else if (IsNewDate(fileManager.ReadAllText(IshPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
+            else if (IsNewDate(fileManager.ReadAllText(OperationPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
             {
                 historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDate}");
             }
             
             historyEntry.AppendLine(InvocationLine);
 
-            fileManager.Append(IshPaths.HistoryFilePath, historyEntry.ToString());
+            fileManager.Append(OperationPaths.HistoryFilePath, historyEntry.ToString());
         }
 
         /// <summary>

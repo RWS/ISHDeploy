@@ -26,6 +26,8 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
             ObjectFactory.SetInstance<ITextConfigManager>(new TextConfigManager(Logger));
             ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
+            ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
+            ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
         }
 
 		/// <summary>

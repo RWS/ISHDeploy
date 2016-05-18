@@ -1,8 +1,5 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHDeployment;
-using ISHDeploy.Extensions;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -19,29 +16,14 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Clear, "ISHDeploymentHistory")]
-    public class ClearISHDeploymentHistoryCmdlet : BaseCmdlet
+    public class ClearISHDeploymentHistoryCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-        
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var ishPaths = new ISHPaths(ISHDeployment);
-
-			// Remove history file
-			var historyFilePath = ishPaths.HistoryFilePath;
-
-			// Clean backup directory
-			var backupFolderPath = ISHDeployment.GetDeploymentBackupFolder();
-
-            var operation = new ClearISHDeploymentHistoryOperation(Logger, historyFilePath, backupFolderPath);
+            var operation = new ClearISHDeploymentHistoryOperation(Logger);
             operation.Run();
 		}
 	}

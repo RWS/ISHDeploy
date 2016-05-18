@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Enables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHExternalPreviewOperation : IOperation
+    public class EnableISHExternalPreviewOperation : OperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,28 +19,27 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// Initializes a new instance of the <see cref="EnableISHExternalPreviewOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="paths">Reference for all files paths.</param>
         /// <param name="externalId">The external user identifier.</param>
-        public EnableISHExternalPreviewOperation(ILogger logger, ISHPaths paths, string externalId)
+        public EnableISHExternalPreviewOperation(ILogger logger, string externalId)
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
             
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    paths.AuthorAspWebConfig,
+                    InfoShareAuthorWebConfig.Path,
                     new [] {
-                        CommentPatterns.TrisoftExternalPreviewModuleSearchPattern,
-                        CommentPatterns.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
-                        CommentPatterns.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
+                        InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleSearchPattern,
+                        InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
+                        InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
                     }));
 
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    paths.AuthorAspWebConfig, 
-                    CommentPatterns.TrisoftInfoshareWebExternalXPath, 
-                    CommentPatterns.TrisoftInfoshareWebExternalAttributeName, 
+                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));
         }
 

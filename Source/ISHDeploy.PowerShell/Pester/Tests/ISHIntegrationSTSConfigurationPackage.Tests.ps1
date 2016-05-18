@@ -31,19 +31,27 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
-$tempFolder = $PSScriptRoot
 #endregion
 
 #region Script Blocks 
 $scriptBlockUndoDeployment = {
     param (
         [Parameter(Mandatory=$false)]
-        $ishDeployName 
+        $ishDeployName,
+        $packagePath
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
+
+    if (!(Test-Path "$packagePath\tmp"))
+    {
+        New-Item "$packagePath\tmp" -ItemType directory
+    }
+
+    Get-ChildItem -Path "$packagePath\tmp" -Include *.* -File -Recurse | foreach { $_.Delete()}
+
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
@@ -116,101 +124,93 @@ function Unzip
 
 Describe "Testing ISHIntegrationSTSConfigurationPackage"{
     BeforeEach {
-        New-Item "$tempFolder\tmp" -ItemType directory
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName, $packagePath
     }
     
 
     It "Save package"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
-        $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
     }
 
     It "Save same package"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
     }
 
     It "Save package ADFS"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
-        Test-Path "$tempFolder\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
-        $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
+        $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
-        $scriptFile = Get-Content "$tempFolder\tmp\Invoke-ADFSIntegrationISH.ps1"
+        $scriptFile = Get-Content "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1"
         $scriptFile -contains '$projectsuffix="' + $testingDeployment.OriginalParameters.projectsuffix +'"' | Should be $true
         $scriptFile -contains '$osuser="' + $testingDeployment.OriginalParameters.osuser +'"' | Should be $true
     }
 
     It "Save same package with adfs switch"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
     }
 
     It "Save package has certificate in md file"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
-        $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
-        $certFile = Get-Content "$tempFolder\tmp\ishws.cer"
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
+        $certFile = Get-Content "$packagePath\tmp\ishws.cer"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
         $Mdfile.ToString() -contains $certFile.ToString() | Should be $true
     }
 
     It "Save package with ADFS switch has certificate in md file"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        Test-Path $packagePath | Should be "True"
+        RemotehPathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
-        Unzip "$packagePath\$packageFileName" "$tempFolder\tmp"
-        Start-Sleep -Milliseconds 7000
-        Test-Path "$tempFolder\tmp\ishws.cer" | Should be $true
-        Test-Path "$tempFolder\tmp\CM Security Token Service Requirements.md" | Should be $true
-        $Mdfile = Get-Content "$tempFolder\tmp\CM Security Token Service Requirements.md"
-        $certFile = Get-Content "$tempFolder\tmp\ishws.cer"
+        Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
+        
+        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
+        $certFile = Get-Content "$packagePath\tmp\ishws.cer"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
         $Mdfile.ToString() -contains $certFile.ToString() | Should be $true
     }
 
     It "Save package writes proper history"{
-        $tempFolder = $PSScriptRoot
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, "package.zip"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, "package_adfs.zip", $true
@@ -219,13 +219,4 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 Save-ISHIntegrationSTSConfigurationPackage -FileName "package_adfs.zip" -ISHDeployment $deployment -ADFS'
        
     }
-
-
-
-    AfterEach {
-        if(Test-Path ("$tempFolder\tmp")){
-            Remove-Item "$tempFolder\tmp" -Recurse -Force 
-        }
-    }
-
 }

@@ -18,6 +18,23 @@ Function Invoke-CommandRemoteOrLocal {
         Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList -ErrorAction Stop 
     }
 }
+#check path remotely
+$scriptBlockTestPath = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path 
+    )
+    Test-Path $path
+}
+Function RemotehPathCheck {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path
+    ) 
+    $isExists = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestPath -Session $session -ArgumentList $path
+    
+    return $isExists
+}
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time
 function RetryCommand {

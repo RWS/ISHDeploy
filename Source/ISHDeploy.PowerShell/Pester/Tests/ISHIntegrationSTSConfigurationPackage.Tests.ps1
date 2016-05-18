@@ -130,12 +130,12 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 
     It "Save package"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
@@ -143,24 +143,24 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 
     It "Save same package"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
     }
 
     It "Save package ADFS"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API/ConditionManagement.svc" | Should be $true
@@ -171,23 +171,23 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 
     It "Save same package with adfs switch"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
     }
 
     It "Save package has certificate in md file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $certFile = Get-Content "$packagePath\tmp\ishws.cer"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true
@@ -197,12 +197,12 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 
     It "Save package with ADFS switch has certificate in md file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
-        RemotehPathCheck $packagePath | Should be "True"
+        RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHPackage -Session $session -ArgumentList $testingDeploymentName, $packageFileName, $true
         Unzip "$packagePath\$packageFileName" "$packagePath\tmp"
         
-        RemotehPathCheck "$packagePath\tmp\ishws.cer" | Should be $true
-        RemotehPathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
+        RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
+        RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $certFile = Get-Content "$packagePath\tmp\ishws.cer"
         $Mdfile -contains "https://$computerName.global.sdl.corp/ISHWSSQL2014/Wcf/API25/Application.svc" | Should be $true

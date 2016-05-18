@@ -26,7 +26,7 @@ $scriptBlockTestPath = {
     )
     Test-Path $path
 }
-Function RemotehPathCheck {
+Function RemotePathCheck {
     param (
         [Parameter(Mandatory=$true)]
         $path
@@ -64,21 +64,10 @@ Function Log($Message)
 }
 
 
-function retryReadXML{
-    param($numberOfRetries,$xmlFile)
-    for($i=0; $i -lt $numberOfRetries; $i++) {
-       try{
-          [xml]$actualResult = Get-Content $xmlFile -ErrorAction Stop
-       } 
-       catch{
-          $ErrorMessage = $_.Exception.Message
-       }
-       if(!$ErrorMessage){
-           $i = $numberOfRetries 
-       }
-       else{
-           Start-Sleep -Milliseconds 1000
-       }
-    }
+function RemoteReadXML{
+    param($xmlFile)
+
+    [xml]$actualResult = Invoke-CommandRemoteOrLocal -ScriptBlock {param ($xmlFile) Get-Content $xmlFile} -Session $session -ArgumentList $xmlFile
+
     return $actualResult
 }

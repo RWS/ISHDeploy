@@ -48,13 +48,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new FileCleanDirectoryAction(logger, deployment.WebNameSTSAppData));
 
             // Recycling Application pool for WS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.WSAppPoolName));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.WSAppPoolName, true));
 
             // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.STSAppPoolName));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.STSAppPoolName, true));
 
             // Recycling Application pool for CM
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.CMAppPoolName));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.CMAppPoolName, true));
         }
 
         /// <summary>

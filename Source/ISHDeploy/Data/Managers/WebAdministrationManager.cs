@@ -57,14 +57,15 @@ namespace ISHDeploy.Data.Managers
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is starting.");
+                        _logger.WriteWarning($"Application pool `{applicationPoolName}` is stopped. Starting it.");
 
                         appPool.Start();
                     }
                 }
                 else
                 {
-                    _logger.WriteWarning($"Application pool `{applicationPoolName}` does not exists.");
+                    // Means system is broken.
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
                 }
             }
         }

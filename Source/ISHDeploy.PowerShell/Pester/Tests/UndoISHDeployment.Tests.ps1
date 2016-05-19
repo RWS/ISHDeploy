@@ -115,6 +115,16 @@ $scriptBlockBackupFilesExist = {
 	return $exist   
 }
 
+$scriptBlockGetCountOfItemsInFolder = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path
+    )
+	$items = Get-ChildItem -Path $path
+
+	return $items.Count   
+}
+
 function readTargetXML(){
     #Content Editor XML
     [xml]$XmlFolderButtonbar = Get-Content "$CExmlPath\FolderButtonbar.xml" -ErrorAction SilentlyContinue
@@ -193,6 +203,9 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
         RetryCommand -numberOfRetries 20 -command {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup} -expectedResult $false | Should Be "False"
         readTargetXML | Should Be "VanilaState"
+        $path =  Join-Path $testingDeployment.WebPath ("Web{0}\InfoShareSTS\App_Data\" -f $testingDeployment.OriginalParameters.projectsuffix )
+        $countOfItemsInDataBaseFolder = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCountOfItemsInFolder -Session $session -ArgumentList $path 
+        $countOfItemsInDataBaseFolder | Should Be 0
     }
 
     It "Undo-IshHistory works when there is no backup"{

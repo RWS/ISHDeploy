@@ -44,8 +44,7 @@ $scriptBlock = {
 		Write-Host "Repository is not registered"
 		Write-Host "Registering repository $repositoryName"
 
-		$sourceLocation = $repositoryPath + "nuget/"
-		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation  $repositoryPath -InstallationPolicy Trusted
+		Register-PSRepository -Name $repositoryName -SourceLocation $repositoryPath -PublishLocation  $repositoryPath -InstallationPolicy Trusted
 
 		$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
         if ($repository.Count -eq 0) {

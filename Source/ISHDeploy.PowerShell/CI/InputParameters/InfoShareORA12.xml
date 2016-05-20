@@ -79,7 +79,7 @@
     <validate />
   </param>
   <param name="baseurl">
-    <currentvalue>https://WIN-BCMCO6U3OI4.global.sdl.corp</currentvalue>
+    <currentvalue>https://uaulab13001.global.sdl.corp</currentvalue>
     <defaultvalue>https://MECDVTRI16BLD.global.sdl.corp</defaultvalue>
     <description>Indicates the first part of the URL your InfoShare users will need to browse to use it. Most of the time a machine like http://TRILT11/ will do, however some situations require specific naming. A full dns name indicating the use of SSL might be required, like https://TRIDT06.tribe.trisoft.be).</description>
     <validate />
@@ -133,7 +133,7 @@
     <validate />
   </param>
   <param name="servicecertificatethumbprint">
-    <currentvalue>ce6d03f0f1eb8d581078305c749f8bada486e8fe</currentvalue>
+    <currentvalue>5f2c39d83c49febd23cae2deb0283e9560d4e086</currentvalue>
     <defaultvalue> </defaultvalue>
     <description>Specify the thumbprint of an already installed certificate (e.g. A43489159A520F0D93D032CCAF37E7FE20A8B419) for unique service identification. You can repurpose your SSL certificate. Note that all your linked web/app servers in a farm should offer the same trusted certificate.</description>
     <validate>certificateinstalled</validate>
@@ -145,7 +145,7 @@
     <validate>certificatevalidationmode</validate>
   </param>
   <param name="issuercertificatethumbprint">
-    <currentvalue>ce6d03f0f1eb8d581078305c749f8bada486e8fe</currentvalue>
+    <currentvalue>5f2c39d83c49febd23cae2deb0283e9560d4e086</currentvalue>
     <defaultvalue> </defaultvalue>
     <description>Specify thumbprint of the certificate of the Secure Token Service (e.g. A43489159A520F0D93D032CCAF37E7FE20A8B419) for unique service identification. Notice that it has to be uppercased, no-whitespace and should never contain unicode characters. Optionally for the built-in STS you can repurpose the thumbprint of your SSL certificate.</description>
     <validate />
@@ -175,19 +175,19 @@
     <validate>askpasswordtwiceifempty</validate>
   </param>
   <param name="issuerwstrustendpointurl">
-    <currentvalue>https://WIN-BCMCO6U3OI4.global.sdl.corp/ISHSTSORA12/issue/wstrust/mixed/username</currentvalue>
+    <currentvalue>https://uaulab13001.global.sdl.corp/ISHSTSORA12/issue/wstrust/mixed/username</currentvalue>
     <defaultvalue>https://MECDVTRI16BLD.global.sdl.corp/ISHSTS/issue/wstrust/mixed/username</defaultvalue>
     <description>The WS-Trust endpoint for the Security Token Service that provides the functionality to issue tokens as specified by the issuerwstrustbindingtype. When using the built-in STS, use the value of BASEURL/INFOSHARESTSWEBAPPNAME/issue/wstrust/mixed/username when issuerwstrustbindingtype is UserNameMixed resulting in for example https://example.com/ISHSTS/issue/wstrust/mixed/username or when issuerwstrustbindingtype is WindowsMixed use  the value of BASEURL/INFOSHARESTSWEBAPPNAME/issue/wstrust/mixed/windows.</description>
     <validate />
   </param>
   <param name="issuerwstrustmexurl">
-    <currentvalue>https://WIN-BCMCO6U3OI4.global.sdl.corp/ISHSTSORA12/issue/wstrust/mex</currentvalue>
+    <currentvalue>https://uaulab13001.global.sdl.corp/ISHSTSORA12/issue/wstrust/mex</currentvalue>
     <defaultvalue>https://MECDVTRI16BLD.global.sdl.corp/ISHSTS/issue/wstrust/mex</defaultvalue>
     <description>The WS-Trust metadata address for the Security Token Service. Optionally when using the built-in STS you should use the value of BASEURL/INFOSHARESTSWEBAPPNAME/issue/wstrust/mex resulting in for example https://example.com/ISHSTS/issue/wstrust/mex</description>
     <validate />
   </param>
   <param name="issuerwsfederationendpointurl">
-    <currentvalue>https://WIN-BCMCO6U3OI4.global.sdl.corp/ISHSTSORA12/issue/wsfed</currentvalue>
+    <currentvalue>https://uaulab13001.global.sdl.corp/ISHSTSORA12/issue/wsfed</currentvalue>
     <defaultvalue>https://MECDVTRI16BLD.global.sdl.corp/ISHSTS/issue/wsfed</defaultvalue>
     <description>The WS-Federation endpoint for the Security Token Service that provides the functionality to issue tokens for browsers (Passive Profile). Optionally when using the built-in STS you should use the value of BASEURL/INFOSHARESTSWEBAPPNAME/issue/wsfed resulting in for example https://example.com/ISHSTS/issue/wsfed</description>
     <validate />

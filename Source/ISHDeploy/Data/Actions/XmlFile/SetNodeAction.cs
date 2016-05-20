@@ -21,17 +21,24 @@ namespace ISHDeploy.Data.Actions.XmlFile
 		private readonly IISHXmlNode _ishXmlNode;
 
 		/// <summary>
+		/// Identifies if existing node should be replaced.
+		/// </summary>
+		private readonly bool _replaceIfExists;
+
+		/// <summary>
 		/// Implements Set node action.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
 		/// <param name="filePath">The file path.</param>
 		/// <param name="xpath">The xpath to the node.</param>
 		/// <param name="ishXmlNode">The ish XML node.</param>
-		public SetNodeAction(ILogger logger, ISHFilePath filePath, string xpath, IISHXmlNode ishXmlNode)
+		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+		public SetNodeAction(ILogger logger, ISHFilePath filePath, string xpath, IISHXmlNode ishXmlNode, bool replaceIfExists = true)
             : base(logger, filePath)
         {
 			_xpath = xpath;
 			_ishXmlNode = ishXmlNode;
+			_replaceIfExists = replaceIfExists;
 		}
 
 		/// <summary>
@@ -39,7 +46,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
 		/// </summary>
 		public override void Execute()
 		{
-			XmlConfigManager.SetNode(FilePath, _xpath, _ishXmlNode);
+			XmlConfigManager.SetNode(FilePath, _xpath, _ishXmlNode, _replaceIfExists);
 		}
 	}
 }

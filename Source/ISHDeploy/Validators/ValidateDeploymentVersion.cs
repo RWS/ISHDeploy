@@ -15,7 +15,7 @@ namespace ISHDeploy.Validators
         /// <summary>
         /// The very first release version of the ISHDeploy module.
         /// </summary>
-        public static readonly Version ModuleInitVersion = new Version("12.0.0");
+        public static readonly Version ModuleInitVersion = new Version("13.0.0");
 
         /// <summary>
         /// Performs the validation.
@@ -63,7 +63,7 @@ namespace ISHDeploy.Validators
 					errorMessage = $"Module version `{moduleVersion}` does not correspond to deployment version `{deploymentVersion}`.";
 
 					if (cmVersion.CompareTo(ModuleInitVersion) < 0)
-					{
+				{
 						errorMessage += "\r\nPlease install newer Content Manager version.";
 					}
 					else

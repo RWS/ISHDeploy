@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ISHDeploy.Business;
 using ISHDeploy.Models;
 
 namespace ISHDeploy.Extensions
@@ -28,17 +27,7 @@ namespace ISHDeploy.Extensions
 
 			return ishDeploymentFolder;
 		}
-
-        /// <summary>
-        /// Retrieves path to packages folder for deployment
-        /// </summary>
-        /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
-        /// <returns>Path to packages folder</returns>
-        public static string GetDeploymenPackagesFolderPath(this ISHDeployment deployment)
-		{
-			return Path.Combine(deployment.GetDeploymentAppDataFolder(), "Packages");
-        }
-
+      
         /// <summary>
         /// Retrieves back up folder location for deployment
         /// </summary>
@@ -53,9 +42,9 @@ namespace ISHDeploy.Extensions
         /// Retrieves back up folder location for deployment depending from deployment type
         /// </summary>
         /// <param name="deployment">Deployment object <see cref="T:ISHDeploy.Models.ISHDeployment"/>.</param>
-        /// <param name="deploymentType">Deployment type <see cref="T:ISHDeploy.Business.ISHPaths.IshDeploymentType"/>.</param>
+        /// <param name="deploymentType">Deployment type <see cref="T:ISHDeploy.Business.ISHFilePath.IshDeploymentType"/>.</param>
         /// <returns>Path to back up folder depending from deployment type</returns>
-        public static string GetDeploymentTypeBackupFolder(this ISHDeployment deployment, ISHPaths.IshDeploymentType deploymentType)
+        public static string GetDeploymentTypeBackupFolder(this ISHDeployment deployment, ISHFilePath.IshDeploymentType deploymentType)
 		{
 			return Path.Combine(deployment.GetDeploymentBackupFolder(), deploymentType.ToString());
 		}

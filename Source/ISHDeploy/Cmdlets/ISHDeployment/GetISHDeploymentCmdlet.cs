@@ -55,7 +55,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var result = operation.Run().ToArray();
             
-            if (Name != null && result.Count() == 1)
+            if (Name != null && result.Length == 1)
             {
                 WriteObject(result[0]);
             }

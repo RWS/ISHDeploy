@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
-using ISHDeploy.Business;
 using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
@@ -30,18 +28,6 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
     public class MoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
-        /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-
-        /// <summary>
-        /// Cashed value for <see cref="IshPaths"/> property
-        /// </summary>
-        private ISHPaths _ishPaths;
-
 		/// <summary>
 		/// <para type="description">Label of menu item.</para>
 		/// </summary>
@@ -70,11 +56,6 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		[ValidateNotNullOrEmpty]
 		public string After { get; set; }
 
-		/// <summary>
-		/// Returns instance of the <see cref="ISHPaths"/>
-		/// </summary>
-		protected override ISHPaths IshPaths => _ishPaths ?? (_ishPaths = new ISHPaths(ISHDeployment));
-
         /// <summary>
         /// Executes cmdlet
         /// </summary>
@@ -85,13 +66,13 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 			switch (ParameterSetName)
 	        {
 				case "Last":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
 					break;
 				case "First":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
 					break;
 				case "After":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, IshPaths, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
 					break;
 				default:
 					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorTabCmdlet)} should be defined.");

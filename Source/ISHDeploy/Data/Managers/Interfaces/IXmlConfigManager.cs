@@ -22,13 +22,20 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="xpath">XPath to searched node</param>
 		void RemoveSingleNode(string filePath, string xpath);
 
-		/// <summary>
-		/// Removes node from xml file that can be found by <paramref name="xpath"/>
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="xpath">XPath to searched node</param>
-		/// <param name="insertBeforeXpath">XPath to searched node</param>
-		void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath = null);
+        /// <summary>
+        /// Removes nodes in xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched nodes</param>
+        void RemoveNodes(string filePath, string xpath);
+
+        /// <summary>
+        /// Removes node from xml file that can be found by <paramref name="xpath"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath to searched node</param>
+        /// <param name="insertBeforeXpath">XPath to searched node</param>
+        void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath = null);
 
 		/// <summary>
 		/// Removes node from xml file that can be found by <paramref name="xpath"/>
@@ -70,13 +77,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false);
         
         /// <summary>
-        /// Set attribute value
+		/// Set attribute value by attribute xPath
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
-        /// <param name="xpath">XPath that is searched</param>
-        /// <param name="attributeName">Name of the attribute that will be modified</param>
+		/// <param name="attributeXpath">XPath the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
-        void SetAttributeValue(string filePath, string xpath, string attributeName, string value);
+		void SetAttributeValue(string filePath, string attributeXpath, string value);
 
 		/// <summary>
 		/// Set attribute value
@@ -84,7 +90,8 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath that is searched</param>
 		/// <param name="value">Node fron IshConfiguration.</param>
-		void SetNode(string filePath, string xpath, IISHXmlNode value);
+		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+		void SetNode(string filePath, string xpath, IISHXmlNode value, bool replaceIfExists = true);
 
         /// <summary>
         /// Inserts a new node before specified one.
@@ -93,5 +100,21 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
         /// <param name="xmlString">The new node as a XML string.</param>
         void InsertBeforeNode(string filePath, string xpath, string xmlString);
+
+        /// <summary>
+        /// Set element value.
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified.</param>
+        /// <param name="xpath">XPath of searched element.</param>
+        /// <param name="value">The new value of element.</param>
+        void SetElementValue(string filePath, string xpath, string value);
+
+        /// <summary>
+        /// Gets the value from element found by xpath.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the element.</param>
+        /// <returns>The element value.</returns>
+        string GetValue(string filePath, string xpath);
     }
 }

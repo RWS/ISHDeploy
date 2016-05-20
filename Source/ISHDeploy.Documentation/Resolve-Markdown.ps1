@@ -10,12 +10,6 @@
 $DebugPreference="Continue"
 $VerbosePreference="Continue"
 
-#$SourcePath="C:\Stash\infoshare-deployment\Source\ISHDeploy.PowerShell\Using"
-#$ExportPath="C:\Stash\infoshare-deployment\Source\ISHDeploy.Documentation\obj\doc\using"
-
-#$SourcePath="C:\Stash\infoshare-deployment\Source\ISHDeploy.PowerShell\Articles"
-#$ExportPath="C:\Stash\infoshare-deployment\Source\ISHDeploy.Documentation\obj\doc\articles"
-
 Write-Debug "SourcePath=$SourcePath"
 Write-Debug "ExportPath=$ExportPath"
 

@@ -3,13 +3,13 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ISHDeploy.Business;
+using ISHDeploy.Business.Operations;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models;
+using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -507,8 +507,7 @@ namespace ISHDeploy.Tests.Data.Managers
         [TestCategory("Data handling")]
         public void SetAttributeValue()
         {
-            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
-            string testAttributeName = "externalId";
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity/@externalId";
             string testValue = "testValue";
 
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -522,7 +521,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.When(x => x.Save(_filePath, doc)).Do(
                         x =>
                         {
-                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}/@{testAttributeName}");
+                            IEnumerable<object> attributes = (IEnumerable<object>)doc.XPathEvaluate($"{testXPath}");
                             foreach (XAttribute attribute in attributes)
                             {
                                 Assert.AreEqual(attribute.Value, testValue, "Setting does NOT work");
@@ -530,16 +529,127 @@ namespace ISHDeploy.Tests.Data.Managers
                         }
                     );
 
-            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testAttributeName, testValue);
+            _xmlConfigManager.SetAttributeValue(_filePath, testXPath, testValue);
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
         }
 
-		#endregion
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void SetElementValue()
+        {
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
+            string testValue = "testValue";
 
-		#region Nodes Manipulation
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<configuration>" +
+                                        "<trisoft.infoshare.web.externalpreviewmodule>" +
+                                            "<identity>THE_FISHEXTERNALID_TO_USE</identity>" +
+                                        "</trisoft.infoshare.web.externalpreviewmodule>" +
+                                    "</configuration>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.When(x => x.Save(_filePath, doc)).Do(
+                        x =>
+                        {
+                            var element = doc.XPathSelectElement(testXPath);
+                            Assert.AreEqual(element.Value, testValue, "Setting does NOT work");
+                        }
+                    );
+
+            _xmlConfigManager.SetElementValue(_filePath, testXPath, testValue);
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void SetElementValue_does_not_contain_element()
+        {
+            string testXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity2";
+            string testValue = "testValue";
+
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                                    "<configuration>" +
+                                        "<trisoft.infoshare.web.externalpreviewmodule>" +
+                                            "<identity>THE_FISHEXTERNALID_TO_USE</identity>" +
+                                        "</trisoft.infoshare.web.externalpreviewmodule>" +
+                                    "</configuration>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            _xmlConfigManager.SetElementValue(_filePath, testXPath, testValue);
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is($"{_filePath} does not contain element '{testXPath}'."));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_attribute_value_by_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            var attributeValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/@nodeAttribute");
+
+            // Assert
+            Assert.AreEqual(attributeValue, "AttributeValue1");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void GetValue_Get_node_value_by_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            var elementValue = _xmlConfigManager.GetValue(_filePath, "/node/childNode/someNode");
+
+            // Assert
+            Assert.AreEqual(elementValue, "SomeNodeValue");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(WrongXPathException))]
+        public void GetValue_Invalid_xpath()
+        {
+            // Arrange
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+                        "<node>" +
+                            "<childNode nodeAttribute='AttributeValue1'>" +
+                                "<someNode>SomeNodeValue</someNode>" +
+                            "</childNode>" +
+                        "</node>");
+
+            FileManager.Load(_filePath).Returns(doc);
+
+            // Act
+            _xmlConfigManager.GetValue(_filePath, "/node/wrongNodeName");
+
+            // Assert
+            Assert.Fail("This method should throw exception");
+        }
+
+        #endregion
+
+        #region Nodes Manipulation
 
 
-		private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
+        private readonly string _nodesManipulationTestXml = $@"<?xml version='1.0' encoding='UTF-8'?>
 										<menubar>
 										  <!-- Synchronize To LiveContent ============================================================= -->
 										  <menuitem label='Synch To Collaborative Review' action='EventMonitor/Main/Overview?' icon='~/UIFramework/synchronization.32.color.png'>
@@ -592,7 +702,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -650,7 +760,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{CommentPatterns.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -698,8 +808,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath, 
-				string.Format(CommentPatterns.EventMonitorTab, testLabel), 
-				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel), 
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -730,7 +840,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -761,8 +871,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel),
-				string.Format(CommentPatterns.EventMonitorTab, insertBeforeLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel),
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -793,7 +903,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -823,10 +933,10 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.RemoveSingleNode(
 				_filePath,
-				string.Format(CommentPatterns.EventMonitorTab, testLabel));
+				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
 
 			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
 			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -854,11 +964,11 @@ namespace ISHDeploy.Tests.Data.Managers
             // Act
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(CommentPatterns.EventMonitorTab, testLabel));
+                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -866,6 +976,61 @@ namespace ISHDeploy.Tests.Data.Managers
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNodes()
+        {
+            // Arrange
+            string testXPath = "/menubar/menuitem/userrole";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            XElement[] elements = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    elements = xdoc.Root.Elements("menuitem").Elements("userrole").ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.AreEqual(elements.Length, 0, "Nodes was not removed.");
+        }
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNodes_if_nodes_are_not_exists()
+        {
+            // Arrange
+            string testXPath = "/tabbar/menuitem/userrole";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            XElement[] elements = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    elements = xdoc.Root.Elements("menuitem").Elements("userrole").ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+
+            // Assert
+            FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+
+            Assert.IsNull(elements, "Wrong node was removed.");
         }
 
         #endregion
@@ -908,7 +1073,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -921,7 +1085,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -939,7 +1102,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -951,7 +1113,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -969,7 +1130,6 @@ namespace ISHDeploy.Tests.Data.Managers
         {
             // Arrange
             string relativeNodeXPath = "configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']";
-            string removeNodeXPath = "configuration/system.webServer/staticContent/remove[@fileExtension='.json']";
             string nodeAsXmlString = "<remove fileExtension='.json'/>";
 
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -981,7 +1141,6 @@ namespace ISHDeploy.Tests.Data.Managers
                                             </system.webServer>
                                         </configuration>");
 
-            XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
 
             // Act

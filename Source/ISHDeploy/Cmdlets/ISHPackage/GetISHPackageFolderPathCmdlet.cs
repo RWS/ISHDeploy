@@ -1,7 +1,6 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Business;
-using ISHDeploy.Validators;
+using ISHDeploy.Business.Operations;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
@@ -17,15 +16,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHPackageFolderPath")]
-    public class GetISHPackageFolderPathCmdlet : BaseCmdlet
+    public class GetISHPackageFolderPathCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
-
         /// <summary>
         /// <para type="description">Return path in UNC format.</para>
         /// </summary>
@@ -38,12 +30,11 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         public override void ExecuteCmdlet()
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
-            var ishPaths = new ISHPaths(ISHDeployment);
 
             // Create "Packages" folder if folder not exists
-            fileManager.EnsureDirectoryExists(ishPaths.PackagesFolderPath);
+            fileManager.EnsureDirectoryExists(OperationPaths.FoldersPaths.PackagesFolderPath);
 
-            var result = UNC ? ishPaths.PackagesFolderUNCPath : ishPaths.PackagesFolderPath;
+            var result = UNC ? OperationPaths.FoldersPaths.PackagesFolderUNCPath : OperationPaths.FoldersPaths.PackagesFolderPath;
 
             WriteObject(result);
         }

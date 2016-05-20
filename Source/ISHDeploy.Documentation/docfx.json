@@ -32,7 +32,7 @@
         "dest": "Articles"
       },
       {
-        "files": [ "**.md", "toc.yml" ]
+        "files": [ "toc.yml" ]
       }
     ],
     "resource": [

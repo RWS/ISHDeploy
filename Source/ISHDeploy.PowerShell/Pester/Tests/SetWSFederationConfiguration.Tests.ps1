@@ -73,9 +73,10 @@ $scriptBlockGetHistory = {
 
 
 
-# Function reads target files and their content, searches for specified nodes in xm
-function readTargetXML() {
+# Function reads target files and their content, searches for specified nodes in xml
+$scriptBlockReadTargetXML = {
     param(
+        $xmlPath,
         $endpoint
     )
     #read all files that are touched with commandlet
@@ -90,24 +91,29 @@ function readTargetXML() {
     {
 		Return $true
 	}
-
 	    
     Return $false
+}
+function readTargetXML() {
+    param(
+        $endpoint
+    )
+	$result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $endpoint
+
+    return $result
 }
 
 
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSWSFederation with full parameters"{   
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML -endpoint "testEndpoint" | Should be $true
-       
     }
 
 
@@ -138,9 +144,7 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"} | Should not Throw
         #Assert
-        Start-Sleep -Milliseconds 7000
         readTargetXML -endpoint "testEndpoint" | Should be $true
-       
     }
 
     It "Set ISHIntegrationSTSWSFederation writes proper history"{

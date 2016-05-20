@@ -92,11 +92,13 @@ $scriptBlockGetHistory = {
 $authorWebConfigFilePath
 
 
-# Function reads target files and their content, searches for specified nodes in xm
-function readTargetXML() {
+# Function reads target files and their content, searches for specified nodes in xml
+$scriptBlockReadTargetXML = {
     param(
         $Issuer,
-        $ValidationMode
+        $ValidationMode,
+        $xmlPath,
+        $testingDeployment
     )
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
@@ -106,27 +108,50 @@ function readTargetXML() {
     [System.Xml.XmlDocument]$stsWebConfig = new-object System.Xml.XmlDocument
     $stsWebConfig.load("$xmlPath\Web{0}\InfoShareSTS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix )
     
+    $result =  @{}
+    #get variables and nodes from files
+    $result["authorWebConfigNodesCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']").Count
+    $result["authorWebConfigThumbprint"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']")[0].thumbprint
+    $result["authorWebConfigValidationModeCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']").Count
+    $result["authorWebConfigValidationModeCertificateValidationMode"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")[0].certificateValidationMode
+    $result["wsWebConfigNodesCount"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']").Count
+    $result["wsWebConfigThumbprint"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']")[0].thumbprint
+    $result["wsWebConfigNodesValidationModeCount"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']").Count
+    $result["wsWebConfigNodesValidationModeCertificateValidationMode"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")[0].certificateValidationMode
+    $result["stsWebConfigNodesCount"] = $stsWebConfig.SelectNodes("configuration/system.serviceModel/behaviors/serviceBehaviors/behavior/addActAsTrustedIssuer[@name='$Issuer']").Count
+
+    return $result
+}
+function remoteReadTargetXML() {
+    param(
+        $Issuer,
+        $ValidationMode
+    )
+    #read all files that are touched with commandlet
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $Issuer, $ValidationMode, $xmlPath, $testingDeployment
     
     #get variables and nodes from files
-    $global:authorWebConfigNodes = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']")
-    $global:authorWbConfigValidationMode = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")
-    
-    $global:wsWebConfigNodes = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='$Issuer']")
-    $global:wsWebConfigNodesValidationMode = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")
-
-    $global:stswebConfigNodes = $stsWebConfig.SelectNodes("configuration/system.serviceModel/behaviors/serviceBehaviors/behavior/addActAsTrustedIssuer[@name='$Issuer']")
+    $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]
+    $global:authorWebConfigThumbprint = $result["authorWebConfigThumbprint"]
+    $global:authorWebConfigValidationModeCount = $result["authorWebConfigValidationModeCount"]
+    $global:authorWebConfigValidationModeCertificateValidationMode = $result["authorWebConfigValidationModeCertificateValidationMode"]
+    $global:wsWebConfigNodesCount = $result["wsWebConfigNodesCount"]
+    $global:wsWebConfigThumbprint = $result["wsWebConfigThumbprint"]
+    $global:wsWebConfigNodesValidationModeCount = $result["wsWebConfigNodesValidationModeCount"]
+    $global:wsWebConfigNodesValidationModeCertificateValidationMode = $result["wsWebConfigNodesValidationModeCertificateValidationMode"]
+    $global:stsWebConfigNodesCount = $result["stsWebConfigNodesCount"]
 }
 
 
 Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
-        if(Test-Path "$filepath\_Web.config")
+        if(RemotePathCheck "$filepath\_Web.config")
         {
-            if (Test-Path "$filepath\Web.config")
+            if (RemotePathCheck "$filepath\Web.config")
             {
-                Remove-Item "$filepath\Web.config"
+                RemoteRemoveItem "$filepath\Web.config"
             }
-            Rename-Item "$filepath\_Web.config" "Web.config"
+            RemoteRenameItem "$filepath\_Web.config" "Web.config"
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
@@ -136,16 +161,15 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
         #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust" 
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint"
-        $authorWbConfigValidationMode.Count | Should be 1
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint"
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $stswebConfigNodes.Count | Should be 1
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint"
+        $authorWebConfigValidationModeCount | Should be 1
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint"
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $stsWebConfigNodesCount | Should be 1
         $Warning | Should be $null 
     }
 
@@ -178,55 +202,54 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "testIssuer", "PeerOrChainTrust"} | Should not Throw
-        #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
-        $stswebConfigNodes.Count | Should be 1
+        #Assert
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint222"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint222"
+        $stsWebConfigNodesCount | Should be 1
     }
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test T h u m b p rint  2", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
-        #Assert
-        Start-Sleep -Milliseconds 7000
         
+        #Assert
         $Warning | Should Match "has been normalized to 'testThumbprint2'"
 
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint2"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint2"
-        $stswebConfigNodes.Count | Should be 1
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint2"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint2"
+        $stsWebConfigNodesCount | Should be 1
        
     }
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint with wrong symbols"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test ,T h u> m<{ b! [p] rint  3", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
         ($Warning-join -'') | Should Match "has been normalized to 'testThumbprint3'"
 
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
-        $stswebConfigNodes.Count | Should be 1
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint3"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint3"
+        $stsWebConfigNodesCount | Should be 1
     }
 
     It "Set ISHIntegrationSTSCertificate writes proper history"{        
@@ -241,14 +264,14 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     It "Set ISHIntegrationSTSCertificate change ValidationMode"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "Custom"
-        #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "Custom" 
         
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWbConfigValidationMode.certificateValidationMode | Should be "Custom"
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodesValidationMode.certificateValidationMode | Should be "Custom"
+        #Assert
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "Custom" 
+        
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigValidationModeCertificateValidationMode | Should be "Custom"
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigNodesValidationModeCertificateValidationMode | Should be "Custom"
     }
 
     It "Remove ISHIntegrationSTSCertificate"{       
@@ -257,24 +280,24 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint2", "testIssuer", "PeerOrChainTrust"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint3", "testIssuer2", "PeerOrChainTrust"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
+        
         #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
-        $authorWebConfigNodes.Count | Should be 0
-        $authorWbConfigValidationMode.Count | Should be 1
-        $wsWebConfigNodes.Count | Should be 0
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $stswebConfigNodes.Count | Should be 0
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        $authorWebConfigNodesCount | Should be 0
+        $authorWebConfigValidationModeCount | Should be 1
+        $wsWebConfigNodesCount | Should be 0
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
 
         
-        readTargetXML -Issuer "testIssuer2" -ValidationMode "PeerOrChainTrust"
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint3"
-        $stswebConfigNodes.Count | Should be 1
+        remoteReadTargetXML -Issuer "testIssuer2" -ValidationMode "PeerOrChainTrust"
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint3"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint3"
+        $stsWebConfigNodesCount | Should be 1
     }
 
     It "Remove ISHIntegrationSTSCertificate with wrong XML"{
@@ -316,24 +339,23 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
         #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint"
-        $stswebConfigNodes.Count | Should be 1
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint"
+        $stsWebConfigNodesCount | Should be 1
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
-        readTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
+        remoteReadTargetXML -Issuer "testIssuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 0
-        $authorWbConfigValidationMode.Count | Should be 1
-        $wsWebConfigNodes.Count | Should be 0
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $stswebConfigNodes.Count | Should be 0
+        $authorWebConfigNodesCount | Should be 0
+        $authorWebConfigValidationModeCount | Should be 1
+        $wsWebConfigNodesCount | Should be 0
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
     }
 
     It "Set-ISHIntegrationSTSCertificate works after last issuer was removed"{       
@@ -341,15 +363,14 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "Issuer"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint222", "Issuer", "PeerOrChainTrust"} | Should not Throw
         #Assert
-        Start-Sleep -Milliseconds 7000
-        readTargetXML -Issuer "Issuer" -ValidationMode "PeerOrChainTrust"
+        remoteReadTargetXML -Issuer "Issuer" -ValidationMode "PeerOrChainTrust"
         
-        $authorWebConfigNodes.Count | Should be 1
-        $authorWbConfigValidationMode.Count | Should be 1
-        $authorWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
-        $wsWebConfigNodes.Count | Should be 1
-        $wsWebConfigNodesValidationMode.Count | Should be 1
-        $wsWebConfigNodes[0].thumbprint | Should be "testThumbprint222"
-        $stswebConfigNodes.Count | Should be 1
+        $authorWebConfigNodesCount | Should be 1
+        $authorWebConfigValidationModeCount | Should be 1
+        $authorWebConfigThumbprint | Should be "testThumbprint222"
+        $wsWebConfigNodesCount | Should be 1
+        $wsWebConfigNodesValidationModeCount | Should be 1
+        $wsWebConfigThumbprint | Should be "testThumbprint222"
+        $stsWebConfigNodesCount | Should be 1
     }
 }

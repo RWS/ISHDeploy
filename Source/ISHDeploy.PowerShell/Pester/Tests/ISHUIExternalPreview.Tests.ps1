@@ -85,14 +85,17 @@ $scriptBlockUndoDeployment = {
 #endregion
 
 
-
-# Function reads target files and their content, searches for specified nodes in xm
-function readTargetXML() {
-	[xml]$XmlWebConfig = Get-Content "$xmlPath\Web.config" #-ErrorAction SilentlyContinue
-    $global:textConfig = $XmlWebConfig.configuration.'trisoft.infoshare.web.externalpreviewmodule'.identity | ? {$_.externalId -eq "ServiceUser"}
-    $global:configSection = $XmlWebConfig.configuration.configSections.section | ? {$_.name -eq "trisoft.infoshare.web.externalpreviewmodule"}
-    $global:module = $XmlWebConfig.configuration.'system.webServer'.modules.add  | ? {$_.name -eq "TrisoftExternalPreviewModule"}
-    $global:configCustomID = $XmlWebConfig.configuration.'trisoft.infoshare.web.externalpreviewmodule'.identity | ? {$_.externalId -eq $customID}
+# Function reads target files and their content, searches for specified nodes in xml
+$scriptBlockReadTargetXML = {
+    param(
+        $xmlPath,
+        $customID
+    )
+    [xml]$XmlWebConfig = Get-Content "$xmlPath\Web.config" #-ErrorAction SilentlyContinue
+    $textConfig = $XmlWebConfig.configuration.'trisoft.infoshare.web.externalpreviewmodule'.identity | ? {$_.externalId -eq "ServiceUser"}
+    $configSection = $XmlWebConfig.configuration.configSections.section | ? {$_.name -eq "trisoft.infoshare.web.externalpreviewmodule"}
+    $module = $XmlWebConfig.configuration.'system.webServer'.modules.add  | ? {$_.name -eq "TrisoftExternalPreviewModule"}
+    $configCustomID = $XmlWebConfig.configuration.'trisoft.infoshare.web.externalpreviewmodule'.identity | ? {$_.externalId -eq $customID}
 
 	if($textConfig -and $configSection -and $module -and !$configCustomID){
 		Return "Enabled"
@@ -103,7 +106,11 @@ function readTargetXML() {
 	else{
 		Return "Disabled"
 	}
+}
+function readTargetXML() {
+	$result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $customID
 
+    return $result
 }
 
 
@@ -125,7 +132,6 @@ Describe "Testing ISHExternalPreview"{
 		#Act
         # Try enabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName
-        Start-Sleep -Milliseconds 7000
         $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
 		#Assert
         $result | Should Be "Enabled"
@@ -141,7 +147,6 @@ Describe "Testing ISHExternalPreview"{
 		}
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        Start-Sleep -Milliseconds 7000
         $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
         $precondition | Should Be "Enabled"
 		#Act
@@ -212,7 +217,6 @@ Describe "Testing ISHExternalPreview"{
         # Try enabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop } | Should Not Throw
-        Start-Sleep -Milliseconds 7000
         $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
 		#Assert
         $result | Should Be "Enabled"
@@ -231,7 +235,6 @@ Describe "Testing ISHExternalPreview"{
         # Try disabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop } | Should Not Throw
-        Start-Sleep -Milliseconds 7000
         $result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
 		#Assert
         $result | Should Be "Disabled"
@@ -244,7 +247,6 @@ Describe "Testing ISHExternalPreview"{
         if ($precondition -eq "Disabled"){Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnable -Session $session -ArgumentList $testingDeploymentName}
 
         # Now External Preview should be fo sure disabled. Otherwise test fails
-        Start-Sleep -Milliseconds 7000
         $precondition = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Enabled"
         $precondition | Should Be "Enabled"
 		#Act
@@ -270,7 +272,6 @@ Describe "Testing ISHExternalPreview"{
 		#Act
         # Try disabling External Preview
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisable -Session $session -ArgumentList $testingDeploymentName
-        Start-Sleep -Milliseconds 7000
 		$result = RetryCommand -numberOfRetries 10 -command {readTargetXML} -expectedResult "Disabled"
 		#Assert
         $result | Should Be "Disabled"

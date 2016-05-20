@@ -18,6 +18,59 @@ Function Invoke-CommandRemoteOrLocal {
         Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList -ErrorAction Stop 
     }
 }
+#check path remotely
+$scriptBlockTestPath = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path 
+    )
+    Test-Path $path
+}
+Function RemotePathCheck {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path
+    ) 
+    $isExists = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestPath -Session $session -ArgumentList $path
+    
+    return $isExists
+}
+
+#remove item remotely
+$scriptBlockRemoveItem = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path 
+    )
+    Remove-Item $path
+}
+Function RemoteRemoveItem {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveItem -Session $session -ArgumentList $path
+}
+
+#rename item remotely
+$scriptBlockRenameItem = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path,
+        [Parameter(Mandatory=$true)]
+        $name
+    )
+    Rename-Item $path
+}
+Function RemoteRenameItem {
+    param (
+        [Parameter(Mandatory=$true)]
+        $path,
+        [Parameter(Mandatory=$true)]
+        $name
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
+}
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time
 function RetryCommand {
@@ -47,21 +100,10 @@ Function Log($Message)
 }
 
 
-function retryReadXML{
-    param($numberOfRetries,$xmlFile)
-    for($i=0; $i -lt $numberOfRetries; $i++) {
-       try{
-          [xml]$actualResult = Get-Content $xmlFile -ErrorAction Stop
-       } 
-       catch{
-          $ErrorMessage = $_.Exception.Message
-       }
-       if(!$ErrorMessage){
-           $i = $numberOfRetries 
-       }
-       else{
-           Start-Sleep -Milliseconds 1000
-       }
-    }
+function RemoteReadXML{
+    param($xmlFile)
+
+    [xml]$actualResult = Invoke-CommandRemoteOrLocal -ScriptBlock {param ($xmlFile) Get-Content $xmlFile} -Session $session -ArgumentList $xmlFile
+
     return $actualResult
 }

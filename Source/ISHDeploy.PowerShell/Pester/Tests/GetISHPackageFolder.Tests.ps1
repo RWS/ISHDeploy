@@ -76,8 +76,8 @@ Describe "Testing Get-ISHPackageFolderPath"{
 
     It "Get package folder creates Package folder"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName, $true} | Should Not Throw
-        RetryCommand -numberOfRetries 10 -command {Test-Path ($uncPackagePath)} -expectedResult $true | Should Be "True"
         
+        RemotePathCheck $uncPackagePath | Should Be "True"
     }
 }
 

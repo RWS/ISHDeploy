@@ -67,7 +67,9 @@
     <None Include="Articles\Module\FeatureToggle.ps1" />
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
+    <None Include="Getting Started.md" />
     <None Include="Export-Markdown-From-Usages.ps1" />
+    <None Include="CHANGELOG.md" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -78,6 +80,7 @@
     <None Include="Index.md" />
     <None Include="Resolve-Markdown.ps1" />
     <None Include="toc.yml" />
+    <None Include="Tools\Resolve-ModuleName.ps1" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +96,8 @@
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)Using"
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ModulePath "$(SolutionDir)ISHDeploy\$(OutDir)\"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

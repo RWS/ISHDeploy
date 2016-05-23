@@ -32,6 +32,11 @@
         "dest": "Articles"
       },
       {
+        "files": [ "*.md" ],
+        "cwd": "obj/doc",
+        "dest": ""
+      },
+      {
         "files": [ "toc.yml" ]
       }
     ],

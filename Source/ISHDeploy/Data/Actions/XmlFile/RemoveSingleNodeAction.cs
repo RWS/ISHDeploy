@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.XmlFile

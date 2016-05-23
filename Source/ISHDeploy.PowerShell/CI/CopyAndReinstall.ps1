@@ -44,8 +44,7 @@ $scriptBlock = {
 		Write-Host "Repository is not registered"
 		Write-Host "Registering repository $repositoryName"
 
-		$sourceLocation = $repositoryPath + "nuget/"
-		Register-PSRepository -Name $repositoryName -SourceLocation $sourceLocation -PublishLocation  $repositoryPath -InstallationPolicy Trusted
+		Register-PSRepository -Name $repositoryName -SourceLocation $repositoryPath -PublishLocation  $repositoryPath -InstallationPolicy Trusted
 
 		$repository = Get-PSRepository $repositoryName -ErrorAction SilentlyContinue
         if ($repository.Count -eq 0) {
@@ -62,7 +61,7 @@ $scriptBlock = {
 
 # Create session to targetPC, kill all powershell instances, that might lock ISHDeploy
 $session = New-PSSession -ComputerName $targetPC 
-Invoke-Command -ScriptBlock {"$targetPath\kill_powershell.bat"} -Session $session
+Invoke-Command -ScriptBlock {Invoke-Expression "cmd.exe /c C:\Users\$env:USERNAME\Documents\ReinstallScripts\kill_powershell.bat"} -Session $session
 $session = New-PSSession -ComputerName $targetPC
 
 # Reinstall ISHDeploy module

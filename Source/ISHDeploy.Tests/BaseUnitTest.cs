@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Collections.Generic;
-using ISHDeploy.Business;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
@@ -41,7 +40,7 @@ namespace ISHDeploy.Tests
 				{ "projectsuffix", ""}
 			};
 
-			return new ISHFilePath(new ISHDeployment(installParams, new Version("1.0.0.0")), ISHPaths.IshDeploymentType.Web, relativePath);
+			return new ISHFilePath(new ISHDeployment(installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);
 		}
     }
 }

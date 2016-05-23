@@ -1,5 +1,4 @@
-﻿using System;
-using ISHDeploy.Business.Invokers;
+﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
@@ -9,12 +8,13 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class MoveISHUIEventMonitorTabOperation : IOperation
+	public class MoveISHUIEventMonitorTabOperation : OperationPaths, IOperation
     {
-		/// <summary>
-		/// Operation type enum
-		/// </summary>
-		public enum OperationType
+        /// <summary>
+        /// Operation type enum
+        ///	<para type="description">Enumeration of Operations Types.</para>
+        /// </summary>
+        public enum OperationType
 		{
 
 			/// <summary>
@@ -37,18 +37,17 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
 		/// </summary>
 		/// <param name="logger">The logger.</param>
-		/// <param name="paths">Reference for all files paths.</param>
 		/// <param name="label">Label of the element</param>
 		/// <param name="operationType">Type of the operation.</param>
 		/// <param name="targetLabel">The target label.</param>
-		public MoveISHUIEventMonitorTabOperation(ILogger logger, ISHPaths paths, string label, OperationType operationType, string targetLabel = null)
+		public MoveISHUIEventMonitorTabOperation(ILogger logger, string label, OperationType operationType, string targetLabel = null)
         {
             _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
 
-			string nodeXPath = String.Format(CommentPatterns.EventMonitorTab, label);
-			string nodeCommentXPath = nodeXPath + CommentPatterns.EventMonitorPreccedingCommentXPath;
+			string nodeXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
+			string nodeCommentXPath = nodeXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
-			string targetNodeXPath = String.IsNullOrEmpty(targetLabel) ? null :  String.Format(CommentPatterns.EventMonitorTab, targetLabel);
+			string targetNodeXPath = string.IsNullOrEmpty(targetLabel) ? null : string.Format(EventMonitorMenuBarXml.EventMonitorTab, targetLabel);
 
 			// Combile node and its xPath
 			string nodesToMoveXPath = nodeXPath + "|" + nodeCommentXPath;
@@ -56,10 +55,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new MoveAfterNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new MoveBeforeNodeAction(logger, paths.EventMonitorMenuBar, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}

@@ -66,16 +66,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void Append(string filePath, string text);
 
         /// <summary>
-        /// Creates a new <see cref="T:System.Xml.Linq.XDocument"/> instance by using the specified stream.
+        /// Creates a new <see cref="XDocument"/> instance by using the specified file path.
         /// </summary>
-        /// <param name="filePath">A URI string that references the file to load into a new <see cref="T:System.Xml.Linq.XDocument"/>.</param>
-        /// <returns>New instance of <see cref="T:System.Xml.Linq.XDocument"/> with loaded file content</returns>
+        /// <param name="filePath">A URI string that references the file to load into a new <see cref="XDocument"/>.</param>
+        /// <returns>New instance of <see cref="XDocument"/> with loaded file content</returns>
         XDocument Load(string filePath);
-        
+
         /// <summary>
-        /// Saves <see cref="T:System.Xml.Linq.XDocument"/> content to file
+        /// Saves <see cref="XDocument"/> content to file
         /// </summary>
-        /// <param name="filePath">The file where <see cref="T:System.Xml.Linq.XDocument"/> content will be stored.</param>
+        /// <param name="filePath">The file where <see cref="XDocument"/> content will be stored.</param>
         /// <param name="doc">The document to be stored</param>
         void Save(string filePath, XDocument doc);
 
@@ -134,5 +134,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// <param name="filePath">File path.</param>
 		/// <returns>Returns True if license file is found, otherwise False.</returns>
 		bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath);
+
+        /// <summary>
+        /// Creates a zip archive that contains the files and directories from the specified directory, uses the Optimal compression level, and optionally includes the base directory.
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationArchiveFilePath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="includeBaseDirectory">'True' to include the directory name from sourceDirectoryName at the root of the archive; 'False' to include only the contents of the directory. 'False' by default</param>
+        void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false);
     }
 }

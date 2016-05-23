@@ -263,8 +263,7 @@ Describe "Testing ISHUIContentEditor"{
     It "checks Set license with valid key"{
 		#Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetLicense -Session $session -ArgumentList  $testingDeploymentName, $domain, $licenseKey -ErrorAction Stop 
-		# Set-ISHContentEditor  commandlet needs some time to creatre file, so Test-Path runs with delay
-        RetryCommand -numberOfRetries 10 -command {Test-Path ($licenseFile)} -expectedResult $true | Should Be "True"
+        RemotePathCheck $licenseFile | Should Be "True"
 		#Assert
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList  $testingDeploymentName, $domain -ErrorAction Stop | Should Be "True"
     }
@@ -272,8 +271,7 @@ Describe "Testing ISHUIContentEditor"{
     It "checks Set and test license with empty key"{
 		#Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetLicense -Session $session -ArgumentList  $testingDeploymentName, $domain, "" -ErrorAction Stop } | Should Throw "Cannot validate argument on parameter 'LicenseKey'"
-        # Set-ISHContentEditor commandlet needs some time to creatre file, so Test-Path runs with delay
-		RetryCommand -numberOfRetries 20 -command {Test-Path ($licenseFile)} -expectedResult $false | Should Be "False"
+        RemotePathCheck $licenseFile | Should Be "False"
 		#Assert
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList $testingDeploymentName, $domain -ErrorAction Stop | Should Be "False"
     } 
@@ -281,8 +279,7 @@ Describe "Testing ISHUIContentEditor"{
     It "checks Set and test license with invalid key"{
 		#Act
        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetLicense -Session $session -ArgumentList $testingDeploymentName, $domain, $randomKey -ErrorAction Stop } | Should Not Throw 
-       # Set-ISHContentEditor commandlet needs some time to creatre file, so Test-Path runs with delay
-	   RetryCommand -numberOfRetries 10 -command {Test-Path ($licenseFile)} -expectedResult $true | Should Be "True"
+	   RemotePathCheck $licenseFile | Should Be "True"
        #Assert
 	   Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList $testingDeploymentName, $domain -ErrorAction Stop | Should Be "True"
     }   

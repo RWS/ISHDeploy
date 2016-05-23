@@ -4,10 +4,10 @@ using System.IO;
 
 namespace ISHDeploy.Models
 {
-    /// <summary>
-    /// Represents the installed Content Manager deployment.
-    /// </summary>
-    public class ISHDeployment
+	/// <summary>
+	///	<para type="description">Represents the installed Content Manager deployment.</para>
+	/// </summary>
+	public class ISHDeployment
     {
         /// <summary>
         /// The HTTPS prefix
@@ -81,6 +81,11 @@ namespace ISHDeploy.Models
         public string WebNameSTS => Path.Combine(GetAuthorFolderPath(), "InfoShareSTS");
 
         /// <summary>
+        /// Gets the path to the InfoShareSTS Application Data folder.
+        /// </summary>
+        public string WebNameSTSAppData => Path.Combine(WebNameSTS, "App_Data");
+
+        /// <summary>
         /// Gets the name of the access host.
         /// </summary>
         public string AccessHostName => OriginalParameters["baseurl"].Substring(HttpsPrefix.Length);
@@ -99,6 +104,26 @@ namespace ISHDeploy.Models
         /// Gets the path to the Data+Suffix Author folder.
         /// </summary>
         public string GetDataFolderPath() => Path.Combine(AppPath, $"Data{GetSuffix()}");
+
+        /// <summary>
+        /// Gets the name of the CM main url folder.
+        /// </summary>
+        public string GetCMWebAppName() => OriginalParameters["infoshareauthorwebappname"];
+
+        /// <summary>
+        /// Gets the name of the WS main url folder.
+        /// </summary>
+        public string GetWSWebAppName() => OriginalParameters["infosharewswebappname"];
+
+        /// <summary>
+        /// Gets the name of the STS main url folder.
+        /// </summary>
+        public string GetSTSWebAppName() => OriginalParameters["infosharestswebappname"];        
+        
+        /// <summary>
+        /// Gets the name of the OS user.
+        /// </summary>
+        public string GetOSUser() => OriginalParameters["osuser"];
 
         /// <summary>
         /// Gets the deployment suffix.

@@ -113,4 +113,23 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
+	<Target Name="DocPortalClean" AfterTargets="Clean">
+    <PropertyGroup>
+      <UsingItemsFolder>Using</UsingItemsFolder>
+      <ModuleItemsFolder>Module</ModuleItemsFolder>
+      <WebSiteFolder>_site</WebSiteFolder>
+    </PropertyGroup>
+		<ItemGroup>
+			<UsingItemsToDelete Include="$(UsingItemsFolder)\**"/>
+      <ModuleItemsToDelete Include="$(ModuleItemsFolder)\**"/>
+      <UsingDirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('$(UsingItemsFolder)', '*', 
+        System.IO.SearchOption.AllDirectories))"
+                   Exclude="$(UsingItemsFolder)"/>
+		</ItemGroup>
+		<Delete Files="@(UsingItemsToDelete)" />
+    <Delete Files="@(ModuleItemsToDelete)" />
+		<RemoveDir Directories="$(WebSiteFolder)" />
+    <RemoveDir Directories="@(UsingDirectoriesToDelete)" />
+	</Target>
 </Project>

@@ -28,19 +28,6 @@ $xmlPath = "\\$computerName\$xmlPath"
 #endregion
 
 #region Script Blocks 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-
 $scriptBlockSetWSTrust = {
     param (
         $ishDeployName,
@@ -151,7 +138,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
             }
             RemoteRenameItem "$filepath\_Web.config" "Web.config"
         }
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSWSTrust with full parameters"{

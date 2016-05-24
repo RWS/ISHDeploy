@@ -18,12 +18,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Reverts all changes to the vanilla
-		/// </summary>
-		/// <param name="logger">Logger object.</param>
-		/// <param name="deployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
-		public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment deployment)
+        /// <summary>
+        /// Reverts all changes to the vanilla
+        /// </summary>
+        /// <param name="logger">Logger object.</param>
+        /// <param name="deployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
+        /// <param name="restartAppPools">When True then application pools are reloaded</param>
+        public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment deployment, bool restartAppPools = true)
 		{
 			Models.ISHDeployment ishDeployment = deployment;
 
@@ -44,21 +45,27 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, deployment.GetDeploymentAppDataFolder()));
 
-            // Stop STS Application pool before clean STS App_Data folder
-            _invoker.AddAction(new StopApplicationPoolAction(logger, deployment.STSAppPoolName));
+            if (restartAppPools)
+            {
+                // Stop STS Application pool before clean STS App_Data folder
+                _invoker.AddAction(new StopApplicationPoolAction(logger, deployment.STSAppPoolName));
+            }
 
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, deployment.WebNameSTSAppData));
 
-            // Recycling Application pool for WS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.WSAppPoolName, true));
+            if (restartAppPools)
+            {
+                // Recycling Application pool for WS
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.WSAppPoolName, true));
 
-            // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.STSAppPoolName, true));
+                // Recycling Application pool for STS
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.STSAppPoolName, true));
 
-            // Recycling Application pool for CM
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.CMAppPoolName, true));
-        }
+                // Recycling Application pool for CM
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, deployment.CMAppPoolName, true));
+            }
+		}
 
         /// <summary>
         /// Runs current operation.

@@ -68,20 +68,6 @@ $scriptBlockDisable = {
     Disable-ISHExternalPreview -ISHDeployment $ishDeploy
 }
 
-
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-
 #endregion
 
 
@@ -116,7 +102,7 @@ function readTargetXML() {
 
 Describe "Testing ISHExternalPreview"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled External Preview"{

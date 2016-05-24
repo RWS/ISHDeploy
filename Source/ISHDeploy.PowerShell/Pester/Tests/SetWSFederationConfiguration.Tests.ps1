@@ -28,18 +28,6 @@ $xmlPath = "\\$computerName\$xmlPath"
 #endregion
 
 #region Script Blocks 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
 
 $scriptBlockSetWSFederation = {
     param (
@@ -106,7 +94,7 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSWSFederation with full parameters"{   

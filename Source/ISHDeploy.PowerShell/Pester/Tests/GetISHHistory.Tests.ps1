@@ -100,21 +100,7 @@ $scriptBlockGetPackageFolder = {
     else{
         Get-ISHPackageFolderPath -ISHDeployment $ishDeploy
     }
-}
-
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-   
+} 
 
  function createFakeHistory{
 $text = '$deployment = Get-ISHDeployment -Name ''InfoShareSQL2014''
@@ -124,7 +110,7 @@ Disable-ISHUIQualityAssistant -ISHDeployment $deployment
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 
 Describe "Testing Get-ISHDeploymentHistory"{
     BeforeEach {

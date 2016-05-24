@@ -93,17 +93,17 @@ namespace ISHDeploy.Models
         /// <summary>
         /// WS Application pool name
         /// </summary>
-        public string WSAppPoolName => $"{TrisoftAppPoolPrefix}{GetWSWebAppName()}{GetSuffix()}";
+        public string WSAppPoolName => $"{TrisoftAppPoolPrefix}{GetWSWebAppName()}";
 
         /// <summary>
         /// STS Application pool name
         /// </summary>
-        public string STSAppPoolName => $"{TrisoftAppPoolPrefix}{GetSTSWebAppName()}{GetSuffix()}";
+        public string STSAppPoolName => $"{TrisoftAppPoolPrefix}{GetSTSWebAppName()}";
 
         /// <summary>
         /// CM Application pool name
         /// </summary>
-        public string CMAppPoolName => $"{TrisoftAppPoolPrefix}{GetCMWebAppName()}{GetSuffix()}";
+        public string CMAppPoolName => $"{TrisoftAppPoolPrefix}{GetCMWebAppName()}";
 
         /// <summary>
         /// Gets the name of the access host.

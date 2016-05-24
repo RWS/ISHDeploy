@@ -7,18 +7,13 @@ namespace ISHDeploy.Data.Actions.WebAdministration
     /// Saves files to package.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class RecycleApplicationPoolAction : BaseAction
+    public class StopApplicationPoolAction : BaseAction
     {
         /// <summary>
         /// The Application Pool name.
         /// </summary>
         private readonly string _appPoolName;
-
-        /// <summary>
-        /// The parameter determines whether application pool should be started if it was not running before
-        /// </summary>
-        private readonly bool _startIfNotRunning;
-
+        
         /// <summary>
         /// The web Administration manager
         /// </summary>
@@ -29,12 +24,10 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>
-        /// <param name="startIfNotRunning">if set to <c>true</c> then starts application pool if not running.</param>
-        public RecycleApplicationPoolAction(ILogger logger, string appPoolName, bool startIfNotRunning = false)
+        public StopApplicationPoolAction(ILogger logger, string appPoolName)
             : base(logger)
         {
             _appPoolName = appPoolName;
-            _startIfNotRunning = startIfNotRunning;
 
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
@@ -44,7 +37,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public override void Execute()
         {
-            _webAdminManager.RecycleApplicationPool(_appPoolName, _startIfNotRunning);
+            _webAdminManager.StopApplicationPool(_appPoolName);
         }
     }
 }

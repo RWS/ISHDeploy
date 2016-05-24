@@ -34,18 +34,18 @@ namespace ISHDeploy.Data.Managers
         /// <param name="startIfNotRunning">if set to <c>true</c> then starts application pool if not running.</param>
         public void RecycleApplicationPool(string applicationPoolName, bool startIfNotRunning = false)
         {
-            _logger.WriteDebug($"Recycling application pool: `{applicationPoolName}`");
-
-            using (ServerManager manager = new ServerManager())
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
                 ApplicationPool appPool = manager.ApplicationPools.FirstOrDefault(ap => ap.Name == applicationPoolName);
 
                 if (appPool != null)
                 {
+                    _logger.WriteDebug($"Recycling application pool: `{applicationPoolName}`");
+
                     // Wait while application pool operation is completed
-                    while (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
+                    if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
                     {
-                        System.Threading.Thread.Sleep(1000);
+                        WaitOperationCompleted(appPool);
                     }
 
                     //The app pool is running, so stop it first.
@@ -57,15 +57,77 @@ namespace ISHDeploy.Data.Managers
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
-                        _logger.WriteWarning($"Application pool `{applicationPoolName}` is stopped. Starting it.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is stopped. Starting it.");
 
                         appPool.Start();
+                        WaitOperationCompleted(appPool);
                     }
                 }
                 else
                 {
                     // Means system is broken.
                     throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stops specific application pool
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        public void StopApplicationPool(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                ApplicationPool appPool = manager.ApplicationPools.FirstOrDefault(ap => ap.Name == applicationPoolName);
+
+                if (appPool != null)
+                {
+                    _logger.WriteDebug($"Stopping application pool: `{applicationPoolName}`");
+                    // Wait while application pool operation is completed
+                    if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
+                    {
+                        WaitOperationCompleted(appPool);
+                    }
+
+                    //The app pool is running, so stop it.
+                    if (appPool.State == ObjectState.Started)
+                    {
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is started. Stopping it.");
+
+                        appPool.Stop();
+                        WaitOperationCompleted(appPool);
+                    }
+
+                    //The app pool is already stopped.
+                    if (appPool.State == ObjectState.Stopped)
+                    {
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is already stopped.");
+                    }
+                }
+                else
+                {
+                    // Means system is broken.
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Wait until application pool operation is completed.
+        /// </summary>
+        /// <param name="appPool">The application pool.</param>
+        private void WaitOperationCompleted(ApplicationPool appPool)
+        {
+            int i = 0;
+            while (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
+            {
+                System.Threading.Thread.Sleep(1000);
+                i++;
+
+                if (i > 10)
+                {
+                    throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }
             }
         }

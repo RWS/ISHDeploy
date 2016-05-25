@@ -178,9 +178,9 @@ $scriptBlockGetAppPoolStartTime = {
         $testingDeployment
     )
 
-    $cmAppPoolName = ("TrisoftAppPool{0}{1}" -f $testingDeployment.OriginalParameters.infoshareauthorwebappname, $testingDeployment.OriginalParameters.projectsuffix)
-    $wsAppPoolName = ("TrisoftAppPool{0}{1}" -f $testingDeployment.OriginalParameters.infosharewswebappname, $testingDeployment.OriginalParameters.projectsuffix)
-    $stsAppPoolName = ("TrisoftAppPool{0}{1}" -f $testingDeployment.OriginalParameters.infosharestswebappname, $testingDeployment.OriginalParameters.projectsuffix)
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infoshareauthorwebappname)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharewswebappname)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharestswebappname)
     
     $result = @{}
     [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
@@ -188,7 +188,6 @@ $scriptBlockGetAppPoolStartTime = {
         $splitedLine = $line.split(" ")
         $processIdAsString = $splitedLine[1]
         $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
-
         if ($splitedLine[2] -match $cmAppPoolName)
         {
             $result["cm"] = (Get-Process -Id $processId).StartTime
@@ -222,7 +221,7 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         $appPoolStartTimes1 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-        #Start-Sleep -Milliseconds 7000
+        Start-Sleep -Milliseconds 7000
         
         # Get web application pool start times
         $appPoolStartTimes2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
@@ -231,12 +230,14 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         (get-date $appPoolStartTimes1["ws"]) -gt (get-date $appPoolStartTimes2["ws"])  | Should Be $false
         (get-date $appPoolStartTimes1["sts"]) -gt (get-date $appPoolStartTimes2["sts"])  | Should Be $false
 
+
+
         RetryCommand -numberOfRetries 20 -command {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup} -expectedResult $false | Should Be "False"
         
         readTargetXML | Should Be "VanilaState"
         $path =  Join-Path $testingDeployment.WebPath ("Web{0}\InfoShareSTS\App_Data\" -f $testingDeployment.OriginalParameters.projectsuffix )
         $countOfItemsInDataBaseFolder = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCountOfItemsInFolder -Session $session -ArgumentList $path 
-        $countOfItemsInDataBaseFolder | Should Be 0
+        $countOfItemsInDataBaseFolder | Should Be 1
     }
 
     It "Undo-IshHistory works when there is no backup"{

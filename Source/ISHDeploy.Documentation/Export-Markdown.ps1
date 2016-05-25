@@ -43,6 +43,14 @@ try
 	[string]$mamlContent = Get-Content $MamlFilePath
 	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
 
+    $modulePath = Join-Path $PSScriptRoot "Module"
+
+	if(!(Test-Path $modulePath ))
+	{
+		Write-Host "Creating Module Folder at '$modulePath'."
+		New-Item -ItemType directory -Path $modulePath
+	}
+
 	# Generating context for all markdown files generated from maml
 	Get-ChildItem -Path $ExportPath | ForEach-Object {
 		"- name: " + $_.BaseName;

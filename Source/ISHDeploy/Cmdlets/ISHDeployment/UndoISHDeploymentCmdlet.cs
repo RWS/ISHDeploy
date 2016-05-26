@@ -20,17 +20,11 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     public class UndoISHDeploymentCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
-        /// <para type="description">Specifies that application pools should not be restarted.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "When -WithoutRestartingAppPools is switched on then application pools are not reloaded")]
-        public SwitchParameter WithoutRestartingAppPools { get; set; }
-
-        /// <summary>
         /// Executes revert changes cmdLet
         /// </summary>
         public override void ExecuteCmdlet()
 		{
-			var cmdSet = new UndoISHDeploymentOperation(Logger, ISHDeployment, !WithoutRestartingAppPools.IsPresent);
+			var cmdSet = new UndoISHDeploymentOperation(Logger, ISHDeployment);
 			cmdSet.Run();
 		}
     }

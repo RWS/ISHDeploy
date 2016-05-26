@@ -65,7 +65,7 @@ function checkBackupFolderIsEmpty{
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 
 Describe "Testing Clear-ISHDeploymentHistory"{
     It "Clear ish deploy history"{

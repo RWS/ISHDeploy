@@ -54,6 +54,7 @@ namespace ISHDeploy.Data.Managers
                         _logger.WriteDebug($"Application pool `{applicationPoolName}` is recycling.");
 
                         appPool.Recycle();
+                        WaitOperationCompleted(appPool);
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
@@ -122,10 +123,10 @@ namespace ISHDeploy.Data.Managers
             int i = 0;
             while (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(100);
                 i++;
 
-                if (i > 10)
+                if (i > 100)
                 {
                     throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }

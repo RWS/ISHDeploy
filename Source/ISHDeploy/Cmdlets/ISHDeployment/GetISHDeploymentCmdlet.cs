@@ -3,6 +3,7 @@ using System.Management.Automation;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -53,17 +54,12 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var operation = new GetISHDeploymentOperation(Logger, suffix);
 
-            var result = operation.Run().ToArray();
-            
-            if (Name != null && result.Length == 1)
-            {
-                WriteObject(result[0]);
-            }
-            else
-            {
-                WriteObject(result);
-            }
+            var result = operation.Run();
 
+            foreach (var deployment in result) {
+                WriteObject(new DeploymentPartial(deployment));
+            }
+            
             if (result.Any())
             {
                 string warningMessage;

@@ -69,6 +69,7 @@
     <Compile Include="Data\Actions\File\GenerateFromTemplateActionTest.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsActionTest.cs" />
     <Compile Include="Data\Actions\SingleFileActionTest.cs" />
+    <Compile Include="Data\Actions\WebAdministration\RecycleApplicationPoolActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlCommentActionTest.cs" />
     <Compile Include="Data\Actions\XmlFile\XmlUncommentActionTest.cs" />
     <Compile Include="Data\Managers\TextConfigManagerTest.cs" />

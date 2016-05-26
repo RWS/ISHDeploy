@@ -1,8 +1,8 @@
 ﻿param (
-    #[Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     $InputDir,
-    #[Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$true)]
     [string]
     $ExportPath
 )
@@ -15,8 +15,11 @@ Write-Debug "Export Path: $ExportPath"
 
 try
 {
-    # Celaning Export path
-    Remove-Item  $ExportPath\* -Recurse -Force
+	if(!(Test-Path $ExportPath ))
+	{
+		Write-Host "Creating Using Folder at '$ExportPath'."
+		New-Item -ItemType directory -Path $ExportPath
+	}
 
     # Copy Cmdlet samples to Export folder
     Copy-Item  $InputDir\* $ExportPath -Recurse -Force
@@ -41,10 +44,12 @@ try
         $mdFileContent | Out-String | Out-File (Join-Path $folderPath "$folderName.md") -Encoding utf8
 
         $ymlFileContent += "- name: $folderName"
-        $ymlFileContent += "  href: " + "../obj/doc/using/$folderName/$folderName.md"
+        $ymlFileContent += "  href: $folderName/$folderName.md"
     }
 
-    $ymlFileContent | Out-String | Out-File (Join-Path $ExportPath "toc.yml") -Encoding utf8 
+    $ymlFileContent | Out-String | Out-File (Join-Path $ExportPath "toc.yml") -Encoding utf8 -Force
+
+    . "$PSScriptRoot\Resolve-Markdown.ps1" -SourcePath "$ExportPath"
 }
 catch
 {

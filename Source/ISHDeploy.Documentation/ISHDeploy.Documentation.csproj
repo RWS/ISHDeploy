@@ -80,20 +80,16 @@
     <None Include="toc.yml" />
     <None Include="web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Module\" />
-    <Folder Include="Using\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Articles\IntegrationSTS\Integration\All.Zone.Clients.png" />
     <Content Include="Articles\IntegrationSTS\Integration\User.Zone.Clients.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module\ISHDeploy"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)Using"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Using" -ExportPath "$(ProjectDir)obj\doc\using"</PostBuildEvent>
+    <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\module"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown-From-Usages.ps1" -InputDir "$(SolutionDir)ISHDeploy.PowerShell\CmdletsUsage" -ExportPath "$(ProjectDir)obj\doc\using"
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -109,23 +105,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
-	<Target Name="DocPortalClean" AfterTargets="Clean">
+  <Target Name="DocPortalClean" AfterTargets="Clean">
     <PropertyGroup>
-      <UsingItemsFolder>Using</UsingItemsFolder>
-      <ModuleItemsFolder>Module</ModuleItemsFolder>
       <WebSiteFolder>_site</WebSiteFolder>
+      <ObjItemsFolder>obj</ObjItemsFolder>
     </PropertyGroup>
-		<ItemGroup>
-			<UsingItemsToDelete Include="$(UsingItemsFolder)\**"/>
-      <ModuleItemsToDelete Include="$(ModuleItemsFolder)\**"/>
-      <UsingDirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('$(UsingItemsFolder)', '*', 
-        System.IO.SearchOption.AllDirectories))"
-                   Exclude="$(UsingItemsFolder)"/>
-		</ItemGroup>
-		<Delete Files="@(UsingItemsToDelete)" />
-    <Delete Files="@(ModuleItemsToDelete)" />
-		<RemoveDir Directories="$(WebSiteFolder)" />
-    <RemoveDir Directories="@(UsingDirectoriesToDelete)" />
-	</Target>
+    <RemoveDir Directories="$(ObjItemsFolder)" />
+    <RemoveDir Directories="$(WebSiteFolder)" />
+  </Target>
 </Project>

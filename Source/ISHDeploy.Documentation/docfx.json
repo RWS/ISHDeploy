@@ -3,8 +3,8 @@
     "content": [
       {
         "files": [ "toc.yml" ],
-        "cwd": "Module",
-        "dest": "module/ISHDeploy"
+        "cwd": "obj/doc/module",
+        "dest": "module"
       },
       {
         "files": [ "**/*.md" ],
@@ -13,7 +13,7 @@
       },
       {
         "files": [ "toc.yml" ],
-        "cwd": "Using",
+        "cwd": "obj/doc/using",
         "dest": "Using"
       },
       {

@@ -46,21 +46,41 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new GetISHDeploymentsOperations(Logger, Name);
-
-            var result = operation.Run();
-
-            foreach (var deployment in result) {
-                WriteObject(new Models.ISHDeployment(deployment));
-            }
-            
-            if (result.Any())
+            if (Name == null)
             {
-                string warningMessage;
+                var operation = new GetISHDeploymentsOperations(Logger, Name);
 
-                if (!ValidateDeploymentVersion.CheckDeploymentVersion(result.First().SoftwareVersion, out warningMessage))
+                var result = operation.Run();
+
+                foreach (var deployment in result)
                 {
-                    WriteWarning(warningMessage);
+                    WriteObject(new Models.ISHDeployment(deployment));
+                }
+
+                if (result.Any())
+                {
+                    string warningMessage;
+
+                    if (!ValidateDeploymentVersion.CheckDeploymentVersion(result.First().SoftwareVersion, out warningMessage))
+                    {
+                        WriteWarning(warningMessage);
+                    }
+                }
+            }
+            else
+            {
+                var operation = new GetISHDeploymentOperation(Logger, Name);
+                var result = operation.Run();
+                WriteObject(new Models.ISHDeployment(result));
+
+                if (result != null)
+                {
+                    string warningMessage;
+
+                    if (!ValidateDeploymentVersion.CheckDeploymentVersion(result.SoftwareVersion, out warningMessage))
+                    {
+                        WriteWarning(warningMessage);
+                    }
                 }
             }
         }

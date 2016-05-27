@@ -78,9 +78,9 @@ namespace ISHDeploy.Data.Managers
         /// <returns>List of found deployments</returns>
         public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null)
         {
-			_logger.WriteDebug($"Retrieveing installed registry keys {(expectedSuffix == null ? "" : ("with suffix " + expectedSuffix))}");
+            _logger.WriteDebug($"Retrieveing installed registry keys {(expectedSuffix == null ? "" : ("with suffix " + expectedSuffix))}");
 
-			var installedProjectsKeys = new List<RegistryKey>();
+            var installedProjectsKeys = new List<RegistryKey>();
             var projectBaseRegKey = GetProjectBaseRegKey();
 
             if (projectBaseRegKey == null || projectBaseRegKey.SubKeyCount == 0)
@@ -93,13 +93,13 @@ namespace ISHDeploy.Data.Managers
 
             foreach (var projectName in projectsKeyNames)
             {
-                if (projectName == CoreRegName || (expectedSuffix != null && expectedSuffix != GetProjectSuffix(projectName) ))
+                if (projectName == CoreRegName || (expectedSuffix != null && expectedSuffix != GetProjectSuffix(projectName)))
                 {
                     continue;
                 }
 
                 var projRegKey = projectBaseRegKey.OpenSubKey(projectName);
-                    
+
                 var currentValue = projRegKey?.GetValue(CurrentRegName, string.Empty).ToString();
 
                 if (!string.IsNullOrWhiteSpace(currentValue))
@@ -109,6 +109,28 @@ namespace ISHDeploy.Data.Managers
             }
 
             return installedProjectsKeys;
+        }
+
+        /// <summary>
+        /// Gets the installed deployment key.
+        /// </summary>
+        /// <param name="projectName">The deployment name.</param>
+        /// <returns>Found deployments</returns>
+        public RegistryKey GetInstalledProjectKey(string projectName)
+        {
+            _logger.WriteDebug($"Retrieveing installed registry keys with name " + projectName);
+
+            var projectBaseRegKey = GetProjectBaseRegKey();
+
+            if (projectBaseRegKey == null || projectBaseRegKey.SubKeyCount == 0)
+            {
+                _logger.WriteDebug("None project base registry keys were found on the system.");
+                return null;
+            }
+
+
+            return projectBaseRegKey.OpenSubKey(projectName);
+
         }
 
         /// <summary>

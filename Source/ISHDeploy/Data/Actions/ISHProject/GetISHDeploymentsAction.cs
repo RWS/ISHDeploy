@@ -13,7 +13,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets all instances of the installed Content Manager deployment for the current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeployment>>
+    public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeploymentExtended>>
     {
         /// <summary>
         /// The input parameters file name
@@ -35,6 +35,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         private readonly IFileManager _fileManager;
 
+
         /// <summary>
         /// The Content Manager deployment suffix.
         /// </summary>
@@ -46,7 +47,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="logger">The logger.</param>
         /// <param name="projectSuffix">The Content Manager deployment suffix.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentsAction(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeployment>> returnResult)
+        public GetISHDeploymentsAction(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeploymentExtended>> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
@@ -58,14 +59,14 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns>List of Content Manager deployments.</returns>
-        protected override IEnumerable<ISHDeployment> ExecuteWithResult()
+        /// <returns>Content Manager deployment in acccordance with name.</returns>
+        protected override IEnumerable<ISHDeploymentExtended> ExecuteWithResult()
         {
-            var result = new List<ISHDeployment>();
+            var result = new List<ISHDeploymentExtended>();
 
             // Get list of installed deployments from the registry.
             var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectSuffix).ToArray();
-            
+
             if (!installProjectsRegKeys.Any())
             {
                 if (_projectSuffix != null)
@@ -104,7 +105,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
                 var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-                var ishProject = new ISHDeployment(dictionary, version);
+                var ishProject = new ISHDeploymentExtended(dictionary, version);
 
                 result.Add(ishProject);
             }

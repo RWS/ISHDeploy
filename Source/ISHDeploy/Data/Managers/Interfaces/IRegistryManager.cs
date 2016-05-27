@@ -10,13 +10,20 @@ namespace ISHDeploy.Data.Managers.Interfaces
     public interface IRegistryManager
     {
         /// <summary>
+        /// Gets the installed deployment key.
+        /// </summary>
+        /// <param name="projectName">The deployment name.</param>
+        /// <returns>Found deployments</returns>
+        RegistryKey GetInstalledProjectKey(string projectName);
+
+        /// <summary>
         /// Gets the installed deployments keys.
         /// </summary>
         /// <param name="expectedSuffix">The deployment suffix. If not specified method will return all found deployments.</param>
         /// <returns>List of found deployments</returns>
         IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null);
 
-        /// <summary>
+                /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

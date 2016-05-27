@@ -1,6 +1,8 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
 using ISHDeploy.Business.Operations;
 using ISHDeploy.Validators;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -14,14 +16,16 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
         [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
+        public Models.ISHDeploymentExtended _ISHDeploymentExtended { get; set; }
 
         /// <summary>
         /// Begins the processing.
         /// </summary>
         protected override void BeginProcessing()
         {
-            OperationPaths.Initialize(ISHDeployment);
+            var extendedDeployment = new GetISHDeploymentOperation(Logger, _ISHDeploymentExtended.Name).Run();
+            OperationPaths.Initialize(extendedDeployment);
         }
+
     }
 }

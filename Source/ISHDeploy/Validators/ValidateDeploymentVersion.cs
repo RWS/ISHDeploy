@@ -20,17 +20,17 @@ namespace ISHDeploy.Validators
         /// <summary>
         /// Performs the validation.
         /// </summary>
-        /// <param name="arguments">The instance of the <see cref="ISHDeployment"/>.</param>
+        /// <param name="arguments">The instance of the <see cref="ISHDeploymentExtended"/>.</param>
         /// <param name="engineIntrinsics">The engine intrinsics.</param>
         /// <exception cref="ValidationMetadataException">
-        /// Thrown when module version does not correspond to deployment version or <paramref name="arguments"/> is not instance of <see cref="ISHDeployment"/>.
+        /// Thrown when module version does not correspond to deployment version or <paramref name="arguments"/> is not instance of <see cref="ISHDeploymentExtended"/>.
         /// </exception>
         protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
         {
-            ISHDeployment deployment = arguments as ISHDeployment;
+            ISHDeploymentExtended deployment = arguments as ISHDeploymentExtended;
             if (deployment == null)
             {
-                throw new ValidationMetadataException($"Validation {nameof(ValidateDeploymentVersion)} should be only applied to parameter with type {nameof(ISHDeployment)}");
+                throw new ValidationMetadataException($"Validation {nameof(ValidateDeploymentVersion)} should be only applied to parameter with type {nameof(ISHDeploymentExtended)}");
             }
 
             string errorMessage;

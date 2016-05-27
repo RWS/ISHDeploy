@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Interfaces;
+using ISHDeploy.Models;
+
+namespace ISHDeploy.Data.Actions.ISHProject
+{
+    /// <summary>
+    /// Gets all instances of the installed Content Manager deployment for the current system.
+    /// </summary>
+    /// <seealso cref="BaseActionWithResult{TResult}" />
+    public class GetISHDeploymentAction : BaseActionWithResult<ISHDeploymentExtended>
+    {
+        /// <summary>
+        /// The input parameters file name
+        /// </summary>
+        private const string InputParametersFileName = "inputparameters.xml";
+
+        /// <summary>
+        /// The registry manager.
+        /// </summary>
+        private readonly IRegistryManager _registryManager;
+
+        /// <summary>
+        /// The XML configuration manager.
+        /// </summary>
+        private readonly IXmlConfigManager _xmlConfigManager;
+
+        /// <summary>
+        /// The file manager.
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
+        /// The Content Manager deployment name.
+        /// </summary>
+        private readonly string _name;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GetISHDeploymentAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="name">The Content Manager deployment name.</param>
+        /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
+        public GetISHDeploymentAction(ILogger logger, string name, Action<ISHDeploymentExtended> returnResult)
+            : base(logger, returnResult)
+        {
+            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            _name = name;
+        }
+
+        /// <summary>
+        /// Executes current action and returns result.
+        /// </summary>
+        /// <returns>Content Manager deployment in acccordance with name.</returns>
+        protected override ISHDeploymentExtended ExecuteWithResult()
+        {
+            // Get installed deployment from the registry.
+            var projectRegKey = _registryManager.GetInstalledProjectKey(_name);
+            var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
+            var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
+
+            if (string.IsNullOrWhiteSpace(installParamsPath))
+            {
+                Logger.WriteError(new CorruptedInstallationException($"Registry subkeys for {projectRegKey} are corrupted"), projectRegKey);
+            }
+
+            var installParamFile = Path.Combine(installParamsPath, InputParametersFileName);
+
+            if (!_fileManager.FileExists(installParamFile))
+            {
+                Logger.WriteError(new CorruptedInstallationException($"{ installParamFile } file does not exist on the system"), installParamFile);
+            }
+
+            var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
+
+            return new ISHDeploymentExtended(dictionary, version);
+
+        }
+    }
+}

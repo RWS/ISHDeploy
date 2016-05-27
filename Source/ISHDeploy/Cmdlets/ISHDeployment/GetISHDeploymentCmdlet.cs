@@ -27,10 +27,6 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     [Cmdlet(VerbsCommon.Get, "ISHDeployment")]
     public class GetISHDeploymentCmdlet : BaseCmdlet
     {
-        /// <summary>
-        /// The information share prefix
-        /// </summary>
-        private const string InfoSharePrefix = "InfoShare";
 
         /// <summary>
         /// The validation pattern
@@ -50,14 +46,12 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var suffix = Name?.Substring(InfoSharePrefix.Length);
-
-            var operation = new GetISHDeploymentOperation(Logger, suffix);
+            var operation = new GetISHDeploymentsOperations(Logger, Name);
 
             var result = operation.Run();
 
             foreach (var deployment in result) {
-                WriteObject(new DeploymentPartial(deployment));
+                WriteObject(new Models.ISHDeployment(deployment));
             }
             
             if (result.Any())

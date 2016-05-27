@@ -41,7 +41,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, ISHDeployment, FileName, ADFS.IsPresent);
+            var operation = new SaveISHIntegrationSTSConfigurationPackageOperation(Logger, _ISHDeploymentExtended, FileName, ADFS.IsPresent);
 
             operation.Run();
         }

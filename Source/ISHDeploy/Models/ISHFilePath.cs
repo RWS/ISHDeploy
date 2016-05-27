@@ -30,7 +30,7 @@ namespace ISHDeploy.Models
         /// <summary>
         /// The instance of the deployment.
         /// </summary>
-        private readonly ISHDeployment _ishDeployment;
+        private readonly ISHDeploymentExtended _ishDeployment;
 
         /// <summary>
         /// Type of the deployment.
@@ -43,7 +43,7 @@ namespace ISHDeploy.Models
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="deploymentType">Type of the deployment.</param>
         /// <param name="path">The path to the file.</param>
-        public ISHFilePath(ISHDeployment ishDeployment, IshDeploymentType deploymentType, string path)
+        public ISHFilePath(ISHDeploymentExtended ishDeployment, IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
 			_deploymentType = deploymentType;

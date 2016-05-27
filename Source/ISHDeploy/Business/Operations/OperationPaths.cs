@@ -13,7 +13,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The instance of the deployment.
         /// </summary>
-        private static Models.ISHDeployment _ishDeployment;
+        private static Models.ISHDeploymentExtended _ishDeployment;
 
         /// <summary>
         /// The path to generated History.ps1 file
@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations
         /// Initialization of a class to build the full paths to files
         /// </summary>
         /// <param name="ishDeployment">Instance of the current <see cref="ISHDeployment"/>.</param>
-        public static void Initialize(Models.ISHDeployment ishDeployment)
+        public static void Initialize(Models.ISHDeploymentExtended ishDeployment)
         {
             _ishDeployment = ishDeployment;
         }

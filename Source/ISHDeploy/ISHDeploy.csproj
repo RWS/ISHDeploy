@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperations.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Data\Actions\Directory\DirectoryRemoveAction.cs" />
     <Compile Include="Data\Actions\File\FileSaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
@@ -161,7 +163,7 @@
     <Compile Include="Data\Managers\TemplateManager.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
-    <Compile Include="Models\DeploymentPartial.cs" />
+    <Compile Include="Models\ISHDeployment.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
@@ -194,7 +196,7 @@
     <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
-    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentAction.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
     <Compile Include="Data\Actions\TextFile\CommentBlockAction.cs" />
     <Compile Include="Data\Actions\TextFile\UncommentBlockAction.cs" />
@@ -230,7 +232,7 @@
     <Compile Include="Business\Invokers\ActionInvoker.cs" />
     <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
-    <Compile Include="Models\ISHDeployment.cs" />
+    <Compile Include="Models\ISHDeploymentExtended.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>

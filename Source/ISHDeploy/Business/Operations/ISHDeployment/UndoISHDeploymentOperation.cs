@@ -22,9 +22,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		/// </summary>
 		/// <param name="logger">Logger object.</param>
 		/// <param name="deployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
-		public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment deployment)
+		public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeploymentExtended deployment)
 		{
-			Models.ISHDeployment ishDeployment = deployment;
+			Models.ISHDeploymentExtended ishDeployment = deployment;
 
 			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 

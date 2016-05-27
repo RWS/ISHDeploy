@@ -18,13 +18,15 @@ namespace ISHDeploy.Cmdlets
         [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
+        public Models.ISHDeploymentExtended ISHDeploymentExtended { get; set; }
+
         /// <summary>
         /// Begins the processing.
         /// </summary>
         protected override void BeginProcessing()
         {
-            var extendedDeployment = new GetISHDeploymentOperation(Logger, ISHDeployment.Name).Run();
-            OperationPaths.Initialize(extendedDeployment);
+            ISHDeploymentExtended = new GetISHDeploymentOperation(Logger, ISHDeployment.Name).Run();
+            OperationPaths.Initialize(ISHDeploymentExtended);
         }
 
     }

@@ -16,14 +16,14 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
         [ValidateDeploymentVersion]
-        public Models.ISHDeploymentExtended _ISHDeploymentExtended { get; set; }
+        public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>
         /// Begins the processing.
         /// </summary>
         protected override void BeginProcessing()
         {
-            var extendedDeployment = new GetISHDeploymentOperation(Logger, _ISHDeploymentExtended.Name).Run();
+            var extendedDeployment = new GetISHDeploymentOperation(Logger, ISHDeployment.Name).Run();
             OperationPaths.Initialize(extendedDeployment);
         }
 

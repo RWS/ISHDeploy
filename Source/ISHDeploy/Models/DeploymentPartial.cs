@@ -8,7 +8,10 @@ namespace ISHDeploy.Models
 {
     class DeploymentPartial
     {
-
+        /// <summary>
+        /// This class is used to make partial view to output some parameters from main ISHDeployment class.
+        /// </summary>
+        /// <param name="iSHDeployment">Main class to get information from.</param>
         public DeploymentPartial(ISHDeployment iSHDeployment)
         {
             SoftwareVersion = iSHDeployment.SoftwareVersion.ToString();
@@ -18,9 +21,9 @@ namespace ISHDeploy.Models
             DataPath = iSHDeployment.DataPath;
             ConnectString = iSHDeployment.ConnectString;
             DatabaseType = iSHDeployment.DatabaseType;
-            WebAppNameCM = iSHDeployment.WebNameCM;
-            WebAppNameWS = iSHDeployment.WebNameWS;
-            WebAppNameSTS = iSHDeployment.WebNameSTS;
+            WebAppNameCM = iSHDeployment.GetCMWebAppName();
+            WebAppNameWS = iSHDeployment.GetWSWebAppName();
+            WebAppNameSTS = iSHDeployment.GetSTSWebAppName();
             AccessHostName = iSHDeployment.AccessHostName;
         }
         public String SoftwareVersion { get; set; }

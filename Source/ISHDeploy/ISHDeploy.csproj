@@ -206,7 +206,7 @@
     <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
-    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\GetISHDeploymentExtendedAction.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
     <Compile Include="Data\Actions\TextFile\CommentBlockAction.cs" />
     <Compile Include="Data\Actions\TextFile\UncommentBlockAction.cs" />

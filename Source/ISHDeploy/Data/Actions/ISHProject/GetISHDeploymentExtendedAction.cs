@@ -13,7 +13,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets all instances of the installed Content Manager deployment for the current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentAction : BaseActionWithResult<ISHDeploymentExtended>
+    public class GetISHDeploymentExtendedAction : BaseActionWithResult<ISHDeploymentExtended>
     {
         /// <summary>
         /// The input parameters file name
@@ -41,12 +41,12 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private readonly string _name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHDeploymentAction"/> class.
+        /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="name">The Content Manager deployment name.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentAction(ILogger logger, string name, Action<ISHDeploymentExtended> returnResult)
+        public GetISHDeploymentExtendedAction(ILogger logger, string name, Action<ISHDeploymentExtended> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();

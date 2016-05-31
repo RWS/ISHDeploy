@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public GetISHDeploymentExtendedOperation(ILogger logger, string name)
         {
             _invoker = new ActionInvoker(logger, "Getting a list of installed Content Manager deployments");
-            _invoker.AddAction(new GetISHDeploymentAction(logger, name, result => _ishProject = result));
+            _invoker.AddAction(new GetISHDeploymentExtendedAction(logger, name, result => _ishProject = result));
         }
 
         /// <summary>

@@ -10,13 +10,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
     public interface IRegistryManager
     {
         /// <summary>
-        /// Gets the installed deployment key.
-        /// </summary>
-        /// <param name="projectName">The deployment name.</param>
-        /// <returns>Found deployments</returns>
-        RegistryKey GetInstalledProjectKey(string projectName);
-
-        /// <summary>
         /// Gets the installed deployments keys.
         /// </summary>
         /// <param name="expectedSuffix">The deployment suffix. If not specified method will return all found deployments.</param>

@@ -37,8 +37,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var stsConfigParams = new Dictionary<string, string>
                     {
                         {"$ishhostname", deployment.AccessHostName},
-                        {"$ishcmwebappname", deployment.GetCMWebAppName()},
-                        {"$ishwswebappname", deployment.GetWSWebAppName()},
+                        {"$ishcmwebappname", deployment.WebAppNameCM},
+                        {"$ishwswebappname", deployment.WebAppNameWS},
                         {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
                         {"$ishwscontent", string.Empty}
                     };
@@ -60,10 +60,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     new Dictionary<string, string>
                     {
                         {"#!#installtool:BASEHOSTNAME#!#", deployment.AccessHostName},
-                        {"#!#installtool:PROJECTSUFFIX#!#", deployment.GetSuffix()},
+                        {"#!#installtool:PROJECTSUFFIX#!#", deployment.ProjectSuffix},
                         {"#!#installtool:OSUSER#!#", deployment.GetOSUser()},
-                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.GetCMWebAppName()},
-                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", deployment.GetWSWebAppName()}
+                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.WebAppNameCM},
+                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", deployment.WebAppNameWS}
                     }));
             }
 

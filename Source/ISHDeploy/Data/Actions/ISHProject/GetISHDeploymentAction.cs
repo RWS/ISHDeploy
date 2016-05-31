@@ -62,7 +62,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         protected override ISHDeploymentExtended ExecuteWithResult()
         {
             // Get installed deployment from the registry.
-            var projectRegKey = _registryManager.GetInstalledProjectKey(_name);
+            var projectRegKey = _registryManager.GetInstalledProjectsKeys(_name).FirstOrDefault();
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
             var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
 

@@ -9,7 +9,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Gets a list of installed Content Manager deployments found on the current system.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class GetISHDeploymentsOperations : IOperation<IEnumerable<Models.ISHDeploymentExtended>>
+    public class GetISHDeploymentsOperations : IOperation<IEnumerable<Models.ISHDeployment>>
     {
         /// <summary>
         /// The actions invoker
@@ -19,24 +19,24 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The list of installed Content Manager deployments found on the current system.
         /// </summary>
-        private IEnumerable<Models.ISHDeploymentExtended> _ishProjects;
+        private IEnumerable<Models.ISHDeployment> _ishProjects;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHDeploymentOperation"/> class.
+        /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="projectSuffix">The deployment suffix.</param>
-        public GetISHDeploymentsOperations(ILogger logger, string projectSuffix)
+        /// <param name="projectName">The deployment name.</param>
+        public GetISHDeploymentsOperations(ILogger logger, string projectName)
         {
             _invoker = new ActionInvoker(logger, "Getting a list of installed Content Manager deployments");
-            _invoker.AddAction(new GetISHDeploymentsAction(logger, projectSuffix, result => _ishProjects = result));
+            _invoker.AddAction(new GetISHDeploymentsAction(logger, projectName, result => _ishProjects = result));
         }
 
         /// <summary>
         /// Runs current operation.
         /// </summary>
         /// <returns>List of installed Content Manager deployments.</returns>
-        public IEnumerable<Models.ISHDeploymentExtended> Run()
+        public IEnumerable<Models.ISHDeployment> Run()
         {
             _invoker.Invoke();
 

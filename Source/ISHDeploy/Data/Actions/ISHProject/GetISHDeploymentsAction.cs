@@ -13,7 +13,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets all instances of the installed Content Manager deployment for the current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeploymentExtended>>
+    public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeployment>>
     {
         /// <summary>
         /// The input parameters file name
@@ -37,43 +37,43 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
 
         /// <summary>
-        /// The Content Manager deployment suffix.
+        /// The Content Manager deployment name.
         /// </summary>
-        private readonly string _projectSuffix;
+        private readonly string _projectName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHDeploymentsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="projectSuffix">The Content Manager deployment suffix.</param>
+        /// <param name="projectName">The Content Manager deployment name.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentsAction(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeploymentExtended>> returnResult)
+        public GetISHDeploymentsAction(ILogger logger, string projectName, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
-            _projectSuffix = projectSuffix;
+            _projectName = projectName;
         }
 
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
         /// <returns>Content Manager deployment in acccordance with name.</returns>
-        protected override IEnumerable<ISHDeploymentExtended> ExecuteWithResult()
+        protected override IEnumerable<ISHDeployment> ExecuteWithResult()
         {
-            var result = new List<ISHDeploymentExtended>();
+            var result = new List<ISHDeployment>();
 
             // Get list of installed deployments from the registry.
-            var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectSuffix).ToArray();
+            var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectName).ToArray();
 
             if (!installProjectsRegKeys.Any())
             {
-                if (_projectSuffix != null)
+                if (_projectName != null)
                 {
                     Logger.WriteError(
                         new DeploymentNotFoundException(
-                            $"Deployment with suffix {_projectSuffix} is not found on the system"), _projectSuffix);
+                            $"Deployment with name {_projectName} is not found on the system"), _projectName);
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
                 var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-                var ishProject = new ISHDeploymentExtended(dictionary, version);
+                var ishProject = new ISHDeployment(dictionary, version);
 
                 result.Add(ishProject);
             }

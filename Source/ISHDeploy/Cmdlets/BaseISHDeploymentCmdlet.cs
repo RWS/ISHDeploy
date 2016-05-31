@@ -25,7 +25,7 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         protected override void BeginProcessing()
         {
-            ISHDeploymentExtended = new GetISHDeploymentOperation(Logger, ISHDeployment.Name).Run();
+            ISHDeploymentExtended = new GetISHDeploymentExtendedOperation(Logger, ISHDeployment.Name).Run();
             OperationPaths.Initialize(ISHDeploymentExtended);
         }
 

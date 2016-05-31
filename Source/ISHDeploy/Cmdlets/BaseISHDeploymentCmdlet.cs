@@ -18,7 +18,7 @@ namespace ISHDeploy.Cmdlets
         [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
-        public Models.ISHDeploymentExtended ISHDeploymentExtended { get; set; }
+        protected Models.ISHDeploymentExtended ISHDeploymentExtended { get; set; }
 
         /// <summary>
         /// Begins the processing.

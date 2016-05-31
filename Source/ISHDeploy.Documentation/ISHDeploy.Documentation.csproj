@@ -32,6 +32,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSkipVersion|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugSkipVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -109,23 +118,20 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
-	<Target Name="DocPortalClean" AfterTargets="Clean">
+  <Target Name="DocPortalClean" AfterTargets="Clean">
     <PropertyGroup>
       <UsingItemsFolder>Using</UsingItemsFolder>
       <ModuleItemsFolder>Module</ModuleItemsFolder>
       <WebSiteFolder>_site</WebSiteFolder>
     </PropertyGroup>
-		<ItemGroup>
-			<UsingItemsToDelete Include="$(UsingItemsFolder)\**"/>
-      <ModuleItemsToDelete Include="$(ModuleItemsFolder)\**"/>
-      <UsingDirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('$(UsingItemsFolder)', '*', 
-        System.IO.SearchOption.AllDirectories))"
-                   Exclude="$(UsingItemsFolder)"/>
-		</ItemGroup>
-		<Delete Files="@(UsingItemsToDelete)" />
+    <ItemGroup>
+      <UsingItemsToDelete Include="$(UsingItemsFolder)\**" />
+      <ModuleItemsToDelete Include="$(ModuleItemsFolder)\**" />
+      <UsingDirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('$(UsingItemsFolder)', '*', &#xD;&#xA;        System.IO.SearchOption.AllDirectories))" Exclude="$(UsingItemsFolder)" />
+    </ItemGroup>
+    <Delete Files="@(UsingItemsToDelete)" />
     <Delete Files="@(ModuleItemsToDelete)" />
-		<RemoveDir Directories="$(WebSiteFolder)" />
+    <RemoveDir Directories="$(WebSiteFolder)" />
     <RemoveDir Directories="@(UsingDirectoriesToDelete)" />
-	</Target>
+  </Target>
 </Project>

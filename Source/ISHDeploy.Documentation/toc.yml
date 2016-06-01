@@ -1,6 +1,4 @@
 ﻿- name: Articles
   href: Articles/
-- name: Using ISHDeploy
-  href: obj/doc/Using/
-- name: ISHDeploy Commandlets
+- name: Module cmdlets
   href: obj/doc/Module/

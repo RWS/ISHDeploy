@@ -1,0 +1,17 @@
+﻿div.sidetoc {
+    width: 400px;
+}
+.container,.container-fluid{
+	margin-right:0;
+	margin-left:0
+}
+.article.grid-right{
+	width: 100%
+}
+.sidefilter {
+	 width: 400px;
+} 
+.article.grid-right {
+  margin-left: 420px;
+}
+

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="template\partials\footer.tmpl.partial" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
@@ -77,6 +78,7 @@
     <None Include="Readme.md" />
     <None Include="Index.md" />
     <None Include="Resolve-Markdown.ps1" />
+    <None Include="template\partials\navbar.tmpl.partial" />
     <None Include="toc.yml" />
     <None Include="web.config" />
   </ItemGroup>
@@ -84,6 +86,8 @@
   <ItemGroup>
     <Content Include="Articles\IntegrationSTS\Integration\All.Zone.Clients.png" />
     <Content Include="Articles\IntegrationSTS\Integration\User.Zone.Clients.png" />
+    <Content Include="sdl_logo_transparent.png" />
+    <Content Include="template\styles\main.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

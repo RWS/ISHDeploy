@@ -40,6 +40,9 @@
         "files": [ "**/images/**" ]
       },
       {
+        "files": "sdl_logo_transparent.png"
+      },
+      {
         "files": "web.config"
       },
       {
@@ -59,7 +62,8 @@
     "globalMetadata": {
     },
     "template": [
-      "default"
+      "default",
+      "template"
     ],
     "dest": "_site"
   }

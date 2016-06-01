@@ -1,4 +1,4 @@
 ﻿- name: Articles
   href: Articles/
-- name: Module cmdlets
+- name: Commands
   href: obj/doc/Module/

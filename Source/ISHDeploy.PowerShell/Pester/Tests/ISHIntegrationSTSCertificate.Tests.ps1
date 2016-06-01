@@ -100,11 +100,10 @@ $scriptBlockReadTargetXML = {
         $Issuer,
         $ValidationMode,
         $xmlPath,
-        $testingDeployment
+        $suffix
     )
     #read all files that are touched with commandlet
     
-    $suffix = GetProjectSuffix($testingDeployment.Name)
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
     $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
@@ -132,7 +131,7 @@ function remoteReadTargetXML() {
         $ValidationMode
     )
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $Issuer, $ValidationMode, $xmlPath, $testingDeployment
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $Issuer, $ValidationMode, $xmlPath, $suffix
     
     #get variables and nodes from files
     $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]

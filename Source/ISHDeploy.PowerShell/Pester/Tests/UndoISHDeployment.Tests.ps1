@@ -204,7 +204,6 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
         RetryCommand -numberOfRetries 20 -command {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup} -expectedResult $false | Should Be "False"
         readTargetXML | Should Be "VanilaState"
-        $suffix = GetProjectSuffix($testingDeployment.Name)
         $path =  Join-Path $testingDeployment.WebPath ("Web{0}\InfoShareSTS\App_Data\" -f $suffix )
         $countOfItemsInDataBaseFolder = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCountOfItemsInFolder -Session $session -ArgumentList $path 
         $countOfItemsInDataBaseFolder | Should Be 0

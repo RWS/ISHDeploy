@@ -26,6 +26,7 @@ $scriptBlockGetDeployment = {
 
 # Generating file pathes to remote PC files
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+$suffix = GetProjectSuffix($testingDeployment.Name)
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
@@ -165,7 +166,6 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
         $scriptFile = Get-Content "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1"
         
-        $suffix = GetProjectSuffix($testingDeployment.Name)
         $scriptFile -contains '$projectsuffix="' + $suffix +'"' | Should be $true
         #$scriptFile -contains '$osuser="' + $testingDeployment.OriginalParameters.osuser +'"' | Should be $true
     }

@@ -32,13 +32,18 @@ namespace ISHDeploy.Tests
 
 	    public ISHFilePath GetIshFilePath(string relativePath)
 	    {
-			var installParams =  new Dictionary<string, string>
-			{
-				{ "apppath", "."},
-				{ "webpath", "."},
-				{ "datapath", "."},
-				{ "projectsuffix", ""}
-			};
+			var installParams = new Dictionary<string, string>
+            {
+                ["projectsuffix"] = string.Empty,
+                ["apppath"] = string.Empty,
+                ["webpath"] = string.Empty,
+                ["datapath"] = string.Empty,
+                ["databasetype"] = string.Empty,
+                ["baseurl"] = "https://",
+                ["infoshareauthorwebappname"] = string.Empty,
+                ["infosharewswebappname"] = string.Empty,
+                ["infosharestswebappname"] = string.Empty
+            };
 
 			return new ISHFilePath(new ISHDeploymentExtended(installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);
 		}

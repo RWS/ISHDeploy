@@ -23,6 +23,19 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
         {
             ObjectFactory.SetInstance(_registryManager);
             ObjectFactory.SetInstance(_xmlManager);
+
+            _xmlManager.GetAllInputParamsValues(Arg.Any<string>()).Returns(new Dictionary<string, string>
+            {
+                ["projectsuffix"] = string.Empty,
+                ["apppath"] = string.Empty,
+                ["webpath"] = string.Empty,
+                ["datapath"] = string.Empty,
+                ["databasetype"] = string.Empty,
+                ["baseurl"] = "https://",
+                ["infoshareauthorwebappname"] = string.Empty,
+                ["infosharewswebappname"] = string.Empty,
+                ["infosharestswebappname"] = string.Empty
+            });
         }
         
         [TestMethod]

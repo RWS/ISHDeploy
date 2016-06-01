@@ -20,7 +20,6 @@ namespace ISHDeploy.Models
         /// <param name="softwareVersion">The deployment version.</param>
         public ISHDeployment(Dictionary<string, string> parameters, Version softwareVersion)
         {
-            OriginalParameters = parameters;
             Name = $"InfoShare{parameters["projectsuffix"]}";
             AppPath = parameters["apppath"];
             WebPath = parameters["webpath"];
@@ -32,16 +31,11 @@ namespace ISHDeploy.Models
             WebAppNameSTS = parameters["infosharestswebappname"];
             SoftwareVersion = softwareVersion;
         }
-
-        /// <summary>
-        /// Gets the all parameters from inputparameter.xml file.
-        /// </summary>
-        protected Dictionary<string, string> OriginalParameters { get; }
-
+        
         /// <summary>
         /// Gets the deployment version.
         /// </summary>
-        public Version SoftwareVersion { get; }
+        public Version SoftwareVersion { get; set; }
 
         /// <summary>
         /// Gets the deployment suffix in user-friendly format.

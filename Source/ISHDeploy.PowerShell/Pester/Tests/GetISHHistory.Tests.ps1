@@ -24,7 +24,8 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
-$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $testingDeployment.OriginalParameters.projectsuffix )
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $suffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
 $scriptBlockGet = {
@@ -117,10 +118,10 @@ $scriptBlockUndoDeployment = {
    
 
  function createFakeHistory{
-$text = '$deployment = Get-ISHDeployment -Name ''InfoShareSQL2014''
+$text = '$deployment = Get-ISHDeployment -Name ''InfoShare''
 Disable-ISHUIQualityAssistant -ISHDeployment $deployment
 '
-  return $text
+  return $text.Replace("InfoShare", $testingDeployment.Name)
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests

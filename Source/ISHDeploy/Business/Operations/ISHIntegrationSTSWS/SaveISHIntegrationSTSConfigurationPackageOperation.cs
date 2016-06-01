@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     {
                         {"#!#installtool:BASEHOSTNAME#!#", deployment.AccessHostName},
                         {"#!#installtool:PROJECTSUFFIX#!#", deployment.ProjectSuffix},
-                        {"#!#installtool:OSUSER#!#", deployment.GetOSUser()},
+                        {"#!#installtool:OSUSER#!#", deployment.OSUser},
                         {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.WebAppNameCM},
                         {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", deployment.WebAppNameWS}
                     }));

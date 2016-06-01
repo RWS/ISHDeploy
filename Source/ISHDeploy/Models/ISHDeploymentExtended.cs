@@ -17,32 +17,38 @@ namespace ISHDeploy.Models
         /// <param name="softwareVersion">The deployment version.</param>
         public ISHDeploymentExtended(Dictionary<string, string> parameters, Version softwareVersion) : base(parameters, softwareVersion)
         {
+            _originalParameters = parameters;
         }
+
+        /// <summary>
+        /// Gets the all parameters from inputparameter.xml file.
+        /// </summary>
+        private Dictionary<string, string> _originalParameters { get; }
 
         /// <summary>
         /// Gets the deployment suffix.
         /// </summary>
-        public string ProjectSuffix => OriginalParameters["projectsuffix"];
+        public string ProjectSuffix => _originalParameters["projectsuffix"];
 
         /// <summary>
         /// Gets the DB connection string.
         /// </summary>
-        public string ConnectString => OriginalParameters["connectstring"];
+        public string ConnectString => _originalParameters["connectstring"];
 
         /// <summary>
         /// Gets the path to the Author folder.
         /// </summary>
-        public string WebNameCM => Path.Combine(GetAuthorFolderPath(), "Author");
+        public string WebNameCM => Path.Combine(AuthorFolderPath, "Author");
 
         /// <summary>
         /// Gets the path to the InfoShareWS folder.
         /// </summary>
-        public string WebNameWS => Path.Combine(GetAuthorFolderPath(), "InfoShareWS");
+        public string WebNameWS => Path.Combine(AuthorFolderPath, "InfoShareWS");
 
         /// <summary>
         /// Gets the path to the InfoShareSTS folder.
         /// </summary>
-        public string WebNameSTS => Path.Combine(GetAuthorFolderPath(), "InfoShareSTS");
+        public string WebNameSTS => Path.Combine(AuthorFolderPath, "InfoShareSTS");
 
         /// <summary>
         /// Gets the path to the InfoShareSTS Application Data folder.
@@ -52,22 +58,22 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Gets the path to the Web+Suffix Author folder.
         /// </summary>
-        public string GetAuthorFolderPath() => Path.Combine(WebPath, $"Web{ProjectSuffix}");
+        public string AuthorFolderPath => Path.Combine(WebPath, $"Web{ProjectSuffix}");
 
         /// <summary>
         /// Gets the path to the App+Suffix Author folder.
         /// </summary>
-        public string GetAppFolderPath() => Path.Combine(AppPath, $"App{ProjectSuffix}");
+        public string AppFolderPath => Path.Combine(AppPath, $"App{ProjectSuffix}");
 
         /// <summary>
         /// Gets the path to the Data+Suffix Author folder.
         /// </summary>
-        public string GetDataFolderPath() => Path.Combine(AppPath, $"Data{ProjectSuffix}");
+        public string DataFolderPath => Path.Combine(AppPath, $"Data{ProjectSuffix}");
 
         /// <summary>
         /// Gets the name of the OS user.
         /// </summary>
-        public string GetOSUser() => OriginalParameters["osuser"];
+        public string OSUser => _originalParameters["osuser"];
 
     }
 }

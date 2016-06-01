@@ -84,19 +84,20 @@ $scriptBlockReadTargetXML = {
         $xmlPath,
         $testingDeployment
     )
+    $suffix = GetProjectSuffix($testingDeployment.Name)
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
-    $connectionConfig.load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $connectionConfig.load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $suffix)
     [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $feedSDLLiveContentConfig.load("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $suffix)
     [System.Xml.XmlDocument]$translationOrganizerConfig = new-object System.Xml.XmlDocument
-    $translationOrganizerConfig.load("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $translationOrganizerConfig.load("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $suffix)
     [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument
-    $synchronizeToLiveContentConfig.load("$xmlPath\App{0}\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $synchronizeToLiveContentConfig.load("$xmlPath\App{0}\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $suffix)
     [System.Xml.XmlDocument]$trisoftInfoShareClientConfig = new-object System.Xml.XmlDocument
-    $trisoftInfoShareClientConfig.load("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $trisoftInfoShareClientConfig.load("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $suffix)
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
-    $infoShareWSWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $infoShareWSWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
 
     $result = @{}
 
@@ -204,7 +205,8 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
+        $suffix = GetProjectSuffix($testingDeployment.Name)
+        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
@@ -220,7 +222,8 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
+        $suffix = GetProjectSuffix($testingDeployment.Name)
+        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         Rename-Item "$filepath\Web.config"  "_Web.config"
 

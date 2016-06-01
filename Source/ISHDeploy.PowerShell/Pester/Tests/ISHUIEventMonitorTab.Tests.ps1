@@ -22,7 +22,8 @@ $scriptBlockGetDeployment = {
 
 # Generating file pathes to remote PC files
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $testingDeployment.OriginalParameters.projectsuffix )
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $suffix )
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 

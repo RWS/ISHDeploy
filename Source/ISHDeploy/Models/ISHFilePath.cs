@@ -61,11 +61,11 @@ namespace ISHDeploy.Models
 				switch (_deploymentType)
 				{
 					case IshDeploymentType.App:
-						return Path.Combine(_ishDeployment.GetAppFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.AppFolderPath, RelativePath);
 					case IshDeploymentType.Web:
-						return Path.Combine(_ishDeployment.GetAuthorFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
 					case IshDeploymentType.Data:
-						return Path.Combine(_ishDeployment.GetDataFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.DataFolderPath, RelativePath);
 					default:
 						return null;
 				}

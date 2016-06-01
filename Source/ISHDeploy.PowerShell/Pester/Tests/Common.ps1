@@ -107,3 +107,9 @@ function RemoteReadXML{
 
     return $actualResult
 }
+
+#Gets suffix from project name
+Function GetProjectSuffix($projectName)
+{
+    return $projectName.Replace("InfoShare", "")
+}

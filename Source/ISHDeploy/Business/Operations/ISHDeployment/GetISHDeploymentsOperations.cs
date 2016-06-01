@@ -5,7 +5,7 @@ using ISHDeploy.Business.Invokers;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
-    // <summary>
+    /// <summary>
     /// Gets a list of installed Content Manager deployments found on the current system.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         private IEnumerable<Models.ISHDeployment> _ishProjects;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedOperation"/> class.
+        /// Initializes a new instance of the <see cref="GetISHDeploymentsOperations"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="projectName">The deployment name.</param>

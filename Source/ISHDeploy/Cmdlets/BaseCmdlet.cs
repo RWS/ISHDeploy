@@ -20,8 +20,9 @@ namespace ISHDeploy.Cmdlets
 		/// Constructor
 		/// </summary>
 		protected BaseCmdlet()
-        {   
+        {
             Logger = CmdletsLogger.Instance();
+            CmdletsLogger.Initialize(this);
             ObjectFactory.SetInstance<IFileManager>(new FileManager(Logger));
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
             ObjectFactory.SetInstance<ITextConfigManager>(new TextConfigManager(Logger));
@@ -29,8 +30,8 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
         }
-
-		/// <summary>
+        
+        /// <summary>
 		/// Method to be overridden instead of process record
 		/// </summary>
 		public abstract void ExecuteCmdlet();
@@ -42,9 +43,7 @@ namespace ISHDeploy.Cmdlets
         {
             try
             {
-                CmdletsLogger.Initialize(this);
                 base.ProcessRecord();
-
                 ExecuteCmdlet();
             }
             catch (Exception ex)

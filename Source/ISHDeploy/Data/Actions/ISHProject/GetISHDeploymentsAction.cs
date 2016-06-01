@@ -71,16 +71,13 @@ namespace ISHDeploy.Data.Actions.ISHProject
             {
                 if (_projectName != null)
                 {
-                    Logger.WriteError(
-                        new DeploymentNotFoundException(
-                            $"Deployment with name {_projectName} is not found on the system"), _projectName);
+                    throw new DeploymentNotFoundException($"Deployment with name {_projectName} is not found on the system");
                 }
                 else
                 {
                     Logger.WriteVerbose("None project instances were found on the system");
+                    return result;
                 }
-
-                return result;
             }
 
             // For each registry record get deployment version, path to inputparameter.xml file and parse this file.

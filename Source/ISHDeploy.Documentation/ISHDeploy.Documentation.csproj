@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="template\partials\footer.tmpl.partial" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
@@ -68,9 +67,7 @@
     <None Include="Articles\Module\FeatureToggle.ps1" />
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
@@ -78,7 +75,8 @@
     <None Include="Index.md" />
     <None Include="Resolve-Markdown.ps1" />
     <None Include="template\partials\navbar.tmpl.partial" />
-    <None Include="toc.yml" />
+	<None Include="template\partials\footer.tmpl.partial" />
+	<None Include="toc.yml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup />

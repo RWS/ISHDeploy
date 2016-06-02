@@ -68,6 +68,7 @@
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="packages.config" />
+    <None Include="WebSite-DeployToIIS.ps1" />
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
@@ -75,8 +76,8 @@
     <None Include="Index.md" />
     <None Include="Resolve-Markdown.ps1" />
     <None Include="template\partials\navbar.tmpl.partial" />
-	<None Include="template\partials\footer.tmpl.partial" />
-	<None Include="toc.yml" />
+    <None Include="template\partials\footer.tmpl.partial" />
+    <None Include="toc.yml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup />

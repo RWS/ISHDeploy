@@ -42,6 +42,8 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         protected override void ProcessRecord()
         {
+            var cmdLetType = this.GetType();
+            Logger.WriteDebug("Cmdlet " + cmdLetType + " starts.");
             try
             {
                 base.ProcessRecord();
@@ -51,6 +53,7 @@ namespace ISHDeploy.Cmdlets
             {
                 ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
+            Logger.WriteDebug("Cmdlet " + cmdLetType + " finished.");
         }
     }
 }

@@ -9,7 +9,11 @@ namespace ISHDeploy.Models
 	/// </summary>
 	public class ISHDeploymentExtended :ISHDeployment
     {
-     
+        /// <summary>
+        /// Trisoft Application Pool Prefix
+        /// </summary>
+        private const string TrisoftAppPoolPrefix = "TrisoftAppPool";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHDeploymentExtended"/> class.
         /// </summary>
@@ -74,6 +78,34 @@ namespace ISHDeploy.Models
         /// Gets the name of the OS user.
         /// </summary>
         public string OSUser => _originalParameters["osuser"];
+ 
+        /// <summary>
+        /// Gets the name of the CM main url folder.
+        /// </summary>
+        public string CMWebAppName => _originalParameters["infoshareauthorwebappname"];
 
+        /// <summary>
+        /// Gets the name of the WS main url folder.
+        /// </summary>
+        public string WSWebAppName => _originalParameters["infosharewswebappname"];
+
+        /// <summary>
+        /// Gets the name of the STS main url folder.
+        /// </summary>
+        public string STSWebAppName => _originalParameters["infosharestswebappname"];
+        /// <summary>
+        /// WS Application pool name
+        /// </summary>
+        public string WSAppPoolName => $"{TrisoftAppPoolPrefix}{WSWebAppName}";
+
+        /// <summary>
+        /// STS Application pool name
+        /// </summary>
+        public string STSAppPoolName => $"{TrisoftAppPoolPrefix}{STSWebAppName}";
+
+	    /// <summary>
+	    /// CM Application pool name
+	    /// </summary>
+	    public string CMAppPoolName => $"{TrisoftAppPoolPrefix}{CMWebAppName}";
     }
 }

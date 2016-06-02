@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		/// </summary>
 		/// <param name="logger">Logger object.</param>
 		/// <param name="deployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
-		public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeploymentExtended deployment)
+		public UndoISHDeploymentOperation(ILogger logger, ISHDeploymentExtended deployment)
 		{
 			Models.ISHDeploymentExtended ishDeployment = deployment;
 

@@ -17,11 +17,6 @@
         "dest": "Using"
       },
       {
-        "files": [ "**/*.md" ],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
-      },
-      {
         "files": [ "toc.yml" ],
         "cwd": "Articles",
         "dest": "Articles"

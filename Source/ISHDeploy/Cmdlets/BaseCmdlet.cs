@@ -3,6 +3,7 @@ using System.Management.Automation;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.Linq;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -42,8 +43,8 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         protected override void ProcessRecord()
         {
-            var cmdLetType = this.GetType();
-            Logger.WriteDebug("Cmdlet " + cmdLetType + " starts.");
+            var cmdLetType = this.GetType().ToString().Split('.').Last();
+            Logger.WriteDebug("Commandlet '" + cmdLetType + "' starts.");
             try
             {
                 base.ProcessRecord();
@@ -53,7 +54,7 @@ namespace ISHDeploy.Cmdlets
             {
                 ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
-            Logger.WriteDebug("Cmdlet " + cmdLetType + " finished.");
+            Logger.WriteDebug("Commandlet '" + cmdLetType + "' finished.");
         }
     }
 }

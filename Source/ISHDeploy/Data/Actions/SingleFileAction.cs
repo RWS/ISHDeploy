@@ -15,7 +15,7 @@ namespace ISHDeploy.Data.Actions
 		/// <summary>
 		/// Extension for backup files
 		/// </summary>
-		private const string BackUpFileExtension = ".back";
+		private const string BackUpFileExtension = ".bak";
 
 		/// <summary>
 		/// IshFilePath instance, containing relative path, deployment and deployment type
@@ -88,11 +88,12 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
-			Logger.WriteVerbose($"Creating back up for `{this.GetType().Name}`");
+			
 
 			if (FileManager.FileExists(this.FilePath))
 			{
-				this.BackupPath = GetNewBackUpFileName();
+                Logger.WriteVerbose($"Creating back up for `{this.FilePath}`");
+                this.BackupPath = GetNewBackUpFileName();
 
 				if (!FileManager.FileExists(this.BackupPath))
 				{
@@ -128,7 +129,7 @@ namespace ISHDeploy.Data.Actions
 			{
 				if (FileManager.FileExists(this.BackupPath))
 				{
-					Logger.WriteDebug($"Temporary backup file `{this.BackupPath}` does not need anymore. Removing it.");
+					Logger.WriteDebug($"Remove temporary backup file `{this.BackupPath}`");
 					FileManager.Delete(this.BackupPath);
 				}
 

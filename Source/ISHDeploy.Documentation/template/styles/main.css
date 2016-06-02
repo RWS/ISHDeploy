@@ -1,0 +1,22 @@
+﻿div.sidetoc {
+    width: 400px;
+}
+.container,.container-fluid{
+	width: auto;
+}
+.sidefilter {
+	 width: 400px;
+} 
+
+.article.grid-right {
+    margin-left: 420px;
+    margin-right: 15px;
+}
+
+@media only screen and (max-width: 768px)
+{
+.article.grid-right {
+	margin-left: 0;
+}
+}
+

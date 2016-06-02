@@ -51,20 +51,7 @@ $scriptBlockDisable = {
         Disable-ISHUIQualityAssistant -ISHDeployment $ishDeploy
   
 }
-
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-   
+  
 
 function checkBackupFolderIsEmpty{
     $directoryInfo = Get-ChildItem $backupPath

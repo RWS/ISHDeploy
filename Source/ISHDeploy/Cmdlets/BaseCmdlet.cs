@@ -17,10 +17,10 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         public readonly ILogger Logger;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		protected BaseCmdlet()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected BaseCmdlet()
         {
             Logger = CmdletsLogger.Instance();
             CmdletsLogger.Initialize(this);
@@ -32,19 +32,18 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
         }
-        
+
         /// <summary>
-		/// Method to be overridden instead of process record
-		/// </summary>
-		public abstract void ExecuteCmdlet();
+        /// Method to be overridden instead of process record
+        /// </summary>
+        public abstract void ExecuteCmdlet();
 
         /// <summary>
         /// Overrides ProcessRecord from base Cmdlet class
         /// </summary>
         protected override void ProcessRecord()
         {
-            var cmdLetType = this.GetType().ToString().Split('.').Last();
-            Logger.WriteDebug("Commandlet '" + cmdLetType + "' starts.");
+            //var cmdLetType = this.GetType().ToString().Split('.').Last();
             try
             {
                 base.ProcessRecord();
@@ -54,7 +53,19 @@ namespace ISHDeploy.Cmdlets
             {
                 ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
-            Logger.WriteDebug("Commandlet '" + cmdLetType + "' finished.");
+
         }
+
+        protected override void BeginProcessing()
+        {
+            Logger.WriteDebug(" starts.");
+            base.BeginProcessing();
+        }
+        protected override void EndProcessing()
+        {
+            Logger.WriteDebug(" finished.");
+            base.EndProcessing();
+        }
+
     }
 }

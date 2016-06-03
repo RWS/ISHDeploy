@@ -10,20 +10,22 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
     /// Sets Thumbprint values to WCF Service configuration.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHAPIWCFServiceCertificateOperation : OperationPaths, IOperation
+    public class SetISHAPIWCFServiceCertificateOperation : BasePathsOperation, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
 		private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="thumbprint">The certificate thumbprint.</param>
-		/// <param name="validationMode">The certificate validation mode.</param>
-		public SetISHAPIWCFServiceCertificateOperation(ILogger logger, string thumbprint, X509CertificateValidationMode validationMode)
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <param name="validationMode">The certificate validation mode.</param>
+        public SetISHAPIWCFServiceCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, X509CertificateValidationMode validationMode) :
+            base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 

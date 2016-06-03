@@ -36,7 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHAPIWCFService
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            IOperation operation = new SetISHAPIWCFServiceCertificateOperation(Logger, Thumbprint, ValidationMode);
+            IOperation operation = new SetISHAPIWCFServiceCertificateOperation(Logger, ISHDeployment, Thumbprint, ValidationMode);
 
             operation.Run();
         }

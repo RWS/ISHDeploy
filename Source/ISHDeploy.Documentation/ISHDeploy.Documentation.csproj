@@ -65,6 +65,7 @@
     <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20161215.Set-ISHIntegrationSTSCertificate.ps1" />
     <None Include="Articles\IntegrationSTS\IssuerCertificateRollover\_nopublish\20170101.Remove-ISHIntegrationSTSCertificate.ps1" />
     <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with files.md" />
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="Getting Started.md" />
@@ -74,7 +75,6 @@
     <None Include="Set-SiteFolderStructure.ps1" />
     <None Include="docfx.json" />
     <None Include="Export-Markdown.ps1" />
-    <None Include="Readme.md" />
     <None Include="Index.md" />
     <None Include="Resolve-Markdown.ps1" />
     <None Include="template\partials\navbar.tmpl.partial" />

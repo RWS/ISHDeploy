@@ -6,7 +6,7 @@ Documentation generation is using [platyPS, version 0.3.1.213](https://blogs.msd
 ## Pre process before the DOCFX build
 When the ISHDeploy.Documentation builds the following actions take place before the DOCFX build:
 
-1. Using `PlatyPS` the help for each cmdlet is exported and stored in `obj\doc\module`
+1. Using `PlatyPS` the help for each cmdlet is exported and stored in `obj\doc\commands`
 1. Each markdown `article` is copied in `obj\doc\articles` within a relevent directory to the original file. Then the markdown file gets infused with code fences matching the reference path. e.g. `CopyCodeBlockAndLink` or `CopyCodeBlock`
 1. The root markdown files are copied in `obj\doc` and the `{ModuleName}` is replaced by the actual modulename from the build
 

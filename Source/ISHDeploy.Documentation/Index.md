@@ -56,6 +56,7 @@ Pre-release version `0.1-alpha1` introduces the following cmdlets and articles:
     - Undo-ISHDeployment
   1. Articles
     - Work with deployments  
+    - Work with files
 1. Feature toggle
   1. Cmdlets
     - Disable-ISHExternalPreview

@@ -28,7 +28,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "connectionconfiguration/issuer/url" element in file ~\Web\InfoShareWS\connectionconfiguration.xml
             /// </summary>
             public const string WSTrustEndpointUrlXPath = "connectionconfiguration/issuer/url";
+
+            /// <summary>
+            /// The xpath of "configuration/trisoft.infoshare.client.settings/datasources/datasource/certificatevalidationmode" element in ~\Web\Author\ASP\Trisoft.InfoShare.Client.config file
+            /// </summary>
+            public const string InfoShareWSServiceCertificateValidationModeXPath = "connectionconfiguration/infosharewscertificatevalidationmode";
         }
-        
     }
 }

@@ -38,6 +38,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/credentials/password" element in file ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
             /// </summary>
             public const string WSTrustActorPasswordXPath = "configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/password";
+
+            /// <summary>
+            /// The xpath of "configuration/trisoft.infoshare.client.settings/datasources/datasource/certificatevalidationmode" element in ~\Web\Author\ASP\Trisoft.InfoShare.Client.config file
+            /// </summary>
+            public const string InfoShareWSServiceCertificateValidationModeXPath = "configuration/trisoft.infoshare.client.settings/datasources/datasource/certificatevalidationmode";
         }
     }
 }

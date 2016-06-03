@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
@@ -47,6 +48,10 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetAttributeValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+
+            // Update STS database
+            var rawData = string.Empty;
+            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => rawData = result));
         }
 
         /// <summary>

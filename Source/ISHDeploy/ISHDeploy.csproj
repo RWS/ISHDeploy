@@ -158,12 +158,13 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
+    <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryCreateAction.cs" />
     <Compile Include="Data\Actions\File\FileReadAllTextAction.cs" />
     <Compile Include="Data\Actions\File\FileDeleteAction.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryRemoveAction.cs" />
-    <Compile Include="Data\Actions\File\FileSaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />

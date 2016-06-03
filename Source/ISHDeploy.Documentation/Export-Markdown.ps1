@@ -38,21 +38,27 @@ try
 	Import-Module platyPS
 	Get-Command -Module platyPS | Select-Object -ExpandProperty Name
 
+    $ExportIshDeployPath = Join-Path $ExportPath "ISHDeploy"
+
 	Write-Verbose "Processing maml file ($MamlFilePath)"
 	# Generating markdown form maml file
 	[string]$mamlContent = Get-Content $MamlFilePath
-	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
+	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportIshDeployPath
+
+	if(!(Test-Path $ExportPath ))
+	{
+		Write-Host "Creating Module Folder at '$ExportPath'."
+		New-Item -ItemType directory -Path $ExportPath
+	}
 
 	# Generating context for all markdown files generated from maml
-	Get-ChildItem -Path $ExportPath | ForEach-Object {
+	Get-ChildItem -Path $ExportIshDeployPath | ForEach-Object {
 		"- name: " + $_.BaseName;
-		"  href: " + "../obj/doc/module/ISHDeploy/" + $_.Name
-	} | Out-File $PSScriptRoot/Module/toc.yml -Encoding utf8
+		"  href: ISHDeploy/" + $_.Name
+	} | Out-File "$ExportPath/toc.yml" -Encoding utf8
 }
 catch
 {
 	Write-Error $_.Exception
 	exit 1
 }
-
-

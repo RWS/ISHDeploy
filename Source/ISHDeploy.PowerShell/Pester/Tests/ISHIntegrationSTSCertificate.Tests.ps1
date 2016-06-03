@@ -28,20 +28,7 @@ $xmlPath = "\\$computerName\$xmlPath"
 $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
 #endregion
 
-#region Script Blocks 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-
+#region Script Blocks
 $scriptBlockSetISHIntegrationSTSCertificate = {
     param (
         $ishDeployName,

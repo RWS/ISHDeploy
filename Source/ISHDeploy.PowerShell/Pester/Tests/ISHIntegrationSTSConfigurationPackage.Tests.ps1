@@ -34,10 +34,9 @@ $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 #endregion
 
 #region Script Blocks 
-$scriptBlockUndoDeployment = {
+$scriptBlockCleanTmpFolder = {
     param (
         [Parameter(Mandatory=$false)]
-        $ishDeployName,
         $packagePath
     )
     if($PSSenderInfo) {
@@ -51,9 +50,6 @@ $scriptBlockUndoDeployment = {
     }
 
     Get-ChildItem -Path "$packagePath\tmp" -Include *.* -File -Recurse | foreach { $_.Delete()}
-
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
 $scriptBlockGetISHPackageFolder = {
@@ -124,7 +120,8 @@ function Unzip
 
 Describe "Testing ISHIntegrationSTSConfigurationPackage"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName, $packagePath
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCleanTmpFolder -Session $session -ArgumentList $packagePath
     }
     
 

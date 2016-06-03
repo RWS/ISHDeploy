@@ -28,6 +28,7 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
             ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
+            ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
         }
 
 		/// <summary>

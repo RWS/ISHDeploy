@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\license\
@@ -18,7 +18,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to packages folder location for deployment
             /// </summary>
-            public static string PackagesFolderPath => Path.Combine(_ishDeployment.GetDeploymentAppDataFolder(), "Packages");
+            public static string PackagesFolderPath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Packages");
 
             /// <summary>
             /// The UNC path to packages folder
@@ -28,12 +28,12 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to back up folder location for deployment
             /// </summary>
-            public static string BackupFolderPath => Path.Combine(_ishDeployment.GetDeploymentAppDataFolder(), "Backup");
+            public static string BackupFolderPath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Backup");
             
             /// <summary>
             /// The path to ~\Web\Author\ASP\Editors\Xopus\license\ folder
             /// </summary>
-            public static ISHFilePath LicenceFolderPath => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Web,
+            public static ISHFilePath LicenceFolderPath => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\Editors\Xopus\license\");
         }
     }

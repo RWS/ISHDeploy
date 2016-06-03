@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
     /// Disables quality assistant plugin for Content Manager development.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHUIQualityAssistantOperation : OperationPaths, IOperation
+    public class DisableISHUIQualityAssistantOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,7 +19,9 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// Initializes a new instance of the <see cref="DisableISHUIQualityAssistantOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public DisableISHUIQualityAssistantOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public DisableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare Enrich integration for Content Editor");
 

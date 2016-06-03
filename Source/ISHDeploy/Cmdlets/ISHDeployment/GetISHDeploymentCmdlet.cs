@@ -46,7 +46,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new GetISHDeploymentsOperations(Logger, Name);
+            var operation = new GetISHDeploymentsOperation(Logger, Name);
 
             var result = operation.Run();
 

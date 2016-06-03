@@ -70,70 +70,70 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperations.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
-    <Compile Include="Business\Operations\OperationPaths.cs" />
+    <Compile Include="Business\Operations\BasePathsOperation.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\EventMonitorMenuBarXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FeedSDLLiveContentConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FolderButtonBarXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\FoldersPaths.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InboxButtonBarXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareAuthorWebConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareWSConnectionConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TemporarySTSConfigurationFileNames.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TopDocumentButtonBarXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TrisoftInfoShareClientConfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\XopusBluelionConfigXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\XopusBlueLionPluginWebCconfig.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\XopusConfigXml.cs">
-      <DependentUpon>OperationPaths.cs</DependentUpon>
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
@@ -186,7 +186,6 @@
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\EnableISHUIQualityAssistantOperation.cs" />
-    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentExtendedOperation.cs" />
     <Compile Include="Business\Operations\ISHExternalPreview\DisableISHExternalPreviewOperation.cs" />
     <Compile Include="Business\Operations\ISHExternalPreview\EnableISHExternalPreviewOperation.cs" />
     <Compile Include="Business\Operations\ISHUITranslationJob\DisableISHUITranslationJobOperation.cs" />
@@ -250,7 +249,7 @@
     <Compile Include="Business\Invokers\ActionInvoker.cs" />
     <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
-    <Compile Include="Models\ISHDeploymentExtended.cs" />
+    <Compile Include="Models\ISHDeploymentInternal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>

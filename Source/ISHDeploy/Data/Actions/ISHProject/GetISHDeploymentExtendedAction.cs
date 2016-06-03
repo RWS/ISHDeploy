@@ -13,7 +13,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets all instances of the installed Content Manager deployment for the current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentExtendedAction : BaseActionWithResult<ISHDeploymentExtended>
+    public class GetISHDeploymentExtendedAction : BaseActionWithResult<ISHDeploymentInternal>
     {
         /// <summary>
         /// The input parameters file name
@@ -46,7 +46,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="logger">The logger.</param>
         /// <param name="name">The Content Manager deployment name.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentExtendedAction(ILogger logger, string name, Action<ISHDeploymentExtended> returnResult)
+        public GetISHDeploymentExtendedAction(ILogger logger, string name, Action<ISHDeploymentInternal> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
@@ -59,7 +59,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// Executes current action and returns result.
         /// </summary>
         /// <returns>Content Manager deployment in acccordance with name.</returns>
-        protected override ISHDeploymentExtended ExecuteWithResult()
+        protected override ISHDeploymentInternal ExecuteWithResult()
         {
             // Get installed deployment from the registry.
             var projectRegKey = _registryManager.GetInstalledProjectsKeys(_name).FirstOrDefault();
@@ -80,7 +80,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentExtended(dictionary, version);
+            return new ISHDeploymentInternal(dictionary, version);
 
         }
     }

@@ -32,9 +32,9 @@ namespace ISHDeploy.Cmdlets.ISHPackage
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
             // Create "Packages" folder if folder not exists
-            fileManager.EnsureDirectoryExists(OperationPaths.FoldersPaths.PackagesFolderPath);
+            fileManager.EnsureDirectoryExists(BasePathsOperation.FoldersPaths.PackagesFolderPath);
 
-            var result = UNC ? OperationPaths.FoldersPaths.PackagesFolderUNCPath : OperationPaths.FoldersPaths.PackagesFolderPath;
+            var result = UNC ? BasePathsOperation.FoldersPaths.PackagesFolderUNCPath : BasePathsOperation.FoldersPaths.PackagesFolderPath;
 
             WriteObject(result);
         }

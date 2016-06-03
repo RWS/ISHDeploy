@@ -9,7 +9,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
     /// Disables translation job functionality for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHUITranslationJobOperation : OperationPaths, IOperation
+    public class DisableISHUITranslationJobOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -20,7 +20,9 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// Initializes a new instance of the <see cref="DisableISHUITranslationJobOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public DisableISHUITranslationJobOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public DisableISHUITranslationJobOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare translation job");
             

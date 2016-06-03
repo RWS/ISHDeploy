@@ -38,12 +38,10 @@ try
 	Import-Module platyPS
 	Get-Command -Module platyPS | Select-Object -ExpandProperty Name
 
-    $ExportIshDeployPath = Join-Path $ExportPath "ISHDeploy"
-
 	Write-Verbose "Processing maml file ($MamlFilePath)"
 	# Generating markdown form maml file
 	[string]$mamlContent = Get-Content $MamlFilePath
-	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportIshDeployPath
+	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
 
 	if(!(Test-Path $ExportPath ))
 	{
@@ -52,9 +50,9 @@ try
 	}
 
 	# Generating context for all markdown files generated from maml
-	Get-ChildItem -Path $ExportIshDeployPath | ForEach-Object {
+	Get-ChildItem -Path $ExportPath -Filter "*.md" | ForEach-Object {
 		"- name: " + $_.BaseName;
-		"  href: ISHDeploy/" + $_.Name
+		"  href: " + $_.Name
 	} | Out-File "$ExportPath/toc.yml" -Encoding utf8
 }
 catch

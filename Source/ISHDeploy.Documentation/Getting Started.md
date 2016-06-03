@@ -105,7 +105,7 @@ Get-Help Get-ISHDeployment -Full
 # The documentation portal
 
 Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 
-[Get-ISHDeployment](module\ISHDeploy\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
+[Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
 
 Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
 For example [Work with deployments](articles/Module/Work with deployments.md) explains how to work with the core cmdlets of the module.

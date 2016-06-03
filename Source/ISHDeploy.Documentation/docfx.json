@@ -3,18 +3,13 @@
     "content": [
       {
         "files": [ "toc.yml" ],
-        "cwd": "obj/doc/module",
-        "dest": "module"
+        "cwd": "obj/doc/commands",
+        "dest": "Commands"
       },
       {
         "files": [ "**/*.md" ],
-        "cwd": "obj/doc/module/ISHDeploy",
-        "dest": "module/ISHDeploy"
-      },
-      {
-        "files": [ "toc.yml" ],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
+        "cwd": "obj/doc/commands",
+        "dest": "Commands"
       },
       {
         "files": [ "toc.yml" ],
@@ -46,12 +41,7 @@
         "files": "web.config"
       },
       {
-        "files": [ "**/*.ps1" ],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
-      },
-      {
-        "files": [ "**/*.ps1" ],
+        "files": [ "**/*.ps1","**/*.png" ],
         "cwd": "obj/doc/articles",
         "exclude": [ "**/_nopublish/**" ],
         "dest": "Articles"

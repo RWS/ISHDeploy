@@ -56,11 +56,18 @@ namespace ISHDeploy.Cmdlets
 
         }
 
+        /// <summary>
+        /// Overrides BeginProcessing from base Cmdlet class with additinal debug information
+        /// </summary>
         protected override void BeginProcessing()
         {
             Logger.WriteDebug("starts.");
             base.BeginProcessing();
         }
+
+        /// <summary>
+        /// Overrides EndProcessing from base Cmdlet class with additinal debug information
+        /// </summary>
         protected override void EndProcessing()
         {
             Logger.WriteDebug("finished.");

@@ -58,12 +58,12 @@ namespace ISHDeploy.Cmdlets
 
         protected override void BeginProcessing()
         {
-            Logger.WriteDebug(" starts.");
+            Logger.WriteDebug("starts.");
             base.BeginProcessing();
         }
         protected override void EndProcessing()
         {
-            Logger.WriteDebug(" finished.");
+            Logger.WriteDebug("finished.");
             base.EndProcessing();
         }
 

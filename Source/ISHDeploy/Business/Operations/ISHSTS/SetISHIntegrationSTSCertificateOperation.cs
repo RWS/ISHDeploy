@@ -12,21 +12,23 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Sets Thumbprint and issuers values to configuration.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationSTSCertificateOperation : OperationPaths, IOperation
+    public class SetISHIntegrationSTSCertificateOperation : BasePathsOperation, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
 		private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="thumbprint">The certificate thumbprint.</param>
-		/// <param name="issuer">The certificate issuer.</param>
-		/// <param name="validationMode">The certificate validation mode.</param>
-		public SetISHIntegrationSTSCertificateOperation(ILogger logger, string thumbprint, string issuer, X509CertificateValidationMode validationMode)
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <param name="issuer">The certificate issuer.</param>
+        /// <param name="validationMode">The certificate validation mode.</param>
+        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
+            base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 

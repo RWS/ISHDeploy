@@ -30,18 +30,16 @@ Get-ISHDeployment -Name InfoShare
 ```
 This outputs the following
  
-    OriginalParameters : A hash collection with all key/value parameters used by InstallTool.exe
-    SoftwareVersion    : 12.0.2417.0
-    Name               : InfoShare
-    AppPath            : C:\InfoShare\12.0\ISH
-    WebPath            : C:\InfoShare\12.0\ISH
-    DataPath           : C:\InfoShare\12.0\ISH
-    ConnectString      : A connection string
-    DatabaseType       : sqlserver2014
-    WebNameCM          : C:\InfoShare\12.0\ISH\Web\Author
-    WebNameWS          : C:\InfoShare\12.0\ISH\Web\InfoShareWS
-    WebNameSTS         : C:\InfoShare\12.0\ISH\Web\InfoShareSTS
-    AccessHostName     : ish.example.com
+    SoftwareVersion : 12.0.2929.1
+    Name            : InfoShare
+    AppPath         : C:\InfoShare
+    WebPath         : C:\InfoShare
+    DataPath        : C:\InfoShare
+    DatabaseType    : sqlserver2012
+    AccessHostName  : ish.example.com
+    WebAppNameCM    : InfoShareAuthor
+    WebAppNameWS    : InfoShareWS
+    WebAppNameSTS   : InfoShareSTS
  
 If the `projectsuffix` was not empty then concatenate it after `InfoShare`. For example
 ```powershell

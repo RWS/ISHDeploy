@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         {
             var historyContent = string.Empty;
 
-            var action = new FileReadAllTextAction(Logger, OperationPaths.HistoryFilePath, result => historyContent = result);
+            var action = new FileReadAllTextAction(Logger, BasePathsOperation.HistoryFilePath, result => historyContent = result);
             action.Execute();
 
             if (string.IsNullOrEmpty(historyContent))

@@ -45,21 +45,21 @@ namespace ISHDeploy.Cmdlets
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var historyEntry = new StringBuilder();
             
-            if (!fileManager.FileExists(OperationPaths.HistoryFilePath)) // create history file with initial record
+            if (!fileManager.FileExists(BasePathsOperation.HistoryFilePath)) // create history file with initial record
 			{
 				Logger.WriteVerbose($"Creating history file.");
 
 				historyEntry.AppendLine($"# {CurrentDate}");
-                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{ISHDeploymentExtended.Name}'");
+                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{ISHDeployment.Name}'");
             }
-            else if (IsNewDate(fileManager.ReadAllText(OperationPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
+            else if (IsNewDate(fileManager.ReadAllText(BasePathsOperation.HistoryFilePath), CurrentDate)) // group history records by date inside the file
             {
                 historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDate}");
             }
             
             historyEntry.AppendLine(InvocationLine);
 
-            fileManager.Append(OperationPaths.HistoryFilePath, historyEntry.ToString());
+            fileManager.Append(BasePathsOperation.HistoryFilePath, historyEntry.ToString());
         }
 
         /// <summary>

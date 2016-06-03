@@ -21,7 +21,7 @@ namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHUIQualityAssistantOperation(Logger);
+            var operation = new EnableISHUIQualityAssistantOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

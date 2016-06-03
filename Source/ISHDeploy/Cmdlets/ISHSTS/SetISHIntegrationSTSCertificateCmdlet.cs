@@ -49,7 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, Thumbprint, Issuer, ValidationMode);
+			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, ISHDeployment, Thumbprint, Issuer, ValidationMode);
 
 			operation.Run();
 		}

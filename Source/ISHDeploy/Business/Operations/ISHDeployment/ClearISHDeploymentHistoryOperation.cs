@@ -7,7 +7,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// <summary>
     /// Clears customization history for Content Manager deployment
     /// </summary>
-    public class ClearISHDeploymentHistoryOperation : IOperation
+    public class ClearISHDeploymentHistoryOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -18,12 +18,14 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// Initializes a new instance of the <see cref="ClearISHDeploymentHistoryOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public ClearISHDeploymentHistoryOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Customization history clean up");
 
-            _invoker.AddAction(new FileDeleteAction(logger, OperationPaths.HistoryFilePath));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, OperationPaths.FoldersPaths.BackupFolderPath));
+            _invoker.AddAction(new FileDeleteAction(logger, HistoryFilePath));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.BackupFolderPath));
         }
 
         /// <summary>

@@ -10,9 +10,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Saves current STS integration configuration to zip package.
     /// </summary>
-    /// <seealso cref="OperationPaths" />
+    /// <seealso cref="BasePathsOperation" />
     /// <seealso cref="IOperation" />
-    public class SaveISHIntegrationSTSConfigurationPackageOperation : OperationPaths, IOperation
+    public class SaveISHIntegrationSTSConfigurationPackageOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -23,10 +23,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="deployment">The instance of <see cref="ISHDeployment" />.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeploymentExtended deployment, string fileName, bool packAdfsInvokeScript = false)
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
+            base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
@@ -36,9 +37,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 
             var stsConfigParams = new Dictionary<string, string>
                     {
-                        {"$ishhostname", deployment.AccessHostName},
-                        {"$ishcmwebappname", deployment.WebAppNameCM},
-                        {"$ishwswebappname", deployment.WebAppNameWS},
+                        {"$ishhostname", ISHDeploymentInternal.AccessHostName},
+                        {"$ishcmwebappname", ISHDeploymentInternal.WebAppNameCM},
+                        {"$ishwswebappname", ISHDeploymentInternal.WebAppNameWS},
                         {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
                         {"$ishwscontent", string.Empty}
                     };
@@ -59,11 +60,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>
                     {
-                        {"#!#installtool:BASEHOSTNAME#!#", deployment.AccessHostName},
-                        {"#!#installtool:PROJECTSUFFIX#!#", deployment.ProjectSuffix},
-                        {"#!#installtool:OSUSER#!#", deployment.OSUser},
-                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", deployment.WebAppNameCM},
-                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", deployment.WebAppNameWS}
+                        {"#!#installtool:BASEHOSTNAME#!#", ISHDeploymentInternal.AccessHostName},
+                        {"#!#installtool:PROJECTSUFFIX#!#", ISHDeploymentInternal.ProjectSuffix},
+                        {"#!#installtool:OSUSER#!#", ISHDeploymentInternal.OSUser},
+                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", ISHDeploymentInternal.WebAppNameCM},
+                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", ISHDeploymentInternal.WebAppNameWS}
                     }));
             }
 

@@ -9,19 +9,21 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Removes certificate based on a issuer name
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class RemoveISHIntegrationSTSCertificateOperation : OperationPaths, IOperation
+    public class RemoveISHIntegrationSTSCertificateOperation : BasePathsOperation, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
 		private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="issuer">The certificate issuer.</param>
-		public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, string issuer)
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="issuer">The certificate issuer.</param>
+        public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string issuer) :
+            base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Removing certificate credentials based on issuer name");
 

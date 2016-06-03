@@ -6,7 +6,7 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
@@ -16,7 +16,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Web,
+            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\XSL\EventMonitorMenuBar.xml");
 
             /// <summary>

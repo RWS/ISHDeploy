@@ -26,7 +26,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="deployment">The instance of <see cref="ISHDeployment" />.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeploymentExtended deployment, string fileName, bool packAdfsInvokeScript = false)
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeploymentInternal deployment, string fileName, bool packAdfsInvokeScript = false)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 

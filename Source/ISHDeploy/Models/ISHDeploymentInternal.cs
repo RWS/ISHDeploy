@@ -7,7 +7,7 @@ namespace ISHDeploy.Models
 	/// <summary>
 	///	<para type="description">Represents the installed Content Manager deployment extended.</para>
 	/// </summary>
-	public class ISHDeploymentExtended :ISHDeployment
+	public class ISHDeploymentInternal :ISHDeployment
     {
         /// <summary>
         /// Trisoft Application Pool Prefix
@@ -15,11 +15,11 @@ namespace ISHDeploy.Models
         private const string TrisoftAppPoolPrefix = "TrisoftAppPool";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ISHDeploymentExtended"/> class.
+        /// Initializes a new instance of the <see cref="ISHDeploymentInternal"/> class.
         /// </summary>
         /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
         /// <param name="softwareVersion">The deployment version.</param>
-        public ISHDeploymentExtended(Dictionary<string, string> parameters, Version softwareVersion) : base(parameters, softwareVersion)
+        public ISHDeploymentInternal(Dictionary<string, string> parameters, Version softwareVersion) : base(parameters, softwareVersion)
         {
             _originalParameters = parameters;
         }

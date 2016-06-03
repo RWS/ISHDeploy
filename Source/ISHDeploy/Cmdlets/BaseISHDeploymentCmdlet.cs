@@ -26,6 +26,6 @@ namespace ISHDeploy.Cmdlets
         /// <summary>
         /// <para type="description">Extended description of the instance of the Content Manager deployment.</para>
         /// </summary>
-        protected Models.ISHDeploymentExtended ISHDeploymentExtended { get; private set; }
+        protected Models.ISHDeploymentInternal ISHDeploymentExtended { get; private set; }
     }
 }

@@ -9,7 +9,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Gets a list of installed Content Manager deployments found on the current system.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class GetISHDeploymentExtendedOperation : IOperation<Models.ISHDeploymentExtended>
+    public class GetISHDeploymentExtendedOperation : IOperation<Models.ISHDeploymentInternal>
     {
         /// <summary>
         /// The actions invoker
@@ -19,7 +19,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The list of installed Content Manager deployments found on the current system.
         /// </summary>
-        private Models.ISHDeploymentExtended _ishProject;
+        private Models.ISHDeploymentInternal _ishProject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedOperation"/> class.
@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// Runs current operation.
         /// </summary>
         /// <returns>List of installed Content Manager deployments.</returns>
-        public Models.ISHDeploymentExtended Run()
+        public Models.ISHDeploymentInternal Run()
         {
             _invoker.Invoke();
 

@@ -250,7 +250,7 @@
     <Compile Include="Business\Invokers\ActionInvoker.cs" />
     <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
-    <Compile Include="Models\ISHDeploymentExtended.cs" />
+    <Compile Include="Models\ISHDeploymentInternal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>

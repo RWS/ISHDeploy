@@ -9,19 +9,21 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHUIEventMonitorTabOperation : OperationPaths, IOperation
+	public class SetISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
 		private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SetISHUIEventMonitorTabOperation" /> class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="menuItem">The menu item object.</param>
-		public SetISHUIEventMonitorTabOperation(ILogger logger, EventLogMenuItem menuItem)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHUIEventMonitorTabOperation" /> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="menuItem">The menu item object.</param>
+        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
+            base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 

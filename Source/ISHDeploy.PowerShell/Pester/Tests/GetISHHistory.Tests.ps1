@@ -24,7 +24,8 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
-$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $testingDeployment.OriginalParameters.projectsuffix )
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $suffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
 $scriptBlockGet = {
@@ -102,11 +103,11 @@ $scriptBlockGetPackageFolder = {
     }
 } 
 
- function createFakeHistory{
-$text = '$deployment = Get-ISHDeployment -Name ''InfoShareSQL2014''
+ function getExpectedHistory{
+$text = '$deployment = Get-ISHDeployment -Name ''InfoShare''
 Disable-ISHUIQualityAssistant -ISHDeployment $deployment
 '
-  return $text
+  return $text.Replace("InfoShare", $testingDeployment.Name)
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
@@ -121,8 +122,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
 		# Try enabling Quality Assistant for generating backup files
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
     }
 
     It "Failed commandlets write no history"{
@@ -131,8 +132,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableContentEditor -Session $session -ArgumentList $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Throw "Could not find file"
         
 		$history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
         
 		Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
     }
@@ -145,8 +146,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName
 
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
     }
 
     It "Get-IshHistory works when there is no history"{

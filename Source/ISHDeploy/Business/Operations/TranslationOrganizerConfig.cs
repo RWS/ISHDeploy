@@ -6,17 +6,17 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config file
         /// </summary>
-        public static class TranslationOrganizerConfig
+        protected static class TranslationOrganizerConfig
         {
             /// <summary>
             /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.App,
+            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
                 @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
 
             /// <summary>

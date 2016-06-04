@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
     /// Disables Content Editor for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHUIContentEditorOperation : OperationPaths, IOperation
+    public class DisableISHUIContentEditorOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,7 +19,9 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
         /// Initializes a new instance of the <see cref="DisableISHUIContentEditorOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public DisableISHUIContentEditorOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public DisableISHUIContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare Content Editor");
             

@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new RemoveISHIntegrationSTSCertificateOperation(Logger, Issuer);
+			var operation = new RemoveISHIntegrationSTSCertificateOperation(Logger, ISHDeployment, Issuer);
 
 			operation.Run();
 		}

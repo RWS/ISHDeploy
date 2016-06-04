@@ -25,7 +25,9 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
-$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
+
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
 #endregion
 
 #region Script Blocks
@@ -85,15 +87,16 @@ $scriptBlockReadTargetXML = {
         $Issuer,
         $ValidationMode,
         $xmlPath,
-        $testingDeployment
+        $suffix
     )
     #read all files that are touched with commandlet
+    
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
-    $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
-    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$stsWebConfig = new-object System.Xml.XmlDocument
-    $stsWebConfig.load("$xmlPath\Web{0}\InfoShareSTS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix )
+    $stsWebConfig.load("$xmlPath\Web{0}\InfoShareSTS\Web.config" -f $suffix )
     
     $result =  @{}
     #get variables and nodes from files
@@ -115,7 +118,7 @@ function remoteReadTargetXML() {
         $ValidationMode
     )
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $Issuer, $ValidationMode, $xmlPath, $testingDeployment
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $Issuer, $ValidationMode, $xmlPath, $suffix
     
     #get variables and nodes from files
     $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]

@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Disables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHExternalPreviewOperation : OperationPaths, IOperation
+    public class DisableISHExternalPreviewOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,7 +19,9 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// Initializes a new instance of the <see cref="DisableISHExternalPreviewOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public DisableISHExternalPreviewOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public DisableISHExternalPreviewOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
 

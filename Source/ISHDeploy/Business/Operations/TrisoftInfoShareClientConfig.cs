@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config file
         /// </summary>
-        public static class TrisoftInfoShareClientConfig
+        protected static class TrisoftInfoShareClientConfig
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config

@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\config\config.xml
         /// </summary>
-        public static class XopusConfigXml
+        protected static class XopusConfigXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\Editors\Xopus\config\config.xml

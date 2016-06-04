@@ -103,7 +103,7 @@ $scriptBlockGetPackageFolder = {
     }
 } 
 
- function createFakeHistory{
+ function getExpectedHistory{
 $text = '$deployment = Get-ISHDeployment -Name ''InfoShare''
 Disable-ISHUIQualityAssistant -ISHDeployment $deployment
 '
@@ -122,8 +122,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
 		# Try enabling Quality Assistant for generating backup files
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
     }
 
     It "Failed commandlets write no history"{
@@ -132,8 +132,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableContentEditor -Session $session -ArgumentList $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Throw "Could not find file"
         
 		$history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
         
 		Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
     }
@@ -146,8 +146,8 @@ Describe "Testing Get-ISHDeploymentHistory"{
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName
 
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
-        $fakeHistory =  createFakeHistory
-        $history.EndsWith($fakeHistory) | Should be "True"
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
     }
 
     It "Get-IshHistory works when there is no history"{

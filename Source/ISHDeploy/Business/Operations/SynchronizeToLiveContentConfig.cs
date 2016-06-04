@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config file
         /// </summary>
-        public static class SynchronizeToLiveContentConfig
+        protected static class SynchronizeToLiveContentConfig
         {
             /// <summary>
             /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config

@@ -13,7 +13,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\license\
         /// </summary>
-        public static class FoldersPaths
+        protected static class FoldersPaths
         {
             /// <summary>
             /// The path to packages folder location for deployment

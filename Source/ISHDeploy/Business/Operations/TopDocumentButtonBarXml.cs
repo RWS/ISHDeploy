@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
         /// </summary>
-        public static class TopDocumentButtonBarXml
+        protected static class TopDocumentButtonBarXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml

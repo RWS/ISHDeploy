@@ -10,7 +10,7 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class BasePathsOperation
+    public abstract partial class BasePathsOperation
     {
         /// <summary>
         /// The instance of the deployment.
@@ -58,7 +58,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to generated History.ps1 file
         /// </summary>
-        public static string HistoryFilePath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "History.ps1");
+        protected static string HistoryFilePath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "History.ps1");
 
         /// <summary>
         /// Converts the local folder path to UNC path.

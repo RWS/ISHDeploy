@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\InfoShareSTS\Configuration\infoShareSTS.config.
         /// </summary>
-        public static class InfoShareSTSConfig
+        protected static class InfoShareSTSConfig
         {
             /// <summary>
             /// The path to ~\Web\InfoShareSTS\Configuration\infoShareSTS.config.

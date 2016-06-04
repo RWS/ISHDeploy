@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\FolderButtonbar.xml
         /// </summary>
-        public static class FolderButtonBarXml
+        protected static class FolderButtonBarXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\XSL\FolderButtonbar.xml

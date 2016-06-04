@@ -1,6 +1,5 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations;
-using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -25,16 +24,9 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var historyContent = string.Empty;
+            var operation = new GetISHDeploymentHistoryOperation(Logger, ISHDeployment);
 
-            var action = new FileReadAllTextAction(Logger, BasePathsOperation.HistoryFilePath, result => historyContent = result);
-            action.Execute();
-
-            if (string.IsNullOrEmpty(historyContent))
-            {
-				Logger.WriteVerbose($"History file is empty.");
-                return;
-            }
+            var historyContent = operation.Run();
 
             WriteObject(historyContent);
         }

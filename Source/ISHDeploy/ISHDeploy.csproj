@@ -70,9 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
+    <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\BasePathsOperation.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
@@ -156,7 +159,9 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
-    <Compile Include="Data\Actions\Directory\DirectoryCreateAction.cs" />
+    <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
+    <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
+    <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />
     <Compile Include="Data\Actions\File\FileReadAllTextAction.cs" />
     <Compile Include="Data\Actions\File\FileDeleteAction.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />

@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
         /// </summary>
-        public static class InfoShareWSConnectionConfig
+        protected static class InfoShareWSConnectionConfig
         {
             /// <summary>
             /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml

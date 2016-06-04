@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config file
         /// </summary>
-        public static class TranslationOrganizerConfig
+        protected static class TranslationOrganizerConfig
         {
             /// <summary>
             /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config

@@ -8,10 +8,10 @@ namespace ISHDeploy.Business.Operations
 	/// </summary>
 	public partial class BasePathsOperation
 	{
-		/// <summary>
-		/// The path to ~\Web\InfoShareSTS\Web.config
-		/// </summary>
-		public static class InfoShareSTSWebConfig
+        /// <summary>
+        /// The path to ~\Web\InfoShareSTS\Web.config
+        /// </summary>
+        protected static class InfoShareSTSWebConfig
 		{
 			/// <summary>
 			/// The path to ~\Web\InfoShareSTS\Web.config

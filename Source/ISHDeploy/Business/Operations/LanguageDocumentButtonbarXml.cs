@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml
         /// </summary>
-        public static class LanguageDocumentButtonbarXml
+        protected static class LanguageDocumentButtonbarXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\XSL\LanguageDocumentButtonbar.xml

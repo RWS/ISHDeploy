@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <param name="label">Label of the element</param>
 		public RemoveISHUIEventMonitorTabOperation(ILogger logger, string label)
         {
-            _invoker = new ActionInvoker(logger, "Removing of Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");
 
 			string itemXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;

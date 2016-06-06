@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <param name="targetLabel">The target label.</param>
 		public MoveISHUIEventMonitorTabOperation(ILogger logger, string label, OperationType operationType, string targetLabel = null)
         {
-            _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Move Event Monitor Tab");
 
 			string nodeXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string nodeCommentXPath = nodeXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;

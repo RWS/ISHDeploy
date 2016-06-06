@@ -62,7 +62,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Dictionary with parameters</returns>
         public Dictionary<string, string> GetAllInputParamsValues(string filePath)
         {
-            _logger.WriteDebug($"[{filePath}][Retrieveing input parameters]");
+            _logger.WriteDebug($"[{filePath}][Retrieve input parameters]");
 
             var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="insertBeforeXpath">XPath to searched node</param>
         public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Moving node before `{insertBeforeXpath}]");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Move node before `{insertBeforeXpath}]");
 
             var doc = _fileManager.Load(filePath);
 
@@ -272,7 +272,7 @@ namespace ISHDeploy.Data.Managers
             uncommentedNode.ReplaceWith(commentedNode);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Commented]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Commented][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace ISHDeploy.Data.Managers
             if (commentedNode != null) // means that file was changed
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Commented]");
+                _logger.WriteVerbose($"[{filePath}][Commented][Comment all nodes that has {searchPattern}]");
             }
         }
 
@@ -371,7 +371,7 @@ namespace ISHDeploy.Data.Managers
             if (isFileChanged)
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Uncommented]");
+                _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment all nodes that has {searchPattern}]");
             }
         }
 
@@ -412,7 +412,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Uncommented]");
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
         }
 
         /// <summary>
@@ -574,7 +574,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             var element = (XElement)node;
-            _logger.WriteDebug($"Retrieved value of element node is: {element.Value}");
+            _logger.WriteVerbose($"Retrieved value of element node is: {element.Value}");
             return element.Value;
         }
 

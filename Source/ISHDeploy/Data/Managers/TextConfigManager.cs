@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Commented]");
+            _logger.WriteVerbose($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
 
         }
 
@@ -115,7 +115,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Uncommented]");
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
         }
 
         /// <summary>

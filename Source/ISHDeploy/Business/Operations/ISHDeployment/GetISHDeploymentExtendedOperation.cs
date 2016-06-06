@@ -28,7 +28,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="name">The deployment name.</param>
         public GetISHDeploymentExtendedOperation(ILogger logger, string name)
         {
-            _invoker = new ActionInvoker(logger, "Getting a list of installed Content Manager deployments");
+            _invoker = new ActionInvoker(logger, "Get a list of installed Content Manager deployments");
             _invoker.AddAction(new GetISHDeploymentExtendedAction(logger, name, result => _ishProject = result));
         }
 

@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// <param name="issuer">The certificate issuer.</param>
 		public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, string issuer)
 		{
-			_invoker = new ActionInvoker(logger, "Removing certificate credentials based on issuer name");
+			_invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
 
 			// Author web Config
 			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfig.Path, 

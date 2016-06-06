@@ -47,7 +47,7 @@ namespace ISHDeploy.Cmdlets
             
             if (!fileManager.FileExists(OperationPaths.HistoryFilePath)) // create history file with initial record
 			{
-				Logger.WriteVerbose($"Creating history file.");
+				Logger.WriteVerbose($"Create history file.");
 
 				historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{ISHDeploymentExtended.Name}'");

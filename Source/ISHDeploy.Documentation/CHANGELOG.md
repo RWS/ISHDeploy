@@ -12,6 +12,7 @@ Initial release
     - Undo-ISHDeployment
   1. Articles
     - Work with deployments  
+    - Work with files  
 1. Feature toggle
   1. Cmdlets
     - Disable-ISHExternalPreview

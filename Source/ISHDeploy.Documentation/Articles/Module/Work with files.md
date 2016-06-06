@@ -1,7 +1,7 @@
 ﻿# Work with files
  
 This article explains how to work with cmdlets that use files as input or output. All cmdlets use a **FileName** parameter and do not accept values with paths. 
-The location of the files is abstracted away and to copy form from/to it the module offers [Get-ISHPackageFolderPath](..\commands\Get-ISHPackageFolderPath.md).
+The location of the files is abstracted away and to copy form from/to it the module offers [Get-ISHPackageFolderPath](..\..\commands\Get-ISHPackageFolderPath.md).
  
 ## Cmdlet working with files
 Some of the cmdlets of the module depend on a file for their operation or their output is too complicated to write into the console.

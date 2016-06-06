@@ -35,6 +35,19 @@ Function RemotePathCheck {
     
     return $isExists
 }
+#undo changes
+$scriptBlockUndoDeployment = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Undo-ISHDeployment -ISHDeployment $ishDeploy
+}
 
 #remove item remotely
 $scriptBlockRemoveItem = {
@@ -106,4 +119,10 @@ function RemoteReadXML{
     [xml]$actualResult = Invoke-CommandRemoteOrLocal -ScriptBlock {param ($xmlFile) Get-Content $xmlFile} -Session $session -ArgumentList $xmlFile
 
     return $actualResult
+}
+
+#Gets suffix from project name
+Function GetProjectSuffix($projectName)
+{
+    return $projectName.Replace("InfoShare", "")
 }

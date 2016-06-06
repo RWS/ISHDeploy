@@ -3,8 +3,8 @@
     "content": [
       {
         "files": [ "toc.yml" ],
-        "cwd": "Module",
-        "dest": "module/ISHDeploy"
+        "cwd": "obj/doc/module",
+        "dest": "module"
       },
       {
         "files": [ "**/*.md" ],
@@ -13,11 +13,6 @@
       },
       {
         "files": [ "toc.yml" ],
-        "cwd": "Using",
-        "dest": "Using"
-      },
-      {
-        "files": [ "**/*.md" ],
         "cwd": "obj/doc/using",
         "dest": "Using"
       },
@@ -32,12 +27,15 @@
         "dest": "Articles"
       },
       {
-        "files": [ "toc.yml" ]
+        "files": [ "Index.md", "toc.yml" ]
       }
     ],
     "resource": [
       {
         "files": [ "**/images/**" ]
+      },
+      {
+        "files": "sdl_logo_transparent.png"
       },
       {
         "files": "web.config"
@@ -59,7 +57,8 @@
     "globalMetadata": {
     },
     "template": [
-      "default"
+      "default",
+      "template"
     ],
     "dest": "_site"
   }

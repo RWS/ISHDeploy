@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Sets WSFederation configuration.
     /// </summary>
-    public class SetISHIntegrationSTSWSFederationOperation : OperationPaths, IOperation
+    public class SetISHIntegrationSTSWSFederationOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,8 +19,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// Initializes a new instance of the <see cref="SetISHIntegrationSTSWSFederationOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="endpoint">The URL to issuer endpoint.</param>
-        public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Uri endpoint)
+        public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 

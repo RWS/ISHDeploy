@@ -172,7 +172,7 @@ namespace ISHDeploy.Data.Managers
 		/// <returns>A string array containing all lines of the file.</returns>
 		public string ReadAllText(string filePath)
         {
-			_logger.WriteDebug($"Reading all text from file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Read all text]");
 			return File.ReadAllText(filePath);
         }
 
@@ -183,7 +183,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>A string array containing all lines of the file.</returns>
         public string[] ReadAllLines(string filePath)
         {
-			_logger.WriteDebug($"Reading all lines from file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Read all lines]");
 			return File.ReadAllLines(filePath);
         }
 
@@ -194,7 +194,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="lines">The string array to write to the file.</param>
         public void WriteAllLines(string filePath, string[] lines)
         {
-			_logger.WriteDebug($"Writing all lines to file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Write all lines]");
 			File.WriteAllLines(filePath, lines);
         }
 
@@ -216,7 +216,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="append">True to append data to the file; false to overwrite the file.</param>
 		public void Write(string filePath, string text, bool append = false)
 		{
-			_logger.WriteDebug($"{(append? "Appending" : "Writing")} content to file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][{(append? "Append" : "Write")} content]");
 			using (var fileStream = new StreamWriter(filePath, append))
 			{
 				fileStream.Write(text);
@@ -230,7 +230,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>New instance of <see cref="XDocument" /> with loaded file content</returns>
         public XDocument Load(string filePath)
         {
-			_logger.WriteDebug($"Loading XML document at `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Load XML document]");
 			return XDocument.Load(filePath);
         }
 
@@ -241,7 +241,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="doc">The document to be stored</param>
         public void Save(string filePath, XDocument doc)
         {
-			_logger.WriteDebug($"Saving XML document to `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Save XML document]");
 			doc.Save(filePath);
         }
 
@@ -260,7 +260,7 @@ namespace ISHDeploy.Data.Managers
 
             if (File.Exists(filePath))
             {
-				_logger.WriteDebug($"License file `{filePath}` found for `{hostName}`");
+				_logger.WriteWarning($"License file `{filePath}` found for `{hostName}`");
 				return true;
             }
 
@@ -270,7 +270,7 @@ namespace ISHDeploy.Data.Managers
                 return TryToFindLicenseFile(licenseFolderPath, hostName.Substring(i + 1), licenseFileExtension, out filePath);
             }
 
-			_logger.WriteDebug($"License file for `{hostName}` is not found.");
+			_logger.WriteWarning($"License file for `{hostName}` was not found.");
 			return false;
         }
 
@@ -295,7 +295,7 @@ namespace ISHDeploy.Data.Managers
 
             ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
 
-            _logger.WriteDebug($"The output package is: '{destinationArchiveFilePath}'");
+            _logger.WriteVerbose($"The output package is: '{destinationArchiveFilePath}'");
         }
     }
 }

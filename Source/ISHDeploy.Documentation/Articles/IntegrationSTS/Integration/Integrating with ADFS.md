@@ -1,6 +1,6 @@
 ﻿# Integrating with ADFS
  
-**ADFS** is an implementation of a **Security Token Service**. The basic integration principals are explained in [Integrating with Security Token Service](Integrating with Security Token Service.html).
+**ADFS** is an implementation of a **Security Token Service**. The basic integration principals are explained in [Integrating with Security Token Service](Integrating with Security Token Service.md).
 This article explains how to use the module's commandlets to integrate with **ADFS**. 
 
 # Acknowledgements

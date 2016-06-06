@@ -10,7 +10,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 {
     /// <summary>
-    /// Sets Thumbprint values to WCF Service configuration.
+    /// Sets WCF service to use a certificate that matches to thumbprint
     /// </summary>
     /// <seealso cref="IOperation" />
     public class SetISHAPIWCFServiceCertificateOperation : BasePathsOperation, IOperation

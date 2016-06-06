@@ -8,7 +8,7 @@ using ISHDeploy.Interfaces.Actions;
 namespace ISHDeploy.Data.Actions.DataBase
 {
     /// <summary>
-	/// Action that creates new file with content inside.
+	/// Action that run update SQL command.
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
@@ -20,6 +20,15 @@ namespace ISHDeploy.Data.Actions.DataBase
         private readonly ISQLCompactCommandExecuter _sqlCommandExecuter;
 
         /// <summary>
+        /// The parameters of SQL command
+        /// </summary>
+        private readonly List<object> _parameters;
+        /// <summary>
+        /// The SQL command text.
+        /// </summary>
+        private readonly string _commandText;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SqlCompactUpdateAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -29,7 +38,9 @@ namespace ISHDeploy.Data.Actions.DataBase
         public SqlCompactUpdateAction(ILogger logger, string connectionString, string commandText, List<object> parameters) 
 			: base(logger)
         {
-            _sqlCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, commandText, parameters, true);
+            _sqlCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, true);
+            _parameters = parameters;
+            _commandText = commandText;
         }
 
         /// <summary>
@@ -37,7 +48,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         public override void Execute()
         {
-            _sqlCommandExecuter.ExecuteNonQuery();
+            _sqlCommandExecuter.ExecuteNonQuery(_commandText, _parameters);
         }
 
 

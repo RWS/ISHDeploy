@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -15,8 +16,10 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         /// Executes a Transact-SQL statement against the connection.
         /// </summary>
+        /// <param name="commandText">The SQL command as text</param>
+        /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
-        int ExecuteNonQuery();
+        int ExecuteNonQuery(string commandText, List<object> parameters = null);
 
         /// <summary>
         /// Rollback the SQL transaction

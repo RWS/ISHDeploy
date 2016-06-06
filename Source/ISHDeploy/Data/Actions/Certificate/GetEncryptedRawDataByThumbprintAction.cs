@@ -5,7 +5,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.Certificate
 {
     /// <summary>
-    /// Implements file read all text action.
+    /// Gets encoded certificate by thumbprint.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
     public class GetEncryptedRawDataByThumbprintAction : BaseActionWithResult<string>

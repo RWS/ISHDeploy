@@ -27,19 +27,9 @@ namespace ISHDeploy.Data.Managers
         private readonly SqlCeConnection _connection;
 
         /// <summary>
-        /// The SQL command text.
-        /// </summary>
-        private readonly string _commandFormat;
-
-        /// <summary>
         /// The SQL command.
         /// </summary>
         private SqlCeCommand _command;
-
-        /// <summary>
-        /// The parameters of SQL command
-        /// </summary>
-        private readonly List<object> _parameters;
 
         /// <summary>
         /// Specifies whether that command is executed as a transaction.
@@ -56,27 +46,34 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="logger">Logger instance</param>
         /// <param name="connectionString">The connection used to open the SQL Server database</param>
-        /// <param name="commandFormat">The SQL command as text</param>
-        /// <param name="parameters">The parameters of SQL command</param>
         /// <param name="useTransaction">Specifies whether that command is executed as a transaction. 'False' by default</param>
-        public SQLCompactCommandExecuter(ILogger logger, string connectionString, string commandFormat, List<object> parameters, bool useTransaction = false)
+        public SQLCompactCommandExecuter(ILogger logger, string connectionString, bool useTransaction = false)
         {
             _logger = logger;
             _connection = new SqlCeConnection(connectionString);
-            _commandFormat = commandFormat;
-            _parameters = parameters;
             _useTransaction = useTransaction;
         }
 
         /// <summary>
         /// Executes a Transact-SQL statement against the connection.
         /// </summary>
+        /// <param name="commandText">The SQL command as text</param>
+        /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
-        public int ExecuteNonQuery()
+        public int ExecuteNonQuery(string commandText, List<object> parameters = null)
         {
             _command = _connection.CreateCommand();
             _command.CommandType = CommandType.Text;
-            _command.CommandText = string.Format(_commandFormat, _parameters.ToArray());
+
+            if (parameters != null)
+            {
+                _command.CommandText = string.Format(commandText, parameters.ToArray());
+            }
+            else
+            {
+                _command.CommandText = commandText;
+            }
+
             _connection.Open();
             if (_useTransaction)
             {

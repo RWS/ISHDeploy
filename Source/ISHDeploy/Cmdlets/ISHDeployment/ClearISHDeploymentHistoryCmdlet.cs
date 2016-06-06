@@ -23,7 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new ClearISHDeploymentHistoryOperation(Logger);
+            var operation = new ClearISHDeploymentHistoryOperation(Logger, ISHDeployment);
             operation.Run();
 		}
 	}

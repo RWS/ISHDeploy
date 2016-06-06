@@ -16,7 +16,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>List of found deployments</returns>
         IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null);
 
-        /// <summary>
+                /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

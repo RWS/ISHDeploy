@@ -89,7 +89,8 @@ Describe "Testing Get-ISHDeployment"{
 
     It "returns message when deployment is not found"{
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList "InfoShare$invalidSuffix"}  | Should Throw "Deployment with suffix $invalidSuffix is not found on the system"
+        $invalidProjectName = "InfoShare$invalidSuffix"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList "InfoShare$invalidSuffix"} | Should Throw "Deployment with name InfoShare$invalidSuffix is not found on the system"
     }
 
     It "returns warning when CM version doesnot match"{

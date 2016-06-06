@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
-        public static class FeedSDLLiveContentConfig
+        protected static class FeedSDLLiveContentConfig
         {
             /// <summary>
             /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config

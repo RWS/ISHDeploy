@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
         /// </summary>
-        public static class EventMonitorMenuBarXml
+        protected static class EventMonitorMenuBarXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml

@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
         /// </summary>
-        public static class XopusBluelionConfigXml
+        protected static class XopusBluelionConfigXml
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml

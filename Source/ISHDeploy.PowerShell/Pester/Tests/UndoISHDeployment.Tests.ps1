@@ -222,7 +222,6 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         $appPoolStartTimes1 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-        Start-Sleep -Milliseconds 7000
         
         # Get web application pool start times
         $appPoolStartTimes2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment

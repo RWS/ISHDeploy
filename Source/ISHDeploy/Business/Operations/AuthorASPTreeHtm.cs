@@ -11,7 +11,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Tree.htm
         /// </summary>
-        public static class AuthorASPTreeHtm
+        protected static class AuthorASPTreeHtm
         {
             /// <summary>
             /// The path to ~\Web\Author\ASP\Tree.htm

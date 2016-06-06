@@ -8,10 +8,10 @@ namespace ISHDeploy.Business.Operations
     /// </summary>
     public partial class BasePathsOperation
     {
-		/// <summary>
-		/// The path to ~\Web\Author\ASP\Web.config
-		/// </summary>
-		public static class InfoShareAuthorWebConfig
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\Web.config
+        /// </summary>
+        protected static class InfoShareAuthorWebConfig
         {
 
             /// <summary>

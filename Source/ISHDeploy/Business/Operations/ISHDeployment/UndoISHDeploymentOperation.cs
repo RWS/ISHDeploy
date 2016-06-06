@@ -57,7 +57,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Recycling Application pool for CM
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
-		}
+
+            // Waiting until files becomes unlocked
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+        }
 
         /// <summary>
         /// Runs current operation.

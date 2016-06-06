@@ -6,15 +6,21 @@ using ISHDeploy.Business.Operations.ISHAPIWCFService;
 namespace ISHDeploy.Cmdlets.ISHAPIWCFService
 {
     /// <summary>
-    ///		<para type="synopsis">Sets WSFederation configuration.</para>
-    ///		<para type="description">The Set-ISHIntegrationSTSWSFederation cmdlet sets WSFederation configuration to Content Manager deployment.</para>
+    ///		<para type="synopsis">Sets WCF service certificate.</para>
+    ///		<para type="description">The Set-ISHAPIWCFServiceCertificate cmdlet sets WCF service certificate to Content Manager deployment.</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wsfed"</code>
-    ///     <para>This command configure WS Federation to use specified Endpoint of STS server.
+    ///		<code>PS C:\>Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint "t1"</code>
+    ///     <para>This command configure WCF service to use specified certificate.
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
+	/// <example>
+	///		<code>PS C:\&gt;Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint "t1" -ValidationMode "None" </code>
+	///		<para>This command sets credentials with no Validation Mode.
+	/// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+	///		</para>
+	/// </example>
     [Cmdlet(VerbsCommon.Set, "ISHAPIWCFServiceCertificate")]
     public class SetISHAPIWCFServiceCertificateCmdlet : BaseHistoryEntryCmdlet
     {

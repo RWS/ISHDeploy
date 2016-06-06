@@ -34,8 +34,8 @@ To install the PowerShellGet module on PowerShell version 4.0, install the [Pack
 
 # Setting up PowerShellGet
 
-PowerShellGet provides a default repository registration for [PowerShell Galery](https://powershellgalery.com/), therefore no action is necessary. 
-To verify that PowerShell galery is registered correctly execute:
+PowerShellGet provides a default repository registration for [PowerShell Gallery](https://powershellgallery.com/), therefore no action is necessary. 
+To verify that PowerShell gallery is registered correctly execute:
 
 ```powershell
 Get-PSRepository
@@ -53,7 +53,7 @@ To register or unregister repositories use the `Register-PSRepository` and `Unre
 
 # Install the module
 
-The module is availabe on powershell galery [here](https://powershellgalery.com/packages/{ModuleName}/). 
+The module is availabe on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
 
 To install the module with administrative rights for all users execute
 ```powershell
@@ -67,7 +67,7 @@ Install-Module {ModuleName} -Scope CurrentUser
 
 # Upgrading the module
 
-Newer versions of the module will become available on powershell galery [here](https://powershellgalery.com/packages/{ModuleName}/). 
+Newer versions of the module will become available on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
 
 To install a new version for all users execute
 ```powershell

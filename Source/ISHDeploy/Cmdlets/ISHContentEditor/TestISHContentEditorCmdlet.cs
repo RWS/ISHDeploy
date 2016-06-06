@@ -31,7 +31,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// </summary>
 		public override void ExecuteCmdlet()
 		{
-            var operation = new TestISHContentEditorOperation(Logger, OperationPaths.FoldersPaths.LicenceFolderPath, Domain);
+            var operation = new TestISHContentEditorOperation(Logger, ISHDeployment, Domain);
 
             var result = operation.Run();
 

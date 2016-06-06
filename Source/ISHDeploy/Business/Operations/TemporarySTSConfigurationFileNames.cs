@@ -4,12 +4,12 @@
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
-        public static class TemporarySTSConfigurationFileNames
+        protected static class TemporarySTSConfigurationFileNames
         {
             /// <summary>
             /// The name of ISH WS certificate file

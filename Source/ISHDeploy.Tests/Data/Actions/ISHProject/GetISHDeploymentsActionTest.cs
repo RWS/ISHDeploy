@@ -23,8 +23,21 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
         {
             ObjectFactory.SetInstance(_registryManager);
             ObjectFactory.SetInstance(_xmlManager);
-        }
 
+            _xmlManager.GetAllInputParamsValues(Arg.Any<string>()).Returns(new Dictionary<string, string>
+            {
+                ["projectsuffix"] = string.Empty,
+                ["apppath"] = string.Empty,
+                ["webpath"] = string.Empty,
+                ["datapath"] = string.Empty,
+                ["databasetype"] = string.Empty,
+                ["baseurl"] = "https://",
+                ["infoshareauthorwebappname"] = string.Empty,
+                ["infosharewswebappname"] = string.Empty,
+                ["infosharestswebappname"] = string.Empty
+            });
+        }
+        
         [TestMethod]
         [TestCategory("Actions")]
         public void ExecuteWithResult_Has_0_installed_projects()
@@ -85,6 +98,7 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
 
         [TestMethod]
         [TestCategory("Actions")]
+        [ExpectedException(typeof(DeploymentNotFoundException))]
         public void ExecuteWithResult_Project_with_such_suffix_not_found()
         {
             IEnumerable<ISHDeployment> ishProjects = null;
@@ -98,8 +112,6 @@ namespace ISHDeploy.Tests.Data.Actions.ISHProject
 
             _registryManager.Received(1).GetInstalledProjectsKeys(suffix);
             Logger.Received(1).WriteError(Arg.Any<DeploymentNotFoundException>(), suffix);
-            Assert.IsNotNull(ishProjects, "Return value from the action should not be null");
-            Assert.IsFalse(ishProjects.Any(), "Returned projects number should be 0");
         }
 
         [TestMethod]

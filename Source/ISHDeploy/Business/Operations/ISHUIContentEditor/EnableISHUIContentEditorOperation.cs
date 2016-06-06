@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
     /// Enables Content Editor for Content Manager deployment
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUIContentEditorOperation : OperationPaths, IOperation
+    public class EnableISHUIContentEditorOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -19,7 +19,9 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
         /// Initializes a new instance of the <see cref="EnableISHUIContentEditorOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public EnableISHUIContentEditorOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public EnableISHUIContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare Content Editor");
             

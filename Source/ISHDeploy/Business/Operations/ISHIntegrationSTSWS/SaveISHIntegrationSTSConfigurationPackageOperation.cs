@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                         {"$ishwscontent", string.Empty}
                     };
 
-            _invoker.AddAction(new DirectoryCreateAction(logger, temporaryFolder));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
             _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 

@@ -22,7 +22,9 @@ $scriptBlockGetDeployment = {
 
 # Generating file pathes to remote PC files
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$LicensePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $testingDeployment.OriginalParameters.projectsuffix )
+
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$LicensePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
 $LicensePath = $LicensePath.ToString().replace(":", "$")
 $LicensePath = "\\$computerName\$LicensePath"
 $xmlPath = Join-Path $LicensePath "\XSL"
@@ -97,19 +99,6 @@ $scriptBlockTestLicense = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Test-ISHContentEditor -Domain $domainName  -ISHDeployment $ishDeploy
-}
-
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
 #endregion

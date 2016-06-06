@@ -42,7 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new SetISHContentEditorOperation(Logger, OperationPaths.FoldersPaths.LicenceFolderPath, string.Concat(Domain, LicenseFileExtension), LicenseKey);
+            var operation = new SetISHContentEditorOperation(Logger, ISHDeployment, string.Concat(Domain, LicenseFileExtension), LicenseKey);
 
             operation.Run();
 		}

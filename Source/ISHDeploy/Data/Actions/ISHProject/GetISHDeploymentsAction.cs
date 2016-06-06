@@ -35,51 +35,49 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         private readonly IFileManager _fileManager;
 
+
         /// <summary>
-        /// The Content Manager deployment suffix.
+        /// The Content Manager deployment name.
         /// </summary>
-        private readonly string _projectSuffix;
+        private readonly string _projectName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHDeploymentsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="projectSuffix">The Content Manager deployment suffix.</param>
+        /// <param name="projectName">The Content Manager deployment name.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentsAction(ILogger logger, string projectSuffix, Action<IEnumerable<ISHDeployment>> returnResult)
+        public GetISHDeploymentsAction(ILogger logger, string projectName, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
-            _projectSuffix = projectSuffix;
+            _projectName = projectName;
         }
 
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns>List of Content Manager deployments.</returns>
+        /// <returns>Content Manager deployment in acccordance with name.</returns>
         protected override IEnumerable<ISHDeployment> ExecuteWithResult()
         {
             var result = new List<ISHDeployment>();
 
             // Get list of installed deployments from the registry.
-            var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectSuffix).ToArray();
-            
+            var installProjectsRegKeys = _registryManager.GetInstalledProjectsKeys(_projectName).ToArray();
+
             if (!installProjectsRegKeys.Any())
             {
-                if (_projectSuffix != null)
+                if (_projectName != null)
                 {
-                    Logger.WriteError(
-                        new DeploymentNotFoundException(
-                            $"Deployment with suffix {_projectSuffix} is not found on the system"), _projectSuffix);
+                    throw new DeploymentNotFoundException($"Deployment with name {_projectName} is not found on the system");
                 }
                 else
                 {
                     Logger.WriteVerbose("None project instances were found on the system");
+                    return result;
                 }
-
-                return result;
             }
 
             // For each registry record get deployment version, path to inputparameter.xml file and parse this file.

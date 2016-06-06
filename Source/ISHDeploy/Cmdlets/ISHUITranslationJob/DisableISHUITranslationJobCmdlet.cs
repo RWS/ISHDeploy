@@ -21,7 +21,7 @@ namespace ISHDeploy.Cmdlets.ISHUITranslationJob
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHUITranslationJobOperation(Logger);
+            var operation = new DisableISHUITranslationJobOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

@@ -130,7 +130,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        var operation = new SetISHUIEventMonitorTabOperation(Logger, new EventLogMenuItem()
+	        var operation = new SetISHUIEventMonitorTabOperation(Logger, ISHDeployment, new EventLogMenuItem()
 			{
 				Label = Label,
 				Description = Description,

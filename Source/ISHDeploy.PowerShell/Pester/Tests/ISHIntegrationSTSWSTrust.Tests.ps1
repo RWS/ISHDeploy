@@ -22,25 +22,13 @@ $scriptBlockGetDeployment = {
 
 # Generating file pathes to remote PC files
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+$suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 #endregion
 
 #region Script Blocks 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
-
 $scriptBlockSetWSTrust = {
     param (
         $ishDeployName,
@@ -82,21 +70,21 @@ $scriptBlockGetHistory = {
 $scriptBlockReadTargetXML = {
     param(
         $xmlPath,
-        $testingDeployment
+        $suffix
     )
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
-    $connectionConfig.load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")
     [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $feedSDLLiveContentConfig.load("$xmlPath\Data$suffix\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$translationOrganizerConfig = new-object System.Xml.XmlDocument
-    $translationOrganizerConfig.load("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $translationOrganizerConfig.load("$xmlPath\App$suffix\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
     [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument
-    $synchronizeToLiveContentConfig.load("$xmlPath\App{0}\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $synchronizeToLiveContentConfig.load("$xmlPath\App$suffix\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
     [System.Xml.XmlDocument]$trisoftInfoShareClientConfig = new-object System.Xml.XmlDocument
-    $trisoftInfoShareClientConfig.load("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $trisoftInfoShareClientConfig.load("$xmlPath\Web$suffix\Author\ASP\Trisoft.InfoShare.Client.config")
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
-    $infoShareWSWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $testingDeployment.OriginalParameters.projectsuffix)
+    $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
 
     $result = @{}
 
@@ -121,7 +109,7 @@ $scriptBlockReadTargetXML = {
 function readTargetXML() {
     
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $testingDeployment
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix
 
     #get variables and nodes from files
     $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]
@@ -204,7 +192,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
+        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
@@ -220,7 +208,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $testingDeployment.OriginalParameters.projectsuffix
+        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         Rename-Item "$filepath\Web.config"  "_Web.config"
 

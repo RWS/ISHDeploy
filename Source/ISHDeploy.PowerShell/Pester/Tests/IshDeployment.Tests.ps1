@@ -118,7 +118,7 @@ Describe "Testing Get-ISHDeployment"{
     It "Commandlets doesnot return Original Parameters"{
         #Arrange
         $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
-        $deploy.ToString().Contains("Original Paremeters") | Should be $False
+        $deploy.ToString().Contains("OriginalParemeters") | Should be $False
     }
 
 }

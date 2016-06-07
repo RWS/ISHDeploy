@@ -43,7 +43,6 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         protected override void ProcessRecord()
         {
-            //var cmdLetType = this.GetType().ToString().Split('.').Last();
             try
             {
                 base.ProcessRecord();

@@ -66,13 +66,13 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 			switch (ParameterSetName)
 	        {
 				case "Last":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
 					break;
 				case "First":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
 					break;
 				case "After":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
+					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
 					break;
 				default:
 					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorTabCmdlet)} should be defined.");

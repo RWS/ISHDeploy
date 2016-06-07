@@ -309,5 +309,31 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"The output package is: '{destinationArchiveFilePath}'");
         }
+
+        /// <summary>
+        /// Determines whether is the specified file locked.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <returns></returns>
+        public bool IsFileLocked(string filePath)
+        {
+            var fileInfo = new FileInfo(filePath);
+            FileStream stream = null;
+
+            try
+            {
+                stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch
+            {
+                return true;
+            }
+            finally
+            {
+                stream?.Close();
+            }
+
+            return false;
+        }
     }
 }

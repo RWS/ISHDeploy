@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
     /// Enables quality assistant plugin for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUIQualityAssistantOperation : OperationPaths, IOperation
+    public class EnableISHUIQualityAssistantOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,7 +19,9 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// Initializes a new instance of the <see cref="EnableISHUIQualityAssistantOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public EnableISHUIQualityAssistantOperation(ILogger logger)
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        public EnableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+            base(logger, ishDeployment)
         {
 			_invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
 

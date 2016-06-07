@@ -78,12 +78,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
                     ActorPassword = string.Empty;
                 }
 
-                var operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, Endpoint, MexEndpoint, BindingType, ActorUsername, ActorPassword);
+                var operation = new SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(Logger, ISHDeployment, Endpoint, MexEndpoint, BindingType, ActorUsername, ActorPassword);
                 operation.Run();
             }
             else
             {
-                var operation = new SetISHIntegrationSTSWSTrustOperation(Logger, Endpoint, MexEndpoint, BindingType);
+                var operation = new SetISHIntegrationSTSWSTrustOperation(Logger, ISHDeployment, Endpoint, MexEndpoint, BindingType);
                 operation.Run();
             }
         }

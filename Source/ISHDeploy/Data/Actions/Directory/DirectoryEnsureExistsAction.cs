@@ -9,7 +9,7 @@ namespace ISHDeploy.Data.Actions.Directory
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class DirectoryCreateAction : BaseAction
+    public class DirectoryEnsureExistsAction : BaseAction
     {
         /// <summary>
         /// The file manager.
@@ -23,11 +23,11 @@ namespace ISHDeploy.Data.Actions.Directory
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DirectoryCreateAction"/> class.
+        /// Initializes a new instance of the <see cref="DirectoryEnsureExistsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="folderPath">The path to folder that will be created.</param>
-        public DirectoryCreateAction(ILogger logger, string folderPath) 
+        public DirectoryEnsureExistsAction(ILogger logger, string folderPath) 
 			: base(logger)
         {
             _folderPath = folderPath;

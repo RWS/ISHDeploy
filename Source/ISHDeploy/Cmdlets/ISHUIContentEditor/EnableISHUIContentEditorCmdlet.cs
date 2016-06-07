@@ -21,7 +21,7 @@ namespace ISHDeploy.Cmdlets.ISHUIContentEditor
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHUIContentEditorOperation(Logger);
+            var operation = new EnableISHUIContentEditorOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

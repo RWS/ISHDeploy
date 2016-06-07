@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class MoveISHUIEventMonitorTabOperation : OperationPaths, IOperation
+	public class MoveISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// Operation type enum
@@ -33,16 +33,18 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// </summary>
         private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="label">Label of the element</param>
-		/// <param name="operationType">Type of the operation.</param>
-		/// <param name="targetLabel">The target label.</param>
-		public MoveISHUIEventMonitorTabOperation(ILogger logger, string label, OperationType operationType, string targetLabel = null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="label">Label of the element</param>
+        /// <param name="operationType">Type of the operation.</param>
+        /// <param name="targetLabel">The target label.</param>
+        public MoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, OperationType operationType, string targetLabel = null) :
+            base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Move Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
 
 			string nodeXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string nodeCommentXPath = nodeXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;

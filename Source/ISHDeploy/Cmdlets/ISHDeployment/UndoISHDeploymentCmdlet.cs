@@ -24,7 +24,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
 		{
-			var cmdSet = new UndoISHDeploymentOperation(Logger, ISHDeploymentExtended);
+			var cmdSet = new UndoISHDeploymentOperation(Logger, ISHDeployment);
 			cmdSet.Run();
 		}
     }

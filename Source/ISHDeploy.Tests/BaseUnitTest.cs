@@ -45,7 +45,7 @@ namespace ISHDeploy.Tests
                 ["infosharestswebappname"] = string.Empty
             };
 
-			return new ISHFilePath(new ISHDeploymentExtended(installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);
+			return new ISHFilePath(new ISHDeploymentInternal(installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);
 		}
     }
 }

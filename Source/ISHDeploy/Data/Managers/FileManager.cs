@@ -271,7 +271,7 @@ namespace ISHDeploy.Data.Managers
 
             if (File.Exists(filePath))
             {
-				_logger.WriteWarning($"License file `{filePath}` found for `{hostName}`");
+				_logger.WriteDebug($"License file `{filePath}` found for `{hostName}`");
 				return true;
             }
 

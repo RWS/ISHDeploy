@@ -4,6 +4,8 @@ using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
+using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
@@ -61,6 +63,20 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
                 InfoShareSTSDataBase.ConnectionString,
                 InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
                 parameters));
+
+            // Recycling Application pool for WS
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
+
+            // Recycling Application pool for STS
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
+
+            // Recycling Application pool for CM
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
+
+            // Waiting until files becomes unlocked
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace ISHDeploy.Tests.Data.Actions
         {
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
-	        var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".back");
+	        var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".bak");
 
 			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
 			FileManager.FileExists(testFilePath.VanillaPath).Returns(true);
@@ -40,7 +40,7 @@ namespace ISHDeploy.Tests.Data.Actions
 		{
 			// Arrange
 			var testFilePath = this.GetIshFilePath("Test.xml");
-			var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".back");
+			var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".bak");
 
 			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
 			FileManager.FileExists(backUpFilePath).Returns(true);

@@ -42,7 +42,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void CommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Commenting blocks matched to `{searchPattern}` in file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Comment blocks matched to `{searchPattern}`]");
 
 			var strLines = _fileManager.ReadAllLines(filePath);
 
@@ -73,6 +73,8 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
+            _logger.WriteVerbose($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
+
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void UncommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Uncommenting blocks matched to `{searchPattern}` in file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Uncommenting blocks matched to `{searchPattern}`]");
 
 			var strLines = _fileManager.ReadAllLines(filePath);
 
@@ -113,6 +115,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAnyUncommented)
             {
-                _logger.WriteVerbose("Text block is already fully commented");
+                _logger.WriteWarning("Text block is already fully commented");
                 return;
             }
             
@@ -155,7 +158,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAllCommented)
             {
-                _logger.WriteVerbose("Text block contains uncommented lines");
+                _logger.WriteWarning("Text block contains uncommented lines");
                 return;
             }
 

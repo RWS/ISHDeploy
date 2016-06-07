@@ -34,7 +34,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Certificate public key.</returns>
         public string GetCertificatePublicKey(string thumbprint)
         {
-            _logger.WriteDebug($"Getting the certificate with thumbprint: {thumbprint}");
+            _logger.WriteDebug($"Get the certificate with thumbprint: {thumbprint}");
             var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
             certStore.Open(OpenFlags.ReadOnly);
@@ -55,6 +55,7 @@ namespace ISHDeploy.Data.Managers
             builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
             builder.AppendLine("-----END CERTIFICATE-----");
 
+            _logger.WriteVerbose($"Got the certificate with thumbprint: {thumbprint} as: {builder.ToString()}");
             return builder.ToString();
         }
     }

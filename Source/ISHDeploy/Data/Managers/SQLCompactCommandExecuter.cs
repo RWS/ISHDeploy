@@ -118,9 +118,9 @@ namespace ISHDeploy.Data.Managers
         {
             _transaction?.Dispose();
 
-            _connection.Close();
-            _connection.Dispose();
-            _command.Dispose();
+            _connection?.Close();
+            _connection?.Dispose();
+            _command?.Dispose();
         }
     }
 }

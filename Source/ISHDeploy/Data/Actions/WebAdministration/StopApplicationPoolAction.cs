@@ -4,7 +4,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Saves files to package.
+    /// Stops an application pool.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
     public class StopApplicationPoolAction : BaseAction
@@ -20,7 +20,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         private readonly IWebAdministrationManager _webAdminManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RecycleApplicationPoolAction"/> class.
+        /// Initializes a new instance of the <see cref="StopApplicationPoolAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>

@@ -40,7 +40,10 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 		    {
                 logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
 		        thumbprint = normalizedThumbprint;
-		    }
+            }
+
+            // Stop STS Application pool before updating RelyingParties 
+            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
 
             // thumbprint
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
@@ -64,19 +67,11 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
                 InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
                 parameters));
 
-            // Recycling Application pool for WS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
-
             // Recycling Application pool for STS
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
 
-            // Recycling Application pool for CM
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
-
             // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
             _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
         }
 
         /// <summary>

@@ -98,6 +98,7 @@
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
     <None Include="Pester\Tests\ISHUITranslationJob.Tests.ps1" />
+    <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />
     <None Include="Publish\Publish-Module.ps1" />

@@ -126,3 +126,16 @@ Function GetProjectSuffix($projectName)
 {
     return $projectName.Replace("InfoShare", "")
 }
+
+$scriptBlockCreateCertificate = {
+    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
+    return $sslCertificate 
+}
+
+$scriptBlockRemoveCertificate= {
+    param (
+        [Parameter(Mandatory=$true)]
+        $thumbprint
+    )
+    certutil -delstore my $thumbprint
+}

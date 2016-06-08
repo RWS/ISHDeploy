@@ -65,7 +65,7 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="System.ArgumentNullException"></exception>
         private X509Certificate2 FindCertificateByThumbprint(string thumbprint)
         {
-            _logger.WriteDebug($"Getting the certificate with thumbprint: {thumbprint}");
+            _logger.WriteDebug($"Get the certificate with thumbprint: {thumbprint}");
             var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
             certStore.Open(OpenFlags.ReadOnly);

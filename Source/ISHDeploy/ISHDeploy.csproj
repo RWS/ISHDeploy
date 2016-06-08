@@ -288,6 +288,16 @@
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)ISHDeploy.PostBuild.ps1" -outputpath "$(TargetDir)." -modulename $(TargetName)
 </PostBuildEvent>
   </PropertyGroup>
+    <Target Name="AfterBuild">
+        <CallTarget Targets="CopyNatives" />
+    </Target>
+    <Target Name="CopyNatives">
+        <Exec Command="if not exist  &quot;$(OutDir)x86 &quot; md  &quot;$(OutDir)x86&quot;" />
+        <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*&quot; &quot;$(OutDir)x86&quot;" />
+        <Exec Command="if not exist &quot;$(OutDir)amd64&quot; md &quot;$(OutDir)amd64&quot;" />
+        <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*&quot; &quot;$(OutDir)amd64 &quot;" />
+        <Warning Text="Natives copied" />
+    </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

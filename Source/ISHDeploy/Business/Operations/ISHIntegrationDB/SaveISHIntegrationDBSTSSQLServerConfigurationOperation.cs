@@ -2,7 +2,6 @@
 using System.Data.OleDb;
 using System.IO;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Cmdlets.ISHIntegrationDB;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
@@ -28,7 +27,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileName">Name of the output file.</param>
         /// <param name="type">The output file type.</param>
-        public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.OutputType type) :
+        public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, OutputType type) :
             base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
@@ -37,10 +36,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             
             switch (type)
             {
-                case SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.OutputType.PS1:
+                case OutputType.PS1:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsPSTemplate;
                     break;
-                case SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.OutputType.SQL:
+                case OutputType.SQL:
                 default:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsSQLTemplate;
                     break;

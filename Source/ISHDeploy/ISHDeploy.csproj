@@ -73,6 +73,7 @@
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationDB\OutputType.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
@@ -142,7 +143,7 @@
     <Compile Include="Business\Operations\XopusConfigXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingType.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
@@ -266,7 +267,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
-	<EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
+    <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />

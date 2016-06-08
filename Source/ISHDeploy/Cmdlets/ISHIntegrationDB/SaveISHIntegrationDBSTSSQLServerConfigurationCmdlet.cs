@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
-using ISHDeploy.Cmdlets.ISHUIEventMonitorTab;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
@@ -26,23 +25,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
     [Cmdlet(VerbsData.Save, "ISHIntegrationDBSTSSQLServerConfiguration")]
     public class SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet : BaseHistoryEntryCmdlet
     {
-        /// <summary>
-        /// Output file type
-        ///	<para type="description">Enumeration of output file types.</para>
-        /// </summary>
-        public enum OutputType
-        {
-            /// <summary>
-            /// Output Powershell file
-            /// </summary>
-            PS1,
-
-            /// <summary>
-            /// Output SQL file
-            /// </summary>
-            SQL
-        }
-
         /// <summary>
         /// <para type="description">Name of the output file.</para>
         /// </summary>

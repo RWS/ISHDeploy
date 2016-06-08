@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.OleDb;
 using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Cmdlets.ISHIntegrationDB;
+using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
@@ -45,18 +48,20 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     break;
             }
 
-        
-            var builder = new SqlConnectionStringBuilder(ISHDeploymentInternal.ConnectString);
-        
-            _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
-                templateFile,
-                Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
-                new Dictionary<string, string>
-                {
-                    {"[$OSUSER$]", ISHDeploymentInternal.OSUser},
-                    {"[$DATABASE$]", builder.InitialCatalog},
-                    {"[$DATASOURCE$]", builder.DataSource}
-                }));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, FoldersPaths.PackagesFolderPath));
+
+            using (OleDbConnection builder = new OleDbConnection(ISHDeploymentInternal.ConnectString))
+            {
+                _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
+                    templateFile,
+                    Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
+                    new Dictionary<string, string>
+                    {
+                        {"$OSUSER$", ISHDeploymentInternal.OSUser},
+                        {"$DATABASE$", builder.Database},
+                        {"$DATASOURCE$", builder.DataSource}
+                    }));
+            }
         }
 
         /// <summary>

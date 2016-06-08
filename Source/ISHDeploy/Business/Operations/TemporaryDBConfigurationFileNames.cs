@@ -14,12 +14,12 @@
             /// <summary>
             /// The template for Account Permissions Grant `SQL` script
             /// </summary>
-            public const string GrantComputerAccountPermissionsSQLTemplate = "GrantComputerAccountPermissions.sql";
+            public const string GrantComputerAccountPermissionsSQLTemplate = "SQL.GrantComputerAccountPermissions.sql";
 
             /// <summary>
             /// The template for Account Permissions Grant `PS1` script
             /// </summary>
-            public const string GrantComputerAccountPermissionsPSTemplate = "GrantComputerAccountPermissions.ps1";
+            public const string GrantComputerAccountPermissionsPSTemplate = "SQL.GrantComputerAccountPermissions.ps1";
         }
     }
 }

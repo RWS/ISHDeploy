@@ -1,5 +1,7 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
+using ISHDeploy.Cmdlets.ISHUIEventMonitorTab;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
@@ -59,6 +61,11 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// </summary>
         public override void ExecuteCmdlet()
         {
+            if (ISHDeployment.DatabaseType == "oracle")
+            {
+                throw new ArgumentException($"Save-ISHIntegrationDBSTSSQLServerConfiguration Commandlet is not supported for `Oracle` Database type.");
+            }
+
             var operation = new SaveISHIntegrationDBSTSSQLServerConfigurationOperation(Logger, ISHDeployment, FileName, Type);
 
             operation.Run();

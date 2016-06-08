@@ -8,22 +8,29 @@
 
 try
 {
-    Push-Location "sql\$DATASOURCE$\databases"
+    if (-not (Get-Module -ListAvailable -Name SQLPS)) 
+    {
+	    throw "SQLPS module is not installed."
+    } 
 
-    cd "[MASTER]"
+    Push-Location "SQLSERVER:sql\$DATASOURCE$\databases"
+
+    cd "MASTER"
 
     # Create login for the computer account. 
-    Invoke-Sqlcmd -Query "LOGIN [$OSUSER$] FROM WINDOWS WITH DEFAULT_DATABASE=[$DATABASE$]"
+    Invoke-Sqlcmd -Query "CREATE LOGIN [$OSUSER$] FROM WINDOWS WITH DEFAULT_DATABASE=[$DATABASE$]"
 
-    cd "[$DATABASE$]"
+    cd "..\$DATABASE$"
 
     # Add the user to the $DATABASE$
-    Invoke-Sqlcmd -Query "USER [$OSUSER$] FOR LOGIN [$OSUSER$]"
-
-    cd "[$DATABASE$]"
+    Invoke-Sqlcmd -Query "CREATE USER [$OSUSER$] FOR LOGIN [$OSUSER$]"
 
     # Grant SELECT permision to the user
-    Invoke-Sqlcmd -Query "SELECT TO [$OSUSER$]"
+    Invoke-Sqlcmd -Query "GRANT SELECT TO [$OSUSER$]"
+}
+catch
+{
+    Write-Error $_
 }
 finally
 {

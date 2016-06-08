@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using ISHDeploy.Business.Invokers;
@@ -7,7 +6,6 @@ using ISHDeploy.Cmdlets.ISHIntegrationDB;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {

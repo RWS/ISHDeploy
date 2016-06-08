@@ -25,7 +25,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string issuer) :
             base(logger, ishDeployment)
 		{
-			_invoker = new ActionInvoker(logger, "Removing certificate credentials based on issuer name");
+			_invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
 
 			// Author web Config
 			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfig.Path, 

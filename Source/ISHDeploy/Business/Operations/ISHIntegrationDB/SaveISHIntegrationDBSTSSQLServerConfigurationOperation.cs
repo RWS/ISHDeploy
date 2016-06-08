@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Cmdlets.ISHIntegrationDB;
@@ -44,14 +45,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     break;
             }
 
+        
+            var builder = new SqlConnectionStringBuilder(ISHDeploymentInternal.ConnectString);
+        
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                 templateFile,
                 Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
                 new Dictionary<string, string>
                 {
-                    {"[MASTER]", ISHDeploymentInternal.AccessHostName},
-                    {"[ISH13TEST]", ISHDeploymentInternal.AccessHostName},
-                    {"[GLOBAL\\MECDEV12QA01$]", ISHDeploymentInternal.AccessHostName}                    
+                    {"[$OSUSER$]", ISHDeploymentInternal.OSUser},
+                    {"[$DATABASE$]", builder.InitialCatalog},
+                    {"[$DATASOURCE$]", builder.DataSource}
                 }));
         }
 

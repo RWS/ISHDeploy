@@ -40,7 +40,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
         /// <para type="description">Specifies the STS issuer authentication type.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Type of STS issuer authentication")]
-        public BindingTypes BindingType { get; set; }
+        public BindingType BindingType { get; set; }
 
         /// <summary>
         /// <para type="description">Specifies that STS -ActorUsername and -ActorPassword need to be updated.</para>

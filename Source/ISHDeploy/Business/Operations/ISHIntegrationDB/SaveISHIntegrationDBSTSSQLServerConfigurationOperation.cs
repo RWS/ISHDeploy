@@ -9,7 +9,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
     /// <summary>
-    /// Generates SQL Server script that grants necessary permissions.
+    /// Generates SQL Server configuration script that grants necessary permissions.
     /// </summary>
     /// <seealso cref="BasePathsOperation" />
     /// <seealso cref="IOperation" />
@@ -39,7 +39,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                 case OutputType.PS1:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsPSTemplate;
                     break;
-                case OutputType.SQL:
                 default:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsSQLTemplate;
                     break;

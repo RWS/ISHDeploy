@@ -31,6 +31,11 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
+$inputParameters = Get-InputParameters $testingDeploymentName
+$osuser = $inputParameters["osuser"]
+[System.Data.OleDb.OleDbConnection]$connection = New-Object "System.Data.OleDb.OleDbConnection" $inputParameters["connectstring"]
+$database = $connection.Database
+$datasource = $connection.DataSource
 #endregion
 
 #region Script Blocks 
@@ -111,12 +116,6 @@ $scriptBlockGetHistory = {
 
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-function Unzip
-{
-    param([string]$zipfile, [string]$outpath)
-
-    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
-}
 
 Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     BeforeEach {
@@ -131,10 +130,11 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
+        
         $Mdfile = Get-Content "$packagePath\$testFileName"
         $Mdfile -contains "USE [MASTER]" | Should be $true
-        $Mdfile -contains "CREATE LOGIN [GLOBAL\infoshareserviceuser] FROM WINDOWS WITH DEFAULT_DATABASE=[ISH11_MECDVTRI14QA03]" | Should be $true
-        $Mdfile -contains "CREATE LOGIN [GLOBAL\infoshareserviceuser] FROM WINDOWS WITH DEFAULT_DATABASE=[ISH11_MECDVTRI14QA03]" | Should be $true
+        $Mdfile -contains "CREATE LOGIN [$osuser] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]" | Should be $true
+
     }
 
     It "Save same file"{
@@ -153,10 +153,8 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         $Mdfile = Get-Content "$packagePath\$testFileName"
-
-        $Mdfile = $Mdfile.Trim()
-
-        $Mdfile -contains "if (-not (Get-Module -ListAvailable -Name SQLPS))" | Should be $true
+        [System.String]$content = [System.String]::Join("", $Mdfile)
+        $content.Contains("SQLSERVER:sql\$datasource\databases") | Should be $true
     }
 
     It "Save same PS1 file"{

@@ -30,7 +30,8 @@ $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
 $suffix = GetProjectSuffix($testingDeployment.Name)
-$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
+$filepath = "$xmlPath\Web{0}\Author\ASP" -f $suffix
+$absolutePath = $testingDeployment.WebPath
 #endregion
 
 #region Script Blocks
@@ -72,7 +73,8 @@ $scriptBlockReadTargetXML = {
         $thumbprint,
         $ValidationMode,
         $suffix,
-        $xmlPath
+        $xmlPath,
+        $absolutePath
     )
     #read all files that are touched with commandlet
     
@@ -102,10 +104,10 @@ $scriptBlockReadTargetXML = {
     $result["connectionConfigNode"] = $ConnectionConfig.SelectNodes("connectionconfiguration/infosharewscertificatevalidationmode")[0].InnerText
 
     #Create System.Data.SqlServerCe.dll path
-    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$xmlPath\Web$suffix\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
+    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\Web$suffix\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
     
     #Add SQL Server CE Engine
-    [Reflection.Assembly]::LoadFile($sqlCEAssemblyPath)
+    $var = [Reflection.Assembly]::LoadFile($sqlCEAssemblyPath)
 
     #Create Connection String
     [System.String] $dbName="IdentityServerConfiguration-2.2.sdf"
@@ -127,7 +129,7 @@ $scriptBlockReadTargetXML = {
 	try
 	{
 		$connection.Open()
-		$result["encryptingCertificate"] =$existCommand.ExecuteScalar()
+		$result["encryptingCertificate"] =$existCommand.ExecuteScalar().ToString()
 	}
 	finally
 	{
@@ -143,8 +145,9 @@ function remoteReadTargetXML() {
         $ValidationMode
     )
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath
-    
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath
+
+
     #get variables and nodes from files
     $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]
     $global:stsConfigNodesCount = $result["stsConfigNodesCount"]
@@ -190,7 +193,42 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $encryptingCertificate | Should be $testEncriptedCertificate
     }
 
+    It "Set-ISHAPIWCFServiceCertificate with no XML"{
+        #Arrange
+        Rename-Item "$filepath\Web.config"  "_Web.config"
 
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop }| Should Throw "Could not find file"
+        #Rollback
+        Rename-Item "$filepath\_Web.config" "Web.config"
+    }
+
+    It "Set-ISHAPIWCFServiceCertificate with wrong XML"{
+        #Arrange
+        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        Rename-Item "$filepath\Web.config"  "_Web.config"
+        New-Item "$filepath\Web.config" -type file |Out-Null
+        
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop}| Should Throw "Root element is missing"
+        #Rollback
+        Remove-Item "$filepath\Web.config"
+        Rename-Item "$filepath\_Web.config" "Web.config"
+    }
+
+     It "Set-ISHAPIWCFServiceCertificate writes proper history"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
+        
+        #Assert
+        $history.Contains('Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint') | Should be "True"
+        $history.Contains('-ValidationMode PeerOrChainTrust') | Should be "True"
+        $history.Contains($testThumbprint) | Should be "True"
+
+              
+    }
 }
 
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

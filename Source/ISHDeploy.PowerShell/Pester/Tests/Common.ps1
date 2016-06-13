@@ -73,7 +73,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path
+    Rename-Item $path, $name
 }
 Function RemoteRenameItem {
     param (

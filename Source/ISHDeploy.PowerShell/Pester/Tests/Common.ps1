@@ -181,7 +181,6 @@ $scriptBlockRemoveCertificate= {
     )
     certutil -delstore my $thumbprint
 }
-}
 #Stop WebAppPool
 Import-Module WebAdministration
 $scriptBlockStopWebAppPool = {

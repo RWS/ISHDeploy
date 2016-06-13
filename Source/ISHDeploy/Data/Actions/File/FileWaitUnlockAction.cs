@@ -62,7 +62,7 @@ namespace ISHDeploy.Data.Actions.File
 
                 if (i > 100)
                 {
-                    throw new TimeoutException($"The process cannot access the file {_filePath} for a long timebecause. It is being used by another process");
+                    throw new TimeoutException($"The process cannot access the file '{_filePath}' for a long time because it is being used by another process");
                 }
             }
         }

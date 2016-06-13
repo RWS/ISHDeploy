@@ -335,6 +335,11 @@ namespace ISHDeploy.Data.Managers
             var fileInfo = new FileInfo(filePath);
             FileStream stream = null;
 
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"File availability check failed. Could not find file '{filePath}'", filePath);
+            }
+
             try
             {
                 stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);

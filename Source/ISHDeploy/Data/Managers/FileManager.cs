@@ -322,7 +322,7 @@ namespace ISHDeploy.Data.Managers
 
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("Could not find file", filePath);
+                throw new FileNotFoundException($"File availability check failed. Could not find file '{filePath}'", filePath);
             }
 
             try

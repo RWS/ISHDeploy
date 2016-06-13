@@ -79,6 +79,11 @@ namespace ISHDeploy.Business.Invokers
                     }
                 }
 
+                executedActions.ForEach(x =>
+                {
+                    (x as ISQLTransactionAction)?.TransactionCommit();
+                });
+
                 _logger.WriteVerbose($"`{_activityDescription}` completed");
             }
             catch
@@ -87,13 +92,12 @@ namespace ISHDeploy.Business.Invokers
 
 				//	We are doing rollback by default, as if we would want to do in on demand,
 				//	then we`d have to add a flag into method invocation
+				executedActions.Reverse();
+				executedActions.ForEach(x =>
 				{
-					executedActions.Reverse();
-					executedActions.ForEach(x =>
-					{
-						(x as IRestorableAction)?.Rollback();
-					});
-                }
+					(x as IRestorableAction)?.Rollback();
+                    (x as ISQLTransactionAction)?.TransactionRollback();
+                });
 
                 throw;
             }

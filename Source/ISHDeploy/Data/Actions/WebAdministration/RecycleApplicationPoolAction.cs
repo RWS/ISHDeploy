@@ -4,7 +4,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Saves files to package.
+    /// Recycles an application pool.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
     public class RecycleApplicationPoolAction : BaseAction

@@ -1,9 +1,5 @@
 ﻿# ISHDeploy
 
-[![Powershell version support][shield-ps]](#)
-[![Build Status](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.0/badge/icon)](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.0/)
-[![Code coverage][shield-coverage]](#)
-[![Dependencies][shield-dependencies]](#)
 
 Table of Contents
 -----------------
@@ -20,7 +16,7 @@ Requirements
 
 ISHDeploy requires the following to run:
 
-* [Powershell][ps] 3.0+
+* [Powershell][ps] 4.0
 * Administrative rights
 * InfoShare Content Manager
 
@@ -71,8 +67,3 @@ limitations under the License.
 [publish-module]: ./Notes/Publish%20Module%20To%20PSGallery.md
 
 [ps]: https://msdn.microsoft.com/en-us/powershell/mt173057.aspx
-[shield-coverage]: https://img.shields.io/badge/coverage-100%25-brightgreen.svg
-[shield-dependencies]: https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg
-[shield-license]: https://img.shields.io/badge/license-MIT-blue.svg
-[shield-ps]: https://img.shields.io/badge/powershell-3+-lightgrey.svg
-[shield-build]: https://img.shields.io/badge/build-passing-brightgreen.svg

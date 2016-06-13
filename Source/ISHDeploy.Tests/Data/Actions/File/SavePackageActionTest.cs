@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Data.Actions.Directory;
+using ISHDeploy.Data.Actions.Directory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 

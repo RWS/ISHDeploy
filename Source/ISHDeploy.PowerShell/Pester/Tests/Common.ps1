@@ -75,7 +75,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path
+    Rename-Item $path, $name
 }
 Function RemoteRenameItem {
     param (
@@ -167,6 +167,20 @@ Function Get-InputParameters
         $projectName
     ) 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+}
+
+$scriptBlockCreateCertificate = {
+    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
+    return $sslCertificate 
+}
+
+$scriptBlockRemoveCertificate= {
+    param (
+        [Parameter(Mandatory=$true)]
+        $thumbprint
+    )
+    certutil -delstore my $thumbprint
+}
 }
 #Stop WebAppPool
 Import-Module WebAdministration

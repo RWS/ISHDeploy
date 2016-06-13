@@ -17,6 +17,6 @@
     <MinPowerShellVersion>3.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>
-    <DocPortalLink>https://sdl.github.io/ISHDeploy/$(ModuleName)</DocPortalLink>
+    <DocPortalLink>https://sdl.github.io/$(ModuleName)</DocPortalLink>
   </PropertyGroup>
 </Project>

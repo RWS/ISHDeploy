@@ -28,8 +28,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
 			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
-			// Rolling back changes for Web folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
+            // Stop Application pools before undo
+            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
+
+            // Rolling back changes for Web folder
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ISHDeploymentInternal.DataFolderPath));
@@ -42,9 +47,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
-
-            // Stop STS Application pool before clean STS App_Data folder
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
 
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));

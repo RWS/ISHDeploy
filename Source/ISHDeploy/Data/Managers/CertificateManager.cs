@@ -49,6 +49,37 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Certificate public key.</returns>
         public string GetCertificatePublicKey(string thumbprint)
         {
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            var builder = new StringBuilder();
+
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Gets the encrypted raw data by thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns></returns>
+        public string GetEncryptedRawDataByThumbprint(string thumbprint)
+        {
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            return Convert.ToBase64String(certificate.RawData);
+        }
+
+        /// <summary>
+        /// Finds the certificate by thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private X509Certificate2 FindCertificateByThumbprint(string thumbprint)
+        {
             _logger.WriteDebug($"Get the certificate with thumbprint: {thumbprint}");
             var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
@@ -64,14 +95,7 @@ namespace ISHDeploy.Data.Managers
             }
             _logger.WriteDebug("Certificate has been found.");
 
-            var builder = new StringBuilder();
-
-            builder.AppendLine("-----BEGIN CERTIFICATE-----");
-            builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
-            builder.AppendLine("-----END CERTIFICATE-----");
-
-            _logger.WriteVerbose($"Got the certificate with thumbprint: {thumbprint} as: {builder.ToString()}");
-            return builder.ToString();
+            return certificate;
         }
     }
 }

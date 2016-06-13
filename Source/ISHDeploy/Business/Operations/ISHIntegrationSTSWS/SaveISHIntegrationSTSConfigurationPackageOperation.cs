@@ -16,6 +16,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
@@ -60,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     };
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
-            _invoker.AddAction(new FileSaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
+            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 

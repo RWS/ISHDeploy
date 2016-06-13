@@ -42,7 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// <summary>
 		/// <para type="description">Certificate Thumbprint.</para>
 		/// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
+		[Parameter(Mandatory = true, HelpMessage = "Certificate Thumbprint")]
 		[ValidateNotNullOrEmpty]
 		public string Thumbprint { get; set; }
 

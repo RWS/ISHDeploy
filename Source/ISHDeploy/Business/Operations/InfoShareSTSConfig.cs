@@ -33,7 +33,11 @@ namespace ISHDeploy.Business.Operations
             /// </summary>
             public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"InfoShareSTS\Configuration\infoShareSTS.config");
+
+            /// <summary>
+            /// The xpath of "infoShareSTS/initialize/@certificateThumbprint" element in ~\Web\InfoShareSTS\Configuration\infoShareSTS.config file
+            /// </summary>
+            public const string CertificateThumbprintAttributeXPath = "infoShareSTS/initialize/@certificateThumbprint";
         }
     }
-    
 }

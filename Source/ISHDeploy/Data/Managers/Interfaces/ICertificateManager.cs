@@ -27,5 +27,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <returns>Certificate public key.</returns>
         string GetCertificatePublicKey(string thumbprint);
+
+        /// <summary>
+        /// Gets the encrypted raw data by thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns></returns>
+        string GetEncryptedRawDataByThumbprint(string thumbprint);
     }
 }

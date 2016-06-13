@@ -99,6 +99,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string CertificateValidationModeXPath = "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode";
-		}
+
+            /// <summary>
+            /// The xpath of "configuration/system.identityModel.services/federationConfiguration/serviceCertificate/certificateReference/@findValue" element in ~\Web\Author\ASP\Web.config file
+            /// </summary>
+            public const string CertificateReferenceFindValueAttributeXPath = "configuration/system.identityModel.services/federationConfiguration/serviceCertificate/certificateReference/@findValue";
+        }
 	}
 }

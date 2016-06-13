@@ -108,6 +108,12 @@ namespace ISHDeploy.Models
         /// Gets the name of the STS main url folder.
         /// </summary>
         public string STSWebAppName => _originalParameters["infosharestswebappname"];
+
+        /// <summary>
+        /// Gets the local service host name.
+        /// </summary>
+        public string BaseUrl => _originalParameters["baseurl"];
+
         /// <summary>
         /// WS Application pool name
         /// </summary>

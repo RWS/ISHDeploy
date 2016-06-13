@@ -201,21 +201,5 @@ namespace ISHDeploy.Data.Managers
 
             return installToolRegKey?.OpenSubKey(ProjectBaseRegName);
         }
-
-        /// <summary>
-        /// Gets the deployment suffix.
-        /// </summary>
-        /// <param name="projectName">Name of the project.</param>
-        /// <returns>Deployment suffix.</returns>
-        private string GetProjectSuffix(string projectName)
-        {
-            if (projectName.Length < 9)
-            {
-                _logger.WriteWarning($"Unexpected project name in the registry: `{projectName}`");
-                return null;
-            }
-
-            return projectName.Substring(9);
-        }
     }
 }

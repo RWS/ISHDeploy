@@ -126,6 +126,42 @@ Function GetProjectSuffix($projectName)
 {
     return $projectName.Replace("InfoShare", "")
 }
+#Gets InputParameters
+$scriptBlockGetInputParameters = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName 
+    )
+
+    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
+    if ([System.Environment]::Is64BitOperatingSystem)
+    {
+        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
+    }
+    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
+    $currentInstallValue = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).GetValue("Current")
+    $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
+    $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
+    
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")#.ToString()
+
+    [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
+    $inputParameters.load("$inputParametersPath\inputparameters.xml")
+
+    $result = @{}
+    $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
+    $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
+    return $result
+    
+}
+Function Get-InputParameters
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+}
 
 $scriptBlockCreateCertificate = {
     $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"

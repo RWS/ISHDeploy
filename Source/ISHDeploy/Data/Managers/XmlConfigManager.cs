@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -62,9 +77,9 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Dictionary with parameters</returns>
         public Dictionary<string, string> GetAllInputParamsValues(string filePath)
         {
-			_logger.WriteDebug($"Retrieveing input parameters from file `{filePath}`");
+            _logger.WriteDebug($"[{filePath}][Retrieve input parameters]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
 
             var paramElements = doc.XPathSelectElements(InputConfigParamXmlPath);
@@ -87,20 +102,23 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched node</param>
         public void RemoveSingleNode(string filePath, string xpath)
         {
-			_logger.WriteDebug($"Removing single node at `{xpath}` from file `{filePath}`");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Remove]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
-	        var node = this.SelectSingleNode(ref doc, xpath);
-			if (node == null)
+            var node = this.SelectSingleNode(ref doc, xpath);
+            if (node == null)
             {
-                _logger.WriteVerbose($"{filePath} does not contain node within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain node within the xpath {xpath}");
                 return;
             }
 
-			node.Remove();
+            node.Remove();
 
             _fileManager.Save(filePath, doc);
+
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
+
         }
 
         /// <summary>
@@ -110,20 +128,21 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched nodes</param>
         public void RemoveNodes(string filePath, string xpath)
         {
-            _logger.WriteDebug($"Removing nodes at `{xpath}` from file `{filePath}`");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Remove nodes]");
 
             var doc = _fileManager.Load(filePath);
 
             var nodes = this.SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
                 return;
             }
 
             nodes.Remove();
 
             _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
         }
 
         /// <summary>
@@ -133,52 +152,53 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched node</param>
         /// <param name="insertBeforeXpath">XPath to searched node</param>
         public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
-		{
-			_logger.WriteDebug($"Moving node at `{xpath}` before `{insertBeforeXpath}` node in file `{filePath}`");
+        {
+            _logger.WriteDebug($"[{filePath}][{xpath}][Move node before `{insertBeforeXpath}]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
-			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
-			if (nodes.Length == 0)
-			{
-				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
-				return;
-			}
+            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            if (nodes.Length == 0)
+            {
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
+                return;
+            }
 
-			XNode insertBeforeNode = null;
-			if (string.IsNullOrEmpty(insertBeforeXpath))
-			{
-				// In this case we need to add node to the top of the document
-				var parentNode = nodes.First().Parent;
-				if (parentNode != null)
-				{
-					insertBeforeNode = parentNode.FirstNode;
-				}
-			}
-			else
-			{
-				insertBeforeNode = doc.XPathSelectElement(insertBeforeXpath);
-			}
+            XNode insertBeforeNode = null;
+            if (string.IsNullOrEmpty(insertBeforeXpath))
+            {
+                // In this case we need to add node to the top of the document
+                var parentNode = nodes.First().Parent;
+                if (parentNode != null)
+                {
+                    insertBeforeNode = parentNode.FirstNode;
+                }
+            }
+            else
+            {
+                insertBeforeNode = doc.XPathSelectElement(insertBeforeXpath);
+            }
 
-			if (insertBeforeNode == null)
-			{
-				_logger.WriteVerbose($"{filePath} does not contain target node to insert before");
-				return;
-			}
+            if (insertBeforeNode == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain target node to insert before");
+                return;
+            }
 
-			foreach (var nodeToMove in nodes.Reverse())
-			{
-				if (nodeToMove != insertBeforeNode)
-				{
-					nodeToMove.Remove();
-					insertBeforeNode.AddBeforeSelf(nodeToMove);
+            foreach (var nodeToMove in nodes.Reverse())
+            {
+                if (nodeToMove != insertBeforeNode)
+                {
+                    nodeToMove.Remove();
+                    insertBeforeNode.AddBeforeSelf(nodeToMove);
 
-					insertBeforeNode = nodeToMove;
-				}
-			}
+                    insertBeforeNode = nodeToMove;
+                }
+            }
 
-			_fileManager.Save(filePath, doc);
-		}
+            _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
+        }
 
         /// <summary>
 	    /// Removes node in xml file that can be found by <paramref name="xpath"/>
@@ -187,54 +207,55 @@ namespace ISHDeploy.Data.Managers
 	    /// <param name="xpath">XPath to searched node</param>
 	    /// <param name="insertAfterXpath">XPath to searched node</param>
 	    public void MoveAfterNode(string filePath, string xpath, string insertAfterXpath)
-	    {
-			_logger.WriteDebug($"Moving node at `{xpath}` after `{insertAfterXpath}` node in file `{filePath}`");
+        {
+            _logger.WriteDebug($"[{filePath}][{xpath}][Move node after `{insertAfterXpath}`]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
-			var nodes = this.SelectNodes(ref doc, xpath).ToArray();
-			if (nodes.Length == 0)
-			{
-				_logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
-				return;
-			}
+            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            if (nodes.Length == 0)
+            {
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
+                return;
+            }
 
-	        XNode insertAfterNode = null;
-	        if (string.IsNullOrEmpty(insertAfterXpath))
-	        {
-				// In this case we need to add node to the bottom of the document
-		        var parentNode = nodes.First().Parent;
-		        if (parentNode != null)
-		        {
-			        insertAfterNode = parentNode.LastNode;
-		        }
-	        }
-	        else
-	        {
-				insertAfterNode = doc.XPathSelectElement(insertAfterXpath);
-			}
+            XNode insertAfterNode = null;
+            if (string.IsNullOrEmpty(insertAfterXpath))
+            {
+                // In this case we need to add node to the bottom of the document
+                var parentNode = nodes.First().Parent;
+                if (parentNode != null)
+                {
+                    insertAfterNode = parentNode.LastNode;
+                }
+            }
+            else
+            {
+                insertAfterNode = doc.XPathSelectElement(insertAfterXpath);
+            }
 
-			if (insertAfterNode == null)
-			{
-				_logger.WriteVerbose($"{filePath} does not contain target node to insert after");
-				return;
-			}
+            if (insertAfterNode == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain target node to insert after");
+                return;
+            }
 
-			foreach (var nodeToMove in nodes)
-			{
-				if (nodeToMove != insertAfterNode)
-				{
-					nodeToMove.Remove();
-					insertAfterNode.AddAfterSelf(nodeToMove);
+            foreach (var nodeToMove in nodes)
+            {
+                if (nodeToMove != insertAfterNode)
+                {
+                    nodeToMove.Remove();
+                    insertAfterNode.AddAfterSelf(nodeToMove);
 
-					insertAfterNode = nodeToMove;
-				}
-			}
+                    insertAfterNode = nodeToMove;
+                }
+            }
 
-			_fileManager.Save(filePath, doc);
-		}
+            _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
+        }
 
-		/// <summary>
+        /// <summary>
         /// Comments node in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
@@ -242,15 +263,15 @@ namespace ISHDeploy.Data.Managers
         /// <param name="encodeInnerXml">True if content of the comment should be encoded; otherwise False.</param>
         public void CommentNode(string filePath, string xpath, bool encodeInnerXml = false)
         {
-			_logger.WriteDebug($"Commenting {(encodeInnerXml ? "and encoding " : "")}xml node in `{filePath}` xml file that can be found by `{xpath}`");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
             var uncommentedNode = doc.XPathSelectElement(xpath);
 
             if (uncommentedNode == null)
             {
-                _logger.WriteVerbose($"{filePath} does not contain uncommented node within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain uncommented node within the xpath {xpath}");
                 return;
             }
 
@@ -266,6 +287,7 @@ namespace ISHDeploy.Data.Managers
             uncommentedNode.ReplaceWith(commentedNode);
 
             _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Commented][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
         }
 
         /// <summary>
@@ -275,9 +297,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
         public void CommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Commenting all nodes in file `{filePath}` that has {searchPattern} right above it");
+            _logger.WriteDebug($"[{filePath}][Comment all nodes that has {searchPattern}]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
             var patternNodes = doc.DescendantNodes()
                 .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
@@ -300,7 +322,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (uncommentedNode.NodeType == XmlNodeType.Comment)
                 {
-                    _logger.WriteVerbose($"{filePath} contains already commented node following after pattern {searchPattern}");
+                    _logger.WriteWarning($"{filePath} contains already commented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -314,6 +336,7 @@ namespace ISHDeploy.Data.Managers
             if (commentedNode != null) // means that file was changed
             {
                 _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][Commented][Comment all nodes that has {searchPattern}]");
             }
         }
 
@@ -324,9 +347,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node.</param>
         public void UncommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Uncommenting all nodes in file `{filePath}` that has {searchPattern} right above it");
+            _logger.WriteDebug($"[{filePath}][Uncomment all nodes that has {searchPattern}]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
             var patternNodes = doc.DescendantNodes()
                 .Where(node => node.NodeType == XmlNodeType.Comment && node.ToString().Contains(searchPattern)).ToArray();
@@ -349,7 +372,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (commentedNode.NodeType != XmlNodeType.Comment)
                 {
-                    _logger.WriteVerbose($"{filePath} contains already uncommented node following after pattern {searchPattern}");
+                    _logger.WriteWarning($"{filePath} contains already uncommented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -363,9 +386,10 @@ namespace ISHDeploy.Data.Managers
             if (isFileChanged)
             {
                 _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment all nodes that has {searchPattern}]");
             }
         }
-        
+
         /// <summary>
         /// Uncomment multiple nodes that can be found by inner pattern
         /// </summary>
@@ -374,9 +398,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         public void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false)
         {
-			_logger.WriteDebug($"Uncommenting {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `{filePath}` xml file that can be found by `{searchPattern}`");
+            _logger.WriteDebug($"[{filePath}][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
             var searchedNodes = doc.DescendantNodes()
                 .Where(node => node.ToString().Contains(searchPattern)).ToArray();
@@ -390,7 +414,7 @@ namespace ISHDeploy.Data.Managers
 
             if (!commentedNodes.Any())
             {
-                _logger.WriteVerbose($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
+                _logger.WriteWarning($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
                 return;
             }
 
@@ -403,78 +427,81 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
         }
 
-		/// <summary>
-		/// Set attribute value by attribute XPath
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="attributeXpath">XPath the attribute that will be modified</param>
-		/// <param name="value">Attribute new value</param>
-		public void SetAttributeValue(string filePath, string attributeXpath, string value)
-		{
-			_logger.WriteDebug($"Setting attribute `{attributeXpath}` value to `{value}` in file `{filePath}`");
+        /// <summary>
+        /// Set attribute value by attribute XPath
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="attributeXpath">XPath the attribute that will be modified</param>
+        /// <param name="value">Attribute new value</param>
+        public void SetAttributeValue(string filePath, string attributeXpath, string value)
+        {
+            _logger.WriteDebug($"[{filePath}][{attributeXpath}][Set attribute value to '{value}']");
 
-			var doc = _fileManager.Load(filePath);
-			var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
-			if (attr == null)
-			{
-				_logger.WriteWarning($"{filePath} does not contain attribute at '{attributeXpath}'.");
-				return;
-			}
+            var doc = _fileManager.Load(filePath);
+            var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
+            if (attr == null)
+            {
+                _logger.WriteWarning($"{filePath} does not contain attribute at '{attributeXpath}'.");
+                return;
+            }
 
-			attr.SetValue(value);
-			_fileManager.Save(filePath, doc);
-		}
+            attr.SetValue(value);
+            _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][Setted]");
+        }
 
-		/// <summary>
-		/// Set xml node
-		/// </summary>
-		/// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="xpath">XPath that is searched</param>
-		/// <param name="xNode">The xml node from ISH configuration.</param>
-		/// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
-		public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
-		{
-			_logger.WriteDebug($"Setting node `{xpath}` to `{filePath}`");
+        /// <summary>
+        /// Set xml node
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="xpath">XPath that is searched</param>
+        /// <param name="xNode">The xml node from ISH configuration.</param>
+        /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
+        public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
+        {
+            _logger.WriteDebug($"[{filePath}][{xpath}][Set node]");
 
-			var doc = _fileManager.Load(filePath);
-			XNode newNode = xNode.ToXElement();
-			var existingElement = doc.XPathSelectElement(xpath);
-			if (existingElement == null)
-			{
-				// We need to take the parent node
-				var parentXPath = Regex.Replace(xpath, @"\/([^\/])*$", "");
-				var parentNode = doc.XPathSelectElement(parentXPath);
-				if (parentNode == null)
-				{
-					throw new WrongXmlStructureException(filePath, $"There are no parent node for XPath '{xpath}' were found.");
-				}
+            var doc = _fileManager.Load(filePath);
+            XNode newNode = xNode.ToXElement();
+            var existingElement = doc.XPathSelectElement(xpath);
+            if (existingElement == null)
+            {
+                // We need to take the parent node
+                var parentXPath = Regex.Replace(xpath, @"\/([^\/])*$", "");
+                var parentNode = doc.XPathSelectElement(parentXPath);
+                if (parentNode == null)
+                {
+                    throw new WrongXmlStructureException(filePath, $"There are no parent node for XPath '{xpath}' were found.");
+                }
 
-				parentNode.Add(newNode);
-			}
-			else if (replaceIfExists)
-			{
-				existingElement.ReplaceWith(newNode);
-			}
-			else
-			{
-				_logger.WriteDebug($"No modifications was done to the file `{filePath}`");
-				return;
-			}
+                parentNode.Add(newNode);
+            }
+            else if (replaceIfExists)
+            {
+                existingElement.ReplaceWith(newNode);
+            }
+            else
+            {
+                _logger.WriteWarning($"No modifications was done to the file `{filePath}`");
+                return;
+            }
 
-			// Check if node does not have a comment
-			if (newNode.PreviousNode == null || newNode.PreviousNode.NodeType != XmlNodeType.Comment)
-			{
-				var comment = xNode.GetNodeComment();
-				if (comment != null)
-				{
-					newNode.AddBeforeSelf(comment);
-				}
-			}
+            // Check if node does not have a comment
+            if (newNode.PreviousNode == null || newNode.PreviousNode.NodeType != XmlNodeType.Comment)
+            {
+                var comment = xNode.GetNodeComment();
+                if (comment != null)
+                {
+                    newNode.AddBeforeSelf(comment);
+                }
+            }
 
-			_fileManager.Save(filePath, doc);
-		}		
+            _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][Setted]");
+        }
 
         /// <summary>
         /// Inserts a new node before specified one.
@@ -485,9 +512,9 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WrongXPathException"></exception>
         public void InsertBeforeNode(string filePath, string xpath, string xmlString)
         {
-			_logger.WriteDebug($"Inserting new node before `{xpath}` to file `{filePath}`");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Insert new node before]");
 
-			var doc = _fileManager.Load(filePath);
+            var doc = _fileManager.Load(filePath);
 
             var relativeElement = doc.XPathSelectElement(xpath);
             if (relativeElement == null)
@@ -509,6 +536,7 @@ namespace ISHDeploy.Data.Managers
             relativeElement.AddBeforeSelf(newElement);
 
             _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][Inserted]");
         }
 
         /// <summary>
@@ -519,7 +547,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="value">The new value of element.</param>
         public void SetElementValue(string filePath, string xpath, string value)
         {
-            _logger.WriteDebug($"Setting `{xpath}` element new value `{value}` in file `{filePath}`");
+            _logger.WriteDebug($"[{filePath}][{xpath}][Set element new value '{value}']");
 
             var doc = _fileManager.Load(filePath);
 
@@ -533,6 +561,7 @@ namespace ISHDeploy.Data.Managers
             element.SetValue(value);
 
             _fileManager.Save(filePath, doc);
+            _logger.WriteVerbose($"[{filePath}][Setted]");
         }
 
         /// <summary>
@@ -543,7 +572,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The element value.</returns>
         public string GetValue(string filePath, string xpath)
         {
-            _logger.WriteDebug($"Getting value by xpath: `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug($"[`{filePath}][{xpath}][Get value]");
 
             var doc = _fileManager.Load(filePath);
             var node = ((IEnumerable<object>)doc.XPathEvaluate(xpath)).SingleOrDefault();
@@ -554,26 +583,26 @@ namespace ISHDeploy.Data.Managers
 
             if (node is XAttribute)
             {
-                var attr = (XAttribute) node;
+                var attr = (XAttribute)node;
                 _logger.WriteDebug($"Retrieved value of attribute node is: {attr.Value}");
                 return attr.Value;
             }
 
             var element = (XElement)node;
-            _logger.WriteDebug($"Retrieved value of element node is: {element.Value}");
+            _logger.WriteVerbose($"Retrieved value of element node is: {element.Value}");
             return element.Value;
         }
 
         #region private methods
 
-		/// <summary>
-		/// Tries to uncomment node.
-		/// </summary>
-		/// <param name="commentedNode">The commented node.</param>
-		/// <param name="doc">The document where changes should take place.</param>
-		/// <returns>True if operation succeeded; otherwise False.</returns>
-		/// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
-		private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
+        /// <summary>
+        /// Tries to uncomment node.
+        /// </summary>
+        /// <param name="commentedNode">The commented node.</param>
+        /// <param name="doc">The document where changes should take place.</param>
+        /// <returns>True if operation succeeded; otherwise False.</returns>
+        /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
+        private bool TryUncommentNode(XNode commentedNode, ref XDocument doc, bool decodeInnerXml = false)
         {
             var commentText = commentedNode.ToString().TrimStart('<').TrimEnd('>');
             var startIndex = commentText.IndexOf('<');
@@ -583,7 +612,7 @@ namespace ISHDeploy.Data.Managers
             {
                 return false;
             }
-            
+
             commentText = commentText.Substring(startIndex, endIndex - startIndex + 1);
 
             if (decodeInnerXml)
@@ -591,52 +620,52 @@ namespace ISHDeploy.Data.Managers
                 commentText = XmlDecode(commentText);
             }
 
-			try
+            try
             {
                 // XElement.Replace cannot be used because of possible unknown namespaces inside the comment.
                 var commentedDocXmlString = doc.ToString();
                 var replacedDocXmlString = commentedDocXmlString.Replace(commentedNode.ToString(), commentText);
-                
+
                 doc = XDocument.Parse(replacedDocXmlString);
             }
-			catch (XmlException ex)
-			{ 
-				_logger.WriteDebug($"Replaced content can`t be parsed as XML, with following message {ex.Message}" );
-				return false;
+            catch (XmlException ex)
+            {
+                _logger.WriteWarning($"Replaced content can`t be parsed as XML, with following message {ex.Message}");
+                return false;
             }
-			catch
-			{
-				return false;
-			}
+            catch
+            {
+                return false;
+            }
 
             return true;
         }
 
-		/// <summary>
-		/// Evaluates node from XPath
-		/// </summary>
-		/// <param name="doc">The document to node lookup.</param>
-		/// <param name="xPath">The xPath of node to be evaluated.</param>
-		/// <returns>
-		/// XNode instance from document.
-		/// </returns>
-		private XNode SelectSingleNode(ref XDocument doc, string xPath)
-		{
-			return this.SelectNodes(ref doc, xPath).SingleOrDefault();
-		}
+        /// <summary>
+        /// Evaluates node from XPath
+        /// </summary>
+        /// <param name="doc">The document to node lookup.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// XNode instance from document.
+        /// </returns>
+        private XNode SelectSingleNode(ref XDocument doc, string xPath)
+        {
+            return this.SelectNodes(ref doc, xPath).SingleOrDefault();
+        }
 
-		/// <summary>
-		/// Evaluates nodes from XPath
-		/// </summary>
-		/// <param name="doc">The document to node lookup.</param>
-		/// <param name="xPath">The xPath of node to be evaluated.</param>
-		/// <returns>
-		/// IEnumerable of XNodes from document.
-		/// </returns>
-		private IEnumerable<XNode> SelectNodes(ref XDocument doc, string xPath)
-		{
-			return ((IEnumerable<object>)doc.XPathEvaluate(xPath)).OfType<XNode>();
-		}
+        /// <summary>
+        /// Evaluates nodes from XPath
+        /// </summary>
+        /// <param name="doc">The document to node lookup.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// IEnumerable of XNodes from document.
+        /// </returns>
+        private IEnumerable<XNode> SelectNodes(ref XDocument doc, string xPath)
+        {
+            return ((IEnumerable<object>)doc.XPathEvaluate(xPath)).OfType<XNode>();
+        }
 
         /// <summary>
         /// Replaces some characters that might cause issues when commenting/uncommenting xml fragment.
@@ -658,6 +687,6 @@ namespace ISHDeploy.Data.Managers
             return text.Replace(@"-\-", @"--").Replace(@"\\", @"\");
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }

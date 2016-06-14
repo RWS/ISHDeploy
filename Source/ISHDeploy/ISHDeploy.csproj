@@ -45,7 +45,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugSkipVersion\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SKIPVERSION</DefineConstants>
-    <DocumentationFile>bin\Debug\ISHDeploy.12.0.0.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\ISHDeploy.13.0.0.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -58,6 +58,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -73,6 +77,9 @@
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationDB\OutputType.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationOperation.cs" />
+    <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
@@ -102,6 +109,9 @@
     <Compile Include="Business\Operations\InfoShareSTSConfig.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\InfoShareSTSDataBase.cs">
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\InfoShareSTSWebConfig.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
@@ -115,6 +125,9 @@
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\TemporaryDBConfigurationFileNames.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\TemporarySTSConfigurationFileNames.cs">
@@ -138,7 +151,7 @@
     <Compile Include="Business\Operations\XopusConfigXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingTypes.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingType.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
@@ -149,9 +162,11 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
@@ -159,6 +174,9 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
+    <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
+    <Compile Include="Data\Actions\DataBase\SqlCompactUpdateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
     <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
     <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />
@@ -166,7 +184,6 @@
     <Compile Include="Data\Actions\File\FileDeleteAction.cs" />
     <Compile Include="Data\Actions\File\FileCreateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryRemoveAction.cs" />
-    <Compile Include="Data\Actions\File\FileSaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
@@ -178,12 +195,15 @@
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
+    <Compile Include="Data\Managers\Interfaces\ISQLCompactCommandExecuter.cs" />
+    <Compile Include="Data\Managers\SQLCompactCommandExecuter.cs" />
     <Compile Include="Data\Managers\WebAdministrationManager.cs" />
     <Compile Include="Data\Managers\CertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWebAdministrationManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
     <Compile Include="Data\Managers\TemplateManager.cs" />
+    <Compile Include="Interfaces\Actions\ISQLRestorableAction.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
     <Compile Include="Models\ISHDeployment.cs" />
@@ -260,11 +280,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
+    <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
+    <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
     <None Include="Properties\AssemblyInfo.targets" />
     <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />
   <Import Project="Properties\ModuleManifest.targets" />
@@ -273,6 +296,16 @@
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)ISHDeploy.PostBuild.ps1" -outputpath "$(TargetDir)." -modulename $(TargetName)
 </PostBuildEvent>
   </PropertyGroup>
+    <Target Name="AfterBuild">
+        <CallTarget Targets="CopyNatives" />
+    </Target>
+    <Target Name="CopyNatives">
+        <Exec Command="if not exist  &quot;$(OutDir)x86 &quot; md  &quot;$(OutDir)x86&quot;" />
+        <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*&quot; &quot;$(OutDir)x86&quot;" />
+        <Exec Command="if not exist &quot;$(OutDir)amd64&quot; md &quot;$(OutDir)amd64&quot;" />
+        <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*&quot; &quot;$(OutDir)amd64 &quot;" />
+        <Warning Text="Natives copied" />
+    </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

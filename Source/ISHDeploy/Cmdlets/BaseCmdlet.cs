@@ -1,8 +1,24 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.Linq;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -16,10 +32,10 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         public readonly ILogger Logger;
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		protected BaseCmdlet()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected BaseCmdlet()
         {
             Logger = CmdletsLogger.Instance();
             CmdletsLogger.Initialize(this);
@@ -31,11 +47,11 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
         }
-        
+
         /// <summary>
-		/// Method to be overridden instead of process record
-		/// </summary>
-		public abstract void ExecuteCmdlet();
+        /// Method to be overridden instead of process record
+        /// </summary>
+        public abstract void ExecuteCmdlet();
 
         /// <summary>
         /// Overrides ProcessRecord from base Cmdlet class
@@ -51,6 +67,26 @@ namespace ISHDeploy.Cmdlets
             {
                 ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
             }
+
         }
+
+        /// <summary>
+        /// Overrides BeginProcessing from base Cmdlet class with additinal debug information
+        /// </summary>
+        protected override void BeginProcessing()
+        {
+            Logger.WriteDebug("starts.");
+            base.BeginProcessing();
+        }
+
+        /// <summary>
+        /// Overrides EndProcessing from base Cmdlet class with additinal debug information
+        /// </summary>
+        protected override void EndProcessing()
+        {
+            Logger.WriteDebug("finished.");
+            base.EndProcessing();
+        }
+
     }
 }

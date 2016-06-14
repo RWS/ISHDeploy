@@ -1,5 +1,7 @@
 - name: Work with deployments
   href: ../obj/doc/articles/Module/Work with deployments.md
+- name: Work with files
+  href: ../obj/doc/articles/Module/Work with files.md
 - name: Work with UI Features
   href: ../obj/doc/articles/FeatureToggle/Work with UI Features.md
 - name: Security Token Service

@@ -16,4 +16,6 @@ $testsFolder = Join-Path $executingScriptDirectory "Tests"
 
 Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile
 
-Remove-PSSession $session
+if ($session) {
+    Remove-PSSession $session
+}

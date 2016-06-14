@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -42,7 +57,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void CommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Commenting blocks matched to `{searchPattern}` in file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Comment blocks matched to `{searchPattern}`]");
 
 			var strLines = _fileManager.ReadAllLines(filePath);
 
@@ -73,6 +88,8 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
+            _logger.WriteVerbose($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
+
         }
 
         /// <summary>
@@ -82,7 +99,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void UncommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"Uncommenting blocks matched to `{searchPattern}` in file `{filePath}`");
+			_logger.WriteDebug($"[{filePath}][Uncommenting blocks matched to `{searchPattern}`]");
 
 			var strLines = _fileManager.ReadAllLines(filePath);
 
@@ -113,6 +130,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
         }
 
         /// <summary>
@@ -130,7 +148,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAnyUncommented)
             {
-                _logger.WriteVerbose("Text block is already fully commented");
+                _logger.WriteWarning("Text block is already fully commented");
                 return;
             }
             
@@ -155,7 +173,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAllCommented)
             {
-                _logger.WriteVerbose("Text block contains uncommented lines");
+                _logger.WriteWarning("Text block contains uncommented lines");
                 return;
             }
 

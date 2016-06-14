@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -122,7 +137,7 @@ namespace ISHDeploy.Tests.Data.Managers
             
             // Arrange
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -218,7 +233,7 @@ namespace ISHDeploy.Tests.Data.Managers
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
             // Assert
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -343,7 +358,7 @@ namespace ISHDeploy.Tests.Data.Managers
             
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
+            Logger.Received(1).WriteWarning($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
         [TestMethod]
@@ -369,7 +384,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
         }
         
         [TestMethod]
@@ -1028,7 +1043,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Any<string>());
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }

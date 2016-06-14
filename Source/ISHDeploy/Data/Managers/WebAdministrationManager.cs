@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System;
 using System.Linq;
 using Microsoft.Web.Administration;
@@ -40,7 +55,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (appPool != null)
                 {
-                    _logger.WriteDebug($"Recycling application pool: `{applicationPoolName}`");
+                    _logger.WriteDebug($"Recycle application pool: `{applicationPoolName}`");
 
                     // Wait while application pool operation is completed
                     if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
@@ -51,17 +66,19 @@ namespace ISHDeploy.Data.Managers
                     //The app pool is running, so stop it first.
                     if (appPool.State == ObjectState.Started)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is recycling.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` recycle.");
 
                         appPool.Recycle();
                         WaitOperationCompleted(appPool);
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` recycled.");
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is stopped. Starting it.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is stopped. Start it.");
 
                         appPool.Start();
                         WaitOperationCompleted(appPool);
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` started");
                     }
                 }
                 else
@@ -84,7 +101,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (appPool != null)
                 {
-                    _logger.WriteDebug($"Stopping application pool: `{applicationPoolName}`");
+                    _logger.WriteDebug($"Stop application pool: `{applicationPoolName}`");
                     // Wait while application pool operation is completed
                     if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
                     {
@@ -94,10 +111,11 @@ namespace ISHDeploy.Data.Managers
                     //The app pool is running, so stop it.
                     if (appPool.State == ObjectState.Started)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is started. Stopping it.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is started. Stop it.");
 
                         appPool.Stop();
                         WaitOperationCompleted(appPool);
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` stopped.");
                     }
 
                     //The app pool is already stopped.

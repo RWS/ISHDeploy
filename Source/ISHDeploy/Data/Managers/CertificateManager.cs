@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -34,7 +49,38 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Certificate public key.</returns>
         public string GetCertificatePublicKey(string thumbprint)
         {
-            _logger.WriteDebug($"Getting the certificate with thumbprint: {thumbprint}");
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            var builder = new StringBuilder();
+
+            builder.AppendLine("-----BEGIN CERTIFICATE-----");
+            builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+            builder.AppendLine("-----END CERTIFICATE-----");
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Gets the encrypted raw data by thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns></returns>
+        public string GetEncryptedRawDataByThumbprint(string thumbprint)
+        {
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            return Convert.ToBase64String(certificate.RawData);
+        }
+
+        /// <summary>
+        /// Finds the certificate by thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        private X509Certificate2 FindCertificateByThumbprint(string thumbprint)
+        {
+            _logger.WriteDebug($"Get the certificate with thumbprint: {thumbprint}");
             var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
             certStore.Open(OpenFlags.ReadOnly);
@@ -49,13 +95,7 @@ namespace ISHDeploy.Data.Managers
             }
             _logger.WriteDebug("Certificate has been found.");
 
-            var builder = new StringBuilder();
-
-            builder.AppendLine("-----BEGIN CERTIFICATE-----");
-            builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
-            builder.AppendLine("-----END CERTIFICATE-----");
-
-            return builder.ToString();
+            return certificate;
         }
     }
 }

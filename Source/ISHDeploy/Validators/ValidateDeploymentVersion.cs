@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 ﻿using System;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
@@ -27,7 +42,6 @@ namespace ISHDeploy.Validators
         /// </exception>
         protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
         {
-            #if !SKIPVERSION
             ISHDeployment deployment = arguments as ISHDeployment;
             if (deployment == null)
             {
@@ -39,7 +53,6 @@ namespace ISHDeploy.Validators
             {
                 throw new ValidationMetadataException(errorMessage);
             }
-            #endif
         }
 
 		/// <summary>
@@ -51,7 +64,6 @@ namespace ISHDeploy.Validators
 		public static bool CheckDeploymentVersion(Version deploymentVersion, out string errorMessage)
 		{
 			errorMessage = null;
-            #if !SKIPVERSION
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
 
@@ -81,7 +93,6 @@ namespace ISHDeploy.Validators
 				// it is not enought to return error message in case of not valid module.
 				throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
 			}
-            #endif
 
 			return String.IsNullOrEmpty(errorMessage);
 		}

@@ -11,12 +11,12 @@
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>Deployment automation module for SDL Knowledge Center Content Manager 13.0.0</ModuleDescription>
     <ModuleCompany>SDL</ModuleCompany>
-    <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>Copyright © 2003-2016 SDL Group. All rights reserved.</ModuleCopyright>
-    <ModuleGuid>481c6663-97b7-4a8e-ae0b-d53e895ae561</ModuleGuid>
+    <ModuleCopyright>SDL plc. All rights reserved.</ModuleCopyright>
+    <ModuleGuid>68ae5b26-edc0-453a-a720-ecc99d9b603e</ModuleGuid>
     <MinPowerShellVersion>3.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>
-    <DocPortalLink>http://kiev-green-bld.global.sdl.corp:8081/$(ModuleName)</DocPortalLink>
+    <DocPortalLink>https://sdl.github.io/$(ModuleName)</DocPortalLink>
   </PropertyGroup>
 </Project>

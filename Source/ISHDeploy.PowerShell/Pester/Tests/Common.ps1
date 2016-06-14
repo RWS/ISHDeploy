@@ -1,4 +1,6 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
+#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.12.0.0.dll")
+
 Function Invoke-CommandRemoteOrLocal {
     param (
         [Parameter(Mandatory=$true)]
@@ -73,7 +75,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path
+    Rename-Item $path, $name
 }
 Function RemoteRenameItem {
     param (
@@ -125,4 +127,101 @@ function RemoteReadXML{
 Function GetProjectSuffix($projectName)
 {
     return $projectName.Replace("InfoShare", "")
+}
+#Gets InputParameters
+$scriptBlockGetInputParameters = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName 
+    )
+
+    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
+    if ([System.Environment]::Is64BitOperatingSystem)
+    {
+        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
+    }
+    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
+    $currentInstallValue = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).GetValue("Current")
+    $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
+    $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
+    
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")#.ToString()
+
+    [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
+    $inputParameters.load("$inputParametersPath\inputparameters.xml")
+
+    $result = @{}
+    $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
+    $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
+    $result["infoshareauthorwebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infoshareauthorwebappname']/currentvalue")[0].InnerText
+    $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
+    $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
+
+    return $result
+    
+}
+Function Get-InputParameters
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+}
+
+$scriptBlockCreateCertificate = {
+    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
+    return $sslCertificate 
+}
+
+$scriptBlockRemoveCertificate= {
+    param (
+        [Parameter(Mandatory=$true)]
+        $thumbprint
+    )
+    certutil -delstore my $thumbprint
+}
+#Stop WebAppPool
+Import-Module WebAdministration
+$scriptBlockStopWebAppPool = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $infoshareauthorwebappname,
+        [Parameter(Mandatory=$true)]
+        $infosharewswebappname,
+        [Parameter(Mandatory=$true)]
+        $infosharestswebappname 
+    )
+    
+
+    if((Get-WebAppPoolState "TrisoftAppPool$infoshareauthorwebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infoshareauthorwebappname"
+    }
+    if((Get-WebAppPoolState "TrisoftAppPool$infosharewswebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infosharewswebappname"
+    }
+    if((Get-WebAppPoolState "TrisoftAppPool$infosharestswebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infosharestswebappname"
+    }
+}
+Function StopPool
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    $result = Get-InputParameters $projectName
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopWebAppPool -Session $session -ArgumentList $result["infoshareauthorwebappname"], $result["infosharewswebappname"], $result["infosharestswebappname"]
+}
+
+Function UndoDeployment
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $testingDeploymentName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

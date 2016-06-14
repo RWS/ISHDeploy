@@ -173,6 +173,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        WebRequestToSTS $testingDeploymentName
     }
 
     It "Set-ISHAPIWCFServiceCertificate"{       

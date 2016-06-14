@@ -209,6 +209,7 @@ $scriptBlockGetAppPoolStartTime = {
 Describe "Testing Undo-ISHDeploymentHistory"{
     BeforeEach {
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        WebRequestToSTS $testingDeploymentName
     }
 
     It "Undo ish deploy history"{

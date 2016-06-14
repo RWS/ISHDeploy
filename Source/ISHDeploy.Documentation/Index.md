@@ -38,7 +38,7 @@ PSRemotingProtocolVersion      2.2
 
 To install the {ModuleName} module execute
 ```powershell
-Install-Module ISHDeploy.12.0.0 -Scope CurrentUser
+Install-Module ISHDeploy.12.0.1 -Scope CurrentUser
 ```
 
 For more detailed information, please read the [getting started](Getting Started.md) page and the rest of the pages in this portal.

@@ -27,7 +27,6 @@ namespace ISHDeploy.Validators
         /// </exception>
         protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics)
         {
-            #if !SKIPVERSION
             ISHDeployment deployment = arguments as ISHDeployment;
             if (deployment == null)
             {
@@ -39,7 +38,6 @@ namespace ISHDeploy.Validators
             {
                 throw new ValidationMetadataException(errorMessage);
             }
-            #endif
         }
 
 		/// <summary>
@@ -51,7 +49,6 @@ namespace ISHDeploy.Validators
 		public static bool CheckDeploymentVersion(Version deploymentVersion, out string errorMessage)
 		{
 			errorMessage = null;
-            #if !SKIPVERSION
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
 
@@ -81,7 +78,6 @@ namespace ISHDeploy.Validators
 				// it is not enought to return error message in case of not valid module.
 				throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
 			}
-            #endif
 
 			return String.IsNullOrEmpty(errorMessage);
 		}

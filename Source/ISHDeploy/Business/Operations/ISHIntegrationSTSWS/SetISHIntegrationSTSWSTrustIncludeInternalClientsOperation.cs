@@ -25,7 +25,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="bindingType">The STS issuer authentication type.</param>
         /// <param name="actorUsername">The STS user.</param>
         /// <param name="actorPassword">The password of STS user.</param>
-        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType, string actorUsername = null, string actorPassword = null) :
+        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint, Uri mexEndpoint, BindingType bindingType, string actorUsername = null, string actorPassword = null) :
             base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration including internal clients");

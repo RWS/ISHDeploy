@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="endpoint">The URL to issuer WSTrust endpoint.</param>
         /// <param name="mexEndpoint">The URL to issuer WSTrust mexEndpoint.</param>
         /// <param name="bindingType">The STS issuer authentication type.</param>
-        public SetISHIntegrationSTSWSTrustOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType) :
+        public SetISHIntegrationSTSWSTrustOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint, Uri mexEndpoint, BindingType bindingType) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration");

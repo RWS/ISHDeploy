@@ -114,6 +114,12 @@ Describe "Testing Get-ISHDeployment"{
 		#Rollback
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
     }
+    
+    It "Commandlets doesnot return Original Parameters"{
+        #Arrange
+        $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        $deploy.ToString().Contains("OriginalParemeters") | Should be $False
+    }
 
 }
 

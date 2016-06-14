@@ -1,7 +1,7 @@
 ﻿# ISHDeploy
 
 [![Powershell version support][shield-ps]](#)
-[![Build Status](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.0/badge/icon)](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.0/)
+[![Build Status](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.1/badge/icon)](http://kiev-green-bld.global.sdl.corp:8080/job/ISHDeploy%20Daily%20Develop.12.0.1/)
 [![Code coverage][shield-coverage]](#)
 [![Dependencies][shield-dependencies]](#)
 

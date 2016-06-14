@@ -1,4 +1,4 @@
 ﻿- name: Articles
   href: Articles/
 - name: Commands
-  href: obj/doc/Module/
+  href: obj/doc/commands/

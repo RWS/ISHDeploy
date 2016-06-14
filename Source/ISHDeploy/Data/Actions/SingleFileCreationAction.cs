@@ -44,12 +44,13 @@ namespace ISHDeploy.Data.Actions
         /// </summary>
         public void Rollback()
         {
-            Logger.WriteDebug($"Reverting changes. Removing file {FilePath}.");
+            Logger.WriteDebug($"[{FilePath}][Revert changes");
             if (FileManager.FileExists(FilePath))
             {
                 FileManager.Delete(FilePath);
                 Logger.WriteDebug($"File {FilePath} removed.");
             }
+            Logger.WriteVerbose($"[{FilePath}][Reverted]");
         }
     }
 }

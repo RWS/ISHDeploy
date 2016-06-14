@@ -43,7 +43,7 @@ try
 	$moduleName = [System.IO.Path]::GetFileNameWithoutExtension($manifestFile)
 	$tmpModulePath = New-Item -Force -Path "$modulePath\$moduleName" -ItemType directory
 
-	Copy-Item "$modulePath\$moduleName.*" $tmpModulePath
+	Copy-Item "$modulePath\*" $tmpModulePath
 
 	if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) 
 	{

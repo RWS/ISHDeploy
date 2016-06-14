@@ -80,20 +80,20 @@ Install-Module {ModuleName} -Scope CurrentUser -Force
 # Verify the module presense
 To verify that the module is installed and check the version execute:
 ```powershell
-Get-Module ISHDeploy.12.0.0 -ListAvailable |Format-Table Name,Version
+Get-Module ISHDeploy.13.0.0 -ListAvailable |Format-Table Name,Version
 ```
 
 if the module is available then the result should be one line such as
 ```
 Name                                                        Version
 ----                                                        -------
-ISHDeploy.12.0.0                                            0.1
+ISHDeploy.13.0.0                                            0.1
 ```
 
 # Available cmdlets
 To retrieve all cmdlets offered by the module then execute:
 ```powershell
-Get-Command -Module ISHDeploy.12.0.0 | Select-Object Name
+Get-Command -Module ISHDeploy.13.0.0 | Select-Object Name
 ```
 
 Each cmdlet offers support for the `Get-Help` cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 

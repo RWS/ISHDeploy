@@ -1,5 +1,5 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
-#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.12.0.0.dll")
+#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.13.0.0.dll")
 
 Function Invoke-CommandRemoteOrLocal {
     param (

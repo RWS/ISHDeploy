@@ -1,4 +1,6 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
+#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.12.0.1.dll")
+
 Function Invoke-CommandRemoteOrLocal {
     param (
         [Parameter(Mandatory=$true)]
@@ -151,6 +153,10 @@ $scriptBlockGetInputParameters = {
     $result = @{}
     $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
     $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
+    $result["infoshareauthorwebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infoshareauthorwebappname']/currentvalue")[0].InnerText
+    $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
+    $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
+
     return $result
     
 }
@@ -174,4 +180,48 @@ $scriptBlockRemoveCertificate= {
         $thumbprint
     )
     certutil -delstore my $thumbprint
+}
+#Stop WebAppPool
+Import-Module WebAdministration
+$scriptBlockStopWebAppPool = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $infoshareauthorwebappname,
+        [Parameter(Mandatory=$true)]
+        $infosharewswebappname,
+        [Parameter(Mandatory=$true)]
+        $infosharestswebappname 
+    )
+    
+
+    if((Get-WebAppPoolState "TrisoftAppPool$infoshareauthorwebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infoshareauthorwebappname"
+    }
+    if((Get-WebAppPoolState "TrisoftAppPool$infosharewswebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infosharewswebappname"
+    }
+    if((Get-WebAppPoolState "TrisoftAppPool$infosharestswebappname").Value -ne 'Stopped')
+    {
+	    Stop-WebAppPool -Name "TrisoftAppPool$infosharestswebappname"
+    }
+}
+Function StopPool
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    $result = Get-InputParameters $projectName
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopWebAppPool -Session $session -ArgumentList $result["infoshareauthorwebappname"], $result["infosharewswebappname"], $result["infosharestswebappname"]
+}
+
+Function UndoDeployment
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $testingDeploymentName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

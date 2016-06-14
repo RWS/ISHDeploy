@@ -122,7 +122,7 @@ namespace ISHDeploy.Tests.Data.Managers
             
             // Arrange
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -218,7 +218,7 @@ namespace ISHDeploy.Tests.Data.Managers
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
             // Assert
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -343,7 +343,7 @@ namespace ISHDeploy.Tests.Data.Managers
             
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
+            Logger.Received(1).WriteWarning($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
         [TestMethod]
@@ -369,7 +369,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
+            Logger.Received(1).WriteWarning($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
         }
         
         [TestMethod]
@@ -702,7 +702,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -760,7 +760,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			FileManager.Save(_filePath, Arg.Do<XDocument>(
 				xdoc =>
 				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{OperationPaths.EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath}")).OfType<XComment>().Single();
+					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
 					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
 					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
 				}));
@@ -808,8 +808,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath, 
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel), 
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
+				string.Format("/menubar/menuitem[@label='{0}']", testLabel), 
+				string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -840,7 +840,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveBeforeNode(
 				_filePath,
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
+				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -871,8 +871,8 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel),
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, insertBeforeLabel));
+				string.Format("/menubar/menuitem[@label='{0}']", testLabel),
+				string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -903,7 +903,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.MoveAfterNode(
 				_filePath,
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
+				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
 
 			// Assert
 			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -933,7 +933,7 @@ namespace ISHDeploy.Tests.Data.Managers
 			// Act
 			_xmlConfigManager.RemoveSingleNode(
 				_filePath,
-				string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
+				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -964,11 +964,11 @@ namespace ISHDeploy.Tests.Data.Managers
             // Act
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
 
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format(OperationPaths.EventMonitorMenuBarXml.EventMonitorTab, testLabel));
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1028,7 +1028,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Any<string>());
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }

@@ -1,7 +1,6 @@
 ﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.License;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHContentEditor
 {
@@ -9,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
     /// Tests if license for specific host name exists
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class TestISHContentEditorOperation : IOperation<bool>
+    public class TestISHContentEditorOperation : BasePathsOperation, IOperation<bool>
     {
         /// <summary>
         /// The actions invoker
@@ -25,12 +24,13 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// Initializes a new instance of the <see cref="TestISHContentEditorOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="licenceFolderPath">The destination path for licence file.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="domain">The host name is checked for the existence of the license file.</param>
-        public TestISHContentEditorOperation(ILogger logger, ISHFilePath licenceFolderPath, string domain)
+        public TestISHContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment, string domain) :
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Testing of license for specific host name");
-            _invoker.AddAction(new LicenseTestAction(logger, licenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
+            _invoker.AddAction(new LicenseTestAction(logger, FoldersPaths.LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
         }
 
         /// <summary>

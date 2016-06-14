@@ -31,7 +31,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new RemoveISHUIEventMonitorTabOperation(Logger, Label);
+            var operation = new RemoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label);
 
 			operation.Run();
         }

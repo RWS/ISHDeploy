@@ -30,7 +30,7 @@ namespace ISHDeploy.Models
         /// <summary>
         /// The instance of the deployment.
         /// </summary>
-        private readonly ISHDeployment _ishDeployment;
+        private readonly ISHDeploymentInternal _ishDeployment;
 
         /// <summary>
         /// Type of the deployment.
@@ -43,7 +43,7 @@ namespace ISHDeploy.Models
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="deploymentType">Type of the deployment.</param>
         /// <param name="path">The path to the file.</param>
-        public ISHFilePath(ISHDeployment ishDeployment, IshDeploymentType deploymentType, string path)
+        public ISHFilePath(ISHDeploymentInternal ishDeployment, IshDeploymentType deploymentType, string path)
 		{
 			_ishDeployment = ishDeployment;
 			_deploymentType = deploymentType;
@@ -61,11 +61,11 @@ namespace ISHDeploy.Models
 				switch (_deploymentType)
 				{
 					case IshDeploymentType.App:
-						return Path.Combine(_ishDeployment.GetAppFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.AppFolderPath, RelativePath);
 					case IshDeploymentType.Web:
-						return Path.Combine(_ishDeployment.GetAuthorFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
 					case IshDeploymentType.Data:
-						return Path.Combine(_ishDeployment.GetDataFolderPath(), RelativePath);
+						return Path.Combine(_ishDeployment.DataFolderPath, RelativePath);
 					default:
 						return null;
 				}

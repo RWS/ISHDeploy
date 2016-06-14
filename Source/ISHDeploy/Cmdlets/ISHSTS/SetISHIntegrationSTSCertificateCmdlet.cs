@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// <summary>
 		/// <para type="description">Certificate Thumbprint.</para>
 		/// </summary>
-		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
+		[Parameter(Mandatory = true, HelpMessage = "Certificate Thumbprint")]
 		[ValidateNotNullOrEmpty]
 		public string Thumbprint { get; set; }
 
@@ -49,7 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		/// </summary>
 		public override void ExecuteCmdlet()
 		{
-			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, Thumbprint, Issuer, ValidationMode);
+			var operation = new SetISHIntegrationSTSCertificateOperation(Logger, ISHDeployment, Thumbprint, Issuer, ValidationMode);
 
 			operation.Run();
 		}

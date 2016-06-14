@@ -3,6 +3,7 @@ using System.Management.Automation;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -26,10 +27,6 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     [Cmdlet(VerbsCommon.Get, "ISHDeployment")]
     public class GetISHDeploymentCmdlet : BaseCmdlet
     {
-        /// <summary>
-        /// The information share prefix
-        /// </summary>
-        private const string InfoSharePrefix = "InfoShare";
 
         /// <summary>
         /// The validation pattern
@@ -49,19 +46,13 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var suffix = Name?.Substring(InfoSharePrefix.Length);
+            var operation = new GetISHDeploymentsOperation(Logger, Name);
 
-            var operation = new GetISHDeploymentOperation(Logger, suffix);
+            var result = operation.Run();
 
-            var result = operation.Run().ToArray();
-            
-            if (Name != null && result.Length == 1)
+            foreach (var deployment in result)
             {
-                WriteObject(result[0]);
-            }
-            else
-            {
-                WriteObject(result);
+                WriteObject(deployment);
             }
 
             if (result.Any())
@@ -73,6 +64,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
                     WriteWarning(warningMessage);
                 }
             }
+
         }
     }
 }

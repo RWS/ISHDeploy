@@ -3,23 +3,13 @@
     "content": [
       {
         "files": [ "toc.yml" ],
-        "cwd": "Module",
-        "dest": "module/ISHDeploy"
+        "cwd": "obj/doc/commands",
+        "dest": "Commands"
       },
       {
         "files": [ "**/*.md" ],
-        "cwd": "obj/doc/module/ISHDeploy",
-        "dest": "module/ISHDeploy"
-      },
-      {
-        "files": [ "toc.yml" ],
-        "cwd": "Using",
-        "dest": "Using"
-      },
-      {
-        "files": [ "**/*.md" ],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
+        "cwd": "obj/doc/commands",
+        "dest": "Commands"
       },
       {
         "files": [ "toc.yml" ],
@@ -32,6 +22,11 @@
         "dest": "Articles"
       },
       {
+        "files": [ "*.md" ],
+        "cwd": "obj/doc",
+        "dest": ""
+      },
+      {
         "files": [ "toc.yml" ]
       }
     ],
@@ -40,15 +35,13 @@
         "files": [ "**/images/**" ]
       },
       {
+        "files": "sdl_logo_transparent.png"
+      },
+      {
         "files": "web.config"
       },
       {
-        "files": [ "**/*.ps1" ],
-        "cwd": "obj/doc/using",
-        "dest": "Using"
-      },
-      {
-        "files": [ "**/*.ps1" ],
+        "files": [ "**/*.ps1","**/*.png" ],
         "cwd": "obj/doc/articles",
         "exclude": [ "**/_nopublish/**" ],
         "dest": "Articles"
@@ -59,7 +52,8 @@
     "globalMetadata": {
     },
     "template": [
-      "default"
+      "default",
+      "template"
     ],
     "dest": "_site"
   }

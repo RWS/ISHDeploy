@@ -8,7 +8,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Sets WSTrust configuration including internal clients.
     /// </summary>
-    public class SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation : OperationPaths, IOperation
+    public class SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -19,12 +19,14 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// Initializes a new instance of the <see cref="SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="endpoint">The URL to issuer WSTrust endpoint.</param>
         /// <param name="mexEndpoint">The URL to issuer WSTrust mexEndpoint.</param>
         /// <param name="bindingType">The STS issuer authentication type.</param>
         /// <param name="actorUsername">The STS user.</param>
         /// <param name="actorPassword">The password of STS user.</param>
-        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Uri endpoint, Uri mexEndpoint, BindingTypes bindingType, string actorUsername = null, string actorPassword = null)
+        public SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint, Uri mexEndpoint, BindingType bindingType, string actorUsername = null, string actorPassword = null) :
+            base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration including internal clients");
 

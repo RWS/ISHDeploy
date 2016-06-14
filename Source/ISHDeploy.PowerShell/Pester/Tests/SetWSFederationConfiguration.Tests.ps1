@@ -22,24 +22,13 @@ $scriptBlockGetDeployment = {
 
 # Generating file pathes to remote PC files
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$xmlPath =Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $testingDeployment.OriginalParameters.projectsuffix )
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$xmlPath =Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 #endregion
 
 #region Script Blocks 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
 
 $scriptBlockSetWSFederation = {
     param (

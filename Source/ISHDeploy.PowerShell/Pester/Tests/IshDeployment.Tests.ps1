@@ -89,7 +89,8 @@ Describe "Testing Get-ISHDeployment"{
 
     It "returns message when deployment is not found"{
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList "InfoShare$invalidSuffix"}  | Should Throw "Deployment with suffix $invalidSuffix is not found on the system"
+        $invalidProjectName = "InfoShare$invalidSuffix"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList "InfoShare$invalidSuffix"} | Should Throw "Deployment with name InfoShare$invalidSuffix is not found on the system"
     }
 
     It "returns warning when CM version doesnot match"{
@@ -112,6 +113,12 @@ Describe "Testing Get-ISHDeployment"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName} | Should Throw "does not correspond to deployment version "
 		#Rollback
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
+    }
+    
+    It "Commandlets doesnot return Original Parameters"{
+        #Arrange
+        $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        $deploy.ToString().Contains("OriginalParemeters") | Should be $False
     }
 
 }

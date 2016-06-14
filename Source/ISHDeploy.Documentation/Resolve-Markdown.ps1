@@ -2,7 +2,6 @@
     [Parameter(Mandatory=$true)]
     [string]
     $SourcePath,
-    [Parameter(Mandatory=$true)]
     [string]
     $ExportPath
 )
@@ -16,13 +15,21 @@ Write-Debug "ExportPath=$ExportPath"
 
 try
 {
-	if(-not (Test-Path $ExportPath))
-	{
-		New-Item $ExportPath -ItemType Directory
-	}
-	Get-ChildItem -Path $ExportPath -Include * | Remove-Item -recurse 
+    if ($ExportPath)
+    {
+	    if(-not (Test-Path $ExportPath))
+	    {
+		    New-Item $ExportPath -ItemType Directory
+	    }
+	    Get-ChildItem -Path $ExportPath -Include * | Remove-Item -recurse 
 
-    Copy-Item "$SourcePath\*" $ExportPath -Recurse
+        Copy-Item "$SourcePath\*" $ExportPath -Recurse
+    }
+    else
+    {
+        # means that the source path is the same as export path and markdown files should be resolved within one folder
+        $ExportPath = $SourcePath;
+    }
 
     $pathsGroupedByContainer=Get-ChildItem $ExportPath -Recurse -Include @("*.ps1","*.md") | Group-Object Directory
     foreach($container in $pathsGroupedByContainer)

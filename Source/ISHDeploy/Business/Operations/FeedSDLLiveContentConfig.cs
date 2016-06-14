@@ -6,17 +6,17 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
-        public static class FeedSDLLiveContentConfig
+        protected static class FeedSDLLiveContentConfig
         {
             /// <summary>
             /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.Data,
+            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Data,
                 @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
 
             /// <summary>
@@ -33,6 +33,11 @@ namespace ISHDeploy.Business.Operations
             /// The attribute name of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config where BindingType should be updated
             /// </summary>
             public const string WSTrustBindingTypeAttributeName = "wsTrustBindingType";
+
+            /// <summary>
+            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode" element in ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config file
+            /// </summary>
+            public const string InfoShareWSServiceCertificateValidationModeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode";
         }
     }
 }

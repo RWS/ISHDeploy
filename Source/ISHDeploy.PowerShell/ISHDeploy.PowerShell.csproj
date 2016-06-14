@@ -29,6 +29,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSkipVersion|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugSkipVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,11 +60,7 @@
     <None Include="CmdletsUsage\Info\GetVersion.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\TestContentEditor.ps1" />
     <None Include="CmdletsUsage\ISHContentEditor\SetContentEditor.ps1" />
-    <None Include="CmdletsUsage\ISHDeployment\GetISHDeploymentCmdlet.ps1" />
-    <None Include="CmdletsUsage\ISHDeployment\ISHDeployment.md" />
-    <None Include="CmdletsUsage\ISHExternalPreview\DisableExternalPreview.ps1" />
-    <None Include="CmdletsUsage\ISHExternalPreview\EnableExternalPreview.ps1" />
-    <None Include="CmdletsUsage\ISHExternalPreview\ISHExternalPreview.md" />
+    <None Include="CmdletsUsage\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfiguration.ps1" />
     <None Include="CmdletsUsage\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederation.ps1" />
     <None Include="CmdletsUsage\ISHDeployment\GetISHDeployment.ps1" />
     <None Include="CmdletsUsage\ISHExternalPreview\DisableISHExternalPreview.ps1" />
@@ -83,12 +88,14 @@
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\IshDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationDBSTSSQLServerConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
     <None Include="Pester\Tests\ISHUITranslationJob.Tests.ps1" />
+    <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />
     <None Include="Publish\Publish-Module.ps1" />

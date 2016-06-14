@@ -8,21 +8,23 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Removes Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class RemoveISHUIEventMonitorTabOperation : OperationPaths, IOperation
+	public class RemoveISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
     {
         /// <summary>
         /// The actions invoker
         /// </summary>
         private readonly IActionInvoker _invoker;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation"/> class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="label">Label of the element</param>
-		public RemoveISHUIEventMonitorTabOperation(ILogger logger, string label)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="label">Label of the element</param>
+        public RemoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label) :
+            base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Removing of Event Monitor Tab");
+            _invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");
 
 			string itemXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;

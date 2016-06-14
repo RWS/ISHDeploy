@@ -1,6 +1,5 @@
 ﻿using System.Management.Automation;
-using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Business.Operations;
+using ISHDeploy.Business.Operations.ISHPackage;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
@@ -29,12 +28,9 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var operation = new GetISHPackageFolderPathOperation(Logger, ISHDeployment, UNC);
 
-            // Create "Packages" folder if folder not exists
-            fileManager.EnsureDirectoryExists(OperationPaths.FoldersPaths.PackagesFolderPath);
-
-            var result = UNC ? OperationPaths.FoldersPaths.PackagesFolderUNCPath : OperationPaths.FoldersPaths.PackagesFolderPath;
+            var result = operation.Run();
 
             WriteObject(result);
         }

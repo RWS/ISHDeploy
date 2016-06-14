@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
-using System.Text.RegularExpressions;
-using ISHDeploy.Business.Operations;
-using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -15,11 +13,6 @@ namespace ISHDeploy.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// Returns current date in format yyyyMMdd
-        /// </summary>
-        private static string CurrentDate => DateTime.Now.ToString("yyyyMMdd");
-        
         /// <summary>
         /// Overrides ProcessRecord from Cmdlet class
         /// </summary>
@@ -41,48 +34,30 @@ namespace ISHDeploy.Cmdlets
 				Logger.WriteVerbose($"Commandlet was executed with `-WhatIf` parameter, no history logging required.");
 				return;
             }
-
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
-            var historyEntry = new StringBuilder();
             
-            if (!fileManager.FileExists(OperationPaths.HistoryFilePath)) // create history file with initial record
-			{
-				Logger.WriteVerbose($"Creating history file.");
+            var operation = new AddHistoryEntryOperation(Logger, ISHDeployment, GetInvocationLine());
 
-				historyEntry.AppendLine($"# {CurrentDate}");
-                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{ISHDeployment.Name}'");
-            }
-            else if (IsNewDate(fileManager.ReadAllText(OperationPaths.HistoryFilePath), CurrentDate)) // group history records by date inside the file
-            {
-                historyEntry.AppendLine($"{Environment.NewLine}# {CurrentDate}");
-            }
-            
-            historyEntry.AppendLine(InvocationLine);
-
-            fileManager.Append(OperationPaths.HistoryFilePath, historyEntry.ToString());
+            operation.Run();
         }
 
         /// <summary>
         /// Describes which cmdlet was executed with which parameters
         /// </summary>
-        private string InvocationLine
+        private string GetInvocationLine()
         {
-            get
+            var strBldr = new StringBuilder(MyInvocation.MyCommand.Name);
+
+            foreach (var boundParameter in MyInvocation.BoundParameters)
             {
-                var strBldr = new StringBuilder(MyInvocation.MyCommand.Name);
+                var historyParameter = ToHistoryParameter(boundParameter);
 
-                foreach (var boundParameter in MyInvocation.BoundParameters)
+                if (historyParameter.HasValue)
                 {
-                    var historyParameter = ToHistoryParameter(boundParameter);
-
-                    if (historyParameter.HasValue)
-                    {
-                        strBldr.Append($" -{historyParameter.Value.Key} {historyParameter.Value.Value}");
-                    }
+                    strBldr.Append($" -{historyParameter.Value.Key} {historyParameter.Value.Value}");
                 }
-
-                return strBldr.ToString();
             }
+
+            return strBldr.ToString();
         }
 
         /// <summary>
@@ -112,27 +87,14 @@ namespace ISHDeploy.Cmdlets
 
 			if (boundParameter.Value is IEnumerable)
 			{
-				var arrayStringValue = String.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
-				return String.IsNullOrEmpty(arrayStringValue)
+				var arrayStringValue = string.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
+				return string.IsNullOrEmpty(arrayStringValue)
 					? (KeyValuePair<string, object>?) null
 					: new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");
 
 			}
 
 			return boundParameter;
-        }
-
-		/// <summary>
-		/// Returns true if current date is same as last history date.
-		/// </summary>
-		/// <param name="historyContent">Whole history file content.</param>
-		/// <param name="currentDate">Current date.</param>
-		/// <returns>True if last date in history content is the same as current date.</returns>
-		private bool IsNewDate(string historyContent, string currentDate)
-        {
-            var lastDate = Regex.Match(historyContent, @"[#]\s\d{8}", RegexOptions.RightToLeft);
-
-            return !lastDate.Value.EndsWith(currentDate);
         }
     }
 }

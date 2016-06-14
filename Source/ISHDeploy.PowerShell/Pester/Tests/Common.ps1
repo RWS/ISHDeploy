@@ -35,6 +35,19 @@ Function RemotePathCheck {
     
     return $isExists
 }
+#undo changes
+$scriptBlockUndoDeployment = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Undo-ISHDeployment -ISHDeployment $ishDeploy
+}
 
 #remove item remotely
 $scriptBlockRemoveItem = {
@@ -60,7 +73,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path
+    Rename-Item $path, $name
 }
 Function RemoteRenameItem {
     param (
@@ -106,4 +119,59 @@ function RemoteReadXML{
     [xml]$actualResult = Invoke-CommandRemoteOrLocal -ScriptBlock {param ($xmlFile) Get-Content $xmlFile} -Session $session -ArgumentList $xmlFile
 
     return $actualResult
+}
+
+#Gets suffix from project name
+Function GetProjectSuffix($projectName)
+{
+    return $projectName.Replace("InfoShare", "")
+}
+#Gets InputParameters
+$scriptBlockGetInputParameters = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName 
+    )
+
+    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
+    if ([System.Environment]::Is64BitOperatingSystem)
+    {
+        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
+    }
+    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
+    $currentInstallValue = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).GetValue("Current")
+    $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
+    $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
+    
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")#.ToString()
+
+    [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
+    $inputParameters.load("$inputParametersPath\inputparameters.xml")
+
+    $result = @{}
+    $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
+    $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
+    return $result
+    
+}
+Function Get-InputParameters
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+}
+
+$scriptBlockCreateCertificate = {
+    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
+    return $sslCertificate 
+}
+
+$scriptBlockRemoveCertificate= {
+    param (
+        [Parameter(Mandatory=$true)]
+        $thumbprint
+    )
+    certutil -delstore my $thumbprint
 }

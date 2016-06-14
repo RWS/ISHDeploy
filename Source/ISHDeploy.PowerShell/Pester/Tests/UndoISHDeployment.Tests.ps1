@@ -24,7 +24,8 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backup = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)"
 
-$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author" -f $testingDeployment.OriginalParameters.projectsuffix )
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author" -f $suffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
 $CEXmlPath = Join-Path $xmlPath "ASP\XSL"
@@ -84,19 +85,6 @@ $scriptBlockEnableContentEditor = {
         $ishDeploy = Get-ISHDeployment -Name $ishDeployName
         Enable-ISHUIContentEditor -ISHDeployment $ishDeploy
   
-}
-
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
 $scriptBlockBackupFilesExist = {
@@ -184,8 +172,39 @@ $scriptBlockEnableExternalPreview = {
     }
   
 }
-# Restoring system to vanila state for not loosing files, touched in previous tests
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+
+#Import-Module WebAdministration
+$scriptBlockGetAppPoolStartTime = {
+    param (
+        $testingDeployment
+    )
+
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infoshareauthorwebappname)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharewswebappname)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharestswebappname)
+    
+    $result = @{}
+    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
+    foreach ($line in $array) {
+        $splitedLine = $line.split(" ")
+        $processIdAsString = $splitedLine[1]
+        $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
+        if ($splitedLine[2] -match $cmAppPoolName)
+        {
+            $result["cm"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $wsAppPoolName)
+        {
+            $result["ws"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $stsAppPoolName)
+        {
+            $result["sts"] = (Get-Process -Id $processId).StartTime
+        }
+    }
+    
+    return $result
+}
 
 Describe "Testing Undo-ISHDeploymentHistory"{
     BeforeEach {
@@ -199,13 +218,26 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableExternalPreview -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup  | Should Be "True"
         readTargetXML | Should Be "changedState"
+        # Get web application pool start times
+        $appPoolStartTimes1 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        
+        # Get web application pool start times
+        $appPoolStartTimes2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
+
+        (get-date $appPoolStartTimes1["cm"]) -gt (get-date $appPoolStartTimes2["cm"])  | Should Be $false
+        (get-date $appPoolStartTimes1["ws"]) -gt (get-date $appPoolStartTimes2["ws"])  | Should Be $false
+        (get-date $appPoolStartTimes1["sts"]) -gt (get-date $appPoolStartTimes2["sts"])  | Should Be $false
+
+
+
         RetryCommand -numberOfRetries 20 -command {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup} -expectedResult $false | Should Be "False"
+        
         readTargetXML | Should Be "VanilaState"
-        $path =  Join-Path $testingDeployment.WebPath ("Web{0}\InfoShareSTS\App_Data\" -f $testingDeployment.OriginalParameters.projectsuffix )
+        $path =  Join-Path $testingDeployment.WebPath ("Web{0}\InfoShareSTS\App_Data\" -f $suffix )
         $countOfItemsInDataBaseFolder = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCountOfItemsInFolder -Session $session -ArgumentList $path 
-        $countOfItemsInDataBaseFolder | Should Be 0
+        $countOfItemsInDataBaseFolder | Should Be 1
     }
 
     It "Undo-IshHistory works when there is no backup"{

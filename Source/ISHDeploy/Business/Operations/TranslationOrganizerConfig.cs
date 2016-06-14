@@ -6,17 +6,17 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class OperationPaths
+    public partial class BasePathsOperation
     {
         /// <summary>
         /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config file
         /// </summary>
-        public static class TranslationOrganizerConfig
+        protected static class TranslationOrganizerConfig
         {
             /// <summary>
             /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
             /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(_ishDeployment, ISHFilePath.IshDeploymentType.App,
+            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
                 @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
 
             /// <summary>
@@ -33,6 +33,11 @@ namespace ISHDeploy.Business.Operations
             /// The attribute name of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config where BindingType should be updated
             /// </summary>
             public const string WSTrustBindingTypeAttributeName = "wsTrustBindingType";
+
+            /// <summary>
+            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode" element in ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config file
+            /// </summary>
+            public const string InfoShareWSServiceCertificateValidationModeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode";
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿param(
     $session = $null,
-    $testingDeploymentName = "InfoShareSQL2014"
+    $testingDeploymentName = "InfoShare"
 )
 
 . "$PSScriptRoot\Common.ps1"

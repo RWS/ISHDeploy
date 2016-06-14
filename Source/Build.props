@@ -13,10 +13,10 @@
     <ModuleCompany>SDL</ModuleCompany>
     <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>Copyright © 2003-2016 SDL Group. All rights reserved.</ModuleCopyright>
-    <ModuleGuid>caf1eece-4d25-4e19-98f7-2ec328472573</ModuleGuid>
+    <ModuleGuid>68ae5b26-edc0-453a-a720-ecc99d9b603e</ModuleGuid>
     <MinPowerShellVersion>3.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>
-    <DocPortalLink>http://kiev-green-bld.global.sdl.corp:8081/$(ModuleName)</DocPortalLink>
+    <DocPortalLink>https://sdl.github.io/$(ModuleName)</DocPortalLink>
   </PropertyGroup>
 </Project>

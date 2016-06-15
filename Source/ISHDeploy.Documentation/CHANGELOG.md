@@ -12,7 +12,8 @@ Initial release
     - Undo-ISHDeployment
   1. Articles
     - Work with deployments  
-    - Work with files  
+    - Work with files
+    - Work with Get-ISHPackageFolderPath  
 1. Feature toggle
   1. Cmdlets
     - Disable-ISHExternalPreview
@@ -37,6 +38,8 @@ Initial release
     - Set-ISHIntegrationSTSCertificate
     - Set-ISHIntegrationSTSWSFederation
     - Set-ISHIntegrationSTSWSTrust
+    - Save-ISHIntegrationDBSTSSQLServerConfiguration
+    - Set-ISHAPIWCFServiceCertificate 
   1. Articles
     - Security Token Service\Integrating with Security Token Service
     - Security Token Service\ADFS\Integrating with Security Token Service

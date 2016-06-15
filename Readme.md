@@ -20,6 +20,8 @@ ISHDeploy requires the following to run:
 * Administrative rights
 * InfoShare Content Manager
 
+Requires [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) Content Manager.
+
 Usage
 -----
 

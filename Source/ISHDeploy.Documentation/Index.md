@@ -57,6 +57,7 @@ Pre-release version `0.1-alpha1` introduces the following cmdlets and articles:
   1. Articles
     - Work with deployments  
     - Work with files
+    - Work with Get-ISHPackageFolderPath  
 1. Feature toggle
   1. Cmdlets
     - Disable-ISHExternalPreview
@@ -81,6 +82,8 @@ Pre-release version `0.1-alpha1` introduces the following cmdlets and articles:
     - Set-ISHIntegrationSTSCertificate
     - Set-ISHIntegrationSTSWSFederation
     - Set-ISHIntegrationSTSWSTrust
+    - Save-ISHIntegrationDBSTSSQLServerConfiguration 
+    - Set-ISHAPIWCFServiceCertificate 
   1. Articles
     - Security Token Service\Integrating with Security Token Service
     - Security Token Service\ADFS\Integrating with Security Token Service

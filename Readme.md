@@ -20,6 +20,8 @@ ISHDeploy requires the following to run:
 * Administrative rights
 * InfoShare Content Manager
 
+Requires [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) Content Manager.
+
 Usage
 -----
 
@@ -28,7 +30,7 @@ To use this module, it should me imported.
 ```powershell
 Import-Module "ISHDeploy"
 
-$deployment = Get-ISHDeployment -Name 'InfoShareORA12'
+$deployment = Get-ISHDeployment -Name 'InfoShare'
 
 Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "EventTab" -Description "New Event Tab"
 ```

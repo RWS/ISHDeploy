@@ -163,6 +163,7 @@ function remoteReadTargetXML() {
 
 Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     BeforeEach {
+        StopPool -projectName $testingDeploymentName
         if(RemotePathCheck "$filepath\_Web.config")
         {
             if (RemotePathCheck "$filepath\Web.config")
@@ -173,6 +174,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        WebRequestToSTS $testingDeploymentName
     }
 
     It "Set-ISHAPIWCFServiceCertificate"{       

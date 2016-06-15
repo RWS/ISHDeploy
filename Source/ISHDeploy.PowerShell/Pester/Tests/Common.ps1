@@ -1,5 +1,5 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
-#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.12.0.0.dll")
+#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.13.0.0.dll")
 
 Function Invoke-CommandRemoteOrLocal {
     param (
@@ -156,6 +156,7 @@ $scriptBlockGetInputParameters = {
     $result["infoshareauthorwebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infoshareauthorwebappname']/currentvalue")[0].InnerText
     $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
     $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
+    $result["baseurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='baseurl']/currentvalue")[0].InnerText
 
     return $result
     
@@ -224,4 +225,39 @@ Function UndoDeployment
         $testingDeploymentName
     ) 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+}
+
+#Stop WebRequestToSTS
+$scriptBlockWebRequest = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $url
+    ) 
+    
+    $request = [System.Net.WebRequest]::Create($url)
+    try {
+        [System.Net.HttpWebResponse]$response = $request.GetResponse()
+    } catch [System.Net.WebException] {
+        [System.Net.HttpWebResponse]$response = $_.Exception.Response
+    }
+    
+    if ($response.StatusCode -ne [System.Net.HttpStatusCode]::OK)
+    {
+        Write-Error $response.StatusDescription
+    }
+}
+
+Function WebRequestToSTS
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+    $baseurl = $result["baseurl"]
+    $infosharestswebappname = $result["infosharestswebappname"]
+    $url = "$baseurl/$infosharestswebappname/"
+
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
 }

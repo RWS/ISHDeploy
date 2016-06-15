@@ -131,6 +131,8 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
+        StopPool -projectName $testingDeploymentName
+
         if(RemotePathCheck "$filepath\_Web.config")
         {
             if (RemotePathCheck "$filepath\Web.config")
@@ -383,6 +385,8 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint test -MexEndpoint test -BindingType UserNameMixed') | Should be "True"
+        $history.Contains('Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint test') | Should be "True"
+        $history.Contains('-MexEndpoint test') | Should be "True"
+        $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
 }

@@ -102,7 +102,8 @@ function readTargetXML() {
 
 
 Describe "Testing ISHExternalPreview"{
-    BeforeEach {
+    BeforeEach {    
+        StopPool -projectName $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 

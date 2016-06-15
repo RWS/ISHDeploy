@@ -28,7 +28,7 @@ To use this module, it should me imported.
 ```powershell
 Import-Module "ISHDeploy"
 
-$deployment = Get-ISHDeployment -Name 'InfoShareORA12'
+$deployment = Get-ISHDeployment -Name 'InfoShare'
 
 Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "EventTab" -Description "New Event Tab"
 ```

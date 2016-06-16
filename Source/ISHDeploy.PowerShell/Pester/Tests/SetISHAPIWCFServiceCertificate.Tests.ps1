@@ -78,6 +78,8 @@ $scriptBlockReadTargetXML = {
     )
     #read all files that are touched with commandlet
     
+    [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
+    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
     $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$STSConfig = new-object System.Xml.XmlDocument
@@ -95,6 +97,7 @@ $scriptBlockReadTargetXML = {
     
     $result =  @{}
     #get variables and nodes from files
+    $result["wsWebConfigNodesCount"] = $wsWebConfig.SelectNodes("configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate[@findValue='$thumbprint']").Count
     $result["authorWebConfigNodesCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel.services/federationConfiguration/serviceCertificate/certificateReference[@findValue='$thumbprint']").Count
     $result["stsConfigNodesCount"] = $STSConfig.SelectNodes("infoShareSTS/initialize[@certificateThumbprint='$thumbprint']").Count
     $result["feedSDLLCConfigNodesCount"] = $FeedSDLLCConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/uri[@infoShareWSServiceCertificateValidationMode='$ValidationMode']").Count
@@ -131,6 +134,9 @@ $scriptBlockReadTargetXML = {
 		$connection.Open()
 		$result["encryptingCertificate"] =$existCommand.ExecuteScalar().ToString()
 	}
+    catch{
+        Write-Host $Error
+    }
 	finally
 	{
 		$connection.Close()
@@ -149,6 +155,7 @@ function remoteReadTargetXML() {
 
 
     #get variables and nodes from files
+    $global:wsWebConfigNodesCount = $result["wsWebConfigNodesCount"]
     $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]
     $global:stsConfigNodesCount = $result["stsConfigNodesCount"]
     $global:feedSDLLCConfigNodesCount = $result["feedSDLLCConfigNodesCount"]
@@ -184,6 +191,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         #Assert
         remoteReadTargetXML -thumbprint $testThumbprint -ValidationMode "PeerOrChainTrust"
 
+        $wsWebConfigNodesCount | Should be 1
         $authorWebConfigNodesCount | Should be 1
         $stsConfigNodesCount | Should be 1
         $feedSDLLCConfigNodesCount | Should be 1
@@ -233,4 +241,5 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     }
 }
 
+Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

@@ -145,7 +145,7 @@ $scriptBlockGetInputParameters = {
     $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
     $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
     
-    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")#.ToString()
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")
 
     [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
     $inputParameters.load("$inputParametersPath\inputparameters.xml")

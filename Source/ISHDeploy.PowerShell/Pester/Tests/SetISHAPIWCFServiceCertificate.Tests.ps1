@@ -125,7 +125,9 @@ $scriptBlockReadTargetXML = {
 	$existCommand.CommandType = [System.Data.CommandType]::Text
 	$existCommand.Connection = $connection
     $myServer = $env:COMPUTERNAME + "." + $env:USERDNSDOMAIN
-	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/ISHWS$suffix/Wcf/API20/Folder.svc")
+    $inputParameters = Get-InputParameters $testingDeploymentName
+    $infosharewswebappname = $inputParameters["infosharewswebappname"]
+	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/$infosharewswebappname/Wcf/API20/Folder.svc")
 	$existCommand.CommandText = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=@realm"
 
 	#Execute Command

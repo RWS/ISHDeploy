@@ -201,7 +201,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $synchronizeToLCConfigNodesCount | Should be 1
         $trisoftInfoShareClientConfigNode | Should be "PeerOrChainTrust"
         $connectionConfigNode | Should be "PeerOrChainTrust"
-        $Warning | Should be $null 
+        $Warning | Should be "This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated." 
         $encryptingCertificate | Should be $testEncriptedCertificate
     }
 

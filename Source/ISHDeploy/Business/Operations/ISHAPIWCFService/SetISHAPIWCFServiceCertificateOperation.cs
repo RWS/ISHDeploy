@@ -65,8 +65,6 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
 
-            logger.WriteWarning("This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated.");
-
             // validationMode
             _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfig.Path, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfig.Path, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
@@ -98,6 +96,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         public void Run()
 		{
 			_invoker.Invoke();
-		}
-	}
+            Logger.WriteWarning("This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated.");
+        }
+    }
 }

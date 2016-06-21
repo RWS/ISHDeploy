@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using ISHDeploy.Business.Invokers;
@@ -43,16 +43,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="fileName">Name of the output file.</param>
         /// <param name="type">The output file type.</param>
         public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, OutputType type) :
-            base (logger, ishDeployment)
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             string templateFile;
-            
+
             switch (type)
             {
                 case OutputType.PS1:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsPSTemplate;
+                    logger.WriteWarning("Current implementation of .ps1 works only with windows authentication.");
                     break;
                 default:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsSQLTemplate;

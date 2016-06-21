@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The logger.
         /// </summary>
-        private static ILogger _logger;
+        protected static ILogger Logger;
 
         /// <summary>
         /// The instance of extended description of the deployment.
@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations
             {
                 if (_ishDeploymentInternal == null || _ishDeployment.Name != _ishDeploymentInternal.Name)
                 {
-                    var action = new GetISHDeploymentExtendedAction(_logger, _ishDeployment.Name,
+                    var action = new GetISHDeploymentExtendedAction(Logger, _ishDeployment.Name,
                         result => _ishDeploymentInternal = result);
                     action.Execute();
                 }
@@ -66,7 +66,7 @@ namespace ISHDeploy.Business.Operations
         /// <param name="logger"></param>
         public BasePathsOperation(ILogger logger, Models.ISHDeployment ishDeployment)
         {
-            _logger = logger;
+            Logger = logger;
             _ishDeployment = ishDeployment;
         }
 

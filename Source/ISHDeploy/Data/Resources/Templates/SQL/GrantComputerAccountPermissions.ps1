@@ -10,34 +10,19 @@
         When the IIS application pool is configure with application pool identity then network resources are accessed with the computer account.
         This commandlet works with windows authentication only.
 
-    .PARAMETER  Computer
-        Specifies computer name to open a persistent connection (PSSession) to. The default is the local computer.
-
-    .PARAMETER  Session
-        Specifies [PSSession] session object to use.
-
-    .PARAMETER  Action
-        Either `Set` or `Remove`
+    .PARAMETER  Credential
+        Specifies credential of user need to be created.
 
     .EXAMPLE
-        $s01 = New-PSSession -ComputerName "10.91.5.39"
-        Invoke-ADFSIntegrationISH -Session $s01 -Action "Set"
-
-    .EXAMPLE
-        Invoke-ADFSIntegrationISH -Computer "10.91.5.39" -Action "Set"
-
-    .EXAMPLE
-         $s03 = New-PSSession -ComputerName "10.91.5.39"
-        Invoke-ADFSIntegrationISH -Session $s03 -Action "Remove"
-
-    .EXAMPLE
-        Invoke-ADFSIntegrationISH -Computer "10.91.5.39" -Action "Remove"
+        $secpasswd = ConvertTo-SecureString “password” -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential (“domain\User”, $secpasswd)
+        GrantComputerAccountPermissions.ps1 -Credential $credential
 
     .INPUTS
-        None. You cannot pipe objects to Invoke-ADFSIntegrationISH.ps1.
+        None. You cannot pipe objects to GrantComputerAccountPermissions.ps1.
 
     .OUTPUTS
-        None. Invoke-ADFSIntegrationISH.ps1 does not generate any output.
+        None. GrantComputerAccountPermissions.ps1 does not generate any output.
 #>
 Param(
 	[parameter(Mandatory=$false)]
@@ -71,7 +56,7 @@ try
     else
     {
         Write-Debug "Creating $psDriveName PSDrive for $server. Using windows authentication."
-        New-PSDrive -PSProvider SqlServer -Root "SQLSERVER:sql\MECDEVDB05\SQL2014SP1\" -Name $psDriveName |Out-Null
+        New-PSDrive -PSProvider SqlServer -Root "SQLSERVER:sql\$server\" -Name $psDriveName |Out-Null
         Write-Verbose "Created $psDriveName PSDrive for $server. Using windows authentication."
     }
  

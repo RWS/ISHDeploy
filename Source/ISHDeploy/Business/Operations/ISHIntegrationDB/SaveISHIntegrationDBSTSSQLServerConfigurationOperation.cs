@@ -20,6 +20,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
@@ -64,18 +65,12 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 
             using (OleDbConnection builder = new OleDbConnection(ISHDeploymentInternal.ConnectString))
             {
-                /*
-                    $principal="GLOBAL\MECDEVASAR02$"   "$OSUSER$"
-                    $dbName="ALEXMECULAB1201"           "$DATABASE$"
-                    $server="MECDEVDB05\SQL2014SP1"     "$DATASOURCE$"
-                 */
-
                 _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     templateFile,
                     Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
                     new Dictionary<string, string>
                     {
-                        {"$OSUSER$", ISHDeploymentInternal.OSUser},
+                        {"$OSUSER$", Environment.UserDomainName+"\\"+Environment.MachineName},
                         {"$DATABASE$", builder.Database},
                         {"$DATASOURCE$", builder.DataSource}
                     }));

@@ -14,8 +14,8 @@
         Specifies credential of user need to be created.
 
     .EXAMPLE
-        $secpasswd = ConvertTo-SecureString “password” -AsPlainText -Force
-        $credential = New-Object System.Management.Automation.PSCredential (“domain\User”, $secpasswd)
+        $secpasswd = ConvertTo-SecureString "password" -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential ("domain\User", $secpasswd)
         GrantComputerAccountPermissions.ps1 -Credential $credential
 
     .INPUTS

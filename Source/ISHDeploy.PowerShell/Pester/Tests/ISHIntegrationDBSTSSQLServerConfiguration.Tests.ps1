@@ -32,9 +32,6 @@ $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 $inputParameters = Get-InputParameters $testingDeploymentName
-import-module activedirectory
-$domain= (Get-ADDomain -Identity (Get-WmiObject Win32_ComputerSystem).Domain).NetBIOSName
-$principal = $domain+"\"+$env:computername+"$"
 [System.Data.OleDb.OleDbConnection]$connection = New-Object "System.Data.OleDb.OleDbConnection" $inputParameters["connectstring"]
 $database = $connection.Database
 $datasource = $connection.DataSource
@@ -57,6 +54,13 @@ $scriptBlockCleanTmpFolder = {
     }
 
     Get-ChildItem -Path "$packagePath\tmp" -Include *.* -File -Recurse | foreach { $_.Delete()}
+}
+
+$scriptBlockGetNetBIOSDomain = {
+    import-module activedirectory
+    $domain= (Get-ADDomain -Identity (Get-WmiObject Win32_ComputerSystem).Domain).NetBIOSName
+    $principal = $domain+"\"+$env:computername+"$"
+    return $principal
 }
 
 $scriptGetPackageFolder = {
@@ -123,6 +127,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     BeforeEach {
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCleanTmpFolder -Session $session -ArgumentList $packagePath
+        $principal= Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetNetBIOSDomain -Session $session
     }
     
 

@@ -63,6 +63,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, FoldersPaths.PackagesFolderPath));
 
+            string principal = NetUtil.GetMachineNetBiosDomain() + "\\" + Environment.MachineName + "$";
+
             using (OleDbConnection builder = new OleDbConnection(ISHDeploymentInternal.ConnectString))
             {
                 _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
@@ -70,7 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
                     new Dictionary<string, string>
                     {
-                        {"$OSUSER$", Environment.UserDomainName+"\\"+Environment.MachineName},
+                        {"$PRINCIPAL$", principal},
                         {"$DATABASE$", builder.Database},
                         {"$DATASOURCE$", builder.DataSource}
                     }));

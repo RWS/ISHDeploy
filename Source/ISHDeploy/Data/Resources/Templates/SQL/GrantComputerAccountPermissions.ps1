@@ -31,7 +31,7 @@ Param(
  
 $server="$DATASOURCE$"
 $dbName="$DATABASE$"
-$principal="$OSUSER$"
+$principal="$PRINCIPAL$"
  
 $psDriveName=$server.Replace("\","_")
  

@@ -9,9 +9,9 @@
 --Create login for the computer account. 
 USE [MASTER]
 GO
-if NOT EXISTS (SELECT name AS Count FROM sys.server_principals WHERE TYPE IN ('U', 'S') and Name='$OSUSER$')
+if NOT EXISTS (SELECT name AS Count FROM sys.server_principals WHERE TYPE IN ('U', 'S') and Name='$PRINCIPAL$')
 BEGIN
-	CREATE LOGIN [$OSUSER$] FROM WINDOWS WITH DEFAULT_DATABASE=[$DATABASE$]
+	CREATE LOGIN [$PRINCIPAL$] FROM WINDOWS WITH DEFAULT_DATABASE=[$DATABASE$]
 END
 GO
  
@@ -19,9 +19,9 @@ GO
 USE [$DATABASE$]
 GO
  
-if NOT EXISTS (SELECT name AS Count FROM sys.database_principals WHERE TYPE IN ('U', 'S') and Name='$OSUSER$')
+if NOT EXISTS (SELECT name AS Count FROM sys.database_principals WHERE TYPE IN ('U', 'S') and Name='$PRINCIPAL$')
 BEGIN
-	CREATE USER [$OSUSER$] FOR LOGIN [$OSUSER$]
-	GRANT SELECT TO [$OSUSER$]
+	CREATE USER [$PRINCIPAL$] FOR LOGIN [$PRINCIPAL$]
+	GRANT SELECT TO [$PRINCIPAL$]
 END
 GO

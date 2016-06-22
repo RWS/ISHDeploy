@@ -173,7 +173,6 @@ $scriptBlockEnableExternalPreview = {
   
 }
 
-#Import-Module WebAdministration
 $scriptBlockGetAppPoolStartTime = {
     param (
         $testingDeployment

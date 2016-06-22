@@ -32,7 +32,9 @@ $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 $inputParameters = Get-InputParameters $testingDeploymentName
-$osuser = $inputParameters["osuser"]
+import-module activedirectory
+$domain= (Get-ADDomain -Identity (Get-WmiObject Win32_ComputerSystem).Domain).NetBIOSName
+$principal = $domain+"\"+$env:computername+"$"
 [System.Data.OleDb.OleDbConnection]$connection = New-Object "System.Data.OleDb.OleDbConnection" $inputParameters["connectstring"]
 $database = $connection.Database
 $datasource = $connection.DataSource
@@ -132,9 +134,9 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         
         $Mdfile = Get-Content "$packagePath\$testFileName"
-        $Mdfile -contains "USE [MASTER]" | Should be $true
-        $Mdfile -contains "CREATE LOGIN [$osuser] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]" | Should be $true
-
+        [System.String]$content = [System.String]::Join("", $Mdfile)
+        $content.Contains("USE [MASTER]") | Should be $true
+        $content.Contains("CREATE LOGIN [$principal] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]") | Should be $true
     }
 
     It "Save same file"{
@@ -147,14 +149,16 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     }
 
     It "Save PS1 file"{
-        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
+        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true -WarningVariable Warning
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName, $true
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         $Mdfile = Get-Content "$packagePath\$testFileName"
         [System.String]$content = [System.String]::Join("", $Mdfile)
-        $content.Contains("SQLSERVER:sql\$datasource\databases") | Should be $true
+        $content.Contains("`$server=`"$datasource`"") | Should be $true
+        $content.Contains("`$principal=`"$principal`"") | Should be $true
+        $Warning | Should be $null         
     }
 
     It "Save same PS1 file"{

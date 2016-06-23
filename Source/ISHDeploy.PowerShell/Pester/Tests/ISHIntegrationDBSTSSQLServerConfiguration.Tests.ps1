@@ -57,12 +57,7 @@ $scriptBlockCleanTmpFolder = {
 }
 
 $scriptBlockGetNetBIOSDomain = {
-     $string = (nbtstat -n | select-string -Pattern '^([^<]+)<(00|1[BCDE]){1}>\s+GROUP' -AllMatches | % { $_.Matches.Groups[1].Value})
-     if ($string.Count -ne 1){
-            $domain=$string[0].Trim()
-      } else {
-        $domain=$string.Trim()
-      }
+    $domain =@(nbtstat -n | select-string -Pattern '^\s*(\w+)\s*<(00|1[BCDE]){1}>\s+GROUP' -AllMatches | % { $_.Matches.Groups[1].Value} | select -Unique)[0]
     $principal = $domain+"\"+$env:computername+"$"
     return $principal
 }

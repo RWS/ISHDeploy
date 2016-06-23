@@ -52,7 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Pester\Helpers\Set-Variables.ps1" />
+    <None Include="Pester\Helpers\Init-TestData.ps1" />
     <None Include="Pester\Test-All.ps1" />
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />

@@ -3,17 +3,14 @@
     $testingDeploymentName = "InfoShare"
 )
 . "$PSScriptRoot\Common.ps1"
-& "$PSScriptRoot\..\Helpers\Set-VariableConstant.ps1"
 
 $computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
 #region variables
-
 $packageFileName = "testFileName"
 
-# Global variables
-Get-Variable -Scope Global
-$domain=Get-Variable -Name "xopusLicenseDomain" -ValueOnly
+# Test variables
+$domain = Get-TestDataValue "testDomain"
 
 # Script block for getting ISH deployment
 $scriptBlockGetDeployment = {

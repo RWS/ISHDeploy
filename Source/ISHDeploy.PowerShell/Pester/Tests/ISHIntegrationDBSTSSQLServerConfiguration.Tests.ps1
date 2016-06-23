@@ -57,8 +57,7 @@ $scriptBlockCleanTmpFolder = {
 }
 
 $scriptBlockGetNetBIOSDomain = {
-    import-module activedirectory
-    $domain= (Get-ADDomain -Identity (Get-WmiObject Win32_ComputerSystem).Domain).NetBIOSName
+    $domain =@(nbtstat -n | select-string -Pattern '^\s*(\w+)\s*<(00|1[BCDE]){1}>\s+GROUP' -AllMatches | % { $_.Matches.Groups[1].Value} | select -Unique)[0]
     $principal = $domain+"\"+$env:computername+"$"
     return $principal
 }
@@ -131,7 +130,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     }
     
 
-    It "Save file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName
@@ -144,7 +143,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         $content.Contains("CREATE LOGIN [$principal] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]") | Should be $true
     }
 
-    It "Save same file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save same file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName
@@ -153,7 +152,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
     }
 
-    It "Save PS1 file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save PS1 file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true -WarningVariable Warning
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName, $true
@@ -166,7 +165,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         $Warning | Should be $null         
     }
 
-    It "Save same PS1 file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save same PS1 file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName, $true

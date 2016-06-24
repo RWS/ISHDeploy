@@ -65,7 +65,21 @@ namespace ISHDeploy.Validators
 		{
 			errorMessage = null;
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
+
+
+
+            //***********************************************************
+            // TODO Atteention!!!!! Need to be removed before release
+            // TS-11395 hardcoded "13.0.*.65534" for 13 version only
+            //***********************************************************
+            Regex regex11395 = new Regex(@"13.0.\d+.65534");
+            if (regex11395.IsMatch(moduleName + ".65534")) {
+                return true;
+            }
+
+
+
+            var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
 
 			Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
 			Version moduleVersion;

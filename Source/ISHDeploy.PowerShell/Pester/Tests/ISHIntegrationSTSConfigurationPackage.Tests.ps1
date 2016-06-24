@@ -217,4 +217,6 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 Save-ISHIntegrationSTSConfigurationPackage -FileName "package_adfs.zip" -ISHDeployment $deployment -ADFS'
        
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

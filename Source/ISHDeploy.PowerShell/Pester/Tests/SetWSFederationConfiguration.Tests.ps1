@@ -96,6 +96,7 @@ function readTargetXML() {
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
+		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -146,4 +147,6 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint testEndpoint') | Should be "True"
               
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

@@ -195,6 +195,14 @@ $scriptBlockRemoveEventMonitorTab= {
 
 Describe "Testing ISHUIEventMonitorTab"{
     BeforeEach {
+	 if(RemotePathCheck "$xmlPath\_EventMonitorMenuBar.xml")
+        {
+            if (RemotePathCheck "$xmlPath\EventMonitorMenuBar.xml")
+            {
+                RemoteRemoveItem "$xmlPath\EventMonitorMenuBar.xml"
+            }
+            RemoteRenameItem "$xmlPath\_EventMonitorMenuBar.xml" "EventMonitorMenuBar.xml"
+        }
             Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -459,5 +467,7 @@ Describe "Testing ISHUIEventMonitorTab"{
         #Assert
         RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"} -expectedResult "Added" | Should be "Added"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 
 }

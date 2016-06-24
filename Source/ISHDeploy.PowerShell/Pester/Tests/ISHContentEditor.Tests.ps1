@@ -126,6 +126,14 @@ function readTargetXML() {
 
 Describe "Testing ISHUIContentEditor"{
     BeforeEach {
+	 if(RemotePathCheck "$xmlPath\_FolderButtonbar.xml")
+        {
+            if (RemotePathCheck "$xmlPath\FolderButtonbar.xml")
+            {
+                RemoteRemoveItem "$xmlPath\FolderButtonbar.xml"
+            }
+            RemoteRenameItem "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
+        }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -272,5 +280,7 @@ Describe "Testing ISHUIContentEditor"{
        #Assert
 	   Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList $testingDeploymentName, $domain -ErrorAction Stop | Should Be "True"
     }   
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     
 }

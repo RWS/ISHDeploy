@@ -96,6 +96,14 @@ function readTargetXML() {
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
+		if(RemotePathCheck "$xmlPath\_Web.config")
+        {
+            if (RemotePathCheck "$xmlPath\Web.config")
+            {
+                RemoteRemoveItem "$xmlPath\Web.config"
+            }
+            RemoteRenameItem "$xmlPath\_Web.config" "Web.config"
+        }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -146,4 +154,6 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint testEndpoint') | Should be "True"
               
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

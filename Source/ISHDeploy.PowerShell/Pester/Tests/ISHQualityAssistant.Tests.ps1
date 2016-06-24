@@ -90,6 +90,14 @@ $precondition = readTargetXML
 
 Describe "Testing ISHUIQualityAssistant"{
     BeforeEach {
+	 if(RemotePathCheck "$xmlPath\_config.xml")
+        {
+            if (RemotePathCheck "$xmlPath\config.xml")
+            {
+                RemoteRemoveItem "$xmlPath\config.xml"
+            }
+            RemoteRenameItem "$xmlPath\_config.xml" "config.xml"
+        }
             Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -213,5 +221,6 @@ Describe "Testing ISHUIQualityAssistant"{
         $result | Should Be "Disabled"
     }
 
-    
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+
 }

@@ -364,4 +364,6 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigThumbprint | Should be "testThumbprint222"
         $stsWebConfigNodesCount | Should be 1
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

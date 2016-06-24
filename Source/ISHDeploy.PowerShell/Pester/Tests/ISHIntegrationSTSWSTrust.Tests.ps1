@@ -389,4 +389,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

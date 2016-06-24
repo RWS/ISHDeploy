@@ -26,6 +26,7 @@ $suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
+$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
 #endregion
 
 #region Script Blocks 
@@ -186,7 +187,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
@@ -202,7 +202,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         Rename-Item "$filepath\Web.config"  "_Web.config"
 

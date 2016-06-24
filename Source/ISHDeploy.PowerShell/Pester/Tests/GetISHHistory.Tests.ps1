@@ -115,6 +115,7 @@ Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $se
 
 Describe "Testing Get-ISHDeploymentHistory"{
     BeforeEach {
+		ArtifactCleaner -filePath $xmlPath -fileName "FolderButtonbar.xml"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockClean -Session $session -ArgumentList $testingDeploymentName
     }
 

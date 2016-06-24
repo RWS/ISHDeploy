@@ -91,7 +91,8 @@ function readTargetXML() {
 
 Describe "Testing ISHUITranslationJob"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+		ArtifactCleaner -filePath $xmlPath -fileName "EventMonitorMenuBar.xml"
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled Translation Job"{
@@ -213,6 +214,7 @@ Describe "Testing ISHUITranslationJob"{
 		#Assert
         $result | Should Be "Disabled"
     }
-
+	
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     
 }

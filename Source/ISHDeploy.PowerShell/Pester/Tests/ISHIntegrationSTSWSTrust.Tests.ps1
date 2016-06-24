@@ -132,15 +132,7 @@ function readTargetXML() {
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
-
-        if(RemotePathCheck "$filepath\_Web.config")
-        {
-            if (RemotePathCheck "$filepath\Web.config")
-            {
-                RemoteRemoveItem "$filepath\Web.config"
-            }
-            RemoteRenameItem "$filepath\_Web.config" "Web.config"
-        }
+        ArtifactCleaner -filePath $filePath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -389,4 +381,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

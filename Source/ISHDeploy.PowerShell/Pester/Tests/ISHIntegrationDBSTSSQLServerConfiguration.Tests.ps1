@@ -173,4 +173,6 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

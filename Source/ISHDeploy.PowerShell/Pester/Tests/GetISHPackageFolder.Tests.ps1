@@ -66,5 +66,7 @@ Describe "Testing Get-ISHPackageFolderPath"{
         
         RemotePathCheck $uncPackagePath | Should Be "True"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }
 

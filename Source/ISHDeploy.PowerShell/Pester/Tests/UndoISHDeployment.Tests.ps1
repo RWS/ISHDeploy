@@ -173,15 +173,14 @@ $scriptBlockEnableExternalPreview = {
   
 }
 
-#Import-Module WebAdministration
 $scriptBlockGetAppPoolStartTime = {
     param (
         $testingDeployment
     )
 
-    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infoshareauthorwebappname)
-    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharewswebappname)
-    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.OriginalParameters.infosharestswebappname)
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameCM)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameWS)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameSTS)
     
     $result = @{}
     [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'

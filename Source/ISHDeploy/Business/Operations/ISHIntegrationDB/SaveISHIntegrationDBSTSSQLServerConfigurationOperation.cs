@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
@@ -43,16 +44,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="fileName">Name of the output file.</param>
         /// <param name="type">The output file type.</param>
         public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, OutputType type) :
-            base (logger, ishDeployment)
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             string templateFile;
-            
+
             switch (type)
             {
                 case OutputType.PS1:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsPSTemplate;
+                    logger.WriteWarning("Current implementation of .ps1 works only with windows authentication.");
                     break;
                 default:
                     templateFile = TemporaryDBConfigurationFileNames.GrantComputerAccountPermissionsSQLTemplate;
@@ -61,6 +63,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, FoldersPaths.PackagesFolderPath));
 
+            string principal = NetUtil.GetMachineNetBiosDomain() + "\\" + Environment.MachineName + "$";
+
             using (OleDbConnection builder = new OleDbConnection(ISHDeploymentInternal.ConnectString))
             {
                 _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
@@ -68,7 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     Path.Combine(FoldersPaths.PackagesFolderPath, fileName),
                     new Dictionary<string, string>
                     {
-                        {"$OSUSER$", ISHDeploymentInternal.OSUser},
+                        {"$PRINCIPAL$", principal},
                         {"$DATABASE$", builder.Database},
                         {"$DATASOURCE$", builder.DataSource}
                     }));

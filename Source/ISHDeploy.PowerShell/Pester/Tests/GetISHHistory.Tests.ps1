@@ -115,14 +115,7 @@ Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $se
 
 Describe "Testing Get-ISHDeploymentHistory"{
     BeforeEach {
-	 if(RemotePathCheck "$xmlPath\_FolderButtonbar.xml")
-        {
-            if (RemotePathCheck "$xmlPath\FolderButtonbar.xml")
-            {
-                RemoteRemoveItem "$xmlPath\FolderButtonbar.xml"
-            }
-            RemoteRenameItem "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
-        }
+		ArtifactCleaner -filePath $xmlPath -fileName "FolderButtonbar.xml"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockClean -Session $session -ArgumentList $testingDeploymentName
     }
 

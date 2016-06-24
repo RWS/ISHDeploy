@@ -104,14 +104,7 @@ function readTargetXML() {
 Describe "Testing ISHExternalPreview"{
     BeforeEach {    
         StopPool -projectName $testingDeploymentName
-		 if(RemotePathCheck "$xmlPath\_Web.config")
-        {
-            if (RemotePathCheck "$xmlPath\Web.config")
-            {
-                RemoteRemoveItem "$xmlPath\Web.config"
-            }
-            RemoteRenameItem "$xmlPath\_Web.config" "Web.config"
-        }
+		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 

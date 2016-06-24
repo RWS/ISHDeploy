@@ -261,3 +261,22 @@ Function WebRequestToSTS
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
 }
+
+Function ArtifactCleaner
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $filePath,
+		[Parameter(Mandatory=$true)]
+        $fileName
+    ) 
+    
+     if(RemotePathCheck "$filePath\_$fileName")
+        {
+            if (RemotePathCheck "$filePath\$fileName")
+            {
+                RemoteRemoveItem "$filePath\$fileName"
+            }
+            RemoteRenameItem "$filePath\_$fileName" "$fileName"
+        }
+}

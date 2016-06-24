@@ -91,15 +91,8 @@ function readTargetXML() {
 
 Describe "Testing ISHUITranslationJob"{
     BeforeEach {
-	if(RemotePathCheck "$xmlPath\_EventMonitorMenuBar.xml")
-        {
-            if (RemotePathCheck "$xmlPath\EventMonitorMenuBar.xml")
-            {
-                RemoteRemoveItem "$xmlPath\EventMonitorMenuBar.xml"
-            }
-            RemoteRenameItem "$xmlPath\_EventMonitorMenuBar.xml" "EventMonitorMenuBar.xml"
-        }
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+		ArtifactCleaner -filePath $xmlPath -fileName "EventMonitorMenuBar.xml"
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled Translation Job"{

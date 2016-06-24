@@ -90,15 +90,8 @@ $precondition = readTargetXML
 
 Describe "Testing ISHUIQualityAssistant"{
     BeforeEach {
-	 if(RemotePathCheck "$xmlPath\_config.xml")
-        {
-            if (RemotePathCheck "$xmlPath\config.xml")
-            {
-                RemoteRemoveItem "$xmlPath\config.xml"
-            }
-            RemoteRenameItem "$xmlPath\_config.xml" "config.xml"
-        }
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+		ArtifactCleaner -filePath $filePath -fileName "config.xml"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled Quality Assistant"{

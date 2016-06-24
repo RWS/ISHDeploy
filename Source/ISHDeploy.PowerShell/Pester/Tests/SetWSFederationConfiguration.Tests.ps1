@@ -95,6 +95,7 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
+        StopPool -projectName $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 

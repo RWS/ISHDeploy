@@ -131,6 +131,8 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
+        StopPool -projectName $testingDeploymentName
+
         if(RemotePathCheck "$filepath\_Web.config")
         {
             if (RemotePathCheck "$filepath\Web.config")

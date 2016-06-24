@@ -67,6 +67,25 @@ $scriptBlockGetHistory = {
     Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
 }
 
+$scriptBlockGetAmountOfInstalledDeployments = {
+    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
+    if ([System.Environment]::Is64BitOperatingSystem)
+    {
+        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
+    }
+    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
+    $amount = 0
+
+    $installToolRegKey.OpenSubKey("InfoShare").GetSubKeyNames() | Where {$_ -ne "Core"} | ForEach-Object {  
+        if ($installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($_).GetValue("Current", "").ToString())
+        {
+            $amount++
+        }
+    }
+
+    return $amount
+}
+
 Describe "Testing Get-ISHDeployment"{
     It "doesnot match 'InfoShare' pattern"{
 		#Act/Assert
@@ -84,7 +103,8 @@ Describe "Testing Get-ISHDeployment"{
         #Act
         $deployments = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session
         #Assert
-		$deployments.Count | Should Be 2
+        $amount = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAmountOfInstalledDeployments -Session $session
+		$deployments.Count | Should Be $amount
     }
 
     It "returns message when deployment is not found"{

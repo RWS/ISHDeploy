@@ -32,7 +32,6 @@ $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 $inputParameters = Get-InputParameters $testingDeploymentName
-$osuser = $inputParameters["osuser"]
 [System.Data.OleDb.OleDbConnection]$connection = New-Object "System.Data.OleDb.OleDbConnection" $inputParameters["connectstring"]
 $database = $connection.Database
 $datasource = $connection.DataSource
@@ -55,6 +54,12 @@ $scriptBlockCleanTmpFolder = {
     }
 
     Get-ChildItem -Path "$packagePath\tmp" -Include *.* -File -Recurse | foreach { $_.Delete()}
+}
+
+$scriptBlockGetNetBIOSDomain = {
+    $domain =@(nbtstat -n | select-string -Pattern '^\s*(\w+)\s*<(00|1[BCDE]){1}>\s+GROUP' -AllMatches | % { $_.Matches.Groups[1].Value} | select -Unique)[0]
+    $principal = $domain+"\"+$env:computername+"$"
+    return $principal
 }
 
 $scriptGetPackageFolder = {
@@ -121,10 +126,11 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     BeforeEach {
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCleanTmpFolder -Session $session -ArgumentList $packagePath
+        $principal= Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetNetBIOSDomain -Session $session
     }
     
 
-    It "Save file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName
@@ -132,12 +138,12 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         
         $Mdfile = Get-Content "$packagePath\$testFileName"
-        $Mdfile -contains "USE [MASTER]" | Should be $true
-        $Mdfile -contains "CREATE LOGIN [$osuser] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]" | Should be $true
-
+        [System.String]$content = [System.String]::Join("", $Mdfile)
+        $content.Contains("USE [MASTER]") | Should be $true
+        $content.Contains("CREATE LOGIN [$principal] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]") | Should be $true
     }
 
-    It "Save same file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save same file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName
@@ -146,18 +152,20 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
     }
 
-    It "Save PS1 file"{
-        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save PS1 file"{
+        $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true -WarningVariable Warning
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName, $true
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         $Mdfile = Get-Content "$packagePath\$testFileName"
         [System.String]$content = [System.String]::Join("", $Mdfile)
-        $content.Contains("SQLSERVER:sql\$datasource\databases") | Should be $true
+        $content.Contains("`$server=`"$datasource`"") | Should be $true
+        $content.Contains("`$principal=`"$principal`"") | Should be $true
+        $Warning | Should be $null         
     }
 
-    It "Save same PS1 file"{
+    It "Save-ISHIntegrationDBSTSSQLServerConfiguration Save same PS1 file"{
         $packagePath = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
         RemotePathCheck $packagePath | Should be "True"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSaveScript -Session $session -ArgumentList $testingDeploymentName, $testFileName, $true

@@ -182,8 +182,8 @@ $scriptBlockRemoveCertificate= {
     )
     certutil -delstore my $thumbprint
 }
+
 #Stop WebAppPool
-Import-Module WebAdministration
 $scriptBlockStopWebAppPool = {
     param (
         [Parameter(Mandatory=$true)]
@@ -225,6 +225,25 @@ Function UndoDeployment
         $testingDeploymentName
     ) 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+}
+
+# Get Test Data variable
+Function Get-TestDataValue
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $valuePath
+    ) 
+
+    # Global variables
+    $testData = Get-Variable -Name "TestData" -Scope Global -ValueOnly
+    $value = $testData.$valuePath;
+    if (-not $value)
+    {
+        throw "Value `$valuePath` does not exists"
+    }
+
+    return $value
 }
 
 #Stop WebRequestToSTS

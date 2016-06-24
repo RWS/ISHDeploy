@@ -25,13 +25,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     ///		<para type="description">When -IncludeInternalClients is switched on then the -ActorUsername and -ActorPassword must be specified.</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mixed/username" -MexEndpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mex" -BindingType "WindowsMixed" -Verbose</code>
+    ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server and sets type of authentication as WindowsMixed.
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mixed/username" -MexEndpoint "https://test.global.sdl.corp/InfoShareSTS/issue/wstrust/mex" -BindingType "WindowsMixed" -IncludeInternalClients -ActorUsername "STSUser" -ActorPassword "somepassword" -Verbose</code>
+    ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -IncludeInternalClients -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server, sets type of authentication as WindowsMixed and sets internal clients credentials.
     ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>

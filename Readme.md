@@ -1,56 +1,50 @@
 ﻿
 # ISHDeploy
 
-Table of Contents
------------------
+# Table of Contents
 
-  * [Requirements](#requirements)
-  * [Usage](#usage)
-  * [Contributing](#contributing)
-  * [More Info](#more-info)
-  * [License](#license)
+- [Introduction](#introduction)
+- [Requirements](#requirements)
+- [License](#license)
 
+## Introduction
 
-Requirements
-------------
+**ISHDeploy** is a PowerShell module that provides the necessary tooling to create, update and maintain [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) Content Manager deployments.
+With ISHDeploy the deployments can be expressed in PowerShell scripts. The module's cmdlets aim towards enabling the **code as configuration** principal. 
+With each cmdlet, the author of the script focuses on expressing intention without knowledge about the configuration implementation details. 
+This allows developing scripts that are cross version applicable as long as the referenced feature is compatible in Content Manager.
+
+For example the following segment enables the Content Editor.
+```powershell
+$xopusLicenseKey="license key for ish.example.com"
+$xopusLicenseDomain='ish.example.com"
+Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "$xopusLicenseKey" -Domain $xopusLicenseDomain
+Enable-ISHUIContentEditor -ISHDeployment $deployment
+```
+
+The module is available in [PowerShell gallery](https://www.powershellgallery.com/items?q=ISHDeploy&x=0&y=0). 
+
+The PowerShell module name matches the specific version of [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) release version. For example 
+- **ISHDeploy.12.0.0** targets the release of **12.0.0**
+
+Every cmdlet provides rich help that can be explored with the `Get-Help` PowerShell command.
+
+Additionally, a [documentation portal](https://github.com/sdl/ISHDeploy/) is available with the following content:
+- Getting started information.
+- Article base on various subjects e.g. *Integration with security token service*.
+- The online equivelant of each cmdlet's help.  
+
+## Requirements
 
 ISHDeploy requires the following to run:
 
-* [Powershell][ps] 4.0
-* Administrative rights
-* InfoShare Content Manager
+* [Powershell](https://msdn.microsoft.com/en-us/powershell/mt173057.aspx) version 4.0 or higher.
+* Administrative user rights.
+* An [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) content manager deployment.
 
-Requires [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) Content Manager.
+The cmdlets that query the deployment work with different versions but the ones that modify files don't. 
 
-Usage
------
-
-To use this module, it should me imported.
-
-```powershell
-Import-Module "ISHDeploy"
-
-$deployment = Get-ISHDeployment -Name 'InfoShare'
-
-Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "EventTab" -Description "New Event Tab"
-```
-
-Contributing
-------------
-
-{ Contribution section }
-
-More Info
-------------
-
-For more info please see:
-
-  * [Maintaining Versions][versions]
-  * [Module Layers Organization][layers]
-  * [How-To Publish Module][publish-module]
-
-
-# License
+## License
 Copyright (c) 2014 All Rights Reserved by the SDL Group.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,10 +56,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-
-[versions]: ./Notes/Maintain%20versions.md
-[layers]: ./Notes/Module%20Layers.md
-[publish-module]: ./Notes/Publish%20Module%20To%20PSGallery.md
-
-[ps]: https://msdn.microsoft.com/en-us/powershell/mt173057.aspx

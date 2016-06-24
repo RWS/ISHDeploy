@@ -5,11 +5,14 @@
     <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
     <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
     <Revision>0</Revision>
-    <ShortModuleVersion>$(Major).$(Minor).$(Build).$(Revision)</ShortModuleVersion>
-    <FullModuleVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleVersion>
-    <ModuleName>ISHDeploy.12.0.0</ModuleName>
+	<ModuleVersion>$(Major).$(Minor).0.$(Revision)</ModuleVersion>
+    <ModuleBuildVersion>$(Major).$(Minor).$(Build).$(Revision)</ModuleBuildVersion>
+    <FullModuleBuildVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleBuildVersion>
+	<ProductName>ISHDeploy</ProductName>
+    <SupportedCMVersion>12.0.0</SupportedCMVersion>	  
+    <ModuleName>$(ProductName).$(SupportedCMVersion)</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
-    <ModuleDescription>Deployment automation module for SDL Knowledge Center Content Manager 12.0.0</ModuleDescription>
+    <ModuleDescription>Deployment automation module for SDL Knowledge Center Content Manager $(SupportedCMVersion)</ModuleDescription>
     <ModuleCompany>SDL plc</ModuleCompany>
     <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>SDL plc. All rights reserved.</ModuleCopyright>
@@ -17,6 +20,6 @@
     <MinPowerShellVersion>3.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>
-    <DocPortalLink>https://sdl.github.io/$(ModuleName)</DocPortalLink>
+    <DocPortalLink>https://sdl.github.io/$(ProductName)/$(SupportedCMVersion)/</DocPortalLink>
   </PropertyGroup>
 </Project>

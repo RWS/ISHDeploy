@@ -74,10 +74,13 @@ $scriptBlockReadTargetXML = {
         $ValidationMode,
         $suffix,
         $xmlPath,
-        $absolutePath
+        $absolutePath,
+        $infosharewswebappname
     )
     #read all files that are touched with commandlet
     
+    [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
+    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
     $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
     [System.Xml.XmlDocument]$STSConfig = new-object System.Xml.XmlDocument
@@ -95,6 +98,7 @@ $scriptBlockReadTargetXML = {
     
     $result =  @{}
     #get variables and nodes from files
+    $result["wsWebConfigNodesCount"] = $wsWebConfig.SelectNodes("configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/serviceCredentials[@useIdentityConfiguration='true']/serviceCertificate[@findValue='$thumbprint']").Count
     $result["authorWebConfigNodesCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel.services/federationConfiguration/serviceCertificate/certificateReference[@findValue='$thumbprint']").Count
     $result["stsConfigNodesCount"] = $STSConfig.SelectNodes("infoShareSTS/initialize[@certificateThumbprint='$thumbprint']").Count
     $result["feedSDLLCConfigNodesCount"] = $FeedSDLLCConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/uri[@infoShareWSServiceCertificateValidationMode='$ValidationMode']").Count
@@ -122,7 +126,7 @@ $scriptBlockReadTargetXML = {
 	$existCommand.CommandType = [System.Data.CommandType]::Text
 	$existCommand.Connection = $connection
     $myServer = $env:COMPUTERNAME + "." + $env:USERDNSDOMAIN
-	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/ISHWS$suffix/Wcf/API20/Folder.svc")
+	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/$infosharewswebappname/Wcf/API20/Folder.svc")
 	$existCommand.CommandText = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=@realm"
 
 	#Execute Command
@@ -131,6 +135,9 @@ $scriptBlockReadTargetXML = {
 		$connection.Open()
 		$result["encryptingCertificate"] =$existCommand.ExecuteScalar().ToString()
 	}
+    catch{
+        Write-Host $Error
+    }
 	finally
 	{
 		$connection.Close()
@@ -144,11 +151,15 @@ function remoteReadTargetXML() {
         $thumbprint,
         $ValidationMode
     )
+    
+    $inputParameters = Get-InputParameters $testingDeploymentName
+    $infosharewswebappname = $inputParameters["infosharewswebappname"]
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname
 
 
     #get variables and nodes from files
+    $global:wsWebConfigNodesCount = $result["wsWebConfigNodesCount"]
     $global:authorWebConfigNodesCount = $result["authorWebConfigNodesCount"]
     $global:stsConfigNodesCount = $result["stsConfigNodesCount"]
     $global:feedSDLLCConfigNodesCount = $result["feedSDLLCConfigNodesCount"]
@@ -164,14 +175,7 @@ function remoteReadTargetXML() {
 Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
-        if(RemotePathCheck "$filepath\_Web.config")
-        {
-            if (RemotePathCheck "$filepath\Web.config")
-            {
-                RemoteRemoveItem "$filepath\Web.config"
-            }
-            RemoteRenameItem "$filepath\_Web.config" "Web.config"
-        }
+       ArtifactCleaner -filePath $filePath -fileName "web.config"
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
         WebRequestToSTS $testingDeploymentName
@@ -184,6 +188,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         #Assert
         remoteReadTargetXML -thumbprint $testThumbprint -ValidationMode "PeerOrChainTrust"
 
+        $wsWebConfigNodesCount | Should be 1
         $authorWebConfigNodesCount | Should be 1
         $stsConfigNodesCount | Should be 1
         $feedSDLLCConfigNodesCount | Should be 1
@@ -191,7 +196,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $synchronizeToLCConfigNodesCount | Should be 1
         $trisoftInfoShareClientConfigNode | Should be "PeerOrChainTrust"
         $connectionConfigNode | Should be "PeerOrChainTrust"
-        $Warning | Should be $null 
+        $Warning | Should be "This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated." 
         $encryptingCertificate | Should be $testEncriptedCertificate
     }
 
@@ -233,4 +238,5 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     }
 }
 
+Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

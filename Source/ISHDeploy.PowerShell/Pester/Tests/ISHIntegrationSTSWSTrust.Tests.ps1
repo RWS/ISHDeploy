@@ -26,6 +26,7 @@ $suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
+$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
 #endregion
 
 #region Script Blocks 
@@ -132,15 +133,7 @@ function readTargetXML() {
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
-
-        if(RemotePathCheck "$filepath\_Web.config")
-        {
-            if (RemotePathCheck "$filepath\Web.config")
-            {
-                RemoteRemoveItem "$filepath\Web.config"
-            }
-            RemoteRenameItem "$filepath\_Web.config" "Web.config"
-        }
+        ArtifactCleaner -filePath $filePath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -194,7 +187,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with wrong XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params
@@ -210,7 +202,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
     It "Set ISHIntegrationSTSWSTrust with no XML"{
         #Arrange
-        $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
         $params = @{Endpoint = "test"; MexEndpoint = "test"; BindingType  = "UserNameMixed"}
         Rename-Item "$filepath\Web.config"  "_Web.config"
 
@@ -389,4 +380,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

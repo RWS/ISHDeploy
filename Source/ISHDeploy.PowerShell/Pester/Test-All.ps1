@@ -1,8 +1,12 @@
 ﻿param(
 	$targetPC = $null,
 	$testingDeployment = "InfoShare",
+    [Parameter(Mandatory=$true)]
+    $testDataFilePath,
 	$outputFile
 	)
+
+& "$PSScriptRoot\Helpers\Init-TestData.ps1" -dataFilePath $testDataFilePath
 
 $DebugPreference = "SilentlyContinue"
 $VerbosePreference = "SilentlyContinue"

@@ -145,7 +145,7 @@ $scriptBlockGetInputParameters = {
     $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
     $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
     
-    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")#.ToString()
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")
 
     [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
     $inputParameters.load("$inputParametersPath\inputparameters.xml")
@@ -182,8 +182,8 @@ $scriptBlockRemoveCertificate= {
     )
     certutil -delstore my $thumbprint
 }
+
 #Stop WebAppPool
-Import-Module WebAdministration
 $scriptBlockStopWebAppPool = {
     param (
         [Parameter(Mandatory=$true)]
@@ -227,6 +227,25 @@ Function UndoDeployment
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }
 
+# Get Test Data variable
+Function Get-TestDataValue
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $valuePath
+    ) 
+
+    # Global variables
+    $testData = Get-Variable -Name "TestData" -Scope Global -ValueOnly
+    $value = $testData.$valuePath;
+    if (-not $value)
+    {
+        throw "Value `$valuePath` does not exists"
+    }
+
+    return $value
+}
+
 #Stop WebRequestToSTS
 $scriptBlockWebRequest = {
     param (
@@ -260,4 +279,23 @@ Function WebRequestToSTS
     $url = "$baseurl/$infosharestswebappname/"
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
+}
+
+Function ArtifactCleaner
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $filePath,
+		[Parameter(Mandatory=$true)]
+        $fileName
+    ) 
+    
+     if(RemotePathCheck "$filePath\_$fileName")
+        {
+            if (RemotePathCheck "$filePath\$fileName")
+            {
+                RemoteRemoveItem "$filePath\$fileName"
+            }
+            RemoteRenameItem "$filePath\_$fileName" "$fileName"
+        }
 }

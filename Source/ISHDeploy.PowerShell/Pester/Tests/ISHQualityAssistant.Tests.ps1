@@ -90,7 +90,7 @@ $precondition = readTargetXML
 
 Describe "Testing ISHUIQualityAssistant"{
     BeforeEach {
-		ArtifactCleaner -filePath $filePath -fileName "config.xml"
+		ArtifactCleaner -filePath $xmlPath -fileName "config.xml"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 

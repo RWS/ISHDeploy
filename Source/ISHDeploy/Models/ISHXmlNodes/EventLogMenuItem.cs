@@ -55,7 +55,7 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		public string Description { get; set; }
 
 		/// <summary>
-		/// Gets node comemnt if exiss
+		/// Gets node comment if exists
 		/// </summary>
 		public XComment GetNodeComment()
 		{

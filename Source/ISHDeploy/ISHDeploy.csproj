@@ -84,6 +84,7 @@
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\BasePathsOperation.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
@@ -169,6 +170,7 @@
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />

@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
+
+using System.Linq;
+using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHPackage;
 ﻿using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -61,7 +64,10 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 
             var result = operation.Run();
 
-            WriteObject(result);
+            foreach (var rp in result)
+            {
+                WriteObject(rp);
+            }
         }
     }
 }

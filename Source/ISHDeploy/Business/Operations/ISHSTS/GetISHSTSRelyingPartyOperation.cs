@@ -40,7 +40,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// The list of installed Content Manager deployments found on the current system.
         /// </summary>
-        private DataTable _resultRows;
+        private IEnumerable<RelyingParty> _resultRows;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHSTSRelyingPartyOperation" /> class.
@@ -76,13 +76,16 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             if (conditions.Count > 0)
             {
-                sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE %{x}"));
+                sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
             }
 
-            _invoker.AddAction(new SqlCompactGetAction(logger, 
+            _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
                     InfoShareSTSDataBase.ConnectionString,
-                    sqlQuery, 
-                    result => _resultRows = result));
+                    sqlQuery,
+                    result =>
+                    {
+                        _resultRows = result.Select(x => (RelyingParty) x);
+                    }));
         }
 
         /// <summary>
@@ -92,7 +95,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker.Invoke();
 
-            return _resultRows.Rows.Cast<RelyingParty>();
+            return _resultRows;
         }
     }
 }

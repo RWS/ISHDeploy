@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿﻿using System.Data;
-﻿using System.Security.Cryptography.X509Certificates;
+
+using System.Data;
 
 namespace ISHDeploy.Models.Structs.SQL
 {
@@ -24,14 +24,14 @@ namespace ISHDeploy.Models.Structs.SQL
     public class RelyingParty
     {
         /// <summary>
+        /// The relying party identifier
+        /// </summary>
+        public int Id;
+
+        /// <summary>
         /// The relying party name
         /// </summary>
         public string Name;
-
-        /// <summary>
-        /// The relying party identifier
-        /// </summary>
-        public string Identifier;
 
         /// <summary>
         /// If relying party is enabled
@@ -41,9 +41,7 @@ namespace ISHDeploy.Models.Structs.SQL
         /// <summary>
         /// The relying party encrypting certificate
         /// </summary>
-        //private X509Certificate EncryptingCertificate;
         public string EncryptingCertificate;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHDeployment" /> class.
@@ -52,30 +50,28 @@ namespace ISHDeploy.Models.Structs.SQL
         /// <param name="identifier">The relying party identifier.</param>
         /// <param name="enabled">if set to <c>true</c> then  relying party is enabled.</param>
         /// <param name="encryptingCertificate">The relying party encrypting certificate.</param>
-        public RelyingParty(string name, string identifier, bool enabled, /*X509Certificate*/ string encryptingCertificate)
+        public RelyingParty(int identifier, string name, bool enabled, string encryptingCertificate)
         {
+            Id = identifier;
             Name = name;
-            Identifier = identifier;
             Enabled = enabled;
             EncryptingCertificate = encryptingCertificate;
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="DataTable"/> to <see cref="RelyingParty"/>.
+        /// Performs an implicit conversion from <see cref="DataRow"/> to <see cref="RelyingParty"/>.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="row">The value.</param>
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        static public implicit operator RelyingParty(DataRow value)
+        static public explicit operator RelyingParty(DataRow row)
         {
-            string id = (string)value["Identifier"];
-            string name = (string)value["Name"];
-            bool enabled = (bool)value["Enabled"];
-            //X509Certificate cert = value["EncryptingCertificate"];
-            string cert = (string)value["EncryptingCertificate"];
-
-            return new RelyingParty(name, id, enabled, cert);
+            return new RelyingParty(
+                row.Field<int>("Id"),
+                row.Field<string>("Name"),
+                row.Field<bool>("Enabled"),
+                row["EncryptingCertificate"].ToString());
         }
     }
 }

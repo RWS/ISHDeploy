@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Models.Structs.SQL;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {
@@ -27,7 +31,7 @@ namespace ISHDeploy.Data.Actions.DataBase
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class SqlCompactGetAction : BaseActionWithResult<DataTable>, ISQLTransactionAction, IDisposable
+    public class SqlCompactSelectAction<T> : BaseActionWithResult<IEnumerable<DataRow>>, ISQLTransactionAction, IDisposable 
     {
         /// <summary>
         /// The SQL command executer.
@@ -46,7 +50,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
         /// <param name="query">The Transact-SQL statement, table name or stored procedure to execute at the data source.</param>
         /// <param name="result">The execution result.</param>
-        public SqlCompactGetAction(ILogger logger, string connectionString, string query, Action<DataTable> result)
+        public SqlCompactSelectAction(ILogger logger, string connectionString, string query, Action<IEnumerable<DataRow>> result)
             : base(logger, result)
         {
             _sqlCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, true);
@@ -56,11 +60,10 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// <summary>
         /// Executes current action.
         /// </summary>
-        protected override DataTable ExecuteWithResult()
+        protected override IEnumerable<DataRow> ExecuteWithResult()
         {
-            return _sqlCommandExecuter.ExecuteQuery(_query);
+            return _sqlCommandExecuter.ExecuteQuery(_query).Select();
         }
-
 
         /// <summary>
         /// Commit the SQL transaction

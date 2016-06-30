@@ -1,6 +1,6 @@
 # Version notes
  
-## 0.1-alpha1 (Pre-release)
+## alpha-0.1. (Pre-release)
 Initial release
  
 1. Working with deployments

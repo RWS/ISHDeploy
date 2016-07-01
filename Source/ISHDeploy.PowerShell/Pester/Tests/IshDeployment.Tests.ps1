@@ -120,6 +120,15 @@ Describe "Testing Get-ISHDeployment"{
         $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
         $deploy.ToString().Contains("OriginalParemeters") | Should be $False
     }
-
+	
+	It "Commandlets that accept ISHDeployment work with dev CM"{
+        #Arrange
+        $current = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetVersionValue -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, "13.0.2417.65534"
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName} | Should Not Throw
+		#Rollback
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetVersionValue -Session $session -ArgumentList $testingDeploymentName, $current 
+    }
 }
 

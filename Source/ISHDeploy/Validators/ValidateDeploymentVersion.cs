@@ -63,9 +63,26 @@ namespace ISHDeploy.Validators
 		/// <returns>True if versions correspond; otherwise False.</returns>
 		public static bool CheckDeploymentVersion(Version deploymentVersion, out string errorMessage)
 		{
-			errorMessage = null;
+            errorMessage = null;
+
+
+
+            //***************************************************************************************
+            // TODO Attention!!!!! Need to be removed before release
+            // OR story [TS-11041- ISHDeploy - Start using the -Force parameter] will be implemented. 
+            // TS-11395 hardcoded "13.0.*.65534" for 13 version only
+            //***************************************************************************************
+            Regex regex11395 = new Regex(@"13.0.\d+.65534");
+            if (regex11395.IsMatch(deploymentVersion.ToString()))
+            {
+                return true;
+            }
+
+
+
+
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
+            var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
 
 			Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
 			Version moduleVersion;

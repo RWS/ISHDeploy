@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHPackage;
 ﻿using ISHDeploy.Business.Operations.ISHSTS;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -38,19 +35,19 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     public class GetISHSTSRelyingPartyCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
-        /// <para type="description">Return relying parties for InfoShare.</para>
+        /// <para type="description">Flag to return relying parties for InfoShare.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Relying parties for InfoShare")]
         public SwitchParameter ISH { get; set; }
 
         /// <summary>
-        /// <para type="description">Return relying parties for LiveContent.</para>
+        /// <para type="description">Flag to return relying parties for LiveContent.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Relying parties for LiveContent")]
         public SwitchParameter LC { get; set; }
 
         /// <summary>
-        /// <para type="description">Return relying parties for BlueLion.</para>
+        /// <para type="description">Flag to return relying parties for BlueLion.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Relying parties for BlueLion")]
         public SwitchParameter BL { get; set; }

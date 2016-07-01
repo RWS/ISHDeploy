@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations
             public const string UpdateCertificateSQLCommandFormat = "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
 
             /// <summary>
-            /// The certificate update command in RelyingParties table
+            /// The select RelyingParties query
             /// </summary>
             public const string GetRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
 

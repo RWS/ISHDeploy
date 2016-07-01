@@ -19,7 +19,7 @@ using System.Data;
 namespace ISHDeploy.Models.Structs.SQL
 {
     /// <summary>
-    ///	<para type="description">Represents the installed Content Manager deployment.</para>
+    ///	<para type="description">Represents the configured Relying Party.</para>
     /// </summary>
     public class RelyingParty
     {
@@ -44,7 +44,7 @@ namespace ISHDeploy.Models.Structs.SQL
         public string EncryptingCertificate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ISHDeployment" /> class.
+        /// Initializes a new instance of the <see cref="RelyingParty" /> class.
         /// </summary>
         /// <param name="name">The relying party name.</param>
         /// <param name="identifier">The relying party identifier.</param>

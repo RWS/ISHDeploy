@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Data.Actions.DataBase;
@@ -26,7 +25,7 @@ using ISHDeploy.Models.Structs.SQL;
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
     /// <summary>
-    /// Gets the path to the packages folder
+    /// Gets the configured Relying Parties
     /// </summary>
     /// <seealso cref="BasePathsOperation" />
     /// <seealso cref="IOperation" />
@@ -38,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// The list of installed Content Manager deployments found on the current system.
+        /// The list of configured Relying Parties found.
         /// </summary>
         private IEnumerable<RelyingParty> _resultRows;
 

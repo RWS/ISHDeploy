@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
-using ISHDeploy.Models.Structs.SQL;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {

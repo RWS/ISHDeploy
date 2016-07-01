@@ -37,8 +37,6 @@ if (-not (Get-Module -ListAvailable -Name platyPS))
 }
 
 #create new index.md file based on last version from CHANGELOG.md file
-Write-Host "$FilePath\CHANGELOG.md"
-
 $subject = [IO.File]::ReadAllText("$FilePath\CHANGELOG.md")
 $regex = [regex] '##((.|\n)*?)(?=##)'
 $match = $regex.Match($subject);

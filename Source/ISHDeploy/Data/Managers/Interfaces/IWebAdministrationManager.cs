@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿namespace ISHDeploy.Data.Managers.Interfaces
+
+using ISHDeploy.Data.Exceptions;
+
+namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
     /// Implements web application management.
@@ -32,5 +35,19 @@
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
         void StopApplicationPool(string applicationPoolName);
+
+        /// <summary>
+        /// Enables the windows authentication.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
+        void EnableWindowsAuthentication(string webSiteName);
+
+        /// <summary>
+        /// Disables the windows authentication.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
+        void DisableWindowsAuthentication(string webSiteName);
     }
 }

@@ -65,7 +65,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         public override void Execute()
         {
             string updateSQLCommand =
-                $"UPDATE {_tableName} SET {String.Join(", ", _fields.Select(x => $"{x.Key} = '{x.Value}'"))} WHERE {$"Where {_key} = '{_fields[_key]}'"}";
+                $"UPDATE {_tableName} SET {String.Join(", ", _fields.Select(x => $"{x.Key} = '{x.Value}'"))} WHERE {$"{_key} = '{_fields[_key]}'"}";
 
             if (SQLCommandExecuter.ExecuteNonQuery(updateSQLCommand) == 0)
             {

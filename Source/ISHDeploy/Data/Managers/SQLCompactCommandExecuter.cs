@@ -80,7 +80,11 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = commandText;
 
-            _connection.Open();
+            if (_connection.State != ConnectionState.Open)
+            {
+                _connection.Open();
+            }
+
             if (_useTransaction)
             {
                 _transaction = _connection.BeginTransaction();
@@ -103,7 +107,11 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = sqlQuery;
 
-            _connection.Open();
+            if (_connection.State != ConnectionState.Open)
+            { 
+                _connection.Open();
+            }
+
             if (_useTransaction)
             {
                 _transaction = _connection.BeginTransaction();

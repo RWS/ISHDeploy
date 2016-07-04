@@ -10,7 +10,7 @@
 
 #create new index.md file based on last version from CHANGELOG.md file
 $subject = Get-Content "$FilePath\CHANGELOG.md"
-$resutl = Get-Content "$FilePath\index.md"
+$result = Get-Content "$FilePath\index.md"
 $flag = $false
 foreach ($str in $subject) {
     if ($str.StartsWith("##")){
@@ -20,7 +20,7 @@ foreach ($str in $subject) {
         $flag = $true
     }
     If($flag){
-        $resutl += $str
+        $result += $str
     }
 }
-$resutl + "Please review the module's entire [history](CHANGELOG.md)." | Set-Content "$ExportPath\index.md"
+$result + "Please review the module's entire [history](CHANGELOG.md)." | Set-Content "$ExportPath\index.md"

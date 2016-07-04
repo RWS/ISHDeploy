@@ -7,10 +7,7 @@
     $ModuleName,
     [Parameter(Mandatory=$true)]
     [string]
-    $ExportPath,
-    [Parameter(Mandatory=$true)]
-    [string]
-    $FilePath
+    $ExportPath
 )
 #$DebugPreference="Continue"
 #$VerbosePreference="Continue"
@@ -35,12 +32,6 @@ if (-not (Get-Module -ListAvailable -Name platyPS))
 	For powershell version smaller or equal to 4 you need to install PackageManagement https://www.microsoft.com/en-us/download/details.aspx?id=49186"
     exit 1
 }
-
-#create new index.md file based on last version from CHANGELOG.md file
-$subject = [IO.File]::ReadAllText("$FilePath\CHANGELOG.md")
-$regex = [regex] '##((.|\n)*?)(?=##)'
-$match = $regex.Match($subject);
-[IO.File]::ReadAllText("$FilePath\IndexTemplate.txt") + $match + "Please review the module's entire [history](CHANGELOG.md)." | Set-Content "$FilePath\index.md"
 
 try
 {

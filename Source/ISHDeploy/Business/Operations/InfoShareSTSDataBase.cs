@@ -55,6 +55,11 @@ namespace ISHDeploy.Business.Operations
             public const string GetRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
 
             /// <summary>
+            /// The Insert/Update RelyingParties query
+            /// </summary>
+            public const string InsertUpdateRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
+
+            /// <summary>
             /// Gets the array of SVC paths.
             /// </summary>
             /// <value>

@@ -24,11 +24,11 @@ using ISHDeploy.Interfaces.Actions;
 namespace ISHDeploy.Data.Actions.DataBase
 {
     /// <summary>
-	/// Action that run update SQL command.
+	/// Action that run select SQL command.
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class SqlCompactSelectAction<T> : BaseActionWithResult<IEnumerable<DataRow>>, ISQLTransactionAction, IDisposable 
+    public class SqlCompactSelectAction : BaseActionWithResult<IEnumerable<DataRow>>, IDisposable 
     {
         /// <summary>
         /// The SQL command executer.
@@ -41,7 +41,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         private readonly string _query;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlCompactUpdateAction" /> class.
+        /// Initializes a new instance of the <see cref="SqlCompactSelectAction" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
@@ -60,22 +60,6 @@ namespace ISHDeploy.Data.Actions.DataBase
         protected override IEnumerable<DataRow> ExecuteWithResult()
         {
             return _sqlCommandExecuter.ExecuteQuery(_query).Select();
-        }
-
-        /// <summary>
-        /// Commit the SQL transaction
-        /// </summary>
-        public void TransactionCommit()
-        {
-            _sqlCommandExecuter.TransactionCommit();
-        }
-
-        /// <summary>
-        /// Rollback the SQL transaction
-        /// </summary>
-        public void TransactionRollback()
-        {
-            _sqlCommandExecuter.TransactionRollback();
         }
 
         /// <summary>

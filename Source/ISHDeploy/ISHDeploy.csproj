@@ -180,6 +180,7 @@
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
+    <Compile Include="Data\Actions\DataBase\DataRowToModelMapper.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactUpdateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
@@ -268,7 +269,7 @@
     <Compile Include="Models\ISHXmlNodes\EventLogMenuItem.cs" />
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
-    <Compile Include="Models\Structs\SQL\RelyingParty.cs" />
+    <Compile Include="Models\SQL\RelyingParty.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

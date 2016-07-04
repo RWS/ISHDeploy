@@ -15,20 +15,21 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
+using static ISHDeploy.Data.Actions.DataBase.DataRowToModelMapper;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {
     /// <summary>
-	/// Action that run update SQL command.
+	/// Action that run select SQL command.
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class SqlCompactSelectAction<T> : BaseActionWithResult<IEnumerable<DataRow>>, ISQLTransactionAction, IDisposable 
+    public class SqlCompactSelectAction<T> : BaseActionWithResult<IEnumerable<T>>, IDisposable where T : class
     {
         /// <summary>
         /// The SQL command executer.
@@ -41,13 +42,13 @@ namespace ISHDeploy.Data.Actions.DataBase
         private readonly string _query;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlCompactUpdateAction" /> class.
+        /// Initializes a new instance of the <see cref="SqlCompactSelectAction" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
         /// <param name="query">The Transact-SQL statement, table name or stored procedure to execute at the data source.</param>
         /// <param name="result">The execution result.</param>
-        public SqlCompactSelectAction(ILogger logger, string connectionString, string query, Action<IEnumerable<DataRow>> result)
+        public SqlCompactSelectAction(ILogger logger, string connectionString, string query, Action<IEnumerable<T>> result)
             : base(logger, result)
         {
             _sqlCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, true);
@@ -57,25 +58,9 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// <summary>
         /// Executes current action.
         /// </summary>
-        protected override IEnumerable<DataRow> ExecuteWithResult()
+        protected override IEnumerable<T> ExecuteWithResult()
         {
-            return _sqlCommandExecuter.ExecuteQuery(_query).Select();
-        }
-
-        /// <summary>
-        /// Commit the SQL transaction
-        /// </summary>
-        public void TransactionCommit()
-        {
-            _sqlCommandExecuter.TransactionCommit();
-        }
-
-        /// <summary>
-        /// Rollback the SQL transaction
-        /// </summary>
-        public void TransactionRollback()
-        {
-            _sqlCommandExecuter.TransactionRollback();
+            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(x => Map<T>(x));
         }
 
         /// <summary>

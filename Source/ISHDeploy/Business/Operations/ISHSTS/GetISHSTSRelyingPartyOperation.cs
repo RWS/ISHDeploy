@@ -20,7 +20,7 @@ using System.Linq;
 using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Data.Actions.DataBase;
 ﻿using ISHDeploy.Interfaces;
-using ISHDeploy.Models.Structs.SQL;
+using ISHDeploy.Models.SQL;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -83,7 +83,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     sqlQuery,
                     result =>
                     {
-                        _resultRows = result.Select(x => (RelyingParty) x);
+                        _resultRows = result;
                     }));
         }
 

@@ -32,6 +32,8 @@ try
         Write-Verbose "Copyied $($_.FullName) to $objPath"
     }
 
+    . "$PSScriptRoot\Copy-Changelog.ps1" -FilePath "$sourcePath" -ExportPath "$objPath"
+
 	$rootItems=Get-ChildItem $objPath -Filter "*.md"
 
 	$rootItems | ForEach-Object {

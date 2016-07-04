@@ -70,14 +70,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
             _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
-                        InfoShareSTSDataBase.ConnectionString,
+                        //InfoShareSTSDataBase.ConnectionString,
+                        $"Data Source = C:\\ISHSandbox\\WebSQL2014\\InfoShareSTS\\App_Data\\IdentityServerConfiguration-2.2.sdf",
                         InfoShareSTSDataBase.RelyingPartyTableName,
                         "Realm",
                         new Dictionary <string, object>
                         {
                             { "Name", $"{relyingPartyType}: {name}"},
                             { "Realm", realm},
-                            { "EncryptionCertificate", encryptionCertificate},
+                            { "EncryptingCertificate", encryptionCertificate},
                             { "Enabled", 1},
                             { "TokenLifeTime", 0}
                         }));

@@ -182,9 +182,10 @@
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
-    <Compile Include="Data\Actions\DataBase\DataRowToModelMapper.cs" />
+    <Compile Include="Data\Actions\DataBase\Mapper\DataRowToModelMapper.cs" />
+    <Compile Include="Data\Actions\DataBase\SqlCompactInsertUpdateAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
-    <Compile Include="Data\Actions\DataBase\SqlCompactUpdateAction.cs" />
+    <Compile Include="Data\Actions\DataBase\SqlCompactExecuteAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
     <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
     <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />

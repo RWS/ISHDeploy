@@ -2,7 +2,7 @@
 using System.Data;
 using System.Reflection;
 
-namespace ISHDeploy.Data.Actions.DataBase
+namespace ISHDeploy.Data.Actions.DataBase.Mapper
 {
     /// <summary>
     /// Casts data from DataRow to specified type

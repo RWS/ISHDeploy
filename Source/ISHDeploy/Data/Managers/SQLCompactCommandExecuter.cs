@@ -73,21 +73,12 @@ namespace ISHDeploy.Data.Managers
         /// Executes a Transact-SQL statement against the connection.
         /// </summary>
         /// <param name="commandText">The SQL command as text</param>
-        /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
-        public int ExecuteNonQuery(string commandText, List<object> parameters = null)
+        public int ExecuteNonQuery(string commandText)
         {
             _command = _connection.CreateCommand();
             _command.CommandType = CommandType.Text;
-
-            if (parameters != null)
-            {
-                _command.CommandText = string.Format(commandText, parameters.ToArray());
-            }
-            else
-            {
-                _command.CommandText = commandText;
-            }
+            _command.CommandText = commandText;
 
             _connection.Open();
             if (_useTransaction)

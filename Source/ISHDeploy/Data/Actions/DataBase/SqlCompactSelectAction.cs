@@ -20,7 +20,6 @@ using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
-using static ISHDeploy.Data.Actions.DataBase.DataRowToModelMapper;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {
@@ -60,7 +59,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         protected override IEnumerable<T> ExecuteWithResult()
         {
-            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(x => Map<T>(x));
+            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(x => DataRowToModelMapper.Map<T>(x));
         }
 
         /// <summary>

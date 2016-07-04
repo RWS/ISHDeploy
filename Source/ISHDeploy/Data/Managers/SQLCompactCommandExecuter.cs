@@ -102,6 +102,37 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Executes a Transact-SQL statement against the connection.
+        /// </summary>
+        /// <param name="sqlQuery">The SQL command as text</param>
+        /// <returns>The number of rows affected</returns>
+        public DataTable ExecuteQuery(string sqlQuery)
+        {
+            _command = _connection.CreateCommand();
+            _command.CommandType = CommandType.Text;
+            _command.CommandText = sqlQuery;
+
+            _connection.Open();
+            if (_useTransaction)
+            {
+                _transaction = _connection.BeginTransaction();
+            }
+
+            _logger.WriteDebug($"Executing command {_command.CommandText}.");
+
+            //Create a new DataTable.
+            DataTable resultTable = new DataTable();
+
+            using (SqlCeDataReader sqlReader = _command.ExecuteReader())
+            {
+                //Load DataReader into the DataTable.
+                resultTable.Load(sqlReader);
+            }
+
+            return resultTable;
+        }
+
+        /// <summary>
         /// Rollback the SQL transaction
         /// </summary>
         public void TransactionRollback()

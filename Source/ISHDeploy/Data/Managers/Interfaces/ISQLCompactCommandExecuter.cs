@@ -15,6 +15,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -35,6 +36,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
         int ExecuteNonQuery(string commandText, List<object> parameters = null);
+
+        /// <summary>
+        /// Executes a Transact-SQL statement against the connection.
+        /// </summary>
+        /// <param name="sqlQuery">The SQL command as text</param>
+        /// <returns>
+        /// The number of rows affected
+        /// </returns>
+        DataTable ExecuteQuery(string sqlQuery);
 
         /// <summary>
         /// Rollback the SQL transaction

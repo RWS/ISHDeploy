@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Data.Actions.DataBase;
 ﻿using ISHDeploy.Interfaces;
-using ISHDeploy.Models.Structs.SQL;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -29,84 +29,27 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <seealso cref="IOperation" />
     public class SetISHSTSRelyingPartyOperation : BasePathsOperation
     {
-        /*
-        <# 
-         .Synopsis
-          Adds a Relying Party to InfoShareSTS configuration.
-
-         .Description
-          Adds a Relying Party to InfoShareSTS configuration..
-
-         .Parameter Name
-          The name of the Relying Party
-
-         .Parameter Realm
-          The realm of the Relying Party.
-
-         .Parameter EncryptingCertificate
-          The encrypting certificate if the relying party is for a WCF service.
-
-         .Example
-           AddRelyingParty InfoShareAuthor https://url/InfoShareAuthor/
-
-        #>
-        function Add-RelyingParty($name,$realm,$encryptingCertificate)
+        /// <summary>
+        /// Operation type enum
+        ///	<para type="description">Enumeration of Relying parties Types.</para>
+        /// </summary>
+        public enum RelyingPartyType
         {
-            #Trace
-            $parametersMessage=RenderKeyValue "name" $name
-            $parametersMessage+=RenderKeyValue "realm" $realm
-            $parametersMessage+=RenderKeyValue "encryptingCertificate" $encryptingCertificate
-            WriteVerboseWithHeaderFooter "Add-RelyingParty Parameters" $parametersMessage
+            /// <summary>
+            /// Flag to identify Info Share
+            /// </summary>
+            ISH,
 
-            #Prepare Database Connection and Command
-            $connection = New-Object "System.Data.SqlServerCe.SqlCeConnection" $connectionString
-            $addCommand = New-Object "System.Data.SqlServerCe.SqlCeCommand"
-            $addCommand.CommandType = [System.Data.CommandType]::Text
-            $addCommand.Connection = $connection
-            $parameter=$addCommand.Parameters.Add("@name",$name)
-            $parameter=$addCommand.Parameters.Add("@realm",$realm)
-            if($encryptingCertificate -eq $null)
-            {
-                $parameter=$addCommand.Parameters.Add("encryptingCertificate",[System.DBNull]::Value)
-            }
-            else
-            {
-                $parameter=$addCommand.Parameters.Add("encryptingCertificate",$encryptingCertificate)	
-            }
-            $addCommand.CommandText = "INSERT RelyingParties (Name,Enabled,Realm,TokenLifeTime,EncryptingCertificate) VALUES (@name,1,@realm,0,@encryptingCertificate)"
+            /// <summary>
+            /// Flag to identify Live Content
+            /// </summary>
+            LC,
 
-            $existCommand = New-Object "System.Data.SqlServerCe.SqlCeCommand"
-            $existCommand.CommandType = [System.Data.CommandType]::Text
-            $existCommand.Connection = $connection
-            $parameter=$existCommand.Parameters.Add("@realm",$realm)
-            $existCommand.CommandText = "SELECT COUNT(Name) FROM RelyingParties WHERE Realm=@realm"
-
-            #Execute Command
-            try
-            {
-                $connection.Open()
-                $existingRelyingPartiesCount=$existCommand.ExecuteScalar()
-
-                if($existingRelyingPartiesCount -eq 0)
-                {
-                    $addedRelyingPartiesCount=$addCommand.ExecuteNonQuery()
-                }
-                else
-                {
-                    Write-Warning "Relying Party $realm already exists"
-                }
-            }
-            finally
-            {
-                $connection.Close()
-                $connection.Dispose()
-            }
-            if($addedRelyingPartiesCount -ge 1)
-            {
-                Write-Host "Relying Party $realm added"
-            } 
+            /// <summary>
+            /// Flag to identify Blue Lion
+            /// </summary>
+            BL
         }
-        */
 
         /// <summary>
         /// The actions invoker
@@ -118,21 +61,26 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="Name">The name.</param>
-        /// <param name="Realm">The realm.</param>
-        /// <param name="RPtype">The relying party type.</param>
-        /// <param name="EncryptionCertificate">The encryption certificate.</param>
-        public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string Name, string Realm, string RPtype, string EncryptionCertificate):
+        /// <param name="name">The name.</param>
+        /// <param name="realm">The realm.</param>
+        /// <param name="relyingPartyType">The relying party type.</param>
+        /// <param name="encryptionCertificate">The encryption certificate.</param>
+        public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string realm, RelyingPartyType relyingPartyType, string encryptionCertificate):
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
-
-            string sqlQuery = InfoShareSTSDataBase.InsertUpdateRelyingPartySQLCommandFormat;
-
-            _invoker.AddAction(new SqlCompactUpdateAction(logger,
-                    InfoShareSTSDataBase.ConnectionString,
-                    sqlQuery,
-                    new List<object>()));
+            _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
+                        InfoShareSTSDataBase.ConnectionString,
+                        InfoShareSTSDataBase.RelyingPartyTableName,
+                        "Realm",
+                        new Dictionary <string, object>
+                        {
+                            { "Name", $"{relyingPartyType}: {name}"},
+                            { "Realm", realm},
+                            { "EncryptionCertificate", encryptionCertificate},
+                            { "Enabled", 1},
+                            { "TokenLifeTime", 0}
+                        }));
         }
 
         /// <summary>

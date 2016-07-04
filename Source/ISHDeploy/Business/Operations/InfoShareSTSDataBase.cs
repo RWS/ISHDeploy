@@ -45,6 +45,11 @@ namespace ISHDeploy.Business.Operations
             public static string ConnectionString => $"Data Source = {Path.AbsolutePath}";
 
             /// <summary>
+            /// Relying Party table name
+            /// </summary>
+            public const string RelyingPartyTableName = "RelyingParties";
+
+            /// <summary>
             /// The certificate update command in RelyingParties table
             /// </summary>
             public const string UpdateCertificateSQLCommandFormat = "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
@@ -53,11 +58,6 @@ namespace ISHDeploy.Business.Operations
             /// The select RelyingParties query
             /// </summary>
             public const string GetRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
-
-            /// <summary>
-            /// The Insert/Update RelyingParties query
-            /// </summary>
-            public const string InsertUpdateRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
 
             /// <summary>
             /// Gets the array of SVC paths.

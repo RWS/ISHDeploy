@@ -72,8 +72,22 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            //var operation = new SetISHSTSRelyingPartyOperation(Logger, ISHDeployment, LC, BL);
-            var operation = new SetISHSTSRelyingPartyOperation(Logger, ISHDeployment, Name, Realm, "", EncryptionCertificate);
+            SetISHSTSRelyingPartyOperation.RelyingPartyType relyingPartyType;
+
+            if (LC)
+            {
+                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.LC;
+            }
+            else if (BL)
+            {
+                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.BL;
+            }
+            else
+            {
+                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.ISH;
+            }
+
+            var operation = new SetISHSTSRelyingPartyOperation(Logger, ISHDeployment, Name, Realm, relyingPartyType, EncryptionCertificate);
 
             operation.Run();
         }

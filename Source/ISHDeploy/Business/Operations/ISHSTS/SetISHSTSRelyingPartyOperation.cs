@@ -66,7 +66,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHSTSRelyingPartyOperation" /> class.
+        /// Initializes a new instance of the <see cref="SetISHSTSRelyingPartyOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
@@ -77,7 +77,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string realm, RelyingPartyType relyingPartyType, string encryptingCertificate) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
+            _invoker = new ActionInvoker(logger, "Setting the relying parties");
 
             string relyingPartyTypePrefix;
             if (relyingPartyType == RelyingPartyType.None)
@@ -107,7 +107,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
                         InfoShareSTSDataBase.ConnectionString,
-                        InfoShareSTSDataBase.RelyingPartyTableName,
+                        InfoShareSTSDataBase.RelyingPartiesTableName,
                         "Realm",
                         new Dictionary <string, object>
                         {

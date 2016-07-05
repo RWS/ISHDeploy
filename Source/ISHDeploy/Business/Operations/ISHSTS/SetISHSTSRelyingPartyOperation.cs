@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Data.Actions.DataBase;
+using ISHDeploy.Data.Actions.Assert;
+using ISHDeploy.Data.Actions.DataBase;
 ﻿using ISHDeploy.Interfaces;
+using ISHDeploy.Models.SQL;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -36,7 +39,13 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public enum RelyingPartyType
         {
             /// <summary>
+            /// Flag to identify that none prefixes should be set
+            /// </summary>
+            None,
+
+            /// <summary>
             /// Flag to identify Info Share
+            /// Used in only seeded configurations
             /// </summary>
             ISH,
 
@@ -64,21 +73,47 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="name">The name.</param>
         /// <param name="realm">The realm.</param>
         /// <param name="relyingPartyType">The relying party type.</param>
-        /// <param name="encryptionCertificate">The encryption certificate.</param>
-        public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string realm, RelyingPartyType relyingPartyType, string encryptionCertificate):
+        /// <param name="encryptingCertificate">The encryption certificate.</param>
+        public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string realm, RelyingPartyType relyingPartyType, string encryptingCertificate) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
+
+            string relyingPartyTypePrefix;
+            if (relyingPartyType == RelyingPartyType.None)
+            {
+                relyingPartyTypePrefix = Regex.Match(name, @"^(?<prefix>[A-Z]+)\:").Groups["prefix"].Value;
+            }
+            else
+            {
+                relyingPartyTypePrefix = relyingPartyType.ToString();
+            }
+
+            if (!string.IsNullOrEmpty(relyingPartyTypePrefix))
+            {
+                int resultRowsCount = 0;
+                _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
+                    InfoShareSTSDataBase.ConnectionString,
+                    $"{InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat} WHERE Realm ='{realm}' AND Name NOT LIKE '{relyingPartyTypePrefix}:%'",
+                    result =>
+                    {
+                        resultRowsCount = result.Count();
+                    }));
+
+                _invoker.AddAction(new AssertAction(logger,
+                    () => (resultRowsCount != 0),
+                    $"Relying party prerfix can not be changed to '{relyingPartyTypePrefix}'."));
+            }
+
             _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
-                        //InfoShareSTSDataBase.ConnectionString,
-                        $"Data Source = C:\\ISHSandbox\\WebSQL2014\\InfoShareSTS\\App_Data\\IdentityServerConfiguration-2.2.sdf",
+                        InfoShareSTSDataBase.ConnectionString,
                         InfoShareSTSDataBase.RelyingPartyTableName,
                         "Realm",
                         new Dictionary <string, object>
                         {
-                            { "Name", $"{relyingPartyType}: {name}"},
+                            { "Name", (relyingPartyType == RelyingPartyType.None) ? name : $"{relyingPartyType}: {name}"},
                             { "Realm", realm},
-                            { "EncryptingCertificate", encryptionCertificate},
+                            { "EncryptingCertificate", encryptingCertificate},
                             { "Enabled", 1},
                             { "TokenLifeTime", 0}
                         }));

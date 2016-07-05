@@ -24,11 +24,16 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <para type="description">The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "BL: WCF" -Realm "https://realm.example.com/BL/wcf/"</code>
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "LC: WCF" -Realm "https://realm.example.com/LC/wcf/"</code>
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "AL: Wcf/API/TestWithCertificate" -Realm "https://realm.example.com/wcf/Api/Test" -EncryptingCertificate "EncryptingCertificateSample="</code>
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "QL: Wcf/API/Test" -Realm "https://realm.example.com/wcf/Api/Test"</code>
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Wcf/API/TestWithCertificate/" -Realm "https://realm.example.com/wcf/Api/Test" -EncryptingCertificate "EncryptingCertificateSample="</code>/// 
+    /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Wcf/API/Test" -Realm "https://realm.example.com/wcf/Api/Test"</code>
     /// <para>This command gets t all relying parties from the infosharests database.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// 
+    /// <para>TODO: Describe why it does not work with different prefixed when changing it
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSRelyingParty")]
@@ -51,43 +56,46 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// <summary>
         /// <para type="description">Flag to set relying party for LiveContent.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Relying parties for LiveContent")]
+        [Parameter(Mandatory = true, ParameterSetName = "LC", HelpMessage = "Relying parties for LiveContent")]
         public SwitchParameter LC { get; set; }
 
         /// <summary>
         /// <para type="description">Flag to set relying party for BlueLion.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Relying parties for BlueLion")]
+        [Parameter(Mandatory = true, ParameterSetName = "BL", HelpMessage = "Relying parties for BlueLion")]
         public SwitchParameter BL { get; set; }
 
         /// <summary>
         /// <para type="description">Relying party encryption certificate.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Relying party encryption certificate.")]
+        [Parameter(Mandatory = false, ParameterSetName = "Active", HelpMessage = "Relying party encryption certificate.")]
         [ValidateNotNullOrEmpty]
-        public string EncryptionCertificate { get; set; }
+        public string EncryptingCertificate { get; set; }
+
+        private SetISHSTSRelyingPartyOperation.RelyingPartyType RelyingPartyType
+        {
+            get
+            {
+                if (LC)
+                {
+                    return SetISHSTSRelyingPartyOperation.RelyingPartyType.LC;
+                }
+
+                if (BL)
+                {
+                    return SetISHSTSRelyingPartyOperation.RelyingPartyType.BL;
+                }
+
+                return SetISHSTSRelyingPartyOperation.RelyingPartyType.None;
+            }
+        }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            SetISHSTSRelyingPartyOperation.RelyingPartyType relyingPartyType;
-
-            if (LC)
-            {
-                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.LC;
-            }
-            else if (BL)
-            {
-                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.BL;
-            }
-            else
-            {
-                relyingPartyType = SetISHSTSRelyingPartyOperation.RelyingPartyType.ISH;
-            }
-
-            var operation = new SetISHSTSRelyingPartyOperation(Logger, ISHDeployment, Name, Realm, relyingPartyType, EncryptionCertificate);
+            var operation = new SetISHSTSRelyingPartyOperation(Logger, ISHDeployment, Name, Realm, RelyingPartyType, EncryptingCertificate);
 
             operation.Run();
         }

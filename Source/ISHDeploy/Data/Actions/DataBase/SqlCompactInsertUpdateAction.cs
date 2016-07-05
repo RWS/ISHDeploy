@@ -49,10 +49,10 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
         /// <param name="tableName">Name of the table.</param>
-        /// <param name="fields">The fields.</param>
         /// <param name="key">The key.</param>
-        public SqlCompactInsertUpdateAction(ILogger logger, string connectionString, string tableName, string key, Dictionary<string, object> fields) 
-			: base(logger, connectionString, "")
+        /// <param name="fields">The fields.</param>
+        public SqlCompactInsertUpdateAction(ILogger logger, string connectionString, string tableName, string key, Dictionary<string, object> fields)
+            : base(logger, connectionString, "")
         {
             _tableName = tableName;
             _fields = fields;
@@ -65,12 +65,12 @@ namespace ISHDeploy.Data.Actions.DataBase
         public override void Execute()
         {
             string updateSQLCommand =
-                $"UPDATE {_tableName} SET {String.Join(", ", _fields.Select(x => $"{x.Key} = '{x.Value}'"))} WHERE {$"{_key} = '{_fields[_key]}'"}";
+                $"UPDATE {_tableName} SET {string.Join(", ", _fields.Select(x => $"{x.Key} = '{x.Value}'"))} WHERE {$"{_key} = '{_fields[_key]}'"}";
 
             if (SQLCommandExecuter.ExecuteNonQuery(updateSQLCommand) == 0)
             {
                 string insertSQLCommand =
-                    $"INSERT INTO {_tableName} ({String.Join(", ", _fields.Keys)}) VALUES ({String.Join(", ", _fields.Values.Select(x => $"'{x}'"))})";
+                    $"INSERT INTO {_tableName} ({string.Join(", ", _fields.Keys)}) VALUES ({string.Join(", ", _fields.Values.Select(x => $"'{x}'"))})";
 
                 SQLCommandExecuter.ExecuteNonQuery(insertSQLCommand);
             }

@@ -45,9 +45,9 @@ namespace ISHDeploy.Business.Operations
             public static string ConnectionString => $"Data Source = {Path.AbsolutePath}";
 
             /// <summary>
-            /// Relying Party table name
+            /// Relying Parties table name
             /// </summary>
-            public const string RelyingPartyTableName = "RelyingParties";
+            public const string RelyingPartiesTableName = "RelyingParties";
 
             /// <summary>
             /// The certificate update command in RelyingParties table

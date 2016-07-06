@@ -1,6 +1,6 @@
 # Introduction
 
-**{ModuleName}** is a PowerShell module that enables the **code as configuration** concept for [SDL](https://sdl.com/)'s [Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) **Content Manager** service. 
+**{ModuleName}** is a PowerShell module that enables the **code as configuration** concept for [SDL](https://sdl.com/)'s [Knowledge Center {Year}](http://www.sdl.com/download/sdl-knowledge-center/60978/) **Content Manager** service. 
 With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments. 
 
 As a very brief example the following script sets the license and enables the **Content Editor** for the default deployment.

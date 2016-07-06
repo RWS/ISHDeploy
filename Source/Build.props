@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Major>0</Major>
     <Minor>1</Minor>
-		<Year>2016</Year>
+    <Year>2016</Year>
     <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
     <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
     <Revision>0</Revision>

@@ -135,15 +135,8 @@ function remoteReadTargetXML() {
 
 Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
-        if(RemotePathCheck "$filepath\_Web.config")
-        {
-            if (RemotePathCheck "$filepath\Web.config")
-            {
-                RemoteRemoveItem "$filepath\Web.config"
-            }
-            RemoteRenameItem "$filepath\_Web.config" "Web.config"
-        }
-
+        StopPool -projectName $testingDeploymentName
+        ArtifactCleaner -filePath $filePath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -363,4 +356,6 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigThumbprint | Should be "testThumbprint222"
         $stsWebConfigNodesCount | Should be 1
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

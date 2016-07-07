@@ -18,7 +18,6 @@ using System.Management.Automation;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using System.Linq;
 
 namespace ISHDeploy.Cmdlets
 {

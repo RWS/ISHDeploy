@@ -40,8 +40,7 @@ try
 
 	Write-Verbose "Processing maml file ($MamlFilePath)"
 	# Generating markdown form maml file
-	[string]$mamlContent = Get-Content $MamlFilePath
-	Get-PlatyPSMarkdown -maml $mamlContent -OneFilePerCommand -OutputFolder $ExportPath
+	New-MarkdownHelp -MamlFile  $MamlFilePath -OutputFolder $ExportPath
 
 	if(!(Test-Path $ExportPath ))
 	{

@@ -6,10 +6,11 @@
 
 $computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
-
 #region variables
-
 $packageFileName = "testFileName"
+
+# Test variables
+$domain = Get-TestDataValue "testDomain"
 
 # Script block for getting ISH deployment
 $scriptBlockGetDeployment = {
@@ -134,8 +135,8 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         RemotePathCheck "$packagePath\tmp\ishws.cer" | Should be $true
         RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
     }
 
     It "Save same package"{
@@ -159,8 +160,8 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         RemotePathCheck "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
         $scriptFile = Get-Content "$packagePath\tmp\Invoke-ADFSIntegrationISH.ps1"
         
         $scriptFile -contains '$projectsuffix="' + $suffix +'"' | Should be $true
@@ -188,8 +189,8 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $certFile = Get-Content "$packagePath\tmp\ishws.cer"
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
         $Mdfile.ToString() -contains $certFile.ToString() | Should be $true
     }
 
@@ -203,8 +204,8 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
         RemotePathCheck "$packagePath\tmp\CM Security Token Service Requirements.md" | Should be $true
         $Mdfile = Get-Content "$packagePath\tmp\CM Security Token Service Requirements.md"
         $certFile = Get-Content "$packagePath\tmp\ishws.cer"
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
-        $Mdfile -contains "https://$computerName.global.sdl.corp/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API25/Application.svc" | Should be $true
+        $Mdfile -contains "https://$computerName.$domain/"+$testingDeployment.WebAppNameWS+"/Wcf/API/ConditionManagement.svc" | Should be $true
         $Mdfile.ToString() -contains $certFile.ToString() | Should be $true
     }
 
@@ -217,4 +218,6 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 Save-ISHIntegrationSTSConfigurationPackage -FileName "package_adfs.zip" -ISHDeployment $deployment -ADFS'
        
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }

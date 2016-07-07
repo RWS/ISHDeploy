@@ -102,7 +102,9 @@ function readTargetXML() {
 
 
 Describe "Testing ISHExternalPreview"{
-    BeforeEach {
+    BeforeEach {    
+        StopPool -projectName $testingDeploymentName
+		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     }
 
@@ -263,5 +265,7 @@ Describe "Testing ISHExternalPreview"{
 		#Assert
         $result | Should Be "Disabled"
     }
+
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
     
 }

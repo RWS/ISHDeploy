@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 using System;
-using ISHDeploy.Data.Managers;
+using System.Net;
+using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
@@ -22,16 +23,21 @@ using ISHDeploy.Interfaces.Actions;
 namespace ISHDeploy.Data.Actions.DataBase
 {
     /// <summary>
-	/// Action that run update SQL command.
+	/// Action that Checks if database file exists, otherwise runs webrequest to create file automatically.
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
     public class SqlCompactEnsureDataBaseExistsAction : BaseAction, IDisposable
     {
         /// <summary>
-        /// The SQL command text.
+        /// Path to database File.
         /// </summary>
         private readonly string _dbFilePath;
+
+        /// <summary>
+        /// Base Url for webRequest
+        /// </summary>
+        private readonly string _baseUrl;
 
         /// <summary>
         /// The file manager
@@ -43,10 +49,12 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="dbFilePath">The database file path.</param>
-        public SqlCompactEnsureDataBaseExistsAction(ILogger logger, string dbFilePath) 
+        /// <param name="baseUrl">The base URL.</param>
+        public SqlCompactEnsureDataBaseExistsAction(ILogger logger, string dbFilePath, string baseUrl) 
 			: base(logger)
         {
             _dbFilePath = dbFilePath;
+            _baseUrl = baseUrl;
 
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
@@ -59,8 +67,35 @@ namespace ISHDeploy.Data.Actions.DataBase
             // Check if DataBase file exists
             if (!_fileManager.FileExists(_dbFilePath))
             {
-                
+                SendWebRequest(_baseUrl);
             }
+        }
+
+        private void SendWebRequest(string url)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                request.Method = "GET";
+                request.Timeout = 10000;
+                request.KeepAlive = false;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        if (_fileManager.FileExists(_dbFilePath))
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (WebException e)
+            {
+                Console.Write("Error: {0}", e.Status);
+            }
+
+            throw new CorruptedInstallationException($"Database file was not created after server was restarted");
         }
 
         /// <summary>

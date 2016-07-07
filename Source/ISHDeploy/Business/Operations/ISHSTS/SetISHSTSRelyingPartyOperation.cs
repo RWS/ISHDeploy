@@ -79,7 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker = new ActionInvoker(logger, "Setting the relying parties");
 
-            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath));
+            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, ISHDeploymentInternal.BaseUrl));
 
             string relyingPartyTypePrefix;
             if (relyingPartyType == RelyingPartyType.None)
@@ -111,7 +111,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                         InfoShareSTSDataBase.ConnectionString,
                         InfoShareSTSDataBase.RelyingPartiesTableName,
                         "Realm",
-                        new Dictionary <string, object>
+                        new Dictionary<string, object>
                         {
                             { "Name", (relyingPartyType == RelyingPartyType.None) ? name : $"{relyingPartyType}: {name}"},
                             { "Realm", realm},

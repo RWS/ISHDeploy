@@ -184,6 +184,7 @@
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\DataBase\Mapper\DataRowToModelMapper.cs" />
+    <Compile Include="Data\Actions\DataBase\SqlCompactEnsureDataBaseExistsAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactInsertUpdateAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactExecuteAction.cs" />

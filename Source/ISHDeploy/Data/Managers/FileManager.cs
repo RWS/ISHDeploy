@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 ﻿using System;
-using System.IO;
+﻿using System.Collections.Generic;
+﻿using System.Diagnostics;
+﻿using System.IO;
 using System.IO.Compression;
-using System.Xml.Linq;
+﻿using System.Linq;
+﻿using System.Security.AccessControl;
+﻿using System.Xml.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 
@@ -354,6 +358,71 @@ namespace ISHDeploy.Data.Managers
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Assigns the necessary permissions to a path for a user
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user who will receive permissions.</param>
+        /// <returns></returns>
+        public void AssignPermissions(string path, string user)
+        {
+            FileSystemAccessRule accessRule;
+            //$acl = Get - Acl $path
+            if (Directory.Exists(path))
+            {
+                _logger.WriteDebug($"Assign permissions to the folder: {path} for user: {user}");
+                accessRule = new FileSystemAccessRule(user, FileSystemRights.FullControl,
+                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None,
+                    AccessControlType.Allow);
+
+                var directoryInfo = new DirectoryInfo(path);
+
+                var security = directoryInfo.GetAccessControl();
+
+                // Add the FileSystemAccessRule to the security settings. 
+                security.AddAccessRule(accessRule);
+
+                // Set the new access settings.
+                directoryInfo.SetAccessControl(security);
+                _logger.WriteDebug("Permissions have been assigned");
+            }
+            else
+            {
+                _logger.WriteDebug($"Assign permissions to the file: {path} for user: {user}");
+                accessRule = new FileSystemAccessRule(user, FileSystemRights.FullControl, AccessControlType.Allow);
+
+                var fileInfo = new FileInfo(path);
+
+                var security = fileInfo.GetAccessControl();
+
+                // Add the FileSystemAccessRule to the security settings. 
+                security.AddAccessRule(accessRule);
+
+                // Set the new access settings.
+                fileInfo.SetAccessControl(security);
+                _logger.WriteDebug("Permissions have been assigned");
+            }
+        }
+
+        /// <summary>
+        /// Gets list of files
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="recurse">Search in all directories or just in top one.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetFiles(string path, string searchPattern, bool recurse)
+        {
+            if (recurse)
+            {
+                return Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+            }
+            else
+            {
+                return Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly).ToList();
+            }
         }
     }
 }

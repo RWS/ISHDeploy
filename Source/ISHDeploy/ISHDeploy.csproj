@@ -70,6 +70,7 @@
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -187,9 +188,12 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Data\Actions\Certificate\GetPathToCertificateByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
+    <Compile Include="Data\Actions\AssertAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactUpdateAction.cs" />
+    <Compile Include="Data\Actions\File\AssignPermissionsAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
     <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
     <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />
@@ -202,12 +206,16 @@
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\DisableWindowsAuthenticationAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\EnableWindowsAuthenticationAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\SetSpecificUserIdentityTypeAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\SetApplicationPoolIdentityTypeAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\StopApplicationPoolAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\RecycleApplicationPoolAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\InsertChildNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveNodesAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\GetValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Data\Exceptions\WindowsAuthenticationModuleIsNotInstalledException.cs" />

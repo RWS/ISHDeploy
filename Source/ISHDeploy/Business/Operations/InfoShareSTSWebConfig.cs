@@ -48,6 +48,21 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
             public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
-		}
+
+            /// <summary>
+            /// The xpath of "configuration/system.web/authentication/@mode" attribute in ~\Web\InfoShareSTS\Web.config file
+            /// </summary>
+            public const string AuthenticationModeAttributeXPath = "configuration/system.web/authentication/@mode";
+
+            /// <summary>
+            /// The xpath of "configuration/system.web/authentication/forms" element in ~\Web\InfoShareSTS\Web.config file
+            /// </summary>
+            public const string AuthenticationFormsElementXPath = "configuration/system.web/authentication/forms";
+
+            /// <summary>
+            /// The xpath of "configuration/system.web/authentication" element in ~\Web\InfoShareSTS\Web.config file
+            /// </summary>
+            public const string AuthenticationElementXPath = "configuration/system.web/authentication";
+        }
 	}
 }

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 ﻿using System;
-using System.Linq;
+﻿using System.DirectoryServices;
+﻿using System.Linq;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -116,13 +117,13 @@ namespace ISHDeploy.Data.Managers
                     var windowsAuthenticationSection = config.GetSection(
                         "system.webServer/security/authentication/windowsAuthentication",
                         locationPath);
-
                     windowsAuthenticationSection["enabled"] = true;
 
-                    var anonymousAuthenticationSection = config.GetSection(
-                        "system.webServer/security/authentication/anonymousAuthentication",
-                        locationPath);
-                    anonymousAuthenticationSection["enabled"] = false;
+                    //var anonymousAuthenticationSection = config.GetSection(
+                    //    "system.webServer/security/authentication/anonymousAuthentication",
+                    //    locationPath);
+                    //anonymousAuthenticationSection["enabled"] = false;
+
                     manager.CommitChanges();
                 }
             }
@@ -149,16 +150,14 @@ namespace ISHDeploy.Data.Managers
                 var windowsAuthenticationSection = config.GetSection(
                     "system.webServer/security/authentication/windowsAuthentication",
                     locationPath);
-
                 windowsAuthenticationSection["enabled"] = false;
 
-                var anonymousAuthenticationSection = config.GetSection(
-                    "system.webServer/security/authentication/anonymousAuthentication",
-                    locationPath);
+                //var anonymousAuthenticationSection = config.GetSection(
+                //    "system.webServer/security/authentication/anonymousAuthentication",
+                //    locationPath);
+                //anonymousAuthenticationSection["enabled"] = true;
 
-                anonymousAuthenticationSection["enabled"] = true;
                 manager.CommitChanges();
-
             }
         }
 
@@ -242,6 +241,80 @@ namespace ISHDeploy.Data.Managers
                 {
                     throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        public void SetApplicationPoolIdentityType(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug($"Set ApplicationPoolIdentity identity type for application poll: `{applicationPoolName}`");
+
+                var config = manager.GetApplicationHostConfiguration();
+
+
+                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (stsPoolElement != null)
+                {
+                    var processModelElement =
+                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    processModelElement.SetAttributeValue("identityType", "ApplicationPoolIdentity");
+                    //var userNameAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "userName");
+                    //userNameAttribute?.Delete();
+                    //var passwordAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "password");
+                    //passwordAttribute?.Delete();
+                }
+                else
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                manager.CommitChanges();
+                _logger.WriteDebug($"The identity type has been changed");
+            }
+        }
+
+        /// <summary>
+        /// Sets identity type of specific application pool as Custom account
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        public void SetSpecificUserIdentityType(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug($"Set SpecificUser identity type for application poll: `{applicationPoolName}`");
+
+                var config = manager.GetApplicationHostConfiguration();
+
+
+                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (stsPoolElement != null)
+                {
+                    var processModelElement =
+                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    processModelElement.SetAttributeValue("identityType", "SpecificUser");
+                    //var userNameAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "userName");
+                    //var passwordAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "password");
+                }
+                else
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                manager.CommitChanges();
+                _logger.WriteDebug($"The identity type has been changed");
             }
         }
     }

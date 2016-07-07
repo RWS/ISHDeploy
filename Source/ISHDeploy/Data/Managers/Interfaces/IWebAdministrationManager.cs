@@ -49,5 +49,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="webSiteName">Name of the web site.</param>
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         void DisableWindowsAuthentication(string webSiteName);
+
+        /// <summary>
+        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        void SetApplicationPoolIdentityType(string applicationPoolName);
+
+        /// <summary>
+        /// Sets identity type of specific application pool as Custom account
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        void SetSpecificUserIdentityType(string applicationPoolName);
     }
 }

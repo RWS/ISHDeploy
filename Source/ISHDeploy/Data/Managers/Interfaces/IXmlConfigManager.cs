@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 ﻿using System.Collections.Generic;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Data.Exceptions;
+﻿using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -114,7 +115,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The file path.</param>
         /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
         /// <param name="xmlString">The new node as a XML string.</param>
+        /// <exception cref="WrongXPathException"></exception>
         void InsertBeforeNode(string filePath, string xpath, string xmlString);
+
+        /// <summary>
+        /// Inserts a new node as child to specified one.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xmlString">The new node as a XML string.</param>
+        /// <exception cref="WrongXPathException"></exception>
+        void InsertChildNode(string filePath, string xpath, string xmlString);
 
         /// <summary>
         /// Set element value.

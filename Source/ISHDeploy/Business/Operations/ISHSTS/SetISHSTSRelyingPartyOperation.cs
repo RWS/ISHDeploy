@@ -79,6 +79,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker = new ActionInvoker(logger, "Setting the relying parties");
 
+            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath));
+
             string relyingPartyTypePrefix;
             if (relyingPartyType == RelyingPartyType.None)
             {

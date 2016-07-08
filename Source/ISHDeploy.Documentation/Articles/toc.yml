@@ -4,15 +4,27 @@
   href: ../obj/doc/articles/Module/Work with files.md
 - name: Work with UI Features
   href: ../obj/doc/articles/FeatureToggle/Work with UI Features.md
-- name: Security Token Service
+- name: Work with Security Token Service
   items:
   - name: Integrating with Security Token Service
     href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with Security Token Service.md
+  - name: ISHSTS
+    items:
+    - name: Integrating a service provider
+      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Integrating 3rd party service providers with ISHSTS.md
+    - name: Implementing light weight Windows Authentication
+      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Implementing light weight Windows Authentication.md
+    - name: Resetting ISHSTS
+      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Resetting ISHSTS.md
   - name: ADFS
     items:
     - name: Integrating with Security Token Service
       href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with ADFS.md
-  - name: Certificates
+  - name: Certificates rollover/replacement
     items:
-    - name: Implementing issuer certificate rollover
-      href: ../obj/doc/articles/IntegrationSTS/IssuerCertificateRollover/Implementing issuer certificate rollover.md
+    - name: Implementing certificate replacement
+      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Implementing certificate replacement.md
+    - name: Implementing issuer certificate rollover with 3rd party STS
+      href: ../obj/doc/articles/IntegrationSTS/Integration/Implementing issuer certificate rollover.md
+    - name: Implementing service certificate replacement with 3rd party STS
+      href: ../obj/doc/articles/IntegrationSTS/Integration/Implementing service certificate replacement.md

@@ -44,9 +44,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
             // Stop Application pools before undo
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
+            //_invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
+            //_invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
+            //_invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
@@ -82,9 +82,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // WARNING-END
 
             // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+            //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
+            //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+            //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
         }
 
         /// <summary>

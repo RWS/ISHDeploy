@@ -1,7 +1,10 @@
 ﻿param (
     [Parameter(Mandatory=$true)]
     [string]
-    $ModulePath
+    $ModulePath,
+    [Parameter(Mandatory=$true)]
+    [string]
+    $Year
 )
 
 try
@@ -32,15 +35,25 @@ try
         Write-Verbose "Copyied $($_.FullName) to $objPath"
     }
 
+    . "$PSScriptRoot\Copy-Changelog.ps1" -FilePath "$sourcePath" -ExportPath "$objPath"
+
 	$rootItems=Get-ChildItem $objPath -Filter "*.md"
 
 	$rootItems | ForEach-Object {
 		Write-Debug "Loading $($_.FullName)"
 		$content = $_|Get-Content
 		Write-Verbose "Loaded $($_.FullName)"
-		if($content -match "{ModuleName}")
+        $containModuleName=$content -match "{ModuleName}"
+        $containYear=$content -match "{Year}"
+		if( $containModuleName -Or $containYear)
 		{
-			$content=$content -replace "{ModuleName}",$moduleName
+            if($containModuleName){
+			    $content=$content -replace "{ModuleName}",$moduleName
+            }
+            if($containYear){
+                $content=$content -replace "{Year}",$Year
+            }
+
 			Write-Verbose "Processed $($_.FullName)"
 		
 			Write-Debug "Saving $($_.FullName)"

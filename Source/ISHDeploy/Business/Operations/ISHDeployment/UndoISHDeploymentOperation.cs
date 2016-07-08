@@ -66,10 +66,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
 
-            // WARNING-BEGIN: As a part of `TS-11329 ISHDeploy - The process cannot access the file`
-            // It was decided to part this for a while, as the recycling app pool does not have serious 
-            // influence on the module functionality. So the issue was prioritized and its severity was decreased.
-
             //// Recycling Application pool for WS
             //_invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
 
@@ -79,9 +75,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             //// Recycling Application pool for CM
             //_invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
 
-            // WARNING-END
-
-            // Waiting until files becomes unlocked
+            //// Waiting until files becomes unlocked
             //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
             //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
             //_invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));

@@ -1,26 +1,15 @@
 ﻿param (
     [Parameter(Mandatory=$true)]
     [string]
-    $ModulePath,
+    $ReleaseYear,
     [Parameter(Mandatory=$true)]
     [string]
-    $Year
+    $SupportedCMVersion
 )
 
 try
 {
-	Write-Verbose "ModulePath=$ModulePath"
-	Write-Debug "Loading module from $ModulePath"
-    $psd1Files=Get-ChildItem $ModulePath  -Filter "*.psd1"
-    if($psd1Files.Count -eq 0)
-    {
-        throw "Could not fine module manifest in $ModulePath"
-    }
-    if($psd1Files.Count -gt 1)
-    {
-        throw "Too many module manifest in $ModulePath"
-    }
-    $moduleName=($psd1Files|Select-Object -ExpandProperty Name -First 1).Replace(".psd1","")
+    $moduleName="ISHDeploy.$SupportedCMVersion"
 	Write-Verbose "moduleName=$moduleName"
     
     $sourcePath=Resolve-Path "$PSScriptRoot\..\"
@@ -35,36 +24,20 @@ try
         Write-Verbose "Copyied $($_.FullName) to $objPath"
     }
 
-    . "$PSScriptRoot\Copy-Changelog.ps1" -FilePath "$sourcePath" -ExportPath "$objPath"
-
 	$rootItems=Get-ChildItem $objPath -Filter "*.md"
 
 	$rootItems | ForEach-Object {
 		Write-Debug "Loading $($_.FullName)"
 		$content = $_|Get-Content
 		Write-Verbose "Loaded $($_.FullName)"
-        $containModuleName=$content -match "{ModuleName}"
-        $containYear=$content -match "{Year}"
-		if( $containModuleName -Or $containYear)
-		{
-            if($containModuleName){
-			    $content=$content -replace "{ModuleName}",$moduleName
-            }
-            if($containYear){
-                $content=$content -replace "{Year}",$Year
-            }
-
-			Write-Verbose "Processed $($_.FullName)"
+		$content=$content -replace "{ModuleName}",$moduleName
+        $content=$content -replace "{ReleaseYear}",$ReleaseYear
+        $content=$content -replace "{SupportedCMVersion}",$SupportedCMVersion
+		Write-Verbose "Processed $($_.FullName)"
 		
-			Write-Debug "Saving $($_.FullName)"
-			$content | Out-File $_.FullName -Force
-			Write-Verbose "Saved $($_.FullName)"
-		}
-		else
-		{
-			Write-Verbose "Not processed $($_.FullName)"
-		}
-
+		Write-Debug "Saving $($_.FullName)"
+		$content | Out-File $_.FullName -Force
+		Write-Verbose "Saved $($_.FullName)"
 	}
 }
 catch

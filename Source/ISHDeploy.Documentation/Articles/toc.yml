@@ -22,8 +22,8 @@
       href: ../obj/doc/articles/IntegrationSTS/Integration/Integrating with ADFS.md
   - name: Certificates rollover/replacement
     items:
-    - name: Implementing certificate replacement
-      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Implementing certificate replacement.md
+    - name: Implementing Vanilla certificate replacement
+      href: ../obj/doc/articles/IntegrationSTS/ISHSTS/Implementing Vanilla certificate replacement.md
     - name: Implementing issuer certificate rollover with 3rd party STS
       href: ../obj/doc/articles/IntegrationSTS/Integration/Implementing issuer certificate rollover.md
     - name: Implementing service certificate replacement with 3rd party STS

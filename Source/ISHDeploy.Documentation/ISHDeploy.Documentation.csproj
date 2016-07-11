@@ -66,7 +66,7 @@
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.ADFS.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\IntegrationValues.Windows.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\_nopublish\UserZoneClients.plantuml" />
-    <None Include="Articles\IntegrationSTS\ISHSTS\Implementing certificate replacement.md" />
+    <None Include="Articles\IntegrationSTS\ISHSTS\Implementing Vanilla certificate replacement.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\Implementing light weight Windows Authentication.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\Integrating 3rd party service providers with ISHSTS.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\Resetting ISHSTS.md" />

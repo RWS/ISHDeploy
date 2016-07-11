@@ -38,6 +38,22 @@ Function RemotePathCheck {
     return $isExists
 }
 #undo changes
+$scriptBlockUndoDeploymentWithoutRestartingAppPools = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+
+    [ISHDeploy.Models.ISHDeployment]$ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    $operation = New-Object ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation $ishDeploy
+    #$operation.Run()
+}
+
 $scriptBlockUndoDeployment = {
     param (
         [Parameter(Mandatory=$false)]

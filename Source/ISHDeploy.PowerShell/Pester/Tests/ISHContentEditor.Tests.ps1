@@ -127,7 +127,7 @@ function readTargetXML() {
 Describe "Testing ISHUIContentEditor"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "FolderButtonbar.xml"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled Content Editor"{
@@ -274,6 +274,6 @@ Describe "Testing ISHUIContentEditor"{
 	   Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList $testingDeploymentName, $domain -ErrorAction Stop | Should Be "True"
     }   
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     
 }

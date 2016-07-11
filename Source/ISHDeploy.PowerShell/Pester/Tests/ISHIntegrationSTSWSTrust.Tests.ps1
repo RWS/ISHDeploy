@@ -134,7 +134,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
         ArtifactCleaner -filePath $filePath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSWSTrust with full parameters"{
@@ -381,5 +381,5 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

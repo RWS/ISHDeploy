@@ -105,7 +105,7 @@ Describe "Testing ISHExternalPreview"{
     BeforeEach {    
         StopPool -projectName $testingDeploymentName
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "enables Disabled External Preview"{
@@ -266,6 +266,6 @@ Describe "Testing ISHExternalPreview"{
         $result | Should Be "Disabled"
     }
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     
 }

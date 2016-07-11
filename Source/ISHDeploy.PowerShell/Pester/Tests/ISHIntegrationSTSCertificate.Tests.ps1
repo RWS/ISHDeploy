@@ -137,7 +137,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
         ArtifactCleaner -filePath $filePath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Set ISHIntegrationSTSCertificate"{       
@@ -357,5 +357,5 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $stsWebConfigNodesCount | Should be 1
     }
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

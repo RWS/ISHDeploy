@@ -124,7 +124,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCleanTmpFolder -Session $session -ArgumentList $packagePath
         $principal= Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetNetBIOSDomain -Session $session
     }
@@ -174,5 +174,5 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
     }
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

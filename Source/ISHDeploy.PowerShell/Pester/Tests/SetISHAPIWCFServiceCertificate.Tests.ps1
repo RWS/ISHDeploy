@@ -177,7 +177,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         StopPool -projectName $testingDeploymentName
        ArtifactCleaner -filePath $filePath -fileName "web.config"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
         WebRequestToSTS $testingDeploymentName
     }
 
@@ -238,5 +238,5 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     }
 }
 
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

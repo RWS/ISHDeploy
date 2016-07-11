@@ -48,7 +48,7 @@ $scriptBlockGet = {
 
 Describe "Testing Get-ISHPackageFolderPath"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Get package folder path"{
@@ -67,6 +67,6 @@ Describe "Testing Get-ISHPackageFolderPath"{
         RemotePathCheck $uncPackagePath | Should Be "True"
     }
 
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }
 

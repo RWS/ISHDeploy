@@ -76,7 +76,7 @@ function readTargetXML() {
     return $result
 }
 
-
+UndoDeploymentBackToVanila $testingDeploymentName
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"

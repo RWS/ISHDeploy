@@ -81,10 +81,11 @@ $scriptBlockWebRequest = {
     $request.KeepAlive = $false;
     try {
         [System.Net.HttpWebResponse]$response = $request.GetResponse()
-        Write-Host "Status of web response of $url is:" $response.StatusCode
+        $status = $response.StatusCode
+        Write-Debug "Status of web response of $url is: $status"
     } catch [System.Net.WebException] {
         #[System.Net.HttpWebResponse]$response = $_.Exception.ToString()
-        Write-Host "Status of web response of $url is:" $_.Exception
+        Write-Error "Status of web response of $url is:" $_.Exception
     }
 }
 
@@ -100,7 +101,7 @@ Function WebRequestToSTS
     $infosharestswebappname = $result["infosharestswebappname"]
     $url = "$baseurl/$infosharestswebappname"
     
-    Write-Host "Send Get request to STS server to init DB file creation"
+    Write-Debug "Send Get request to STS server to init DB file creation"
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
 }
 #undo changes
@@ -153,7 +154,7 @@ Function UndoDeploymentBackToVanila {
         $doesDBFileExist = Test-Path $dbPath
         while($doesDBFileExist -ne $true)
         {
-            Write-Host "$dbPath does not exist"
+            Write-Debug "$dbPath does not exist"
             WebRequestToSTS $testingDeploymentName
             Start-Sleep -Milliseconds 7000
             $doesDBFileExist = Test-Path $dbPath

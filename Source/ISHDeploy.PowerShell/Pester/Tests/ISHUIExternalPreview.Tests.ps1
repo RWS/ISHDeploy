@@ -101,7 +101,6 @@ function readTargetXML() {
 
 Describe "Testing ISHExternalPreview"{
     BeforeEach {    
-        StopPool -projectName $testingDeploymentName
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }

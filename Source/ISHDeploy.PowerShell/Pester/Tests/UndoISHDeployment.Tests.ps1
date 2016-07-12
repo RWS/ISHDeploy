@@ -190,7 +190,6 @@ $scriptBlockGetAppPoolStartTime = {
 
 Describe "Testing Undo-ISHDeploymentHistory"{
     BeforeEach {
-        StopPool -projectName $testingDeploymentName
         UndoDeploymentBackToVanila $testingDeploymentName
     }
 

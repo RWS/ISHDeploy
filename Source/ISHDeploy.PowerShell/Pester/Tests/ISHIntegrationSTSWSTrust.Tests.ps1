@@ -116,7 +116,6 @@ function readTargetXML() {
 
 Describe "Testing ISHIntegrationSTSWSTrust"{
     BeforeEach {
-        StopPool -projectName $testingDeploymentName
         ArtifactCleaner -filePath $filePath -fileName "web.config"
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }

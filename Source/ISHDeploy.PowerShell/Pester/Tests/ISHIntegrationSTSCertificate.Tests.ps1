@@ -117,7 +117,6 @@ function remoteReadTargetXML() {
 
 Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
-        StopPool -projectName $testingDeploymentName
         ArtifactCleaner -filePath $filePath -fileName "web.config"
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }

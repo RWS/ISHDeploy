@@ -80,8 +80,7 @@ namespace ISHDeploy.Data.Actions.DataBase
             request.Timeout = 10000;
             request.KeepAlive = false;
 
-            int i = 0;
-            while (!_fileManager.FileExists(_dbFilePath))
+            if (!_fileManager.FileExists(_dbFilePath))
             {
                 try
                 {
@@ -100,17 +99,20 @@ namespace ISHDeploy.Data.Actions.DataBase
                         }
                     }
 
+                    int i = 0;
+                    while (!_fileManager.FileExists(_dbFilePath))
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        i++;
+                        if (i > 100)
+                        {
+                            throw new CorruptedInstallationException("Database file was not created after server was restarted.");
+                        }
+                    }
                 }
                 catch (WebException e)
                 {
-                    Logger.WriteDebug($"While checking the existence of the database file {_dbFilePath} and trying to make an webrequest to assignment {_baseUrl} the following error has occurred: {e.Message}");
-                }
-
-                System.Threading.Thread.Sleep(100);
-                i++;
-                if (i > 100)
-                {
-                    throw new CorruptedInstallationException($"Database file was not created after server was restarted.");
+                   throw new Exception($"While checking the existence of the database file {_dbFilePath} and trying to make an webrequest to assignment {_baseUrl} the following error has occurred: {e.Message}");
                 }
             }
         }

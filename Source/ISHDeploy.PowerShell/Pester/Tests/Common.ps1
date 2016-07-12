@@ -105,33 +105,22 @@ Function WebRequestToSTS
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
 }
 #undo changes
-$scriptBlockUndoDeploymentWithoutRestartingAppPools = {
+$scriptBlockUndoDeployment = {
     param (
+        [Parameter(Mandatory=$true)]
+        $deployName,
         [Parameter(Mandatory=$false)]
-        $ishDeployName 
+        [bool]$skipRecycling = $false
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
     
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $true
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
-}
+    # Sets a value indicating whether skip recycle or not. For integration test perspective only. Please, see https://jira.sdl.com/browse/TS-11329
+    [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $skipRecycling
 
-$scriptBlockUndoDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $false
+    $ishDeploy = Get-ISHDeployment -Name $deployName
     Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
@@ -143,19 +132,22 @@ Function UndoDeploymentBackToVanila {
         [bool]$skipRecycling = $false
     ) 
 
-    if ($skipRecycling){
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $deploymentName
-    }
-    else
-    {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName, $skipRecycling
+
+    if ($skipRecycling -eq $false){
 
         $i = 0
         $doesDBFileExist = Test-Path $dbPath
-        while($doesDBFileExist -ne $true)
-        {
+
+        if ($doesDBFileExist -ne $true) {
             Write-Debug "$dbPath does not exist"
             WebRequestToSTS $testingDeploymentName
+            Start-Sleep -Milliseconds 1000
+        }
+
+        $doesDBFileExist = Test-Path $dbPath
+        while($doesDBFileExist -ne $true)
+        {
             Start-Sleep -Milliseconds 7000
             $doesDBFileExist = Test-Path $dbPath
 

@@ -91,22 +91,17 @@ namespace ISHDeploy.Data.Actions.DataBase
 
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            if (_fileManager.FileExists(_dbFilePath))
+                            int i = 0;
+                            while (!_fileManager.FileExists(_dbFilePath))
                             {
-                                Logger.WriteDebug($"Database file {_dbFilePath} has been created");
-                                return;
+                                System.Threading.Thread.Sleep(100);
+                                i++;
+                                if (i > 100)
+                                {
+                                    throw new CorruptedInstallationException("Database file was not created after server was restarted.");
+                                }
                             }
-                        }
-                    }
-
-                    int i = 0;
-                    while (!_fileManager.FileExists(_dbFilePath))
-                    {
-                        System.Threading.Thread.Sleep(100);
-                        i++;
-                        if (i > 100)
-                        {
-                            throw new CorruptedInstallationException("Database file was not created after server was restarted.");
+                            Logger.WriteDebug($"Database file {_dbFilePath} has been created");
                         }
                     }
                 }

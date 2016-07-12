@@ -72,6 +72,9 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         public void Rollback()
         {
             _webAdminManager.RecycleApplicationPool(_appPoolName, true);
+
+            // Add Sleep to wait until pool will free all files
+            System.Threading.Thread.Sleep(7000);
         }
     }
 }

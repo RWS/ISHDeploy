@@ -4,8 +4,6 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
 # Script block for getting ISH deployment
 $scriptBlockGetDeployment = {
@@ -103,9 +101,8 @@ function readTargetXML() {
 
 Describe "Testing ISHExternalPreview"{
     BeforeEach {    
-        StopPool -projectName $testingDeploymentName
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "enables Disabled External Preview"{
@@ -265,7 +262,4 @@ Describe "Testing ISHExternalPreview"{
 		#Assert
         $result | Should Be "Disabled"
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-    
 }

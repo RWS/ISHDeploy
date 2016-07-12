@@ -55,26 +55,5 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         {
             _webAdminManager.StopApplicationPool(_appPoolName);
         }
-
-        /// <summary>
-        /// Creates backup of the asset.
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public void Backup()
-        {
-            
-        }
-
-        /// <summary>
-        /// Reverts an asset to initial state.
-        /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public void Rollback()
-        {
-            _webAdminManager.RecycleApplicationPool(_appPoolName, true);
-
-            // Add Sleep to wait until pool will free all files
-            System.Threading.Thread.Sleep(7000);
-        }
     }
 }

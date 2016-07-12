@@ -20,7 +20,8 @@ using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Assert;
 using ISHDeploy.Data.Actions.DataBase;
-﻿using ISHDeploy.Interfaces;
+using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Interfaces;
 using ISHDeploy.Models.SQL;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
@@ -79,7 +80,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker = new ActionInvoker(logger, "Setting the relying parties");
 
-            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, ISHDeploymentInternal.BaseUrl));
+            // Ensure DataBase file exists
+            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
 
             string relyingPartyTypePrefix;
             if (relyingPartyType == RelyingPartyType.None)

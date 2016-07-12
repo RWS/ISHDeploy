@@ -4,27 +4,10 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backup = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)"
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author" -f $suffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
@@ -207,8 +190,7 @@ $scriptBlockGetAppPoolStartTime = {
 
 Describe "Testing Undo-ISHDeploymentHistory"{
     BeforeEach {
-        StopPool -projectName $testingDeploymentName
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName
     }
 
     It "Undo ish deploy history"{
@@ -221,7 +203,7 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         # Get web application pool start times
         $appPoolStartTimes1 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName
         
         WebRequestToSTS $testingDeploymentName
 
@@ -243,7 +225,7 @@ Describe "Testing Undo-ISHDeploymentHistory"{
     }
 
     It "Undo-IshHistory works when there is no backup"{
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
+        {UndoDeploymentBackToVanila $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
     }
 }
 

@@ -1,6 +1,4 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
-#Import-Module $PSScriptRoot.Replace(".powershell\pester\tests", "\bin\DebugSkipVersion\ISHDeploy.13.0.0.dll")
-
 Function Invoke-CommandRemoteOrLocal {
     param (
         [Parameter(Mandatory=$true)]
@@ -20,6 +18,37 @@ Function Invoke-CommandRemoteOrLocal {
         Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList -ErrorAction Stop 
     }
 }
+
+$scriptBlockGetDeployment = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Get-ISHDeployment -Name $ishDeployName 
+}
+
+$scriptBlockCreateCertificate = {
+    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
+    return $sslCertificate 
+}
+$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
+
+$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+$testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
+
+#Gets suffix from project name
+Function GetProjectSuffix($projectName)
+{
+    return $projectName.Replace("InfoShare", "")
+}
+
+$suffix = GetProjectSuffix($testingDeployment.Name)
+$dbPath = ("\\$computerName\{0}\Web{1}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $testingDeployment.Webpath, $suffix).replace(":", "$")
+
 #check path remotely
 $scriptBlockTestPath = {
     param (
@@ -37,6 +66,43 @@ Function RemotePathCheck {
     
     return $isExists
 }
+
+
+#Stop WebRequestToSTS
+$scriptBlockWebRequest = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $url
+    ) 
+    
+    $request = [System.Net.WebRequest]::Create($url)
+    $request.Method = "GET";
+    $request.Timeout = 10000;
+    $request.KeepAlive = $false;
+    try {
+        [System.Net.HttpWebResponse]$response = $request.GetResponse()
+        Write-Host "Status of web response of $url is:" $response.StatusCode
+    } catch [System.Net.WebException] {
+        #[System.Net.HttpWebResponse]$response = $_.Exception.ToString()
+        Write-Host "Status of web response of $url is:" $_.Exception
+    }
+}
+
+Function WebRequestToSTS
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+    $baseurl = $result["baseurl"]
+    $infosharestswebappname = $result["infosharestswebappname"]
+    $url = "$baseurl/$infosharestswebappname"
+    
+    Write-Host "Send Get request to STS server to init DB file creation"
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
+}
 #undo changes
 $scriptBlockUndoDeploymentWithoutRestartingAppPools = {
     param (
@@ -47,11 +113,10 @@ $scriptBlockUndoDeploymentWithoutRestartingAppPools = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-
-
-    [ISHDeploy.Models.ISHDeployment]$ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    $operation = New-Object ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation $ishDeploy
-    #$operation.Run()
+    
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $true
+    Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
 $scriptBlockUndoDeployment = {
@@ -63,8 +128,43 @@ $scriptBlockUndoDeployment = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
+
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $false
     Undo-ISHDeployment -ISHDeployment $ishDeploy
+}
+
+Function UndoDeploymentBackToVanila {
+    param (
+        [Parameter(Mandatory=$true)]
+        $deploymentName,
+        [Parameter(Mandatory=$false)]
+        [bool]$skipRecycling = $false
+    ) 
+
+    if ($skipRecycling){
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $deploymentName
+    }
+    else
+    {
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName
+
+        $i = 0
+        $doesDBFileExist = Test-Path $dbPath
+        while($doesDBFileExist -ne $true)
+        {
+            Write-Host "$dbPath does not exist"
+            WebRequestToSTS $testingDeploymentName
+            Start-Sleep -Milliseconds 7000
+            $doesDBFileExist = Test-Path $dbPath
+
+            if ($i -ge 2)
+            {
+                $doesDBFileExist | Should be $true
+            }
+            $i++
+        }
+    }
 }
 
 #remove item remotely
@@ -100,7 +200,7 @@ Function RemoteRenameItem {
         [Parameter(Mandatory=$true)]
         $name
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path $name
 }
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time
@@ -139,11 +239,6 @@ function RemoteReadXML{
     return $actualResult
 }
 
-#Gets suffix from project name
-Function GetProjectSuffix($projectName)
-{
-    return $projectName.Replace("InfoShare", "")
-}
 #Gets InputParameters
 $scriptBlockGetInputParameters = {
     param (
@@ -184,11 +279,6 @@ Function Get-InputParameters
         $projectName
     ) 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
-}
-
-$scriptBlockCreateCertificate = {
-    $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
-    return $sslCertificate 
 }
 
 $scriptBlockRemoveCertificate= {
@@ -240,7 +330,7 @@ Function UndoDeployment
         [Parameter(Mandatory=$true)]
         $testingDeploymentName
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+    UndoDeployment
 }
 
 # Get Test Data variable
@@ -260,41 +350,6 @@ Function Get-TestDataValue
     }
 
     return $value
-}
-
-#Stop WebRequestToSTS
-$scriptBlockWebRequest = {
-    param (
-        [Parameter(Mandatory=$true)]
-        $url
-    ) 
-    
-    $request = [System.Net.WebRequest]::Create($url)
-    try {
-        [System.Net.HttpWebResponse]$response = $request.GetResponse()
-    } catch [System.Net.WebException] {
-        [System.Net.HttpWebResponse]$response = $_.Exception.Response
-    }
-    
-    if ($response.StatusCode -ne [System.Net.HttpStatusCode]::OK)
-    {
-        Write-Error $response.StatusDescription
-    }
-}
-
-Function WebRequestToSTS
-{
-    param (
-        [Parameter(Mandatory=$true)]
-        $projectName
-    ) 
-    
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
-    $baseurl = $result["baseurl"]
-    $infosharestswebappname = $result["infosharestswebappname"]
-    $url = "$baseurl/$infosharestswebappname/"
-
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockWebRequest -Session $session -ArgumentList $url
 }
 
 Function ArtifactCleaner

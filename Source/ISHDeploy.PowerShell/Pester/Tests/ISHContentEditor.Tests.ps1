@@ -4,29 +4,11 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
 # Test variables
 $licenseKey=Get-TestDataValue "xopusLicenseKey"
 $domain=Get-TestDataValue "xopusLicenseDomain"
 
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-# Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $LicensePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
 $LicensePath = $LicensePath.ToString().replace(":", "$")
 $LicensePath = "\\$computerName\$LicensePath"
@@ -127,7 +109,7 @@ function readTargetXML() {
 Describe "Testing ISHUIContentEditor"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "FolderButtonbar.xml"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "enables Disabled Content Editor"{
@@ -272,8 +254,5 @@ Describe "Testing ISHUIContentEditor"{
 	   RemotePathCheck $licenseFile | Should Be "True"
        #Assert
 	   Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestLicense -Session $session -ArgumentList $testingDeploymentName, $domain -ErrorAction Stop | Should Be "True"
-    }   
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
-    
+    }
 }

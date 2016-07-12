@@ -4,29 +4,11 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-# Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
 #endregion
 
@@ -137,7 +119,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
         ArtifactCleaner -filePath $filePath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "Set ISHIntegrationSTSCertificate"{       
@@ -356,6 +338,4 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigThumbprint | Should be "testThumbprint222"
         $stsWebConfigNodesCount | Should be 1
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

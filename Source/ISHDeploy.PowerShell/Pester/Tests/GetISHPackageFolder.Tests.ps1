@@ -4,22 +4,6 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
@@ -48,7 +32,7 @@ $scriptBlockGet = {
 
 Describe "Testing Get-ISHPackageFolderPath"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "Get package folder path"{
@@ -66,7 +50,5 @@ Describe "Testing Get-ISHPackageFolderPath"{
         
         RemotePathCheck $uncPackagePath | Should Be "True"
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }
 

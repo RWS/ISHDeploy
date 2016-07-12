@@ -36,6 +36,15 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         private readonly IActionInvoker _invoker;
 
         /// <summary>
+        /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
+        /// Please, see https://jira.sdl.com/browse/TS-11329
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [true] then skip recycle; otherwise do recycle</c>.
+        /// </value>
+        public static bool SkipRecycle { get; set; } = false;
+
+        /// <summary>
         /// Reverts all changes to the vanilla
         /// </summary>
         /// <param name="logger">Logger object.</param>
@@ -45,10 +54,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
-            // Stop Application pools before undo
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
+            if (!SkipRecycle)
+            {
+                // Stop Application pools before undo
+                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
+                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
+                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
+            }
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
@@ -68,15 +80,18 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
 
-            // Recycling Application pools after undo
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
+            if (!SkipRecycle)
+            {
+                // Recycling Application pools after undo
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
 
-            // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+                // Waiting until files becomes unlocked
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+            }
 		}
 
         /// <summary>
@@ -85,66 +100,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public void Run()
         {
             _invoker.Invoke();
-        }
-
-        /// <summary>
-        /// Special undo operation for integration test only
-        /// </summary>
-        public UndoISHDeploymentOperation(Models.ISHDeployment ishDeployment) :
-            base(new FakeLogger(), ishDeployment)
-        {
-
-            _invoker = new ActionInvoker(Logger, "Reverting of changes to Vanilla state");
-
-            // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(Logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
-
-            // Rolling back changes for Data folder
-            _invoker.AddAction(new FileCopyDirectoryAction(Logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ISHDeploymentInternal.DataFolderPath));
-
-            // Rolling back changes for App folder
-            _invoker.AddAction(new FileCopyDirectoryAction(Logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ISHDeploymentInternal.AppFolderPath));
-
-            // Removing licenses
-            _invoker.AddAction(new FileCleanDirectoryAction(Logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
-
-            // Removing Backup folder
-            _invoker.AddAction(new DirectoryRemoveAction(Logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
-
-            // Cleaning up STS App_Data folder
-            _invoker.AddAction(new FileCleanDirectoryAction(Logger, ISHDeploymentInternal.WebNameSTSAppData));
-        }
-
-
-        /// <summary>
-        /// For integration tests only
-        /// </summary>
-        /// <seealso cref="ISHDeploy.Interfaces.ILogger" />
-        private class FakeLogger : ILogger
-        {
-            public void WriteVerbose(string message)
-            {
-            }
-
-            public void WriteProgress(string activity, string statusDescription, int percentComplete = -1)
-            {
-            }
-
-            public void WriteParentProgress(string activity, string statusDescription, int percentComplete)
-            {
-            }
-
-            public void WriteDebug(string message)
-            {
-            }
-
-            public void WriteWarning(string message)
-            {
-            }
-
-            public void WriteError(Exception ex, object errorObject = null)
-            {
-            }
         }
 	}
 }

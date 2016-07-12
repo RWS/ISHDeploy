@@ -4,25 +4,9 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $suffix )
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
@@ -196,7 +180,7 @@ $scriptBlockRemoveEventMonitorTab= {
 Describe "Testing ISHUIEventMonitorTab"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "EventMonitorMenuBar.xml"
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+		UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "Set monitor tab"{
@@ -460,7 +444,4 @@ Describe "Testing ISHUIEventMonitorTab"{
         #Assert
         RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"} -expectedResult "Added" | Should be "Added"
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
-
 }

@@ -4,30 +4,13 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
 $packageFileName = "testFileName"
 
 # Test variables
 $domain = Get-TestDataValue "testDomain"
 
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
@@ -121,7 +104,7 @@ function Unzip
 
 Describe "Testing ISHIntegrationSTSConfigurationPackage"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCleanTmpFolder -Session $session -ArgumentList $packagePath
     }
     
@@ -218,6 +201,4 @@ Describe "Testing ISHIntegrationSTSConfigurationPackage"{
 Save-ISHIntegrationSTSConfigurationPackage -FileName "package_adfs.zip" -ISHDeployment $deployment -ADFS'
        
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

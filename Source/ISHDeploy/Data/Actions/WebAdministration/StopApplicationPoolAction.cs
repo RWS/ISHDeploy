@@ -15,6 +15,7 @@
  */
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
@@ -22,7 +23,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
     /// Stops an application pool.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class StopApplicationPoolAction : BaseAction
+    public class StopApplicationPoolAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The Application Pool name.
@@ -53,6 +54,27 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         public override void Execute()
         {
             _webAdminManager.StopApplicationPool(_appPoolName);
+        }
+
+        /// <summary>
+        /// Creates backup of the asset.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Backup()
+        {
+            
+        }
+
+        /// <summary>
+        /// Reverts an asset to initial state.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Rollback()
+        {
+            _webAdminManager.RecycleApplicationPool(_appPoolName, true);
+
+            // Add Sleep to wait until pool will free all files
+            System.Threading.Thread.Sleep(7000);
         }
     }
 }

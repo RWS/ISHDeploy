@@ -4,27 +4,11 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $suffix )
 $xmlPath = "\\$computerName\$xmlPath"
 
@@ -111,7 +95,7 @@ Disable-ISHUIQualityAssistant -ISHDeployment $deployment
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+UndoDeploymentBackToVanila $testingDeploymentName $true
 
 Describe "Testing Get-ISHDeploymentHistory"{
     BeforeEach {

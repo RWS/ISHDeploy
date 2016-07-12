@@ -4,25 +4,9 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $xmlPath =Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
@@ -97,7 +81,7 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
         StopPool -projectName $testingDeploymentName
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "Set ISHIntegrationSTSWSFederation with full parameters"{   
@@ -147,6 +131,4 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint testEndpoint') | Should be "True"
               
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeploymentWithoutRestartingAppPools -Session $session -ArgumentList $testingDeploymentName
 }

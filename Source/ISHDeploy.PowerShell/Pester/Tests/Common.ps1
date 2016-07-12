@@ -84,8 +84,7 @@ $scriptBlockWebRequest = {
         $status = $response.StatusCode
         Write-Debug "Status of web response of $url is: $status"
     } catch [System.Net.WebException] {
-        #[System.Net.HttpWebResponse]$response = $_.Exception.ToString()
-        Write-Error "Status of web response of $url is:" $_.Exception
+        Write-Error $_.Exception
     }
 }
 

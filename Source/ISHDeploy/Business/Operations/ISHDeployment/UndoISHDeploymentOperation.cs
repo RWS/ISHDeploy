@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Business.Invokers;
+
+using System;
+using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
@@ -23,15 +25,24 @@ using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
-	/// <summary>
-	/// Operation to revert changes to Vanilla state
-	/// </summary>
+    /// <summary>
+    /// Operation to revert changes to Vanilla state
+    /// </summary>
     public class UndoISHDeploymentOperation : BasePathsOperation, IOperation
-	{
+    {
         /// <summary>
         /// The actions invoker
         /// </summary>
         private readonly IActionInvoker _invoker;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
+        /// Please, see https://jira.sdl.com/browse/TS-11329
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [true] then skip recycle; otherwise do recycle</c>.
+        /// </value>
+        public static bool SkipRecycle { get; set; } = false;
 
         /// <summary>
         /// Reverts all changes to the vanilla
@@ -40,8 +51,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="ishDeployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
         public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
-		{
-			_invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
+        {
+            _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
             if (!SkipRecycle)
             {
@@ -54,34 +65,33 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
 
-			// Rolling back changes for Data folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ISHDeploymentInternal.DataFolderPath));
-            
-			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ISHDeploymentInternal.AppFolderPath));
+            // Rolling back changes for Data folder
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ISHDeploymentInternal.DataFolderPath));
 
-			// Removing licenses
-			_invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
+            // Rolling back changes for App folder
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ISHDeploymentInternal.AppFolderPath));
 
-			// Removing Backup folder
-			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
+            // Removing licenses
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
+
+            // Removing Backup folder
+            _invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
 
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
 
-            // Recycling Application pool for WS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
+            if (!SkipRecycle)
+            {
+                // Recycling Application pools after undo
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
 
-            // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
-
-            // Recycling Application pool for CM
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
-
-            // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+                // Waiting until files becomes unlocked
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+            }
         }
 
         /// <summary>
@@ -89,7 +99,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         public void Run()
         {
-			_invoker.Invoke();
-		}
-	}
+            _invoker.Invoke();
+        }
+    }
 }

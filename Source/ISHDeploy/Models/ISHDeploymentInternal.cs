@@ -22,7 +22,7 @@ namespace ISHDeploy.Models
 	/// <summary>
 	///	<para type="description">Represents the installed Content Manager deployment extended.</para>
 	/// </summary>
-	public class ISHDeploymentInternal :ISHDeployment
+	public class ISHDeploymentInternal : ISHDeployment
     {
         /// <summary>
         /// Trisoft Application Pool Prefix

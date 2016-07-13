@@ -4,25 +4,9 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $configPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\Editors\Xopus" -f $suffix )
 $configPath = $configPath.ToString().replace(":", "$")
 $configPath = "\\$computerName\$configPath"
@@ -68,7 +52,7 @@ $scriptBlockDisable = {
 # Function reads target files and their content, searches for specified nodes in xm
 function readTargetXML() {
 	[xml]$XmlConfig = Get-Content "$xmlPath\config.xml" -ErrorAction SilentlyContinue
-Write-Debug "COnfig path $xmlPath\config.xml"
+    Write-Debug "COnfig path $xmlPath\config.xml"
     [xml]$XmlBlueLionConfig = Get-Content "$xmlPath\bluelion-config.xml" -ErrorAction SilentlyContinue
     Write-Debug "COnfig path $xmlPath\bluelion-config.xml"
     [xml]$XmlEnrichWebConfig = Get-Content "$configPath\BlueLion-Plugin\web.config" -ErrorAction SilentlyContinue
@@ -91,7 +75,7 @@ $precondition = readTargetXML
 Describe "Testing ISHUIQualityAssistant"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "config.xml"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "enables Disabled Quality Assistant"{
@@ -213,7 +197,4 @@ Describe "Testing ISHUIQualityAssistant"{
 		#Assert
         $result | Should Be "Disabled"
     }
-
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-
 }

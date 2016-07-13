@@ -86,6 +86,9 @@ $scriptBlockGetAmountOfInstalledDeployments = {
     return $amount
 }
 
+# Restoring system to vanila state for not loosing files, touched in previous tests
+UndoDeploymentBackToVanila $testingDeploymentName $true
+
 Describe "Testing Get-ISHDeployment"{
     It "doesnot match 'InfoShare' pattern"{
 		#Act/Assert

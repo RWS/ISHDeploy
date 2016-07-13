@@ -4,22 +4,7 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
-
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
@@ -60,12 +45,12 @@ function checkBackupFolderIsEmpty{
     }
     else {
         return $false
-
     }    
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+
+UndoDeploymentBackToVanila $testingDeploymentName $true
 
 Describe "Testing Clear-ISHDeploymentHistory"{
     It "Clear ish deploy history"{
@@ -86,6 +71,5 @@ Describe "Testing Clear-ISHDeploymentHistory"{
         $folderEmptyState | Should be $true
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockClean -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
     }
-
 }
 

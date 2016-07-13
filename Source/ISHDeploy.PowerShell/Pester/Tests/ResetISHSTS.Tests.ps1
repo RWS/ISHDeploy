@@ -4,27 +4,11 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $absolutePath = $testingDeployment.WebPath
-$dbPath = ("\\$computerName\{0}\Web{1}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $testingDeployment.Webpath, $suffix).replace(":", "$")
 $computerName = $computerName.split(".")[0]
 
 $scriptBlockGetHistory = {
@@ -145,13 +129,10 @@ function remoteQuerryDatabase() {
 
 Describe "Testing Reset-ISHSTS"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName
     }
 
     It "Reset ISH STS"{
-        WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
-
         $infosharewswebappname = $testingDeployment.WebAppNameWS
         $dbQuerryCommandSet = "UPDATE RelyingParties SET EncryptingCertificate='testThumbprint' WHERE Realm=`'https://$computerName.$env:USERDNSDOMAIN/$infosharewswebappname/Wcf/API20/Folder.svc`'"
         $dbQuerryCommandSelect = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=`'https://$computerName.$env:USERDNSDOMAIN/$infosharewswebappname/Wcf/API20/Folder.svc`'"
@@ -190,8 +171,6 @@ Describe "Testing Reset-ISHSTS"{
         
         #Assert
         $history.Contains('Reset-ISHSTS -ISHDeployment $deployment')
-              
     }
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 }
 

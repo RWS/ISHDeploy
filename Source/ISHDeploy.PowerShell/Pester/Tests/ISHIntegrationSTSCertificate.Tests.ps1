@@ -101,11 +101,11 @@ $scriptBlockReadTargetXML = {
     $result =  @{}
     #get variables and nodes from files
     $result["authorWebConfigNodesCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']").Count
-    $result["authorWebConfigIssuer"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']")[0].issuer
+    $result["authorWebConfigIssuer"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']")[0].name
     $result["authorWebConfigValidationModeCount"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']").Count
     $result["authorWebConfigValidationModeCertificateValidationMode"] = $authorWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")[0].certificateValidationMode
     $result["wsWebConfigNodesCount"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']").Count
-    $result["wsWebConfigIssuer"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']")[0].issuer
+    $result["wsWebConfigIssuer"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='$Thumbprint']")[0].name
     $result["wsWebConfigNodesValidationModeCount"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']").Count
     $result["wsWebConfigNodesValidationModeCertificateValidationMode"] = $wsWebConfig.SelectNodes("configuration/system.identityModel/identityConfiguration/certificateValidation[@certificateValidationMode='$ValidationMode']")[0].certificateValidationMode
     $result["stsWebConfigNodesCount"] = $stsWebConfig.SelectNodes("configuration/system.serviceModel/behaviors/serviceBehaviors/behavior/addActAsTrustedIssuer[@thumbprint='$Thumbprint']").Count
@@ -274,13 +274,13 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $stsWebConfigNodesCount | Should be 0
 
         
-        remoteReadTargetXML -Thumbprint "testThumbprint" -ValidationMode "PeerOrChainTrust"
+        remoteReadTargetXML -Thumbprint "testThumbprint3" -ValidationMode "PeerOrChainTrust"
         $authorWebConfigNodesCount | Should be 1
         $authorWebConfigValidationModeCount | Should be 1
-        $authorWebConfigThumbprint | Should be "testThumbprint3"
+        $authorWebConfigIssuer | Should be "testIssuer2"
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
-        $wsWebConfigThumbprint | Should be "testThumbprint3"
+        $wsWebConfigIssuer | Should be "testIssuer2"
         $stsWebConfigNodesCount | Should be 1
     }
 

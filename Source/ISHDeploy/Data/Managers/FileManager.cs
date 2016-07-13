@@ -342,7 +342,7 @@ namespace ISHDeploy.Data.Managers
 
             try
             {
-                stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream = fileInfo.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             }
             catch
             {

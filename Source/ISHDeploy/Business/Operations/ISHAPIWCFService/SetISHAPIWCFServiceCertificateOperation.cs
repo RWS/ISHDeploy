@@ -57,6 +57,21 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 		        thumbprint = normalizedThumbprint;
             }
 
+            // Ensure DataBase file exists
+            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
+
+            // Update STS database
+            var parameters = new List<object> { string.Empty };
+            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
+
+            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => parameters[0] = result));
+
+            _invoker.AddAction(new SqlCompactUpdateAction(logger,
+                InfoShareSTSDataBase.ConnectionString,
+                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
+                parameters));
+
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
 
@@ -72,16 +87,6 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
 
-            // Update STS database
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
-
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactUpdateAction(logger,
-                InfoShareSTSDataBase.ConnectionString,
-                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
-                parameters));
 
             // Recycling Application pool for STS
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));

@@ -4,25 +4,9 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
-
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $configPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\" -f $suffix)
 $configPath = $configPath.ToString().replace(":", "$")
 $configPath = "\\$computerName\$configPath"
@@ -85,14 +69,13 @@ function readTargetXML() {
     elseif  ($commentCheck -and !$global:textEventMenuBar -and !$global:textTopDocumentButtonbar -and $global:textTopDocumentButtonbarTranslationButton.Count -eq 2){
         Return "Disabled" 
     }
-
 }
 
 
 Describe "Testing ISHUITranslationJob"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "EventMonitorMenuBar.xml"
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+		UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "enables Disabled Translation Job"{
@@ -214,7 +197,4 @@ Describe "Testing ISHUITranslationJob"{
 		#Assert
         $result | Should Be "Disabled"
     }
-	
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-    
 }

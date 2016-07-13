@@ -4,32 +4,17 @@
 )
 . "$PSScriptRoot\Common.ps1"
 
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 $testCertName = "TestISHAPIWCFServiceCertificate"
 $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
 $testEncriptedCertificate = [System.Convert]::ToBase64String($testCertificate.RawData)
 $testThumbprint = $testCertificate.Thumbprint
 #region variables
-# Script block for getting ISH deployment
-$scriptBlockGetDeployment = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Get-ISHDeployment -Name $ishDeployName 
-}
 
 # Generating file pathes to remote PC files
-$testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
 $filepath = "$xmlPath\Web{0}\Author\ASP" -f $suffix
 $absolutePath = $testingDeployment.WebPath
 #endregion
@@ -174,16 +159,14 @@ function remoteReadTargetXML() {
 
 Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     BeforeEach {
-        StopPool -projectName $testingDeploymentName
-       ArtifactCleaner -filePath $filePath -fileName "web.config"
+        ArtifactCleaner -filePath $filePath -fileName "web.config"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-        WebRequestToSTS $testingDeploymentName
+        UndoDeploymentBackToVanila $testingDeploymentName
     }
 
     It "Set-ISHAPIWCFServiceCertificate"{       
         #Act
-       Start-Sleep -Milliseconds 7000
+        Start-Sleep -Milliseconds 7000
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
         #Assert
         remoteReadTargetXML -thumbprint $testThumbprint -ValidationMode "PeerOrChainTrust"
@@ -233,10 +216,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $history.Contains('Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint') | Should be "True"
         $history.Contains('-ValidationMode PeerOrChainTrust') | Should be "True"
         $history.Contains($testThumbprint) | Should be "True"
-
-              
     }
 }
 
-Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

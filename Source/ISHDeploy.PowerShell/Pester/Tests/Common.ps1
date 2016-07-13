@@ -77,7 +77,6 @@ $scriptBlockWebRequest = {
     
     $request = [System.Net.WebRequest]::Create($url)
     $request.Method = "GET";
-    $request.Timeout = 10000;
     $request.KeepAlive = $false;
     try {
         [System.Net.HttpWebResponse]$response = $request.GetResponse()

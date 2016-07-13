@@ -27,23 +27,31 @@ When the certificate expires there is no true rollover and a downtime period is 
 
 ## New service certificate becomes available
 
-On the 1st December 2016, a new certificate becomes available on the store with thumbprint `20161201.Thumbprint` but since its not being referenced it's not used.
+On the 1st December 2016, a new certificate becomes available on the store with thumbprint `20161201.Thumbprint` but since it’s not being referenced it's not used.
 
 ## Day of scheduled replacement
 
 On the 15th December 2016 the following sequence is executed:
 
 1. All users sign out.
-1. The current service certificate with thumbprint `20160101.Thumbprint` is replaced by the newer `20161201.Thumbprint`. The cmdlet for this step is `Set-ISHAPIWCFServiceCertificate`. 
+1. The current issuer validation configuration is extended with the new issuer certificate with thumbprint `20161201.Thumbprint`.The cmdlet for this step is `Set-ISHIntegrationSTSCertificate`. 
+1. The current ISHSTS token signing certificate with thumbprint `20160101.Thumbprint` is replaced with the newer `20160101.Thumbprint` is replaced by the newer `20161201.Thumbprint`. The cmdlet for this step is `Set-ISHSTSConfiguration`. 
+1. The current service certificate with thumbprint `20160101.Thumbprint` is replaced with the newer `20161201.Thumbprint`. The cmdlet for this step is `Set-ISHAPIWCFServiceCertificate`. 
 1. Users sign in.
 
 This script replaces the existing certificate with the new one.
 
-CopyCodeBlock(_nopublish\20161215.Set-ISHAPIWCFServiceCertificate.ps1)
+CopyCodeBlock(_nopublish\20161215.VanillaCertificateReplacement.ps1)
 
 ## Remove the old certificate
 
-The certificate with thumbprint `20161201.Thumbprint` is removed from the store. Since it's not referenced this step has not impact.
+As a cleanup process, all service providers should remove their old issuer certificate references.
+
+```powershell
+Remove-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Issuer "Issuer"
+```
+
+The above removes any reference to the certificate with thumbprint `20161201.Thumbprint`, hence it can be removed from the store.
 
 # Replace the web site's HTTPS binding SSL certificate
 

@@ -70,6 +70,7 @@
     <None Include="Articles\IntegrationSTS\ISHSTS\Implementing light weight Windows Authentication.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\Integrating 3rd party service providers with ISHSTS.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\Resetting ISHSTS.md" />
+    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\20161215.VanillaCertificateReplacement.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\20161215.Set-ISHAPIWCFServiceCertificate.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Add-ISHSTSRelyingParty.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\BL.Add-ISHSTSRelyingParty.ps1" />

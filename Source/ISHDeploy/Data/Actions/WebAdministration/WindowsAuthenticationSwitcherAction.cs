@@ -61,9 +61,11 @@ namespace ISHDeploy.Data.Actions.WebAdministration
             if (_enable)
             {
                 _webAdministrationManager.EnableWindowsAuthentication(_webSiteName);
-                return;
             }
-            _webAdministrationManager.DisableWindowsAuthentication(_webSiteName);
+            else
+            {
+                _webAdministrationManager.DisableWindowsAuthentication(_webSiteName);
+            }
         }
     }
 }

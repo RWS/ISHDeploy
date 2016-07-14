@@ -540,42 +540,6 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Inserts a new node as child to specified one.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <param name="xpath">The xpath to the parent node in which we want to add a new node.</param>
-        /// <param name="xmlString">The new node as a XML string.</param>
-        /// <exception cref="WrongXPathException"></exception>
-        public void InsertChildNode(string filePath, string xpath, string xmlString)
-        {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Insert new child node]");
-
-            var doc = _fileManager.Load(filePath);
-
-            var relativeElement = doc.XPathSelectElement(xpath);
-            if (relativeElement == null)
-            {
-                throw new WrongXPathException(filePath, xpath);
-            }
-
-            var newElement = XElement.Parse(xmlString);
-            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
-            foreach (var node in relativeElement.Nodes())
-            {
-                if (equalityComparer.Equals(node, newElement))
-                {
-                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains child element '{xmlString}'.");
-                    return;
-                }
-            }
-
-            relativeElement.Add(newElement);
-
-            _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Inserted]");
-        }
-
-        /// <summary>
         /// Set element value.
         /// </summary>
         /// <param name="filePath">Path to the file that is modified.</param>

@@ -213,7 +213,6 @@
     <Compile Include="Data\Actions\WebAdministration\SetIdentityTypeAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\StopApplicationPoolAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\RecycleApplicationPoolAction.cs" />
-    <Compile Include="Data\Actions\XmlFile\InsertChildNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveNodesAction.cs" />

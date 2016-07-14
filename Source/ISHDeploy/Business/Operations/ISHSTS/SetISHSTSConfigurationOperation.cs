@@ -206,8 +206,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, ISHDeploymentInternal.STSWebAppName, false));
                 // Enable Forms Authentication for STS web site
                 _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Forms"));
-                //_invoker.AddAction(new InsertChildNodeAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationElementXPath, "<forms loginUrl = \"~/account/signin\" />"));
-
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/username" endpoint and binding type to UserNameMixed type

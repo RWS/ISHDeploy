@@ -161,7 +161,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             if (authenticationType == AuthenticationTypes.Windows)
             {
                 // Enable Windows Authentication for STS web site
-                _invoker.AddAction(new EnableWindowsAuthenticationAction(Logger, ISHDeploymentInternal.STSWebAppName));
+                _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, ISHDeploymentInternal.STSWebAppName, true));
                 // Disable Forms Authentication for STS web site
                 _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Windows"));
                 //_invoker.AddAction(new RemoveNodesAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationFormsElementXPath));
@@ -183,27 +183,27 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     (new GetPathToCertificateByThumbprintAction(Logger,
                         ISHDeploymentInternal.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
 
-                _invoker.AddAction(new AssignPermissionsAction(Logger, pathToCertificate, applicationPoolUser));
-                _invoker.AddAction(new AssignPermissionsAction(Logger, ISHDeploymentInternal.AppPath, applicationPoolUser));
+                _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ISHDeploymentInternal.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 if (ISHDeploymentInternal.AppPath != ISHDeploymentInternal.DataPath)
                 {
-                    _invoker.AddAction(new AssignPermissionsAction(Logger, ISHDeploymentInternal.DataPath, applicationPoolUser));
+                    _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ISHDeploymentInternal.DataPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
 
                 }
                 if (ISHDeploymentInternal.DataPath != ISHDeploymentInternal.WebPath)
                 {
-                    _invoker.AddAction(new AssignPermissionsAction(Logger, ISHDeploymentInternal.WebPath, applicationPoolUser));
+                    _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ISHDeploymentInternal.WebPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
 
                 }
 
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
-                _invoker.AddAction(new SetApplicationPoolIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName));
+                _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
             }
             else
             {
                 // Disable Windows Authentication for STS web site
-                _invoker.AddAction(new DisableWindowsAuthenticationAction(Logger, ISHDeploymentInternal.STSWebAppName));
+                _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, ISHDeploymentInternal.STSWebAppName, false));
                 // Enable Forms Authentication for STS web site
                 _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Forms"));
                 //_invoker.AddAction(new InsertChildNodeAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationElementXPath, "<forms loginUrl = \"~/account/signin\" />"));
@@ -219,7 +219,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 }
 
                 // Set SpecificUser identityType for STS application pool
-                _invoker.AddAction(new SetSpecificUserIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName));
+                _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
         }

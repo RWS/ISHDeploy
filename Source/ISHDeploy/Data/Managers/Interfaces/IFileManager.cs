@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -168,12 +169,26 @@ namespace ISHDeploy.Data.Managers.Interfaces
         bool IsFileLocked(string filePath);
 
         /// <summary>
-        /// Assigns the necessary permissions to a path for a user
+        /// Assigns the permissions for directory.
         /// </summary>
-        /// <param name="filePath">The path to directory.</param>
-        /// <param name="user">The user who will receive permissions.</param>
-        /// <returns></returns>
-        void AssignPermissions(string filePath, string user);
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="inheritanceFlags">The inheritance flags.</param>
+        /// <param name="propagationFlags">The propagation flags.</param>
+        /// <param name="type">The type.</param>
+        void AssignPermissionsForDirectory(string path, string user, FileSystemRights fileSystemRights,
+            InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type);
+
+        /// <summary>
+        /// Assigns the permissions for file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="type">The type.</param>
+        void AssignPermissionsForFile(string path, string user, FileSystemRights fileSystemRights,
+            AccessControlType type);
 
         /// <summary>
         /// Gets list of files
@@ -182,6 +197,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
         /// <returns></returns>
-        IEnumerable<string> GetFiles(string path, string searchPattern, bool recurse);
+        List<string> GetFiles(string path, string searchPattern, bool recurse);
     }
 }

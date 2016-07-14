@@ -19,15 +19,35 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Sets identity type of specific application pool as ApplicationPoolIdentity
+    /// Sets identity type of application pool
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetApplicationPoolIdentityTypeAction : BaseAction
+    public class SetIdentityTypeAction : BaseAction
     {
+        /// <summary>
+        /// The types of identity
+        /// </summary>
+        public enum IdentityTypes
+        {
+            /// <summary>
+            /// The application pool identity
+            /// </summary>
+            ApplicationPoolIdentity,
+            /// <summary>
+            /// The specific user identity
+            /// </summary>
+            SpecificUserIdentity
+        }
+
         /// <summary>
         /// The Application Pool name.
         /// </summary>
         private readonly string _appPoolName;
+
+        /// <summary>
+        /// The Application Pool name.
+        /// </summary>
+        private readonly IdentityTypes _identityType;
 
         /// <summary>
         /// The web Administration manager
@@ -39,10 +59,11 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>
-        public SetApplicationPoolIdentityTypeAction(ILogger logger, string appPoolName)
+        public SetIdentityTypeAction(ILogger logger, string appPoolName, IdentityTypes identityType)
             : base(logger)
         {
             _appPoolName = appPoolName;
+            _identityType = identityType;
 
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
@@ -52,7 +73,15 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public override void Execute()
         {
-            _webAdminManager.SetApplicationPoolIdentityType(_appPoolName);
+            if (_identityType == IdentityTypes.ApplicationPoolIdentity)
+            {
+                _webAdminManager.SetApplicationPoolIdentityType(_appPoolName);
+            }
+
+            if (_identityType == IdentityTypes.SpecificUserIdentity)
+            {
+                _webAdminManager.SetSpecificUserIdentityType(_appPoolName);
+            }
         }
     }
 }

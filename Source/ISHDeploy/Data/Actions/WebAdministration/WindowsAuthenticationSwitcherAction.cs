@@ -19,14 +19,19 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Enables the windows authentication.
+    /// Disables or enables the windows authentication.
     /// </summary>
-    public class EnableWindowsAuthenticationAction : BaseAction
+    public class WindowsAuthenticationSwitcherAction : BaseAction
     {
         /// <summary>
         /// The site name.
         /// </summary>
         private readonly string _webSiteName;
+
+        /// <summary>
+        /// The site name.
+        /// </summary>
+        private readonly bool _enable;
 
         /// <summary>
         /// The web Administration manager
@@ -38,10 +43,12 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="webSiteName">Name of the web site.</param>
-        public EnableWindowsAuthenticationAction(ILogger logger, string webSiteName)
+        /// <param name="enable">if set to <c>true</c> then enable WindowsAuthentication.</param>
+        public WindowsAuthenticationSwitcherAction(ILogger logger, string webSiteName, bool enable)
             : base(logger)
         {
             _webSiteName = webSiteName;
+            _enable = enable;
 
             _webAdministrationManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
@@ -51,7 +58,12 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public override void Execute()
         {
-            _webAdministrationManager.EnableWindowsAuthentication(_webSiteName);
+            if (_enable)
+            {
+                _webAdministrationManager.EnableWindowsAuthentication(_webSiteName);
+                return;
+            }
+            _webAdministrationManager.DisableWindowsAuthentication(_webSiteName);
         }
     }
 }

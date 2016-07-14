@@ -267,10 +267,6 @@ namespace ISHDeploy.Data.Managers
                     var processModelElement =
                         stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
                     processModelElement.SetAttributeValue("identityType", "ApplicationPoolIdentity");
-                    //var userNameAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "userName");
-                    //userNameAttribute?.Delete();
-                    //var passwordAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "password");
-                    //passwordAttribute?.Delete();
                 }
                 else
                 {
@@ -305,8 +301,6 @@ namespace ISHDeploy.Data.Managers
                     var processModelElement =
                         stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
                     processModelElement.SetAttributeValue("identityType", "SpecificUser");
-                    //var userNameAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "userName");
-                    //var passwordAttribute = processModelElement.Attributes.FirstOrDefault(x => x.Name == "password");
                 }
                 else
                 {

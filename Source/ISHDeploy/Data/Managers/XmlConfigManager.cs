@@ -543,7 +543,7 @@ namespace ISHDeploy.Data.Managers
         /// Inserts a new node as child to specified one.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        /// <param name="xpath">The xpath to the node before which we want to add a new node.</param>
+        /// <param name="xpath">The xpath to the parent node in which we want to add a new node.</param>
         /// <param name="xmlString">The new node as a XML string.</param>
         /// <exception cref="WrongXPathException"></exception>
         public void InsertChildNode(string filePath, string xpath, string xmlString)

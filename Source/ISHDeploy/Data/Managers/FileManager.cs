@@ -130,7 +130,7 @@ namespace ISHDeploy.Data.Managers
 					this.DeleteFolder(subFolderPath);
 				}
 
-				foreach (string filePath in Directory.GetFiles(folderPath))
+				foreach (string filePath in GetFiles(folderPath, "*", false))
 				{
 					this.Delete(filePath);
 				}
@@ -181,7 +181,7 @@ namespace ISHDeploy.Data.Managers
 			if (this.FolderExists(sourcePath))
 			{
 				//Copy all the files & Replaces any files with the same name
-				foreach (string newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
+				foreach (string newPath in GetFiles(sourcePath, "*", true))
 				{
 					this.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
 				}
@@ -361,49 +361,56 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Assigns the necessary permissions to a path for a user
+        /// Assigns the permissions for directory.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <param name="user">The user who will receive permissions.</param>
-        /// <returns></returns>
-        public void AssignPermissions(string path, string user)
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="inheritanceFlags">The inheritance flags.</param>
+        /// <param name="propagationFlags">The propagation flags.</param>
+        /// <param name="type">The type.</param>
+        public void AssignPermissionsForDirectory(string path, string user, FileSystemRights fileSystemRights, InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type)
         {
-            FileSystemAccessRule accessRule;
-            //$acl = Get - Acl $path
-            if (Directory.Exists(path))
-            {
-                _logger.WriteDebug($"Assign permissions to the folder: {path} for user: {user}");
-                accessRule = new FileSystemAccessRule(user, FileSystemRights.FullControl,
-                    InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None,
-                    AccessControlType.Allow);
+            _logger.WriteDebug($"Assign permissions to the folder: {path} for user: {user}");
+            var accessRule = new FileSystemAccessRule(user, fileSystemRights,
+                inheritanceFlags, propagationFlags,
+                type);
 
-                var directoryInfo = new DirectoryInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
 
-                var security = directoryInfo.GetAccessControl();
+            var security = directoryInfo.GetAccessControl();
 
-                // Add the FileSystemAccessRule to the security settings. 
-                security.AddAccessRule(accessRule);
+            // Add the FileSystemAccessRule to the security settings. 
+            security.AddAccessRule(accessRule);
 
-                // Set the new access settings.
-                directoryInfo.SetAccessControl(security);
-                _logger.WriteDebug("Permissions have been assigned");
-            }
-            else
-            {
-                _logger.WriteDebug($"Assign permissions to the file: {path} for user: {user}");
-                accessRule = new FileSystemAccessRule(user, FileSystemRights.FullControl, AccessControlType.Allow);
+            // Set the new access settings.
+            directoryInfo.SetAccessControl(security);
+            _logger.WriteDebug("Permissions have been assigned");
+            
+        }
 
-                var fileInfo = new FileInfo(path);
+        /// <summary>
+        /// Assigns the permissions for file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="type">The type.</param>
+        public void AssignPermissionsForFile(string path, string user, FileSystemRights fileSystemRights, AccessControlType type)
+        {
+            _logger.WriteDebug($"Assign permissions to the file: {path} for user: {user}");
+            var accessRule = new FileSystemAccessRule(user, fileSystemRights, type);
 
-                var security = fileInfo.GetAccessControl();
+            var fileInfo = new FileInfo(path);
 
-                // Add the FileSystemAccessRule to the security settings. 
-                security.AddAccessRule(accessRule);
+            var security = fileInfo.GetAccessControl();
 
-                // Set the new access settings.
-                fileInfo.SetAccessControl(security);
-                _logger.WriteDebug("Permissions have been assigned");
-            }
+            // Add the FileSystemAccessRule to the security settings. 
+            security.AddAccessRule(accessRule);
+
+            // Set the new access settings.
+            fileInfo.SetAccessControl(security);
+            _logger.WriteDebug("Permissions have been assigned");
         }
 
         /// <summary>
@@ -413,7 +420,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
         /// <returns></returns>
-        public IEnumerable<string> GetFiles(string path, string searchPattern, bool recurse)
+        public List<string> GetFiles(string path, string searchPattern, bool recurse)
         {
             if (recurse)
             {

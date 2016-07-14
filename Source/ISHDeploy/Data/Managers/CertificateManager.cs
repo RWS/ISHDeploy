@@ -34,12 +34,18 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
+        /// The file manager.
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CertificateManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public CertificateManager(ILogger logger)
         {
             _logger = logger;
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         /// <summary>
@@ -70,6 +76,43 @@ namespace ISHDeploy.Data.Managers
             var certificate = FindCertificateByThumbprint(thumbprint);
 
             return Convert.ToBase64String(certificate.RawData);
+        }
+
+        /// <summary>
+        /// Gets the path to certificate by thumbprint
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns></returns>
+        public string GetPathToCertificateByThumbprint(string thumbprint)
+        {
+            _logger.WriteDebug($"Get path to the certificate with thumbprint: {thumbprint}");
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            var uniqueKeyContainerName =
+                ((System.Security.Cryptography.RSACryptoServiceProvider) certificate.PrivateKey).CspKeyContainerInfo
+                    .KeyContainerName;
+
+            var commonApplicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            string path = $"{commonApplicationDataPath}\\Microsoft\\Crypto\\RSA\\MachineKeys\\{uniqueKeyContainerName}";
+
+            if (_fileManager.FileExists(path))
+            {
+                _logger.WriteDebug($"The path to the certificate: {path}");
+                return path;
+            }
+
+            var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            path = $"{applicationDataPath}\\Microsoft\\Crypto\\RSA\\MachineKeys\\{uniqueKeyContainerName}";
+            path = _fileManager.GetFiles(path, uniqueKeyContainerName, true).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new Exception($"Could not locate private key file for certificate {thumbprint}");
+            }
+
+            _logger.WriteDebug($"The path to the certificate: {path}");
+
+            return path;
         }
 
         /// <summary>

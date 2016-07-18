@@ -213,7 +213,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
-        $history.Contains('Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint') | Should be "True"
+        $history.Contains('Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint') | Should be "True"
         $history.Contains('-ValidationMode PeerOrChainTrust') | Should be "True"
         $history.Contains($testThumbprint) | Should be "True"
     }

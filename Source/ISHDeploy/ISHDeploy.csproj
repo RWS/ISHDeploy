@@ -190,6 +190,7 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
     <Compile Include="Data\Actions\Certificate\GetPathToCertificateByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />

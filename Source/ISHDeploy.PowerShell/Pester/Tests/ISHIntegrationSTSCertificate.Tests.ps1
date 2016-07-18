@@ -222,7 +222,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
-        $history.Contains('Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "testThumbprint" -Issuer "testIssuer" -ValidationMode PeerOrChainTrust') | Should be "True"     
+        $history.Contains('Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Thumbprint "testThumbprint" -Issuer "testIssuer" -ValidationMode PeerOrChainTrust') | Should be "True"     
     }
     
     It "Set ISHIntegrationSTSCertificate change ValidationMode"{       
@@ -288,14 +288,14 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         Rename-Item "$filepath\_Web.config" "Web.config"
     }
 
-    It "Set ISHIntegrationSTSCertificate writes proper history"{        
+    It "Set ISHIntegrationSTSCertificate writes proper history. One more test"{        
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
-        $history.Contains('Remove-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Issuer "testIssuer"') | Should be "True"
+        $history.Contains('Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer "testIssuer"') | Should be "True"
               
     }
 

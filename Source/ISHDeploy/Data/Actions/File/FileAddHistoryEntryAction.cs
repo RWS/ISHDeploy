@@ -78,7 +78,7 @@ namespace ISHDeploy.Data.Actions.File
                 Logger.WriteVerbose("Creating history file.");
 
                 historyEntry.AppendLine($"# {CurrentDate}");
-                historyEntry.AppendLine($"$deployment = Get-ISHDeployment -Name '{_ishDeploymentName}'");
+                historyEntry.AppendLine($"$deploymentName = '{_ishDeploymentName}'");
             }
             else if (IsNewDate(_fileManager.ReadAllText(_path), CurrentDate)) // group history records by date inside the file
             {

@@ -127,7 +127,7 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
-        $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint testEndpoint') | Should be "True"
+        $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint testEndpoint') | Should be "True"
               
     }
 }

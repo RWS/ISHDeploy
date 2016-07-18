@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 ﻿using System;
-using System.Linq;
-using Microsoft.Web.Administration;
+﻿using System.DirectoryServices;
+﻿using System.Linq;
+﻿using ISHDeploy.Data.Exceptions;
+﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+﻿using Microsoft.Dism;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -90,6 +93,96 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Enables the windows authentication.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
+        public void EnableWindowsAuthentication(string webSiteName)
+        {
+            if (IsWindowsAuthenticationFeatureEnabled())
+            {
+                using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+                {
+                    _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
+
+                    var config = manager.GetApplicationHostConfiguration();
+
+                    var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+                    if (locationPath == null)
+                    {
+                        throw new WindowsAuthenticationModuleIsNotInstalledException(
+                            "WindowsAuthentication module has not been installed");
+                    }
+
+                    var windowsAuthenticationSection = config.GetSection(
+                        "system.webServer/security/authentication/windowsAuthentication",
+                        locationPath);
+                    windowsAuthenticationSection["enabled"] = true;
+
+                    //var anonymousAuthenticationSection = config.GetSection(
+                    //    "system.webServer/security/authentication/anonymousAuthentication",
+                    //    locationPath);
+                    //anonymousAuthenticationSection["enabled"] = false;
+
+                    manager.CommitChanges();
+                }
+            }
+            else
+            {
+                throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
+            }
+        }
+
+        /// <summary>
+        /// Disables the windows authentication.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
+        public void DisableWindowsAuthentication(string webSiteName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var windowsAuthenticationSection = config.GetSection(
+                    "system.webServer/security/authentication/windowsAuthentication",
+                    locationPath);
+                windowsAuthenticationSection["enabled"] = false;
+
+                //var anonymousAuthenticationSection = config.GetSection(
+                //    "system.webServer/security/authentication/anonymousAuthentication",
+                //    locationPath);
+                //anonymousAuthenticationSection["enabled"] = true;
+
+                manager.CommitChanges();
+            }
+        }
+
+        /// <summary>
+        /// Determines whether IIS-WindowsAuthentication feature enabled or not.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsWindowsAuthenticationFeatureEnabled()
+        {
+            bool isEnabled = false;
+            DismApi.Initialize(DismLogLevel.LogErrors);
+            using (DismSession session = DismApi.OpenOnlineSession())
+            {
+                isEnabled =
+                    DismApi.GetFeatures(session)
+                        .Any(
+                            x =>
+                                x.FeatureName == "IIS-WindowsAuthentication" &&
+                                x.State == DismPackageFeatureState.Installed);
+            }
+            DismApi.Shutdown();
+            return isEnabled;
+        }
+
+        /// <summary>
         /// Stops specific application pool
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
@@ -148,6 +241,74 @@ namespace ISHDeploy.Data.Managers
                 {
                     throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        public void SetApplicationPoolIdentityType(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug($"Set ApplicationPoolIdentity identity type for application poll: `{applicationPoolName}`");
+
+                var config = manager.GetApplicationHostConfiguration();
+
+
+                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (stsPoolElement != null)
+                {
+                    var processModelElement =
+                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    processModelElement.SetAttributeValue("identityType", "ApplicationPoolIdentity");
+                }
+                else
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                manager.CommitChanges();
+                _logger.WriteDebug($"The identity type has been changed");
+            }
+        }
+
+        /// <summary>
+        /// Sets identity type of specific application pool as Custom account
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        public void SetSpecificUserIdentityType(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug($"Set SpecificUser identity type for application poll: `{applicationPoolName}`");
+
+                var config = manager.GetApplicationHostConfiguration();
+
+
+                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (stsPoolElement != null)
+                {
+                    var processModelElement =
+                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    processModelElement.SetAttributeValue("identityType", "SpecificUser");
+                }
+                else
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                manager.CommitChanges();
+                _logger.WriteDebug($"The identity type has been changed");
             }
         }
     }

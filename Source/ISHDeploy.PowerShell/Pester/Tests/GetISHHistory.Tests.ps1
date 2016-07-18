@@ -42,29 +42,47 @@ $scriptBlockClean = {
 $scriptBlockDisableQA = {
     param (
         [Parameter(Mandatory=$true)]
-        $ishDeployName 
+        $ishDeployName,
+        [Parameter(Mandatory=$false)]
+        [bool]$ishDeployParameterAsString = $false
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
+
+    if ($ishDeployParameterAsString -eq $true)
+    {
+        Disable-ISHUIQualityAssistant -ISHDeployment $ishDeployName
+    }
+    else
+    {
         $ishDeploy = Get-ISHDeployment -Name $ishDeployName
         Disable-ISHUIQualityAssistant -ISHDeployment $ishDeploy
-  
+    }
 }
 
 $scriptBlockEnableContentEditor = {
     param (
         [Parameter(Mandatory=$true)]
-        $ishDeployName 
+        $ishDeployName,
+        [Parameter(Mandatory=$false)]
+        [bool]$ishDeployParameterAsString = $false
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
+
+    if ($ishDeployParameterAsString -eq $true)
+    {
+        Enable-ISHUIContentEditor -ISHDeployment $ishDeployName
+    }
+    else
+    {
         $ishDeploy = Get-ISHDeployment -Name $ishDeployName
         Enable-ISHUIContentEditor -ISHDeployment $ishDeploy
-  
+    }
 }
 
 $scriptBlockGetPackageFolder = {
@@ -87,9 +105,9 @@ $scriptBlockGetPackageFolder = {
     }
 } 
 
- function getExpectedHistory{
-$text = '$deployment = Get-ISHDeployment -Name ''InfoShare''
-Disable-ISHUIQualityAssistant -ISHDeployment $deployment
+function getExpectedHistory{
+$text = '$deploymentName = ''InfoShare''
+Disable-ISHUIQualityAssistant -ISHDeployment $deploymentName
 '
   return $text.Replace("InfoShare", $testingDeployment.Name)
 }
@@ -140,6 +158,14 @@ Describe "Testing Get-ISHDeploymentHistory"{
 
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         !$history | Should be "True"
+    }
+
+    It "Get ish deploy history - ISHDeployment parameter as a string"{
+		# Try enabling Quality Assistant for generating backup files
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName, $true
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName, $true
+        $expectedHistory =  getExpectedHistory
+        $history.EndsWith($expectedHistory) | Should be "True"
     }
 }
 

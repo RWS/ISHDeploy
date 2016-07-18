@@ -163,7 +163,7 @@ Describe "Testing Get-ISHDeploymentHistory"{
     It "Get ish deploy history - ISHDeployment parameter as a string"{
 		# Try enabling Quality Assistant for generating backup files
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName, $true
-        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName, $true
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         $expectedHistory =  getExpectedHistory
         $history.EndsWith($expectedHistory) | Should be "True"
     }

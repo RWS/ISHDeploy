@@ -64,14 +64,14 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
 
             // Update STS database
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
+            var encryptedThumbprint = string.Empty;
+            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactExecuteAction(logger,
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBase.ConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat, parameters.ToArray())));
+                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
+                        encryptedThumbprint,
+                        string.Join(", ", InfoShareSTSDataBase.SvcPaths))));
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));

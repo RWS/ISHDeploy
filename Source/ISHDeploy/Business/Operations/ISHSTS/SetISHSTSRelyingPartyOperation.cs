@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.Assert;
+using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;

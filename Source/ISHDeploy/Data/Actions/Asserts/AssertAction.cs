@@ -2,16 +2,16 @@
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Data.Actions.Assert
+namespace ISHDeploy.Data.Actions.Asserts
 {
     /// <summary>
-    /// Implements file read all text action.
+    /// The action that verify condition and generates an error in case if condition returns true
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
     public class AssertAction : BaseAction
     {
         /// <summary>
-        /// The action
+        /// The condition
         /// </summary>
         private readonly Func<bool> _condition;
 

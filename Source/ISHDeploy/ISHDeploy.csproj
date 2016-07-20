@@ -52,9 +52,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Dism, Version=1.5.5577.14140, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Dism.1.5.1\lib\net40\Microsoft.Dism.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32Ex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=74136f9f94e352d9, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32Ex.1.2.0.0\lib\net40\Microsoft.Win32Ex.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,6 +70,7 @@
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -85,6 +94,7 @@
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\AuthenticationTypes.cs" />
     <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\BasePathsOperation.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
@@ -123,6 +133,7 @@
     <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
@@ -173,18 +184,23 @@
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
+    <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
+    <Compile Include="Data\Actions\Certificate\GetPathToCertificateByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\SaveThumbprintAsCertificateAction.cs" />
     <Compile Include="Data\Actions\DataBase\DataRowToModelMapper.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactEnsureDataBaseExistsAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
+    <Compile Include="Data\Actions\AssertAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactUpdateAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
+    <Compile Include="Data\Actions\File\FileSystemRightsAssignAction.cs" />
     <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
     <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />
     <Compile Include="Data\Actions\File\FileReadAllTextAction.cs" />
@@ -194,14 +210,18 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\SetIdentityTypeAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\StopApplicationPoolAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\RecycleApplicationPoolAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveAfterNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\MoveBeforeNodeAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveNodesAction.cs" />
     <Compile Include="Data\Actions\XmlFile\RemoveSingleNodeAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\GetValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetElementValueAction.cs" />
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
+    <Compile Include="Data\Exceptions\WindowsAuthenticationModuleIsNotInstalledException.cs" />
     <Compile Include="Data\Managers\Interfaces\ISQLCompactCommandExecuter.cs" />
     <Compile Include="Data\Managers\SQLCompactCommandExecuter.cs" />
     <Compile Include="Data\Managers\WebAdministrationManager.cs" />
@@ -291,8 +311,10 @@
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\AssemblyInfo.targets" />
-    <None Include="ISHDeploy.PostBuild.ps1" />
     <None Include="Properties\ModuleManifest.targets" />
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
@@ -300,9 +322,7 @@
   <Import Project="Properties\AssemblyInfo.targets" />
   <Import Project="Properties\ModuleManifest.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" "$(TargetPath)"
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)ISHDeploy.PostBuild.ps1" -outputpath "$(TargetDir)." -modulename $(TargetName)
-</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="AfterBuild">
     <CallTarget Targets="CopyNatives" />

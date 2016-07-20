@@ -182,7 +182,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path, $name
+    Rename-Item $path $name
 }
 Function RemoteRenameItem {
     param (
@@ -191,7 +191,7 @@ Function RemoteRenameItem {
         [Parameter(Mandatory=$true)]
         $name
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path $name
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
 }
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time

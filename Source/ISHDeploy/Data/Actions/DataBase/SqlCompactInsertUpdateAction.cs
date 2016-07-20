@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Interfaces;
@@ -44,7 +43,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         private readonly string _key;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlCompactExecuteAction" /> class.
+        /// Initializes a new instance of the <see cref="SqlCompactInsertUpdateAction" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>

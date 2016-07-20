@@ -1,6 +1,11 @@
 # Version notes
- 
-## 0.1-alpha1 (Pre-release)
+## alpha-0.2 (Pre-release)
+Initial release
+1. Working with deployments
+   1. Cmdlets
+    - Reset-ISHSTS
+
+## alpha-0.1 (Pre-release)
 Initial release
  
 1. Working with deployments

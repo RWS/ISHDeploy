@@ -77,15 +77,13 @@ $scriptBlockWebRequest = {
     
     $request = [System.Net.WebRequest]::Create($url)
     $request.Method = "GET";
-    $request.Timeout = 10000;
     $request.KeepAlive = $false;
     try {
         [System.Net.HttpWebResponse]$response = $request.GetResponse()
         $status = $response.StatusCode
         Write-Debug "Status of web response of $url is: $status"
     } catch [System.Net.WebException] {
-        #[System.Net.HttpWebResponse]$response = $_.Exception.ToString()
-        Write-Error "Status of web response of $url is:" $_.Exception
+        Write-Error $_.Exception
     }
 }
 
@@ -184,7 +182,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path, $name
+    Rename-Item $path $name
 }
 Function RemoteRenameItem {
     param (
@@ -193,7 +191,7 @@ Function RemoteRenameItem {
         [Parameter(Mandatory=$true)]
         $name
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path $name
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
 }
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time

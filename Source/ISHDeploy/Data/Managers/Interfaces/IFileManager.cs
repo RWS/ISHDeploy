@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Xml.Linq;
+
+using System.Collections.Generic;
+using System.Security.AccessControl;
+using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -164,5 +167,36 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The file path.</param>
         /// <returns></returns>
         bool IsFileLocked(string filePath);
+
+        /// <summary>
+        /// Assigns the permissions for directory.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="inheritanceFlags">The inheritance flags.</param>
+        /// <param name="propagationFlags">The propagation flags.</param>
+        /// <param name="type">The type.</param>
+        void AssignPermissionsForDirectory(string path, string user, FileSystemRights fileSystemRights,
+            InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type);
+
+        /// <summary>
+        /// Assigns the permissions for file.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="fileSystemRights">The file system rights.</param>
+        /// <param name="type">The type.</param>
+        void AssignPermissionsForFile(string path, string user, FileSystemRights fileSystemRights,
+            AccessControlType type);
+
+        /// <summary>
+        /// Gets list of files
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="recurse">Search in all directories or just in top one.</param>
+        /// <returns></returns>
+        List<string> GetFiles(string path, string searchPattern, bool recurse);
     }
 }

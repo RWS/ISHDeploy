@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-using ISHDeploy.Validators;
-
-namespace ISHDeploy.Cmdlets
+namespace ISHDeploy.Business.Operations.ISHSTS
 {
     /// <summary>
-    /// Provides base functionality for all cmdlets that use an instance of the Content Manager deployment.
+    /// Specify the binding type that is required by the end point of the WS-Trust issuer.
     /// </summary>
-    public abstract class BaseISHDeploymentCmdlet : BaseCmdlet
+    public enum AuthenticationTypes
     {
         /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
+        /// Username Password
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
-        [StringToISHDeploymentTransformation]
-        [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
+        UsernamePassword,
+        /// <summary>
+        /// Windows 
+        /// </summary>
+        Windows
     }
 }

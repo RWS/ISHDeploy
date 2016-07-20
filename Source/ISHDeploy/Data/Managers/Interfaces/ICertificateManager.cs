@@ -34,5 +34,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="thumbprint">The thumbprint.</param>
         /// <returns></returns>
         string GetEncryptedRawDataByThumbprint(string thumbprint);
+
+        /// <summary>
+        /// Gets the path to certificate by thumbprint
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns></returns>
+        string GetPathToCertificateByThumbprint(string thumbprint);
     }
 }

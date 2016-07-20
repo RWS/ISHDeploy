@@ -84,7 +84,7 @@ namespace ISHDeploy.Cmdlets
         {
             if (string.Compare(boundParameter.Key, "ISHDeployment", StringComparison.OrdinalIgnoreCase) == 0)
             {
-                return new KeyValuePair<string, object>(boundParameter.Key, "$deployment");
+                return new KeyValuePair<string, object>(boundParameter.Key, "$deploymentName");
             }
 
             if (boundParameter.Value is SwitchParameter)

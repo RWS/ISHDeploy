@@ -256,6 +256,19 @@ Describe "Testing ISHRelaying party"{
         $commandletList.Name -contains "testName" | Should be $true
     }
 
+	It "Set ISHSTSRelyingParty updates RP when realm exists"{
+       WebRequestToSTS $testingDeploymentName
+        Test-Path $dbPath | Should be "True"
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "SecondName", "testRealm", "testcert", $false, $false
+      
+        $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
+
+        $commandletList.Name -contains "SecondName" | Should be $true
+		$commandletList.Name -contains "testName" | Should be $false
+    }
+
     It "Set ISHSTSRelyingParty with LC switch"{
        WebRequestToSTS $testingDeploymentName
         Test-Path $dbPath | Should be "True"

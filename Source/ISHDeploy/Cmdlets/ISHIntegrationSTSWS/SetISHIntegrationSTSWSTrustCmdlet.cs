@@ -27,13 +27,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server and sets type of authentication as WindowsMixed.
-    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -IncludeInternalClients -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server, sets type of authentication as WindowsMixed and sets internal clients credentials.
-    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSTrust")]

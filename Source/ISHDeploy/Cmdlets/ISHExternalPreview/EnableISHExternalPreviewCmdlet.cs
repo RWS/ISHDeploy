@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
     /// <example>
     /// <code>PS C:\>Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
     /// <para>This command enables the external preview for user 'user1'.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview")]
     public sealed class EnableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet

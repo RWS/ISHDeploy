@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
     /// <para></para>
     /// <code>PS C:\>Set-ISHContentEditor -ISHDeployment $deployment -Domain "localhost" -LicenseKey "123445345342331313432423"</code>
     /// <para>This command sets new license for Content Editor using domain name and license key.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor")]
 	public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet

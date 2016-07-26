@@ -26,13 +26,13 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <example>
     ///		<code>PS C:\&gt;Set-ISHSTSConfiguration -ISHDeployment $deployment -TokenSigningCertificateThumbprint "t1"</code>
     ///		<para>This command sets STS token signing certificate.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     /// <example>
     ///		<code>PS C:\&gt;Set-ISHSTSConfiguration -ISHDeployment $deployment -AuthenticationType "Windows"</code>
     ///		<para>This command sets Windows Authentication type for STS.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSConfiguration")]

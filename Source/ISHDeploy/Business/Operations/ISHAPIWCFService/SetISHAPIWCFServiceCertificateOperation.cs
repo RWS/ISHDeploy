@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Security;
@@ -62,15 +64,14 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
 
             // Update STS database
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
+            var encryptedThumbprint = string.Empty;
+            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactUpdateAction(logger,
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBase.ConnectionString,
-                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
-                parameters));
+                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
+                        encryptedThumbprint,
+                        string.Join(", ", InfoShareSTSDataBase.SvcPaths))));
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));

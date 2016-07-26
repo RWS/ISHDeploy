@@ -79,6 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateThumbprintXPath, thumbprint));
 
             // validationMode
             _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfig.Path, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
@@ -86,6 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateValidationModeXPath, validationMode.ToString()));
 
 
             // Recycling Application pool for STS

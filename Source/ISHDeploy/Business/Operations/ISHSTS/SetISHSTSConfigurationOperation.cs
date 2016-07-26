@@ -249,6 +249,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             // Change ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
+
+            // InputParameters.xml
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustEndpointUrlXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 
         /// <summary>

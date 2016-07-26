@@ -43,49 +43,9 @@ namespace ISHDeploy.Models
         }
 
         /// <summary>
-        /// The instance of the deployment.
+        /// Absolute path to file or folder
         /// </summary>
-        private readonly ISHDeploymentInternal _ishDeployment;
-
-        /// <summary>
-        /// Type of the deployment.
-        /// </summary>
-        private readonly IshDeploymentType _deploymentType;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
-        /// </summary>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="deploymentType">Type of the deployment.</param>
-        /// <param name="path">The path to the file.</param>
-        public ISHFilePath(ISHDeploymentInternal ishDeployment, IshDeploymentType deploymentType, string path)
-		{
-			_ishDeployment = ishDeployment;
-			_deploymentType = deploymentType;
-
-			RelativePath = path;
-		}
-
-		/// <summary>
-		/// Absolute path to file or folder
-		/// </summary>
-		public string AbsolutePath
-		{
-			get
-			{
-				switch (_deploymentType)
-				{
-					case IshDeploymentType.App:
-						return Path.Combine(_ishDeployment.AppFolderPath, RelativePath);
-					case IshDeploymentType.Web:
-						return Path.Combine(_ishDeployment.AuthorFolderPath, RelativePath);
-					case IshDeploymentType.Data:
-						return Path.Combine(_ishDeployment.DataFolderPath, RelativePath);
-					default:
-						return null;
-				}
-			}
-		}
+        public string AbsolutePath { get; }
 
         /// <summary>
         /// Gets the relative path of the file.
@@ -95,6 +55,42 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Gets the vanilla installation path.
         /// </summary>
-        public string VanillaPath => Path.Combine(_ishDeployment.GetDeploymentTypeBackupFolder(_deploymentType), RelativePath);
+        public string VanillaPath { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
+        /// </summary>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="deploymentType">Type of the deployment.</param>
+        /// <param name="relativePath">The relative path to the file.</param>
+        public ISHFilePath(ISHDeploymentInternal ishDeployment, IshDeploymentType deploymentType, string relativePath)
+		{
+            if (deploymentType == IshDeploymentType.App)
+            {
+                AbsolutePath = Path.Combine(ishDeployment.AppFolderPath, relativePath);
+            }
+            else if (deploymentType == IshDeploymentType.Web)
+            {
+                AbsolutePath = Path.Combine(ishDeployment.AuthorFolderPath, relativePath);
+            }
+            else if (deploymentType == IshDeploymentType.Data)
+            {
+                AbsolutePath = Path.Combine(ishDeployment.DataFolderPath, relativePath);
+            }
+
+			RelativePath = relativePath;
+            VanillaPath = Path.Combine(ishDeployment.GetDeploymentTypeBackupFolder(deploymentType), RelativePath);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
+        /// </summary>
+        /// <param name="absolutePath">The path to file in deployment.</param>
+        /// <param name="backupPath">The path to backup file.</param>
+        public ISHFilePath(string absolutePath, string backupPath)
+        {
+            AbsolutePath = absolutePath;
+            VanillaPath = backupPath;
+        }
 	}
 }

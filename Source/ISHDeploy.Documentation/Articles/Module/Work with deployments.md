@@ -40,6 +40,7 @@ This outputs the following
     WebAppNameCM    : InfoShareAuthor
     WebAppNameWS    : InfoShareWS
     WebAppNameSTS   : InfoShareSTS
+	WebSiteName     : Default Web Site
  
 If the `projectsuffix` was not empty then concatenate it after `InfoShare`. For example
 ```powershell

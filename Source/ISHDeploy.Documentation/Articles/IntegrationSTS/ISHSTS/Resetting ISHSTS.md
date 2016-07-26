@@ -7,8 +7,8 @@ ISHSTS stores all configuration in a SQL compact database. When Content Manager 
 To help reset ISHSTS the module offers the `Reset-ISHSTS` cmdlet.
 
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
-Reset-ISHSTS -ISHDeployment $deployment
+$deploymentName="InfoShare"
+Reset-ISHSTS -ISHDeployment $deploymentName
 ```
 
 `Reset-ISHSTS` is not the same as `Undo-ISHDeployment`. As a small comparison 

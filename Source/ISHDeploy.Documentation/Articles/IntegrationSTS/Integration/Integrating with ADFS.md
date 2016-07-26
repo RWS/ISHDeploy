@@ -16,9 +16,10 @@ There are two kind of integrations:
 
 ## User zone integration
 
-First get a reference to a deployment.
+### Set deploymentName variable
+First set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName=`InfoShare`
 ```
 
 Then
@@ -26,9 +27,10 @@ CopyCodeBlock(Implementation.User.ps1)
 
 ## All zone integration
 
-First get a reference to a deployment.
+### Set deploymentName variable
+First set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName=`InfoShare`
 ```
 
 This is an example for a windows authentication
@@ -39,7 +41,7 @@ CopyCodeBlock(Implementation.All.Windows.ps1)
 The `Save-ISHIntegrationSTSConfigurationPackage` cmdlet supports a parameter `-ADFS` that generates an extra script that can configure the ADFS server remotely.
 ```powershell
 $filename="$(Get-Date -Format "yyyyMMdd").ADFSIntegrationISH.zip"
-Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName $filename -ADFS
+Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename -ADFS
 ```
 
 Inside the zip file you will find two files

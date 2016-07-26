@@ -45,38 +45,42 @@ If the `projectsuffix` was not empty then concatenate it after `InfoShare`. For 
 ```powershell
 Get-ISHDeployment -Name InfoShareSQL
 ```
- 
- 
+
 ### Using a deployment
-All commandlets that target a specific deployment are driven from a parameter `-ISHDeployment` that expects as value an instance from the `Get-ISHDeployment` output. 
-To provide `-ISHDeployment` parameter to commandlets you need to initialize variable with Get-ISHDeployment output, for example:
+All commandlets that target a specific deployment are driven from a parameter `-ISHDeployment` that expects as a value a name of deployment or an instance from the `Get-ISHDeployment` output.
+To provide `-ISHDeployment` parameter to commandlets you need either to initialize variable with Get-ISHDeployment output, for example:
 ```powershell
 $deployment = Get-ISHDeployment -Name InfoShare
 ```
+Or specify deployment name
+```powershell
+$deploymentName = "InfoShare"
+```
+Using deployment name instead of deployment instance is the preffered way for remote invocation purposes.
  
 ### Get the history of a deployment
 Infoshare.Deployment tracks all actions done on a Vanilla deployment through this module. 
  
-For the above `$deployment` you can get the history like this
+For the above `$deploymentName` you can get the history like this
  
 ```powershell
-Get-ISHDeploymentHistory -ISHDeployment $deployment
+Get-ISHDeploymentHistory -ISHDeployment $deploymentName
 ```
  
 If you would execute the following.
  
 CopyCodeBlockAndLink(FeatureToggle.ps1)
  
-and then again `Get-ISHDeploymentHistory -ISHDeployment $deployment` outputs as an example of a history file.
+and then again `Get-ISHDeploymentHistory -ISHDeployment $deploymentName` outputs as an example of a history file.
 
 ```powershell
 # 20160314
-$deployment = Get-ISHDeployment -Name 'InfoShare'
-Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "licensekey" -Domain "ish.example.com"
-Enable-ISHUIContentEditor -ISHDeployment $deployment
-Enable-ISHUIQualityAssistant -ISHDeployment $deployment
-Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId "externalid"
-Disable-ISHUITranslationJob -ISHDeployment $deployment
+$deploymentName = "InfoShare"
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "licensekey" -Domain "ish.example.com"
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
+Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
+Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId "externalid"
+Disable-ISHUITranslationJob -ISHDeployment $deploymentName
 ```
 
  
@@ -87,7 +91,7 @@ All commandlets in this module track and keep a backup of all vanilla files bein
 This allows the module to undo all changes without the requirement to uninstall and then re-install.
  
 ```powershell
-Undo-ISHDeployment -ISHDeployment $deployment
+Undo-ISHDeployment -ISHDeployment $deploymentName
 ```
  
 ## Clear history artifacts
@@ -95,5 +99,5 @@ Because the module's codebase is not connected with the `InstallTool.exe` when y
 The `Clear-ISHDeploymentHistory` takes care of this by removing all artifacts. You must use this commandlet before uninstalling.
  
 ```powershell
-Clear-ISHDeploymentHistory -ISHDeployment $deployment
+Clear-ISHDeploymentHistory -ISHDeployment $deploymentName
 ```

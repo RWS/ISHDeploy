@@ -45,4 +45,4 @@ For more detailed information, please read the [getting started](Getting Started
 
 # What is new in this release?
 
-This version introduces the following cmdlets and articles:
+This version introduces the following changes in cmdlets and articles:

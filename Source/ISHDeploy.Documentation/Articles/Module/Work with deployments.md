@@ -51,19 +51,21 @@ All commandlets that target a specific deployment are driven from a parameter `-
 To provide `-ISHDeployment` parameter to commandlets you need either to initialize variable with Get-ISHDeployment output, for example:
 ```powershell
 $deployment = Get-ISHDeployment -Name InfoShare
+Get-ISHDeploymentHistory -ISHDeployment $deployment
 ```
 Or specify deployment name
 ```powershell
-$deploymentName = "InfoShare"
+Get-ISHDeploymentHistory -ISHDeployment "InfoShare"
 ```
 Using deployment name instead of deployment instance is the preffered way for remote invocation purposes.
  
 ### Get the history of a deployment
 Infoshare.Deployment tracks all actions done on a Vanilla deployment through this module. 
  
-For the above `$deploymentName` you can get the history like this
+You can get the history like this
  
 ```powershell
+$deploymentName = "InfoShare"
 Get-ISHDeploymentHistory -ISHDeployment $deploymentName
 ```
  

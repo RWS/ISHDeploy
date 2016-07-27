@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,14 +36,14 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public DisableISHUITranslationJobOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
+        public DisableISHUITranslationJobOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare translation job");
             
-            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
-            _invoker.AddAction(new CommentNodeByXPathAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TopDocumentTranslationJobXPath, true));
-            _invoker.AddAction(new CommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
+            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, Deployment.EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
+            _invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TopDocumentTranslationJobXPath, true));
+            _invoker.AddAction(new CommentBlockAction(logger, Deployment.AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
         }
 
         /// <summary>

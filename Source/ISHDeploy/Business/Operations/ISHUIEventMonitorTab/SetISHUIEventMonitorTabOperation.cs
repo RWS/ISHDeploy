@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,12 +37,12 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="menuItem">The menu item object.</param>
-        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, EventLogMenuItem menuItem) :
+        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
 		}
 
 		/// <summary>

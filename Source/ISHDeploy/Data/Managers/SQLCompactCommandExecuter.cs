@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using ISHDeploy.Data.Managers.Interfaces;

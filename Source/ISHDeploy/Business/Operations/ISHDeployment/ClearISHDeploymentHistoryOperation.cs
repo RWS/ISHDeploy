@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,13 +34,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
+        public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Customization history clean up");
 
-            _invoker.AddAction(new FileDeleteAction(logger, HistoryFilePath));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, BackupFolderPath));
+            _invoker.AddAction(new FileDeleteAction(logger, Deployment.HistoryFilePath));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, Deployment.BackupFolderPath));
         }
 
         /// <summary>

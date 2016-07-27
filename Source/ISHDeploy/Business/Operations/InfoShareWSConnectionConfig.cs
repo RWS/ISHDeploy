@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,30 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
     /// <summary>
-    /// Provides absolute paths to all ISH files that are going to be used
-    /// Also provides xpaths to XML elements and attributes in these files
+    /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
-    public partial class BasePathsOperation
+    partial class BasePathsOperation
     {
         /// <summary>
-        /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
-        /// </summary>
-        protected ISHFilePath InfoShareWSConnectionConfigPath
-        {
-            get
-            {
-                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"InfoShareWS\connectionconfiguration.xml");
-            }
-        }
-
-        /// <summary>
-        /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
+        /// Provides constants related to ~\Web\InfoShareWS\connectionconfiguration.xml
         /// </summary>
         protected class InfoShareWSConnectionConfig
         {

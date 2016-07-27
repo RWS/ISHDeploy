@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
 using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
@@ -62,17 +61,17 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			};
 
 			// Author web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
+			_invoker.AddAction(new SetNodeAction(logger, Deployment.InfoShareAuthorWebConfigPath, 
 				string.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareAuthorWebConfigPath,
 				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// WS web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
+			_invoker.AddAction(new SetNodeAction(logger, Deployment.InfoShareWSWebConfigPath, 
 				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareWSWebConfigPath,
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
             // STS web Config
@@ -82,15 +81,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 				Issuer = issuer
 			};
 
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
+			_invoker.AddAction(new SetNodeAction(logger, Deployment.InfoShareSTSWebConfigPath,
 				string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, Deployment.InfoShareSTSWebConfigPath,
 				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
             // InputParameters.xml
-            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerCertificateValidationModeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerCertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(logger, Deployment.InputParametersFilePath, InputParameters.IssuerCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, Deployment.InputParametersFilePath, InputParameters.IssuerCertificateThumbprintXPath, thumbprint));
         }
 
         /// <summary>

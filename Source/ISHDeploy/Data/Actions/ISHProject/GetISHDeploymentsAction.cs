@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,7 +117,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
                 var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-                var ishProject = new ISHDeployment(dictionary, version);
+                var ishProject = new ISHDeployment(new InputParameters(dictionary), version);
 
                 result.Add(ishProject);
             }

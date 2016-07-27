@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 ﻿using System.IO;
-using ISHDeploy.Extensions;
 
 namespace ISHDeploy.Models
 {
@@ -23,25 +22,6 @@ namespace ISHDeploy.Models
     /// </summary>
     public class ISHFilePath
 	{
-        /// <summary>
-        /// Specifies Content Manager main folders
-        /// </summary>
-		public enum IshDeploymentType
-        {
-            /// <summary>
-            /// Content Manager Web folder
-            /// </summary>
-			Web,
-            /// <summary>
-            /// Content Manager Data folder
-            /// </summary>
-			Data,
-            /// <summary>
-            /// Content Manager App folder
-            /// </summary>
-			App
-        }
-
         /// <summary>
         /// Absolute path to file or folder
         /// </summary>
@@ -60,26 +40,14 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
         /// </summary>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="deploymentType">Type of the deployment.</param>
+        /// <param name="deploymentFolderPath">The path to folder instance of the deployment.</param>
+        /// <param name="backupFolderPath">Type of the deployment.</param>
         /// <param name="relativePath">The relative path to the file.</param>
-        public ISHFilePath(ISHDeploymentInternal ishDeployment, IshDeploymentType deploymentType, string relativePath)
-		{
-            if (deploymentType == IshDeploymentType.App)
-            {
-                AbsolutePath = Path.Combine(ishDeployment.AppFolderPath, relativePath);
-            }
-            else if (deploymentType == IshDeploymentType.Web)
-            {
-                AbsolutePath = Path.Combine(ishDeployment.AuthorFolderPath, relativePath);
-            }
-            else if (deploymentType == IshDeploymentType.Data)
-            {
-                AbsolutePath = Path.Combine(ishDeployment.DataFolderPath, relativePath);
-            }
-
-			RelativePath = relativePath;
-            VanillaPath = Path.Combine(ishDeployment.GetDeploymentTypeBackupFolder(deploymentType), RelativePath);
+        public ISHFilePath(string deploymentFolderPath, string backupFolderPath, string relativePath)
+        {
+            RelativePath = relativePath;
+            AbsolutePath = Path.Combine(deploymentFolderPath, relativePath);
+            VanillaPath = Path.Combine(backupFolderPath, relativePath);
         }
 
         /// <summary>

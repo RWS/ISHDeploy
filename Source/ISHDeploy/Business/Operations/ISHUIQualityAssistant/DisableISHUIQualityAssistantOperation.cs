@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,13 +35,13 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public DisableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
+        public DisableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
 		}
 
         /// <summary>

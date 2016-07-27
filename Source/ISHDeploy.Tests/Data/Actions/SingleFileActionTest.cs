@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,7 @@ namespace ISHDeploy.Tests.Data.Actions
         public void Create_Backup_file_created()
         {
 			// Arrange
-			var testFilePath = this.GetIshFilePath("Test.xml");
+			var testFilePath = GetIshFilePath("Test.xml");
 	        var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".bak");
 
 			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
@@ -54,7 +54,7 @@ namespace ISHDeploy.Tests.Data.Actions
 		public void Dispose_Backup_file_disposed()
 		{
 			// Arrange
-			var testFilePath = this.GetIshFilePath("Test.xml");
+			var testFilePath = GetIshFilePath("Test.xml");
 			var backUpFilePath = String.Concat(testFilePath.AbsolutePath, ".bak");
 
 			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
@@ -74,7 +74,7 @@ namespace ISHDeploy.Tests.Data.Actions
 		public void Create_Vanilla_backup_created()
 		{
 			// Arrange
-			var testFilePath = this.GetIshFilePath("Test.xml");
+			var testFilePath = GetIshFilePath("Test.xml");
 			FileManager.FileExists(testFilePath.AbsolutePath).Returns(true);
 
 			// Act

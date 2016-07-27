@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,15 +36,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public ResetISHSTSOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
+        public ResetISHSTSOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Reset STS database");
 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ishDeployment.STSAppPoolName));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, ishDeployment.WebNameSTSAppData));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ishDeployment.STSAppPoolName, true));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, Deployment.InputParameters.WebNameSTSAppData));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName, true));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, Deployment.InfoShareSTSWebConfigPath));
         }
 
 		/// <summary>

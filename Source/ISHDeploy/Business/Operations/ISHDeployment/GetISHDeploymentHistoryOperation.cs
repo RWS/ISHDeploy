@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,12 +40,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
-        public GetISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
+        public GetISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Getting the history file content");
 
-            _invoker.AddAction(new FileReadAllTextAction(logger, HistoryFilePath, result => _historyContent = result));
+            _invoker.AddAction(new FileReadAllTextAction(logger, Deployment.HistoryFilePath, result => _historyContent = result));
         }
 
         /// <summary>

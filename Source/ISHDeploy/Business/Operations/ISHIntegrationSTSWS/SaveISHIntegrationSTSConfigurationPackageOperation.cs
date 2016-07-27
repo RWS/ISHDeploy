@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,12 +42,12 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
             base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
-            var packageFilePath = Path.Combine(PackagesFolderPath, fileName);
+            var packageFilePath = Path.Combine(Deployment.PackagesFolderPath, fileName);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     };
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
-            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
+            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, Deployment.InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
@@ -76,9 +76,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>
                     {
-                        {"#!#installtool:BASEHOSTNAME#!#", ishDeployment.AccessHostName},
-                        {"#!#installtool:PROJECTSUFFIX#!#", ishDeployment.ProjectSuffix},
-                        {"#!#installtool:OSUSER#!#", ishDeployment.OSUser},
+                        {"#!#installtool:BASEHOSTNAME#!#", Deployment.AccessHostName},
+                        {"#!#installtool:PROJECTSUFFIX#!#", Deployment.InputParameters.ProjectSuffix},
+                        {"#!#installtool:OSUSER#!#", Deployment.InputParameters.OSUser},
                         {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", ishDeployment.WebAppNameCM},
                         {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", ishDeployment.WebAppNameWS}
                     }));

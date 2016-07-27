@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,7 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
 
             _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    InfoShareSTSDataBase.ConnectionString,
+                    Deployment.InfoShareSTSDataBaseConnectionString,
                     sqlQuery,
                     result =>
                     {

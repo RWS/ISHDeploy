@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="label">Label of the element</param>
-        public RemoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string label) :
+        public RemoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");
@@ -45,10 +45,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
 			// First we should remove comment as it is dependent to its sibling node
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, itemCommentXPath));
 
 			// Then we removing item itself
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, itemXPath));
         }
 
         /// <summary>

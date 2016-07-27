@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Extensions;
-using ISHDeploy.Models;
-
 namespace ISHDeploy.Business.Operations
 {
     /// <summary>
     /// Provides xpaths to XML elements and attributes in these files
     /// </summary>
-    public partial class BasePathsOperation
+    partial class BasePathsOperation
     {
         /// <summary>
         /// Provides xpaths to XML elements and attributes in inputparameters.xml file
         /// </summary>
-        protected static class InputParameters
+        protected class InputParameters
         {
-            /// <summary>
-            /// The path to inputparameters.xml
-            /// </summary>
-            public static ISHFilePath Path => 
-                    new ISHFilePath(ISHDeploymentInternal.InputParametersFilePath,
-                        System.IO.Path.Combine(ISHDeploymentInternal.GetDeploymentBackupFolder(), "inputparameters.xml"));
-
             /// <summary>
             /// The xpath of "inputconfig/param[@name='issueractorpassword']/currentvalue" element in inputparameters.xml file
             /// </summary>

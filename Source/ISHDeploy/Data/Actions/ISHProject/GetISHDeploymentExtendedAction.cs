@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -95,7 +94,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentInternal(installParamFile, dictionary, version);
+            return new ISHDeploymentInternal(installParamFile, new InputParameters(dictionary), version);
         }
     }
 }

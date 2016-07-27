@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,14 +41,14 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public GetISHPackageFolderPathOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, bool isUNCFormat = false) :
+        public GetISHPackageFolderPathOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool isUNCFormat = false) :
             base(logger, ishDeployment)
         {
             _isUNCFormat = isUNCFormat;
 
             _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, Deployment.PackagesFolderPath));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _invoker.Invoke();
 
-            return _isUNCFormat ? PackagesFolderUNCPath : PackagesFolderPath; ;
+            return _isUNCFormat ? Deployment.PackagesFolderUNCPath : Deployment.PackagesFolderPath; ;
         }
     }
 }

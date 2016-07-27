@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileName">Name of the output file.</param>
         /// <param name="type">The output file type.</param>
-        public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string fileName, OutputType type) :
+        public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, OutputType type) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
@@ -61,15 +61,15 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     break;
             }
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, Deployment.PackagesFolderPath));
 
             string principal = NetUtil.GetMachineNetBiosDomain() + "\\" + Environment.MachineName + "$";
 
-            using (OleDbConnection builder = new OleDbConnection(ishDeployment.ConnectString))
+            using (OleDbConnection builder = new OleDbConnection(Deployment.InputParameters.ConnectString))
             {
                 _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     templateFile,
-                    Path.Combine(PackagesFolderPath, fileName),
+                    Path.Combine(Deployment.PackagesFolderPath, fileName),
                     new Dictionary<string, string>
                     {
                         {"$PRINCIPAL$", principal},

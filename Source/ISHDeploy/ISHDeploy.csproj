@@ -110,9 +110,6 @@
     <Compile Include="Business\Operations\FolderButtonBarXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\FoldersPaths.cs">
-      <DependentUpon>BasePathsOperation.cs</DependentUpon>
-    </Compile>
     <Compile Include="Business\Operations\InboxButtonBarXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
@@ -242,6 +239,7 @@
     <Compile Include="Interfaces\Actions\ISQLRestorableAction.cs" />
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
+    <Compile Include="Models\InputParameters.cs" />
     <Compile Include="Models\ISHDeployment.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
@@ -293,7 +291,6 @@
     <Compile Include="Data\Exceptions\WrongXmlStructureException.cs" />
     <Compile Include="Data\Exceptions\WrongXPathException.cs" />
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
-    <Compile Include="Extensions\DeploymentExtension.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
     <Compile Include="Models\ISHXmlNodes\EventLogMenuItemAction.cs" />
     <Compile Include="Models\ISHXmlNodes\EventLogMenuItem.cs" />

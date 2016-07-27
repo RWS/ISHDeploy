@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 ﻿using System;
-﻿using System.DirectoryServices;
 ﻿using System.Linq;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-﻿using Microsoft.Dism;
+using Microsoft.Dism;
 
 namespace ISHDeploy.Data.Managers
 {

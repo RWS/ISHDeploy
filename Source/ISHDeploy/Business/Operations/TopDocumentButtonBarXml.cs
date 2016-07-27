@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
         /// </summary>
-        protected static class TopDocumentButtonBarXml
+        protected ISHFilePath TopDocumentButtonBarXmlPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\XSL\TopDocumentButtonbar.xml");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
+        /// </summary>
+        protected class TopDocumentButtonBarXml
+        {
             /// <summary>
             /// The translation job attribute value
             /// </summary>

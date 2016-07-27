@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\InfoShareWS\Web.config
         /// </summary>
-        protected static class InfoShareWSWebConfig
+        protected ISHFilePath InfoShareWSWebConfigPath
         {
-            /// <summary>
-            /// The path to ~\Web\InfoShareWS\Web.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"InfoShareWS\Web.config");
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web, @"InfoShareWS\Web.config");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\InfoShareWS\Web.config
+        /// </summary>
+        protected class InfoShareWSWebConfig
+        {
+            
             /// <summary>
             /// The xpath of "configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>

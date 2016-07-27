@@ -34,13 +34,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Customization history clean up");
 
             _invoker.AddAction(new FileDeleteAction(logger, HistoryFilePath));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.BackupFolderPath));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, BackupFolderPath));
         }
 
         /// <summary>

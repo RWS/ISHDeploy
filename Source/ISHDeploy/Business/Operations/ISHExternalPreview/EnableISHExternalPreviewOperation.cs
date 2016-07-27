@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="externalId">The external user identifier.</param>
-        public EnableISHExternalPreviewOperation(ILogger logger, Models.ISHDeployment ishDeployment, string externalId) :
+        public EnableISHExternalPreviewOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string externalId) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
@@ -44,7 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     new [] {
                         InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleSearchPattern,
                         InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));

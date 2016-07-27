@@ -37,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="text">The text with description which cmdlet was executed with which parameters.</param>
-        public AddHistoryEntryOperation(ILogger logger, Models.ISHDeployment ishDeployment, string text) :
+        public AddHistoryEntryOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string text) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Adding of entry to the history file about cmdlets usage");

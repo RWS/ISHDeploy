@@ -42,26 +42,26 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
-        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
+        public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
             base (logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
-            var packageFilePath = Path.Combine(FoldersPaths.PackagesFolderPath, fileName);
+            var packageFilePath = Path.Combine(PackagesFolderPath, fileName);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
             var stsConfigParams = new Dictionary<string, string>
                     {
-                        {"$ishhostname", ISHDeploymentInternal.AccessHostName},
-                        {"$ishcmwebappname", ISHDeploymentInternal.WebAppNameCM},
-                        {"$ishwswebappname", ISHDeploymentInternal.WebAppNameWS},
+                        {"$ishhostname", ishDeployment.AccessHostName},
+                        {"$ishcmwebappname", ishDeployment.WebAppNameCM},
+                        {"$ishwswebappname", ishDeployment.WebAppNameWS},
                         {"$ishwscertificate", TemporarySTSConfigurationFileNames.ISHWSCertificateFileName},
                         {"$ishwscontent", string.Empty}
                     };
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
-            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfig.Path.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
+            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
@@ -76,11 +76,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>
                     {
-                        {"#!#installtool:BASEHOSTNAME#!#", ISHDeploymentInternal.AccessHostName},
-                        {"#!#installtool:PROJECTSUFFIX#!#", ISHDeploymentInternal.ProjectSuffix},
-                        {"#!#installtool:OSUSER#!#", ISHDeploymentInternal.OSUser},
-                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", ISHDeploymentInternal.WebAppNameCM},
-                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", ISHDeploymentInternal.WebAppNameWS}
+                        {"#!#installtool:BASEHOSTNAME#!#", ishDeployment.AccessHostName},
+                        {"#!#installtool:PROJECTSUFFIX#!#", ishDeployment.ProjectSuffix},
+                        {"#!#installtool:OSUSER#!#", ishDeployment.OSUser},
+                        {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", ishDeployment.WebAppNameCM},
+                        {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", ishDeployment.WebAppNameWS}
                     }));
             }
 

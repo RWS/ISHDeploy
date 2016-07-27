@@ -37,21 +37,21 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="issuer">The certificate issuer.</param>
-        public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string issuer) :
+        public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string issuer) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
 
 			// Author web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfig.Path, 
+			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfigPath, 
 				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersXPath, issuer)));
         
 			// WS web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfig.Path, 
+			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfigPath, 
 				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersPath, issuer)));
 
             // STS web Config
-            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfig.Path,
+            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfigPath,
 				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserXPath, issuer)));
 		}
 

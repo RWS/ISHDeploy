@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,13 +26,22 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
-        protected static class FeedSDLLiveContentConfig
+        protected ISHFilePath FeedSDLLiveContentConfigPath
         {
-            /// <summary>
-            /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Data,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Data,
                 @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
+            }
+
+        }
+
+        /// <summary>
+        /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
+        /// </summary>
+        protected class FeedSDLLiveContentConfig
+        {
+
 
             /// <summary>
             /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config

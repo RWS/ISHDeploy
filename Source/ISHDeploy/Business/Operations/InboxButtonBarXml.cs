@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\InboxButtonBar.xml
         /// </summary>
-        protected static class InboxButtonBarXml
+        protected ISHFilePath InboxButtonBarXmlPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\XSL\InboxButtonBar.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\XSL\InboxButtonBar.xml");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\XSL\InboxButtonBar.xml
+        /// </summary>
+        protected class InboxButtonBarXml
+        {
             /// <summary>
             /// The Xopus add check out comment placeholder
             /// </summary>

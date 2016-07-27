@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <param name="issuer">The certificate issuer.</param>
         /// <param name="validationMode">The certificate validation mode.</param>
-        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
+        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
@@ -62,17 +62,17 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			};
 
 			// Author web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfigPath, 
 				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
 				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// WS web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
 				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// STS web Config
@@ -82,10 +82,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 				Issuer = issuer
 			};
 
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
 				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
 				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 		}
 

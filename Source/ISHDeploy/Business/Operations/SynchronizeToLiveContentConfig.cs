@@ -24,16 +24,22 @@ namespace ISHDeploy.Business.Operations
     public partial class BasePathsOperation
     {
         /// <summary>
+        /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
+        /// </summary>
+        protected ISHFilePath SynchronizeToLiveContentConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
+                @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
+            }
+        }
+
+        /// <summary>
         /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config file
         /// </summary>
-        protected static class SynchronizeToLiveContentConfig
+        protected class SynchronizeToLiveContentConfig
         {
-            /// <summary>
-            /// The path to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
-                @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
-
             /// <summary>
             /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             /// </summary>

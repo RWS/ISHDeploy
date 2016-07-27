@@ -26,15 +26,21 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\config\config.xml
         /// </summary>
-        protected static class XopusConfigXml
+        protected ISHFilePath XopusConfigXmlPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Editors\Xopus\config\config.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\Editors\Xopus\config\config.xml");
+            }
+        }
 
-            /// <summary>
+         /// <summary>
+        /// The path to ~\Web\Author\ASP\Editors\Xopus\config\config.xml
+        /// </summary>
+        protected class XopusConfigXml
+        {
+           /// <summary>
             /// The Enrich integration bluelion plugin xpath comment placeholder
             /// </summary>
             public const string EnrichIntegrationXPath = "*/*[local-name()='javascript'][@src='../BlueLion-Plugin/Bootstrap/bootstrap.js']";

@@ -24,16 +24,22 @@ namespace ISHDeploy.Business.Operations
     public partial class BasePathsOperation
     {
         /// <summary>
+        /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
+        /// </summary>
+        protected ISHFilePath TrisoftInfoShareClientConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+                @"Author\ASP\Trisoft.InfoShare.Client.config");
+            }
+        }
+
+        /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config file
         /// </summary>
-        protected static class TrisoftInfoShareClientConfig
+        protected class TrisoftInfoShareClientConfig
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"Author\ASP\Trisoft.InfoShare.Client.config");
-
             /// <summary>
             /// The xpath of "configuration/trisoft.infoshare.client.settings/datasources/datasource/issuer/uri" element in file ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
             /// </summary>

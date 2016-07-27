@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\InfoShareSTS\Configuration\infoShareSTS.config.
         /// </summary>
-        protected static class InfoShareSTSConfig
+        protected ISHFilePath InfoShareSTSConfigPath
         {
-            /// <summary>
-            /// The path to ~\Web\InfoShareSTS\Configuration\infoShareSTS.config.
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"InfoShareSTS\Configuration\infoShareSTS.config");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\InfoShareSTS\Configuration\infoShareSTS.config.
+        /// </summary>
+        protected class InfoShareSTSConfig
+        {
             /// <summary>
             /// The xpath of "infoShareSTS/initialize/@certificateThumbprint" element in ~\Web\InfoShareSTS\Configuration\infoShareSTS.config file
             /// </summary>

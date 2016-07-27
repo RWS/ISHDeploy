@@ -41,11 +41,11 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="domain">The host name is checked for the existence of the license file.</param>
-        public TestISHContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment, string domain) :
+        public TestISHContentEditorOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string domain) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Testing of license for specific host name");
-            _invoker.AddAction(new LicenseTestAction(logger, FoldersPaths.LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
+            _invoker.AddAction(new LicenseTestAction(logger, LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
         }
 
         /// <summary>

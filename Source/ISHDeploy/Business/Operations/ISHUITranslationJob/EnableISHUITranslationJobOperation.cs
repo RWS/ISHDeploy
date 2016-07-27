@@ -36,14 +36,14 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public EnableISHUITranslationJobOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public EnableISHUITranslationJobOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare translation job");
             
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXml.Path, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXml.Path, TopDocumentButtonBarXml.TranslationJobAttribute, true));
-            _invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtm.Path, AuthorASPTreeHtm.TranslationJobHack));
+            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
+            _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TranslationJobAttribute, true));
+            _invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
         }
 
         /// <summary>

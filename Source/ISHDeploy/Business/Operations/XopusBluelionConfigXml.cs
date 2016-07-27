@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
         /// </summary>
-        protected static class XopusBluelionConfigXml
+        protected ISHFilePath XopusBluelionConfigXmlPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
+        /// </summary>
+        protected class XopusBluelionConfigXml
+        {
             /// <summary>
             /// The Enrich integration bluelion configuration xpath comment placeholder
             /// </summary>

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,14 +26,21 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Web.config
         /// </summary>
+        protected ISHFilePath InfoShareAuthorWebConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+                @"Author\ASP\Web.config");
+            }
+        }
+
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\Web.config
+        /// </summary>
         protected static class InfoShareAuthorWebConfig
         {
 
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Web.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"Author\ASP\Web.config");
 
             /// <summary>
             /// The xpath of "configuration/trisoft.infoshare.web.externalpreviewmodule/identity" element in ~\Web\Author\ASP\Web.config file
@@ -105,5 +112,5 @@ namespace ISHDeploy.Business.Operations
             /// </summary>
             public const string CertificateReferenceFindValueAttributeXPath = "configuration/system.identityModel.services/federationConfiguration/serviceCertificate/certificateReference/@findValue";
         }
-	}
+    }
 }

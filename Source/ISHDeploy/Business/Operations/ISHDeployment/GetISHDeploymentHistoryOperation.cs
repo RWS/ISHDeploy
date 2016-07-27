@@ -40,7 +40,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
-        public GetISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public GetISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Getting the history file content");

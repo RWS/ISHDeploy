@@ -36,15 +36,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public ResetISHSTSOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public ResetISHSTSOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Reset STS database");
 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, ishDeployment.STSAppPoolName));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, ishDeployment.WebNameSTSAppData));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, ishDeployment.STSAppPoolName, true));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 
 		/// <summary>

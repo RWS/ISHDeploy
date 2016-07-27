@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,13 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
         /// </summary>
-        protected static class EventMonitorMenuBarXml
+        protected ISHFilePath EventMonitorMenuBarXmlPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\XSL\EventMonitorMenuBar.xml");
+            }
+        }
+
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\XSL\EventMonitorMenuBar.xml
+        /// </summary>
+        protected class EventMonitorMenuBarXml
+        {
 
             /// <summary>
             /// Event monitor tab menu item XPath

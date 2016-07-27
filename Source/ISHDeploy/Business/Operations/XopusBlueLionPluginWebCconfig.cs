@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config
         /// </summary>
-        protected static class XopusBlueLionPluginWebCconfig
+        protected ISHFilePath XopusBlueLionPluginWebCconfigPath
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config
+        /// </summary>
+        protected class XopusBlueLionPluginWebCconfig
+        {
             /// <summary>
             /// The XPath to Json mimeMap in enrich bluelion web.config file
             /// </summary>

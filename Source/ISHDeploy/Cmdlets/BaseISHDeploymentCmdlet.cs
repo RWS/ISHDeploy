@@ -29,6 +29,6 @@ namespace ISHDeploy.Cmdlets
         [Parameter(Mandatory = true, HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
         [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
+        public Models.ISHDeploymentInternal ISHDeployment { get; set; }
     }
 }

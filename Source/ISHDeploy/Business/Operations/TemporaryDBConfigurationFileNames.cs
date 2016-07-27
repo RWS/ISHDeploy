@@ -24,7 +24,7 @@
         /// <summary>
         /// Temporary names, used to locating SQL templates script for DataBase integration
         /// </summary>
-        protected static class TemporaryDBConfigurationFileNames
+        protected class TemporaryDBConfigurationFileNames
         {
             /// <summary>
             /// The template for Account Permissions Grant `SQL` script

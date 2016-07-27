@@ -24,16 +24,22 @@ namespace ISHDeploy.Business.Operations
     public partial class BasePathsOperation
     {
         /// <summary>
+        /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
+        /// </summary>
+        protected ISHFilePath TranslationOrganizerConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
+                @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
+            }
+        }
+
+        /// <summary>
         /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config file
         /// </summary>
-        protected static class TranslationOrganizerConfig
+        protected class TranslationOrganizerConfig
         {
-            /// <summary>
-            /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.App,
-                @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
-
             /// <summary>
             /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer" element in file ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
             /// </summary>

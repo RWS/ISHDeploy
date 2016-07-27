@@ -24,7 +24,7 @@
         /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
-        protected static class TemporarySTSConfigurationFileNames
+        protected class TemporarySTSConfigurationFileNames
         {
             /// <summary>
             /// The name of ISH WS certificate file

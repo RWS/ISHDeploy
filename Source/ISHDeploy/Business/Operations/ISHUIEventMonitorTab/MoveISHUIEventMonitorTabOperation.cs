@@ -56,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <param name="label">Label of the element</param>
         /// <param name="operationType">Type of the operation.</param>
         /// <param name="targetLabel">The target label.</param>
-        public MoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, OperationType operationType, string targetLabel = null) :
+        public MoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string label, OperationType operationType, string targetLabel = null) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
@@ -72,10 +72,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}

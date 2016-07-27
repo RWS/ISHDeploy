@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.IO;
+using System.IO;
 using ISHDeploy.Extensions;
 using ISHDeploy.Models;
 
@@ -26,30 +26,48 @@ namespace ISHDeploy.Business.Operations
     public partial class BasePathsOperation
     {
         /// <summary>
-        /// The path to ~\Web\Author\ASP\Editors\Xopus\license\
+        /// The path to packages folder location for deployment
         /// </summary>
-        protected static class FoldersPaths
+        protected string PackagesFolderPath
         {
-            /// <summary>
-            /// The path to packages folder location for deployment
-            /// </summary>
-            public static string PackagesFolderPath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Packages");
+            get
+            {
+                return Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Packages");
+            }
+        }
 
-            /// <summary>
-            /// The UNC path to packages folder
-            /// </summary>
-            public static string PackagesFolderUNCPath => ConvertLocalFolderPathToUNCPath(PackagesFolderPath);
+        /// <summary>
+        /// The UNC path to packages folder
+        /// </summary>
+        protected string PackagesFolderUNCPath
+        {
+            get
+            {
+                return ConvertLocalFolderPathToUNCPath(PackagesFolderPath);
+            }
+        }
 
-            /// <summary>
-            /// The path to back up folder location for deployment
-            /// </summary>
-            public static string BackupFolderPath => Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Backup");
-            
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Editors\Xopus\license\ folder
-            /// </summary>
-            public static ISHFilePath LicenceFolderPath => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"Author\ASP\Editors\Xopus\license\");
+        /// <summary>
+        /// The path to back up folder location for deployment
+        /// </summary>
+        protected string BackupFolderPath
+        {
+            get
+            {
+                return Path.Combine(ISHDeploymentInternal.GetDeploymentAppDataFolder(), "Backup");
+            }
+        }
+
+        /// <summary>
+        /// The path to ~\Web\Author\ASP\Editors\Xopus\license\ folder
+        /// </summary>
+        protected ISHFilePath LicenceFolderPath
+        {
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            @"Author\ASP\Editors\Xopus\license\");
+            }
         }
     }
 }

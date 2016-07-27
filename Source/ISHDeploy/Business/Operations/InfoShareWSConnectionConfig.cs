@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -26,14 +26,20 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
         /// </summary>
-        protected static class InfoShareWSConnectionConfig
+        protected ISHFilePath InfoShareWSConnectionConfigPath
         {
-            /// <summary>
-            /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
+            get
+            {
+                return new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
                 @"InfoShareWS\connectionconfiguration.xml");
+            }
+        }
 
+        /// <summary>
+        /// The path to ~\Web\InfoShareWS\connectionconfiguration.xml
+        /// </summary>
+        protected class InfoShareWSConnectionConfig
+        {
             /// <summary>
             /// The xpath of "connectionconfiguration/issuer/authenticationtype" element in file ~\Web\InfoShareWS\connectionconfiguration.xml
             /// </summary>

@@ -37,12 +37,12 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="menuItem">The menu item object.</param>
-        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
+        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, EventLogMenuItem menuItem) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXml.Path, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
 		}
 
 		/// <summary>

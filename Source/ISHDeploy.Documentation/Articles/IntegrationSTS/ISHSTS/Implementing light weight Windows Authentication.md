@@ -8,7 +8,7 @@ Content Manager is installed on `ish.example.com` and ISHSTS is installed on `is
 
 Set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 # Enable Windows Authentication

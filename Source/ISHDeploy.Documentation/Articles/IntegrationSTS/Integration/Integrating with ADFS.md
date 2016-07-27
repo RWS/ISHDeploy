@@ -19,7 +19,7 @@ There are two kind of integrations:
 ### Set deploymentName variable
 First set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 Then
@@ -30,7 +30,7 @@ CopyCodeBlock(Implementation.User.ps1)
 ### Set deploymentName variable
 First set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 This is an example for a windows authentication

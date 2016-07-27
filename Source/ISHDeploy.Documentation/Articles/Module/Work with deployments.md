@@ -47,7 +47,7 @@ Get-ISHDeployment -Name InfoShareSQL
 ```
 
 ### Using a deployment
-All commandlets that target a specific deployment are driven from a parameter `-ISHDeployment` that expects as a value a name of deployment or an instance from the `Get-ISHDeployment` output.
+All commandlets that target a specific deployment are driven from a parameter `-ISHDeployment` that expects as value a name of deployment or an instance from the `Get-ISHDeployment` output.
 To provide `-ISHDeployment` parameter to commandlets you need either to initialize variable with Get-ISHDeployment output, for example:
 ```powershell
 $deployment = Get-ISHDeployment -Name InfoShare

@@ -41,7 +41,7 @@ The differences are shown in the following images
 ### Set deploymentName variable
 First set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 Then
@@ -52,7 +52,7 @@ CopyCodeBlock(Implementation.User.ps1)
 ### Set deploymentName variable
 First set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 The internal clients are all non interactive. That means they required a pre-configured set of credentials to use during authentication.

@@ -23,7 +23,7 @@ ISHSTS needs the following from the service provider:
 
 Set deploymentName variable.
 ```powershell
-$deploymentName=`InfoShare`
+$deploymentName="InfoShare"
 ```
 
 # Configuring ISHSTS for a service provider

@@ -2,4 +2,4 @@
 $serviceCertificateThumbprint="20161201.Thumbprint"
 
 # Set service certificate
-Set-ISHAPIWCFServiceCertificate -ISHDeployment $deployment -Thumbprint $serviceCertificateThumbprint
+Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint $serviceCertificateThumbprint

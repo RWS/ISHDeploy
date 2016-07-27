@@ -48,13 +48,6 @@ By default the **Translation Job** is enabled in the UI. To disable it:
 Disable-ISHUITranslationJob -ISHDeployment $deploymentName
 ```
 
-### Configure Translation Job
-By default the **Translation Job** is enabled in the UI. To disable it:
-
-```powershell
-Disable-ISHUITranslationJob -ISHDeployment $deploymentName
-```
-
 ### Configure Event monitor options
 To create a new tab event type `CUSTOM`:
 

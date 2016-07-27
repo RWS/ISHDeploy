@@ -95,7 +95,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentInternal(installParamsPath, dictionary, version);
+            return new ISHDeploymentInternal(installParamFile, dictionary, version);
         }
     }
 }

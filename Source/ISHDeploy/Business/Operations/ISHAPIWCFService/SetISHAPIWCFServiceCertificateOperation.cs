@@ -57,6 +57,9 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 		        thumbprint = normalizedThumbprint;
             }
 
+            var serviceCertificateSubjectName = string.Empty;
+            (new GetCertificateSubjectByThumbprintAction(logger, thumbprint, result => serviceCertificateSubjectName = result)).Execute();
+
             // Ensure DataBase file exists
             _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
             _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
@@ -74,12 +77,13 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-
+            
             // thumbprint
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
 
             // validationMode
             _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfig.Path, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));

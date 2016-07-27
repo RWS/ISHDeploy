@@ -52,7 +52,7 @@ namespace ISHDeploy.Data.Actions.File
         private readonly IFileManager _fileManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCopyAction"/> class.
+        /// Initializes a new instance of the <see cref="FileCopyToDirectoryAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="path">The file path.</param>

@@ -70,7 +70,8 @@ $scriptBlockReadTargetXML = {
     $trisoftInfoShareClientConfig.load("$xmlPath\Web$suffix\Author\ASP\Trisoft.InfoShare.Client.config")
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
     $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
-
+    [System.Xml.XmlDocument]$inputParametersXml = new-object System.Xml.XmlDocument
+    $inputParametersXml.load($inputParameters["inputparametersFilePath"])
     $result = @{}
 
     #get variables and nodes from files
@@ -88,6 +89,7 @@ $scriptBlockReadTargetXML = {
     $result["trisoftInfoShareClientConfigWSTrustActorPassword"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/password")[0].InnerText
     $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
     $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
+    $result["issueractorpassword"] = $inputParametersXml.SelectNodes("inputconfig/param[@name='issueractorpassword']/currentvalue")[0].InnerText
     
     return $result
 }
@@ -111,6 +113,7 @@ function readTargetXML() {
     $global:trisoftInfoShareClientConfigWSTrustActorPassword = $result["trisoftInfoShareClientConfigWSTrustActorPassword"]
     $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttp = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"]
     $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttps = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"]
+    $global:issuerActorPassword = $result["issueractorpassword"]
 }
 
 
@@ -146,6 +149,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint"
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint"
@@ -243,6 +247,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint2"
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint2"
@@ -263,6 +268,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     }
 
     It "Set ISHIntegrationSTSWSTrust change only ActorPassword"{
@@ -297,6 +303,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
+        $issuerActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as empty string"{
@@ -314,6 +321,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
+        $issuerActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorUsername as NULL"{
@@ -331,6 +339,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
+        $issuerActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as NULL"{
@@ -348,6 +357,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
+        $issuerActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust writes proper history"{

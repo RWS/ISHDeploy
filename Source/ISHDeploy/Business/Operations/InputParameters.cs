@@ -72,6 +72,21 @@ namespace ISHDeploy.Business.Operations
             public const string IssuerWSTrustEndpointUrlXPath = "inputconfig/param[@name='issuerwstrustendpointurl']/currentvalue";
 
             /// <summary>
+            /// The xpath of "inputconfig/param[@name='authenticationtype']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string AuthenticationTypeXPath = "inputconfig/param[@name='authenticationtype']/currentvalue";
+
+            /// <summary>
+            /// The xpath of "inputconfig/param[@name='infosharestswindowsauthenticationenabled']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string InfoshareSTSWindowsAuthenticationEnabledXPath = "inputconfig/param[@name='infosharestswindowsauthenticationenabled']/currentvalue";
+            
+            /// <summary>
+            /// The xpath of "inputconfig/param[@name='issuerwstrustendpointurl_normalized']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string IssuerWSTrustEndpointUrl_NormalizedXPath = "inputconfig/param[@name='issuerwstrustendpointurl_normalized']/currentvalue";
+
+            /// <summary>
             /// The xpath of "inputconfig/param[@name='issuerwstrustmexurl']/currentvalue" element in inputparameters.xml file
             /// </summary>
             public const string IssuerWSTrustMexUrlXPath = "inputconfig/param[@name='issuerwstrustmexurl']/currentvalue";
@@ -85,6 +100,12 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue" element in inputparameters.xml file
             /// </summary>
             public const string ServiceCertificateValidationModeXPath = "inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue";
+
+            /// <summary>
+            /// The xpath of "inputconfig/param[@name='servicecertificatesubjectname']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string ServiceCertificateSubjectNameXPath = "inputconfig/param[@name='servicecertificatesubjectname']/currentvalue";
+
         }
     }
 }

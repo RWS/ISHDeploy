@@ -199,6 +199,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
+
+                _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
             }
             else
             {
@@ -218,8 +220,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Set SpecificUser identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
+                _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.AuthenticationTypeXPath, authenticationType.ToString()));
         }
 
         /// <summary>
@@ -252,6 +256,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // InputParameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustEndpointUrlXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 

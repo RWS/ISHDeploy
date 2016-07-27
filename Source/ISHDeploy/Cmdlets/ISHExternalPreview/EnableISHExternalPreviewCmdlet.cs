@@ -25,7 +25,7 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
     /// <para type="link">Disable-ISHExternalPreview</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Disable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
+    /// <code>PS C:\>Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
     /// <para>This command enables the external preview for user 'user1'.
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>

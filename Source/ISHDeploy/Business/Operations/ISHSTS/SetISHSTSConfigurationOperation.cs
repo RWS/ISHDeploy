@@ -131,21 +131,20 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 thumbprint = normalizedThumbprint;
             }
 
+            var encryptedThumbprint = string.Empty;
+            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
+
             _invoker.AddAction(new StopApplicationPoolAction(Logger, ISHDeploymentInternal.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
             _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfig.Path,
                 InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
-
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactUpdateAction(Logger,
-                InfoShareSTSDataBase.ConnectionString,
-                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
-                parameters));
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger, 
+                InfoShareSTSDataBase.ConnectionString, 
+                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat, 
+                        encryptedThumbprint, 
+                        string.Join(", ", InfoShareSTSDataBase.SvcPaths))));
         }
 
         /// <summary>

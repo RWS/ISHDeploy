@@ -21,6 +21,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models.SQL;
 
@@ -81,8 +82,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting the relying parties");
 
             // Ensure DataBase file exists
-            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (!isDataBaseFileExist)
+            {
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
+                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
+            }
 
             string relyingPartyTypePrefix;
             if (relyingPartyType == RelyingPartyType.None)

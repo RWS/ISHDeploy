@@ -70,6 +70,20 @@ $scriptBlockGetRelayingParty = {
  
 }
 
+$scriptBlockResetISHSTS = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Reset-ISHSTS -ISHDeployment $ishDeploy
+    Start-Sleep -Milliseconds 7000
+}
+
 $scriptBlockSetRelayingParty = {
     param (
         $ishDeployName,
@@ -164,8 +178,8 @@ function remoteQuerryDatabase() {
 
 Describe "Testing ISHRelaying party"{
     BeforeEach {
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
-        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
+    }
     
      It "Get ISHSTSRelyingParty"{
         WebRequestToSTS $testingDeploymentName
@@ -297,7 +311,6 @@ Describe "Testing ISHRelaying party"{
         }
   
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName} | Should Throw 
-
     }
 
     It "Set ISHSTSRelyingParty when db not exists"{
@@ -306,8 +319,7 @@ Describe "Testing ISHRelaying party"{
         }
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false} | Should not Throw 
         Test-Path $dbPath | Should be "True"
-
     }
-	Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $testingDeploymentName
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
 }
 

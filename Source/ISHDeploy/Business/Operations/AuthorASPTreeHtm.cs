@@ -17,8 +17,7 @@
 namespace ISHDeploy.Business.Operations
 {
     /// <summary>
-    /// Provides absolute paths to all ISH files that are going to be used
-    /// Also provides xpaths to XML elements and attributes in these files
+    /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
     partial class BaseOperationPaths
     {

@@ -149,6 +149,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// Adds actions for setting STS authentication type.
         /// </summary>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="authenticationType">The authentication type.</param>
         private void AddActionsToSetAuthenticationType(Models.ISHDeployment ishDeployment, AuthenticationTypes authenticationType)
         {

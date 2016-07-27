@@ -55,8 +55,10 @@ $scriptBlockGetHistory = {
 $scriptBlockReadTargetXML = {
     param(
         $xmlPath,
-        $suffix
+        $suffix,
+        $inputparametersFilePath
     )
+    
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")
@@ -71,7 +73,7 @@ $scriptBlockReadTargetXML = {
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
     $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
     [System.Xml.XmlDocument]$inputParametersXml = new-object System.Xml.XmlDocument
-    $inputParametersXml.load($inputParameters["inputparametersFilePath"])
+    $inputParametersXml.load($inputparametersFilePath)
     $result = @{}
 
     #get variables and nodes from files
@@ -96,7 +98,7 @@ $scriptBlockReadTargetXML = {
 function readTargetXML() {
     
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix, $inputParameters["inputparametersFilePath"]
 
     #get variables and nodes from files
     $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]

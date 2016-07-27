@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
     /// <example>
     /// <code>PS C:\>Test-ISHContentEditor -Domain "localhost" -ISHDeployment $deployment</code>
     /// <para>This command checks if license for domain name 'localhost' exists.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsDiagnostic.Test, "ISHContentEditor")]
 	public class TestISHContentEditorCmdlet : BaseISHDeploymentCmdlet

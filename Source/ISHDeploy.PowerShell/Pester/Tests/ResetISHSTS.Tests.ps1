@@ -136,13 +136,15 @@ Describe "Testing Reset-ISHSTS"{
         $infosharewswebappname = $testingDeployment.WebAppNameWS
         $dbQuerryCommandSet = "UPDATE RelyingParties SET EncryptingCertificate='testThumbprint' WHERE Realm=`'https://$computerName.$env:USERDNSDOMAIN/$infosharewswebappname/Wcf/API20/Folder.svc`'"
         $dbQuerryCommandSelect = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=`'https://$computerName.$env:USERDNSDOMAIN/$infosharewswebappname/Wcf/API20/Folder.svc`'"
+        
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
+        Start-Sleep -Milliseconds 7000
 
         $thumbprint1 = remoteQuerryDatabase -command $dbQuerryCommandSelect -stringOutput $true
-        
         #Change thubmprint value
         remoteQuerryDatabase -command $dbQuerryCommandSet
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName  
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
         Start-Sleep -Milliseconds 7000
 
         If (Test-Path $dbPath) {

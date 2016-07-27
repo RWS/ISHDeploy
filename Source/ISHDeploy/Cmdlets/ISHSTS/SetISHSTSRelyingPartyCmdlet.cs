@@ -31,7 +31,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Wcf/API/TestWithCertificate/" -Realm "https://realm.example.com/wcf/Api/Test" -EncryptingCertificate "EncryptingCertificateSample="</code>/// 
     /// <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Wcf/API/Test" -Realm "https://realm.example.com/wcf/Api/Test"</code>
     /// <para>This command sets relying parties to infosharests database.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSRelyingParty")]

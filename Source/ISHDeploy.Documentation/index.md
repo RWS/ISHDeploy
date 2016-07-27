@@ -6,9 +6,9 @@ With code as configuration, PowerShell authors develop scripts that configure Co
 As a very brief example the following script sets the license and enables the **Content Editor** for the default deployment.
 
 ```powershell
-$deployment = Get-ISHDeployment -Name InfoShare
-Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "licensekey" -Domain "ish.example.com"
-Enable-ISHUIContentEditor -ISHDeployment $deployment
+$deploymentName = "InfoShare"
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "licensekey" -Domain "ish.example.com"
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 ```
 
 # Getting started

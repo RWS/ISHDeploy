@@ -26,7 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
     /// <example>
     /// <code>PS C:\>Enable-ISHUIQualityAssistant -ISHDeployment $deployment</code>
     /// <para>This command enables Quality Assistant.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHUIQualityAssistant")]
     public sealed class EnableISHUIQualityAssistantCmdlet : BaseHistoryEntryCmdlet

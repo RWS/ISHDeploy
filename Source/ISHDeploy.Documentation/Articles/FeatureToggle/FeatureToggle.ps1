@@ -1,14 +1,14 @@
-﻿# $deployment is acquired by Get-ISHDeployment
+﻿# $deploymentName is the name of Deployment
  
 # Set the license and enable the Content Editor
-Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "licensekey" -Domain "ish.example.com"
-Enable-ISHUIContentEditor -ISHDeployment $deployment
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "licensekey" -Domain "ish.example.com"
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
  
 # Enable the Quality Assistant
-Enable-ISHUIQualityAssistant -ISHDeployment $deployment
+Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
  
 # Enable the External Preview using externalid
-Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId "externalid"
+Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId "externalid"
 
 # Create a new tab for CUSTOM event types
 $hash=@{
@@ -16,5 +16,5 @@ $hash=@{
     Description="Show all custom events"
     EventTypesFilter=@("CUSTOM1","CUSTOM2")
 }
-Set-ISHUIEventMonitorTab -ISHDeployment $deployment @hash
-Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label $hash["Label"] -First
+Set-ISHUIEventMonitorTab -ISHDeployment $deploymentName @hash
+Move-ISHUIEventMonitorTab -ISHDeployment $deploymentName -Label $hash["Label"] -First

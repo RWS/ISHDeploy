@@ -74,6 +74,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Removing licenses
             _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
 
+            // Cleaning up STS App_Data folder
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
+
             // Restore InputParameters.xml
             bool isInputParameterBackupFileExist = false;
             (new FileExistsAction(logger, InputParameters.Path.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();

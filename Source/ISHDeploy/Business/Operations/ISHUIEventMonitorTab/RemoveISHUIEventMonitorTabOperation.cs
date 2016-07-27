@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Removes Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class RemoveISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
+	public class RemoveISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -45,10 +45,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
 			// First we should remove comment as it is dependent to its sibling node
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, itemCommentXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath));
 
 			// Then we removing item itself
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, itemXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemXPath));
         }
 
         /// <summary>

@@ -49,16 +49,5 @@ namespace ISHDeploy.Models
             AbsolutePath = Path.Combine(deploymentFolderPath, relativePath);
             VanillaPath = Path.Combine(backupFolderPath, relativePath);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ISHFilePath"/> class.
-        /// </summary>
-        /// <param name="absolutePath">The path to file in deployment.</param>
-        /// <param name="backupPath">The path to backup file.</param>
-        public ISHFilePath(string absolutePath, string backupPath)
-        {
-            AbsolutePath = absolutePath;
-            VanillaPath = backupPath;
-        }
 	}
 }

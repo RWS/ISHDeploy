@@ -26,9 +26,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Saves current STS integration configuration to zip package.
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class SaveISHIntegrationSTSConfigurationPackageOperation : BasePathsOperation, IOperation
+    public class SaveISHIntegrationSTSConfigurationPackageOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -47,7 +47,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
-            var packageFilePath = Path.Combine(Deployment.PackagesFolderPath, fileName);
+            var packageFilePath = Path.Combine(PackagesFolderPath, fileName);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     };
 
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
-            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, Deployment.InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
+            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
             _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
@@ -76,9 +76,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>
                     {
-                        {"#!#installtool:BASEHOSTNAME#!#", Deployment.AccessHostName},
-                        {"#!#installtool:PROJECTSUFFIX#!#", Deployment.InputParameters.ProjectSuffix},
-                        {"#!#installtool:OSUSER#!#", Deployment.InputParameters.OSUser},
+                        {"#!#installtool:BASEHOSTNAME#!#", ishDeployment.AccessHostName},
+                        {"#!#installtool:PROJECTSUFFIX#!#", InputParameters.ProjectSuffix},
+                        {"#!#installtool:OSUSER#!#", InputParameters.OSUser},
                         {"#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#", ishDeployment.WebAppNameCM},
                         {"#!#installtool:INFOSHAREWSWEBAPPNAME#!#", ishDeployment.WebAppNameWS}
                     }));

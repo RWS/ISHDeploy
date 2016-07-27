@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Collections.Generic;
@@ -59,7 +61,7 @@ namespace ISHDeploy.Tests
                 ["infosharestswebappname"] = string.Empty
             };
 
-			return new ISHFilePath(string.Empty, relativePath);
+			return new ISHFilePath(string.Empty, string.Empty, relativePath);
 		}
     }
 }

@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Sets WSTrust configuration.
     /// </summary>
-    public class SetISHIntegrationSTSWSTrustOperation : BasePathsOperation, IOperation
+    public class SetISHIntegrationSTSWSTrustOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -44,16 +44,16 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker = new ActionInvoker(logger, "Setting of WSTrust configuration");
 
             // endpoint
-            _invoker.AddAction(new SetElementValueAction(logger, Deployment.InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, endpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.IssuerWSTrustEndpointUrlXPath, endpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.ToString()));
             // mexEndpoint
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareWSWebConfigPath, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareWSWebConfigPath, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpsXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.IssuerWSTrustMexUrlXPath, mexEndpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath, InfoShareWSWebConfig.WSTrustMexEndpointUrlHttpsXPath, InfoShareWSWebConfig.WSTrustMexEndpointAttributeName, mexEndpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustMexUrlXPath, mexEndpoint.ToString()));
             // bindingType
-            _invoker.AddAction(new SetElementValueAction(logger, Deployment.InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, bindingType.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, bindingType.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 
         /// <summary>

@@ -106,7 +106,7 @@ namespace ISHDeploy.Data.Managers
 
             var doc = _fileManager.Load(filePath);
 
-            var node = this.SelectSingleNode(ref doc, xpath);
+            var node = SelectSingleNode(ref doc, xpath);
             if (node == null)
             {
                 _logger.WriteWarning($"{filePath} does not contain node within the xpath {xpath}");
@@ -132,7 +132,7 @@ namespace ISHDeploy.Data.Managers
 
             var doc = _fileManager.Load(filePath);
 
-            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
                 _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
@@ -157,7 +157,7 @@ namespace ISHDeploy.Data.Managers
 
             var doc = _fileManager.Load(filePath);
 
-            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
                 _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
@@ -212,7 +212,7 @@ namespace ISHDeploy.Data.Managers
 
             var doc = _fileManager.Load(filePath);
 
-            var nodes = this.SelectNodes(ref doc, xpath).ToArray();
+            var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
                 _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
@@ -517,7 +517,7 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var relativeElement = doc.XPathSelectElement(xpath);
-            if (relativeElement == null)
+            if (relativeElement?.Parent == null)
             {
                 throw new WrongXPathException(filePath, xpath);
             }
@@ -651,7 +651,7 @@ namespace ISHDeploy.Data.Managers
         /// </returns>
         private XNode SelectSingleNode(ref XDocument doc, string xPath)
         {
-            return this.SelectNodes(ref doc, xPath).SingleOrDefault();
+            return SelectNodes(ref doc, xPath).SingleOrDefault();
         }
 
         /// <summary>

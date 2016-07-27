@@ -30,9 +30,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <summary>
     /// Sets the Relying Party
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class SetISHSTSRelyingPartyOperation : BasePathsOperation
+    public class SetISHSTSRelyingPartyOperation : BaseOperationPaths
     {
         /// <summary>
         /// Operation type enum
@@ -83,12 +83,12 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // Ensure DataBase file exists
             bool isDataBaseFileExist = false;
-            (new FileExistsAction(logger, Deployment.InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
             if (!isDataBaseFileExist)
             {
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName, true));
-                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, Deployment.InfoShareSTSDataBasePath.AbsolutePath, $"{Deployment.InputParameters.BaseUrl}/{Deployment.InputParameters.STSWebAppName}"));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, Deployment.InfoShareSTSDataBasePath));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
             }
 
             string relyingPartyTypePrefix;
@@ -98,7 +98,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             {
                 int resultRowsCount = 0;
                 _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    Deployment.InfoShareSTSDataBaseConnectionString,
+                    InfoShareSTSDataBaseConnectionString,
                     $"{InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat} WHERE Realm ='{realm}' AND Name NOT LIKE '{relyingPartyTypePrefix}:%'",
                     result =>
                     {
@@ -111,7 +111,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
 
             _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
-                        Deployment.InfoShareSTSDataBaseConnectionString,
+                        InfoShareSTSDataBaseConnectionString,
                         InfoShareSTSDataBase.RelyingPartiesTableName,
                         "Realm",
                         new Dictionary<string, object>

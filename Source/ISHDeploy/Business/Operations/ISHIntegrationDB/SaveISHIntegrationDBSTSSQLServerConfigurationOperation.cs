@@ -27,9 +27,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
     /// <summary>
     /// Generates SQL Server configuration script that grants necessary permissions.
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class SaveISHIntegrationDBSTSSQLServerConfigurationOperation : BasePathsOperation, IOperation
+    public class SaveISHIntegrationDBSTSSQLServerConfigurationOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -61,15 +61,15 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     break;
             }
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, Deployment.PackagesFolderPath));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
 
             string principal = NetUtil.GetMachineNetBiosDomain() + "\\" + Environment.MachineName + "$";
 
-            using (OleDbConnection builder = new OleDbConnection(Deployment.InputParameters.ConnectString))
+            using (OleDbConnection builder = new OleDbConnection(InputParameters.ConnectString))
             {
                 _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     templateFile,
-                    Path.Combine(Deployment.PackagesFolderPath, fileName),
+                    Path.Combine(PackagesFolderPath, fileName),
                     new Dictionary<string, string>
                     {
                         {"$PRINCIPAL$", principal},

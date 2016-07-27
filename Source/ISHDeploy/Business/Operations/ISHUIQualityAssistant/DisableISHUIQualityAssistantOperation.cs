@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
     /// Disables quality assistant plugin for Content Manager development.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHUIQualityAssistantOperation : BasePathsOperation, IOperation
+    public class DisableISHUIQualityAssistantOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -40,8 +40,8 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
+			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
 		}
 
         /// <summary>

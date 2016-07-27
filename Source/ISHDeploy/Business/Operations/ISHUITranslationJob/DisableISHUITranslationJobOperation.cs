@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
     /// Disables translation job functionality for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHUITranslationJobOperation : BasePathsOperation, IOperation
+    public class DisableISHUITranslationJobOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -41,9 +41,9 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         {
             _invoker = new ActionInvoker(logger, "Disabling of InfoShare translation job");
             
-            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, Deployment.EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
-            _invoker.AddAction(new CommentNodeByXPathAction(logger, Deployment.TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TopDocumentTranslationJobXPath, true));
-            _invoker.AddAction(new CommentBlockAction(logger, Deployment.AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
+            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
+            _invoker.AddAction(new CommentNodeByXPathAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TopDocumentTranslationJobXPath, true));
+            _invoker.AddAction(new CommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
         }
 
         /// <summary>

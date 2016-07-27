@@ -22,9 +22,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// <summary>
     /// Adds entry to the history file about cmdlets usage
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class AddHistoryEntryOperation : BasePathsOperation, IOperation
+    public class AddHistoryEntryOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -41,7 +41,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Adding of entry to the history file about cmdlets usage");
-            _invoker.AddAction(new FileAddHistoryEntryAction(logger, Deployment.HistoryFilePath, text, Deployment.Name));
+            _invoker.AddAction(new FileAddHistoryEntryAction(logger, HistoryFilePath, text, ishDeployment.Name));
         }
 
         /// <summary>

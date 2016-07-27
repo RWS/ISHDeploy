@@ -5,12 +5,12 @@ using System.Reflection;
 namespace ISHDeploy.Data.Actions.DataBase.Mapper
 {
     /// <summary>
-    /// Casts data from DataRow to specified type
+    /// Casts data from <see cref="DataRow"/> to specified type
     /// </summary>
     public class DataRowToModelMapper
     {
         /// <summary>
-        /// Map data from DataRow to specified type
+        /// Map data from <see cref="DataRow"/> to specified type
         /// </summary>
         /// <param name="row">The value.</param>
         /// <returns>

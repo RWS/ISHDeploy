@@ -27,7 +27,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets all instances of the installed Content Manager deployment for the current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentExtendedAction : BaseActionWithResult<ISHDeploymentInternal>
+    public class GetCurrentInputParametersAction : BaseActionWithResult<InputParameters>
     {
         /// <summary>
         /// The input parameters file name
@@ -55,12 +55,12 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private readonly string _name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedAction"/> class.
+        /// Initializes a new instance of the <see cref="GetCurrentInputParametersAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="name">The Content Manager deployment name.</param>
         /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentExtendedAction(ILogger logger, string name, Action<ISHDeploymentInternal> returnResult)
+        public GetCurrentInputParametersAction(ILogger logger, string name, Action<InputParameters> returnResult)
             : base(logger, returnResult)
         {
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
@@ -73,12 +73,11 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// Executes current action and returns result.
         /// </summary>
         /// <returns>Content Manager deployment in acccordance with name.</returns>
-        protected override ISHDeploymentInternal ExecuteWithResult()
+        protected override InputParameters ExecuteWithResult()
         {
             // Get installed deployment from the registry.
             var projectRegKey = _registryManager.GetInstalledProjectsKeys(_name).FirstOrDefault();
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
-            var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
 
             if (string.IsNullOrWhiteSpace(installParamsPath))
             {
@@ -94,7 +93,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentInternal(installParamFile, new InputParameters(dictionary), version);
+            return new InputParameters(installParamFile, dictionary);
         }
     }
 }

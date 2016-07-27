@@ -239,7 +239,7 @@ Describe "Testing ISHRelaying party"{
     }
 
      It "Get ISHSTSRelyingParty with BL key"{
-       WebRequestToSTS $testingDeploymentName
+        WebRequestToSTS $testingDeploymentName
         Test-Path $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'BL%'"
@@ -258,7 +258,7 @@ Describe "Testing ISHRelaying party"{
         $rpTextConcat -eq $commandletTextConcat | Should be $true
     }
 
-     It "Set ISHSTSRelyingParty"{
+    It "Set ISHSTSRelyingParty"{
        WebRequestToSTS $testingDeploymentName
         Test-Path $dbPath | Should be "True"
 

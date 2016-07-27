@@ -19,12 +19,12 @@ namespace ISHDeploy.Business.Operations
     /// <summary>
     /// Provides xpaths to XML elements and attributes in these files
     /// </summary>
-    partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
         /// Provides xpaths to XML elements and attributes in inputparameters.xml file
         /// </summary>
-        protected class InputParameters
+        protected class InputParametersXml
         {
             /// <summary>
             /// The xpath of "inputconfig/param[@name='issueractorpassword']/currentvalue" element in inputparameters.xml file

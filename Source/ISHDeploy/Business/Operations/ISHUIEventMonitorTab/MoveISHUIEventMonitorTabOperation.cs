@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class MoveISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
+	public class MoveISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// Operation type enum
@@ -72,10 +72,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new MoveAfterNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new MoveBeforeNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}

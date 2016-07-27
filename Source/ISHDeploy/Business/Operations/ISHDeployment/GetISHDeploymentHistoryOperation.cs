@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Gets history file content.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class GetISHDeploymentHistoryOperation : BasePathsOperation, IOperation<string>
+    public class GetISHDeploymentHistoryOperation : BaseOperationPaths, IOperation<string>
     {
         /// <summary>
         /// The actions invoker
@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         {
             _invoker = new ActionInvoker(logger, "Getting the history file content");
 
-            _invoker.AddAction(new FileReadAllTextAction(logger, Deployment.HistoryFilePath, result => _historyContent = result));
+            _invoker.AddAction(new FileReadAllTextAction(logger, HistoryFilePath, result => _historyContent = result));
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
     /// Enables Content Editor for Content Manager deployment
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUIContentEditorOperation : BasePathsOperation, IOperation
+    public class EnableISHUIContentEditorOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -40,11 +40,11 @@ namespace ISHDeploy.Business.Operations.ISHUIContentEditor
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare Content Editor");
             
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, Deployment.FolderButtonBarXmlPath, new [] { FolderButtonBarXml.XopusAddCheckOut, FolderButtonBarXml.XopusAddUndoCheckOut }));
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, Deployment.InboxButtonBarXmlPath, InboxButtonBarXml.XopusAddCheckOut));
-            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, Deployment.InboxButtonBarXmlPath, new[] { InboxButtonBarXml.XopusRemoveCheckoutDownload, InboxButtonBarXml.XopusRemoveCheckIn }));
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, Deployment.LanguageDocumentButtonbarXmlPath, LanguageDocumentButtonbarXml.XopusAddCheckOut));
-            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, Deployment.LanguageDocumentButtonbarXmlPath, new[] { LanguageDocumentButtonbarXml.XopusRemoveCheckoutDownload, LanguageDocumentButtonbarXml.XopusRemoveCheckIn }));
+            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, FolderButtonBarXmlPath, new [] { FolderButtonBarXml.XopusAddCheckOut, FolderButtonBarXml.XopusAddUndoCheckOut }));
+            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, InboxButtonBarXmlPath, InboxButtonBarXml.XopusAddCheckOut));
+            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, InboxButtonBarXmlPath, new[] { InboxButtonBarXml.XopusRemoveCheckoutDownload, InboxButtonBarXml.XopusRemoveCheckIn }));
+            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, LanguageDocumentButtonbarXmlPath, LanguageDocumentButtonbarXml.XopusAddCheckOut));
+            _invoker.AddAction(new CommentNodesByPrecedingPatternAction(logger, LanguageDocumentButtonbarXmlPath, new[] { LanguageDocumentButtonbarXml.XopusRemoveCheckoutDownload, LanguageDocumentButtonbarXml.XopusRemoveCheckIn }));
         }
 
         /// <summary>

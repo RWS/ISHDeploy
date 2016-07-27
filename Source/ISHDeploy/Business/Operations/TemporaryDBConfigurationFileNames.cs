@@ -18,7 +18,7 @@
     /// <summary>
     /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
-    partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
         /// Temporary names, used to locating SQL templates script for DataBase integration

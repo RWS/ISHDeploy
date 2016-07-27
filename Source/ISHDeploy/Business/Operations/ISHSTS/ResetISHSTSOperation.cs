@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Resets STS database
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class ResetISHSTSOperation : BasePathsOperation, IOperation
+    public class ResetISHSTSOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -41,10 +41,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		{
 			_invoker = new ActionInvoker(logger, "Reset STS database");
 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, Deployment.InputParameters.WebNameSTSAppData));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName, true));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, Deployment.InfoShareSTSWebConfigPath));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 
 		/// <summary>

@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
     /// Enables quality assistant plugin for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUIQualityAssistantOperation : BasePathsOperation, IOperation
+    public class EnableISHUIQualityAssistantOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -40,9 +40,9 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         {
 			_invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, Deployment.XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfig));
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, Deployment.XopusConfigXmlPath, XopusConfigXml.EnrichIntegration));
-            _invoker.AddAction(new InsertBeforeNodeAction(logger, Deployment.XopusBlueLionPluginWebCconfigPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigJsonMimeMapXPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfig));
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegration));
+            _invoker.AddAction(new InsertBeforeNodeAction(logger, XopusBlueLionPluginWebCconfigPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigJsonMimeMapXPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
         }
 
         /// <summary>

@@ -85,7 +85,7 @@ namespace ISHDeploy.Data.Actions
 		{
 			Logger.WriteVerbose($"Roll back result of `{GetType().Name}`");
 
-			if (this.BackupPath != null)
+			if (BackupPath != null)
 			{
 				// TODO: think of failed rollback. As it might fail, and backups would get removed in disposed.
 				Logger.WriteDebug($"Replacing file `{FilePath}` with its back up `{BackupPath}`.");
@@ -106,7 +106,7 @@ namespace ISHDeploy.Data.Actions
 			if (FileManager.FileExists(FilePath))
 			{
                 Logger.WriteVerbose($"Create back up for `{FilePath}`");
-                this.BackupPath = GetNewBackUpFileName();
+                BackupPath = GetNewBackUpFileName();
 
 				if (!FileManager.FileExists(BackupPath))
 				{
@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Dispose()
 		{
-			if (this.BackupPath != null)
+			if (BackupPath != null)
 			{
 				if (FileManager.FileExists(BackupPath))
 				{
@@ -146,7 +146,7 @@ namespace ISHDeploy.Data.Actions
 					FileManager.Delete(BackupPath);
 				}
 
-				this.BackupPath = null;
+				BackupPath = null;
 			}
 		}
 

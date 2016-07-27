@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
     /// Sets WCF service to use a certificate that matches to thumbprint
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHAPIWCFServiceCertificateOperation : BasePathsOperation, IOperation
+    public class SetISHAPIWCFServiceCertificateOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -61,43 +61,43 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             (new GetCertificateSubjectByThumbprintAction(logger, thumbprint, result => serviceCertificateSubjectName = result)).Execute();
 
             // Ensure DataBase file exists
-            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, Deployment.InfoShareSTSDataBasePath.AbsolutePath, $"{Deployment.InputParameters.BaseUrl}/{Deployment.InputParameters.STSWebAppName}"));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, Deployment.InfoShareSTSDataBasePath));
+            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
 
             // Update STS database
             var encryptedThumbprint = string.Empty;
             (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
             _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                Deployment.InfoShareSTSDataBaseConnectionString,
+                InfoShareSTSDataBaseConnectionString,
                 string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
                         encryptedThumbprint,
-                        string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(Deployment.InputParameters.BaseUrl, Deployment.InputParameters.WebAppNameWS)))));
+                        string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
 
             // Stop STS Application pool before updating RelyingParties 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
             
             // thumbprint
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.InfoShareWSWebConfigPath, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.ServiceCertificateThumbprintXPath, thumbprint));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
 
             // validationMode
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.TranslationOrganizerConfigPath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, Deployment.SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, Deployment.TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, Deployment.InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, Deployment.InputParametersFilePath, InputParameters.ServiceCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
 
 
             // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, Deployment.InputParameters.STSAppPoolName, true));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
 
             // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, Deployment.InfoShareSTSWebConfigPath));
+            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 
         /// <summary>

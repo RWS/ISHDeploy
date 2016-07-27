@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
     /// Tests if license for specific host name exists
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class TestISHContentEditorOperation : BasePathsOperation, IOperation<bool>
+    public class TestISHContentEditorOperation : BaseOperationPaths, IOperation<bool>
     {
         /// <summary>
         /// The actions invoker
@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Testing of license for specific host name");
-            _invoker.AddAction(new LicenseTestAction(logger, Deployment.LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
+            _invoker.AddAction(new LicenseTestAction(logger, LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
         }
 
         /// <summary>

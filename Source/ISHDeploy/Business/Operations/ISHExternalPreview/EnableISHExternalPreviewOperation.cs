@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Enables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHExternalPreviewOperation : BasePathsOperation, IOperation
+    public class EnableISHExternalPreviewOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -44,7 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    Deployment.InfoShareAuthorWebConfigPath,
+                    InfoShareAuthorWebConfigPath,
                     new [] {
                         InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleSearchPattern,
                         InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    Deployment.InfoShareAuthorWebConfigPath,
+                    InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));

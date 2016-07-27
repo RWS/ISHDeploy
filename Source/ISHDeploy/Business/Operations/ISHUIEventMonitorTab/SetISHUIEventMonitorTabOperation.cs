@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
+	public class SetISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, Deployment.EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
 		}
 
 		/// <summary>

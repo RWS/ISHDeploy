@@ -116,8 +116,20 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 }
 
                 var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
-
-                var ishProject = new ISHDeployment(new InputParameters(dictionary), version);
+                var parameters = new InputParameters(installParamFile, dictionary);
+                var ishProject = new ISHDeployment
+                {
+                    Name = $"InfoShare{parameters.ProjectSuffix}",
+                    AppPath = parameters.AppPath,
+                    WebPath = parameters.WebPath,
+                    DataPath = parameters.DataPath,
+                    DatabaseType = parameters.DatabaseType,
+                    AccessHostName = parameters.AccessHostName,
+                    WebAppNameCM = parameters.WebAppNameCM,
+                    WebAppNameWS = parameters.WebAppNameWS,
+                    WebAppNameSTS = parameters.WebAppNameSTS,
+                    SoftwareVersion = version
+                };
 
                 result.Add(ishProject);
             }

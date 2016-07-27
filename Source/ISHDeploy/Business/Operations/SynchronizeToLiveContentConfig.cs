@@ -19,7 +19,7 @@ namespace ISHDeploy.Business.Operations
     /// <summary>
     /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
-    partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
         /// Provides constants related to ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config file

@@ -23,25 +23,6 @@ namespace ISHDeploy.Models
     public class ISHDeployment
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ISHDeployment"/> class.
-        /// </summary>
-        /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
-        /// <param name="softwareVersion">The deployment version.</param>
-        public ISHDeployment(InputParameters parameters, Version softwareVersion)
-        {
-            Name = $"InfoShare{parameters.ProjectSuffix}";
-            AppPath = parameters.AppPath;
-            WebPath = parameters.WebPath;
-            DataPath = parameters.DataPath;
-            DatabaseType = parameters.DatabaseType;
-            AccessHostName = parameters.AccessHostName;
-            WebAppNameCM = parameters.WebAppNameCM;
-            WebAppNameWS = parameters.WebAppNameWS;
-            WebAppNameSTS = parameters.WebAppNameSTS;
-            SoftwareVersion = softwareVersion;
-        }
-        
-        /// <summary>
         /// Gets the deployment version.
         /// </summary>
         public Version SoftwareVersion { get; set; }

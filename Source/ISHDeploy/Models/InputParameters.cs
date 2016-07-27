@@ -19,6 +19,11 @@ namespace ISHDeploy.Models
         private const string TrisoftAppPoolPrefix = "TrisoftAppPool";
 
         /// <summary>
+        /// The path to inputparameters.xml
+        /// </summary>
+        public string FilePath { get; }
+
+        /// <summary>
         /// Gets the application path.
         /// </summary>
         public string AppPath { get; set; }
@@ -69,41 +74,6 @@ namespace ISHDeploy.Models
         public string ConnectString { get; }
 
         /// <summary>
-        /// Gets the path to the Author folder.
-        /// </summary>
-        public string WebNameCM { get; }
-
-        /// <summary>
-        /// Gets the path to the InfoShareWS folder.
-        /// </summary>
-        public string WebNameWS { get; }
-
-        /// <summary>
-        /// Gets the path to the InfoShareSTS folder.
-        /// </summary>
-        public string WebNameSTS { get; }
-
-        /// <summary>
-        /// Gets the path to the InfoShareSTS Application Data folder.
-        /// </summary>
-        public string WebNameSTSAppData { get; }
-
-        /// <summary>
-        /// Gets the path to the Web+Suffix Author folder.
-        /// </summary>
-        public string AuthorFolderPath { get; }
-
-        /// <summary>
-        /// Gets the path to the App+Suffix Author folder.
-        /// </summary>
-        public string AppFolderPath { get; }
-
-        /// <summary>
-        /// Gets the path to the Data+Suffix Author folder.
-        /// </summary>
-        public string DataFolderPath { get; }
-
-        /// <summary>
         /// Gets the name of the OS user.
         /// </summary>
         public string OSUser { get; }
@@ -151,9 +121,11 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="InputParameters"/> class.
         /// </summary>
+        /// <param name="filePath">The inputparameters.xml file path.</param>
         /// <param name="parameters">The parameters.</param>
-        public InputParameters(Dictionary<string, string> parameters)
+        public InputParameters(string filePath, Dictionary<string, string> parameters)
         {
+            FilePath = filePath;
             ProjectSuffix = parameters["projectsuffix"];
             AppPath = parameters["apppath"];
             WebPath = parameters["webpath"];
@@ -165,9 +137,6 @@ namespace ISHDeploy.Models
             WebAppNameSTS = parameters["infosharestswebappname"];
             ConnectString = parameters["connectstring"];
             WebPath = parameters["webpath"];
-            AuthorFolderPath = Path.Combine(WebPath, $"Web{ProjectSuffix}");
-            //AppFolderPath = Path.Combine(AppPath, $"App{ProjectSuffix}");
-            DataFolderPath = Path.Combine(AppPath, $"Data{ProjectSuffix}");
             OSUser = parameters["osuser"];
             CMWebAppName = parameters["infoshareauthorwebappname"];
             WSWebAppName = parameters["infosharewswebappname"];

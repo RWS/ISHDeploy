@@ -20,7 +20,7 @@ namespace ISHDeploy.Business.Operations
     /// Provides absolute paths to all ISH files that are going to be used
     /// Also provides xpaths to XML elements and attributes in these files
     /// </summary>
-    partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
         /// Provides constants related to ~\Web\Author\ASP\Tree.htm

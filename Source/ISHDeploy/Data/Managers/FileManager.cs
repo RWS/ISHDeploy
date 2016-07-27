@@ -122,16 +122,16 @@ namespace ISHDeploy.Data.Managers
         public void CleanFolder(string folderPath)
 		{
 			_logger.WriteDebug($"Clean folder `{folderPath}`");
-			if (this.FolderExists(folderPath))
+			if (FolderExists(folderPath))
 			{
 				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
 				{
-					this.DeleteFolder(subFolderPath);
+					DeleteFolder(subFolderPath);
 				}
 
 				foreach (string filePath in GetFiles(folderPath, "*", false))
 				{
-					this.Delete(filePath);
+					Delete(filePath);
 				}
 			}
             _logger.WriteVerbose($"Cleaned folder `{folderPath}`");
@@ -145,7 +145,7 @@ namespace ISHDeploy.Data.Managers
 		public void DeleteFolder(string folderPath, bool recursive = true)
 		{
 			_logger.WriteDebug($"Delete folder `{folderPath}`{(recursive ? " recursively" : "")}");
-			if (this.FolderExists(folderPath))
+			if (FolderExists(folderPath))
 			{
 				Directory.Delete(folderPath, recursive);
 			}
@@ -158,10 +158,10 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="folderPath">Directory path to verify</param>
 		public void EnsureDirectoryExists(string folderPath)
 		{
-			if (!this.FolderExists(folderPath))
+			if (!FolderExists(folderPath))
 			{
 				_logger.WriteDebug($"Directory `{folderPath}` does not exist, creating it.");
-				this.CreateDirectory(folderPath);
+				CreateDirectory(folderPath);
 			}
 			else
 			{
@@ -177,12 +177,12 @@ namespace ISHDeploy.Data.Managers
 		public void CopyDirectoryContent(string sourcePath, string destinationPath)
 		{
 			_logger.WriteDebug($"Copy `{sourcePath}` directory content to {destinationPath}");
-			if (this.FolderExists(sourcePath))
+			if (FolderExists(sourcePath))
 			{
 				//Copy all the files & Replaces any files with the same name
 				foreach (string newPath in GetFiles(sourcePath, "*", true))
 				{
-					this.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+					Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
 				}
 			}
             _logger.WriteVerbose($"Copied `{sourcePath}` directory content to {destinationPath}");
@@ -231,7 +231,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="text">The text to be appended to the file content.</param>
         public void Append(string filePath, string text)
         {
-			this.Write(filePath, text, true);
+			Write(filePath, text, true);
         }
 
 		/// <summary>
@@ -243,7 +243,10 @@ namespace ISHDeploy.Data.Managers
 		public void Write(string filePath, string text, bool append = false)
 		{
 			_logger.WriteDebug($"[{filePath}][{(append? "Append" : "Write")} content]");
-			using (var fileStream = new StreamWriter(filePath, append))
+
+            EnsureDirectoryExists(Path.GetDirectoryName(filePath));
+
+            using (var fileStream = new StreamWriter(filePath, append))
 			{
 				fileStream.Write(text);
 			}

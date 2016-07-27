@@ -66,7 +66,7 @@ namespace ISHDeploy.Tests.Data.Actions.XmlFile
             // Arrange
             string testSrc = "../BlueLion-Plugin/Bootstrap/bootstrap.js";
             string testCommentPattern = "Begin BlueLion integration";
-            var testFilePath = this.GetIshFilePath("DisabledEnrich.xml");
+            var testFilePath = GetIshFilePath("DisabledEnrich.xml");
 
             var doc = XDocument.Parse("<config version='1.0' xmlns='http://www.xopus.com/xmlns/config'>" +
                                       "<javascript src='config.js' eval='false' phase='Xopus' />" +

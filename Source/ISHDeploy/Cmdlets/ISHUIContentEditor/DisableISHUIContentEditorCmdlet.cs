@@ -26,7 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHUIContentEditor
     /// <example>
     /// <code>PS C:\>Disable-ISHUIContentEditor -ISHDeployment $deployment</code>
     /// <para>This command disables Content Editor.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHUIContentEditor")]
     public sealed class DisableISHUIContentEditorCmdlet : BaseHistoryEntryCmdlet

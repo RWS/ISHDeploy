@@ -24,9 +24,9 @@ namespace ISHDeploy.Cmdlets
     public abstract class BaseISHDeploymentCmdlet : BaseCmdlet
     {
         /// <summary>
-        /// <para type="description">Specifies the instance of the Content Manager deployment.</para>
+        /// <para type="description">Specifies the name or instance of the Content Manager deployment.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Instance of the installed Content Manager deployment.")]
+        [Parameter(Mandatory = true, HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
         [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }

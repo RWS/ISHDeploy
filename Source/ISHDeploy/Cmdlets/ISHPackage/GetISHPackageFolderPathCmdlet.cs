@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <example>
     /// <code>PS C:\>Get-ISHPackageFolderPath -ISHDeployment $deployment -UNC</code>
     /// <para>This command gets the UNC path to Packages folder for Content Manager deployment.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHPackageFolderPath")]
     public class GetISHPackageFolderPathCmdlet : BaseISHDeploymentCmdlet

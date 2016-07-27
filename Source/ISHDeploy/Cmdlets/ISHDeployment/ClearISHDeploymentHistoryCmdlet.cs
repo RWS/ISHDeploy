@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <example>
     /// <code>PS C:\>Clear-ISHDeploymentHistory -ISHDeployment $deployment</code>
     /// <para>This command clears the history information for Content Manager deployment.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Clear, "ISHDeploymentHistory")]
     public class ClearISHDeploymentHistoryCmdlet : BaseISHDeploymentCmdlet

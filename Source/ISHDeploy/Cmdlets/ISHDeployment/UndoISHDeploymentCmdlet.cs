@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <example>
     /// <code>PS C:\>Undo-ISHDeployment -ISHDeployment $deployment</code>
     /// <para>This command reverts Content Manager to original state.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Undo, "ISHDeployment")]
     public class UndoISHDeploymentCmdlet : BaseISHDeploymentCmdlet

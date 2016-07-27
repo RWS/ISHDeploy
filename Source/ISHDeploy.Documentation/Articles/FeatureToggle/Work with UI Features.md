@@ -4,23 +4,23 @@ This article explains how to control UI features such as **Content Editor**, **Q
  
 ## Control individual features 
 
-### Get reference to a deployment
-First get a reference to a deployment.
+### Set deploymentName variable
+First set deploymentName variable.
 
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName="InfoShare"
 ```
 
 ### Configure Content Editor
 Set the license for Content Editor for domain e.g. `ish.example.com`
 ```powershell
-Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "licensekey" -Domain "ish.example.com"
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "licensekey" -Domain "ish.example.com"
 ```
 
 By default the **Content Editor** is disabled in the UI. To enable it:
 
 ```powershell
-Enable-ISHUIContentEditor -ISHDeployment $deployment
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 ```
 
 
@@ -28,7 +28,7 @@ Enable-ISHUIContentEditor -ISHDeployment $deployment
 By default the **Quality Assistant** is disabled in the UI. To enable it:
 
 ```powershell
-Enable-ISHUIQualityAssistant -ISHDeployment $deployment
+Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
 ```
 
 
@@ -36,7 +36,7 @@ Enable-ISHUIQualityAssistant -ISHDeployment $deployment
 By default the **External Preview** is disabled. To enable it for a user with `ExternalId` e.g. `externalid`:
 
 ```powershell
-Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId "externalid"
+Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId "externalid"
 ```
 
 The `ExternalId` value must match an existing user's `FISHEXTERNALID`.
@@ -45,14 +45,7 @@ The `ExternalId` value must match an existing user's `FISHEXTERNALID`.
 By default the **Translation Job** is enabled in the UI. To disable it:
 
 ```powershell
-Disable-ISHUITranslationJob -ISHDeployment $deployment
-```
-
-### Configure Translation Job
-By default the **Translation Job** is enabled in the UI. To disable it:
-
-```powershell
-Disable-ISHUITranslationJob -ISHDeployment $deployment
+Disable-ISHUITranslationJob -ISHDeployment $deploymentName
 ```
 
 ### Configure Event monitor options

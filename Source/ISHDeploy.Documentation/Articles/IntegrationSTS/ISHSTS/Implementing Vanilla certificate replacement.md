@@ -48,7 +48,7 @@ CopyCodeBlock(_nopublish\20161215.VanillaCertificateReplacement.ps1)
 As a cleanup process, all service providers should remove their old issuer certificate references.
 
 ```powershell
-Remove-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Issuer "Issuer"
+Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer "Issuer"
 ```
 
 The above removes any reference to the certificate with thumbprint `20161201.Thumbprint`, hence it can be removed from the store.

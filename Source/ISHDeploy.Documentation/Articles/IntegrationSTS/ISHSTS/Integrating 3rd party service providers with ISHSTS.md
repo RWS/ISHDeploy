@@ -21,9 +21,9 @@ ISHSTS needs the following from the service provider:
 - An identifier for the service provider. This is usually the url for the service provider. This value is used to create a relying party entry and has to be unique in the ISHSTS database.
 - Claim composition in the token. 
 
-A reference variable to a deployment is created with:
+Set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName="InfoShare"
 ```
 
 # Configuring ISHSTS for a service provider

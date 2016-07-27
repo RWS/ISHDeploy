@@ -49,6 +49,9 @@ namespace ISHDeploy.Business.Operations
             /// <value>
             /// The list of SVC paths.
             /// </value>
+            /// <param name="baseUrl">The base URL.</param>
+            /// <param name="webAppNameWS">The web name of WS application.</param>
+            /// <returns></returns>
             public static string[] GetSvcPaths(string baseUrl, string webAppNameWS)
             {
                 return new[]

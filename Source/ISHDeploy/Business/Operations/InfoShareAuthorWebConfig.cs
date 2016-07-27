@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// Provides constants related to ~\Web\Author\ASP\Web.config
         /// </summary>
-        protected static class InfoShareAuthorWebConfig
+        protected class InfoShareAuthorWebConfig
         {
             /// <summary>
             /// The xpath of "configuration/trisoft.infoshare.web.externalpreviewmodule/identity" element in ~\Web\Author\ASP\Web.config file

@@ -103,8 +103,6 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
-			
-
 			if (FileManager.FileExists(this.FilePath))
 			{
                 Logger.WriteVerbose($"Create back up for `{this.FilePath}`");

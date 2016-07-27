@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <param name="issuer">The certificate issuer.</param>
         /// <param name="validationMode">The certificate validation mode.</param>
-        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
+        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
@@ -62,32 +62,36 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			};
 
 			// Author web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfigPath, 
-				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
+				string.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
 				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// WS web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
-				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
+				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
-			// STS web Config
-			var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
+            // STS web Config
+            var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer
 			};
 
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
-				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
+				string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
+			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
 				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
-		}
+
+            // InputParameters.xml
+            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerCertificateThumbprintXPath, thumbprint));
+        }
 
         /// <summary>
         /// Runs current operation.

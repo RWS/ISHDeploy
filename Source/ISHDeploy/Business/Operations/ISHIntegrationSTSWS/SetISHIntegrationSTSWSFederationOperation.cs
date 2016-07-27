@@ -36,12 +36,13 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="endpoint">The URL to issuer endpoint.</param>
-        public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Models.ISHDeploymentInternal ishDeployment, Uri endpoint) :
+        public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 
-            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
         }
 
         /// <summary>

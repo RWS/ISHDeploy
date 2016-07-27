@@ -40,6 +40,11 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// The XML configuration manager.
         /// </summary>
         private readonly IXmlConfigManager _xmlConfigManager;
+        
+        /// <summary>
+        /// The file manager.
+        /// </summary>
+        private readonly IFileManager _fileManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHDeploymentParametersAction"/> class.
@@ -60,6 +65,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
                                                 Action<Dictionary<string, string>> returnResult) : base(logger, returnResult)
         {
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _showPassword = showPassword;
             _changed = changed;
             _original = original;
@@ -74,10 +80,9 @@ namespace ISHDeploy.Data.Actions.ISHProject
         protected override Dictionary<string, string> ExecuteWithResult()
         {
             Dictionary<string, string> dictionary;
-            _original= IshFilePath.VanillaPath;
 
             // If we want data from original backup file
-            if (_original)
+            if (_original && _fileManager.FileExists(_originalFilePath))
             {
                 dictionary = _xmlConfigManager.GetAllInputParamsValues(_originalFilePath);
             }
@@ -88,6 +93,11 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 // To show only difference
                 if (_changed)
                 {
+                    // if backup file does not exist return empty Dictionary
+                    if (!_fileManager.FileExists(_originalFilePath)) {
+                        return new Dictionary<string, string>();
+                    }
+
                     dictionary = dictionary
                         .Except(_xmlConfigManager.GetAllInputParamsValues(_originalFilePath))
                         .ToDictionary(t => t.Key, t => t.Value);

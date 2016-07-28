@@ -55,7 +55,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="original">Get initial data for deployment.</param>
         /// <param name="changed">Get difference from initial data for deployment.</param>
         /// <param name="showPassword">Show real passwords.</param>
-        /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
+        /// <param name="returnResult">The delegate that returns Dictionary with parameters.</param>
         public GetISHDeploymentParametersAction(ILogger logger,
                                                 string originalFilePath,
                                                 string changedFilePath,
@@ -76,7 +76,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns>Content Manager deployment in acccordance with name.</returns>
+        /// <returns>Dictionary with parameters depend on flags.</returns>
         protected override Dictionary<string, string> ExecuteWithResult()
         {
             Dictionary<string, string> dictionary;

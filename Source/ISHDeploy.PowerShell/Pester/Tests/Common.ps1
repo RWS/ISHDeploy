@@ -38,7 +38,7 @@ $scriptBlockCreateCertificate = {
 $computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
+
 
 #Gets InputParameters
 $scriptBlockGetInputParameters = {
@@ -70,7 +70,18 @@ $scriptBlockGetInputParameters = {
     $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
     $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
     $result["baseurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='baseurl']/currentvalue")[0].InnerText
-    $result["websitename"] = $inputParameters.SelectNodes("inputconfig/param[@name='websitename']/currentvalue")[0].InnerText
+    $result["issueractorusername"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorusername']/currentvalue")[0].InnerText
+	$result["issueractorpassword"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorpassword']/currentvalue")[0].InnerText
+	$result["websitename"] = $inputParameters.SelectNodes("inputconfig/param[@name='websitename']/currentvalue")[0].InnerText
+	$result["issuerwstrustbindingtype"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustbindingtype']/currentvalue")[0].InnerText
+	$result["issuerwstrustendpointurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustendpointurl']/currentvalue")[0].InnerText
+	$result["issuerwstrustmexurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustmexurl']/currentvalue")[0].InnerText
+	$result["issuercertificatethumbprint"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuercertificatethumbprint']/currentvalue")[0].InnerText
+	$result["issuercertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuercertificatevalidationmode']/currentvalue")[0].InnerText
+	$result["issuerwsfederationendpointurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwsfederationendpointurl']/currentvalue")[0].InnerText
+	$result["servicecertificatethumbprint"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatethumbprint']/currentvalue")[0].InnerText
+	$result["servicecertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue")[0].InnerText
+	$result["servicecertificatesubjectname"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatesubjectname']/currentvalue")[0].InnerText
 
     return $result
     

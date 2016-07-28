@@ -71,14 +71,20 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			// Rolling back changes for App folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ISHDeploymentInternal.AppFolderPath));
 
-			// Removing licenses
-			_invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
-
-			// Removing Backup folder
-			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
+            // Removing licenses
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
 
             // Cleaning up STS App_Data folder
             _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
+
+            // Restore InputParameters.xml
+            bool isInputParameterBackupFileExist = false;
+            (new FileExistsAction(logger, InputParameters.Path.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
+            if (isInputParameterBackupFileExist)
+            {
+                _invoker.AddAction(new FileCopyAction(logger, InputParameters.Path.VanillaPath, InputParameters.Path,
+                    true));
+            }
 
             if (!SkipRecycle)
             {
@@ -92,6 +98,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
                 _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
             }
+
+			// Removing Backup folder
+			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
 		}
 
         /// <summary>

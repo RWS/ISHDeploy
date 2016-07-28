@@ -134,6 +134,9 @@
     <Compile Include="Business\Operations\InfoShareWSWebConfig.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\InputParameters.cs">
+      <DependentUpon>BasePathsOperation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BasePathsOperation.cs</DependentUpon>
@@ -193,6 +196,7 @@
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
+    <Compile Include="Data\Actions\Certificate\GetCertificateSubjectByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Certificate\GetPathToCertificateByThumbprintAction.cs" />
     <Compile Include="Data\Actions\Asserts\AssertAction.cs" />
     <Compile Include="Data\Actions\Certificate\GetEncryptedRawDataByThumbprintAction.cs" />
@@ -203,6 +207,8 @@
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactExecuteAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyAction.cs" />
+    <Compile Include="Data\Actions\File\FileExistsAction.cs" />
     <Compile Include="Data\Actions\File\FileSystemRightsAssignAction.cs" />
     <Compile Include="Data\Actions\File\FileAddHistoryEntryAction.cs" />
     <Compile Include="Data\Actions\File\FileWaitUnlockAction.cs" />
@@ -266,7 +272,7 @@
     <Compile Include="Data\Actions\BaseAction.cs" />
     <Compile Include="Data\Actions\BaseActionWithResult.cs" />
     <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
-    <Compile Include="Data\Actions\File\FileCopyAction.cs" />
+    <Compile Include="Data\Actions\File\FileCopyToDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentExtendedAction.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />

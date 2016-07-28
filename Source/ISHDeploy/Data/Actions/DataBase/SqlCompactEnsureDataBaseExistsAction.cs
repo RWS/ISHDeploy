@@ -50,8 +50,8 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// <param name="logger">The logger.</param>
         /// <param name="dbFilePath">The database file path.</param>
         /// <param name="baseUrl">The base URL.</param>
-        public SqlCompactEnsureDataBaseExistsAction(ILogger logger, string dbFilePath, string baseUrl) 
-			: base(logger)
+        public SqlCompactEnsureDataBaseExistsAction(ILogger logger, string dbFilePath, string baseUrl)
+            : base(logger)
         {
             _dbFilePath = dbFilePath;
             _baseUrl = baseUrl;
@@ -77,9 +77,8 @@ namespace ISHDeploy.Data.Actions.DataBase
             Logger.WriteDebug($"Creating of web request to {_baseUrl} to perform database file {_dbFilePath} recreation");
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.Timeout = 10000;
             request.KeepAlive = false;
-                
+
             if (!_fileManager.FileExists(_dbFilePath))
             {
                 try
@@ -107,7 +106,7 @@ namespace ISHDeploy.Data.Actions.DataBase
                 }
                 catch (WebException e)
                 {
-                   throw new Exception($"While checking the existence of the database file {_dbFilePath} and trying to make an webrequest to assignment {_baseUrl} the following error has occurred: {e.Message}");
+                    throw new Exception($"While checking the existence of the database file {_dbFilePath} and trying to make an webrequest to assignment {_baseUrl} the following error has occurred: {e.Message}");
                 }
             }
         }

@@ -42,6 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
         }
 
         /// <summary>

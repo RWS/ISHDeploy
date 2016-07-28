@@ -12,7 +12,6 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 $packagePath = "C:\ProgramData\$moduleName\$($testingDeployment.Name)\Packages"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
-$inputParameters = Get-InputParameters $testingDeploymentName
 [System.Data.OleDb.OleDbConnection]$connection = New-Object "System.Data.OleDb.OleDbConnection" $inputParameters["connectstring"]
 $database = $connection.Database
 $datasource = $connection.DataSource

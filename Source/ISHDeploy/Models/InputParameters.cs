@@ -119,6 +119,11 @@ namespace ISHDeploy.Models
         public string ServiceCertificateThumbprint { get; }
 
         /// <summary>
+        /// Gets the web site name.
+        /// </summary>
+        public string WebSiteName { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InputParameters"/> class.
         /// </summary>
         /// <param name="filePath">The inputparameters.xml file path.</param>
@@ -146,6 +151,7 @@ namespace ISHDeploy.Models
             STSAppPoolName = $"{TrisoftAppPoolPrefix}{STSWebAppName}";
             CMAppPoolName = $"{TrisoftAppPoolPrefix}{CMWebAppName}";
             ServiceCertificateThumbprint = parameters["servicecertificatethumbprint"];
+            WebSiteName = parameters["websitename"];
         }
     }
 }

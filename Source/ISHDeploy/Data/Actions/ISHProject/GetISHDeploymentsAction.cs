@@ -128,6 +128,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
                     WebAppNameCM = parameters.WebAppNameCM,
                     WebAppNameWS = parameters.WebAppNameWS,
                     WebAppNameSTS = parameters.WebAppNameSTS,
+                    WebSiteName = parameters.WebSiteName,
                     SoftwareVersion = version
                 };
 

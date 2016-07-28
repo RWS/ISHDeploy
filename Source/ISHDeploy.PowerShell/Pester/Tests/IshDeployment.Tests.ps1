@@ -144,5 +144,11 @@ Describe "Testing Get-ISHDeployment"{
         $deploy.ToString().Contains("OriginalParemeters") | Should be $False
     }
 
+    It "Get-ISHDeployment returns WebSiteName"{
+        #Arrange
+        $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        $inputparameters = Get-InputParameters $testingDeploymentName
+        $deploy.WebSiteName -eq $inputparameters["websitename"] | Should be true
+    }
 }
 

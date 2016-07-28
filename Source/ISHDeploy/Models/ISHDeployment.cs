@@ -44,6 +44,7 @@ namespace ISHDeploy.Models
             WebAppNameCM = parameters["infoshareauthorwebappname"];
             WebAppNameWS = parameters["infosharewswebappname"];
             WebAppNameSTS = parameters["infosharestswebappname"];
+            WebSiteName = parameters["websitename"];
             SoftwareVersion = softwareVersion;
         }
         
@@ -96,5 +97,10 @@ namespace ISHDeploy.Models
         /// Gets the name of the STS main url folder.
         /// </summary>
         public string WebAppNameSTS { get; set; }
+        
+        /// <summary>
+        /// Gets the web site name.
+        /// </summary>
+        public string WebSiteName { get; set; }
     }
 }

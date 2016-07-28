@@ -137,7 +137,6 @@ function remoteReadTargetXML() {
         $ValidationMode
     )
     
-    $inputParameters = Get-InputParameters $testingDeploymentName
     $infosharewswebappname = $inputParameters["infosharewswebappname"]
     #read all files that are touched with commandlet
     $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname
@@ -220,3 +219,4 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
 }
 
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint
+UndoDeploymentBackToVanila $testingDeploymentName

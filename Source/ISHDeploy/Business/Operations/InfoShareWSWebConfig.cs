@@ -52,11 +52,6 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\InfoShareWS\Web.config file
             /// </summary>
-            public const string IdentityTrustedIssuersPath = InfoShareAuthorWebConfig.IdentityTrustedIssuersXPath;
-
-            /// <summary>
-            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\InfoShareWS\Web.config file
-            /// </summary>
             public const string IdentityTrustedIssuersByNameXPath = InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath;
 
             /// <summary>

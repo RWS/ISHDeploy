@@ -32,14 +32,24 @@ namespace ISHDeploy.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHDeploymentInternal"/> class.
         /// </summary>
-        /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
+        /// <param name="inputParametersFilePath">The inputparameters.xml file path.</param>
+        /// <param name="parameters">The dictionary with all parameters from inputparameters.xml file.</param>
         /// <param name="softwareVersion">The deployment version.</param>
-        public ISHDeploymentInternal(Dictionary<string, string> parameters, Version softwareVersion) : base(parameters, softwareVersion)
+        public ISHDeploymentInternal(string inputParametersFilePath, Dictionary<string, string> parameters, Version softwareVersion) : base(parameters, softwareVersion)
         {
+            InputParametersFilePath = inputParametersFilePath;
             _originalParameters = parameters;
         }
 
         /// <summary>
+        /// Gets the inputparameters.xml file path.
+        /// </summary>
+        /// <value>
+        /// The inputparameters.xml file path.
+        /// </value>
+        public string InputParametersFilePath { get; }
+
+	    /// <summary>
         /// Gets the all parameters from inputparameter.xml file.
         /// </summary>
         private Dictionary<string, string> _originalParameters { get; }

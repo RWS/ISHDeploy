@@ -32,7 +32,7 @@
     ],
     "resource": [
       {
-        "files": [ "**/images/*" ]
+        "files": [ "**/images/**" ]
       },
       {
         "files": "sdl_logo_transparent.png"
@@ -43,7 +43,7 @@
       {
         "files": [ "**/*.ps1","**/*.png" ],
         "cwd": "obj/doc/articles",
-        "exclude": [ "**/_nopublish/*" ],
+        "exclude": [ "**/_nopublish/**" ],
         "dest": "Articles"
       }
     ],

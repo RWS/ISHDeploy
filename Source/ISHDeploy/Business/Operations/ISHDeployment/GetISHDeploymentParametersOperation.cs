@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Gets parameters.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class GetISHDeploymentParametersOperation : BasePathsOperation
+    public class GetISHDeploymentParametersOperation : BaseOperationPaths
     {
         /// <summary>
         /// The actions invoker
@@ -52,8 +52,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             _invoker.AddAction(new GetISHDeploymentParametersAction (
                 logger,
-                InputParameters.Path.VanillaPath,
-                ISHDeploymentInternal.InputParametersFilePath,
+                InputParametersFilePath.VanillaPath,
+                InputParametersFilePath.AbsolutePath,
                 original, 
                 changed, 
                 showPassword, 

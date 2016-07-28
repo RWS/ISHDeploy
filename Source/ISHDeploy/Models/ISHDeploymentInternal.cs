@@ -128,5 +128,10 @@ namespace ISHDeploy.Models
 	    /// CM Application pool name
 	    /// </summary>
 	    public string CMAppPoolName => $"{TrisoftAppPoolPrefix}{CMWebAppName}";
+
+        /// <summary>
+        /// CM certificate thumbprint
+        /// </summary>
+        public string ServiceCertificateThumbprint => _originalParameters["servicecertificatethumbprint"];
     }
 }

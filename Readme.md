@@ -18,8 +18,8 @@ For example the following segment enables the Content Editor.
 ```powershell
 $xopusLicenseKey="license key for ish.example.com"
 $xopusLicenseDomain='ish.example.com"
-Set-ISHContentEditor -ISHDeployment $deployment -LicenseKey "$xopusLicenseKey" -Domain $xopusLicenseDomain
-Enable-ISHUIContentEditor -ISHDeployment $deployment
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "$xopusLicenseKey" -Domain $xopusLicenseDomain
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 ```
 
 The module is available in [PowerShell gallery](https://www.powershellgallery.com/items?q=ISHDeploy&x=0&y=0). 

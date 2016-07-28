@@ -16,14 +16,12 @@
 using ISHDeploy.Interfaces;
 using ISHDeploy.Business.Invokers;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Linq;
 using ISHDeploy.Data.Actions.ISHProject;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
     /// <summary>
-    /// Gets parameters file content.
+    /// Gets parameters.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
     public class GetISHDeploymentParametersOperation : BasePathsOperation
@@ -34,7 +32,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// The parameters file content
+        /// Parameters 
         /// </summary>
         private Dictionary<string, string> _parameters;
 
@@ -57,7 +55,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 ISHDeploymentInternal.InputParametersFilePath,
                 original, 
                 changed, 
-                showPassword, result => _parameters = result));
+                showPassword, 
+                result => _parameters = result));
         }
 
         /// <summary>

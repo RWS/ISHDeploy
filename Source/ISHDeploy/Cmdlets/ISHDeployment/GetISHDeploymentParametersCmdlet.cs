@@ -95,7 +95,10 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var parametersContent = operation.Run();
 
-            WriteObject(parametersContent);
+            foreach (var pc in parametersContent)
+            {
+                WriteObject(pc);
+            }
         }
     }
 }

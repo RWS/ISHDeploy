@@ -246,6 +246,7 @@
     <Compile Include="Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
     <Compile Include="Models\ISHDeployment.cs" />
+    <Compile Include="Models\ISHDeploymentParameter.cs" />
     <Compile Include="Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />

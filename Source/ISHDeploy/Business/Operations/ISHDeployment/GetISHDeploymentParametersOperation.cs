@@ -17,6 +17,7 @@ using ISHDeploy.Interfaces;
 using ISHDeploy.Business.Invokers;
 using System.Collections.Generic;
 using ISHDeploy.Data.Actions.ISHProject;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
@@ -34,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// Parameters 
         /// </summary>
-        private Dictionary<string, string> _parameters;
+        private IEnumerable<ISHDeploymentParameter> _parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHDeploymentParametersOperation"/> class.
@@ -62,8 +63,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// Runs current operation.
         /// </summary>
-        /// <returns>Dictionary with parameters for Content Manager deployments.</returns>
-        public Dictionary<string, string> Run()
+        /// <returns>Collection with parameters for Content Manager deployments.</returns>
+        public IEnumerable<ISHDeploymentParameter> Run()
         {
             _invoker.Invoke();
 

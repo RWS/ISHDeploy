@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.ISHProject
 {
@@ -25,7 +26,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets parameters for given deployment on current system.
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentParametersAction : BaseActionWithResult<Dictionary<string, string>>
+    public class GetISHDeploymentParametersAction : BaseActionWithResult<IEnumerable<ISHDeploymentParameter>>
     {
         private const string password = "password";
         private const string hiddenPassword = "*******";
@@ -55,14 +56,14 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="original">Get initial data for deployment.</param>
         /// <param name="changed">Get difference from initial data for deployment.</param>
         /// <param name="showPassword">Show real passwords.</param>
-        /// <param name="returnResult">The delegate that returns Dictionary with parameters.</param>
+        /// <param name="returnResult">The delegate that returns collection with parameters.</param>
         public GetISHDeploymentParametersAction(ILogger logger,
                                                 string originalFilePath,
                                                 string changedFilePath,
                                                 bool original,
                                                 bool changed,
                                                 bool showPassword,
-                                                Action<Dictionary<string, string>> returnResult) : base(logger, returnResult)
+                                                Action<IEnumerable<ISHDeploymentParameter>> returnResult) : base(logger, returnResult)
         {
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
@@ -76,8 +77,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns>Dictionary with parameters depend on flags.</returns>
-        protected override Dictionary<string, string> ExecuteWithResult()
+        /// <returns>Collection with parameters depend on flags.</returns>
+        protected override IEnumerable<ISHDeploymentParameter> ExecuteWithResult()
         {
             Dictionary<string, string> dictionary;
 
@@ -93,14 +94,17 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 // To show only difference
                 if (_changed)
                 {
-                    // if backup file does not exist return empty Dictionary
-                    if (!_fileManager.FileExists(_originalFilePath)) {
-                        return new Dictionary<string, string>();
+                    // if backup file does not exist return empty data
+                    if (!_fileManager.FileExists(_originalFilePath))
+                    {
+                        dictionary = new Dictionary<string, string>();
                     }
-
-                    dictionary = dictionary
-                        .Except(_xmlConfigManager.GetAllInputParamsValues(_originalFilePath))
-                        .ToDictionary(t => t.Key, t => t.Value);
+                    else
+                    {
+                        dictionary = dictionary
+                            .Except(_xmlConfigManager.GetAllInputParamsValues(_originalFilePath))
+                            .ToDictionary(t => t.Key, t => t.Value);
+                    }
                 }
             }
 
@@ -119,10 +123,14 @@ namespace ISHDeploy.Data.Actions.ISHProject
                         hiddenDictionary.Add(element.Key, element.Value);
                     }
                 }
-                return hiddenDictionary;
+                dictionary = hiddenDictionary;
             }
 
-            return dictionary;
+            return from t in dictionary
+                   select new ISHDeploymentParameter {
+                       Name = t.Key, 
+                       Value= t.Value
+                   };
         }
     }
 }

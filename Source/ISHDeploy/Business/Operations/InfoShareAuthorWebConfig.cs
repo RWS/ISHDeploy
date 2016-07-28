@@ -91,6 +91,11 @@ namespace ISHDeploy.Business.Operations
             public const string IdentityTrustedIssuersByNameXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@name='{0}']";
             
             /// <summary>
+            /// The xpath of "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']" element in ~\Web\Author\ASP\Web.config file
+            /// </summary>
+            public const string IdentityTrustedIssuersByThumbprintXPath = "configuration/system.identityModel/identityConfiguration/issuerNameRegistry/trustedIssuers/add[@thumbprint='{0}']";
+
+            /// <summary>
             /// The xpath of "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
             public const string CertificateValidationModeXPath = "configuration/system.identityModel/identityConfiguration/certificateValidation/@certificateValidationMode";

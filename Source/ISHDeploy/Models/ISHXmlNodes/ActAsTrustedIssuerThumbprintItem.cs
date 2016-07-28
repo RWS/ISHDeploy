@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿namespace ISHDeploy.Models.ISHXmlNodes
+
+using System.Xml.Linq;
+
+namespace ISHDeploy.Models.ISHXmlNodes
 {
 	/// <summary>
 	/// Represents menu item xml node
@@ -24,5 +27,16 @@
 		///		Xml node name.
 		/// </summary>
 		protected override string XmlElementName => "addActAsTrustedIssuer";
-	}
+
+        /// <summary>
+        /// Converts object to XElement.
+        /// </summary>
+        /// <returns>XElement</returns>
+        public override XElement ToXElement()
+        {
+            return new XElement(XmlElementName,
+                new XAttribute("thumbprint", Thumbprint),
+                new XAttribute("issuer", Issuer));
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 ## alpha-0.3 (Pre-release)
 
-1. Integration with Security Token Service (STS)
+1. Working with deployments
   1. Cmdlets
     - Get-ISHDeploymentParameters. **[New]**
 

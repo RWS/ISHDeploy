@@ -57,7 +57,8 @@ namespace ISHDeploy.Tests
                 ["baseurl"] = "https://",
                 ["infoshareauthorwebappname"] = string.Empty,
                 ["infosharewswebappname"] = string.Empty,
-                ["infosharestswebappname"] = string.Empty
+                ["infosharestswebappname"] = string.Empty,
+                ["websitename"] = string.Empty
             };
 
 			return new ISHFilePath(new ISHDeploymentInternal(string.Empty, installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);

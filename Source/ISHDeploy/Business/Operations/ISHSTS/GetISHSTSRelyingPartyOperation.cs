@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public GetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool ISH, bool LC, bool BL):
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
+            _invoker = new ActionInvoker(logger, "Getting the relying parties");
 
             string sqlQuery = InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat;
 

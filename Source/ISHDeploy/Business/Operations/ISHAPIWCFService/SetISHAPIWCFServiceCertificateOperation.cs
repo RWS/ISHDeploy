@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Security;
@@ -57,28 +59,32 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 		        thumbprint = normalizedThumbprint;
             }
 
+            var serviceCertificateSubjectName = string.Empty;
+            (new GetCertificateSubjectByThumbprintAction(logger, thumbprint, result => serviceCertificateSubjectName = result)).Execute();
+
             // Ensure DataBase file exists
             _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
             _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
 
             // Update STS database
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
+            var encryptedThumbprint = string.Empty;
+            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactUpdateAction(logger,
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBase.ConnectionString,
-                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
-                parameters));
+                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
+                        encryptedThumbprint,
+                        string.Join(", ", InfoShareSTSDataBase.SvcPaths))));
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-
+            
             // thumbprint
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateThumbprintXPath, thumbprint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
 
             // validationMode
             _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfig.Path, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
@@ -86,6 +92,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfig.Path, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfig.Path, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.ServiceCertificateValidationModeXPath, validationMode.ToString()));
 
 
             // Recycling Application pool for STS

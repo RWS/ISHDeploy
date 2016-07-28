@@ -73,11 +73,12 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// Executes current action and returns result.
         /// </summary>
-        /// <returns>Content Manager deployment in acccordance with name.</returns>
+        /// <returns>Content Manager deployment in accordance with name.</returns>
         protected override ISHDeploymentInternal ExecuteWithResult()
         {
             // Get installed deployment from the registry.
             var projectRegKey = _registryManager.GetInstalledProjectsKeys(_name).FirstOrDefault();
+
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
             var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
 
@@ -95,8 +96,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentInternal(dictionary, version);
-
+            return new ISHDeploymentInternal(installParamFile, dictionary, version);
         }
     }
 }

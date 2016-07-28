@@ -40,29 +40,19 @@ namespace ISHDeploy.Business.Operations
 			public const string TrustedIssuerBehaviorExtensions = "<add name=\"addActAsTrustedIssuer\"";
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@issuer='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
-            public const string ServiceBehaviorsTrustedUserXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
+            public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@issuer='{0}']";
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
-            public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
+            public const string ServiceBehaviorsTrustedUserByThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']";
 
             /// <summary>
             /// The xpath of "configuration/system.web/authentication/@mode" attribute in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
             public const string AuthenticationModeAttributeXPath = "configuration/system.web/authentication/@mode";
-
-            /// <summary>
-            /// The xpath of "configuration/system.web/authentication/forms" element in ~\Web\InfoShareSTS\Web.config file
-            /// </summary>
-            public const string AuthenticationFormsElementXPath = "configuration/system.web/authentication/forms";
-
-            /// <summary>
-            /// The xpath of "configuration/system.web/authentication" element in ~\Web\InfoShareSTS\Web.config file
-            /// </summary>
-            public const string AuthenticationElementXPath = "configuration/system.web/authentication";
         }
 	}
 }

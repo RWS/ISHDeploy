@@ -131,21 +131,20 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 thumbprint = normalizedThumbprint;
             }
 
+            var encryptedThumbprint = string.Empty;
+            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
+
             _invoker.AddAction(new StopApplicationPoolAction(Logger, ISHDeploymentInternal.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
             _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfig.Path,
                 InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            var parameters = new List<object> { string.Empty };
-            parameters.Add(string.Join(", ", InfoShareSTSDataBase.SvcPaths));
-
-            _invoker.AddAction(new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => parameters[0] = result));
-
-            _invoker.AddAction(new SqlCompactUpdateAction(Logger,
-                InfoShareSTSDataBase.ConnectionString,
-                InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
-                parameters));
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger, 
+                InfoShareSTSDataBase.ConnectionString, 
+                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat, 
+                        encryptedThumbprint, 
+                        string.Join(", ", InfoShareSTSDataBase.SvcPaths))));
         }
 
         /// <summary>
@@ -199,6 +198,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
+
+                _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
             }
             else
             {
@@ -218,8 +219,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Set SpecificUser identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, ISHDeploymentInternal.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
+                _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfig.Path, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.AuthenticationTypeXPath, authenticationType.ToString()));
         }
 
         /// <summary>
@@ -249,6 +252,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             // Change ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfig.Path, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
+
+            // InputParameters.xml
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustEndpointUrlXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParameters.Path, InputParameters.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 
         /// <summary>

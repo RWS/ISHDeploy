@@ -6,9 +6,9 @@ This article explains how to integrate with Active Directory the out of the box 
 
 Content Manager is installed on `ish.example.com` and ISHSTS is installed on `ish.example.com/ISHSTS`. 
 
-A reference variable to a deployment is created with:
+Set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName="InfoShare"
 ```
 
 # Enable Windows Authentication

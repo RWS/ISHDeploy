@@ -27,13 +27,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.
-    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -ADFS -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations for ADFS.
-    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationSTSConfigurationPackage")]

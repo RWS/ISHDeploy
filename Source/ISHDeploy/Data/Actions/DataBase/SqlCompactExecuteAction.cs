@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -27,34 +26,28 @@ namespace ISHDeploy.Data.Actions.DataBase
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class SqlCompactUpdateAction : BaseAction, ISQLTransactionAction, IDisposable
+    public class SqlCompactExecuteAction : BaseAction, ISQLTransactionAction, IDisposable
     {
         /// <summary>
         /// The SQL command executer.
         /// </summary>
-        private readonly ISQLCompactCommandExecuter _sqlCommandExecuter;
+        protected readonly ISQLCompactCommandExecuter SQLCommandExecuter;
 
-        /// <summary>
-        /// The parameters of SQL command
-        /// </summary>
-        private readonly List<object> _parameters;
         /// <summary>
         /// The SQL command text.
         /// </summary>
         private readonly string _commandText;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlCompactUpdateAction"/> class.
+        /// Initializes a new instance of the <see cref="SqlCompactExecuteAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
         /// <param name="commandText">The Transact-SQL statement, table name or stored procedure to execute at the data source.</param>
-        /// <param name="parameters">The parameters of SQL command</param>
-        public SqlCompactUpdateAction(ILogger logger, string connectionString, string commandText, List<object> parameters) 
+        public SqlCompactExecuteAction(ILogger logger, string connectionString, string commandText) 
 			: base(logger)
         {
-            _sqlCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, true);
-            _parameters = parameters;
+            SQLCommandExecuter = new SQLCompactCommandExecuter(logger, connectionString, true);
             _commandText = commandText;
         }
 
@@ -63,16 +56,15 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         public override void Execute()
         {
-            _sqlCommandExecuter.ExecuteNonQuery(_commandText, _parameters);
+            SQLCommandExecuter.ExecuteNonQuery(_commandText);
         }
-
 
         /// <summary>
         /// Commit the SQL transaction
         /// </summary>
         public void TransactionCommit()
         {
-            _sqlCommandExecuter.TransactionCommit();
+            SQLCommandExecuter.TransactionCommit();
         }
 
         /// <summary>
@@ -80,7 +72,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         public void TransactionRollback()
         {
-            _sqlCommandExecuter.TransactionRollback();
+            SQLCommandExecuter.TransactionRollback();
         }
 
         /// <summary>
@@ -88,7 +80,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         public void Dispose()
         {
-            _sqlCommandExecuter.Dispose();
+            SQLCommandExecuter.Dispose();
         }
     }
 }

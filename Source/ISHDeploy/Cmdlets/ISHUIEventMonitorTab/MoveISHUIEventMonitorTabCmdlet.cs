@@ -38,7 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 	///		<para>Moves definition of the "Translation" after "Publish".</para> 
 	/// </example>
 	/// <para>This command manipulates XML definitions nodes in EventMonitor.
-	///		Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+	///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	/// </para>
 	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
     public class MoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet

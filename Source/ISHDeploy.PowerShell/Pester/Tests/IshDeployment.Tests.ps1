@@ -149,8 +149,6 @@ Describe "Testing Get-ISHDeployment"{
         $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
         $inputparameters = Get-InputParameters $testingDeploymentName
         $deploy.WebSiteName -eq $inputparameters["websitename"] | Should be true
-
     }
-
 }
 

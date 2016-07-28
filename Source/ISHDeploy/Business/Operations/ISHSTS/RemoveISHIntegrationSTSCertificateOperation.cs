@@ -44,15 +44,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
 			// Author web Config
 			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfig.Path, 
-				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersXPath, issuer)));
+				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
         
 			// WS web Config
 			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfig.Path, 
-				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersPath, issuer)));
+				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
 
             // STS web Config
             _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfig.Path,
-				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserXPath, issuer)));
+				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, issuer)));
 		}
 
 		/// <summary>

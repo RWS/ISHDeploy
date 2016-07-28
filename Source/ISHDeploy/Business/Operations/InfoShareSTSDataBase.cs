@@ -45,6 +45,11 @@ namespace ISHDeploy.Business.Operations
             public static string ConnectionString => $"Data Source = {Path.AbsolutePath}";
 
             /// <summary>
+            /// Relying Parties table name
+            /// </summary>
+            public const string RelyingPartiesTableName = "RelyingParties";
+
+            /// <summary>
             /// The certificate update command in RelyingParties table
             /// </summary>
             public const string UpdateCertificateSQLCommandFormat = "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";

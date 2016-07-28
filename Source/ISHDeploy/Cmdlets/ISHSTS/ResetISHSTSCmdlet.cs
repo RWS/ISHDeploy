@@ -26,7 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <example>
     ///		<code>PS C:\&gt;Reset-ISHSTS -ISHDeployment $deployment</code>
     ///		<para>This command resets STS database to initial state.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Reset, "ISHSTS")]

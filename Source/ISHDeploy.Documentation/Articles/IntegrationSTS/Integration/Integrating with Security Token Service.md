@@ -38,9 +38,10 @@ The differences are shown in the following images
 
 ## User zone integration
 
-First get a reference to a deployment.
+### Set deploymentName variable
+First set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName="InfoShare"
 ```
 
 Then
@@ -48,9 +49,10 @@ CopyCodeBlock(Implementation.User.ps1)
 
 ## All zone integration
 
-First get a reference to a deployment.
+### Set deploymentName variable
+First set deploymentName variable.
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
+$deploymentName="InfoShare"
 ```
 
 The internal clients are all non interactive. That means they required a pre-configured set of credentials to use during authentication.
@@ -70,7 +72,7 @@ CopyCodeBlock(Implementation.All.Windows.ps1)
 For every STS the configuration is different. Therefore the module's `Save-ISHIntegrationSTSConfigurationPackage` generates a set of information that describe the important information for configuring Content Manager's relying parties.
 ```powershell
 $filename="$(Get-Date -Format "yyyyMMdd").IntegrationISH.zip"
-Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName $filename
+Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename
 ```
 
 Inside the zip file you will find two files

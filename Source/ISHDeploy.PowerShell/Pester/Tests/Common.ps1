@@ -259,6 +259,7 @@ $scriptBlockGetInputParameters = {
     $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
     $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
     $result["baseurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='baseurl']/currentvalue")[0].InnerText
+	$result["websitename"] = $inputParameters.SelectNodes("inputconfig/param[@name='websitename']/currentvalue")[0].InnerText
 
     return $result
     

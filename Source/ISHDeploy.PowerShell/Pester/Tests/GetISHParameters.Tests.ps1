@@ -75,6 +75,22 @@ $scriptBlockSetWSFederation = {
     Set-ISHIntegrationSTSWSFederation -ISHDeployment $ishDeploy  -Endpoint $endpoint
 }
 
+$scriptBlockGetParametersPipeline = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName,
+        $switshes
+         
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $count = 0
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHDeploymentParameters -ISHDeployment $ishDeploy @switshes | % {$count = $count + 1}
+    return $count
+}
 
 Describe "Testing Get-ISHDeploymentParameters"{
     BeforeEach {
@@ -156,6 +172,16 @@ Describe "Testing Get-ISHDeploymentParameters"{
         $issueractorpassword | Should not be "*******"
         $servicepassword | Should not be "*******"
         $databasepassword | Should not be "*******"
+    }
+
+    It "Get-ISHDeploymentParameters returns collection"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $true}
+        
+        #Assert
+        $count = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParametersPipeline -Session $session -ArgumentList $testingDeploymentName, $params
+        $count -gt 1 | should be $true
+       
     }
 }
 

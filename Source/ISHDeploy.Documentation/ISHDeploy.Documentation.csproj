@@ -72,10 +72,10 @@
     <None Include="Articles\IntegrationSTS\ISHSTS\Resetting ISHSTS.md" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\20161215.VanillaCertificateReplacement.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\20161215.Set-ISHAPIWCFServiceCertificate.ps1" />
-    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Add-ISHSTSRelyingParty.ps1" />
-    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\BL.Add-ISHSTSRelyingParty.ps1" />
+    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Set-ISHSTSRelyingParty.ps1" />
+    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\BL.Set-ISHSTSRelyingParty.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Get-ISHSTSRelyingParty.ps1" />
-    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\LC.Add-ISHSTSRelyingParty.ps1" />
+    <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\LC.Set-ISHSTSRelyingParty.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Save-ISHIntegrationDBSTSSQLServerConfiguration.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Set-ISHSTSConfiguration.Authentication.ps1" />
     <None Include="Articles\Module\FeatureToggle.ps1" />

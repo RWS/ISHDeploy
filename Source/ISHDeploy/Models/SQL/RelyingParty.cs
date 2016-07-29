@@ -22,9 +22,9 @@ namespace ISHDeploy.Models.SQL
     public class RelyingParty
     {
         /// <summary>
-        /// The relying party identifier
+        /// The relying party realm
         /// </summary>
-        public int Id { get; set; }
+        public string Realm { get; set; }
 
         /// <summary>
         /// The relying party name

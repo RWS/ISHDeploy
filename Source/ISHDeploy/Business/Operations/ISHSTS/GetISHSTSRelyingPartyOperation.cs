@@ -18,9 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Data.Actions.DataBase;
-﻿using ISHDeploy.Interfaces;
+using ISHDeploy.Data.Actions.DataBase;
+using ISHDeploy.Interfaces;
 using ISHDeploy.Models.SQL;
+using ISHDeploy.Data.Actions.File;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -54,37 +55,47 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             _invoker = new ActionInvoker(logger, "Getting the relying parties");
 
-            string sqlQuery = InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat;
-
-            List<string> conditions = new List<string>();
-
-            if (ISH)
+            // Ensure DataBase file exists
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (!isDataBaseFileExist)
             {
-                conditions.Add("ISH");
+                logger.WriteWarning("The database file does not exists");
             }
-
-            if (LC)
+            else
             {
-                conditions.Add("LC");
-            }
+                string sqlQuery = InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat;
 
-            if (BL)
-            {
-                conditions.Add("BL");
-            }
+                List<string> conditions = new List<string>();
 
-            if (conditions.Count > 0)
-            {
-                sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
-            }
+                if (ISH)
+                {
+                    conditions.Add("ISH");
+                }
 
-            _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    InfoShareSTSDataBase.ConnectionString,
-                    sqlQuery,
-                    result =>
-                    {
-                        _resultRows = result;
-                    }));
+                if (LC)
+                {
+                    conditions.Add("LC");
+                }
+
+                if (BL)
+                {
+                    conditions.Add("BL");
+                }
+
+                if (conditions.Count > 0)
+                {
+                    sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
+                }
+
+                _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
+                        InfoShareSTSDataBase.ConnectionString,
+                        sqlQuery,
+                        result =>
+                        {
+                            _resultRows = result;
+                        }));
+            }
         }
 
         /// <summary>

@@ -389,5 +389,6 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
         $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
         $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should be "testEndpoint"
     }
 }

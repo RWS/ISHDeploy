@@ -19,7 +19,6 @@
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using Microsoft.Dism;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -98,8 +97,10 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
-            if (IsWindowsAuthenticationFeatureEnabled())
-            {
+            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
+            // https://jira.sdl.com/browse/TS-11523
+            //if (IsWindowsAuthenticationFeatureEnabled())
+            //{
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
                 {
                     _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
@@ -118,18 +119,13 @@ namespace ISHDeploy.Data.Managers
                         locationPath);
                     windowsAuthenticationSection["enabled"] = true;
 
-                    //var anonymousAuthenticationSection = config.GetSection(
-                    //    "system.webServer/security/authentication/anonymousAuthentication",
-                    //    locationPath);
-                    //anonymousAuthenticationSection["enabled"] = false;
-
                     manager.CommitChanges();
                 }
-            }
-            else
-            {
-                throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
-            }
+            //}
+            //else
+            //{
+            //    throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
+            //}
         }
 
         /// <summary>
@@ -166,19 +162,9 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
-            bool isEnabled = false;
-            DismApi.Initialize(DismLogLevel.LogErrors);
-            using (DismSession session = DismApi.OpenOnlineSession())
-            {
-                isEnabled =
-                    DismApi.GetFeatures(session)
-                        .Any(
-                            x =>
-                                x.FeatureName == "IIS-WindowsAuthentication" &&
-                                x.State == DismPackageFeatureState.Installed);
-            }
-            DismApi.Shutdown();
-            return isEnabled;
+            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
+            // https://jira.sdl.com/browse/TS-11523
+            return true;
         }
 
         /// <summary>

@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using ISHDeploy.Data.Actions.ISHProject;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 ﻿using ISHDeploy.Models;
 
@@ -228,9 +229,8 @@ namespace ISHDeploy.Business.Operations
         {
             Logger = logger;
 
-            var action = new GetCurrentInputParametersAction(Logger, ishDeployment.Name,
-                result => InputParameters = result);
-            action.Execute();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);

@@ -15,7 +15,6 @@
  */
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Data.Exceptions;
@@ -31,25 +30,14 @@ namespace ISHDeploy.Data.Actions.ISHProject
     public class GetISHDeploymentsAction : BaseActionWithResult<IEnumerable<ISHDeployment>>
     {
         /// <summary>
-        /// The input parameters file name
+        /// The aggregator of data.
         /// </summary>
-        private const string InputParametersFileName = "inputparameters.xml";
+        private readonly IDataAggregateHelper _dataAggregateHelper;
 
         /// <summary>
         /// The registry manager.
         /// </summary>
         private readonly IRegistryManager _registryManager;
-
-        /// <summary>
-        /// The XML configuration manager.
-        /// </summary>
-        private readonly IXmlConfigManager _xmlConfigManager;
-
-        /// <summary>
-        /// The file manager.
-        /// </summary>
-        private readonly IFileManager _fileManager;
-
 
         /// <summary>
         /// The Content Manager deployment name.
@@ -65,9 +53,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
         public GetISHDeploymentsAction(ILogger logger, string projectName, Action<IEnumerable<ISHDeployment>> returnResult)
             : base(logger, returnResult)
         {
+            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
-            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
-            _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _projectName = projectName;
         }
 
@@ -98,25 +85,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
             // For each registry record get deployment version, path to inputparameter.xml file and parse this file.
             foreach (var projectRegKey in installProjectsRegKeys)
             {
-                var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
                 var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
-
-                if (string.IsNullOrWhiteSpace(installParamsPath))
-                {
-                    Logger.WriteError(new CorruptedInstallationException($"Registry subkeys for {projectRegKey} are corrupted"), projectRegKey);
-                    continue;
-                }
-
-                var installParamFile = Path.Combine(installParamsPath, InputParametersFileName);
-
-                if (!_fileManager.FileExists(installParamFile))
-                {
-                    Logger.WriteError(new CorruptedInstallationException($"{ installParamFile } file does not exist on the system"), installParamFile);
-                    continue;
-                }
-
-                var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
-                var parameters = new InputParameters(installParamFile, dictionary);
+                var parameters = _dataAggregateHelper.GetInputParameters(projectRegKey.Name.Split(new[]{'\\'}).Last());
                 var ishProject = new ISHDeployment
                 {
                     Name = $"InfoShare{parameters.ProjectSuffix}",

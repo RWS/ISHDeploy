@@ -45,6 +45,7 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
+            ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
         }
 
         /// <summary>

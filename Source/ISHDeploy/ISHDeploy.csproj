@@ -52,10 +52,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Dism, Version=1.5.5577.14140, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Dism.1.5.1\lib\net40\Microsoft.Dism.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
@@ -232,7 +228,9 @@
     <Compile Include="Data\Actions\XmlFile\SetNodeAction.cs" />
     <Compile Include="Data\Exceptions\WindowsAuthenticationModuleIsNotInstalledException.cs" />
     <Compile Include="Data\Managers\Interfaces\ISQLCompactCommandExecuter.cs" />
+    <Compile Include="Data\Managers\Interfaces\IDataAggregateHelper.cs" />
     <Compile Include="Data\Managers\SQLCompactCommandExecuter.cs" />
+    <Compile Include="Data\Managers\DataAggregateHelper.cs" />
     <Compile Include="Data\Managers\WebAdministrationManager.cs" />
     <Compile Include="Data\Managers\CertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWebAdministrationManager.cs" />
@@ -276,7 +274,6 @@
     <Compile Include="Data\Actions\File\FileCleanDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyToDirectoryAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyDirectoryAction.cs" />
-    <Compile Include="Data\Actions\ISHProject\GetCurrentInputParametersAction.cs" />
     <Compile Include="Data\Actions\License\LicenseTestAction.cs" />
     <Compile Include="Data\Actions\TextFile\CommentBlockAction.cs" />
     <Compile Include="Data\Actions\TextFile\UncommentBlockAction.cs" />

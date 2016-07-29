@@ -5,7 +5,7 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.Asserts
 {
     /// <summary>
-    /// The action that verify condition and generates an error in case if condition returns true
+    /// The action that verify condition and generates an error in case if condition returns <see langword="true"/>
     /// </summary>
     /// <seealso cref="BaseActionWithResult{TResult}" />
     public class AssertAction : BaseAction
@@ -16,7 +16,7 @@ namespace ISHDeploy.Data.Actions.Asserts
         private readonly Func<bool> _condition;
 
         /// <summary>
-        /// The Exception message
+        /// The exception message
         /// </summary>
         private readonly string _message;
 
@@ -36,7 +36,7 @@ namespace ISHDeploy.Data.Actions.Asserts
         /// <summary>
         /// Executes current action.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Execute()
         {
             if (_condition.Invoke())

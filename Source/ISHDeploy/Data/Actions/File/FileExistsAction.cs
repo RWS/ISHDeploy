@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,7 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path.</param>
+        /// <param name="returnResult">The delegate that returns all text of file.</param>
         public FileExistsAction(ILogger logger, string filePath, Action<bool> returnResult)
             : base(logger, returnResult)
         {

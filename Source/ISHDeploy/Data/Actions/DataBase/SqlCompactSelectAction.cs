@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +60,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         protected override IEnumerable<T> ExecuteWithResult()
         {
-            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(x => DataRowToModelMapper.Map<T>(x));
+            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(DataRowToModelMapper.Map<T>);
         }
 
         /// <summary>

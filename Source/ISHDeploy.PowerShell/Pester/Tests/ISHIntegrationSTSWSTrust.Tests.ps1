@@ -58,6 +58,7 @@ $scriptBlockReadTargetXML = {
         $suffix,
         $inputParametersPath
     )
+    
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")

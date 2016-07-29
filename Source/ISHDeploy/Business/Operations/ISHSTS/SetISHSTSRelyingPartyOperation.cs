@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,9 +30,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <summary>
     /// Sets the Relying Party
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class SetISHSTSRelyingPartyOperation : BasePathsOperation
+    public class SetISHSTSRelyingPartyOperation : BaseOperationPaths
     {
         /// <summary>
         /// Operation type enum
@@ -83,29 +83,22 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // Ensure DataBase file exists
             bool isDataBaseFileExist = false;
-            (new FileExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
             if (!isDataBaseFileExist)
             {
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
-                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, $"{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.STSWebAppName}"));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBase.Path));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
             }
 
             string relyingPartyTypePrefix;
-            if (relyingPartyType == RelyingPartyType.None)
-            {
-                relyingPartyTypePrefix = Regex.Match(name, @"^(?<prefix>[A-Z]+)\:").Groups["prefix"].Value;
-            }
-            else
-            {
-                relyingPartyTypePrefix = relyingPartyType.ToString();
-            }
+            relyingPartyTypePrefix = relyingPartyType == RelyingPartyType.None ? Regex.Match(name, @"^(?<prefix>[A-Z]+)\:").Groups["prefix"].Value : relyingPartyType.ToString();
 
             if (!string.IsNullOrEmpty(relyingPartyTypePrefix))
             {
                 int resultRowsCount = 0;
                 _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    InfoShareSTSDataBase.ConnectionString,
+                    InfoShareSTSDataBaseConnectionString,
                     $"{InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat} WHERE Realm ='{realm}' AND Name NOT LIKE '{relyingPartyTypePrefix}:%'",
                     result =>
                     {
@@ -118,7 +111,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
 
             _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
-                        InfoShareSTSDataBase.ConnectionString,
+                        InfoShareSTSDataBaseConnectionString,
                         InfoShareSTSDataBase.RelyingPartiesTableName,
                         "Realm",
                         new Dictionary<string, object>

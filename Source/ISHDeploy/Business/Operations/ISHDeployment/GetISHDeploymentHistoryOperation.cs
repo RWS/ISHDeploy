@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Gets history file content.
     /// </summary>
     /// <seealso cref="IOperation{TResult}" />
-    public class GetISHDeploymentHistoryOperation : BasePathsOperation, IOperation<string>
+    public class GetISHDeploymentHistoryOperation : BaseOperationPaths, IOperation<string>
     {
         /// <summary>
         /// The actions invoker

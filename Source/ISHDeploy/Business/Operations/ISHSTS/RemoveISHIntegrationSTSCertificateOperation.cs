@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Removes certificate based on a issuer name
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class RemoveISHIntegrationSTSCertificateOperation : BasePathsOperation, IOperation
+    public class RemoveISHIntegrationSTSCertificateOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -43,15 +43,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			_invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
 
 			// Author web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfig.Path, 
+			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfigPath, 
 				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
         
 			// WS web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfig.Path, 
+			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfigPath, 
 				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
 
             // STS web Config
-            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfig.Path,
+            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfigPath,
 				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, issuer)));
 		}
 

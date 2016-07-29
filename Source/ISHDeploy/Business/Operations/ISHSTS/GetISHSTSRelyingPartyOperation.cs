@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,9 +27,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <summary>
     /// Gets the configured Relying Parties
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class GetISHSTSRelyingPartyOperation : BasePathsOperation, IOperation<IEnumerable<RelyingParty>>
+    public class GetISHSTSRelyingPartyOperation : BaseOperationPaths, IOperation<IEnumerable<RelyingParty>>
     {
         /// <summary>
         /// The actions invoker
@@ -79,7 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
 
             _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    InfoShareSTSDataBase.ConnectionString,
+                    InfoShareSTSDataBaseConnectionString,
                     sqlQuery,
                     result =>
                     {

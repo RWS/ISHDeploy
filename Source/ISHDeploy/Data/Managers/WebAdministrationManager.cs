@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,7 +97,8 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
-            // Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet. https://jira.sdl.com/browse/TS-11523
+            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
+            // https://jira.sdl.com/browse/TS-11523
             //if (IsWindowsAuthenticationFeatureEnabled())
             //{
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
@@ -161,7 +162,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
-            // Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
+            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
             // https://jira.sdl.com/browse/TS-11523
             return true;
         }

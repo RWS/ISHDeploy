@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHContentEditor;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor

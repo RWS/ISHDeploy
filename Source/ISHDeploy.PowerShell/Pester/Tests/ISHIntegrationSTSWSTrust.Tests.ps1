@@ -403,8 +403,8 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         #Assert
         $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
 
-        $result["issueractorusername"] | Should be "testActorUsername"
-        $result["issueractorpassword"] | Should be "testActorPassword"
+        $result["issueractorusername"] | Should not be "testActorUsername"
+        $result["issueractorpassword"] | Should not be "testActorPassword"
         $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
         $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
         $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"

@@ -62,7 +62,7 @@ namespace ISHDeploy.Tests
                 ["websitename"] = string.Empty
             };
 
-			return new ISHFilePath(string.Empty, string.Empty, relativePath);
-		}
+            return new ISHFilePath("Web", "Backup", relativePath);
+        }
     }
 }

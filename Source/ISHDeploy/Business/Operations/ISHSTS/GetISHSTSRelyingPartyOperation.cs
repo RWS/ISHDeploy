@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// </summary>
     /// <seealso cref="BasePathsOperation" />
     /// <seealso cref="IOperation" />
-    public class GetISHSTSRelyingPartyOperation : BasePathsOperation, IOperation<IEnumerable<RelyingParty>>
+    public class GetISHSTSRelyingPartyOperation : BaseOperationPaths, IOperation<IEnumerable<RelyingParty>>
     {
         /// <summary>
         /// The actions invoker
@@ -57,7 +57,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // Ensure DataBase file exists
             bool isDataBaseFileExist = false;
-            (new FileExistsAction(logger, InfoShareSTSDataBase.Path.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
             if (!isDataBaseFileExist)
             {
                 logger.WriteWarning("The database file does not exists");
@@ -89,7 +89,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 }
 
                 _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                        InfoShareSTSDataBase.ConnectionString,
+                        InfoShareSTSDataBaseConnectionString,
                         sqlQuery,
                         result =>
                         {

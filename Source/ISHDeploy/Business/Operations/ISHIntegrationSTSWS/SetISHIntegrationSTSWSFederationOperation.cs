@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
     /// <summary>
     /// Sets WSFederation configuration.
     /// </summary>
-    public class SetISHIntegrationSTSWSFederationOperation : BasePathsOperation, IOperation
+    public class SetISHIntegrationSTSWSFederationOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -41,8 +41,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         {
             _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 
-            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, InputParameters.Path, InputParameters.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
+            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
         }
 
         /// <summary>

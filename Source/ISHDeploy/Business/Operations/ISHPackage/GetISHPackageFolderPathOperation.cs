@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// <summary>
     /// Gets the path to the packages folder
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class GetISHPackageFolderPathOperation : BasePathsOperation, IOperation<string>
+    public class GetISHPackageFolderPathOperation : BaseOperationPaths, IOperation<string>
     {
         /// <summary>
         /// The actions invoker
@@ -34,21 +34,22 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <summary>
         /// Return path in UNC format
         /// </summary>
-        private bool _isUNCFormat;
+        private readonly bool _isUncFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetISHPackageFolderPathOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public GetISHPackageFolderPathOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool isUNCFormat = false) :
+        /// <param name="isUncFormat">If true return path in UNC format</param>
+        public GetISHPackageFolderPathOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool isUncFormat = false) :
             base(logger, ishDeployment)
         {
-            _isUNCFormat = isUNCFormat;
+            _isUncFormat = isUncFormat;
 
             _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, FoldersPaths.PackagesFolderPath));
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _invoker.Invoke();
 
-            return _isUNCFormat ? FoldersPaths.PackagesFolderUNCPath : FoldersPaths.PackagesFolderPath; ;
+            return _isUncFormat ? PackagesFolderUNCPath : PackagesFolderPath; ;
         }
     }
 }

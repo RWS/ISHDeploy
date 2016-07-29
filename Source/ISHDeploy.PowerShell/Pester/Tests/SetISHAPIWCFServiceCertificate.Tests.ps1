@@ -216,6 +216,17 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         $history.Contains('-ValidationMode PeerOrChainTrust') | Should be "True"
         $history.Contains($testThumbprint) | Should be "True"
     }
+
+	It "Set-ISHAPIWCFServiceCertificate writes inputparameters"{       
+        #Act
+        Start-Sleep -Milliseconds 7000
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+		$result["servicecertificatevalidationmode"] | Should be "PeerOrChainTrust"
+		$result["servicecertificatesubjectname"] | Should be "CN=testDNS"
+		$result["servicecertificatethumbprint"] -eq $testThumbprint | Should be $true
+    }
 }
 
 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveCertificate -Session $session -ArgumentList $testThumbprint

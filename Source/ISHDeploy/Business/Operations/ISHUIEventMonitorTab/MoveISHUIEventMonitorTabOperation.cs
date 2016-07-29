@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class MoveISHUIEventMonitorTabOperation : BasePathsOperation, IOperation
+	public class MoveISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// Operation type enum
@@ -72,10 +72,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (operationType)
 	        {
 				case OperationType.InsertAfter:
-					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case OperationType.InsertBefore:
-					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXml.Path, nodesToMoveXPath, targetNodeXPath));
+					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}

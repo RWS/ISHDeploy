@@ -338,4 +338,16 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigIssuer | Should be "Issuer"
         $stsWebConfigNodesCount | Should be 1
     }
+
+	It "Set ISHIntegrationSTSCertificate writes inputparameters"{       
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust" -WarningVariable Warning
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issuercertificatethumbprint"] | Should be "testThumbprint"
+		$result["issuercertificatevalidationmode"] | Should be "PeerOrChainTrust"
+
+    }
 }

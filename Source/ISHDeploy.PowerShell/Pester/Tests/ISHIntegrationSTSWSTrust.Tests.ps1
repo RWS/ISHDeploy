@@ -55,8 +55,10 @@ $scriptBlockGetHistory = {
 $scriptBlockReadTargetXML = {
     param(
         $xmlPath,
-        $suffix
+        $suffix,
+        $inputParametersPath
     )
+    
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")
@@ -71,7 +73,7 @@ $scriptBlockReadTargetXML = {
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
     $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
     [System.Xml.XmlDocument]$inputParametersXml = new-object System.Xml.XmlDocument
-    $inputParametersXml.load($inputParameters["inputparametersFilePath"])
+    $inputParametersXml.load($inputParametersPath)
     $result = @{}
 
     #get variables and nodes from files
@@ -96,7 +98,7 @@ $scriptBlockReadTargetXML = {
 function readTargetXML() {
     
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix, $inputParameters["inputparametersFilePath"]
 
     #get variables and nodes from files
     $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]
@@ -372,5 +374,41 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint test') | Should be "True"
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
+    }
+
+	It "Set ISHIntegrationSTSWSTrust writes inputparameters"{
+         #Arrange
+        $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issueractorusername"] | Should be "testActorUsername"
+        $result["issueractorpassword"] | Should be "testActorPassword"
+        $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
+        $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
+        $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should be "testEndpoint"
+    }
+
+	It "Set ISHIntegrationSTSWSTrust writes inputparameters with no interanl clients"{
+         #Arrange
+        $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $false
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issueractorusername"] | Should not be "testActorUsername"
+        $result["issueractorpassword"] | Should not be "testActorPassword"
+        $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
+        $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
+        $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should not be "testEndpoint"
     }
 }

@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,37 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
     /// <summary>
-    /// Provides absolute paths to all ISH files that are going to be used
-    /// Also provides xpaths to XML elements and attributes in these files
+    /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
-    public partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
-        /// The path to ~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf
+        /// Provides constants related to ~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf file
         /// </summary>
-        protected static class InfoShareSTSDataBase
+        protected class InfoShareSTSDataBase
         {
-            /// <summary>
-            /// The path to ~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf");
-
-            /// <summary>
-            /// Gets the connection string.
-            /// </summary>
-            /// <value>
-            /// The connection string.
-            /// </value>
-            public static string ConnectionString => $"Data Source = {Path.AbsolutePath}";
-
             /// <summary>
             /// Relying Parties table name
             /// </summary>
@@ -52,12 +34,13 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The certificate update command in RelyingParties table
             /// </summary>
-            public const string UpdateCertificateSQLCommandFormat = "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
+            public const string UpdateCertificateSQLCommandFormat =
+                "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
 
             /// <summary>
             /// The select RelyingParties query
             /// </summary>
-            public const string GetRelyingPartySQLCommandFormat = "SELECT Id, Name, Enabled, EncryptingCertificate FROM RelyingParties";
+            public const string GetRelyingPartySQLCommandFormat = "SELECT Realm, Name, Enabled, EncryptingCertificate FROM RelyingParties";
 
             /// <summary>
             /// Gets the array of SVC paths.
@@ -65,41 +48,47 @@ namespace ISHDeploy.Business.Operations
             /// <value>
             /// The list of SVC paths.
             /// </value>
-            public static string[] SvcPaths => new[]
+            /// <param name="baseUrl">The base URL.</param>
+            /// <param name="webAppNameWS">The web name of WS application.</param>
+            /// <returns></returns>
+            public static string[] GetSvcPaths(string baseUrl, string webAppNameWS)
             {
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/Application.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/Baseline.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/DocumentObj.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/EDT.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/EventMonitor.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/Folder.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/ListOfValues.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/MetadataBinding.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/OutputFormat.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/PublicationOutput.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/Search.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/Settings.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/TranslationJob.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/TranslationTemplate.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/User.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/UserGroup.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API25/UserRole.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Application.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/DocumentObj.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/EDT.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Folder.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/MetaDataAssist.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/OutputFormat.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Publication.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/PublicationOutput.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Reports.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Search.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Settings.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API20/Workflow.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API/Application.svc'",
-                $"'{ISHDeploymentInternal.BaseUrl}/{ISHDeploymentInternal.WebAppNameWS}/Wcf/API/ConditionManagement.svc'"
-            };
+                return new[]
+                {
+                    $"'{baseUrl}/{webAppNameWS}/'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/Application.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/Baseline.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/DocumentObj.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/EDT.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/EventMonitor.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/Folder.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/ListOfValues.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/MetadataBinding.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/OutputFormat.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/PublicationOutput.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/Search.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/Settings.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/TranslationJob.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/TranslationTemplate.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/User.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/UserGroup.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API25/UserRole.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Application.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/DocumentObj.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/EDT.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Folder.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/MetaDataAssist.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/OutputFormat.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Publication.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/PublicationOutput.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Reports.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Search.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Settings.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API20/Workflow.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API/Application.svc'",
+                    $"'{baseUrl}/{webAppNameWS}/Wcf/API/ConditionManagement.svc'"
+                };
+            }
         }
     }
 }

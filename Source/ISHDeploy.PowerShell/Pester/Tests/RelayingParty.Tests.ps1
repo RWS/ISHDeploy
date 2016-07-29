@@ -310,7 +310,7 @@ Describe "Testing ISHRelaying party"{
             Remove-Item $dbPath
         }
   
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName} | Should Throw 
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName} | Should not Throw 
     }
 
     It "Set ISHSTSRelyingParty when db not exists"{

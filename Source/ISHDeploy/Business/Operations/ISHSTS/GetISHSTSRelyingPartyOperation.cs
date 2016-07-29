@@ -61,6 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             if (!isDataBaseFileExist)
             {
                 logger.WriteWarning("The database file does not exists");
+                _resultRows = new List<RelyingParty>();
             }
             else
             {

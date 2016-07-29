@@ -131,7 +131,7 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
               
     }
 	
-	It "Set ISHIntegrationSTSWSFederation with full parameters"{   
+	It "Set ISHIntegrationSTSWSFederation writes inputparameters"{   
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
         #Assert

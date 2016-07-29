@@ -28,7 +28,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <summary>
     /// Gets the configured Relying Parties
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
     public class GetISHSTSRelyingPartyOperation : BaseOperationPaths, IOperation<IEnumerable<RelyingParty>>
     {

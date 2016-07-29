@@ -94,7 +94,7 @@ namespace ISHDeploy.Data.Actions.File
                     InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None,
                     AccessControlType.Allow);
             }
-            else if (_fileManager.FolderExists(_path))
+            else if (_fileManager.FileExists(_path))
             {
                 _fileManager.AssignPermissionsForFile(_path, _user, _rights, AccessControlType.Allow);
             }

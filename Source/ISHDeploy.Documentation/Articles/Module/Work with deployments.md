@@ -29,18 +29,20 @@ To query for one specific deployment use the following command when the `project
 Get-ISHDeployment -Name InfoShare
 ```
 This outputs the following
- 
-    SoftwareVersion : 12.0.2929.1
-    Name            : InfoShare
-    AppPath         : C:\InfoShare
-    WebPath         : C:\InfoShare
-    DataPath        : C:\InfoShare
-    DatabaseType    : sqlserver2012
-    AccessHostName  : ish.example.com
-    WebAppNameCM    : InfoShareAuthor
-    WebAppNameWS    : InfoShareWS
-    WebAppNameSTS   : InfoShareSTS
-	WebSiteName     : Default Web Site
+
+```text 
+SoftwareVersion : 12.0.2929.1
+Name            : InfoShare
+AppPath         : C:\InfoShare
+WebPath         : C:\InfoShare
+DataPath        : C:\InfoShare
+DatabaseType    : sqlserver2012
+AccessHostName  : ish.example.com
+WebAppNameCM    : InfoShareAuthor
+WebAppNameWS    : InfoShareWS
+WebAppNameSTS   : InfoShareSTS
+WebSiteName     : Default Web Site
+```
  
 If the `projectsuffix` was not empty then concatenate it after `InfoShare`. For example
 ```powershell
@@ -113,7 +115,7 @@ Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Original
 
 And the shortened outcome looks like this
 
-```
+```text
 Name                                     Value
 ----                                     -----
 osuser                                   osuser

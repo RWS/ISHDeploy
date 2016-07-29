@@ -374,6 +374,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
     }
+
 	It "Set ISHIntegrationSTSWSTrust writes inputparameters"{
          #Arrange
         $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
@@ -390,5 +391,23 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
         $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
 		$result["issuerwstrustendpointurl_normalized"] | Should be "testEndpoint"
+    }
+
+	It "Set ISHIntegrationSTSWSTrust writes inputparameters with no interanl clients"{
+         #Arrange
+        $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $false
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issueractorusername"] | Should be "testActorUsername"
+        $result["issueractorpassword"] | Should be "testActorPassword"
+        $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
+        $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
+        $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should not be "testEndpoint"
     }
 }

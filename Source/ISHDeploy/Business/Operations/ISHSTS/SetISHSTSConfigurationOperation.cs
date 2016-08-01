@@ -130,8 +130,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 thumbprint = normalizedThumbprint;
             }
 
-            var encryptedThumbprint = string.Empty;
-            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
+            var subjectThumbprint = string.Empty;
+            (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
 
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
@@ -140,10 +140,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
             _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString, 
-                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat, 
-                        encryptedThumbprint, 
-                        string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
+                InfoShareSTSDataBaseConnectionString,
+                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                        subjectThumbprint)));
         }
 
         /// <summary>
@@ -179,8 +178,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 string pathToCertificate = string.Empty;
-                    (new GetPathToCertificateByThumbprintAction(Logger,
-                        InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
+                (new GetPathToCertificateByThumbprintAction(Logger,
+                    InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
 
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));

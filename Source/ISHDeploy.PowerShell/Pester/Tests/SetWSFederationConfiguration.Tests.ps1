@@ -130,4 +130,13 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         $history.Contains('Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint testEndpoint') | Should be "True"
               
     }
+	
+	It "Set ISHIntegrationSTSWSFederation writes inputparameters"{   
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issuerwsfederationendpointurl"] | Should be "testEndpoint"
+    }
 }

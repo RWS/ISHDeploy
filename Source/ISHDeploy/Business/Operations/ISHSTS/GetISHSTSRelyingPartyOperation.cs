@@ -18,18 +18,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Data.Actions.DataBase;
-﻿using ISHDeploy.Interfaces;
+using ISHDeploy.Data.Actions.DataBase;
+using ISHDeploy.Interfaces;
 using ISHDeploy.Models.SQL;
+using ISHDeploy.Data.Actions.File;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
     /// <summary>
     /// Gets the configured Relying Parties
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class GetISHSTSRelyingPartyOperation : BasePathsOperation, IOperation<IEnumerable<RelyingParty>>
+    public class GetISHSTSRelyingPartyOperation : BaseOperationPaths, IOperation<IEnumerable<RelyingParty>>
     {
         /// <summary>
         /// The actions invoker
@@ -52,39 +53,50 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public GetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool ISH, bool LC, bool BL):
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
+            _invoker = new ActionInvoker(logger, "Getting the relying parties");
 
-            string sqlQuery = InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat;
-
-            List<string> conditions = new List<string>();
-
-            if (ISH)
+            // Ensure DataBase file exists
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (!isDataBaseFileExist)
             {
-                conditions.Add("ISH");
+                logger.WriteWarning("The database file does not exists");
+                _resultRows = new List<RelyingParty>();
             }
-
-            if (LC)
+            else
             {
-                conditions.Add("LC");
-            }
+                string sqlQuery = InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat;
 
-            if (BL)
-            {
-                conditions.Add("BL");
-            }
+                List<string> conditions = new List<string>();
 
-            if (conditions.Count > 0)
-            {
-                sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
-            }
+                if (ISH)
+                {
+                    conditions.Add("ISH");
+                }
 
-            _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
-                    InfoShareSTSDataBase.ConnectionString,
-                    sqlQuery,
-                    result =>
-                    {
-                        _resultRows = result;
-                    }));
+                if (LC)
+                {
+                    conditions.Add("LC");
+                }
+
+                if (BL)
+                {
+                    conditions.Add("BL");
+                }
+
+                if (conditions.Count > 0)
+                {
+                    sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
+                }
+
+                _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
+                        InfoShareSTSDataBaseConnectionString,
+                        sqlQuery,
+                        result =>
+                        {
+                            _resultRows = result;
+                        }));
+            }
         }
 
         /// <summary>

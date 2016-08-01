@@ -58,6 +58,7 @@
     <None Include="Pester\Tests\Common.ps1" />
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
+    <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
@@ -68,6 +69,7 @@
     <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
     <None Include="Pester\Tests\ISHUITranslationJob.Tests.ps1" />
+    <None Include="Pester\Tests\RelayingParty.Tests.ps1" />
     <None Include="Pester\Tests\ResetISHSTS.Tests.ps1" />
     <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />

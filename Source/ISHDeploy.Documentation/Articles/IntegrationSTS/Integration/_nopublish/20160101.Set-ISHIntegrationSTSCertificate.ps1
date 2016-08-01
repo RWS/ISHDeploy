@@ -4,4 +4,4 @@ $issuerName="Example STS (20160101)"
 $tokenSigningCertificateThumbprint="20160101.Thumbprint"
 
 # Set Token signing certificate
-Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint

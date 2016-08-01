@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
     /// <summary>
-    /// Provides absolute paths to all ISH files that are going to be used
-    /// Also provides xpaths to XML elements and attributes in these files
+    /// Provides xpaths, search patterns and constants of deployment files
     /// </summary>
-    public partial class BasePathsOperation
+    partial class BaseOperationPaths
     {
         /// <summary>
-        /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
+        /// Provides constants related to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
         /// </summary>
-        protected static class XopusBluelionConfigXml
+        protected class XopusBluelionConfigXml
         {
-            /// <summary>
-            /// The path to ~\Web\Author\ASP\Editors\Xopus\config\bluelion-config.xml
-            /// </summary>
-            public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-                @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
-
             /// <summary>
             /// The Enrich integration bluelion configuration xpath comment placeholder
             /// </summary>

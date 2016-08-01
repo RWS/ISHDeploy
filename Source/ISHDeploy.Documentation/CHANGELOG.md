@@ -1,9 +1,23 @@
 # Version notes
-## alpha-0.2 (Pre-release)
-Initial release
+
+## alpha-0.3 (Pre-release)
+
 1. Working with deployments
-   1. Cmdlets
-    - Reset-ISHSTS
+  1. Cmdlets
+    - Get-ISHDeploymentParameters. **[New]**
+
+## alpha-0.2 (Pre-release)
+
+1. Integration with Security Token Service (STS)
+  1. Cmdlets
+    - Remove-ISHSTS. **[New]**
+  1. Articles
+    - Work with Security Token Service\ISHSTS\Integrating 3rd party service providers. **New**
+    - Work with Security Token Service\ISHSTS\Implementing light weight Windows Authentication. **[New]**
+    - Work with Security Token Service\ISHSTS\Resetting ISHSTS. **[New]**
+    - Work with Security Token Service\Certificates rollover/replacement\Implementing certificate replacement. **[New]**
+    - Work with Security Token Service\Certificates rollover/replacement\Implementing issuer certificate rollover with 3rd party STS. **[Update]**
+	- Work with Security Token Service\Certificates rollover/replacement\Implementing service certificate replacement with 3rd party STS. **[New]**
 
 ## alpha-0.1 (Pre-release)
 Initial release

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHUITranslationJob
     /// <example>
     /// <code>PS C:\>Disable-ISHUITranslationJob -ISHDeployment $deployment</code>
     /// <para>This command disables translation job.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHUITranslationJob")]
     public class DisableISHUITranslationJobCmdlet : BaseHistoryEntryCmdlet

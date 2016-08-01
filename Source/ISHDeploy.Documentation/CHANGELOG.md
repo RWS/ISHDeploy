@@ -1,16 +1,17 @@
 # Version notes
 
-## alpha-0.3 (Pre-release)
-
-1. Working with deployments
-  1. Cmdlets
-    - Get-ISHDeploymentParameters. **[New]**
-
 ## alpha-0.2 (Pre-release)
 
 1. Integration with Security Token Service (STS)
   1. Cmdlets
-    - Remove-ISHSTS. **[New]**
+    - All cmdlets accept also name as value for the `-ISHDeployment` parameter. e.g. `Enable-ISHUIContentEditor -ISHDeployment "InfoShare"`. **[Update]**
+    - `Get-ISHDeployment` returns the `WebSiteName` also. **[Update]**
+	- `Get-ISHDeploymentParameters` . **[New]**
+	- Remove-ISHSTS. **[New]**
+	- Get-ISHSTSRelyingParty. **[New]**
+	- Set-ISHSTSRelyingParty. **[New]**
+	- Set-ISHSTSConfiguration. (Not working) **[New]**
+	- Reset-ISHSTS. **[New]**
   1. Articles
     - Work with Security Token Service\ISHSTS\Integrating 3rd party service providers. **New**
     - Work with Security Token Service\ISHSTS\Implementing light weight Windows Authentication. **[New]**

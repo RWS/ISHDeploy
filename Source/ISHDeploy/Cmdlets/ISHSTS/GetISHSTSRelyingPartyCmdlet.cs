@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
     /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
     /// <para>This command gets t all relying parties from the infosharests database.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHSTSRelyingParty")]
     public class GetISHSTSRelyingPartyCmdlet : BaseISHDeploymentCmdlet

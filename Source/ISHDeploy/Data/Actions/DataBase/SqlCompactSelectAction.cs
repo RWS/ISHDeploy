@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ISHDeploy.Data.Actions.DataBase.Mapper;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -41,7 +42,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         private readonly string _query;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlCompactSelectAction" /> class.
+        /// Initializes a new instance of the <see cref="SqlCompactSelectAction{T}" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionString">The connection used to open the SQL Server database.</param>
@@ -59,7 +60,7 @@ namespace ISHDeploy.Data.Actions.DataBase
         /// </summary>
         protected override IEnumerable<T> ExecuteWithResult()
         {
-            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(x => DataRowToModelMapper.Map<T>(x));
+            return _sqlCommandExecuter.ExecuteQuery(_query).Select().Select(DataRowToModelMapper.Map<T>);
         }
 
         /// <summary>

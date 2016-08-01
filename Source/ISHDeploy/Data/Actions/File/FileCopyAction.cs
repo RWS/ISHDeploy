@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.IO;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
 using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.File
@@ -24,7 +22,7 @@ namespace ISHDeploy.Data.Actions.File
 	/// <summary>
 	/// Implements file copy action
 	/// </summary>
-    public class FileCopyAction : BaseAction, IRestorableAction
+    public class FileCopyAction : BaseAction
     {
         /// <summary>
         /// The source file path
@@ -68,37 +66,7 @@ namespace ISHDeploy.Data.Actions.File
 		/// </summary>
 		public override void Execute()
 		{
-			_fileManager.CopyToDirectory(_sourcePath, _destinationPath, _force);
-		}
-
-        /// <summary>
-        /// Reverts an asset to initial state.
-        /// </summary>
-        public virtual void Rollback()
-		{
-			var fileName = Path.GetFileName(_sourcePath);
-
-			Logger.WriteVerbose($"Rolling back file `{fileName}` copy action.");
-			if (string.IsNullOrEmpty(fileName))
-		    {
-		        return;
-		    }
-
-			var copiedFileName = Path.Combine(_destinationPath, fileName);
-			if (_fileManager.FileExists(copiedFileName))
-		    {
-				_fileManager.Delete(copiedFileName);
-			}
-		}
-
-		/// <summary>
-		/// Used to create a backup of the file, however, as this command is doing no modification 
-		/// on existing file we keep this method empty
-		/// </summary>
-		public void Backup()
-		{
-			//	Otherwise backup means removing added item
-			//	So do nothing here
+			_fileManager.Copy(_sourcePath, _destinationPath, _force);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -73,23 +72,18 @@ namespace ISHDeploy.Data.Managers
         /// Executes a Transact-SQL statement against the connection.
         /// </summary>
         /// <param name="commandText">The SQL command as text</param>
-        /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
-        public int ExecuteNonQuery(string commandText, List<object> parameters = null)
+        public int ExecuteNonQuery(string commandText)
         {
             _command = _connection.CreateCommand();
             _command.CommandType = CommandType.Text;
+            _command.CommandText = commandText;
 
-            if (parameters != null)
+            if (_connection.State != ConnectionState.Open)
             {
-                _command.CommandText = string.Format(commandText, parameters.ToArray());
-            }
-            else
-            {
-                _command.CommandText = commandText;
+                _connection.Open();
             }
 
-            _connection.Open();
             if (_useTransaction)
             {
                 _transaction = _connection.BeginTransaction();
@@ -112,7 +106,11 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = sqlQuery;
 
-            _connection.Open();
+            if (_connection.State != ConnectionState.Open)
+            { 
+                _connection.Open();
+            }
+
             if (_useTransaction)
             {
                 _transaction = _connection.BeginTransaction();

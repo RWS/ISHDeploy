@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,13 +28,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
     /// <example>
     ///   <code>PS C:\&gt;Save-ISHIntegrationDBSTSSQLServerConfigurationCmdlet -ISHDeployment $deployment -FileName GrantPermissions.sql</code>
     ///   <para>Generates SQL script that grants necessary permissions.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// </para>
     /// </example>
     /// <example>
     ///   <code>PS C:\&gt;Save-ISHIntegrationDBSTSSQLServerConfigurationCmdlet -ISHDeployment $deployment -FileName GrantPermissions.ps1 -Type PS1</code>
     ///   <para>Generates PS1 script that runs sql command on server and grants necessary permissions.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationDBSTSSQLServerConfiguration")]

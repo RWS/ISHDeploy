@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ISHDeploy.Models
 {
@@ -23,30 +22,6 @@ namespace ISHDeploy.Models
     /// </summary>
     public class ISHDeployment
     {
-        /// <summary>
-        /// The HTTPS prefix
-        /// </summary>
-        private const string HttpsPrefix = "https://";
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ISHDeployment"/> class.
-        /// </summary>
-        /// <param name="parameters">The dictionary with all parameters from inputparameter.xml file.</param>
-        /// <param name="softwareVersion">The deployment version.</param>
-        public ISHDeployment(Dictionary<string, string> parameters, Version softwareVersion)
-        {
-            Name = $"InfoShare{parameters["projectsuffix"]}";
-            AppPath = parameters["apppath"];
-            WebPath = parameters["webpath"];
-            DataPath = parameters["datapath"];
-            DatabaseType = parameters["databasetype"];
-            AccessHostName = parameters["baseurl"].Substring(HttpsPrefix.Length);
-            WebAppNameCM = parameters["infoshareauthorwebappname"];
-            WebAppNameWS = parameters["infosharewswebappname"];
-            WebAppNameSTS = parameters["infosharestswebappname"];
-            SoftwareVersion = softwareVersion;
-        }
-        
         /// <summary>
         /// Gets the deployment version.
         /// </summary>
@@ -96,5 +71,10 @@ namespace ISHDeploy.Models
         /// Gets the name of the STS main url folder.
         /// </summary>
         public string WebAppNameSTS { get; set; }
+        
+        /// <summary>
+        /// Gets the web site name.
+        /// </summary>
+        public string WebSiteName { get; set; }
     }
 }

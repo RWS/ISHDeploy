@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
     /// <summary>
     /// Sets new license for Content Editor
     /// </summary>
-    public class SetISHContentEditorOperation : BasePathsOperation, IOperation
+    public class SetISHContentEditorOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -41,7 +41,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         {
             _invoker = new ActionInvoker(logger, "Setting of new license for Content Editor");
 
-            _invoker.AddAction(new FileCreateAction(logger, FoldersPaths.LicenceFolderPath, fileName, fileContent));
+            _invoker.AddAction(new FileCreateAction(logger, LicenceFolderPath, fileName, fileContent));
         }
 
         /// <summary>

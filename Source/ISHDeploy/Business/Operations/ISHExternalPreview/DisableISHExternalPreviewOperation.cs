@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Disables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHExternalPreviewOperation : BasePathsOperation, IOperation
+    public class DisableISHExternalPreviewOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -42,14 +42,14 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
 
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     "THE_FISHEXTERNALID_TO_USE"));
 
             _invoker.AddAction(new CommentNodeByXPathAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     new [] {
                         InfoShareAuthorWebConfig.SystemWebServerModulesAddTrisoftExternalPreviewModuleXPath,
                         InfoShareAuthorWebConfig.SectionExternalPreviewModuleXPath,

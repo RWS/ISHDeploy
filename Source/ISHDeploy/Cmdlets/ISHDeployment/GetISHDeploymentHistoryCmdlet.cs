@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <example>
     /// <code>PS C:\>Get-ISHDeploymentHistory -ISHDeployment $deployment</code>
     /// <para>This command gets the history information for Content Manager deployment.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHDeploymentHistory")]
     [OutputType(typeof(string))]

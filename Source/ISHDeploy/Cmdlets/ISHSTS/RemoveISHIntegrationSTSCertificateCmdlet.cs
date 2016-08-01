@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <example>
     ///		<code>PS C:\&gt;Remove-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Issuer "20151028ADFS"</code>
     ///		<para>This command removes STS trusted issuer credentials.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Remove, "ISHIntegrationSTSCertificate")]

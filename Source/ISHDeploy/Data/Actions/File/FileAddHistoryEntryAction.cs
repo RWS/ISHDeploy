@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +52,7 @@ namespace ISHDeploy.Data.Actions.File
         private readonly IFileManager _fileManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCopyAction"/> class.
+        /// Initializes a new instance of the <see cref="FileAddHistoryEntryAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="path">The file path.</param>

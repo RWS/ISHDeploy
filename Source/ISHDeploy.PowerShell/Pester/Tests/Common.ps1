@@ -38,7 +38,64 @@ $scriptBlockCreateCertificate = {
 $computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-$testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
+
+
+#Gets InputParameters
+$scriptBlockGetInputParameters = {
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName 
+    )
+
+    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
+    if ([System.Environment]::Is64BitOperatingSystem)
+    {
+        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
+    }
+    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
+    $currentInstallValue = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).GetValue("Current")
+    $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
+    $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
+    
+    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")
+
+    [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
+    $inputParameters.load("$inputParametersPath\inputparameters.xml")
+
+    $result = @{}
+    $result["inputparametersFilePath"] = "$inputParametersPath\inputparameters.xml"
+    $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
+    $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
+    $result["infoshareauthorwebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infoshareauthorwebappname']/currentvalue")[0].InnerText
+    $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
+    $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
+    $result["baseurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='baseurl']/currentvalue")[0].InnerText
+    $result["issueractorusername"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorusername']/currentvalue")[0].InnerText
+	$result["issueractorpassword"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorpassword']/currentvalue")[0].InnerText
+	$result["websitename"] = $inputParameters.SelectNodes("inputconfig/param[@name='websitename']/currentvalue")[0].InnerText
+	$result["issuerwstrustbindingtype"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustbindingtype']/currentvalue")[0].InnerText
+	$result["issuerwstrustendpointurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustendpointurl']/currentvalue")[0].InnerText
+	$result["issuerwstrustmexurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustmexurl']/currentvalue")[0].InnerText
+	$result["issuercertificatethumbprint"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuercertificatethumbprint']/currentvalue")[0].InnerText
+	$result["issuercertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuercertificatevalidationmode']/currentvalue")[0].InnerText
+	$result["issuerwsfederationendpointurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwsfederationendpointurl']/currentvalue")[0].InnerText
+	$result["servicecertificatethumbprint"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatethumbprint']/currentvalue")[0].InnerText
+	$result["servicecertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue")[0].InnerText
+	$result["servicecertificatesubjectname"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatesubjectname']/currentvalue")[0].InnerText
+	$result["issuerwstrustendpointurl_normalized"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustendpointurl_normalized']/currentvalue")[0].InnerText
+
+    return $result
+    
+}
+Function Get-InputParameters
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        $projectName
+    ) 
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
+}
+$inputParameters = Get-InputParameters $testingDeploymentName
 
 #Gets suffix from project name
 Function GetProjectSuffix($projectName)
@@ -83,7 +140,8 @@ $scriptBlockWebRequest = {
         $status = $response.StatusCode
         Write-Debug "Status of web response of $url is: $status"
     } catch [System.Net.WebException] {
-        Write-Error $_.Exception
+        #[System.Net.HttpWebResponse]$response = $_.Exception.ToString()
+        Write-Error "Status of web response of $url is:" $_.Exception
     }
 }
 
@@ -182,7 +240,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path $name
+    Rename-Item $path, $name
 }
 Function RemoteRenameItem {
     param (
@@ -191,7 +249,7 @@ Function RemoteRenameItem {
         [Parameter(Mandatory=$true)]
         $name
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path $name
 }
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time
@@ -228,48 +286,6 @@ function RemoteReadXML{
     [xml]$actualResult = Invoke-CommandRemoteOrLocal -ScriptBlock {param ($xmlFile) Get-Content $xmlFile} -Session $session -ArgumentList $xmlFile
 
     return $actualResult
-}
-
-#Gets InputParameters
-$scriptBlockGetInputParameters = {
-    param (
-        [Parameter(Mandatory=$true)]
-        $projectName 
-    )
-
-    $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
-    if ([System.Environment]::Is64BitOperatingSystem)
-    {
-        $RegistryInstallToolPath = "SOFTWARE\\Wow6432Node\\Trisoft\\InstallTool"
-    }
-    [Microsoft.Win32.RegistryKey]$installToolRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryInstallToolPath);
-    $currentInstallValue = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).GetValue("Current")
-    $historyRegKey = $installToolRegKey.OpenSubKey("InfoShare").OpenSubKey($projectName).OpenSubKey("History")
-    $installFolderRegKey =  $historyRegKey.GetSubKeyNames() | Where { $_ -eq $currentInstallValue } | Select -First 1
-    
-    $inputParametersPath = $historyRegKey.OpenSubKey($installFolderRegKey).GetValue("InstallHistoryPath")
-
-    [System.Xml.XmlDocument]$inputParameters = new-object System.Xml.XmlDocument
-    $inputParameters.load("$inputParametersPath\inputparameters.xml")
-
-    $result = @{}
-    $result["osuser"] = $inputParameters.SelectNodes("inputconfig/param[@name='osuser']/currentvalue")[0].InnerText
-    $result["connectstring"] = $inputParameters.SelectNodes("inputconfig/param[@name='connectstring']/currentvalue")[0].InnerText
-    $result["infoshareauthorwebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infoshareauthorwebappname']/currentvalue")[0].InnerText
-    $result["infosharewswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharewswebappname']/currentvalue")[0].InnerText
-    $result["infosharestswebappname"] = $inputParameters.SelectNodes("inputconfig/param[@name='infosharestswebappname']/currentvalue")[0].InnerText
-    $result["baseurl"] = $inputParameters.SelectNodes("inputconfig/param[@name='baseurl']/currentvalue")[0].InnerText
-
-    return $result
-    
-}
-Function Get-InputParameters
-{
-    param (
-        [Parameter(Mandatory=$true)]
-        $projectName
-    ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $projectName
 }
 
 $scriptBlockRemoveCertificate= {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Data.Exceptions;
+using System.Reflection;
+﻿using ISHDeploy.Data.Exceptions;
+﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+﻿using ISHDeploy.Models;
 
-namespace ISHDeploy.Data.Actions.ISHProject
+namespace ISHDeploy.Data.Managers
 {
     /// <summary>
-    /// Gets all instances of the installed Content Manager deployment for the current system.
+    /// Aggregates data from different places.
     /// </summary>
-    /// <seealso cref="BaseActionWithResult{TResult}" />
-    public class GetISHDeploymentExtendedAction : BaseActionWithResult<ISHDeploymentInternal>
+    /// <seealso cref="IDataAggregator" />
+    public class DataAggregateHelper : IDataAggregateHelper
     {
         /// <summary>
-        /// The input parameters file name
+        /// The logger.
         /// </summary>
-        private const string InputParametersFileName = "inputparameters.xml";
+        private readonly ILogger _logger;
 
         /// <summary>
         /// The registry manager.
@@ -51,52 +51,43 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private readonly IFileManager _fileManager;
 
         /// <summary>
-        /// The Content Manager deployment name.
-        /// </summary>
-        private readonly string _name;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GetISHDeploymentExtendedAction"/> class.
+        /// Initializes a new instance of the <see cref="TemplateManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="name">The Content Manager deployment name.</param>
-        /// <param name="returnResult">The delegate that returns list of Content Manager deployments.</param>
-        public GetISHDeploymentExtendedAction(ILogger logger, string name, Action<ISHDeploymentInternal> returnResult)
-            : base(logger, returnResult)
+        public DataAggregateHelper(ILogger logger)
         {
+            _logger = logger;
             _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
-            _name = name;
         }
 
         /// <summary>
-        /// Executes current action and returns result.
+        /// Returns input parameters
         /// </summary>
-        /// <returns>Content Manager deployment in acccordance with name.</returns>
-        protected override ISHDeploymentInternal ExecuteWithResult()
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>InputParameters containing all parameters from InputParameters.xml file for specified deployment</returns>
+        public InputParameters GetInputParameters(string deploymentName)
         {
             // Get installed deployment from the registry.
-            var projectRegKey = _registryManager.GetInstalledProjectsKeys(_name).FirstOrDefault();
+            var projectRegKey = _registryManager.GetInstalledProjectsKeys(deploymentName).FirstOrDefault();
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
-            var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
 
             if (string.IsNullOrWhiteSpace(installParamsPath))
             {
-                Logger.WriteError(new CorruptedInstallationException($"Registry subkeys for {projectRegKey} are corrupted"), projectRegKey);
+                _logger.WriteError(new CorruptedInstallationException($"Registry subkeys for {projectRegKey} are corrupted"), projectRegKey);
             }
 
-            var installParamFile = Path.Combine(installParamsPath, InputParametersFileName);
+            var installParamFile = Path.Combine(installParamsPath, "inputparameters.xml");
 
             if (!_fileManager.FileExists(installParamFile))
             {
-                Logger.WriteError(new CorruptedInstallationException($"{ installParamFile } file does not exist on the system"), installParamFile);
+                _logger.WriteError(new CorruptedInstallationException($"{ installParamFile } file does not exist on the system"), installParamFile);
             }
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new ISHDeploymentInternal(dictionary, version);
-
+            return new InputParameters(installParamFile, dictionary);
         }
     }
 }

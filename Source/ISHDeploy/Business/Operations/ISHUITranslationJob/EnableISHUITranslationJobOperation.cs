@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
     /// Enables translation job functionality for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHUITranslationJobOperation : BasePathsOperation, IOperation
+    public class EnableISHUITranslationJobOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker.
@@ -41,9 +41,9 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         {
             _invoker = new ActionInvoker(logger, "Enabling of InfoShare translation job");
             
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXml.Path, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXml.Path, TopDocumentButtonBarXml.TranslationJobAttribute, true));
-            _invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtm.Path, AuthorASPTreeHtm.TranslationJobHack));
+            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
+            _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TranslationJobAttribute, true));
+            _invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
         }
 
         /// <summary>

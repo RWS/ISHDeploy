@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,6 +64,18 @@ namespace ISHDeploy.Data.Managers
             builder.AppendLine("-----END CERTIFICATE-----");
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Gets the certificate subject.
+        /// </summary>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <returns>Certificate subject.</returns>
+        public string GetCertificateSubjectByThumbprint(string thumbprint)
+        {
+            var certificate = FindCertificateByThumbprint(thumbprint);
+
+            return certificate.Subject;
         }
 
         /// <summary>

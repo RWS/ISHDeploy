@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+
+using System;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Collections.Generic;
@@ -57,10 +58,11 @@ namespace ISHDeploy.Tests
                 ["baseurl"] = "https://",
                 ["infoshareauthorwebappname"] = string.Empty,
                 ["infosharewswebappname"] = string.Empty,
-                ["infosharestswebappname"] = string.Empty
+                ["infosharestswebappname"] = string.Empty,
+                ["websitename"] = string.Empty
             };
 
-			return new ISHFilePath(new ISHDeploymentInternal(installParams, new Version("1.0.0.0")), ISHFilePath.IshDeploymentType.Web, relativePath);
-		}
+            return new ISHFilePath("Web", "Backup", relativePath);
+        }
     }
 }

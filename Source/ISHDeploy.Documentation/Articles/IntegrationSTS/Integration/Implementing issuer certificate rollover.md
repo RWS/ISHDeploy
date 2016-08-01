@@ -8,7 +8,7 @@ Certificates have by design an expiration date. Certificates can be also revoked
 
 When this happens certificates become invalid and need to be replaced. The goal of **certificate roll over** is to replace the old certificate dependency with the new one wish as minumum downtime as possible.
 
-Typically, the owner of the certificate will acquire a new or reniewed certificate. For the purpose of this article lets see what happens with
+Typically, the owner of the certificate will acquire a new or renewed certificate. For the purpose of this article let’s see what happens with
 
 - Security Token Service token signing certificate also known as the **issuer certificate**.
 - Service providers issuer validation 
@@ -25,7 +25,7 @@ The sequence is as follows:
 
 # Acknowledgements
 
-Lets assume that the integration was implemented on the 1st January 2016. A matching example script to configure the issuer certificate is this:
+Let’s assume that the integration was implemented on the 1st January 2016. A matching example script to configure the issuer certificate is this:
 CopyCodeBlock(_nopublish\20160101.Set-ISHIntegrationSTSCertificate.ps1)
 
 The issuer certificate expires in one year, on the **1st January 2017**.
@@ -56,7 +56,7 @@ Therefore the owner of the STS can replace the primary token signing certificate
 
 ## STS has removed old token signing certificate
 
-On the **1st January 2017**, STS shares that the old certificate issued on the **1st January 2016** is completly gone. 
+On the **1st January 2017**, STS shares that the old certificate issued on the **1st January 2016** is completely gone. 
 As a cleanup process, all service providers should remove their old issuer certificate references.
 
 To remove old entries on deployments execute:

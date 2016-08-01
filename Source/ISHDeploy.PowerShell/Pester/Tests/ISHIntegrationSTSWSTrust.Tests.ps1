@@ -55,8 +55,10 @@ $scriptBlockGetHistory = {
 $scriptBlockReadTargetXML = {
     param(
         $xmlPath,
-        $suffix
+        $suffix,
+        $inputParametersPath
     )
+    
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")
@@ -70,7 +72,8 @@ $scriptBlockReadTargetXML = {
     $trisoftInfoShareClientConfig.load("$xmlPath\Web$suffix\Author\ASP\Trisoft.InfoShare.Client.config")
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
     $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
-
+    [System.Xml.XmlDocument]$inputParametersXml = new-object System.Xml.XmlDocument
+    $inputParametersXml.load($inputParametersPath)
     $result = @{}
 
     #get variables and nodes from files
@@ -88,13 +91,14 @@ $scriptBlockReadTargetXML = {
     $result["trisoftInfoShareClientConfigWSTrustActorPassword"] = $trisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials/password")[0].InnerText
     $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(http)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
     $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"] = $infoShareWSWebConfig.SelectNodes("configuration/system.serviceModel/bindings/customBinding/binding[@name='InfoShareWS(https)']/security/secureConversationBootstrap/issuedTokenParameters/issuerMetadata")[0].address
+    $result["issueractorpassword"] = $inputParametersXml.SelectNodes("inputconfig/param[@name='issueractorpassword']/currentvalue")[0].InnerText
     
     return $result
 }
 function readTargetXML() {
     
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix, $inputParameters["inputparametersFilePath"]
 
     #get variables and nodes from files
     $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]
@@ -111,6 +115,7 @@ function readTargetXML() {
     $global:trisoftInfoShareClientConfigWSTrustActorPassword = $result["trisoftInfoShareClientConfigWSTrustActorPassword"]
     $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttp = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttp"]
     $global:infoShareWSWebConfigWSTrustMexEndpointUrlHttps = $result["infoShareWSWebConfigWSTrustMexEndpointUrlHttps"]
+    $global:issuerActorPassword = $result["issueractorpassword"]
 }
 
 
@@ -146,6 +151,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint"
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint"
@@ -243,6 +249,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $trisoftInfoShareClientConfigWSTrustBindingType | Should be "UserNameMixed"
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttp | Should be "testMexEndpoint2"
         $infoShareWSWebConfigWSTrustMexEndpointUrlHttps | Should be "testMexEndpoint2"
@@ -263,6 +270,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword"
+        $issuerActorPassword | Should be "testActorPassword"
     }
 
     It "Set ISHIntegrationSTSWSTrust change only ActorPassword"{
@@ -297,6 +305,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
+        $issuerActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as empty string"{
@@ -314,6 +323,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
+        $issuerActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorUsername as NULL"{
@@ -331,6 +341,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be ""
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be "testActorPassword2"
+        $issuerActorPassword | Should be "testActorPassword2"
     }
 
     It "Set ISHIntegrationSTSWSTrust set ActorPassword as NULL"{
@@ -348,6 +359,7 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
 
         $trisoftInfoShareClientConfigWSTrustActorUserName | Should be "testActorUsername2"
         $trisoftInfoShareClientConfigWSTrustActorPassword | Should be ""
+        $issuerActorPassword | Should be ""
     }
 
     It "Set ISHIntegrationSTSWSTrust writes proper history"{
@@ -362,5 +374,41 @@ Describe "Testing ISHIntegrationSTSWSTrust"{
         $history.Contains('Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint test') | Should be "True"
         $history.Contains('-MexEndpoint test') | Should be "True"
         $history.Contains('-BindingType UserNameMixed') | Should be "True"
+    }
+
+	It "Set ISHIntegrationSTSWSTrust writes inputparameters"{
+         #Arrange
+        $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $true
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issueractorusername"] | Should be "testActorUsername"
+        $result["issueractorpassword"] | Should be "testActorPassword"
+        $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
+        $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
+        $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should be "testEndpoint"
+    }
+
+	It "Set ISHIntegrationSTSWSTrust writes inputparameters with no interanl clients"{
+         #Arrange
+        $params = @{Endpoint = "testEndpoint"; MexEndpoint = "testMexEndpoint"; BindingType  = "UserNameMixed"; ActorUsername = "testActorUsername"; ActorPassword = "testActorPassword"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSTrust -Session $session -ArgumentList $testingDeploymentName, $params, $false
+        
+        #Assert
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+
+        $result["issueractorusername"] | Should not be "testActorUsername"
+        $result["issueractorpassword"] | Should not be "testActorPassword"
+        $result["issuerwstrustbindingtype"] | Should be "UserNameMixed"
+        $result["issuerwstrustendpointurl"] | Should be "testEndpoint"
+        $result["issuerwstrustmexurl"] | Should be "testMexEndpoint"
+		$result["issuerwstrustendpointurl_normalized"] | Should not be "testEndpoint"
     }
 }

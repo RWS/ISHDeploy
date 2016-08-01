@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,18 +83,18 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public virtual void Rollback()
 		{
-			Logger.WriteVerbose($"Roll back result of `{this.GetType().Name}`");
+			Logger.WriteVerbose($"Roll back result of `{GetType().Name}`");
 
-			if (this.BackupPath != null)
+			if (BackupPath != null)
 			{
 				// TODO: think of failed rollback. As it might fail, and backups would get removed in disposed.
-				Logger.WriteDebug($"Replacing file `{this.FilePath}` with its back up `{this.BackupPath}`.");
-				FileManager.Copy(this.BackupPath, this.FilePath, true);
+				Logger.WriteDebug($"Replacing file `{FilePath}` with its back up `{BackupPath}`.");
+				FileManager.Copy(BackupPath, FilePath, true);
 			}
-			else if (FileManager.FileExists(this.FilePath))
+			else if (FileManager.FileExists(FilePath))
 			{
-				Logger.WriteDebug($"Remove action result `{this.FilePath}`.");
-				FileManager.Delete(this.FilePath);
+				Logger.WriteDebug($"Remove action result `{FilePath}`.");
+				FileManager.Delete(FilePath);
 			}
 		}
 
@@ -103,17 +103,15 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Backup()
 		{
-			
-
-			if (FileManager.FileExists(this.FilePath))
+			if (FileManager.FileExists(FilePath))
 			{
-                Logger.WriteVerbose($"Create back up for `{this.FilePath}`");
-                this.BackupPath = GetNewBackUpFileName();
+                Logger.WriteVerbose($"Create back up for `{FilePath}`");
+                BackupPath = GetNewBackUpFileName();
 
-				if (!FileManager.FileExists(this.BackupPath))
+				if (!FileManager.FileExists(BackupPath))
 				{
-					Logger.WriteDebug($"Back up file `{this.BackupPath}` does not exists. Creating temporary back up file for `{this.FilePath}`.");
-                    FileManager.Copy(this.FilePath, this.BackupPath);
+					Logger.WriteDebug($"Back up file `{BackupPath}` does not exists. Creating temporary back up file for `{FilePath}`.");
+                    FileManager.Copy(FilePath, BackupPath);
 				}
 			}
 		}
@@ -123,14 +121,14 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void EnsureVanillaBackUpExists()
 		{
-			if (FileManager.FileExists(this.FilePath))
+			if (FileManager.FileExists(FilePath))
 			{
 				string vanillaFilePath = IshFilePath.VanillaPath;
 				if (!FileManager.FileExists(vanillaFilePath))
 				{
-					Logger.WriteDebug($"Create vanilla back up of file `{this.GetType().Name}`");
+					Logger.WriteDebug($"Create vanilla back up of file `{GetType().Name}`");
 					FileManager.EnsureDirectoryExists(Path.GetDirectoryName(vanillaFilePath));
-					FileManager.Copy(this.FilePath, vanillaFilePath);
+					FileManager.Copy(FilePath, vanillaFilePath);
 				}
 			}
 		}
@@ -140,15 +138,15 @@ namespace ISHDeploy.Data.Actions
 		/// </summary>
 		public void Dispose()
 		{
-			if (this.BackupPath != null)
+			if (BackupPath != null)
 			{
-				if (FileManager.FileExists(this.BackupPath))
+				if (FileManager.FileExists(BackupPath))
 				{
-					Logger.WriteDebug($"Remove temporary backup file `{this.BackupPath}`");
-					FileManager.Delete(this.BackupPath);
+					Logger.WriteDebug($"Remove temporary backup file `{BackupPath}`");
+					FileManager.Delete(BackupPath);
 				}
 
-				this.BackupPath = null;
+				BackupPath = null;
 			}
 		}
 

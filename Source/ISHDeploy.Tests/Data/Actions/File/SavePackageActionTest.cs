@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,21 +22,21 @@ namespace ISHDeploy.Tests.Data.Actions.File
     [TestClass]
     public class SavePackageActionTest : BaseUnitTest
     {
-        private const string _filePath = "C:\\DummyFilePath.txt";
-        private const string _destinationArchiveFilePath = "C:\\Packages";
+        private const string FilePath = "C:\\DummyFilePath.txt";
+        private const string DestinationArchiveFilePath = "C:\\Packages";
 
         [TestMethod]
         [TestCategory("Actions")]
         public void Execute_Package_correct_files_to_correct_package_name()
         {
             // Arrange
-            var action = new DirectoryCreateZipPackageAction(Logger, _filePath, _destinationArchiveFilePath);
+            var action = new DirectoryCreateZipPackageAction(Logger, FilePath, DestinationArchiveFilePath);
 
             // Act
             action.Execute();
 
             // Assert
-            FileManager.Received().PackageDirectory(_filePath, _destinationArchiveFilePath);
+            FileManager.Received().PackageDirectory(FilePath, DestinationArchiveFilePath);
         }
     }
 }

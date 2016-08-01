@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,56 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
-	/// <summary>
-	/// Provides absolute paths to all ISH files that are going to be used
-	/// Also provides xpaths to XML elements and attributes in these files
-	/// </summary>
-	public partial class BasePathsOperation
+    /// <summary>
+    /// Provides xpaths, search patterns and constants of deployment files
+    /// </summary>
+    partial class BaseOperationPaths
 	{
         /// <summary>
-        /// The path to ~\Web\InfoShareSTS\Web.config
+        /// Provides constants related to ~\Web\InfoShareSTS\Web.config
         /// </summary>
-        protected static class InfoShareSTSWebConfig
+        protected class InfoShareSTSWebConfig
 		{
-			/// <summary>
-			/// The path to ~\Web\InfoShareSTS\Web.config
-			/// </summary>
-			public static ISHFilePath Path => new ISHFilePath(ISHDeploymentInternal, ISHFilePath.IshDeploymentType.Web,
-				@"InfoShareSTS\Web.config");
-
 			/// <summary>
 			/// Node to uncomment to enable infoshare sts to provide identity delegation for tokens issued by other sts
 			/// </summary>
 			public const string TrustedIssuerBehaviorExtensions = "<add name=\"addActAsTrustedIssuer\"";
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@issuer='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
-            public const string ServiceBehaviorsTrustedUserXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
+            public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@issuer='{0}']";
 
             /// <summary>
-            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']" element in ~\Web\InfoShareSTS\Web.config file
+            /// The xpath of "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']" element in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
-            public const string ServiceBehaviorsTrustedUserByNameXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@name='{0}']";
+            public const string ServiceBehaviorsTrustedUserByThumbprintXPath = "configuration/system.serviceModel/behaviors/serviceBehaviors/behavior[@name='']/addActAsTrustedIssuer[@thumbprint='{0}']";
 
             /// <summary>
             /// The xpath of "configuration/system.web/authentication/@mode" attribute in ~\Web\InfoShareSTS\Web.config file
             /// </summary>
             public const string AuthenticationModeAttributeXPath = "configuration/system.web/authentication/@mode";
-
-            /// <summary>
-            /// The xpath of "configuration/system.web/authentication/forms" element in ~\Web\InfoShareSTS\Web.config file
-            /// </summary>
-            public const string AuthenticationFormsElementXPath = "configuration/system.web/authentication/forms";
-
-            /// <summary>
-            /// The xpath of "configuration/system.web/authentication" element in ~\Web\InfoShareSTS\Web.config file
-            /// </summary>
-            public const string AuthenticationElementXPath = "configuration/system.web/authentication";
         }
 	}
 }

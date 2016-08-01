@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@ using System.Management.Automation;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {

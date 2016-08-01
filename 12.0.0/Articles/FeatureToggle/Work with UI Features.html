@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Configuring features using the module </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Configuring features using the module ">
+    <meta name="generator" content="docfx 1.9.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="configuring-features-using-the-module">Configuring features using the module</h1>
+              
+<p>This article explains how to control UI features such as <strong>Content Editor</strong>, <strong>Quality Assistant</strong>, <strong>Translation Job</strong> and <strong>External Preview</strong>.</p>
+<h2 id="control-individual-features">Control individual features</h2>
+<h3 id="set-deploymentname-variable">Set deploymentName variable</h3>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre>
+<h3 id="configure-content-editor">Configure Content Editor</h3>
+<p>Set the license for Content Editor for domain e.g. <code>ish.example.com</code></p>
+<pre><code class="lang-powershell">Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey &quot;licensekey&quot; -Domain &quot;ish.example.com&quot;
+</code></pre>
+<p>By default the <strong>Content Editor</strong> is disabled in the UI. To enable it:</p>
+<pre><code class="lang-powershell">Enable-ISHUIContentEditor -ISHDeployment $deploymentName
+</code></pre>
+<h3 id="configure-quality-assistant">Configure Quality Assistant</h3>
+<p>By default the <strong>Quality Assistant</strong> is disabled in the UI. To enable it:</p>
+<pre><code class="lang-powershell">Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
+</code></pre>
+<h3 id="configure-external-preview">Configure External Preview</h3>
+<p>By default the <strong>External Preview</strong> is disabled. To enable it for a user with <code>ExternalId</code> e.g. <code>externalid</code>:</p>
+<pre><code class="lang-powershell">Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId &quot;externalid&quot;
+</code></pre>
+<p>The <code>ExternalId</code> value must match an existing user&#39;s <code>FISHEXTERNALID</code>.</p>
+<h3 id="configure-translation-job">Configure Translation Job</h3>
+<p>By default the <strong>Translation Job</strong> is enabled in the UI. To disable it:</p>
+<pre><code class="lang-powershell">Disable-ISHUITranslationJob -ISHDeployment $deploymentName
+</code></pre>
+<h3 id="configure-event-monitor-options">Configure Event monitor options</h3>
+<p>To create a new tab event type <code>CUSTOM</code>:</p>
+<pre><code class="lang-powershell">$hash=@{
+    Label=&quot;Custom Event&quot;
+    Description=&quot;Show all custom events&quot;
+    EventTypesFilter=&quot;CUSTOM&quot;
+}
+Set-ISHUIEventMonitorTab -ISHDeployment $deploymentName @hash
+</code></pre>
+<p>To change this tab to show event types <code>CUSTOM1</code> and <code>CUSTOM2</code> and make it appear first</p>
+<pre><code class="lang-powershell">$hash=@{
+    Label=&quot;Custom Event&quot;
+    Description=&quot;Show all custom events&quot;
+    EventTypesFilter=@(&quot;CUSTOM1&quot;,&quot;CUSTOM2&quot;)
+}
+Set-ISHUIEventMonitorTab -ISHDeployment $deploymentName @hash
+Move-ISHUIEventMonitorTab -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
+</code></pre>
+<p>The above scripts use the splatting technique to avoid lengthy lines.</p>
+<h2 id="putting-it-all-together">Putting it all together</h2>
+<p>The following script is an example of changing the state of all the above features with one script</p>
+<pre><code class="lang-powershell"># $deploymentName is the name of Deployment
+
+# Set the license and enable the Content Editor
+Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey &quot;licensekey&quot; -Domain &quot;ish.example.com&quot;
+Enable-ISHUIContentEditor -ISHDeployment $deploymentName
+
+# Enable the Quality Assistant
+Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
+
+# Enable the External Preview using externalid
+Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId &quot;externalid&quot;
+
+# Create a new tab for CUSTOM event types
+$hash=@{
+    Label=&quot;Custom Event&quot;
+    Description=&quot;Show all custom events&quot;
+    EventTypesFilter=@(&quot;CUSTOM1&quot;,&quot;CUSTOM2&quot;)
+}
+Set-ISHUIEventMonitorTab -ISHDeployment $deploymentName @hash
+Move-ISHUIEventMonitorTab -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
+</code></pre>
+<p><a href="FeatureToggle.ps1">Download</a></p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+            </nav>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

@@ -15,6 +15,7 @@
  */
 ﻿using System;
 ﻿using System.Linq;
+﻿using System.Management.Automation;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -97,10 +98,8 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
-            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
-            // https://jira.sdl.com/browse/TS-11523
-            //if (IsWindowsAuthenticationFeatureEnabled())
-            //{
+            if (IsWindowsAuthenticationFeatureEnabled())
+            {
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
                 {
                     _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
@@ -121,11 +120,11 @@ namespace ISHDeploy.Data.Managers
 
                     manager.CommitChanges();
                 }
-            //}
-            //else
-            //{
-            //    throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
-            //}
+            }
+            else
+            {
+                throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
+            }
         }
 
         /// <summary>
@@ -162,9 +161,18 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
-            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
-            // https://jira.sdl.com/browse/TS-11523
-            return true;
+            bool isFeatureEnabled = false;
+            using (var ps = PowerShell.Create())
+            {
+                ps.AddScript("Get-WindowsOptionalFeature -FeatureName \"IIS-WindowsAuthentication\" -online");
+
+                foreach (PSObject result in ps.Invoke())
+                {
+                    isFeatureEnabled = result.Properties["State"].Value.ToString() == "Enabled";
+                }
+            }
+
+            return isFeatureEnabled;
         }
 
         /// <summary>

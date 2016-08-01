@@ -25,13 +25,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -FileName packageFile.zip</code>
+    ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.
     ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackageCmdlet -ISHDeployment $deployment -ADFS -FileName packageFile.zip</code>
+    ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -ADFS -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations for ADFS.
     ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>

@@ -160,10 +160,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             {
                 // Enable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));
-                // Disable Forms Authentication for STS web site
-                _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfigPath, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Windows"));
-                //_invoker.AddAction(new RemoveNodesAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationFormsElementXPath));
-
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/windows" endpoint and binding type to WindowsMixed type
@@ -173,7 +169,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.WindowsMixed, windowsEndpoint);
                 }
-
 
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
@@ -191,9 +186,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (ishDeployment.DataPath != ishDeployment.WebPath)
                 {
                     _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.WebPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
-
                 }
-
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
@@ -204,8 +197,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             {
                 // Disable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
-                // Enable Forms Authentication for STS web site
-                _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfigPath, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Forms"));
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/username" endpoint and binding type to UserNameMixed type

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using ISHDeploy.Business.Invokers;
@@ -20,7 +21,6 @@ using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
-using System;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
 {
@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
             var version = new Version(  ishDeployment.SoftwareVersion.Major,
                                         ishDeployment.SoftwareVersion.Minor,
                                         ishDeployment.SoftwareVersion.Revision);
-            var temporaryFolder = Path.Combine(Path.GetTempPath(), "ISHDeploy" + version.ToString());
+            var temporaryFolder = Path.Combine(Path.GetTempPath(), $"ISHDeploy{version}");
             _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 

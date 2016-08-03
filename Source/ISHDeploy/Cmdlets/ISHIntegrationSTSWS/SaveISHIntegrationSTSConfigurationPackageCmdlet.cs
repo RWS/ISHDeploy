@@ -20,7 +20,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
 {
     /// <summary>
     ///		<para type="synopsis">Saves STS integration configuration to zip archive in package folder.</para>
-    ///		<para type="description">The Save-ISHIntegrationSTSConfigurationPackageCmdlet saves STS integration configuration to zip archive in package folder.</para>
+    ///		<para type="description">The Save-ISHIntegrationSTSConfigurationPackage saves STS integration configuration to zip archive in package folder.</para>
     ///     <para type="description">Cmdlet will overwrite zip archive if there is already one with same name.</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>

@@ -25,6 +25,6 @@
       <DotNetFrameworkVersion>$(MinDotNetVersion)</DotNetFrameworkVersion>
       <HelpInfoURI>$(DocPortalLink)</HelpInfoURI>
     </PropertyGroup>
-    <Exec Command='$(PowerShellExe) -NonInteractive -command "New-ModuleManifest -Path &apos;$(ManifestPath)&apos; -RootModule &apos;$(RootModule)&apos; -ModuleVersion &apos;$(ModuleVersion)&apos; -Guid &apos;$(Guid)&apos; -Author &apos;$(Author)&apos; -CompanyName &apos;$(CompanyName)&apos; -Copyright &apos;$(Copyright)&apos; -Description &apos;$(Description)&apos; -PowerShellVersion &apos;$(PowerShellVersion)&apos; -ClrVersion &apos;$(CLRVersion)&apos; -DotNetFrameworkVersion &apos;$(DotNetFrameworkVersion)&apos; -HelpInfoURI &apos;$(HelpInfoURI)&apos; -Tags @(&apos;ISH&apos;)"'/>
+    <Exec Command='$(PowerShellExe) -NonInteractive -command "New-ModuleManifest -Path &apos;$(ManifestPath)&apos; -RootModule &apos;$(RootModule)&apos; -ModuleVersion &apos;$(ModuleVersion)&apos; -Guid &apos;$(Guid)&apos; -Author &apos;$(Author)&apos; -CompanyName &apos;$(CompanyName)&apos; -Copyright &apos;$(Copyright)&apos; -Description &apos;$(Description)&apos; -PowerShellVersion &apos;$(PowerShellVersion)&apos; -ClrVersion &apos;$(CLRVersion)&apos; -DotNetFrameworkVersion &apos;$(DotNetFrameworkVersion)&apos; -HelpInfoURI &apos;$(HelpInfoURI)&apos;"'/>
   </Target>
 </Project>

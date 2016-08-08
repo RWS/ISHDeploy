@@ -1,21 +1,27 @@
 # Version notes
 
+## alpha-0.3 (Pre-release)
+
+
 ## alpha-0.2 (Pre-release)
 
-1. Integration with Security Token Service (STS)
+1. General 
   1. Cmdlets
     - All cmdlets accept also name as value for the `-ISHDeployment` parameter. e.g. `Enable-ISHUIContentEditor -ISHDeployment "InfoShare"`. **[Update]**
     - `Get-ISHDeployment` returns the `WebSiteName` also. **[Update]**
 	- `Get-ISHDeploymentParameters` . **[New]**
-	- Remove-ISHSTS. **[New]**
+1. ISHSTS
+  1. Cmdlets
+	- Reset-ISHSTS. **[New]**
 	- Get-ISHSTSRelyingParty. **[New]**
 	- Set-ISHSTSRelyingParty. **[New]**
 	- Set-ISHSTSConfiguration. (Not working) **[New]**
-	- Reset-ISHSTS. **[New]**
   1. Articles
     - Work with Security Token Service\ISHSTS\Integrating 3rd party service providers. **New**
     - Work with Security Token Service\ISHSTS\Implementing light weight Windows Authentication. **[New]**
     - Work with Security Token Service\ISHSTS\Resetting ISHSTS. **[New]**
+1. Security Token Service (STS)
+  1. Articles
     - Work with Security Token Service\Certificates rollover/replacement\Implementing certificate replacement. **[New]**
     - Work with Security Token Service\Certificates rollover/replacement\Implementing issuer certificate rollover with 3rd party STS. **[Update]**
 	- Work with Security Token Service\Certificates rollover/replacement\Implementing service certificate replacement with 3rd party STS. **[New]**

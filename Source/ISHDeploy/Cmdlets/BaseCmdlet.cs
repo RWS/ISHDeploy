@@ -61,10 +61,7 @@ namespace ISHDeploy.Cmdlets
 
             if (enumerable != null)
             {
-                foreach (object o in enumerable)
-                {
-                    WriteObject(o);
-                }
+                    WriteObject(obj, true);
             }
             else
             {

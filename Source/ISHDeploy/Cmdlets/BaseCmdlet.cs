@@ -61,7 +61,10 @@ namespace ISHDeploy.Cmdlets
 
             if (enumerable != null)
             {
-                WriteObject(((IEnumerable<object>)obj).ToArray());
+                foreach (object o in enumerable)
+                {
+                    WriteObject(o);
+                }
             }
             else
             {

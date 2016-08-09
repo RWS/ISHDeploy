@@ -132,8 +132,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		/// </summary>
 		[Parameter(Mandatory = false, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-        [Alias("UserRole")]
-        public string[] UserRoles { get; set; } = new string[] {"Administrator"};
+        public string[] UserRole { get; set; } = new string[] {"Administrator"};
 
 		/// <summary>
 		/// <para type="description">User role description.</para>
@@ -151,7 +150,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 				Label = Label,
 				Description = Description,
 				Icon = Icon,
-				UserRoles = UserRoles,
+				UserRoles = UserRole, // we need single form in powershell
 				Action = new EventLogMenuItemAction()
 				{
 					SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],

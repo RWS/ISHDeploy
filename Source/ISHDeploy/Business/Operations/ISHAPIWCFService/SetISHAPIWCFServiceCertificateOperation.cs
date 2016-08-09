@@ -31,11 +31,11 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
     /// </summary>
     /// <seealso cref="IOperation" />
     public class SetISHAPIWCFServiceCertificateOperation : BaseOperationPaths, IOperation
-	{
-		/// <summary>
-		/// The actions invoker
-		/// </summary>
-		private readonly IActionInvoker _invoker;
+    {
+        /// <summary>
+        /// The actions invoker
+        /// </summary>
+        private readonly IActionInvoker _invoker;
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -46,15 +46,15 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         /// <param name="validationMode">The certificate validation mode.</param>
         public SetISHAPIWCFServiceCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, X509CertificateValidationMode validationMode) :
             base(logger, ishDeployment)
-		{
-			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
+        {
+            _invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
             var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
 
-		    if (normalizedThumbprint.Length != thumbprint.Length)
-		    {
+            if (normalizedThumbprint.Length != thumbprint.Length)
+            {
                 logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-		        thumbprint = normalizedThumbprint;
+                thumbprint = normalizedThumbprint;
             }
 
             var serviceCertificateSubjectName = string.Empty;
@@ -70,13 +70,13 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
 
             _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBaseConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat,
+                string.Format(InfoShareSTSDataBase.UpdateCertificateInRelyingPartiesSQLCommandFormat,
                         encryptedThumbprint,
                         string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-            
+
             // thumbprint
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
             _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
@@ -104,8 +104,8 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         /// Runs current operation.
         /// </summary>
         public void Run()
-		{
-			_invoker.Invoke();
+        {
+            _invoker.Invoke();
             Logger.WriteWarning("This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated.");
         }
     }

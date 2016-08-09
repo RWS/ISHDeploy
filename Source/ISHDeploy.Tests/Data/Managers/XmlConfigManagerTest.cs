@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -49,7 +49,7 @@ namespace ISHDeploy.Tests.Data.Managers
             string testButtonName = "testDoButton";
             string testCommentPattern = "testCommentPattern START";
             string endCommentPattern = "testCommentPattern END";
-            
+
             var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                     "<BUTTONBAR><!-- " + testCommentPattern + " --><!-- Xopus is disabled.Please obtain a license from SDL Trisoft" +
                                         "<BUTTON>" +
@@ -107,7 +107,7 @@ namespace ISHDeploy.Tests.Data.Managers
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
             FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"*/*[local-name()='javascript'][@src='{testSrc}']")));
-            
+
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
@@ -133,7 +133,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
-            
+
             // Arrange
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
@@ -156,7 +156,7 @@ namespace ISHDeploy.Tests.Data.Managers
                                     "</BUTTONBAR>");
 
             FileManager.Load(_filePath).Returns(doc);
-            
+
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
@@ -206,7 +206,7 @@ namespace ISHDeploy.Tests.Data.Managers
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
             FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, testSrcXPath)));
-            
+
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
@@ -257,7 +257,7 @@ namespace ISHDeploy.Tests.Data.Managers
         }
 
         #endregion UncommentNode
-        
+
         #region CommentNode
         [TestMethod]
         [TestCategory("Data handling")]
@@ -278,14 +278,14 @@ namespace ISHDeploy.Tests.Data.Managers
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
             FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, $"BUTTONBAR/BUTTON/INPUT[@NAME='{testButtonName}']")));
-            
+
             // Act
             _xmlConfigManager.CommentNodesByPrecedingPattern(_filePath, testCommentPattern);
 
             // Assert
             Assert.IsNull(result, "Uncommented node is null");
         }
-        
+
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Disable_Enrich()
@@ -303,7 +303,7 @@ namespace ISHDeploy.Tests.Data.Managers
             XElement result = null;
             FileManager.Load(_filePath).Returns(doc);
             FileManager.Save(_filePath, Arg.Do<XDocument>(x => result = GetXElementByXPath(x, testXPath)));
-            
+
             // Act
             _xmlConfigManager.CommentNode(_filePath, testXPath);
 
@@ -328,7 +328,7 @@ namespace ISHDeploy.Tests.Data.Managers
                                     "</BUTTONBAR>");
 
             FileManager.Load(_filePath).Returns(doc);
-            
+
             // Act
             _xmlConfigManager.CommentNodesByPrecedingPattern(_filePath, testCommentPattern);
 
@@ -354,7 +354,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Act
             _xmlConfigManager.CommentNode(_filePath, testXPath);
-            
+
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteWarning($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
@@ -385,7 +385,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteWarning($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
         }
-        
+
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_bluelion_config_xml()
@@ -405,11 +405,11 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Act
             _xmlConfigManager.CommentNode(_filePath, testXPath);
-            
+
             // Assert
             Assert.IsNull(result, "Commented node should be null");
         }
-        
+
         [TestMethod]
         [TestCategory("Data handling")]
         public void CommentNode_Commment_with_encoding()
@@ -483,11 +483,11 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Act
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, $"NAME='{testButtonName}'", true);
-            
+
             // Assert
             Assert.IsTrue(string.CompareOrdinal(result.ToString(), @"<!-- Translation\Job -->") == 0);
         }
-        
+
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(WrongXmlStructureException))]
@@ -503,7 +503,7 @@ namespace ISHDeploy.Tests.Data.Managers
                                             "<INPUT type='button' NAME='" + testButtonName + "' />" +
                                         "</BUTTON>-->" +
                                     "</BUTTONBAR>");
-            
+
             FileManager.Load(_filePath).Returns(doc);
 
             // Act
@@ -599,7 +599,7 @@ namespace ISHDeploy.Tests.Data.Managers
         public void GetValue_Get_attribute_value_by_xpath()
         {
             // Arrange
-            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<node>" +
                             "<childNode nodeAttribute='AttributeValue1'>" +
                                 "<someNode>SomeNodeValue</someNode>" +
@@ -620,7 +620,7 @@ namespace ISHDeploy.Tests.Data.Managers
         public void GetValue_Get_node_value_by_xpath()
         {
             // Arrange
-            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<node>" +
                             "<childNode nodeAttribute='AttributeValue1'>" +
                                 "<someNode>SomeNodeValue</someNode>" +
@@ -642,7 +642,7 @@ namespace ISHDeploy.Tests.Data.Managers
         public void GetValue_Invalid_xpath()
         {
             // Arrange
-            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+            var doc = XDocument.Parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<node>" +
                             "<childNode nodeAttribute='AttributeValue1'>" +
                                 "<someNode>SomeNodeValue</someNode>" +
@@ -683,278 +683,291 @@ namespace ISHDeploy.Tests.Data.Managers
 										</menubar>";
 
 
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void SetNode_New()
-		{
-			// Arrange
-			string testXPath = "/menubar/menuitem[@label='TEST_Label']";
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void SetNode_New()
+        {
+            // Arrange
+            string testXPath = "/menubar/menuitem[@label='TEST_Label']";
 
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
 
-			var item = new EventLogMenuItem()
-			{
-				Label = "TEST_Label",
-				Description = "TEST_Description",
-				Icon = "TEST_icon.png",
-				UserRole = "TEST_UserRole",
-				Action = new EventLogMenuItemAction()
-				{
-					SelectedButtonTitle = "TEST_SelectedButtonTitle",
-					ModifiedSinceMinutesFilter = 8888,
-					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
-					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
-				}
-			};
+            var item = new EventLogMenuItem()
+            {
+                Label = "TEST_Label",
+                Description = "TEST_Description",
+                Icon = "TEST_icon.png",
+                UserRoles = new string[] { "TEST_UserRole1", "TEST_UserRole2" },
+                Action = new EventLogMenuItemAction()
+                {
+                    SelectedButtonTitle = "TEST_SelectedButtonTitle",
+                    ModifiedSinceMinutesFilter = 8888,
+                    SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+                    StatusFilter = "TEST_StatusFilter",
+                    EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+                }
+            };
 
-			XComment comment = null;
-			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
-			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
+            XComment comment = null;
+            Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+            IEnumerable<XElement> elements = null;
 
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
-					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
-					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
-				}));
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
+                    attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+                    elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>();
+                }));
 
-			// Act
-			_xmlConfigManager.SetNode(_filePath, testXPath, item);
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.IsNotNull(comment, "Comments was not added");
-			Assert.AreEqual(comment.Value, item.GetNodeComment().Value, "Comments was not correctly set");
-
-			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
-			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
-			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
-			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
-
-			Assert.AreEqual(elements.Count, 2, "Elements are not set");
-			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
-			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
-		}
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void SetNode_Existing()
-		{
-			// Arrange
-			string testXPath = "/menubar/menuitem[@label='Thumbnails']";
-
-			var commentValue = " Thumbnails ============================================================= ";
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			var item = new EventLogMenuItem()
-			{
-				Label = "Thumbnails",
-				Description = "TEST_Description",
-				Icon = "TEST_icon.png",
-				UserRole = "TEST_UserRole",
-				Action = new EventLogMenuItemAction()
-				{
-					SelectedButtonTitle = "TEST_SelectedButtonTitle",
-					ModifiedSinceMinutesFilter = 8888,
-					SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
-					StatusFilter = "TEST_StatusFilter",
-					EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
-				}
-			};
-
-			XComment comment = null;
-			Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
-			Dictionary<string, XElement> elements = new Dictionary<string, XElement>();
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
-					attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
-					elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>().ToDictionary(x => x.Name.LocalName, x => x);
-				}));
-
-			// Act
-			_xmlConfigManager.SetNode(_filePath, testXPath, item);
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.IsNotNull(comment, "Comments was not added");
-
-			Assert.AreNotEqual(comment.Value, item.GetNodeComment().Value, "Comment should not be owerwriten");
-			Assert.AreEqual(comment.Value, commentValue, "Comments was not correctly set");
-
-			Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
-			Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
-			Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
-			Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
-
-			Assert.AreEqual(elements.Count, 2, "Elements are not set");
-			Assert.AreEqual(elements["userrole"].Value, item.UserRole, "User role element is not set correctly");
-			Assert.AreEqual(elements["description"].Value, item.Description, "Description element is not set correctly");
-        }
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void MoveBeforeNode()
-		{
-			// Arrange
-			string testLabel = "All Events";
-			string insertBeforeLabel = "Thumbnails";
-
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			string[] labels = null;
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
-				}));
-
-			// Act
-			_xmlConfigManager.MoveBeforeNode(
-				_filePath, 
-				string.Format("/menubar/menuitem[@label='{0}']", testLabel), 
-				string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
-			Assert.AreEqual(labels[1], testLabel, "Inserted node is not in a correct place");
-			Assert.AreEqual(labels[2], insertBeforeLabel, "Previouse node is not in a correct place");
-		}
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void MoveBeforeNode_Top()
-		{
-			// Arrange
-			string testLabel = "All Events";
-
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			string[] labels = null;
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
-				}));
-
-			// Act
-			_xmlConfigManager.MoveBeforeNode(
-				_filePath,
-				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
-			Assert.AreEqual(labels[0], testLabel, "Inserted node is not in a correct place");
-		}
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void MoveAfterNode()
-		{
-			// Arrange
-			string testLabel = "Thumbnails";
-			string insertBeforeLabel = "All Events";
-
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			string[] labels = null;
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
-				}));
-
-			// Act
-			_xmlConfigManager.MoveAfterNode(
-				_filePath,
-				string.Format("/menubar/menuitem[@label='{0}']", testLabel),
-				string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
-			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
-			Assert.AreEqual(labels[1], insertBeforeLabel, "Previouse node is not in a correct place");
-		}
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void MoveAfterNode_Bottom()
-		{
-			// Arrange
-			string testLabel = "Thumbnails";
-
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			string[] labels = null;
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
-				}));
-
-			// Act
-			_xmlConfigManager.MoveAfterNode(
-				_filePath,
-				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
-
-			// Assert
-			FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-
-			Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
-			Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
-		}
-
-		[TestMethod]
-		[TestCategory("Data handling")]
-		public void RemoveNode()
-		{
-			// Arrange
-			string testLabel = "Thumbnails";
-
-			var doc = XDocument.Parse(_nodesManipulationTestXml);
-
-			string[] labels = null;
-
-			FileManager.Load(_filePath).Returns(doc);
-			FileManager.Save(_filePath, Arg.Do<XDocument>(
-				xdoc =>
-				{
-					labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
-				}));
-
-			// Act
-			_xmlConfigManager.RemoveSingleNode(
-				_filePath,
-				string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+            // Act
+            _xmlConfigManager.SetNode(_filePath, testXPath, item);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
 
-			Assert.AreEqual(labels.Length, 2, "Node was not removed.");
-			Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
-		}
+            Assert.IsNotNull(comment, "Comments was not added");
+            Assert.AreEqual(comment.Value, item.GetNodeComment().Value, "Comments was not correctly set");
+
+            Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+
+            string discription = elements.Where(x => x.Name.LocalName == "description").Select(x => x.Value).First();
+            string[] userroles = elements.Where(x => x.Name.LocalName == "userrole").Select(x => x.Value).ToArray();
+
+            Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+            Assert.AreEqual(elements.Count(), 3, "Elements are not set");
+            Assert.AreEqual(userroles[0], item.UserRoles[0], "User role element is not set correctly");
+            Assert.AreEqual(userroles[1], item.UserRoles[1], "User role element is not set correctly");
+            Assert.AreEqual(discription, item.Description, "Description element is not set correctly");
+        }
+
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void SetNode_Existing()
+        {
+            // Arrange
+            string testXPath = "/menubar/menuitem[@label='Thumbnails']";
+
+            var commentValue = " Thumbnails ============================================================= ";
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            var item = new EventLogMenuItem()
+            {
+                Label = "Thumbnails",
+                Description = "TEST_Description",
+                Icon = "TEST_icon.png",
+                UserRoles = new string[] { "TEST_UserRole", "TEST_UserRole2" },
+                Action = new EventLogMenuItemAction()
+                {
+                    SelectedButtonTitle = "TEST_SelectedButtonTitle",
+                    ModifiedSinceMinutesFilter = 8888,
+                    SelectedMenuItemTitle = "TEST_SelectedMenuItemTitle",
+                    StatusFilter = "TEST_StatusFilter",
+                    EventTypesFilter = new[] { "TEST_REACH", "TEST_PDF", "TEST_ZIP" }
+                }
+            };
+
+            XComment comment = null;
+            Dictionary<string, XAttribute> attributes = new Dictionary<string, XAttribute>();
+            IEnumerable<XElement> elements = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    comment = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}{"/preceding-sibling::node()[not(self::text())][1][not(local-name())]"}")).OfType<XComment>().Single();
+                    attributes = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/@*")).OfType<XAttribute>().ToDictionary(x => x.Name.LocalName, x => x);
+                    elements = ((IEnumerable<object>)xdoc.XPathEvaluate($"{testXPath}/*")).OfType<XElement>();
+                }));
+
+            // Act
+            _xmlConfigManager.SetNode(_filePath, testXPath, item);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.IsNotNull(comment, "Comments was not added");
+
+            Assert.AreNotEqual(comment.Value, item.GetNodeComment().Value, "Comment should not be owerwriten");
+            Assert.AreEqual(comment.Value, commentValue, "Comments was not correctly set");
+
+            Assert.AreEqual(attributes.Count, 3, "Attributes are not set");
+            Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+            string discription = elements.Where(x => x.Name.LocalName == "description").Select(x => x.Value).First();
+            string[] userroles = elements.Where(x => x.Name.LocalName == "userrole").Select(x => x.Value).ToArray();
+
+            Assert.AreEqual(attributes["label"].Value, item.Label, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["icon"].Value, item.Icon, "Label attribute is not set correctly");
+            Assert.AreEqual(attributes["action"].Value, item.Action.ToQueryString(), "Action attribute is not set correctly");
+
+            Assert.AreEqual(elements.Count(), 3, "Elements are not set");
+            Assert.AreEqual(userroles[0], item.UserRoles[0], "User role element is not set correctly");
+            Assert.AreEqual(userroles[1], item.UserRoles[1], "User role element is not set correctly");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveBeforeNode()
+        {
+            // Arrange
+            string testLabel = "All Events";
+            string insertBeforeLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.MoveBeforeNode(
+                _filePath,
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel),
+                string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+            Assert.AreEqual(labels[1], testLabel, "Inserted node is not in a correct place");
+            Assert.AreEqual(labels[2], insertBeforeLabel, "Previouse node is not in a correct place");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveBeforeNode_Top()
+        {
+            // Arrange
+            string testLabel = "All Events";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.MoveBeforeNode(
+                _filePath,
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+            Assert.AreEqual(labels[0], testLabel, "Inserted node is not in a correct place");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveAfterNode()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+            string insertBeforeLabel = "All Events";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.MoveAfterNode(
+                _filePath,
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel),
+                string.Format("/menubar/menuitem[@label='{0}']", insertBeforeLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+            Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+            Assert.AreEqual(labels[1], insertBeforeLabel, "Previouse node is not in a correct place");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveAfterNode_Bottom()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.MoveAfterNode(
+                _filePath,
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 3, "Nodes quantity was not kept.");
+            Assert.AreEqual(labels[2], testLabel, "Inserted node is not in a correct place");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveNode()
+        {
+            // Arrange
+            string testLabel = "Thumbnails";
+
+            var doc = XDocument.Parse(_nodesManipulationTestXml);
+
+            string[] labels = null;
+
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(
+                xdoc =>
+                {
+                    labels = xdoc.Root.Elements("menuitem").Select(x => x.Attribute("label").Value).ToArray();
+                }));
+
+            // Act
+            _xmlConfigManager.RemoveSingleNode(
+                _filePath,
+                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            Assert.AreEqual(labels.Length, 2, "Node was not removed.");
+            Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
+        }
 
 
         [TestMethod]

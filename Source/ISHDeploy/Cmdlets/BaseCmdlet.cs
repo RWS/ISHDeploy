@@ -52,7 +52,7 @@ namespace ISHDeploy.Cmdlets
         }
 
         /// <summary>
-        /// Will provide functionality - ForEach-Object  in powershell work only with array type
+        /// Will provide functionality - ForEach-Object  in powershell
         /// </summary>
         /// <param name="obj">object for output</param>
         protected void ISHWriteOutput(object obj)

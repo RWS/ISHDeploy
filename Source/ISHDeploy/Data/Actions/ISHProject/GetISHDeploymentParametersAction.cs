@@ -41,7 +41,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// The XML configuration manager.
         /// </summary>
         private readonly IXmlConfigManager _xmlConfigManager;
-
+        
         /// <summary>
         /// The file manager.
         /// </summary>
@@ -108,12 +108,28 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 }
             }
 
+            // To hide passwords
+            if (!_showPassword)
+            {
+                var hiddenDictionary = new Dictionary<string, string>();
+                foreach (var element in dictionary)
+                {
+                    if (element.Key.Contains(password))
+                    {
+                        hiddenDictionary.Add(element.Key, hiddenPassword);
+                    }
+                    else
+                    {
+                        hiddenDictionary.Add(element.Key, element.Value);
+                    }
+                }
+                dictionary = hiddenDictionary;
+            }
+
             return from t in dictionary
-                   select new ISHDeploymentParameter
-                   {
-                       Name = t.Key,
-                       // To hide passwords
-                       Value = (!_showPassword && t.Key.Contains(password)) ? hiddenPassword : t.Value
+                   select new ISHDeploymentParameter {
+                       Name = t.Key, 
+                       Value= t.Value
                    };
         }
     }

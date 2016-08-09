@@ -138,7 +138,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
                 InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
-
+            
             _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBaseConnectionString,
                 string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
@@ -166,7 +166,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (currentEndpoint.Contains($"{InputParameters.BaseUrl}/{ishDeployment.WebAppNameSTS}"))
                 {
                     var windowsEndpoint = currentEndpoint.Replace("issue/wstrust/mixed/username", "issue/wstrust/mixed/windows");
-
+                    
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.WindowsMixed, windowsEndpoint);
                 }
 
@@ -203,7 +203,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (currentEndpoint.Contains($"{InputParameters.BaseUrl}/{ishDeployment.WebAppNameSTS}"))
                 {
                     var usernameEndpoint = currentEndpoint.Replace("issue/wstrust/mixed/windows", "issue/wstrust/mixed/username");
-
+                    
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.UserNameMixed, usernameEndpoint);
                 }
 
@@ -245,7 +245,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // InputParameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.Replace(InputParameters.BaseHostName, InputParameters.LocalServiceHostName)));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 

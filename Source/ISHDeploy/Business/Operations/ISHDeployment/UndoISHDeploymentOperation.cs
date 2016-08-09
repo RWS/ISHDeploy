@@ -19,7 +19,6 @@ using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
@@ -59,6 +58,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
             }
+
+            // Disable Windows Authentication for STS web site
+            _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, AuthorFolderPath));

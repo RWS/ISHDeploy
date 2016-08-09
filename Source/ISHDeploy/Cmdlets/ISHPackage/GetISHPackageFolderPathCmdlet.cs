@@ -47,7 +47,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
 
             var result = operation.Run();
 
-            WriteObject(result);
+            ISHWriteOutput(result);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
             set { _Original = value; }
         }
         private bool _Original;
-        
+
         /// <summary>
         /// Switch parameter to get difference from changed and original file
         /// </summary>
@@ -69,7 +69,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
             set { _Changed = value; }
         }
         private bool _Changed;
-        
+
         /// <summary>
         /// Switch parameter to show real passwords in parameters
         /// </summary>
@@ -95,10 +95,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var parametersContent = operation.Run();
 
-            foreach (var pc in parametersContent)
-            {
-                WriteObject(pc);
-            }
+            ISHWriteOutput(parametersContent);
         }
     }
 }

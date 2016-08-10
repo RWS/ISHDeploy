@@ -15,7 +15,7 @@
  */
 
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHSTS;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -61,10 +61,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 
             var result = operation.Run();
 
-            foreach (var rp in result)
-            {
-                WriteObject(rp);
-            }
+            ISHWriteOutput(result);
         }
     }
 }

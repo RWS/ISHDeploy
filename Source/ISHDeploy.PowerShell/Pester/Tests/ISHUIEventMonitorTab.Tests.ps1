@@ -122,6 +122,15 @@ function checkEventMonitorTabExist{
 
 }
 
+function checkAmountOFUserroles{
+    param( [string]$Label)
+
+    [xml]$XmlEventMonitorBar= Get-Content "$xmlPath\EventMonitorMenuBar.xml"  -ErrorAction SilentlyContinue
+      
+    $textEventMenuBar = $XmlEventMonitorBar.menubar.menuitem | ? {($_.label -eq $Label)}
+    Return  $textEventMenuBar.userrole.Count
+  
+}
 
 $scriptBlockSetEventMonitor = {
     param (
@@ -443,5 +452,14 @@ Describe "Testing ISHUIEventMonitorTab"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
         RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"} -expectedResult "Added" | Should be "Added"
+    }
+
+	It "Set accepts multiple roles"{
+        #Arrange
+        $params =  $params = @{label = $testLabelName; Description = $testDescription;EventTypesFilter = @("NotDef", "2423");SelectedStatusFilter = "All";ModifiedSinceMinutesFilter = "2000";UserRole = "User", "Administrator"  }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        RetryCommand -numberOfRetries 10 -command {checkAmountOFUserroles -Label $params.label } -expectedResult 2 | Should be 2
     }
 }

@@ -20,31 +20,31 @@ using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
-	/// <summary>
-	///		<para type="synopsis">Update or add a new EventMonitor tab.</para>
-	///		<para type="description">The Set-ISHUIEventMonitorTab cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
-	///		<para type="description">If Icon is not specified, the default value '~/UIFramework/events.32x32.png' is taken.</para>
-	///		<para type="description">If UserRole is not specified, the default value 'Administrator' is taken.</para>
-	///		<para type="description">If ModifiedSinceMinutesFilter is not specified, the default value '1440' is taken.</para>
-	///		<para type="description">If SelectedStatusFilter is not specified, the default value 'Recent' is taken.</para>
-	///		<para type="link">Move-ISHUIEventMonitorTab</para>
-	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
-	/// </summary>
-	/// <example>
-	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole "Administrator" -Description "Tab using all available parameters"</code>
-	///		<para>Sets new tab with all sets of available and provided parameters.</para>
-	///		<para>This command sets XML definitions to EventMonitor.
-	///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-	///		</para>
-	/// </example>
-	/// <example>
-	///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
-	///		<para>Sets new tab with default set of provided parameters.</para>
-	///		<para>This command sets XML definitions to EventMonitor.
-	///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-	///		</para>
-	/// </example>/// 
-	[Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
+    /// <summary>
+    ///		<para type="synopsis">Update or add a new EventMonitor tab.</para>
+    ///		<para type="description">The Set-ISHUIEventMonitorTab cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
+    ///		<para type="description">If Icon is not specified, the default value '~/UIFramework/events.32x32.png' is taken.</para>
+    ///		<para type="description">If UserRole is not specified, the default value 'Administrator' is taken.</para>
+    ///		<para type="description">If ModifiedSinceMinutesFilter is not specified, the default value '1440' is taken.</para>
+    ///		<para type="description">If SelectedStatusFilter is not specified, the default value 'Recent' is taken.</para>
+    ///		<para type="link">Move-ISHUIEventMonitorTab</para>
+    ///		<para type="link">Remove-ISHUIEventMonitorTab</para>
+    /// </summary>
+    /// <example>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole @("Administrator","Author") -Description "Tab using all available parameters"</code>
+    ///		<para>Sets new tab with all sets of available and provided parameters.</para>
+    ///		<para>This command sets XML definitions to EventMonitor.
+    ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///		</para>
+    /// </example>
+    /// <example>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
+    ///		<para>Sets new tab with default set of provided parameters.</para>
+    ///		<para>This command sets XML definitions to EventMonitor.
+    ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///		</para>
+    /// </example>/// 
+    [Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
     public class SetISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
 		/// <summary>
@@ -132,7 +132,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		/// </summary>
 		[Parameter(Mandatory = false, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-		public string UserRole { get; set; } = "Administrator";
+        public string[] UserRole { get; set; } = new string[] {"Administrator"};
 
 		/// <summary>
 		/// <para type="description">User role description.</para>
@@ -150,7 +150,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 				Label = Label,
 				Description = Description,
 				Icon = Icon,
-				UserRole = UserRole,
+				UserRoles = UserRole, // we need single form in powershell
 				Action = new EventLogMenuItemAction()
 				{
 					SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],

@@ -64,10 +64,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var result = operation.Run();
 
-            foreach (var deployment in result)
-            {
-                WriteObject(deployment);
-            }
+            ISHWriteOutput(result);
 
             if (result.Any())
             {

@@ -138,11 +138,17 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
                 InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
-            
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
-                        subjectThumbprint)));
+
+            // if the database exists we update the database
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (isDataBaseFileExist)
+            {
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                    InfoShareSTSDataBaseConnectionString,
+                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                            subjectThumbprint)));
+            }
         }
 
         /// <summary>
@@ -166,7 +172,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (currentEndpoint.Contains($"{InputParameters.BaseUrl}/{ishDeployment.WebAppNameSTS}"))
                 {
                     var windowsEndpoint = currentEndpoint.Replace("issue/wstrust/mixed/username", "issue/wstrust/mixed/windows");
-                    
+
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.WindowsMixed, windowsEndpoint);
                 }
 
@@ -203,7 +209,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (currentEndpoint.Contains($"{InputParameters.BaseUrl}/{ishDeployment.WebAppNameSTS}"))
                 {
                     var usernameEndpoint = currentEndpoint.Replace("issue/wstrust/mixed/windows", "issue/wstrust/mixed/username");
-                    
+
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.UserNameMixed, usernameEndpoint);
                 }
 

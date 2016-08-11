@@ -164,11 +164,11 @@ namespace ISHDeploy.Data.Managers
             bool isFeatureEnabled = false;
             using (var ps = PowerShell.Create())
             {
-                ps.AddScript("Get-WindowsOptionalFeature -FeatureName \"IIS-WindowsAuthentication\" -online");
+                ps.AddScript("$(Get-WindowsOptionalFeature -FeatureName \"IIS-WindowsAuthentication\" -Online).State -eq \"Enabled\"");
 
                 foreach (PSObject result in ps.Invoke())
                 {
-                    isFeatureEnabled = result.Properties["State"].Value.ToString() == "Enabled";
+                    isFeatureEnabled = result != null && bool.Parse(result.ToString());
                 }
             }
 

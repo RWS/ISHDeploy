@@ -136,8 +136,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
-                InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+            // It is the responsibility of SetISHIntegrationSTSCertificateOperation to add or uncomment <add name="addActAsTrustedIssuer" node in ~\Web\InfoShareSTS\Web.config file  
+            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
+            //    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
             // if the database exists we update the database
             bool isDataBaseFileExist = false;

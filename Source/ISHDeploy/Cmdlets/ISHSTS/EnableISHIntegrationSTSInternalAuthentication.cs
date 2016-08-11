@@ -42,13 +42,13 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     public sealed class EnableISHIntegrationSTSInternalAuthentication : BaseHistoryEntryCmdlet
     {
         /// <summary>
-        /// <para type="description">Certificate Thumbprint.</para>
+        /// <para type="description">Host name.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Host name")]
         public string LCHost { get; set; }
 
         /// <summary>
-        /// <para type="description">Issuer name.</para>
+        /// <para type="description">Web application name.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Web application name")]
         public string LCWebAppName { get; set; }

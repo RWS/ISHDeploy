@@ -140,6 +140,10 @@ namespace ISHDeploy.Business.Operations
                 return new ISHFilePath(InternalSTSSouceFolder, BackupWebFolderPath, InternalSTSLogin.TargetFolderName);
             }
         }
+
+        /// <summary>
+        /// New connection file path
+        /// </summary>
         protected ISHFilePath InternalSTSNewConnectionConfigPath
         {
             get

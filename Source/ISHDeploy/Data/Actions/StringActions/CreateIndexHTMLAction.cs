@@ -50,7 +50,7 @@ namespace ISHDeploy.Data.Actions.StringActions
     <div app = ""ISH"" >
         <h1> Content Manager</h1>
         <p><a href = ""{linkISHCM}"" > Content Manager</a></p>
-        <p>Use <b>{linkISHWS}</b> as the value for SDL Knowledge Center Content Manager web service</p>
+        <p>Use <b>{linkISHWS}/</b> as the value for SDL Knowledge Center Content Manager web service</p>
     </div>
 {divLC}
 </body>

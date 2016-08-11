@@ -96,10 +96,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
 
             // Change new created connectionconfiguration.xml
-            var newInfoShareWSConnectionConfigPath = new ISHFilePath(folderToChange, BackupWebFolderPath, fileToChange);
+            var newConnectionConfigPath = new ISHFilePath(folderToChange, BackupWebFolderPath, fileToChange);
 
-            _invoker.AddAction(new SetElementValueAction(Logger, newInfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
-            _invoker.AddAction(new SetElementValueAction(Logger, newInfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, url));
+            _invoker.AddAction(new SetElementValueAction(Logger, newConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
+            _invoker.AddAction(new SetElementValueAction(Logger, newConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, url));
         }
 
         /// <summary>

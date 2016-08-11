@@ -25,13 +25,13 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.ISHSTS" />
     /// <example>
-    ///		<code>PS C:\&gt;Enable-ISHSTSSupportAccess -ISHDeployment $deployment</code>
+    ///		<code>PS C:\&gt;Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment</code>
     ///		<para>This command enable internal STS authentication with new index.html page.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\&gt;Enable-ISHSTSSupportAccess -ISHDeployment $deployment -LCHost "lc.example.com" -LCWebAppName "ContentDelivery" </code>
+    ///		<code>PS C:\&gt;Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost "lc.example.com" -LCWebAppName "ContentDelivery" </code>
     ///		<para>This command enable internal STS authentication with new index.html page.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// Parameter LCHost define host name
@@ -67,7 +67,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
                 LCWebAppName = "ContentDelivery"; // default value
             }
 
-            var operation = new EnableISHAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
+            var operation = new EnableDisableISHAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
 
             operation.Run();
         }

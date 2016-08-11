@@ -1,8 +1,9 @@
 # Version notes
 
 ## alpha-0.3 (Pre-release)
-- Cmdlet Enable-ISHSTSSupportAccess to make possibility for Professional Team to access with internal STS
-- Updated Set-ISHUIEventMonitorTab to work with multiple user roles
+- Cmdlet Enable-ISHIntegrationSTSInternalAuthentication to make possibility for Professional Team to access with internal STS.
+- Cmdlet Disablee-ISHIntegrationSTSInternalAuthentication removes created directory with files for internal STS access.
+- Updated Set-ISHUIEventMonitorTab to work with multiple user roles.
 ## alpha-0.2 (Pre-release)
 
 1. General 

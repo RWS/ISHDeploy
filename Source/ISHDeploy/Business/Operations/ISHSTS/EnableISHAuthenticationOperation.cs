@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Enable internal STS access
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHAuthenticationOperation : BaseOperationPaths, IOperation
+    public class EnableDisableISHAuthenticationOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -43,7 +43,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="lCHost">Host name.</param>
         /// <param name="lCWebAppName">Application name.</param>
-        public EnableISHAuthenticationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string lCHost, string lCWebAppName) :
+        /// <param name="toDisable">True for disable cmdlet</param>
+        public EnableDisableISHAuthenticationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string lCHost, string lCWebAppName, bool toDisable = false) :
             base(logger, ishDeployment)
         {
             string targetFolderName = "Internal";
@@ -54,9 +55,13 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             _invoker = new ActionInvoker(logger, "Enable internal STS access.");
 
-            // first we need to delete directory and then create it
+            // first we need to delete directory
             _invoker.AddAction(new DirectoryRemoveAction(Logger, folderToChange));
-            //_invoker.AddAction(new DirectoryCreateAction(Logger, souceFolder));
+            
+            // For disable cmdlet
+            if (toDisable) {
+                return;
+            }
 
             // Files contents generation 
             var indexContent = string.Empty;
@@ -78,6 +83,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             string authenticationToChange, url, authenticationType = string.Empty;
             (new GetValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath,
                 result => authenticationType = result)).Execute();
+
             if (authenticationType != AuthenticationTypes.Windows.ToString())
             {
                 authenticationToChange = BindingType.UserNameMixed.ToString();
@@ -89,12 +95,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 url = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/windows";
             }
 
-            // Change ~\Web\InfoShareWS\connectionconfiguration.xml
+            // Change new created connectionconfiguration.xml
             var newInfoShareWSConnectionConfigPath = new ISHFilePath(folderToChange, BackupWebFolderPath, fileToChange);
 
             _invoker.AddAction(new SetElementValueAction(Logger, newInfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
             _invoker.AddAction(new SetElementValueAction(Logger, newInfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, url));
-
         }
 
         /// <summary>

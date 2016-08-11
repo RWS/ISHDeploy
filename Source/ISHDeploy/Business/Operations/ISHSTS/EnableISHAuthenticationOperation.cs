@@ -53,7 +53,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             string folderToChange = Path.Combine(souceFolder, targetFolderName);
             string fileToChange = folderToChange + @"\connectionconfiguration.xml";
 
-            _invoker = new ActionInvoker(logger, "Enable internal STS access.");
+            _invoker = new ActionInvoker(logger, toDisable?"Disable internal STS access.":"Enable internal STS access.");
 
             // first we need to delete directory
             _invoker.AddAction(new DirectoryRemoveAction(Logger, folderToChange));

@@ -15,6 +15,7 @@
  */
 
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHSTS;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
@@ -51,6 +52,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
+
+            // Disable internal STS login (remove directory) 
+            new EnableDisableISHAuthenticationOperation(Logger, ishDeployment, null, null, true).Run();
+
 
             if (!SkipRecycle)
             {

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.StringActions;
+using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using System.IO;
@@ -54,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new DirectoryRemoveAction(Logger, folderToDelete));
             //_invoker.AddAction(new DirectoryCreateAction(Logger, souceFolder));
 
-            // files contents generation 
+            // Files contents generation 
             var indexContent = string.Empty;
             (new CreateIndexHTMLAction(Logger,
                 InputParameters.BaseUrl + "/" + InputParameters.WebAppNameCM + "/",
@@ -63,17 +65,29 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 lCHost,
                 lCWebAppName,
                 result => indexContent = result)).Execute();
-            //var connectionconfiguration = string.Empty;
-            //(new GetEncryptedRaindewDataByThumbprintAction(Logger, thumbprint, result => index = result)).Execute();
 
-            // creating index.html file
+            // Creating index.html file
             var filelPath = new ISHFilePath(souceFolder, BackupWebFolderPath, targetFolderName);
             _invoker.AddAction(new FileCreateAction(Logger, filelPath, "index.html", indexContent));
-            // creating connectionconfiguration.xml file
-            //_invoker.AddAction(new FileCreateAction(Logger, souceFolder, "connectionconfiguration.xml", connectionconfiguration));
 
-            // changing ISHSTS configuration
-            //_invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            string authentication, url, authenticationType = string.Empty;
+            (new GetValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath,
+                result => authenticationType = result)).Execute();
+            if (authenticationType != AuthenticationTypes.Windows.ToString())
+            {
+                authentication = BindingType.UserNameMixed.ToString();
+                url = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/username";
+            }
+            else
+            {
+                authentication = BindingType.WindowsMixed.ToString();;
+                url = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/windows";
+            }
+
+            // Change ~\Web\InfoShareWS\connectionconfiguration.xml
+            _invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authentication));
+            _invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, url));
+
         }
 
         /// <summary>

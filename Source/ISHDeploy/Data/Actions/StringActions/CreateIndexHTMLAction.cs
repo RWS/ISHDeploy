@@ -101,10 +101,11 @@ namespace ISHDeploy.Data.Actions.StringActions
         /// </summary>
         protected override string ExecuteWithResult()
         {
+            // originally from here: https://confluence.sdl.com/download/attachments/67406928/Prepare-SupportAccess.ps1?version=1&modificationDate=1450257894000&api=v2
             string onload;
 
-           html =  html.Replace("{linkISHCM}", _linkISHCM);
-           html = html.Replace("{linkISHWS}", _linkISHWS);
+            html = html.Replace("{linkISHCM}", _linkISHCM);
+            html = html.Replace("{linkISHWS}", _linkISHWS);
 
             if (_lCHost != null)
             {
@@ -124,9 +125,9 @@ namespace ISHDeploy.Data.Actions.StringActions
                 onload = "";
             }
 
-           html = html.Replace("{script}", script);
-           html = html.Replace("{divLC}", divLC);
-           html = html.Replace("{onload}", onload);
+            html = html.Replace("{script}", script);
+            html = html.Replace("{divLC}", divLC);
+            html = html.Replace("{onload}", onload);
 
             return html;
         }

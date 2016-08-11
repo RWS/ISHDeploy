@@ -80,26 +80,26 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new FileCopyToDirectoryAction(logger, sourceConnectionConfigurationFile, filelPath, true));
 
             // Get authenticationType attribute value from Web\InfoShareSTS\Configuration\infoShareSTS.config 
-            string authenticationToChange, url, authenticationType = string.Empty;
+            string authenticationToChange, urlToChange, authenticationType = string.Empty;
             (new GetValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath,
                 result => authenticationType = result)).Execute();
 
             if (authenticationType != AuthenticationTypes.Windows.ToString())
             {
                 authenticationToChange = BindingType.UserNameMixed.ToString();
-                url = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/username";
+                urlToChange = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/username";
             }
             else
             {
                 authenticationToChange = BindingType.WindowsMixed.ToString(); ;
-                url = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/windows";
+                urlToChange = InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/issue/wstrust/mixed/windows";
             }
 
             // Change new created connectionconfiguration.xml
             var newConnectionConfigPath = new ISHFilePath(folderToChange, BackupWebFolderPath, fileToChange);
 
             _invoker.AddAction(new SetElementValueAction(Logger, newConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
-            _invoker.AddAction(new SetElementValueAction(Logger, newConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, url));
+            _invoker.AddAction(new SetElementValueAction(Logger, newConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, urlToChange));
         }
 
         /// <summary>

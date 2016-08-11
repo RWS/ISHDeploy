@@ -19,7 +19,7 @@ using System.IO;
 using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -74,6 +74,101 @@ namespace ISHDeploy.Business.Operations
         /// The path to C:\ProgramData\ISHDeploy.X.X.X folder
         /// </summary>
         protected string ISHDeploymentProgramDataFolderPath { get; }
+
+        /// <summary>
+        /// Url for STS path
+        /// </summary>
+        protected string InternalSTSLoginUrlSTS
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/";
+            }
+        }
+        
+        /// <summary>
+        /// Url for CM path
+        /// </summary>
+        protected string InternalSTSLoginUrlCM
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameCM + "/";
+            }
+        }
+
+        /// <summary>
+        /// Url for WS path with new folder
+        /// </summary>
+        protected string InternalSTSLoginUrlWSWithNewFolder
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameWS + "/" + InternalSTSLogin.TargetFolderName;
+            }
+        }
+        
+        /// <summary>
+        /// Url for WS path with new folder
+        /// </summary>
+        protected string InternalSTSSouceFolder
+        {
+            get
+            {
+                return Path.Combine(AuthorFolderPath, "InfoShareWS");
+            }
+        }
+
+        /// <summary>
+        /// File which will be copied
+        /// </summary>
+        protected string InternalSTSSourceConnectionConfigurationFile
+        {
+            get
+            {
+                return InternalSTSSouceFolder + InternalSTSLogin.FileToCopy;
+            }
+        }
+
+        /// <summary>
+        /// Create path for new derectory for 2 files
+        /// </summary>
+        protected ISHFilePath InternalSTSFilelPath
+        {
+            get
+            {
+                return new ISHFilePath(InternalSTSSouceFolder, BackupWebFolderPath, InternalSTSLogin.TargetFolderName);
+            }
+        }
+        protected ISHFilePath InternalSTSNewConnectionConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(InternalSTSFolderToChange, BackupWebFolderPath, InternalSTSFileToChange);
+            }
+        }
+
+        /// <summary>
+        /// Folder will be created
+        /// </summary>
+        protected string InternalSTSFolderToChange
+        {
+            get
+            {
+                return Path.Combine(InternalSTSSouceFolder, InternalSTSLogin.TargetFolderName);
+            }
+        }
+
+        /// <summary>
+        /// XML file will be changed in new directory
+        /// </summary>
+        protected string InternalSTSFileToChange
+        {
+            get
+            {
+                return InternalSTSFolderToChange + InternalSTSLogin.FileToCopy;
+            }
+        }
 
         /// <summary>
         /// The path to ~\Web\Author\ASP\Tree.htm

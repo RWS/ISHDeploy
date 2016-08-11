@@ -39,7 +39,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableDisableISHAuthenticationOperation(Logger, ISHDeployment, null, null, true);
+            var operation = new DisableISHAuthenticationOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

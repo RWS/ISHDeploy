@@ -67,7 +67,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
                 LCWebAppName = "ContentDelivery"; // default value
             }
 
-            var operation = new EnableDisableISHAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
+            var operation = new EnableISHAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
 
             operation.Run();
         }

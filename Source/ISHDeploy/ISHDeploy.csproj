@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\InternalSTSLogin.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -89,7 +90,8 @@
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
-    <Compile Include="Business\Operations\ISHSTS\EnableDisableISHAuthenticationOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\DisableISHAuthenticationOperation.cs" />
+    <Compile Include="Business\Operations\ISHSTS\EnableISHAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />

@@ -1,8 +1,8 @@
 # Version notes
 
 ## alpha-0.3 (Pre-release)
-
-
+- Cmdlet Enable-ISHSTSSupportAccess to make possibility for Professional Team to access with internal STS
+- Updated Set-ISHUIEventMonitorTab to work with multiple user roles
 ## alpha-0.2 (Pre-release)
 
 1. General 

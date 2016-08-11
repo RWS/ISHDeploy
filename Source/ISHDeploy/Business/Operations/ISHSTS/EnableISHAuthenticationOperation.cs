@@ -71,7 +71,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new FileCreateAction(Logger, filelPath, "index.html", indexContent));
 
             string authentication, url, authenticationType = string.Empty;
-            (new GetValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath,
+            (new GetValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath,
                 result => authenticationType = result)).Execute();
             if (authenticationType != AuthenticationTypes.Windows.ToString())
             {

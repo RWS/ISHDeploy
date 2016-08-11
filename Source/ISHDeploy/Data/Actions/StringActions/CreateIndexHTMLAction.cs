@@ -104,7 +104,8 @@ namespace ISHDeploy.Data.Actions.StringActions
             // originally from here: https://confluence.sdl.com/download/attachments/67406928/Prepare-SupportAccess.ps1?version=1&modificationDate=1450257894000&api=v2
             string onload;
 
-            html = html.Replace("{linkISHCM}", _linkISHCM);
+            string link = BuildWSFedUrl(new Uri(_linkISHCM));
+            html = html.Replace("{linkISHCM}", link);
             html = html.Replace("{linkISHWS}", _linkISHWS);
 
             if (_lCHost != null)

@@ -136,7 +136,7 @@ namespace ISHDeploy.Data.Actions.StringActions
         {
             var builder = new UriBuilder(_linkISHSTS);
             builder.Path += "issue/wsfed";
-            builder.Query = "wa=wsignin1.0&wtrealm=" + realm;
+            builder.Query = "wa=wsignin1.0&wtrealm=" + Uri.EscapeDataString(realm.ToString());
             return builder.ToString();
         }
     }

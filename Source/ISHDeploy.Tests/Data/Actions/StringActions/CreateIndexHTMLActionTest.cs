@@ -28,6 +28,7 @@ namespace ISHDeploy.Tests.Data.Actions.WebAdministration
         private const string URL1 = "a href = \"https://ualaptop3.global.sdl.corp:443/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Fualaptop3.global.sdl.corp%2FInfoShareAuthor%2F\"";
         private const string URL2 = "a href = \"https://ualaptop3.global.sdl.corp:443/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Ftest.com%2FContentDelivery\"";
         private const string URL3 = "https://test.com/ContentDelivery";
+        private const string URL4 = "https://UALAPTOP3.global.sdl.corp/InfoShareWS/Internal";
 
         [TestMethod]
         [TestCategory("Actions")]
@@ -48,6 +49,8 @@ namespace ISHDeploy.Tests.Data.Actions.WebAdministration
             // Assert
             Assert.IsTrue(output.Contains(URL1));
             Assert.IsTrue(output.Contains(URL2));
-            Assert.IsTrue(output.Contains(URL3));        }
+            Assert.IsTrue(output.Contains(URL3));
+            Assert.IsTrue(output.Contains(URL4));
+        }
     }
 }

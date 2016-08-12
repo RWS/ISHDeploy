@@ -25,8 +25,8 @@ namespace ISHDeploy.Tests.Data.Actions.WebAdministration
     [TestClass]
     public class CreateIndexHTMLActionTest : BaseUnitTest
     {
-        private const string URL1 = "a href = \"https://ualaptop3.global.sdl.corp:443/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Fualaptop3.global.sdl.corp%2FInfoShareAuthor%2F\"";
-        private const string URL2 = "a href = \"https://ualaptop3.global.sdl.corp:443/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Ftest.com%2FContentDelivery\"";
+        private const string URL1 = "a href = \"https://ualaptop3.global.sdl.corp/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Fualaptop3.global.sdl.corp%2FInfoShareAuthor%2F\"";
+        private const string URL2 = "a href = \"https://ualaptop3.global.sdl.corp/InfoShareSTS/issue/wsfed?wa=wsignin1.0&wtrealm=https%3A%2F%2Ftest.com%2FContentDelivery\"";
         private const string URL3 = "https://test.com/ContentDelivery";
         private const string URL4 = "https://UALAPTOP3.global.sdl.corp/InfoShareWS/Internal";
 

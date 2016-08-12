@@ -2,6 +2,10 @@
 
 ## alpha-0.3 (Pre-release)
 
+1. ISHSTS
+  1. Cmdlets
+	- Set-ISHSTSConfiguration. Has known issue. **[Update]**
+
 **Known issues**
 
 - When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.

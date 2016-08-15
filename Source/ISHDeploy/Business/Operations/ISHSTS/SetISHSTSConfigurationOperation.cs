@@ -136,13 +136,20 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
-                InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+            // It is the responsibility of SetISHIntegrationSTSCertificateOperation to add or uncomment <add name="addActAsTrustedIssuer" node in ~\Web\InfoShareSTS\Web.config file  
+            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
+            //    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
-                        subjectThumbprint)));
+            // if the database exists we update the database
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (isDataBaseFileExist)
+            {
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                    InfoShareSTSDataBaseConnectionString,
+                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                            subjectThumbprint)));
+            }
         }
 
         /// <summary>
@@ -245,7 +252,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // InputParameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.Replace(InputParameters.BaseHostName, InputParameters.LocalServiceHostName)));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 

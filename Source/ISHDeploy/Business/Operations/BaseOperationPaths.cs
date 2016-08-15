@@ -16,7 +16,6 @@
 
 using System;
 using System.IO;
-using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 ﻿using ISHDeploy.Models;
@@ -36,7 +35,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// Input parameters
         /// </summary>
-        protected InputParameters InputParameters { get; private set; }
+        protected InputParameters InputParameters { get; }
 
         #region Paths
 

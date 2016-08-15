@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.IO;
 ﻿using System.Linq;
 ﻿using System.Management.Automation;
+﻿using System.Reflection;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -145,12 +147,7 @@ namespace ISHDeploy.Data.Managers
                     "system.webServer/security/authentication/windowsAuthentication",
                     locationPath);
                 windowsAuthenticationSection["enabled"] = false;
-
-                //var anonymousAuthenticationSection = config.GetSection(
-                //    "system.webServer/security/authentication/anonymousAuthentication",
-                //    locationPath);
-                //anonymousAuthenticationSection["enabled"] = true;
-
+                
                 manager.CommitChanges();
             }
         }
@@ -164,7 +161,14 @@ namespace ISHDeploy.Data.Managers
             bool isFeatureEnabled = false;
             using (var ps = PowerShell.Create())
             {
-                ps.AddScript("$(Get-WindowsOptionalFeature -FeatureName \"IIS-WindowsAuthentication\" -Online).State -eq \"Enabled\"");
+                // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
+                using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("ISHDeploy.Data.Resources.Check-WindowsAuthenticationFeatureEnabled.ps1"))
+                {
+                    using (var reader = new StreamReader(resourceReader))
+                    {
+                        ps.AddScript(reader.ReadToEnd());
+                    }
+                }
 
                 foreach (PSObject result in ps.Invoke())
                 {

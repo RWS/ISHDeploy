@@ -32,9 +32,16 @@ namespace ISHDeploy.Business.Operations
             public const string RelyingPartiesTableName = "RelyingParties";
 
             /// <summary>
+            /// The certificate update command in KeyMaterialConfiguration table
+            /// </summary>
+            public const string UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat =
+                "UPDATE KeyMaterialConfiguration SET SigningCertificateName = '{0}' Where  SymmetricSigningKey in (SELECT TOP 1 SymmetricSigningKey FROM KeyMaterialConfiguration)";
+
+
+            /// <summary>
             /// The certificate update command in RelyingParties table
             /// </summary>
-            public const string UpdateCertificateSQLCommandFormat =
+            public const string UpdateCertificateInRelyingPartiesSQLCommandFormat =
                 "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
 
             /// <summary>

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Certificate;
@@ -43,12 +44,16 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
         /// <param name="fileName">Name of the file.</param>
         /// <param name="packAdfsInvokeScript">if set to <c>true</c> the add ADFS script invocation into package.</param>
         public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
-            base (logger, ishDeployment)
+            base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             var packageFilePath = Path.Combine(PackagesFolderPath, fileName);
-            var temporaryFolder = Path.Combine(Path.GetTempPath(), fileName);
+            var version = new Version(  ishDeployment.SoftwareVersion.Major,
+                                        ishDeployment.SoftwareVersion.Minor,
+                                        ishDeployment.SoftwareVersion.Revision);
+            var temporaryFolder = Path.Combine(Path.GetTempPath(), $"ISHDeploy{version}");
+            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
             var stsConfigParams = new Dictionary<string, string>
@@ -60,11 +65,11 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
                         {"$ishwscontent", string.Empty}
                     };
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
+
             _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
             _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
-            _invoker.AddAction(new FileGenerateFromTemplateAction(logger, 
+            _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                 TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
                 Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
                 stsConfigParams));

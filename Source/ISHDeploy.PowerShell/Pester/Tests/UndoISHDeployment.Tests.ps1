@@ -156,6 +156,23 @@ $scriptBlockEnableExternalPreview = {
   
 }
 
+$scriptBlockSetISHSTSConfiguration = {
+    param (
+        $ishDeployName,
+        $thumbprint,
+        $authenticationMode
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+
+    Set-ISHSTSConfiguration -ISHDeployment $ishDeploy -TokenSigningCertificateThumbprint $thumbprint -AuthenticationType $authenticationMode
+ 
+}
+
 $scriptBlockGetAppPoolStartTime = {
     param (
         $testingDeployment
@@ -225,6 +242,10 @@ Describe "Testing Undo-ISHDeploymentHistory"{
     }
 
     It "Undo-IshHistory works when there is no backup"{
+        {UndoDeploymentBackToVanila $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
+    }
+
+	It "Undo-IshHistory works when there is no backup"{
         {UndoDeploymentBackToVanila $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
     }
 }

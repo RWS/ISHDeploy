@@ -123,6 +123,16 @@ namespace ISHDeploy.Models
         public string WebSiteName { get; }
 
         /// <summary>
+        /// Gets the base host name.
+        /// </summary>
+        public string BaseHostName { get; }
+
+        /// <summary>
+        /// Gets the local service host name.
+        /// </summary>
+        public string LocalServiceHostName { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InputParameters"/> class.
         /// </summary>
         /// <param name="filePath">The inputparameters.xml file path.</param>
@@ -151,6 +161,8 @@ namespace ISHDeploy.Models
             CMAppPoolName = $"{TrisoftAppPoolPrefix}{CMWebAppName}";
             ServiceCertificateThumbprint = parameters["servicecertificatethumbprint"];
             WebSiteName = parameters["websitename"];
+            BaseHostName = parameters["basehostname"];
+            LocalServiceHostName = parameters["localservicehostname"];
         }
     }
 }

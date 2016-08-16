@@ -130,20 +130,26 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 thumbprint = normalizedThumbprint;
             }
 
-            var encryptedThumbprint = string.Empty;
-            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
+            var subjectThumbprint = string.Empty;
+            (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
 
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
-                InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+            // It is the responsibility of SetISHIntegrationSTSCertificateOperation to add or uncomment <add name="addActAsTrustedIssuer" node in ~\Web\InfoShareSTS\Web.config file  
+            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
+            //    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString, 
-                string.Format(InfoShareSTSDataBase.UpdateCertificateSQLCommandFormat, 
-                        encryptedThumbprint, 
-                        string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
+            // if the database exists we update the database
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (isDataBaseFileExist)
+            {
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                    InfoShareSTSDataBaseConnectionString,
+                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                            subjectThumbprint)));
+            }
         }
 
         /// <summary>
@@ -161,10 +167,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             {
                 // Enable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));
-                // Disable Forms Authentication for STS web site
-                _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfigPath, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Windows"));
-                //_invoker.AddAction(new RemoveNodesAction(Logger, InfoShareSTSWebConfig.Path, InfoShareSTSWebConfig.AuthenticationFormsElementXPath));
-
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/windows" endpoint and binding type to WindowsMixed type
@@ -175,12 +177,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     AddActionsToChangeEndpointAndBindingTypes(BindingType.WindowsMixed, windowsEndpoint);
                 }
 
-
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 string pathToCertificate = string.Empty;
-                    (new GetPathToCertificateByThumbprintAction(Logger,
-                        InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
+                (new GetPathToCertificateByThumbprintAction(Logger,
+                    InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
 
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
@@ -192,9 +193,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 if (ishDeployment.DataPath != ishDeployment.WebPath)
                 {
                     _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.WebPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
-
                 }
-
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
                 _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
@@ -205,8 +204,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             {
                 // Disable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
-                // Enable Forms Authentication for STS web site
-                _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSWebConfigPath, InfoShareSTSWebConfig.AuthenticationModeAttributeXPath, "Forms"));
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/username" endpoint and binding type to UserNameMixed type
@@ -255,7 +252,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             // InputParameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.Replace(InputParameters.BaseHostName, InputParameters.LocalServiceHostName)));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 

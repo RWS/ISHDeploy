@@ -45,9 +45,9 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		public string Icon { get; set; }
 
 		/// <summary>
-		/// Gets or sets the userrole.
+		/// Gets or sets the userroles.
 		/// </summary>
-		public string UserRole { get; set; }
+		public string[] UserRoles { get; set; }
 
 		/// <summary>
 		/// Gets or sets the description.
@@ -74,12 +74,15 @@ namespace ISHDeploy.Models.ISHXmlNodes
 		/// <returns>XElement</returns>
 		public XElement ToXElement()
 		{
-			return new XElement("menuitem",
+            var element= new XElement("menuitem",
 				new XAttribute("label", Label),
 				new XAttribute("action", Action.ToQueryString()),
 				new XAttribute("icon", Icon),
-				new XElement("userrole", UserRole),
 				new XElement("description", Description));
+            foreach (var role in UserRoles) {
+                element.Add(new XElement("userrole", role));
+            }
+            return element;
 		}
 	}
 }

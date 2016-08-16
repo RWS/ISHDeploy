@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHContentEditor;
 
 namespace ISHDeploy.Cmdlets.ISHContentEditor
@@ -28,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
     /// <para></para>
     /// <code>PS C:\>Set-ISHContentEditor -ISHDeployment $deployment -Domain "localhost" -LicenseKey "123445345342331313432423"</code>
     /// <para>This command sets new license for Content Editor using domain name and license key.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor")]
 	public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet

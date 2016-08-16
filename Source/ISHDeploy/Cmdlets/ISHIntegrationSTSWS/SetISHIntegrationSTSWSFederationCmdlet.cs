@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/ls/"</code>
     ///     <para>This command configure WS Federation to use specified Endpoint of STS server.
-    ///         Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///         Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSFederation")]

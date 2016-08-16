@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using System;
 using System.Management.Automation;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -45,6 +48,25 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
+            ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
+        }
+
+        /// <summary>
+        /// Will provide functionality - ForEach-Object  in powershell
+        /// </summary>
+        /// <param name="obj">object for output</param>
+        protected void ISHWriteOutput(object obj)
+        {
+            var enumerable = obj as IEnumerable;
+
+            if (enumerable != null)
+            {
+                    WriteObject(obj, true);
+            }
+            else
+            {
+                WriteObject(obj);
+            }
         }
 
         /// <summary>

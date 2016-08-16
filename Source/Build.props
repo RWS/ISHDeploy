@@ -1,15 +1,16 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Major>0</Major>
-    <Minor>1</Minor>
+    <Minor>2</Minor>
     <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
     <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
     <Revision>0</Revision>
     <ModuleVersion>$(Major).$(Minor).0.$(Revision)</ModuleVersion>
     <ModuleBuildVersion>$(Major).$(Minor).$(Build).$(Revision)</ModuleBuildVersion>
-    <FullModuleBuildVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</FullModuleBuildVersion>
-	<ProductName>ISHDeploy</ProductName>
-    <SupportedCMVersion>13.0.0</SupportedCMVersion>	  
+    <ModuleManifestVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</ModuleManifestVersion>
+    <ProductName>ISHDeploy</ProductName>
+    <ReleaseYear>2016</ReleaseYear>
+    <SupportedCMVersion>13.0.0</SupportedCMVersion>
     <ModuleName>$(ProductName).$(SupportedCMVersion)</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>Deployment automation module for SDL Knowledge Center $(Year) Content Manager $(SupportedCMVersion) (LiveContent Architect, Trisoft InfoShare)</ModuleDescription>

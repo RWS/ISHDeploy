@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,6 +59,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>
+        /// <param name="identityType">The type of identity.</param>
         public SetIdentityTypeAction(ILogger logger, string appPoolName, IdentityTypes identityType)
             : base(logger)
         {

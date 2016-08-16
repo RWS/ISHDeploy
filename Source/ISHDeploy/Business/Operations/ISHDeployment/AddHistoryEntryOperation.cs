@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// <summary>
     /// Adds entry to the history file about cmdlets usage
     /// </summary>
-    /// <seealso cref="BasePathsOperation" />
+    /// <seealso cref="BaseOperationPaths" />
     /// <seealso cref="IOperation" />
-    public class AddHistoryEntryOperation : BasePathsOperation, IOperation
+    public class AddHistoryEntryOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker

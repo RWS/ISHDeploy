@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +25,9 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
     /// <para type="link">Disable-ISHExternalPreview</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Disable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
+    /// <code>PS C:\>Enable-ISHExternalPreview -ISHDeployment $deployment -ExternalId 'user1'</code>
     /// <para>This command enables the external preview for user 'user1'.
-    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHExternalPreview")]
     public sealed class EnableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet

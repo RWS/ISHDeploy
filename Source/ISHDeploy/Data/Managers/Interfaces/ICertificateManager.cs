@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <returns>Certificate public key.</returns>
         string GetCertificatePublicKey(string thumbprint);
+
+        /// <summary>
+        /// Gets the certificate subject.
+        /// </summary>
+        /// <param name="thumbprint">The certificate thumbprint.</param>
+        /// <returns>Certificate subject.</returns>
+        string GetCertificateSubjectByThumbprint(string thumbprint);
 
         /// <summary>
         /// Gets the encrypted raw data by thumbprint.

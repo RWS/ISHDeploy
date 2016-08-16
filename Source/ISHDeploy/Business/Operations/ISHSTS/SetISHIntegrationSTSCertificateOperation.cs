@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
 using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
@@ -27,7 +26,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// Sets Thumbprint and issuers values to configuration.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationSTSCertificateOperation : BasePathsOperation, IOperation
+    public class SetISHIntegrationSTSCertificateOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -62,32 +61,35 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			};
 
 			// Author web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfig.Path, 
-				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfigPath, 
+				string.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
 				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
 			// WS web Config
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfig.Path, 
-				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, menuItem.Issuer), menuItem));
+			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
+				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfig.Path,
+			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
-			// STS web Config
-			var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
-			{
-				Thumbprint = thumbprint,
-				Issuer = issuer
-			};
+            // STS web Config
+            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-			_invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfig.Path,
-				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, menuItem.Issuer), actAsTrustedIssuerThumbprintItem));
+            // To avoid following problem: "The issuer certificate Thumbprint '09bc09cc1221a5d813f5f195eda6612b7bd2ca0a' already exists in the set of configured trusted issuers."
+            // there is no need to set or uncomment a Issuer with the same thumbprint in file ~\Web\InfoShareSTS\Web.config 
+            // because the trusted issuer being already set in file ~\Web\InfoShareWS\Web.config in line 71
+            // _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
+            // string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfig.Path,
-				InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
-		}
+            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
+            //	InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+
+            // InputParameters.xml
+            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
+            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateThumbprintXPath, thumbprint));
+        }
 
         /// <summary>
         /// Runs current operation.

@@ -1,4 +1,4 @@
-﻿/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-using System;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
-using ISHDeploy.Extensions;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
-    /// <summary>
-    /// Operation to revert changes to Vanilla state
-    /// </summary>
-    public class UndoISHDeploymentOperation : BasePathsOperation, IOperation
-    {
+	/// <summary>
+	/// Operation to revert changes to Vanilla state
+	/// </summary>
+    public class UndoISHDeploymentOperation : BaseOperationPaths, IOperation
+	{
         /// <summary>
         /// The actions invoker
         /// </summary>
@@ -40,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// Please, see https://jira.sdl.com/browse/TS-11329
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [true] then skip recycle; otherwise do recycle</c>.
+        ///   <c>true if [true] then skip recycle; otherwise do recycle</c>.
         /// </value>
         public static bool SkipRecycle { get; set; } = false;
 
@@ -51,48 +48,63 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="ishDeployment">Deployment instance <see cref="T:ISHDeploy.Models.ISHDeployment"/></param>
         public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
-        {
+		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
             if (!SkipRecycle)
             {
                 // Stop Application pools before undo
-                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName));
-                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName));
-                _invoker.AddAction(new StopApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName));
+                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
+                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
             }
 
+            // Disable Windows Authentication for STS web site
+            _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
+
+            // Set SpecificUser identityType for STS application pool
+            _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
+
             // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Web), ISHDeploymentInternal.AuthorFolderPath));
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, AuthorFolderPath));
 
-            // Rolling back changes for Data folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.Data), ISHDeploymentInternal.DataFolderPath));
-
-            // Rolling back changes for App folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, ISHDeploymentInternal.GetDeploymentTypeBackupFolder(ISHFilePath.IshDeploymentType.App), ISHDeploymentInternal.AppFolderPath));
+			// Rolling back changes for Data folder
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
+            
+			// Rolling back changes for App folder
+			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupAppFolderPath, AppFolderPath));
 
             // Removing licenses
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, FoldersPaths.LicenceFolderPath.AbsolutePath));
-
-            // Removing Backup folder
-            _invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentInternal.GetDeploymentAppDataFolder()));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
 
             // Cleaning up STS App_Data folder
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, ISHDeploymentInternal.WebNameSTSAppData));
+            _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
+
+            // Restore InputParameters.xml
+            bool isInputParameterBackupFileExist = false;
+            (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
+            if (isInputParameterBackupFileExist)
+            {
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath,
+                    true));
+            }
 
             if (!SkipRecycle)
             {
                 // Recycling Application pools after undo
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.WSAppPoolName, true));
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.STSAppPoolName, true));
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, ISHDeploymentInternal.CMAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
 
                 // Waiting until files becomes unlocked
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfig.Path));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfig.Path));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfig.Path));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
             }
-        }
+
+			// Removing Backup folder
+			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
+		}
 
         /// <summary>
         /// Runs current operation.
@@ -101,5 +113,5 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         {
             _invoker.Invoke();
         }
-    }
+	}
 }

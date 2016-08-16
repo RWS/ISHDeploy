@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -33,9 +32,8 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Executes a Transact-SQL statement against the connection.
         /// </summary>
         /// <param name="commandText">The SQL command as text</param>
-        /// <param name="parameters">The parameters of SQL command</param>
         /// <returns>The number of rows affected</returns>
-        int ExecuteNonQuery(string commandText, List<object> parameters = null);
+        int ExecuteNonQuery(string commandText);
 
         /// <summary>
         /// Executes a Transact-SQL statement against the connection.

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
     /// Enables external preview for Content Manager deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHExternalPreviewOperation : BasePathsOperation, IOperation
+    public class EnableISHExternalPreviewOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -44,7 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     new [] {
                         InfoShareAuthorWebConfig.TrisoftExternalPreviewModuleSearchPattern,
                         InfoShareAuthorWebConfig.SectionTrisoftInfoshareWebExternalPreviewModuleSearchPattern,
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
-                    InfoShareAuthorWebConfig.Path,
+                    InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
                     externalId));

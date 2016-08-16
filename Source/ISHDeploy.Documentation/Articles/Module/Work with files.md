@@ -15,11 +15,11 @@ To abstract the location away, the module provides the `Get-ISHPackageFolderPath
 - UNC path format e.g. `\\COMPUTER\C$\ProgramData\ISHDeploy.X.0.Y\InfoShareSQL\Packages`. This format is focused on scripts with remote targets.
 
 ## Script target is local
-First get a reference to a deployment and get the package location.
+First get the package location.
 
 ```powershell
-$deployment=Get-ISHDeployment -Name InfoShare
-$location=Get-ISHPackageFolderPath -ISHDeployment $deployment
+$deploymentName="InfoShare"
+$location=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
 ```
 
 To upload a file from path `$inputFilePath` into the module package directory execute 
@@ -42,11 +42,11 @@ PowerShell v5.0 offers new features with regards to working with files and remot
 ### PowerShell v4.0
 With PowerShell v4.0 we must work with UNC paths.
 
-First get a reference to a deployment and get the package location in UNC format.
+First get the package location in UNC format.
 
 ```powershell
-$deployment=Invoke-Command -ComputerName $computerName -ScriptBlock {Get-ISHDeployment -Name InfoShare}
-$location=Invoke-Command -ComputerName $computerName -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deployment -UNC}
+$deploymentName="InfoShare"
+$location=Invoke-Command -ComputerName $computerName -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName -UNC}
 ```
 
 To upload a file from path `$inputFilePath` into the module package directory execute 
@@ -63,12 +63,12 @@ Copy-Item $sourcePath $env:TEMP
 ### PowerShell v5.0
 With PowerShell v5.0 we get the ability to drive a cmdlet such as `Copy-Item` with `-FromSession` and `-ToSession`. When using these parameters, also file paths are local to the from/to computer referenced by the session.
 
-First create a `PSSession`, then create a reference to a deployment and get the package location in local format.
+First create a `PSSession`, then get the package location in local format.
 
 ```powershell
 $session=New-PSSession -ComputerName $computerName
-$deployment=Invoke-Command -Session $session -ScriptBlock {Get-ISHDeployment -Name InfoShare}
-$location=Invoke-Command -Session $session -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deployment}
+$deploymentName="InfoShare"
+$location=Invoke-Command -Session $session -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName}
 ```
 
 To upload a file from path `$inputFilePath` into the module package directory execute 

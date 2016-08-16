@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -94,7 +94,7 @@ namespace ISHDeploy.Data.Actions.File
                     InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None,
                     AccessControlType.Allow);
             }
-            else if (_fileManager.FolderExists(_path))
+            else if (_fileManager.FileExists(_path))
             {
                 _fileManager.AssignPermissionsForFile(_path, _user, _rights, AccessControlType.Allow);
             }

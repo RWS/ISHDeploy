@@ -134,7 +134,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuer"
         $wsWebConfigNodesValidationModeCount | Should be 1
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
         $Warning | Should be $null 
     }
 
@@ -177,7 +177,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuer222"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
     }
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint"{       
@@ -195,7 +195,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuerNormalized"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
        
     }
 
@@ -214,7 +214,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuerNormalized2"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
     }
 
     It "Set ISHIntegrationSTSCertificate writes proper history"{        
@@ -262,7 +262,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuer2"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
     }
 
     It "Remove ISHIntegrationSTSCertificate with wrong XML"{
@@ -311,7 +311,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "testIssuer"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testIssuer"
         remoteReadTargetXML -Thumbprint "testThumbprint" -ValidationMode "PeerOrChainTrust"
@@ -336,7 +336,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigNodesCount | Should be 1
         $wsWebConfigNodesValidationModeCount | Should be 1
         $wsWebConfigIssuer | Should be "Issuer"
-        $stsWebConfigNodesCount | Should be 1
+        $stsWebConfigNodesCount | Should be 0
     }
 
 	It "Set ISHIntegrationSTSCertificate writes inputparameters"{       

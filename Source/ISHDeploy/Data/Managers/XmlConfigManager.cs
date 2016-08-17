@@ -450,7 +450,7 @@ namespace ISHDeploy.Data.Managers
 
             attr.SetValue(value);
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace ISHDeploy.Data.Managers
             element.SetValue(value);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>

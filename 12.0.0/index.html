@@ -88,32 +88,35 @@ PSRemotingProtocolVersion      2.2
 <p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release-">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="alpha-0-2-pre-release-">alpha-0.2 (Pre-release)</h2>
+<h2 id="beta-0-9-pre-release-">beta-0.9 (Pre-release)</h2>
 <ol>
-<li>Integration with Security Token Service (STS)<ol>
+<li>Working with deployments<ol>
 <li>Cmdlets<ul>
-<li>All cmdlets accept also name as value for the <code>-ISHDeployment</code> parameter. e.g. <code>Enable-ISHUIContentEditor -ISHDeployment &quot;InfoShare&quot;</code>. <strong>[Update]</strong></li>
-<li><code>Get-ISHDeployment</code> returns the <code>WebSiteName</code> also. <strong>[Update]</strong></li>
-<li><code>Get-ISHDeploymentParameters</code> . <strong>[New]</strong></li>
-<li>Remove-ISHSTS. <strong>[New]</strong></li>
-<li>Get-ISHSTSRelyingParty. <strong>[New]</strong></li>
-<li>Set-ISHSTSRelyingParty. <strong>[New]</strong></li>
-<li>Set-ISHSTSConfiguration. (Not working) <strong>[New]</strong></li>
-<li>Reset-ISHSTS. <strong>[New]</strong></li>
+<li>All Get-ISH* cmdlets e.g. <code>Get-ISHDeployment</code> can be piped. e.g. <code>Get-ISHDeployment | ForEach-Object {$_}</code>. <strong>[Update]</strong></li>
 </ul>
 </li>
-<li>Articles<ul>
-<li>Work with Security Token Service\ISHSTS\Integrating 3rd party service providers. <strong>New</strong></li>
-<li>Work with Security Token Service\ISHSTS\Implementing light weight Windows Authentication. <strong>[New]</strong></li>
-<li>Work with Security Token Service\ISHSTS\Resetting ISHSTS. <strong>[New]</strong></li>
-<li>Work with Security Token Service\Certificates rollover/replacement\Implementing certificate replacement. <strong>[New]</strong></li>
-<li>Work with Security Token Service\Certificates rollover/replacement\Implementing issuer certificate rollover with 3rd party STS. <strong>[Update]</strong></li>
-<li>Work with Security Token Service\Certificates rollover/replacement\Implementing service certificate replacement with 3rd party STS. <strong>[New]</strong></li>
+</ol>
+</li>
+<li>Feature toggle<ol>
+<li>Cmdlets<ul>
+<li>Set-ISHUIEventMonitorTab can accept multiple user roles in parameter <code>-UserRole</code>. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li>Set-ISHSTSConfiguration. (Fixed) <strong>[Update]</strong></li>
 </ul>
 </li>
 </ol>
 </li>
 </ol>
+<p><strong>Known issues</strong></p>
+<ul>
+<li>When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the <code>Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows</code>.</li>
+<li>Set-ISHSTSConfiguration does not check if the windows authentication module is installed on IIS.</li>
+</ul>
 <p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>

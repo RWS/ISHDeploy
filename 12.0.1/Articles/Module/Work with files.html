@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Work with files </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Work with files ">
+    <meta name="generator" content="docfx 1.9.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="work-with-files">Work with files</h1>
+              
+<p>This article explains how to work with cmdlets that use files as input or output. All cmdlets use a <strong>FileName</strong> parameter and do not accept values with paths. 
+The location of the files is abstracted away and to copy form from/to it the module offers <a href="..\..\commands\Get-ISHPackageFolderPath.md">Get-ISHPackageFolderPath</a>.</p>
+<h2 id="cmdlet-working-with-files">Cmdlet working with files</h2>
+<p>Some of the cmdlets of the module depend on a file for their operation or their output is too complicated to write into the console.</p>
+<p>The module uses a specific folder within <code>$env:ProgramData</code>: </p>
+<ul>
+<li>All saved files from cmdlets are written in this location.</li>
+<li>All files that drive a cmdlet must first be uploaded in this location.</li>
+</ul>
+<p>To abstract the location away, the module provides the <code>Get-ISHPackageFolderPath</code> that returns the location in two possible formats:</p>
+<ul>
+<li>Local folder format e.g. <code>C:\ProgramData\ISHDeploy.X.0.Y\InfoShareSQL\Packages</code></li>
+<li>UNC path format e.g. <code>\\COMPUTER\C$\ProgramData\ISHDeploy.X.0.Y\InfoShareSQL\Packages</code>. This format is focused on scripts with remote targets.</li>
+</ul>
+<h2 id="script-target-is-local">Script target is local</h2>
+<p>First get the package location.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+$location=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
+</code></pre>
+<p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location
+</code></pre>
+<p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP
+</code></pre><h2 id="script-target-is-remote">Script target is remote</h2>
+<p>In this case we work with a remote computer <code>$computerName=&quot;SERVER&quot;</code> where the module is deployed. 
+To keep the examples simple when using <code>Invoke-Command</code> the <code>$Using</code> pattern will be used to access local variables from the script block. </p>
+<p>PowerShell v5.0 offers new features with regards to working with files and remote sessions. Depending on the version there are two options.</p>
+<h3 id="powershell-v4-0">PowerShell v4.0</h3>
+<p>With PowerShell v4.0 we must work with UNC paths.</p>
+<p>First get the package location in UNC format.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+$location=Invoke-Command -ComputerName $computerName -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName -UNC}
+</code></pre>
+<p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location
+</code></pre>
+<p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP
+</code></pre><h3 id="powershell-v5-0">PowerShell v5.0</h3>
+<p>With PowerShell v5.0 we get the ability to drive a cmdlet such as <code>Copy-Item</code> with <code>-FromSession</code> and <code>-ToSession</code>. When using these parameters, also file paths are local to the from/to computer referenced by the session.</p>
+<p>First create a <code>PSSession</code>, then get the package location in local format.</p>
+<pre><code class="lang-powershell">$session=New-PSSession -ComputerName $computerName
+$deploymentName=&quot;InfoShare&quot;
+$location=Invoke-Command -Session $session -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName}
+</code></pre>
+<p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location -ToSession $session
+</code></pre>
+<p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP -FromSession $session
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+            </nav>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

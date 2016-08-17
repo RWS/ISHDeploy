@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Integrating with Security Token Service (STS) </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Integrating with Security Token Service (STS) ">
+    <meta name="generator" content="docfx 1.9.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../../index.html">
+                <img src="../../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="integrating-with-security-token-service-sts-">Integrating with Security Token Service (STS)</h1>
+              
+<p>This article explains how to use the module&#39;s commandlets to integrate with a <strong>Security Token Service</strong> also referred to as <strong>STS</strong>.</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>When a service provider integrated with an STS, it requires some information exchange. In the context of this article the service provider is Content Manager</p>
+<p>Content Manager requires knowledge of the following information:</p>
+<ul>
+<li>WS Federation endpoint</li>
+<li>WS Trust endpoint</li>
+<li>WS Trust binding type</li>
+<li>WS Trust Metadata Exchange endpoint</li>
+<li>Token signing certificate thumbprint</li>
+</ul>
+<p>The following values assume an STS at <code>sts.example.com</code></p>
+<pre><code class="lang-powershell">#Issuer name
+$issuerName=&quot;Example STS (20160101)&quot;
+#WS Federation endpoint
+$wsFederationUri=&quot;https://sts.example.com/wsfed&quot;
+#WS Trust endpoint
+$wsTrustUri=&quot;https://sts.example.com/wstrust/UsernameMixed&quot;
+#WS Trust metadata exchange endpoint
+$wsTrustMexUri=&quot;https://sts.example.com/wstrust/mex&quot;
+#The authentication type
+$bindingType=&quot;UsernameMixed&quot;
+#Token signing thumbprint
+$tokenSigningCertificateThumbprint=&quot;2509fb22f7671aea2d0a28ae80516f390de0ca21&quot;
+</code></pre>
+<p>When the authentication type is Windows then the values change like this</p>
+<pre><code class="lang-powershell">#WS Trust endpoint
+$wsTrustUri=&quot;sts.example.com/wstrust/WindowsMixed&quot;
+#The authentication type
+$bindingType=&quot;WindowsMixed&quot;
+</code></pre>
+<p>STS required knowledge of the following information:</p>
+<ul>
+<li>The endpoints to create relying parties for<ul>
+<li>ISHCM e.g. <code>https://ish.example.com/ISHCM</code></li>
+<li>ISHWS e.g. <code>https://ish.example.com/ISHWS</code>. Although it is not required it is recommended to create relying parties for each .svc endpoint in <strong>ISHWS</strong> e.g. <code>https://ish.example.com/ISHWS/Wcf/API25/Application.svc</code></li>
+</ul>
+</li>
+<li>For each <strong>ISHWS</strong> based identifier the public key to encrypt the tokens.</li>
+<li>Expected token claim composition. This drives the claims transformation rules.</li>
+</ul>
+<h1 id="implementing-the-integration-on-content-manager">Implementing the integration on Content Manager</h1>
+<p>There are two kind of integrations:</p>
+<ol>
+<li>Only the clients not in the server zone use the <strong>STS</strong> at <code>sts.example.com</code> to authenticate. All clients within the server zone continue using the internal <strong>ISHSTS</strong>.</li>
+<li>All clients in the user and server zone use the <strong>STS</strong> at <code>sts.example.com</code> to authenticate.</li>
+</ol>
+<p>The differences are shown in the following images
+<img src="User.Zone.Clients.png" alt=""><img src="All.Zone.Clients.png" alt=""></p>
+<h2 id="user-zone-integration">User zone integration</h2>
+<h3 id="set-deploymentname-variable">Set deploymentName variable</h3>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre>
+<p>Then</p>
+<pre><code class="lang-powershell"># Set WS Federation integration
+Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
+# Set WS Trust integration
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+</code></pre>
+<h2 id="all-zone-integration">All zone integration</h2>
+<h3 id="set-deploymentname-variable-0">Set deploymentName variable</h3>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre>
+<p>The internal clients are all non interactive. That means they required a pre-configured set of credentials to use during authentication.
+When these clients are redirected to the <strong>STS</strong> at <code>sts.example.com</code>, then there are two options</p>
+<ul>
+<li>When the authentication type is windows then the <code>osuser</code> credential set will be used</li>
+<li>When the authentication type is username/password then a the <code>-ActorUsername</code> and <code>-ActorPassword</code> must be provided.</li>
+</ul>
+<p>This is an example for a username/password authentication</p>
+<pre><code class="lang-powershell"># Set WS Federation integration
+Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
+# Set WS Trust integration
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+</code></pre>
+<p>This is an example for a windows authentication</p>
+<pre><code class="lang-powershell"># Set WS Federation integration
+Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
+# Set WS Trust integration
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+</code></pre>
+<h1 id="implement-the-integration-on-the-security-token-service">Implement the integration on the Security Token Service</h1>
+<p>For every STS the configuration is different. Therefore the module&#39;s <code>Save-ISHIntegrationSTSConfigurationPackage</code> generates a set of information that describe the important information for configuring Content Manager&#39;s relying parties.</p>
+<pre><code class="lang-powershell">$filename=&quot;$(Get-Date -Format &quot;yyyyMMdd&quot;).IntegrationISH.zip&quot;
+Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename
+</code></pre>
+<p>Inside the zip file you will find two files</p>
+<ul>
+<li><code>CM Security Token Service Requirements.md</code> that is a markdown file with the specific deployment information.</li>
+<li><code>ishws.cer</code> that is the public key of the <strong>ISHWS</strong> service certificate. This is added for your convienience.</li>
+</ul>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+            </nav>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

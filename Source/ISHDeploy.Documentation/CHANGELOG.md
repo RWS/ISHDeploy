@@ -1,9 +1,19 @@
 # Version notes
 
 ## alpha-0.3 (Pre-release)
-- Cmdlet Enable-ISHIntegrationSTSInternalAuthentication to make possibility for Professional Team to access with internal STS.
-- Cmdlet Disablee-ISHIntegrationSTSInternalAuthentication removes created directory with files for internal STS access.
-- Updated Set-ISHUIEventMonitorTab to work with multiple user roles.
+
+1. ISHSTS
+  1. Cmdlets
+	- Set-ISHSTSConfiguration. Has known issue. **[Update]**
+	- Created cmdlet Enable-ISHIntegrationSTSInternalAuthentication to make possibility for Professional Team to access with internal STS.
+	- Created cmdlet Disablee-ISHIntegrationSTSInternalAuthentication removes created directory with files for internal STS access.
+	- Updated Set-ISHUIEventMonitorTab to work with multiple user roles.
+
+**Known issues**
+
+- When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
+
+
 ## alpha-0.2 (Pre-release)
 
 1. General 

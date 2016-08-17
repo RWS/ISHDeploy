@@ -21,6 +21,11 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///		<para type="synopsis">Removes STS certificate.</para>
     ///		<para type="description">The Remove-ISHIntegrationSTSCertificate cmdlet removes certificate based on a issuer name.</para>
+    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Reset-ISHSTSCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
+    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
     /// <example>

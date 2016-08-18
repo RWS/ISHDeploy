@@ -23,6 +23,8 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     /// <summary>
     ///		<para type="synopsis">Sets WSFederation configuration.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSWSFederation cmdlet sets WSFederation configuration to Content Manager deployment.</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationCmdlet</para>
+    ///		<para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/ls/"</code>

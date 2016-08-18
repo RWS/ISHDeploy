@@ -21,6 +21,11 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///		<para type="synopsis">Sets STS token signing certificate and/or type of authentication.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets STS token signing certificate and/or type of authentication.</para>
+    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Reset-ISHSTSCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
     /// <example>

@@ -1,5 +1,8 @@
 # Version notes
 
+## release-1.0
+
+
 ## beta-0.9 (Pre-release)
 
 1. Working with deployments

@@ -1,7 +1,9 @@
 # Version notes
 
 ## release-1.0
-
+1. ISHSTS
+    1. Cmdlets
+	      - Set-ISHSTSConfiguration does check - is Windows Authentication feature installed on environment or not.
 
 ## beta-0.9 (Pre-release)
 

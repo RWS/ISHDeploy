@@ -47,7 +47,10 @@ try
 		Write-Host "Creating Module Folder at '$ExportPath'."
 		New-Item -ItemType directory -Path $ExportPath
 	}
-
+	Get-ChildItem -Path $ExportPath -Filter "*.md" | ForEach-Object {
+		$content=Get-Content -Path $_.FullName
+		$content -replace "\[(?<linkname>.+)\]\(\)",'[${linkname}](${linkname}.md)' |Out-File $_.FullName -Force
+	}
 	# Generating context for all markdown files generated from maml
 	Get-ChildItem -Path $ExportPath -Filter "*.md" | ForEach-Object {
 		"- name: " + $_.BaseName;

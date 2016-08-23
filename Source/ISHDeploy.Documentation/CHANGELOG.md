@@ -2,6 +2,10 @@
 
 ## release-1.0
 
+1. General 
+  1. Documentation
+    - Related links render as links and provide a quick navigation.	   
+
 1. Integration STS
   1. Cmdlets
 	- `Enable-ISHIntegrationSTSInternalAuthentication` and  `Disablee-ISHIntegrationSTSInternalAuthentication` enable access for internal users. **[New]**

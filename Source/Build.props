@@ -10,7 +10,7 @@
     <ModuleManifestVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</ModuleManifestVersion>
     <ProductName>ISHDeploy</ProductName>
     <ReleaseYear>2016</ReleaseYear>
-    <SupportedCMVersion>12.0.1</SupportedCMVersion>
+    <SupportedCMVersion>12.0.2</SupportedCMVersion>
     <ModuleName>$(ProductName).$(SupportedCMVersion)</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>Deployment automation module for SDL Knowledge Center $(Year) Content Manager $(SupportedCMVersion) (LiveContent Architect, Trisoft InfoShare)</ModuleDescription>

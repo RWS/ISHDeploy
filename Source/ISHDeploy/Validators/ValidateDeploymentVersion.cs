@@ -30,7 +30,7 @@ namespace ISHDeploy.Validators
         /// <summary>
         /// The very first release version of the ISHDeploy module.
         /// </summary>
-        public static readonly Version ModuleInitVersion = new Version("12.0.1");
+        public static readonly Version ModuleInitVersion = new Version("12.0.2");
 
         /// <summary>
         /// Performs the validation.

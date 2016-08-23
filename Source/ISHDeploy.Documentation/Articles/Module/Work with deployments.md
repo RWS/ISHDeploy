@@ -122,10 +122,10 @@ osuser                                   osuser
 ospassword                               *******
 ...
 databasetype                             sqlserver2014
-apppath                                  C:\InfoShare\12.0.1\ISH
-webpath                                  C:\InfoShare\12.0.1\ISH
-datapath                                 C:\InfoShare\12.0.1\ISH
-workspacepath                            C:\InfoShare\12.0.1\_Workspace
+apppath                                  C:\InfoShare\12.0.2\ISH
+webpath                                  C:\InfoShare\12.0.2\ISH
+datapath                                 C:\InfoShare\12.0.2\ISH
+workspacepath                            C:\InfoShare\12.0.2\_Workspace
 infoshareauthorwebappname                ishcmsql
 infosharewswebappname                    ishwssql
 infosharestswebappname                   ishstssql

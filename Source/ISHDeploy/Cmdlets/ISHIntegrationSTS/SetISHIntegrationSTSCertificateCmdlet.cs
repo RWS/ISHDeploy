@@ -19,24 +19,30 @@ using ISHDeploy.Business.Operations.ISHSTS;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
-	/// <summary>
-	///		<para type="synopsis">Sets STS certificate.</para>
-	///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
-	/// </summary>
-	/// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
-	/// <example>
-	///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS"</code>
-	///		<para>This command sets STS trusted issuer credentials.
-	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-	///		</para>
-	/// </example>
-	/// <example>
-	///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS" -ValidationMode "None" </code>
-	///		<para>This command sets STS trusted issuer credentials with no Validation Mode.
-	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-	///		</para>
-	/// </example>
-	[Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSCertificate")]
+    /// <summary>
+    ///		<para type="synopsis">Sets STS certificate.</para>
+    ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
+    /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
+    /// <example>
+    ///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS"</code>
+    ///		<para>This command sets STS trusted issuer credentials.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///		</para>
+    /// </example>
+    /// <example>
+    ///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS" -ValidationMode "None" </code>
+    ///		<para>This command sets STS trusted issuer credentials with no Validation Mode.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    ///		</para>
+    /// </example>
+    [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSCertificate")]
 	public sealed class SetISHIntegrationSTSCertificateCmdlet : BaseHistoryEntryCmdlet
 	{
 		/// <summary>

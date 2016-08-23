@@ -43,7 +43,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var historyContent = operation.Run();
 
-            WriteObject(historyContent);
+            ISHWriteOutput(historyContent);
         }
     }
 }

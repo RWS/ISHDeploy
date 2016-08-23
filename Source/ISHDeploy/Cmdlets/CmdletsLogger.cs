@@ -83,6 +83,16 @@ namespace ISHDeploy.Cmdlets
         }
 
         /// <summary>
+        /// Writes message as Write-Host wrapper.
+        /// </summary>
+        /// <param name="message">Verbose message.</param>
+        public void WriteHostEmulation(string message)
+        {
+            // !!!Warning use carefully.
+            _cmdlet.SessionState.InvokeCommand.InvokeScript("Write-Host \""+ message+ "\"");
+        }
+
+        /// <summary>
         /// Reports progress.
         /// </summary>
         /// <param name="activity">Activity that takes place.</param>

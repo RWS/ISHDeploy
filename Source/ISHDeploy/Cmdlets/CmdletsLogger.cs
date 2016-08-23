@@ -88,7 +88,7 @@ namespace ISHDeploy.Cmdlets
         /// <param name="message">Verbose message.</param>
         public void WriteHostEmulation(string message)
         {
-            // !!!Warning use carefully.
+            // !!!Warning, please use carefully.
             _cmdlet.SessionState.InvokeCommand.InvokeScript("Write-Host \""+ message+ "\"");
         }
 

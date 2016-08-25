@@ -45,7 +45,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugSkipVersion\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SKIPVERSION</DefineConstants>
-    <DocumentationFile>bin\Debug\ISHDeploy.12.0.0.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\ISHDeploy.12.0.2.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

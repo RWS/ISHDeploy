@@ -12,6 +12,7 @@
   1. Articles
     - Security Token Service\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
 	- Security Token Service\ADFS\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
+
 1. ISHSTS
     1. Cmdlets
 	      - Set-ISHSTSConfiguration does check - is Windows Authentication feature installed on environment or not.

@@ -130,6 +130,7 @@ namespace ISHDeploy.Data.Actions.StringActions
             html = html.Replace("{divLC}", divLC);
             html = html.Replace("{onload}", onload);
 
+            Logger.WriteHostEmulation($"Use URL: {_linkISHWS}/");
             return html;
         }
 

@@ -17,7 +17,7 @@ using System.Management.Automation;
 using System;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Create new page with additional login redirect.</para>
@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.ISHSTS" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment</code>
     ///		<para>This command enable internal STS authentication with new index.html page.

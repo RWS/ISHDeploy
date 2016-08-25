@@ -30,6 +30,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.

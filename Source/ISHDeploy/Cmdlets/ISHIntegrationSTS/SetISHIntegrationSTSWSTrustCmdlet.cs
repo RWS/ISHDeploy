@@ -30,6 +30,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server and sets type of authentication as WindowsMixed.

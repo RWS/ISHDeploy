@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS"</code>
     ///		<para>This command sets STS trusted issuer credentials.

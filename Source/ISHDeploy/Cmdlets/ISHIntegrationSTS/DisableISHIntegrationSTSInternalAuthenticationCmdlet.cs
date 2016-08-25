@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.ISHSTS" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment</code>
     ///		<para>This command disable internal STS authentication and removes files created for internal STS login.

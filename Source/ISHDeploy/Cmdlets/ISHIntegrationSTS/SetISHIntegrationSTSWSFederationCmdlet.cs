@@ -30,6 +30,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/ls/"</code>
     ///     <para>This command configure WS Federation to use specified Endpoint of STS server.

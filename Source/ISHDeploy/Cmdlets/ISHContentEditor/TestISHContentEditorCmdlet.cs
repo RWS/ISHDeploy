@@ -49,7 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
 
             var result = operation.Run();
 
-            WriteObject(result);
+            ISHWriteOutput(result);
 		}
 	}
 }

@@ -75,13 +75,20 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
             // STS web Config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
+            string configurationInfoShareSTSCertificateThumbprint = string.Empty;
+            new GetValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, result => configurationInfoShareSTSCertificateThumbprint = result).Execute();
 
-            // To avoid following problem: "The issuer certificate Thumbprint '09bc09cc1221a5d813f5f195eda6612b7bd2ca0a' already exists in the set of configured trusted issuers."
-            // there is no need to set or uncomment a Issuer with the same thumbprint in file ~\Web\InfoShareSTS\Web.config 
-            // because the trusted issuer being already set in file ~\Web\InfoShareWS\Web.config in line 71
-            // _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
-            // string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
+            if (configurationInfoShareSTSCertificateThumbprint != thumbprint)
+            {
+                var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
+                {
+                    Thumbprint = thumbprint,
+                    Issuer = issuer
+                };
+                
+                _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
+                    string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
+            }
 
             //_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
             //	InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));

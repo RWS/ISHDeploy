@@ -21,6 +21,11 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///		<para type="synopsis">Resets STS database.</para>
     ///		<para type="description">The Reset-ISHSTS cmdlet resets STS database to initial state.</para>
+    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
+    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
     /// <example>

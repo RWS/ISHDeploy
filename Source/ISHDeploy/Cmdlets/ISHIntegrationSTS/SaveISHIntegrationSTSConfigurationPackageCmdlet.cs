@@ -28,6 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
     ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     /// </summary>
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName packageFile.zip</code>

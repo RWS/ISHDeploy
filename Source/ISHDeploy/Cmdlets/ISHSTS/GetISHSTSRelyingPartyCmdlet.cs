@@ -20,15 +20,20 @@ using ISHDeploy.Business.Operations.ISHSTS;
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
     /// <summary>
-    /// <para type="synopsis">Gets all relying parties from the infosharests database. The switches acts as filter based on the RP name.</para>
-    /// <para type="description">The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</para>
+    ///     <para type="synopsis">Gets all relying parties from the infosharests database. The switches acts as filter based on the RP name.</para>
+    ///     <para type="description">The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Reset-ISHSTSCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
+    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
-    /// <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
-    /// <para>This command gets t all relying parties from the infosharests database.
+    ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH</code>
+    ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC</code>
+    ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
+    ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
+    ///     <para>This command gets t all relying parties from the infosharests database.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHSTSRelyingParty")]

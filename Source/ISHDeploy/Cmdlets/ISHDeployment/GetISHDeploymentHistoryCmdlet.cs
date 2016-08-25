@@ -24,6 +24,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <para type="link">Clear-ISHDeploymentHistory</para>
     /// <para type="link">Get-ISHDeployment</para>
     /// <para type="link">Undo-ISHDeployment</para>
+    /// <para type="link">Get-ISHDeploymentParameters</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHDeploymentHistory -ISHDeployment $deployment</code>

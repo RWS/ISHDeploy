@@ -171,19 +171,21 @@ Describe "Testing Set-ISHSTSConfiguration"{
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "Windows"} | Should not Throw 
     }
-    
-	It "Set-ISHSTSConfiguration shows error when no windows feature "{  
-          try {
-		  $expectedErrorMessage = "IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it"
-			Invoke-CommandRemoteOrLocal -ScriptBlock {Disable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication} -Session $session 
-        #Act
-			{Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "Windows"} | Should Throw $expectedErrorMessage
-			}
-		finally{
-			Invoke-CommandRemoteOrLocal -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication} -Session $session 
-		}
-    }
-	
+
+    if((Get-WmiObject -class Win32_OperatingSystem).caption -match "Server") {
+	    It "Set-ISHSTSConfiguration shows error when no windows feature "{  
+            try {
+		        $expectedErrorMessage = "IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it"
+		        Invoke-CommandRemoteOrLocal -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication } -Session $session 
+            
+                #Act
+		        { Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "Windows"} | Should Throw $expectedErrorMessage
+		    }
+		    finally{
+			    Invoke-CommandRemoteOrLocal -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication} -Session $session 
+		    }
+        }
+	}
 
 	It "Undo-ISHDeployment switches windows authentication in iis "{      
         #Act

@@ -181,7 +181,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 string pathToCertificate = string.Empty;
                 (new GetPathToCertificateByThumbprintAction(Logger,
-                    InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
+                    InputParameters.IssuerCertificateThumbprint, s => pathToCertificate = s)).Execute();
 
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));

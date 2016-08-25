@@ -165,6 +165,14 @@ $scriptBlockQuerry = {
      return $array 
 }
 
+$scriptBlockTestDBPath = {
+    param (
+        $dbPath
+    )
+    
+    return Test-Path $dbPath 
+}
+
 
 function remoteQuerryDatabase() {
     param(
@@ -183,7 +191,7 @@ Describe "Testing ISHRelaying party"{
     
      It "Get ISHSTSRelyingParty"{
         WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties"
 
@@ -200,8 +208,8 @@ Describe "Testing ISHRelaying party"{
     }
     
     It "Get ISHSTSRelyingParty with ISH key"{
-       WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        WebRequestToSTS $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'ISH%'"
 
@@ -220,7 +228,7 @@ Describe "Testing ISHRelaying party"{
 
     It "Get ISHSTSRelyingParty with LC key"{
         WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'LC%'"
 
@@ -240,7 +248,7 @@ Describe "Testing ISHRelaying party"{
 
      It "Get ISHSTSRelyingParty with BL key"{
         WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'BL%'"
 
@@ -260,7 +268,7 @@ Describe "Testing ISHRelaying party"{
 
     It "Set ISHSTSRelyingParty"{
        WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false
 
@@ -271,8 +279,8 @@ Describe "Testing ISHRelaying party"{
     }
 
 	It "Set ISHSTSRelyingParty updates RP when realm exists"{
-       WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        WebRequestToSTS $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "SecondName", "testRealm", "testcert", $false, $false
@@ -284,8 +292,8 @@ Describe "Testing ISHRelaying party"{
     }
 
     It "Set ISHSTSRelyingParty with LC switch"{
-       WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        WebRequestToSTS $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameLC", "testRealmLC", "testcert", $true, $false
 
@@ -296,7 +304,7 @@ Describe "Testing ISHRelaying party"{
 
     It "Set ISHSTSRelyingParty with BL switch"{
         WebRequestToSTS $testingDeploymentName
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameBL", "testRealmBL", "testcert", $false, $true
 
@@ -314,11 +322,9 @@ Describe "Testing ISHRelaying party"{
     }
 
     It "Set ISHSTSRelyingParty when db not exists"{
-        if (Test-Path $dbPath){ 
-            Remove-Item $dbPath
-        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock {if (Test-Path $dbPath){ Remove-Item $dbPath }} -Session $session -ArgumentList $dbPath
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false} | Should not Throw 
-        Test-Path $dbPath | Should be "True"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
     }
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
 }

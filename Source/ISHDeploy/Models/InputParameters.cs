@@ -61,7 +61,7 @@ namespace ISHDeploy.Models
         /// Gets the name of the STS main url folder.
         /// </summary>
         public string WebAppNameSTS { get; set; }
-        
+
         /// <summary>
         /// Gets the deployment suffix.
         /// </summary>
@@ -118,6 +118,11 @@ namespace ISHDeploy.Models
         public string ServiceCertificateThumbprint { get; }
 
         /// <summary>
+        /// Issuer certificate thumbprint
+        /// </summary>
+        public string IssuerCertificateThumbprint { get; }
+
+        /// <summary>
         /// Gets the web site name.
         /// </summary>
         public string WebSiteName { get; }
@@ -160,6 +165,7 @@ namespace ISHDeploy.Models
             STSAppPoolName = $"{TrisoftAppPoolPrefix}{STSWebAppName}";
             CMAppPoolName = $"{TrisoftAppPoolPrefix}{CMWebAppName}";
             ServiceCertificateThumbprint = parameters["servicecertificatethumbprint"];
+            IssuerCertificateThumbprint = parameters["issuercertificatethumbprint"];
             WebSiteName = parameters["websitename"];
             BaseHostName = parameters["basehostname"];
             LocalServiceHostName = parameters["localservicehostname"];

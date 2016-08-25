@@ -17,13 +17,20 @@
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
 
-namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets WSTrust configuration.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSWSTrust cmdlet sets WSTrust configuration to Content Manager deployment.</para>
     ///		<para type="description">When -IncludeInternalClients is switched on then the -ActorUsername and -ActorPassword must be specified.</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/services/trust/13/windowsmixed" -MexEndpoint "https://adfs.example.com/adfs/services/trust/mex" -BindingType "WindowsMixed" -Verbose</code>
     ///     <para>This command configure WS to use specified Endpoint and MexEndpoint of STS server and sets type of authentication as WindowsMixed.

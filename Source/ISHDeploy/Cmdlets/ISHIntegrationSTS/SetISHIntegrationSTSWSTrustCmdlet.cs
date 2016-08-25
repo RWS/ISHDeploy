@@ -17,7 +17,7 @@
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
 
-namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets WSTrust configuration.</para>

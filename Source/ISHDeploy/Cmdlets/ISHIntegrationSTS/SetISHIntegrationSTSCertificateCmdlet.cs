@@ -17,7 +17,7 @@
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets STS certificate.</para>

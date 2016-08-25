@@ -17,7 +17,7 @@ using System.Management.Automation;
 using System;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Removes additional login redirect.</para>
@@ -38,7 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// </example>
 
     [Cmdlet(VerbsLifecycle.Disable, "ISHIntegrationSTSInternalAuthentication")]
-    public sealed class DisableISHIntegrationSTSInternalAuthentication : BaseHistoryEntryCmdlet
+    public sealed class DisableISHIntegrationSTSInternalAuthenticationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet

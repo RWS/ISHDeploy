@@ -16,7 +16,7 @@
 ﻿using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Removes STS certificate.</para>

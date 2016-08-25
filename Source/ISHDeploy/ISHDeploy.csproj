@@ -183,8 +183,8 @@
     <Compile Include="Cmdlets\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthentication.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthentication.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />

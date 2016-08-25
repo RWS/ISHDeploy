@@ -85,7 +85,10 @@ Describe "Testing ISHIntegrationSTSInternalAuthentication"{
         RemotePathCheck $internalFolderPath | Should be $true
 
         $indexFile = Invoke-CommandRemoteOrLocal -ScriptBlock {param($internalFolderPath) Get-Content "$internalFolderPath\index.html"} -Session $session -ArgumentList $internalFolderPath
-        $indexFile -match "https://$dnsComputerName/ISHWS$suffix/Internal/" | Should be $true
+        
+        $infosharewswebappname = $inputParameters["infosharewswebappname"]
+        $baseurl = $inputParameters["baseurl"]
+        $indexFile -match "$baseurl/$infosharewswebappname/Internal/" | Should be $true
     }
 
     It "Enable ISHIntegrationSTSInternalAuthentication with LC"{

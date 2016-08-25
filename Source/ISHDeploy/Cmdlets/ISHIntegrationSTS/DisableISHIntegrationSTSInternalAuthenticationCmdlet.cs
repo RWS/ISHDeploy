@@ -17,13 +17,19 @@ using System.Management.Automation;
 using System;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Removes additional login redirect.</para>
     ///		<para type="description">Deleted directory with created for internal login STS files.</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.ISHSTS" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment</code>
     ///		<para>This command disable internal STS authentication and removes files created for internal STS login.
@@ -32,7 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// </example>
 
     [Cmdlet(VerbsLifecycle.Disable, "ISHIntegrationSTSInternalAuthentication")]
-    public sealed class DisableSHIntegrationSTSInternalAuthenticationCmdlet : BaseHistoryEntryCmdlet
+    public sealed class DisableISHIntegrationSTSInternalAuthenticationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet

@@ -17,18 +17,19 @@
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Operations.ISHSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets STS certificate.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
-    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
     ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
-    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS"</code>
     ///		<para>This command sets STS trusted issuer credentials.

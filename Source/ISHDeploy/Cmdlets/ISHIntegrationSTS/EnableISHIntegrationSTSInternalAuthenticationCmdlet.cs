@@ -22,7 +22,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///		<para type="synopsis">Create new page with additional login redirect.</para>
     ///		<para type="description">Create new index.html page with additional login redirect. Also create connectionconfiguration.xml file to use STS.</para>
-    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
     ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
     ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>

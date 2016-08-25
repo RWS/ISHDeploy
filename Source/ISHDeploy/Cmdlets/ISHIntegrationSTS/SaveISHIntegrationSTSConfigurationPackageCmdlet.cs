@@ -22,8 +22,8 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///		<para type="synopsis">Saves STS integration configuration to zip archive in package folder.</para>
     ///		<para type="description">The Save-ISHIntegrationSTSConfigurationPackage saves STS integration configuration to zip archive in package folder.</para>
     ///     <para type="description">Cmdlet will overwrite zip archive if there is already one with same name.</para>
-    ///     <para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
-    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
     ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
     ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>

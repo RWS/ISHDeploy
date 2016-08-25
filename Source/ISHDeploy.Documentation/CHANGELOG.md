@@ -2,11 +2,12 @@
 
 ## release-1.0
 
-1. ISHSTS
+1. Integration STS
   1. Cmdlets
-	- Created cmdlet Enable-ISHIntegrationSTSInternalAuthentication to make possibility for Professional Team to access with internal STS.
-	- Created cmdlet Disablee-ISHIntegrationSTSInternalAuthentication removes created directory with files for internal STS access.
-	- Updated Set-ISHUIEventMonitorTab to work with multiple user roles.
+	- `Enable-ISHIntegrationSTSInternalAuthentication` and  `Disablee-ISHIntegrationSTSInternalAuthentication` enable access for internal users. **[New]**
+  1. Articles
+    - Security Token Service\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
+	- Security Token Service\ADFS\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
 
 ## beta-0.9 (Pre-release)
 

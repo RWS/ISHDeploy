@@ -100,11 +100,12 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
+            _logger.WriteVerbose($"Enable WindowsAuthentication for site: `{webSiteName}`");
             if (IsWindowsAuthenticationFeatureEnabled())
             {
+                _logger.WriteVerbose("IIS-WindowsAuthentication feature is turned on");
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
                 {
-                    _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
 
                     var config = manager.GetApplicationHostConfiguration();
 
@@ -119,6 +120,7 @@ namespace ISHDeploy.Data.Managers
                         "system.webServer/security/authentication/windowsAuthentication",
                         locationPath);
                     windowsAuthenticationSection["enabled"] = true;
+                    _logger.WriteVerbose("WindowsAuthentication has been enabled");
 
                     manager.CommitChanges();
                 }
@@ -138,7 +140,7 @@ namespace ISHDeploy.Data.Managers
         {
             using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
+                _logger.WriteVerbose($"Disable WindowsAuthentication for site: `{webSiteName}`");
 
                 var config = manager.GetApplicationHostConfiguration();
                 var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
@@ -147,7 +149,8 @@ namespace ISHDeploy.Data.Managers
                     "system.webServer/security/authentication/windowsAuthentication",
                     locationPath);
                 windowsAuthenticationSection["enabled"] = false;
-                
+                _logger.WriteVerbose("WindowsAuthentication has been disabled");
+
                 manager.CommitChanges();
             }
         }
@@ -159,6 +162,9 @@ namespace ISHDeploy.Data.Managers
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
             bool isFeatureEnabled = false;
+
+            _logger.WriteVerbose("Checking whether IIS-WindowsAuthentication feature is turned on or not");
+
             using (var ps = PowerShell.Create())
             {
                 // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
@@ -172,6 +178,16 @@ namespace ISHDeploy.Data.Managers
 
                 foreach (PSObject result in ps.Invoke())
                 {
+                    foreach (var verbose in ps.Streams.Verbose.ReadAll())
+                    {
+                        _logger.WriteVerbose(verbose.Message);
+                    }
+
+                    foreach (var warning in ps.Streams.Warning.ReadAll())
+                    {
+                        _logger.WriteWarning(warning.Message);
+                    }
+
                     isFeatureEnabled = result != null && bool.Parse(result.ToString());
                 }
             }

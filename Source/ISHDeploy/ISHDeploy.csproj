@@ -56,10 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32Ex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=74136f9f94e352d9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32Ex.1.2.0.0\lib\net40\Microsoft.Win32Ex.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -324,6 +320,7 @@
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
+    <EmbeddedResource Include="Data\Resources\Check-WindowsAuthenticationFeatureEnabled.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

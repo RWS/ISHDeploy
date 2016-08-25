@@ -59,7 +59,7 @@ namespace ISHDeploy.Cmdlets
 
             if (enumerable != null)
             {
-                    WriteObject(obj, true);
+                WriteObject(obj, true);
             }
             else
             {

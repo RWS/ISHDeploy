@@ -88,10 +88,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 
                 _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
                     string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
-            }
 
-            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
-            //	InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+                _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
+                    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+            }
 
             // InputParameters.xml
             _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));

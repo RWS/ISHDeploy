@@ -132,6 +132,8 @@
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIOperation\RemoveUIOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIOperation\SetUIOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -186,7 +188,8 @@
     <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIComponents\ISHUIMainMenuButton.cs" />
+    <Compile Include="Cmdlets\ISHUIComponents\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIComponents\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
@@ -215,6 +218,8 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
+    <Compile Include="Data\Actions\ISHUIAction\RemoveUIAction.cs" />
+    <Compile Include="Data\Actions\ISHUIAction\SetUIAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetIdentityTypeAction.cs" />

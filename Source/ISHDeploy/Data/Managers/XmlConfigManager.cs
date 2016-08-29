@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -22,6 +22,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
 using System.Text.RegularExpressions;
+using System;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -537,6 +538,50 @@ namespace ISHDeploy.Data.Managers
 
             _fileManager.Save(filePath, doc);
             _logger.WriteVerbose($"[{filePath}][Inserted]");
+        }
+
+        public void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
+        {
+            _logger.WriteDebug($"[{filePath}][Insert/Update element]");
+            var doc = _fileManager.Load(filePath);
+
+            var found = doc.Element(root)
+                           .Elements(childElement)
+                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+
+            if (found.Count() == 0) {// creating new
+                var MemberList = doc.Element(root).Elements(childElement);
+                MemberList.Last().AddAfterSelf(element);
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][Inserted]");
+            }
+            else { //update existing
+                found.First().ReplaceWith(element);
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][Updated]");
+            }
+        }
+
+        public void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
+        {
+            _logger.WriteDebug($"[{filePath}][Remove element]");
+            var doc = _fileManager.Load(filePath);
+
+            var found = doc.Element(root)
+                           .Elements(childElement)
+                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+
+            if (found.Count() == 0) {// not found
+                throw new Exception("Could not find element");
+            }
+            else { 
+                found.First().Remove();
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][Removed]");
+            }
         }
 
         /// <summary>

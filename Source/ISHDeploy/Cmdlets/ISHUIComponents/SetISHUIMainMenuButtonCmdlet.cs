@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Business.Operations.ISHUIOperation;
 using ISHDeploy.Data.Managers;
 using System.Management.Automation;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 
 namespace ISHDeploy.Cmdlets.ISHUIComponents
 {
     /// <summary>
-    /// <para type="synopsis">Disables Content Editor for Content Manager deployment.</para>
-    /// <para type="description">The Disable-ISHUIContentEditor cmdlet disables Content Editor for Content Manager deployment.</para>
-    /// <para type="link">Enable-ISHUIContentEditor</para>
+    /// <para type="synopsis">Create/Update main menu item.</para>
+    /// <para type="description">The Set-ISHUIMainMenuButton cmdlet add or update main menu item.</para>
+    /// <para type="link">Move-ISHUIMainMenuButton</para>    
+    /// <para type="link">Delete-ISHUIMainMenuButton</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Inbox2" -Action "ShowSubMenu.asp?Menu=2" -UserRole Author, Reviewer</code>
-    /// <para>This command disables Content Editor.
+    /// <para>This command add/update main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuButton")]
@@ -96,22 +96,25 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ID == null) {
+            if (ID == null)
+            {
                 element.Add(new XAttribute("id", Label.ToUpper()));
             }
-            var t = element.ToString();
 
-            //var operation = new Set(Logger, ISHDeployment, element, "mainmenubar");
-            new XmlConfigManager(Logger).InsertBeforeNode(@"C:\InfoShare\Web\Author\ASP\XSL\MainMenuBar.xml", "./mainmenubar/menuitem", element.ToString());
+            var operation = new SetUIOperation(
+                Logger,
+                ISHDeployment,
+                @"Author\ASP\XSL\MainMenuBar.xml",
+                "mainmenubar",
+                "menuitem",
+                element,
+                "label");
+            operation.Run();
         }
     }
 
     /*
     [Cmdlet(VerbsCommon.Move, "ISHUIContentEditor")]
     public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
-    { }
-    [Cmdlet(VerbsLifecycle.Delete, "ISHUIContentEditor")]
-    public sealed class DeleteISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     { }*/
-
 }

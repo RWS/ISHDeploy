@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
-﻿using ISHDeploy.Data.Exceptions;
-﻿using ISHDeploy.Interfaces;
+using System.Collections.Generic;
+using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Interfaces;
+using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -133,5 +134,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="xpath">The xpath to the element.</param>
         /// <returns>The element value.</returns>
         string GetValue(string filePath, string xpath);
+
+        void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
+        void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
+
     }
 }

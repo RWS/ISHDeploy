@@ -16,6 +16,7 @@
 1. ISHSTS
     1. Cmdlets
 	      - Set-ISHSTSConfiguration does check - is Windows Authentication feature installed on environment or not.
+		  - Set-ISHSTSRelyingParty `-Realm` is required to be a proper url with schema.
 
 ## beta-0.9 (Pre-release)
 

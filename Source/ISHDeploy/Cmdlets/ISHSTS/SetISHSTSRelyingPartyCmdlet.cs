@@ -61,7 +61,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Relying party realm")]
         [ValidateNotNullOrEmpty]
-        [ValidatePattern(@"https?:\/\/.*\/",Options = System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
+        [ValidatePattern(@"^(https:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$", Options = System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
         public string Realm { get; set; }
         
         /// <summary>

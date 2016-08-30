@@ -337,7 +337,8 @@ Describe "Testing ISHRelaying party"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName4", "https://testRealm", "testcert", $false, $false } | Should Throw "Cannot validate argument on parameter 'Realm'. The argument `"https://testRealm`" does not match the"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName5", "https://testRealm.c", "testcert", $false, $false } | Should Throw "Cannot validate argument on parameter 'Realm'. The argument `"https://testRealm.c`" does not match the"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName7", "https://testRealmApi25.global.sdl.corp/InfoShareWS/Wcf/API25/User.svc", "testcert", $false, $false
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName8", "http://testRealm.corp", "testcert", $false, $false } | Should Throw "Cannot validate argument on parameter 'Realm'. The argument `"http://testRealm.corp`" does not match the"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName8", "http://testRealm.corp", "testcert", $false, $false
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName9", "http://testRealmApi25.global.sdl.corp/InfoShareWS/Wcf/API25/User.svc", "testcert", $false, $false
     }
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName

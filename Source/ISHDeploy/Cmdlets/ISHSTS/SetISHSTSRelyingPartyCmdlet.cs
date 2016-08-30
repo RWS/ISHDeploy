@@ -29,9 +29,19 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
     /// </summary>
     /// <example>
-    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "3rd party" -Realm "3rdparty.example.com"</code>
-    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Content Review" -Realm "lc.example.com" -LC</code>
-    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Quality Assistant" -Realm "bl.example.com" -BL</code>
+    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Content Review" -Realm "https://lc.example.com/" -LC</code>
+    ///     <para>This command sets relying parties to infosharests database.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
+    /// </example>
+    /// <example>
+    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Quality Assistant" -Realm "https://bl.example.com/" -BL</code>
+    ///     <para>This command sets relying parties to infosharests database.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
+    /// </example>
+    /// <example>
+    ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "3rd party" -Realm "https://3rdparty.example.com/"</code>
     ///     <para>This command sets relying parties to infosharests database.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
@@ -51,6 +61,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Relying party realm")]
         [ValidateNotNullOrEmpty]
+        [ValidatePattern(@"^(http|https)://?(([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)(/[A-Za-z0-9\?\&\=;\+!'\(\)\*\-\._~%]*)*)", Options = System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
         public string Realm { get; set; }
         
         /// <summary>

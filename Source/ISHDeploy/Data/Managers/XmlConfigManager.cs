@@ -23,6 +23,7 @@ using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
 using System.Text.RegularExpressions;
 using System;
+using ISHDeploy.Business.Enums;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -549,14 +550,23 @@ namespace ISHDeploy.Data.Managers
                            .Elements(childElement)
                            .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
 
-            if (found.Count() == 0) {// creating new
+            if (found.Count() == 0)
+            {// creating new
                 var MemberList = doc.Element(root).Elements(childElement);
-                MemberList.Last().AddAfterSelf(element);
+                if (MemberList.Count() == 0)
+                {// no elements at all
+                    doc.Element(root).Add(element);
+                }
+                else
+                {
+                    MemberList.Last().AddAfterSelf(element);
+                }
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Inserted]");
             }
-            else { //update existing
+            else
+            { //update existing
                 found.First().ReplaceWith(element);
 
                 _fileManager.Save(filePath, doc);
@@ -573,16 +583,73 @@ namespace ISHDeploy.Data.Managers
                            .Elements(childElement)
                            .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
 
-            if (found.Count() == 0) {// not found
+            if (found.Count() == 0)
+            {// not found
                 throw new Exception("Could not find element");
             }
-            else { 
+            else
+            {
                 found.First().Remove();
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Removed]");
             }
         }
+
+        public void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation)
+        {
+            _logger.WriteDebug($"[{filePath}][Move element]");
+            var doc = _fileManager.Load(filePath);
+
+            var found = doc.Element(root)
+                           .Elements(childElement)
+                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+
+            string verboseMessage = "";
+            if (found.Count() == 0)
+            {// not found
+                throw new Exception("Could not find source element");
+            }
+            else
+            {
+                var foundElement = found.First();
+                switch (operation)
+                {
+                    case OperationType.First: // Move to first position
+                        doc.Element(root).Add(foundElement);
+                        verboseMessage = "Moved to the first position";
+                        break;
+                    case OperationType.Last: // Move to last
+                        var MemberList = doc.Element(root).Elements(childElement);
+                        if (MemberList.Count() == 0)
+                        {// no elements at all
+                            doc.Element(root).Add(foundElement);
+                        }
+                        else
+                        {
+                            MemberList.Last().AddAfterSelf(foundElement);
+                        }
+                        verboseMessage = "Moved to the last position";
+                        break;
+                    case OperationType.After://After certain item
+                        var List = doc.Element(root).Elements(childElement);
+                        if (List.Count() == 0)
+                        {// no target element
+                            throw new Exception("Could not find target element");
+                        }
+                        List.First().AddAfterSelf(foundElement);
+                        verboseMessage = $"Moved after {List.First().Attribute(updateAttributeName).Value}";
+                        break;
+                    default:
+                        throw new Exception("Unknown operation");
+                }
+
+                foundElement.Remove(); // Remove old element
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"[{filePath}][{verboseMessage}]");
+            }
+        }
+
 
         /// <summary>
         /// Set element value.

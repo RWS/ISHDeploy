@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.Xml.Linq;
-using System;
 using ISHDeploy.Models;
 
-namespace ISHDeploy.Data.Actions.SetUIAction
+namespace ISHDeploy.Data.Actions.ISHUIAction
 {
     /// <summary>
     /// Disables Content Editor for Content Manager deployment.

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIAction;
 using ISHDeploy.Interfaces;
@@ -23,10 +24,10 @@ using System.Xml.Linq;
 namespace ISHDeploy.Business.Operations.ISHUIOperation
 {
     /// <summary>
-    /// Remove UI item.
+    /// Move UI item.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class RemoveUIOperation : BaseOperationPaths, IOperation
+    public class MoveUIOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -34,28 +35,30 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveUIOperation"/> class.
+        /// Initializes a new instance of the <see cref="MoveUIOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public RemoveUIOperation(ILogger logger, 
+        public MoveUIOperation(ILogger logger, 
             Models.ISHDeployment ishDeployment,
             string filePath, 
             string root, 
             string childElement, 
             XElement element, 
-            string updateAttributeName) :
+            string updateAttributeName,
+            OperationType operation) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Remove UI/XML element");
+            _invoker = new ActionInvoker(logger, "Move UI/XML element");
             
-            _invoker.AddAction(new RemoveUIAction(
+            _invoker.AddAction(new MoveUIAction(
                 logger,
                 new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, filePath),
                 root, 
                 childElement, 
                 element, 
-                updateAttributeName));
+                updateAttributeName,
+                operation));
         }
 
         /// <summary>

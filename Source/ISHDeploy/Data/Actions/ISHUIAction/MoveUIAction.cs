@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions;
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
@@ -26,7 +25,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
     /// <summary>
     /// Remove xml node from file.
     /// </summary>
-    public class RemoveUIAction : SingleXmlFileAction
+    public class MoveUIAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xml configuration manager.
@@ -38,17 +37,19 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         private string _childElement;
         private XElement _element;
         private string _updateAttributeName;
+        private OperationType _operation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveUIAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public RemoveUIAction(ILogger logger,
+        public MoveUIAction(ILogger logger,
             ISHFilePath filePath,
             string root,
             string childElement,
             XElement element,
-            string updateAttributeName) :
+            string updateAttributeName,
+            OperationType operation) :
             base(logger, filePath)
         {
             _filePath = filePath.AbsolutePath;
@@ -56,18 +57,19 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
             _childElement = childElement;
             _element = element;
             _updateAttributeName = updateAttributeName;
-
+            _operation = operation;
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
         public override void Execute()
         {
-            _xmlConfigManager.RemoveElement(
+            _xmlConfigManager.MoveElement(
                 _filePath,
                 _root,
                 _childElement,
                 _element,
-                _updateAttributeName);
+                _updateAttributeName,
+                _operation);
         }
     }
 }

@@ -15,8 +15,7 @@
  */
 
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.SetUIAction;
-using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Data.Actions.ISHUIAction;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using System.Xml.Linq;

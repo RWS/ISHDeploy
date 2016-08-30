@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Interfaces;
 using System.Xml.Linq;
+using ISHDeploy.Business.Enums;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -137,6 +138,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
 
         void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
         void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
+        void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation);
 
     }
 }

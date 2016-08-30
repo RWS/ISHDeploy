@@ -33,7 +33,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     /// <para>This command remove main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHUIMainMenuButton")]
+    [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuButton")]
     public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
         private XElement element = new XElement("menuitem");

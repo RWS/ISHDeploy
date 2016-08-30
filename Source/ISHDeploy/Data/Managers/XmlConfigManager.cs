@@ -616,7 +616,7 @@ namespace ISHDeploy.Data.Managers
                 switch (operation)
                 {
                     case OperationType.First: // Move to first position
-                        doc.Element(root).Add(foundElement);
+                        doc.Element(root).AddFirst(foundElement);
                         verboseMessage = "Moved to the first position";
                         break;
                     case OperationType.Last: // Move to last

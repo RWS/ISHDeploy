@@ -596,7 +596,13 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        public void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation)
+        public void MoveElement(string filePath, 
+            string root, 
+            string childElement, 
+            XElement element, 
+            string updateAttributeName, 
+            OperationType operation, 
+            string after)
         {
             _logger.WriteDebug($"[{filePath}][Move element]");
             var doc = _fileManager.Load(filePath);
@@ -632,7 +638,9 @@ namespace ISHDeploy.Data.Managers
                         verboseMessage = "Moved to the last position";
                         break;
                     case OperationType.After://After certain item
-                        var List = doc.Element(root).Elements(childElement);
+                        var List = doc.Element(root)
+                            .Elements(childElement)
+                            .Where(item => item.Attribute(updateAttributeName).Value == after);
                         if (List.Count() == 0)
                         {// no target element
                             throw new Exception("Could not find target element");

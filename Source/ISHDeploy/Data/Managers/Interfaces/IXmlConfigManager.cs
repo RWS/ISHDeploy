@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
 
         void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
         void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
-        void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation);
+        void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation, string after);
 
     }
 }

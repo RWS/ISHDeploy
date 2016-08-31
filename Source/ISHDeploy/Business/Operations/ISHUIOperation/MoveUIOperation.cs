@@ -46,7 +46,8 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
             string childElement, 
             XElement element, 
             string updateAttributeName,
-            OperationType operation) :
+            OperationType operation,
+            string after) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Move UI/XML element");
@@ -58,7 +59,8 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
                 childElement, 
                 element, 
                 updateAttributeName,
-                operation));
+                operation,
+                after));
         }
 
         /// <summary>

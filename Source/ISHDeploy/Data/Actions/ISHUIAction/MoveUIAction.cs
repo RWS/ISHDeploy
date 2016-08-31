@@ -38,6 +38,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         private XElement _element;
         private string _updateAttributeName;
         private OperationType _operation;
+        private string _after;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveUIAction"/> class.
@@ -49,7 +50,8 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
             string childElement,
             XElement element,
             string updateAttributeName,
-            OperationType operation) :
+            OperationType operation,
+            string after) :
             base(logger, filePath)
         {
             _filePath = filePath.AbsolutePath;
@@ -58,6 +60,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
             _element = element;
             _updateAttributeName = updateAttributeName;
             _operation = operation;
+            _after = after;
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
@@ -69,7 +72,8 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
                 _childElement,
                 _element,
                 _updateAttributeName,
-                _operation);
+                _operation,
+                _after);
         }
     }
 }

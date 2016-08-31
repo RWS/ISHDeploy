@@ -97,7 +97,8 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
                 "menuitem",
                 element,
                 "label",
-                operation).Run();
+                operation,
+                After).Run();
         }
     }
 

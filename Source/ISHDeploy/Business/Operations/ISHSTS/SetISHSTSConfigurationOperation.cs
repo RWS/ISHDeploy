@@ -72,7 +72,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             AddActionsToStopSTSApplicationPool();
             AddActionsToSetTokenSigningCertificate(thumbprint);
 
-            // TS-11671 TS-11594
             string authenticationType = string.Empty;
             (new GetValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath,
                     result => authenticationType = result)).Execute();

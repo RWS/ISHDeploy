@@ -47,7 +47,7 @@ namespace ISHDeploy.Cmdlets
                     }
                     else
                     {
-                        throw new ArgumentException("You have more than one installed environments, please specify one.");
+                        throw new ArgumentException("You have not one installed environment, please specify one.");
                     }
                 }
                 return _ISHDeployment;

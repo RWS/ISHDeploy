@@ -15,7 +15,7 @@
  */
 ﻿using System.Management.Automation;
 using System.ServiceModel.Security;
-using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {

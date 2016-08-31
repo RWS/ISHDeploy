@@ -16,8 +16,9 @@
 
 using System;
 using System.Linq;
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
+using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;

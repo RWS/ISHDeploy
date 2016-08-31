@@ -17,13 +17,13 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHSTS
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
     /// <summary>
     /// Disable internal STS access
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class DisableISHAuthenticationOperation : BaseOperationPaths, IOperation
+    public class DisableISHIntegrationSTSInternalAuthenticationOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public DisableISHAuthenticationOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public DisableISHIntegrationSTSInternalAuthenticationOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Disable internal STS access.");

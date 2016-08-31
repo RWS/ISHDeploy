@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
+using System.Management.Automation;
 using ISHDeploy.Validators;
+using ISHDeploy.Business.Operations.ISHDeployment;
+using System;
+using System.Linq;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -23,12 +26,33 @@ namespace ISHDeploy.Cmdlets
     /// </summary>
     public abstract class BaseISHDeploymentCmdlet : BaseCmdlet
     {
+        private Models.ISHDeployment _ISHDeployment;
         /// <summary>
         /// <para type="description">Specifies the name or instance of the Content Manager deployment.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
+        [Parameter(Mandatory = false, HelpMessage = "Name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
         [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment { get; set; }
+        public Models.ISHDeployment ISHDeployment
+        {
+            get
+            {
+                if (_ISHDeployment == null)
+                {
+                    var operation = new GetISHDeploymentsOperation(CmdletsLogger.Instance(), null);
+                    var deployments = operation.Run();
+                    if (deployments.Count() == 1)
+                    {
+                        _ISHDeployment = deployments.First();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("You have more than one installed  environment, please specify one.");
+                    }
+                }
+                return _ISHDeployment;
+            }
+            set { _ISHDeployment = value; }
+        }
     }
 }

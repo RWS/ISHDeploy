@@ -31,20 +31,20 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <example>
     ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Content Review" -Realm "https://lc.example.com/" -LC</code>
     ///     <para>This command sets relying parties to infosharests database.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     /// <example>
     ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Quality Assistant" -Realm "https://bl.example.com/" -BL</code>
     ///     <para>This command sets relying parties to infosharests database.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     /// <example>
     ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "3rd party" -Realm "https://3rdparty.example.com/"</code>
     ///     <para>This command sets relying parties to infosharests database.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    ///     <para>As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSRelyingParty")]
     public class SetISHSTSRelyingPartyCmdlet : BaseISHDeploymentCmdlet

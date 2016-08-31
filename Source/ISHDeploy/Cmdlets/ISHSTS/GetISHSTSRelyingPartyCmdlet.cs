@@ -35,12 +35,12 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC</code>
     ///     <para>This command gets all relying parties from the infosharests database where name of relying party starts with "LC".</para>
-    /// <example>
     /// </example>
+    /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
     ///     <para>This command gets all relying parties from the infosharests database where name of relying party starts with "BL".</para>
-    /// <example>
     /// </example>
+    /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
     ///     <para>This command gets all relying parties from the infosharests database.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>

@@ -83,7 +83,7 @@
     <None Include="Articles\Module\Work with deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="index.md" />
-    <None Include="Issues\issues.md" />
+    <None Include="Issues\index.md" />
     <None Include="Issues\toc.yml" />
     <None Include="Tools\Copy-Changelog.ps1" />
     <None Include="Getting Started.md" />

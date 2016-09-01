@@ -22,11 +22,11 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///     <para type="synopsis">Gets all relying parties from the infosharests database. The switches acts as filter based on the RP name.</para>
     ///     <para type="description">The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
-    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Reset-ISHSTS</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHSTSConfiguration</para>
+    ///     <para type="link">Set-ISHSTSRelyingParty</para>
     /// </summary>
     /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH</code>

@@ -22,12 +22,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     /// <summary>
     ///		<para type="synopsis">Sets STS certificate.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
-    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
-    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackage</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrust</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>

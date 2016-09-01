@@ -71,6 +71,16 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             AddActionsToStopSTSApplicationPool();
             AddActionsToSetTokenSigningCertificate(thumbprint);
+
+            string authenticationType = string.Empty;
+            (new GetValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath,
+                    result => authenticationType = result)).Execute();
+
+            if (authenticationType == AuthenticationTypes.Windows.ToString())
+            {
+                var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
+                AddActionsToSetCertificateFilePermission(applicationPoolUser, GetNormalizedThumbprint(thumbprint));
+            }
             AddActionsToStartSTSApplicationPool();
         }
 
@@ -122,13 +132,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
         private void AddActionsToSetTokenSigningCertificate(string thumbprint)
         {
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-
-            if (normalizedThumbprint.Length != thumbprint.Length)
-            {
-                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-                thumbprint = normalizedThumbprint;
-            }
+            thumbprint = GetNormalizedThumbprint(thumbprint);
 
             var subjectThumbprint = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
@@ -150,6 +154,19 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
                             subjectThumbprint)));
             }
+        }
+
+        private string GetNormalizedThumbprint(string thumbprint)
+        {
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+            if (normalizedThumbprint.Length != thumbprint.Length)
+            {
+                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+                thumbprint = normalizedThumbprint;
+            }
+
+            return thumbprint;
         }
 
         /// <summary>
@@ -179,11 +196,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
-                string pathToCertificate = string.Empty;
-                (new GetPathToCertificateByThumbprintAction(Logger,
-                    InputParameters.IssuerCertificateThumbprint, s => pathToCertificate = s)).Execute();
-
-                _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                AddActionsToSetCertificateFilePermission(applicationPoolUser, InputParameters.ServiceCertificateThumbprint);
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 if (ishDeployment.AppPath != ishDeployment.DataPath)
                 {
@@ -220,6 +233,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath, authenticationType.ToString()));
+        }
+
+        private void AddActionsToSetCertificateFilePermission(string applicationPoolUser, string certificateThumbprint)
+        {
+            string pathToCertificate = string.Empty;
+            (new GetPathToCertificateByThumbprintAction(Logger, certificateThumbprint, s => pathToCertificate = s)).Execute();
+
+            _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
         }
 
         /// <summary>

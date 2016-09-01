@@ -102,7 +102,7 @@ namespace ISHDeploy.Data.Managers
 
             var uniqueKeyContainerName =
                 ((System.Security.Cryptography.RSACryptoServiceProvider) certificate.PrivateKey).CspKeyContainerInfo
-                    .KeyContainerName;
+                    .UniqueKeyContainerName;
 
             var commonApplicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             string path = $"{commonApplicationDataPath}\\Microsoft\\Crypto\\RSA\\MachineKeys\\{uniqueKeyContainerName}";

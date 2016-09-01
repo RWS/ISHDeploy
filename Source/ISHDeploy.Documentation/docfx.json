@@ -23,7 +23,7 @@
       },
       {
         "files": [ "toc.yml" ],
-        "cwd": "Issues",
+        "cwd": "obj/doc/issues",
         "dest": "Issues"
       },
       {

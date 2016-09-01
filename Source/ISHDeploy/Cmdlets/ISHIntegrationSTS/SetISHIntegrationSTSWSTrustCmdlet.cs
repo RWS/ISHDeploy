@@ -15,7 +15,8 @@
  */
 ﻿using System;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
+﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 ﻿using System;
-using ISHDeploy.Business.Invokers;
+﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
     /// <summary>
     /// Sets WSTrust configuration including internal clients.

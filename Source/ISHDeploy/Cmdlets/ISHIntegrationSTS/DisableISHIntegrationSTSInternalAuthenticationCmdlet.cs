@@ -15,7 +15,7 @@
  */
 using System.Management.Automation;
 using System;
-using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
@@ -45,7 +45,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHAuthenticationOperation(Logger, ISHDeployment);
+            var operation = new DisableISHIntegrationSTSInternalAuthenticationOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

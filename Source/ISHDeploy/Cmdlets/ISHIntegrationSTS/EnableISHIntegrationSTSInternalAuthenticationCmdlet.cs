@@ -15,7 +15,7 @@
  */
 using System.Management.Automation;
 using System;
-using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
@@ -73,7 +73,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
                 LCWebAppName = "ContentDelivery"; // default value
             }
 
-            var operation = new EnableISHAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
+            var operation = new EnableISHIntegrationSTSInternalAuthenticationOperation(Logger, ISHDeployment, LCHost, LCWebAppName);
 
             operation.Run();
         }

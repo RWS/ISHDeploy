@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHSTS;
+﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Business.Operations.ISHSTS;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {

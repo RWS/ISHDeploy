@@ -20,7 +20,7 @@ using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models.ISHXmlNodes;
 
-namespace ISHDeploy.Business.Operations.ISHSTS
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
     /// <summary>
     /// Sets Thumbprint and issuers values to configuration.

@@ -18,6 +18,11 @@
 	      - Set-ISHSTSConfiguration does check - is Windows Authentication feature installed on environment or not.
 		  - Set-ISHSTSRelyingParty `-Realm` is required to be a proper url with schema.
 
+**Fixed known issues**
+
+- When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
+
+
 ## beta-0.9 (Pre-release)
 
 1. Working with deployments

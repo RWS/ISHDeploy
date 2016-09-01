@@ -22,13 +22,8 @@
         "dest": "Articles"
       },
       {
-        "files": [ "toc.yml" ],
-        "cwd": "Issues",
-        "dest": "Issues"
-      },
-      {
         "files": [ "**/*.md" ],
-        "cwd": "obj/doc/issues",
+        "cwd": "Issues",
         "dest": "Issues"
       },
       {

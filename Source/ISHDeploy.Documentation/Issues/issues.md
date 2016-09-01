@@ -1,6 +1,6 @@
 # Known issues
 
-### 1
+## 1
 The following Pester code is not allowed when doing a token signing certificate rollover for ISHSTS.
 
 ```powershell

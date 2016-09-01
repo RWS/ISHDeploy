@@ -28,7 +28,7 @@
       },
       {
         "files": [ "**/*.md" ],
-        "cwd": "Issues",
+        "cwd": "obj/doc/issues",
         "dest": "Issues"
       },
       {

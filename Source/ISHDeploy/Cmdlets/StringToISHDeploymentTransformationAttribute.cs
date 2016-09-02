@@ -23,7 +23,7 @@ namespace ISHDeploy.Cmdlets
     /// <summary>
     /// Trasform input parameters
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property |AttributeTargets.Class |AttributeTargets.Constructor)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class StringToISHDeploymentTransformationAttribute : ArgumentTransformationAttribute
     {
         /// <summary>

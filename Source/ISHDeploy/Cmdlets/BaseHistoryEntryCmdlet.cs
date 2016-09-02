@@ -62,6 +62,12 @@ namespace ISHDeploy.Cmdlets
         {
             var strBldr = new StringBuilder(MyInvocation.MyCommand.Name);
 
+            // If default ISHDeployment without name was invoked
+            if (MyInvocation.BoundParameters.Where(a=>a.Key=="ISHDeployment").Count() == 0) 
+            {
+                strBldr.Append($" -ISHDeployment $deploymentName");
+            }
+
             foreach (var boundParameter in MyInvocation.BoundParameters)
             {
                 var historyParameter = ToHistoryParameter(boundParameter);

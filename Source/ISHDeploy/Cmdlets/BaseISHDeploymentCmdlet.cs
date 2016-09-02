@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Management.Automation;
-using ISHDeploy.Validators;
-using ISHDeploy.Business.Operations.ISHDeployment;
+
 using System;
 using System.Linq;
+using System.Management.Automation;
+﻿using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -26,33 +27,35 @@ namespace ISHDeploy.Cmdlets
     /// </summary>
     public abstract class BaseISHDeploymentCmdlet : BaseCmdlet
     {
-        private Models.ISHDeployment _ISHDeployment;
         /// <summary>
         /// <para type="description">Specifies the name or instance of the Content Manager deployment.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Name or instance of the installed Content Manager deployment.")]
+        [Parameter(Mandatory = false,
+            HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
         [ValidateDeploymentVersion]
-        public Models.ISHDeployment ISHDeployment
+        public Models.ISHDeployment ISHDeployment { get; set; }
+
+        /// <summary>
+        /// Overrides BeginProcessing from base Cmdlet class with additinal debug information
+        /// </summary>
+        /// <exception cref="System.ArgumentException">You have not one installed environment, please specify one.</exception>
+        protected override void BeginProcessing()
         {
-            get
+            base.BeginProcessing();
+            if (ISHDeployment == null)
             {
-                if (_ISHDeployment == null)
+                var operation = new GetISHDeploymentsOperation(Logger, string.Empty);
+                var deployments = operation.Run().ToList();
+                if (deployments.Count() == 1)
                 {
-                    var operation = new GetISHDeploymentsOperation(CmdletsLogger.Instance(), null);
-                    var deployments = operation.Run();
-                    if (deployments.Count() == 1)
-                    {
-                        _ISHDeployment = deployments.First();
-                    }
-                    else
-                    {
-                        throw new ArgumentException("You have not one installed environment, please specify one.");
-                    }
+                    ISHDeployment = deployments.First();
                 }
-                return _ISHDeployment;
+                else
+                {
+                    throw new ArgumentException("You have not one installed environment, please specify one.");
+                }
             }
-            set { _ISHDeployment = value; }
         }
     }
 }

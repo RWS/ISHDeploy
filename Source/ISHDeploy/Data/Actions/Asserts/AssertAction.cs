@@ -36,7 +36,7 @@ namespace ISHDeploy.Data.Actions.Asserts
         /// <summary>
         /// Executes current action.
         /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <exception cref="Exception"></exception>
         public override void Execute()
         {
             if (_condition.Invoke())

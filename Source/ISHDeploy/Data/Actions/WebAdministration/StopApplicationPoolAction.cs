@@ -59,7 +59,6 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// <summary>
         /// Creates backup of the asset.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void Backup()
         {
             
@@ -68,7 +67,6 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// <summary>
         /// Reverts an asset to initial state.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void Rollback()
         {
             _webAdminManager.RecycleApplicationPool(_appPoolName, true);

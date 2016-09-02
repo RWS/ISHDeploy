@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -27,7 +25,7 @@ namespace ISHDeploy.Data.Managers
     /// <summary>
     /// Aggregates data from different places.
     /// </summary>
-    /// <seealso cref="IDataAggregator" />
+    /// <seealso cref="IDataAggregateHelper" />
     public class DataAggregateHelper : IDataAggregateHelper
     {
         /// <summary>

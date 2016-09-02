@@ -17,7 +17,7 @@
 using System;
 using System.Linq;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets

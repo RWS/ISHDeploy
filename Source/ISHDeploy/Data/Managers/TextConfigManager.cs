@@ -79,16 +79,16 @@ namespace ISHDeploy.Data.Managers
 
             if (patternIndex >= 0)
             {
-                _logger.WriteWarning($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
+                _logger.WriteDebug($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
             }
             else if (patternIndex == -2)
             {
-                _logger.WriteWarning($"No comment patterns were found in the file {filePath}");
+                _logger.WriteDebug($"No comment patterns were found in the file {filePath}");
                 return;
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
+            _logger.WriteDebug($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
 
         }
 
@@ -121,16 +121,16 @@ namespace ISHDeploy.Data.Managers
 
             if (patternIndex >= 0)
             {
-                _logger.WriteWarning($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
+                _logger.WriteDebug($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
             }
             else if (patternIndex == -2)
             {
-                _logger.WriteWarning($"No comment patterns were found in the file {filePath}");
+                _logger.WriteDebug($"No comment patterns were found in the file {filePath}");
                 return;
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
+            _logger.WriteDebug($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAnyUncommented)
             {
-                _logger.WriteWarning("Text block is already fully commented");
+                _logger.WriteDebug("Text block is already fully commented");
                 return;
             }
             
@@ -173,7 +173,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAllCommented)
             {
-                _logger.WriteWarning("Text block contains uncommented lines");
+                _logger.WriteDebug("Text block contains uncommented lines");
                 return;
             }
 

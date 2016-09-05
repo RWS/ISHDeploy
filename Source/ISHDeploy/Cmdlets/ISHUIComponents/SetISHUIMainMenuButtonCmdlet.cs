@@ -16,6 +16,7 @@
 
 using ISHDeploy.Business.Operations.ISHUIOperation;
 using ISHDeploy.Data.Managers;
+using ISHDeploy.Models.UI;
 using System.Management.Automation;
 using System.Xml.Linq;
 
@@ -35,61 +36,19 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuButton")]
     public sealed class SetISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
-        private XElement element = new XElement("menuitem");
-
-        private string _label;
         [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
-        public string Label
-        {
-            get
-            {
-                return _label;
-            }
-            set
-            {
-                element.Add(new XAttribute("label", value));
-                _label = value;
-            }
-        }
+        public string Label { get; set; }
 
-        private string[] _userRole;
         [Parameter(Mandatory = true, HelpMessage = "Nested roles")]
-        public string[] UserRole
-        {
-            get { return _userRole; }
-            set
-            {
-                foreach (string role in value)
-                {
-                    element.Add(new XElement("userrole", role));
-                }
-                _userRole = value;
-            }
-        }
+        public string[] UserRole { get; set; }
 
         private string _action;
         [Parameter(HelpMessage = "Action to do after choosing menu")]
-        public string Action
-        {
-            get { return _action; }
-            set
-            {
-                element.Add(new XAttribute("action", value));
-                _action = value;
-            }
-        }
+        public string Action { get; set; }
 
         private string _id;
         [Parameter(HelpMessage = "Unique id")]
-        public string ID
-        {
-            get { return _id; }
-            set
-            {
-                element.Add(new XAttribute("id", value));
-                _id = value;
-            }
-        }
+        public string ID { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -98,23 +57,11 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         {
             if (ID == null)
             {
-                element.Add(new XAttribute("id", Label.ToUpper()));
+                //ID = GenearateId("Label");
             }
 
-            var operation = new SetUIOperation(
-                Logger,
-                ISHDeployment,
-                @"Author\ASP\XSL\MainMenuBar.xml",
-                "mainmenubar",
-                "menuitem",
-                element,
-                "label");
-            operation.Run();
+            var menu = new MainMenuModel(Label, UserRole, Action, ID);
+            menu.Set(Logger, ISHDeployment);
         }
     }
-
-    /*
-    [Cmdlet(VerbsCommon.Move, "ISHUIContentEditor")]
-    public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
-    { }*/
 }

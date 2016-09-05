@@ -16,6 +16,7 @@
 
 using ISHDeploy.Business.Operations.ISHUIOperation;
 using ISHDeploy.Data.Managers;
+using ISHDeploy.Models.UI;
 using System.Management.Automation;
 using System.Xml.Linq;
 
@@ -35,31 +36,16 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Remove, "ISHUIMainMenuButton")]
     public sealed class RemoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
-        private XElement element = new XElement("menuitem");
-
         [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
-        public string Label
-        {
-            set
-            {
-                element.Add(new XAttribute("label", value));
-            }
-        }
+        public string Label { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new RemoveUIOperation(
-                Logger, 
-                ISHDeployment,
-                @"Author\ASP\XSL\MainMenuBar.xml",
-                "mainmenubar",
-                "menuitem",
-                element,
-                "label");
-            operation.Run();
+            var menu = new MainMenuModel(Label, null, null, null);
+            menu.Remove(Logger, ISHDeployment);
         }
     }
 

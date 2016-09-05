@@ -17,6 +17,7 @@
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Operations.ISHUIOperation;
 using ISHDeploy.Data.Managers;
+using ISHDeploy.Models.UI;
 using System.Management.Automation;
 using System.Xml.Linq;
 
@@ -36,16 +37,8 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuButton")]
     public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
-        private XElement element = new XElement("menuitem");
-
         [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
-        public string Label
-        {
-            set
-            {
-                element.Add(new XAttribute("label", value));
-            }
-        }
+        public string Label { get; set; }
         
         /// <summary>
 		/// <para type="description">Menu item move to the last position.</para>
@@ -89,16 +82,12 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
             }
 
-            new MoveUIOperation(
+            var menu = new MainMenuModel(Label, null, null, null);
+            menu.Move(
                 Logger, 
                 ISHDeployment,
-                @"Author\ASP\XSL\MainMenuBar.xml",
-                "mainmenubar",
-                "menuitem",
-                element,
-                "label",
                 operation,
-                After).Run();
+                After);
         }
     }
 

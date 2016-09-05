@@ -34,14 +34,16 @@ On the 1st December 2016, a new certificate becomes available on the store with 
 On the 15th December 2016 the following sequence is executed:
 
 1. All users sign out.
-1. The current issuer validation configuration is extended with the new issuer certificate with thumbprint `20161201.Thumbprint`.The cmdlet for this step is `Set-ISHIntegrationSTSCertificate`. 
 1. The current ISHSTS token signing certificate with thumbprint `20160101.Thumbprint` is replaced with the newer `20160101.Thumbprint` is replaced by the newer `20161201.Thumbprint`. The cmdlet for this step is `Set-ISHSTSConfiguration`. 
+1. The current issuer validation configuration is extended with the new issuer certificate with thumbprint `20161201.Thumbprint`.The cmdlet for this step is `Set-ISHIntegrationSTSCertificate`. 
 1. The current service certificate with thumbprint `20160101.Thumbprint` is replaced with the newer `20161201.Thumbprint`. The cmdlet for this step is `Set-ISHAPIWCFServiceCertificate`. 
 1. Users sign in.
 
 This script replaces the existing certificate with the new one.
 
 CopyCodeBlock(_nopublish\20161215.VanillaCertificateReplacement.ps1)
+
+Please note that the order of execution between `Set-ISHIntegrationSTSCertificate` and `Set-ISHSTSConfiguration` must not be changed otherwise it might break the deployment.
 
 ## Remove the old certificate
 

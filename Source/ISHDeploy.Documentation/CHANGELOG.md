@@ -22,6 +22,9 @@
 
 - When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
 
+**Known issues**
+
+- Due to internal dependencies to the product, avoid sequencing first `Set-ISHIntegrationSTSCertificate` and then `Set-ISHSTSConfiguration` because they will break the deployment.
 
 ## beta-0.9 (Pre-release)
 

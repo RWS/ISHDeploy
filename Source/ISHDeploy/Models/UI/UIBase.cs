@@ -48,7 +48,7 @@ namespace ISHDeploy.Models.UI
                     rootPath,
                     childItemPath,
                     null,
-                    "label",
+                    keyAttribute,
                     operation,
                     after).Run();
         }

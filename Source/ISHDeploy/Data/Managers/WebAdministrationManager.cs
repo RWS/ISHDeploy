@@ -74,7 +74,7 @@ namespace ISHDeploy.Data.Managers
 
                         appPool.Recycle();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` recycled.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` recycled.");
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
@@ -82,7 +82,7 @@ namespace ISHDeploy.Data.Managers
 
                         appPool.Start();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` started");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` started");
                     }
                 }
                 else
@@ -100,10 +100,10 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
-            _logger.WriteVerbose($"Enable WindowsAuthentication for site: `{webSiteName}`");
+            _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
             if (IsWindowsAuthenticationFeatureEnabled())
             {
-                _logger.WriteVerbose("IIS-WindowsAuthentication feature is turned on");
+                _logger.WriteDebug("IIS-WindowsAuthentication feature is turned on");
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
                 {
 
@@ -120,7 +120,7 @@ namespace ISHDeploy.Data.Managers
                         "system.webServer/security/authentication/windowsAuthentication",
                         locationPath);
                     windowsAuthenticationSection["enabled"] = true;
-                    _logger.WriteVerbose("WindowsAuthentication has been enabled");
+                    _logger.WriteDebug("WindowsAuthentication has been enabled");
 
                     manager.CommitChanges();
                 }
@@ -140,7 +140,7 @@ namespace ISHDeploy.Data.Managers
         {
             using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteVerbose($"Disable WindowsAuthentication for site: `{webSiteName}`");
+                _logger.WriteDebug($"Disable WindowsAuthentication for site: `{webSiteName}`");
 
                 var config = manager.GetApplicationHostConfiguration();
                 var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
@@ -149,7 +149,7 @@ namespace ISHDeploy.Data.Managers
                     "system.webServer/security/authentication/windowsAuthentication",
                     locationPath);
                 windowsAuthenticationSection["enabled"] = false;
-                _logger.WriteVerbose("WindowsAuthentication has been disabled");
+                _logger.WriteDebug("WindowsAuthentication has been disabled");
 
                 manager.CommitChanges();
             }
@@ -163,7 +163,7 @@ namespace ISHDeploy.Data.Managers
         {
             bool isFeatureEnabled = false;
 
-            _logger.WriteVerbose("Checking whether IIS-WindowsAuthentication feature is turned on or not");
+            _logger.WriteDebug("Checking whether IIS-WindowsAuthentication feature is turned on or not");
 
             using (var ps = PowerShell.Create())
             {
@@ -180,12 +180,12 @@ namespace ISHDeploy.Data.Managers
                 {
                     foreach (var verbose in ps.Streams.Verbose.ReadAll())
                     {
-                        _logger.WriteVerbose(verbose.Message);
+                        _logger.WriteDebug(verbose.Message);
                     }
 
                     foreach (var warning in ps.Streams.Warning.ReadAll())
                     {
-                        _logger.WriteWarning(warning.Message);
+                        _logger.WriteDebug(warning.Message);
                     }
 
                     isFeatureEnabled = result != null && bool.Parse(result.ToString());
@@ -221,7 +221,7 @@ namespace ISHDeploy.Data.Managers
 
                         appPool.Stop();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` stopped.");
+                        _logger.WriteDebug($"Application pool `{applicationPoolName}` stopped.");
                     }
 
                     //The app pool is already stopped.

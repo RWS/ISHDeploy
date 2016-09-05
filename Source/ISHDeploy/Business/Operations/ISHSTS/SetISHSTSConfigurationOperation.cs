@@ -157,19 +157,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
         }
 
-        private string GetNormalizedThumbprint(string thumbprint)
-        {
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-
-            if (normalizedThumbprint.Length != thumbprint.Length)
-            {
-                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-                thumbprint = normalizedThumbprint;
-            }
-
-            return thumbprint;
-        }
-
         /// <summary>
         /// Adds actions for setting STS authentication type.
         /// </summary>

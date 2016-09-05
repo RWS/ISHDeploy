@@ -169,7 +169,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     It "Set ISHIntegrationSTSCertificate several times"{        
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer222", "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer222", "PeerOrChainTrust"
         
         #Assert
         remoteReadTargetXML -Thumbprint "testThumbprint" -ValidationMode "PeerOrChainTrust"
@@ -182,16 +182,13 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigIssuer | Should be "testIssuer222"
         $stsWebConfigNodesCount | Should be 1
         $stsWebConfigAddActAsTrustedIssuerNodeCount | Should be 1
-        $Warning | Should Match "contains already uncommented node by searched pattern '<add name=`"addActAsTrustedIssuer`"'." 
     }
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint"{       
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test T h u m b p rint  2", "testIssuerNormalized", "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test T h u m b p rint  2", "testIssuerNormalized", "PeerOrChainTrust"
         
         #Assert
-        $Warning | Should Match "has been normalized to 'testThumbprint2'"
-
         remoteReadTargetXML -Thumbprint "testThumbprint2" -ValidationMode "PeerOrChainTrust"
         
         $authorWebConfigNodesCount | Should be 1
@@ -206,11 +203,9 @@ Describe "Testing ISHIntegrationSTSCertificate"{
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint with wrong symbols"{       
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test ,T h u> m<{ b! [p] rint  3", "testIssuerNormalized2", "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "test ,T h u> m<{ b! [p] rint  3", "testIssuerNormalized2", "PeerOrChainTrust"
         
         #Assert
-        ($Warning-join -'') | Should Match "has been normalized to 'testThumbprint3'"
-
         remoteReadTargetXML -Thumbprint "testThumbprint3" -ValidationMode "PeerOrChainTrust"
         
         $authorWebConfigNodesCount | Should be 1

@@ -24,12 +24,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///		<para type="synopsis">Sets WSTrust configuration.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSWSTrust cmdlet sets WSTrust configuration to Content Manager deployment.</para>
     ///		<para type="description">When -IncludeInternalClients is switched on then the -ActorUsername and -ActorPassword must be specified.</para>
-    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
-    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackage</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>

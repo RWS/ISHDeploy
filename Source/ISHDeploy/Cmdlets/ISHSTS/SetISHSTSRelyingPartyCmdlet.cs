@@ -22,11 +22,11 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///     <para type="synopsis">Sets relying party to infosharests database. The switches acts as filter based on the RP name.</para>
     ///     <para type="description">The Set-ISHSTSRelyingParty cmdlet sets relying party to from the infosharests database.</para>
-    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
+    ///     <para type="link">Get-ISHSTSRelyingParty</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Reset-ISHSTS</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHSTSConfiguration</para>
     /// </summary>
     /// <example>
     ///     <code>PS C:\>Set-ISHSTSRelyingParty -ISHDeployment $deployment -Name "Content Review" -Realm "https://lc.example.com/" -LC</code>

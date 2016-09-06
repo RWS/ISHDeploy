@@ -42,11 +42,9 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         [Parameter(Mandatory = true, HelpMessage = "Nested roles")]
         public string[] UserRole { get; set; }
 
-        private string _action;
         [Parameter(HelpMessage = "Action to do after choosing menu")]
         public string Action { get; set; }
 
-        private string _id;
         [Parameter(HelpMessage = "Unique id")]
         public string ID { get; set; }
 

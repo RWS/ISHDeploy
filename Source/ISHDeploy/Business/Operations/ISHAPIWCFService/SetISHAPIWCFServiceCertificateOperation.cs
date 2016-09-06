@@ -49,7 +49,13 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         {
             _invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-            thumbprint = GetNormalizedThumbprint(thumbprint);
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+            if (normalizedThumbprint.Length != thumbprint.Length)
+            {
+                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+                thumbprint = normalizedThumbprint;
+            }
 
             var serviceCertificateSubjectName = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(logger, thumbprint, result => serviceCertificateSubjectName = result)).Execute();

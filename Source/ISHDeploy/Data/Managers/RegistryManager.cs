@@ -101,7 +101,7 @@ namespace ISHDeploy.Data.Managers
 
             if (projectBaseRegKey == null || projectBaseRegKey.SubKeyCount == 0)
             {
-                _logger.WriteDebug("None project base registry keys were found on the system.");
+                _logger.WriteWarning("None project base registry keys were found on the system.");
                 return installedProjectsKeys;
             }
 
@@ -123,7 +123,7 @@ namespace ISHDeploy.Data.Managers
                     installedProjectsKeys.Add(projRegKey);
                 }
             }
-            _logger.WriteDebug($"[Retrieved installed registry keys]");
+            _logger.WriteVerbose($"[Retrieved installed registry keys]");
             return installedProjectsKeys;
         }
 
@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers
 
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
-            _logger.WriteDebug($"[{projectRegKey.Name}][Retrieved the inputparameters.xml file path]");
+            _logger.WriteVerbose($"[{projectRegKey.Name}][Retrieved the inputparameters.xml file path]");
             return historyItem?.GetValue(InstallHistoryPathRegValue).ToString();
         }
 
@@ -158,11 +158,11 @@ namespace ISHDeploy.Data.Managers
 
             if (string.IsNullOrWhiteSpace(versionStr) || !Version.TryParse(versionStr, out version))
             {
-                _logger.WriteDebug($"`{projectRegKey}` registry key does not contain correct `{VersionRegValue}` value");
+                _logger.WriteWarning($"`{projectRegKey}` registry key does not contain correct `{VersionRegValue}` value");
                 return null;
             }
 
-            _logger.WriteDebug($"[{projectRegKey.Name}][Retrieved installed deployment version");
+            _logger.WriteVerbose($"[{projectRegKey.Name}][Retrieved installed deployment version");
             return version;
         }
 
@@ -177,7 +177,7 @@ namespace ISHDeploy.Data.Managers
 
             if (string.IsNullOrWhiteSpace(currentInstallvalue))
             {
-                _logger.WriteDebug($"`{projectRegKey}` does not contain `{CurrentRegName}` key");
+                _logger.WriteWarning($"`{projectRegKey}` does not contain `{CurrentRegName}` key");
                 return null;
             }
 
@@ -187,7 +187,7 @@ namespace ISHDeploy.Data.Managers
 
             if (installFolderRegKey == null)
             {
-                _logger.WriteDebug($"`{projectRegKey}` does not contain `{HistoryRegName}` key that named `{currentInstallvalue}`");
+                _logger.WriteWarning($"`{projectRegKey}` does not contain `{HistoryRegName}` key that named `{currentInstallvalue}`");
                 return null;
             }
 

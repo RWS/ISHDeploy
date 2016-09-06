@@ -109,7 +109,7 @@ namespace ISHDeploy.Data.Managers
             var node = SelectSingleNode(ref doc, xpath);
             if (node == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain node within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain node within the xpath {xpath}");
                 return;
             }
 
@@ -117,7 +117,8 @@ namespace ISHDeploy.Data.Managers
 
             _fileManager.Save(filePath, doc);
 
-            _logger.WriteDebug($"[{filePath}][{xpath}][Removed]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
+
         }
 
         /// <summary>
@@ -134,14 +135,14 @@ namespace ISHDeploy.Data.Managers
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteDebug($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
                 return;
             }
 
             nodes.Remove();
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][{xpath}][Removed]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
         }
 
         /// <summary>
@@ -159,7 +160,7 @@ namespace ISHDeploy.Data.Managers
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteDebug($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
                 return;
             }
 
@@ -180,7 +181,7 @@ namespace ISHDeploy.Data.Managers
 
             if (insertBeforeNode == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain target node to insert before");
+                _logger.WriteWarning($"{filePath} does not contain target node to insert before");
                 return;
             }
 
@@ -196,7 +197,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][{xpath}][Moved]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace ISHDeploy.Data.Managers
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteDebug($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
                 return;
             }
 
@@ -235,7 +236,7 @@ namespace ISHDeploy.Data.Managers
 
             if (insertAfterNode == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain target node to insert after");
+                _logger.WriteWarning($"{filePath} does not contain target node to insert after");
                 return;
             }
 
@@ -251,7 +252,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][{xpath}][Moved]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
         }
 
         /// <summary>
@@ -270,7 +271,7 @@ namespace ISHDeploy.Data.Managers
 
             if (uncommentedNode == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain uncommented node within the xpath {xpath}");
+                _logger.WriteWarning($"{filePath} does not contain uncommented node within the xpath {xpath}");
                 return;
             }
 
@@ -286,7 +287,7 @@ namespace ISHDeploy.Data.Managers
             uncommentedNode.ReplaceWith(commentedNode);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][{xpath}][Commented][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
+            _logger.WriteVerbose($"[{filePath}][{xpath}][Commented][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
         }
 
         /// <summary>
@@ -321,7 +322,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (uncommentedNode.NodeType == XmlNodeType.Comment)
                 {
-                    _logger.WriteDebug($"{filePath} contains already commented node following after pattern {searchPattern}");
+                    _logger.WriteWarning($"{filePath} contains already commented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -335,7 +336,7 @@ namespace ISHDeploy.Data.Managers
             if (commentedNode != null) // means that file was changed
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteDebug($"[{filePath}][Commented][Comment all nodes that has {searchPattern}]");
+                _logger.WriteVerbose($"[{filePath}][Commented][Comment all nodes that has {searchPattern}]");
             }
         }
 
@@ -371,7 +372,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (commentedNode.NodeType != XmlNodeType.Comment)
                 {
-                    _logger.WriteDebug($"{filePath} contains already uncommented node following after pattern {searchPattern}");
+                    _logger.WriteWarning($"{filePath} contains already uncommented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -385,7 +386,7 @@ namespace ISHDeploy.Data.Managers
             if (isFileChanged)
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteDebug($"[{filePath}][Uncommented][Uncomment all nodes that has {searchPattern}]");
+                _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment all nodes that has {searchPattern}]");
             }
         }
 
@@ -413,7 +414,7 @@ namespace ISHDeploy.Data.Managers
 
             if (!commentedNodes.Any())
             {
-                _logger.WriteDebug($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
+                _logger.WriteWarning($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
                 return;
             }
 
@@ -426,7 +427,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][Uncommented][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
+            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
         }
 
         /// <summary>
@@ -443,13 +444,13 @@ namespace ISHDeploy.Data.Managers
             var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
             if (attr == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain attribute at '{attributeXpath}'.");
+                _logger.WriteWarning($"{filePath} does not contain attribute at '{attributeXpath}'.");
                 return;
             }
 
             attr.SetValue(value);
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][Set]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>
@@ -484,7 +485,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                _logger.WriteDebug($"No modifications was done to the file `{filePath}`");
+                _logger.WriteWarning($"No modifications was done to the file `{filePath}`");
                 return;
             }
 
@@ -499,7 +500,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][Set]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>
@@ -527,7 +528,7 @@ namespace ISHDeploy.Data.Managers
             {
                 if (equalityComparer.Equals(node, newElement))
                 {
-                    _logger.WriteDebug($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
+                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
                     return;
                 }
             }
@@ -535,7 +536,7 @@ namespace ISHDeploy.Data.Managers
             relativeElement.AddBeforeSelf(newElement);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][Inserted]");
+            _logger.WriteVerbose($"[{filePath}][Inserted]");
         }
 
         /// <summary>
@@ -554,13 +555,13 @@ namespace ISHDeploy.Data.Managers
 
             if (element == null)
             {
-                _logger.WriteDebug($"{filePath} does not contain element '{xpath}'.");
+                _logger.WriteWarning($"{filePath} does not contain element '{xpath}'.");
                 return;
             }
             element.SetValue(value);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteDebug($"[{filePath}][Set]");
+            _logger.WriteVerbose($"[{filePath}][Set]");
         }
 
         /// <summary>
@@ -588,7 +589,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             var element = (XElement)node;
-            _logger.WriteDebug($"Retrieved value of element node is: {element.Value}");
+            _logger.WriteVerbose($"Retrieved value of element node is: {element.Value}");
             return element.Value;
         }
 
@@ -629,7 +630,7 @@ namespace ISHDeploy.Data.Managers
             }
             catch (XmlException ex)
             {
-                _logger.WriteDebug($"Replaced content can`t be parsed as XML, with following message {ex.Message}");
+                _logger.WriteWarning($"Replaced content can`t be parsed as XML, with following message {ex.Message}");
                 return false;
             }
             catch

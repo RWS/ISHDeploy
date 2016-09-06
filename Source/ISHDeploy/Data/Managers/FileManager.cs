@@ -101,7 +101,7 @@ namespace ISHDeploy.Data.Managers
 
 			_logger.WriteDebug($"Delete file `{path}`");
 			File.Delete(path);
-            _logger.WriteDebug($"Deleted file `{path}`");
+            _logger.WriteVerbose($"Deleted file `{path}`");
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace ISHDeploy.Data.Managers
         {
 			_logger.WriteDebug($"Create directory `{folderPath}`");
 			Directory.CreateDirectory(folderPath);
-            _logger.WriteDebug($"Created directory `{folderPath}`");
+            _logger.WriteVerbose($"Created directory `{folderPath}`");
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace ISHDeploy.Data.Managers
 					Delete(filePath);
 				}
 			}
-            _logger.WriteDebug($"Cleaned folder `{folderPath}`");
+            _logger.WriteVerbose($"Cleaned folder `{folderPath}`");
         }
 
 		/// <summary>
@@ -149,7 +149,7 @@ namespace ISHDeploy.Data.Managers
 			{
 				Directory.Delete(folderPath, recursive);
 			}
-            _logger.WriteDebug($"Deleted folder `{folderPath}`{(recursive ? " recursively" : "")}");
+            _logger.WriteVerbose($"Deleted folder `{folderPath}`{(recursive ? " recursively" : "")}");
         }
 
 		/// <summary>
@@ -185,7 +185,7 @@ namespace ISHDeploy.Data.Managers
 					Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
 				}
 			}
-            _logger.WriteDebug($"Copied `{sourcePath}` directory content to {destinationPath}");
+            _logger.WriteVerbose($"Copied `{sourcePath}` directory content to {destinationPath}");
         }
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace ISHDeploy.Data.Managers
 		public string ReadAllText(string filePath)
         {
 			_logger.WriteDebug($"[{filePath}][Read all text]");
-            _logger.WriteDebug($"[{filePath}][Read all text]");
+            _logger.WriteVerbose($"[{filePath}][Read all text]");
             return File.ReadAllText(filePath);
         }
 
@@ -208,7 +208,7 @@ namespace ISHDeploy.Data.Managers
         public string[] ReadAllLines(string filePath)
         {
 			_logger.WriteDebug($"[{filePath}][Read all lines]");
-            _logger.WriteDebug($"[{filePath}][Read all lines]");
+            _logger.WriteVerbose($"[{filePath}][Read all lines]");
             return File.ReadAllLines(filePath);
         }
 
@@ -221,7 +221,7 @@ namespace ISHDeploy.Data.Managers
         {
 			_logger.WriteDebug($"[{filePath}][Write all lines]");
 			File.WriteAllLines(filePath, lines);
-            _logger.WriteDebug($"[{filePath}][Wrote all lines]");
+            _logger.WriteVerbose($"[{filePath}][Wrote all lines]");
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace ISHDeploy.Data.Managers
 			{
 				fileStream.Write(text);
 			}
-            _logger.WriteDebug($"[{filePath}][{(append ? "Appended" : "Wrote")} content]");
+            _logger.WriteVerbose($"[{filePath}][{(append ? "Appended" : "Wrote")} content]");
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace ISHDeploy.Data.Managers
         public XDocument Load(string filePath)
         {
 			_logger.WriteDebug($"[{filePath}][Load XML document]");
-            _logger.WriteDebug($"[{filePath}][Loaded XML document]");
+            _logger.WriteVerbose($"[{filePath}][Loaded XML document]");
             return XDocument.Load(filePath);
         }
 
@@ -273,7 +273,7 @@ namespace ISHDeploy.Data.Managers
         public void Save(string filePath, XDocument doc)
         {
 			_logger.WriteDebug($"[{filePath}][Save XML document]");
-            _logger.WriteDebug($"[{filePath}][Saved XML document]");
+            _logger.WriteVerbose($"[{filePath}][Saved XML document]");
             doc.Save(filePath);
         }
 
@@ -299,7 +299,7 @@ namespace ISHDeploy.Data.Managers
             int i = hostName.IndexOf(".", StringComparison.InvariantCulture);
             if (i > 0)
             {
-                _logger.WriteDebug($"Looked for `{hostName}` license file");
+                _logger.WriteVerbose($"Looked for `{hostName}` license file");
                 return TryToFindLicenseFile(licenseFolderPath, hostName.Substring(i + 1), licenseFileExtension, out filePath);
             }
 
@@ -328,7 +328,7 @@ namespace ISHDeploy.Data.Managers
 
             ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
 
-            _logger.WriteDebug($"The output package is: '{destinationArchiveFilePath}'");
+            _logger.WriteVerbose($"The output package is: '{destinationArchiveFilePath}'");
         }
 
         /// <summary>

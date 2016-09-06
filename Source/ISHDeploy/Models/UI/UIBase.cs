@@ -41,7 +41,8 @@ namespace ISHDeploy.Models.UI
                 element,
                 keyAttribute).Run();
         }
-        internal void Remove(ILogger Logger, ISHDeployment ISHDeployment) {
+        internal void Remove(ILogger Logger, ISHDeployment ISHDeployment)
+        {
             CreateXMLNode();
             new RemoveUIOperation(
                 Logger,
@@ -52,14 +53,16 @@ namespace ISHDeploy.Models.UI
                 element,
                 keyAttribute).Run();
         }
-        internal void Move(ILogger Logger, ISHDeployment ISHDeployment, OperationType operation, string after) { 
+        internal void Move(ILogger Logger, ISHDeployment ISHDeployment, OperationType operation, string after)
+        {
+            CreateXMLNode();
             new MoveUIOperation(
                     Logger,
                     ISHDeployment,
                     filePath,
                     rootPath,
                     childItemPath,
-                    null,
+                    element,
                     keyAttribute,
                     operation,
                     after).Run();

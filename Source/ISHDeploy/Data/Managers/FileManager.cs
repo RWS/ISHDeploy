@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
-﻿using System.Collections.Generic;
-﻿using System.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
-﻿using System.Linq;
-﻿using System.Security.AccessControl;
-﻿using System.Xml.Linq;
+using System.Linq;
+using System.Security.AccessControl;
+using System.Xml.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.Threading;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -147,7 +148,16 @@ namespace ISHDeploy.Data.Managers
 			_logger.WriteDebug($"Delete folder `{folderPath}`{(recursive ? " recursively" : "")}");
 			if (FolderExists(folderPath))
 			{
-				Directory.Delete(folderPath, recursive);
+                try
+                {
+                    Directory.Delete(folderPath, recursive);
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(0);
+                    Directory.Delete(folderPath, recursive);
+                }
+
 			}
             _logger.WriteVerbose($"Deleted folder `{folderPath}`{(recursive ? " recursively" : "")}");
         }

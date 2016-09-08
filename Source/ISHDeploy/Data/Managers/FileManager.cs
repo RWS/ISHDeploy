@@ -142,7 +142,6 @@ namespace ISHDeploy.Data.Managers
 		/// Deletes the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
 		public void DeleteFolder(string folderPath)
 		{
 			_logger.WriteDebug($"Delete folder `{folderPath}`");

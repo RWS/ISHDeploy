@@ -154,7 +154,7 @@ namespace ISHDeploy.Data.Managers
                 {
                     DeleteDirectory(directory);
                 }
-
+                DeleteDirectory(folderPath);
             }
             _logger.WriteVerbose($"Deleted folder `{folderPath}`");
         }

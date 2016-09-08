@@ -157,7 +157,7 @@ namespace ISHDeploy.Data.Managers
                 }
                 catch (IOException)
                 {
-                    Thread.Sleep(0);
+                    Thread.Sleep(2000);
                     Directory.Delete(folderPath, recursive);
                 }
 

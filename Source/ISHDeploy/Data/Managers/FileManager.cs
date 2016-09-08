@@ -148,6 +148,9 @@ namespace ISHDeploy.Data.Managers
 			_logger.WriteDebug($"Delete folder `{folderPath}`{(recursive ? " recursively" : "")}");
 			if (FolderExists(folderPath))
 			{
+                // known c# issue
+                // TS-11684
+                // http://zacharykniebel.com/blog/web-development/2013/june/21/solving-the-csharp-bug-when-recursively-deleting-directories
                 try
                 {
                     Directory.Delete(folderPath, recursive);

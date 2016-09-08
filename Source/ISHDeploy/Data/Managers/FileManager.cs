@@ -159,7 +159,7 @@ namespace ISHDeploy.Data.Managers
         /// Depth-first recursive delete, with handling for descendant 
         /// directories open in Windows Explorer.
         /// </summary>
-        private static void DeleteDirectory(string path)
+        private void DeleteDirectory(string path)
         {
             foreach (string directory in Directory.GetDirectories(path))
             {

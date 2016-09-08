@@ -77,6 +77,9 @@ function readTargetXML() {
 }
 
 UndoDeploymentBackToVanila $testingDeploymentName
+
+$DebugPreference = "Continue"
+$VerbosePreference = "Continue"
 Describe "Testing ISHIntegrationSTSWSFederation"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "web.config"
@@ -102,6 +105,8 @@ Describe "Testing ISHIntegrationSTSWSFederation"{
         #Rollback
         Remove-Item "$xmlPath\Web.config"
         Rename-Item "$xmlPath\_Web.config" "web.config"
+        $DebugPreference = "SilentlyContinue"
+        $VerbosePreference = "SilentlyContinue"
     }
 
     It "Set ISHIntegrationSTSWSFederation with no XML"{

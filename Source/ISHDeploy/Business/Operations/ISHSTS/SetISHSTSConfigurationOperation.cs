@@ -15,10 +15,8 @@
  */
 
 using System;
-using System.Linq;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
@@ -155,19 +153,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
                             subjectThumbprint)));
             }
-        }
-
-        private string GetNormalizedThumbprint(string thumbprint)
-        {
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-
-            if (normalizedThumbprint.Length != thumbprint.Length)
-            {
-                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-                thumbprint = normalizedThumbprint;
-            }
-
-            return thumbprint;
         }
 
         /// <summary>

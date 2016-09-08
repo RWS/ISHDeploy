@@ -93,8 +93,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>List of found deployments</returns>
         public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string projectName = null)
         {
-            _logger.WriteDebug($"[projectName={projectName}]");
-            _logger.WriteDebug($"[Retrieve installed registry keys]");
+            _logger.WriteDebug($"Retrieve registry keys for {(string.IsNullOrEmpty(projectName) ? "installed projects" : $"project `{projectName}`")}");
 
             var installedProjectsKeys = new List<RegistryKey>();
             var projectBaseRegKey = GetProjectBaseRegKey();
@@ -123,7 +122,8 @@ namespace ISHDeploy.Data.Managers
                     installedProjectsKeys.Add(projRegKey);
                 }
             }
-            _logger.WriteVerbose($"[Retrieved installed registry keys]");
+
+            _logger.WriteVerbose($"Registry keys for {(string.IsNullOrEmpty(projectName) ? "installed projects" : $"project `{projectName}`")} have been retrieved");
             return installedProjectsKeys;
         }
 
@@ -134,12 +134,13 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Path to inputparameters.xml file</returns>
         public string GetInstallParamFilePath(RegistryKey projectRegKey)
         {
-            _logger.WriteDebug($"[{projectRegKey.Name}][Retrieve the inputparameters.xml file path]");
+            _logger.WriteDebug($"Retrieve the inputparameters.xml file path for {projectRegKey.Name}");
 
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
-            _logger.WriteVerbose($"[{projectRegKey.Name}][Retrieved the inputparameters.xml file path]");
-            return historyItem?.GetValue(InstallHistoryPathRegValue).ToString();
+            var path = historyItem?.GetValue(InstallHistoryPathRegValue).ToString();
+            _logger.WriteVerbose($"The path to file inputparameters.xml for {projectRegKey.Name} has been retrieved");
+            return path;
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Deployment version.</returns>
         public Version GetInstalledProjectVersion(RegistryKey projectRegKey)
         {
-            _logger.WriteDebug($"[{projectRegKey.Name}][Retrieve installed deployment version");
+            _logger.WriteDebug($"Retrieve installed deployment version for {projectRegKey.Name}");
 
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
@@ -162,7 +163,7 @@ namespace ISHDeploy.Data.Managers
                 return null;
             }
 
-            _logger.WriteVerbose($"[{projectRegKey.Name}][Retrieved installed deployment version");
+            _logger.WriteVerbose($"The version for installed deployment {projectRegKey.Name} has been retrieved");
             return version;
         }
 
@@ -204,13 +205,13 @@ namespace ISHDeploy.Data.Managers
 
             if (Environment.Is64BitOperatingSystem)
             {
-                _logger.WriteDebug($"[{InstallToolRegPath64}][Try to open registry key]");
+                _logger.WriteDebug($"[{InstallToolRegPath64}] Try to open registry key");
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath64);
             }
 
             if (installToolRegKey == null)
             {
-                _logger.WriteDebug($"[{InstallToolRegPath}][Try to open registry key");
+                _logger.WriteDebug($"[{InstallToolRegPath}] Try to open registry key");
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath);
             }
 

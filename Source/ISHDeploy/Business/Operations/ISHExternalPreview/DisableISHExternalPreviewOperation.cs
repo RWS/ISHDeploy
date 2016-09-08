@@ -15,7 +15,8 @@
  */
 ﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Data.Exceptions;
+﻿using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHExternalPreview
 {
@@ -43,8 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath,
                     "THE_FISHEXTERNALID_TO_USE"));
 
             _invoker.AddAction(new CommentNodeByXPathAction(
@@ -62,7 +62,24 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            // TODO: Create get status operation and use it before run the invoker to check whether external preview already disabled or not, 
+            // and remove this try/catch block
+            // This block has been added as workaround solution, because we try to set value for commented xml attribute? instead of do above check
+            try
+            {
+                _invoker.Invoke();
+            }
+            catch (WrongXPathException ex)
+            {
+                if (ex.Message.Contains(InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath))
+                {
+                    Logger.WriteVerbose("External preview for Content Manager has already been disabled");
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
         }
     }
 }

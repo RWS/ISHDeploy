@@ -150,10 +150,6 @@ namespace ISHDeploy.Data.Managers
                 // known c# issue
                 // TS-11684
                 // http://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
-                foreach (string directory in Directory.GetDirectories(folderPath))
-                {
-                    DeleteDirectory(directory);
-                }
                 DeleteDirectory(folderPath);
             }
             _logger.WriteVerbose($"Deleted folder `{folderPath}`");
@@ -165,6 +161,10 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private static void DeleteDirectory(string path)
         {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
             try
             {
                 Directory.Delete(path, true);

@@ -63,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 		/// <para type="description">Selected validation mode. Default value is 'ChainTrust'.</para>
 		/// </summary>
 		[Parameter(Mandatory = false, HelpMessage = "Selected validation mode")]
-		public X509CertificateValidationMode ValidationMode { get; set; } = X509CertificateValidationMode.PeerOrChainTrust;
+		public X509CertificateValidationMode? ValidationMode { get; set; }
 
 		/// <summary>
 		/// Executes cmdlet

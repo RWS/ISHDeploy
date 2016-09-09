@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Business.Operations.ISHSTS
+namespace ISHDeploy.Business.Enums
 {
     /// <summary>
     /// Specify the binding type that is required by the end point of the WS-Trust issuer.

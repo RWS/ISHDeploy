@@ -93,15 +93,6 @@ namespace ISHDeploy.Validators
 				if (cmVersion.CompareTo(moduleVersion) != 0)
 				{
 					errorMessage = $"Module version `{moduleVersion}` does not correspond to deployment version `{deploymentVersion}`.";
-
-					if (cmVersion.CompareTo(ModuleInitVersion) < 0)
-				{
-						errorMessage += "\r\nPlease install newer Content Manager version.";
-					}
-					else
-					{
-						errorMessage += $"\r\nPlease install module `{moduleName}`.";
-					}
 				}
 			}
 	        else
@@ -111,7 +102,7 @@ namespace ISHDeploy.Validators
 				throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
 			}
 
-			return String.IsNullOrEmpty(errorMessage);
+			return string.IsNullOrEmpty(errorMessage);
 		}
     }
 }

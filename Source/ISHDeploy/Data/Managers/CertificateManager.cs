@@ -97,19 +97,19 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string GetPathToCertificateByThumbprint(string thumbprint)
         {
-            _logger.WriteDebug($"Get path to the certificate with thumbprint: {thumbprint}");
+            _logger.WriteDebug("Get path to certificate", thumbprint);
             var certificate = FindCertificateByThumbprint(thumbprint);
 
             var uniqueKeyContainerName =
                 ((System.Security.Cryptography.RSACryptoServiceProvider) certificate.PrivateKey).CspKeyContainerInfo
-                    .KeyContainerName;
+                    .UniqueKeyContainerName;
 
             var commonApplicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             string path = $"{commonApplicationDataPath}\\Microsoft\\Crypto\\RSA\\MachineKeys\\{uniqueKeyContainerName}";
 
             if (_fileManager.FileExists(path))
             {
-                _logger.WriteDebug($"The path to the certificate: {path}");
+                _logger.WriteVerbose($"The path to the certificate: {path}");
                 return path;
             }
 
@@ -122,7 +122,7 @@ namespace ISHDeploy.Data.Managers
                 throw new Exception($"Could not locate private key file for certificate {thumbprint}");
             }
 
-            _logger.WriteDebug($"The path to the certificate: {path}");
+            _logger.WriteVerbose($"The path to the certificate: {path}");
 
             return path;
         }
@@ -135,7 +135,7 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="System.ArgumentNullException"></exception>
         private X509Certificate2 FindCertificateByThumbprint(string thumbprint)
         {
-            _logger.WriteDebug($"Get the certificate with thumbprint: {thumbprint}");
+            _logger.WriteDebug("Find certificate", thumbprint);
             var certStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
             certStore.Open(OpenFlags.ReadOnly);
@@ -148,7 +148,7 @@ namespace ISHDeploy.Data.Managers
             {
                 throw new ArgumentNullException($"Certificate with thumbprint `{thumbprint}` cannot be found.");
             }
-            _logger.WriteDebug("Certificate has been found.");
+            _logger.WriteVerbose("Certificate has been found.");
 
             return certificate;
         }

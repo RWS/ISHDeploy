@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.IO;
 ﻿using System.Linq;
+﻿using System.Management.Automation;
+﻿using System.Reflection;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -56,7 +59,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (appPool != null)
                 {
-                    _logger.WriteDebug($"Recycle application pool: `{applicationPoolName}`");
+                    _logger.WriteDebug("Recycle application pool", applicationPoolName);
 
                     // Wait while application pool operation is completed
                     if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
@@ -67,19 +70,19 @@ namespace ISHDeploy.Data.Managers
                     //The app pool is running, so stop it first.
                     if (appPool.State == ObjectState.Started)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` recycle.");
+                        _logger.WriteDebug("Application pool is started. Recycle it", applicationPoolName);
 
                         appPool.Recycle();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` recycled.");
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` has been recycled.");
                     }
                     else if (appPool.State == ObjectState.Stopped && startIfNotRunning)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is stopped. Start it.");
+                        _logger.WriteDebug("Application pool is stopped. Start it.", applicationPoolName);
 
                         appPool.Start();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` started");
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` has been started");
                     }
                 }
                 else
@@ -97,14 +100,11 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void EnableWindowsAuthentication(string webSiteName)
         {
-            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
-            // https://jira.sdl.com/browse/TS-11523
-            //if (IsWindowsAuthenticationFeatureEnabled())
-            //{
+            _logger.WriteDebug("Enable WindowsAuthentication for site", webSiteName);
+            if (IsWindowsAuthenticationFeatureEnabled())
+            {
                 using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
                 {
-                    _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
-
                     var config = manager.GetApplicationHostConfiguration();
 
                     var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
@@ -120,12 +120,14 @@ namespace ISHDeploy.Data.Managers
                     windowsAuthenticationSection["enabled"] = true;
 
                     manager.CommitChanges();
+
+                    _logger.WriteVerbose("WindowsAuthentication has been enabled");
                 }
-            //}
-            //else
-            //{
-            //    throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
-            //}
+            }
+            else
+            {
+                throw new WindowsAuthenticationModuleIsNotInstalledException("IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it");
+            }
         }
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace ISHDeploy.Data.Managers
         {
             using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug($"Enable WindowsAuthentication for site: `{webSiteName}`");
+                _logger.WriteDebug("Disable WindowsAuthentication for site", webSiteName);
 
                 var config = manager.GetApplicationHostConfiguration();
                 var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
@@ -147,12 +149,9 @@ namespace ISHDeploy.Data.Managers
                     locationPath);
                 windowsAuthenticationSection["enabled"] = false;
 
-                //var anonymousAuthenticationSection = config.GetSection(
-                //    "system.webServer/security/authentication/anonymousAuthentication",
-                //    locationPath);
-                //anonymousAuthenticationSection["enabled"] = true;
-
                 manager.CommitChanges();
+
+                _logger.WriteVerbose("WindowsAuthentication has been disabled");
             }
         }
 
@@ -162,9 +161,40 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
-            // TODO: Add check is feature WindowsAuthentication enable on current operation system for Set-ISHSTSConfiguration  cmdlet.
-            // https://jira.sdl.com/browse/TS-11523
-            return true;
+            bool isFeatureEnabled = false;
+
+            _logger.WriteDebug("Checking IIS-WindowsAuthentication feature is turned on or not");
+
+            using (var ps = PowerShell.Create())
+            {
+                // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
+                using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("ISHDeploy.Data.Resources.Check-WindowsAuthenticationFeatureEnabled.ps1"))
+                {
+                    using (var reader = new StreamReader(resourceReader))
+                    {
+                        ps.AddScript(reader.ReadToEnd());
+                    }
+                }
+
+                foreach (PSObject result in ps.Invoke())
+                {
+                    foreach (var verbose in ps.Streams.Verbose.ReadAll())
+                    {
+                        _logger.WriteVerbose(verbose.Message);
+                    }
+
+                    foreach (var warning in ps.Streams.Warning.ReadAll())
+                    {
+                        _logger.WriteWarning(warning.Message);
+                    }
+
+                    isFeatureEnabled = result != null && bool.Parse(result.ToString());
+                }
+            }
+
+            _logger.WriteVerbose($"IIS-WindowsAuthentication feature is {(isFeatureEnabled ? "turned on" : "turned off")}");
+
+            return isFeatureEnabled;
         }
 
         /// <summary>
@@ -179,7 +209,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (appPool != null)
                 {
-                    _logger.WriteDebug($"Stop application pool: `{applicationPoolName}`");
+                    _logger.WriteDebug("Stop application pool", applicationPoolName);
                     // Wait while application pool operation is completed
                     if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
                     {
@@ -189,17 +219,17 @@ namespace ISHDeploy.Data.Managers
                     //The app pool is running, so stop it.
                     if (appPool.State == ObjectState.Started)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is started. Stop it.");
+                        _logger.WriteDebug("Application pool is started. Stop it", applicationPoolName);
 
                         appPool.Stop();
                         WaitOperationCompleted(appPool);
-                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` stopped.");
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` has been stopped.");
                     }
 
                     //The app pool is already stopped.
                     if (appPool.State == ObjectState.Stopped)
                     {
-                        _logger.WriteDebug($"Application pool `{applicationPoolName}` is already stopped.");
+                        _logger.WriteVerbose($"Application pool `{applicationPoolName}` is already stopped.");
                     }
                 }
                 else
@@ -217,6 +247,7 @@ namespace ISHDeploy.Data.Managers
         private void WaitOperationCompleted(ApplicationPool appPool)
         {
             int i = 0;
+            _logger.WriteDebug("Wait until application pool change status", appPool.Name);
             while (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
             {
                 System.Threading.Thread.Sleep(100);
@@ -237,7 +268,7 @@ namespace ISHDeploy.Data.Managers
         {
             using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug($"Set ApplicationPoolIdentity identity type for application poll: `{applicationPoolName}`");
+                _logger.WriteDebug("Set ApplicationPoolIdentity identity type", applicationPoolName);
 
                 var config = manager.GetApplicationHostConfiguration();
 
@@ -259,7 +290,7 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 manager.CommitChanges();
-                _logger.WriteDebug($"The identity type has been changed");
+                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName} has been changed");
             }
         }
 
@@ -271,7 +302,7 @@ namespace ISHDeploy.Data.Managers
         {
             using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug($"Set SpecificUser identity type for application poll: `{applicationPoolName}`");
+                _logger.WriteDebug("Set application pool SpecificUser identity type", applicationPoolName);
 
                 var config = manager.GetApplicationHostConfiguration();
 
@@ -293,7 +324,7 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 manager.CommitChanges();
-                _logger.WriteDebug($"The identity type has been changed");
+                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName}` has been changed");
             }
         }
     }

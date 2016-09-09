@@ -47,6 +47,14 @@ try
 		Write-Host "Creating Module Folder at '$ExportPath'."
 		New-Item -ItemType directory -Path $ExportPath
 	}
+	
+	# From schema https://github.com/PowerShell/platyPS/blob/master/platyPS.schema.md
+	# platyPS generates link elements like [{link name}]({link url}) but the {link url} is always empty resulting in ugly links
+	# The following block reads each file and promotes the {link name} to {link url}
+	Get-ChildItem -Path $ExportPath -Filter "*.md" | ForEach-Object {
+		$content=Get-Content -Path $_.FullName
+		$content -replace "\[(?<linkname>.+)\]\(\)",'[${linkname}](${linkname}.md)' |Out-File $_.FullName -Force
+	}
 
 	# Generating context for all markdown files generated from maml
 	Get-ChildItem -Path $ExportPath -Filter "*.md" | ForEach-Object {

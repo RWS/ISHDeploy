@@ -56,10 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32Ex, Version=1.2.0.0, Culture=neutral, PublicKeyToken=74136f9f94e352d9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32Ex.1.2.0.0\lib\net40\Microsoft.Win32Ex.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -79,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\InternalSTSLogin.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -86,14 +83,16 @@
     <Compile Include="Business\Operations\ISHIntegrationDB\OutputType.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationOperation.cs" />
     <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />
-    <Compile Include="Business\Operations\ISHSTS\AuthenticationTypes.cs" />
-    <Compile Include="Business\Operations\ISHSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
+    <Compile Include="Business\Enums\AuthenticationTypes.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\BaseOperationPaths.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
@@ -162,13 +161,13 @@
     <Compile Include="Business\Operations\XopusConfigXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\BindingType.cs" />
+    <Compile Include="Business\Enums\BindingType.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation.cs" />
-    <Compile Include="Business\Operations\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustOperation.cs" />
-    <Compile Include="Business\Operations\ISHSTS\SetISHIntegrationSTSCertificateOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
@@ -177,15 +176,17 @@
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentParametersCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSFederationCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHIntegrationSTSWS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Data\Actions\DataBase\SqlCompactSelectAction.cs" />
     <Compile Include="Data\Actions\DataBase\SqlCompactExecuteAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryEnsureExistsAction.cs" />
+    <Compile Include="Data\Actions\Directory\DirectoryCreateAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAction.cs" />
     <Compile Include="Data\Actions\File\FileExistsAction.cs" />
     <Compile Include="Data\Actions\File\FileSystemRightsAssignAction.cs" />
@@ -215,6 +217,7 @@
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
+    <Compile Include="Data\Actions\StringActions\CreateIndexHTMLAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetIdentityTypeAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\StopApplicationPoolAction.cs" />
@@ -317,6 +320,7 @@
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
+    <EmbeddedResource Include="Data\Resources\Check-WindowsAuthenticationFeatureEnabled.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

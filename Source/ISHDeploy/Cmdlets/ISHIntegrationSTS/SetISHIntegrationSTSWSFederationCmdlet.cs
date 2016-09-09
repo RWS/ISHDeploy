@@ -16,14 +16,21 @@
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
+﻿using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
-namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets WSFederation configuration.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSWSFederation cmdlet sets WSFederation configuration to Content Manager deployment.</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackage</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrust</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint "https://adfs.example.com/adfs/ls/"</code>
     ///     <para>This command configure WS Federation to use specified Endpoint of STS server.

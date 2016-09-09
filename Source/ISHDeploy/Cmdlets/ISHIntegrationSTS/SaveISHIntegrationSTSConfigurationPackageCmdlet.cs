@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
+﻿using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
-namespace ISHDeploy.Cmdlets.ISHIntegrationSTSWS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Saves STS integration configuration to zip archive in package folder.</para>
     ///		<para type="description">The Save-ISHIntegrationSTSConfigurationPackage saves STS integration configuration to zip archive in package folder.</para>
     ///     <para type="description">Cmdlet will overwrite zip archive if there is already one with same name.</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
+    ///     <para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrust</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
     /// </summary>
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\>Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName packageFile.zip</code>
     ///     <para>Creates a zip archive in package folder with current STS integration configurations.

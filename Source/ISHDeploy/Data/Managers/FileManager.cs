@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
-﻿using System.Collections.Generic;
-﻿using System.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
-﻿using System.Linq;
-﻿using System.Security.AccessControl;
-﻿using System.Xml.Linq;
+using System.Linq;
+using System.Security.AccessControl;
+using System.Xml.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.Threading;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -141,22 +142,48 @@ namespace ISHDeploy.Data.Managers
 		/// Deletes the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise False.</param>
-		public void DeleteFolder(string folderPath, bool recursive = true)
+		public void DeleteFolder(string folderPath)
 		{
-			_logger.WriteDebug($"Delete folder `{folderPath}`{(recursive ? " recursively" : "")}");
+			_logger.WriteDebug($"Delete folder `{folderPath}`");
 			if (FolderExists(folderPath))
 			{
-				Directory.Delete(folderPath, recursive);
-			}
-            _logger.WriteVerbose($"Deleted folder `{folderPath}`{(recursive ? " recursively" : "")}");
+                // known c# issue
+                // TS-11684
+                // http://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+                DeleteDirectory(folderPath);
+            }
+            _logger.WriteVerbose($"Deleted folder `{folderPath}`");
         }
 
-		/// <summary>
-		/// Makes sure directory exists, if not, then creates it
-		/// </summary>
-		/// <param name="folderPath">Directory path to verify</param>
-		public void EnsureDirectoryExists(string folderPath)
+        /// <summary>
+        /// Depth-first recursive delete, with handling for descendant 
+        /// directories open in Windows Explorer.
+        /// </summary>
+        private void DeleteDirectory(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
+        }
+
+        /// <summary>
+        /// Makes sure directory exists, if not, then creates it
+        /// </summary>
+        /// <param name="folderPath">Directory path to verify</param>
+        public void EnsureDirectoryExists(string folderPath)
 		{
 			if (!FolderExists(folderPath))
 			{

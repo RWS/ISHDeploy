@@ -77,7 +77,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Dictionary with parameters</returns>
         public Dictionary<string, string> GetAllInputParamsValues(string filePath)
         {
-            _logger.WriteDebug($"Retrieve input parameters from file `{filePath}`");
+            _logger.WriteDebug("Retrieve input parameters", filePath);
 
             var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
@@ -104,7 +104,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched node</param>
         public void RemoveSingleNode(string filePath, string xpath)
         {
-            _logger.WriteDebug($"Remove the node `{xpath}` from file `{filePath}`");
+            _logger.WriteDebug("Remove node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -129,7 +129,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched nodes</param>
         public void RemoveNodes(string filePath, string xpath)
         {
-            _logger.WriteDebug($"Remove nodes `{xpath}` from file `{filePath}`");
+            _logger.WriteDebug("Remove nodes", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -154,7 +154,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="insertBeforeXpath">XPath to searched node</param>
         public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
         {
-            _logger.WriteDebug($"Move the node `{xpath}` before `{insertBeforeXpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Move node before `{insertBeforeXpath}`", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -210,7 +210,7 @@ namespace ISHDeploy.Data.Managers
 	    /// <param name="insertAfterXpath">XPath to searched node</param>
 	    public void MoveAfterNode(string filePath, string xpath, string insertAfterXpath)
         {
-            _logger.WriteDebug($"Move the node `{xpath}` after `{insertAfterXpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Move node after `{insertAfterXpath}`", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -267,7 +267,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="encodeInnerXml">True if content of the comment should be encoded; otherwise False.</param>
         public void CommentNode(string filePath, string xpath, bool encodeInnerXml = false)
         {
-            _logger.WriteDebug($"Comment{(encodeInnerXml ? " and encode" : "")} xml node `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Comment{(encodeInnerXml ? " and encode" : "")} xml node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -301,7 +301,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
         public void CommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-            _logger.WriteDebug($"Comment all nodes that have `{searchPattern}` in file `{filePath}`");
+            _logger.WriteDebug($"Comment all nodes that have `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -351,7 +351,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node.</param>
         public void UncommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-            _logger.WriteDebug($"Unomment all nodes that have `{searchPattern}` in file `{filePath}`");
+            _logger.WriteDebug($"Unomment all nodes that have `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -402,7 +402,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         public void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false)
         {
-            _logger.WriteDebug($"Uncomment{(decodeInnerXml ? " and decoding" : "")} all xml nodes that can be found by `{searchPattern}` in file `{filePath}`");
+            _logger.WriteDebug($"Uncomment{(decodeInnerXml ? " and decoding" : "")} all xml nodes that can be found by `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -442,7 +442,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="value">Attribute new value</param>
         public void SetAttributeValue(string filePath, string attributeXpath, string value)
         {
-            _logger.WriteDebug($"Set value of attribute `{attributeXpath}` to '{value}' in file `{filePath}`");
+            _logger.WriteDebug($"Set new value `{value}` for attribute `{attributeXpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
             var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
@@ -468,7 +468,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug($"Set node with xpath `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug("Set node", xpath ,filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();
@@ -518,7 +518,7 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WrongXPathException"></exception>
         public void InsertBeforeNode(string filePath, string xpath, string xmlString)
         {
-            _logger.WriteDebug($"Insert new node before node with xpath `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Insert new node before `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -553,7 +553,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="value">The new value of element.</param>
         public void SetElementValue(string filePath, string xpath, string value)
         {
-            _logger.WriteDebug($"Set new value '{value}' for element with xpath `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Set new value '{value}' for element `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -578,7 +578,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The element value.</returns>
         public string GetValue(string filePath, string xpath)
         {
-            _logger.WriteDebug($"Get value of element with xpath `{xpath}` in file `{filePath}`");
+            _logger.WriteDebug($"Get value of element `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
             var node = ((IEnumerable<object>)doc.XPathEvaluate(xpath)).SingleOrDefault();

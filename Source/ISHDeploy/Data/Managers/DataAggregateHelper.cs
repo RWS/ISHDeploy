@@ -67,7 +67,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>InputParameters containing all parameters from InputParameters.xml file for specified deployment</returns>
         public InputParameters GetInputParameters(string deploymentName)
         {
-            _logger.WriteDebug($"Get input parameters for `{deploymentName}` deployment");
+            _logger.WriteDebug("Get input parameters", deploymentName);
             // Get installed deployment from the registry.
             var projectRegKey = _registryManager.GetInstalledProjectsKeys(deploymentName).FirstOrDefault();
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);

@@ -93,7 +93,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>List of found deployments</returns>
         public IEnumerable<RegistryKey> GetInstalledProjectsKeys(string projectName = null)
         {
-            _logger.WriteDebug($"Retrieve registry keys for {(string.IsNullOrEmpty(projectName) ? "installed projects" : $"project `{projectName}`")}");
+            _logger.WriteDebug("Retrieve registry keys", (string.IsNullOrEmpty(projectName) ? "for all installed projects" : projectName));
 
             var installedProjectsKeys = new List<RegistryKey>();
             var projectBaseRegKey = GetProjectBaseRegKey();
@@ -134,7 +134,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Path to inputparameters.xml file</returns>
         public string GetInstallParamFilePath(RegistryKey projectRegKey)
         {
-            _logger.WriteDebug($"Retrieve the inputparameters.xml file path for {projectRegKey.Name}");
+            _logger.WriteDebug("[Get path to inputparameters.xml]");
 
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
@@ -150,7 +150,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Deployment version.</returns>
         public Version GetInstalledProjectVersion(RegistryKey projectRegKey)
         {
-            _logger.WriteDebug($"Retrieve installed deployment version for {projectRegKey.Name}");
+            _logger.WriteDebug("[Get deployment version]");
 
             var historyItem = GetHistoryFolderRegKey(projectRegKey);
 
@@ -205,13 +205,13 @@ namespace ISHDeploy.Data.Managers
 
             if (Environment.Is64BitOperatingSystem)
             {
-                _logger.WriteDebug($"[{InstallToolRegPath64}] Try to open registry key");
+                _logger.WriteDebug("Try to open registry key", InstallToolRegPath64);
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath64);
             }
 
             if (installToolRegKey == null)
             {
-                _logger.WriteDebug($"[{InstallToolRegPath}] Try to open registry key");
+                _logger.WriteDebug("Try to open registry key", InstallToolRegPath);
                 installToolRegKey = Registry.LocalMachine.OpenSubKey(InstallToolRegPath);
             }
 

@@ -79,7 +79,7 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = commandText;
 
-            _logger.WriteDebug($"Executing command `{_command.CommandText}`");
+            _logger.WriteDebug("Execut SQL command", _command.CommandText);
 
             if (_connection.State != ConnectionState.Open)
             {
@@ -109,7 +109,7 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = sqlQuery;
 
-            _logger.WriteDebug($"Executing command `{_command.CommandText}`");
+            _logger.WriteDebug("Execut SQL command", _command.CommandText);
 
             if (_connection.State != ConnectionState.Open)
             { 
@@ -141,7 +141,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         public void TransactionRollback()
         {
-            _logger.WriteDebug($"Roll back command `{_command.CommandText}`");
+            _logger.WriteDebug("Roll back SQL command", _command.CommandText);
             if (IsCommitted)
             {
                 _logger.WriteVerbose($"Cannot rollback command `{_command.CommandText}` because it has been already committed.");
@@ -157,7 +157,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         public void TransactionCommit()
         {
-            _logger.WriteDebug($"Commiting transaction with command {_command.CommandText}.");
+            _logger.WriteDebug("Commit transaction", _command.CommandText);
             _transaction?.Commit();
             IsCommitted = true;
         }

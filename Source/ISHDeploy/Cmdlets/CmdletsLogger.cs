@@ -15,7 +15,9 @@
  */
 ﻿using ISHDeploy.Interfaces;
 using System;
-using System.Management.Automation;
+﻿using System.Linq;
+﻿using System.Management.Automation;
+﻿using System.Runtime.CompilerServices;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -140,6 +142,15 @@ namespace ISHDeploy.Cmdlets
         public void WriteDebug(string message)
         {
             _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}");
+        }
+
+        /// <summary>
+        /// Writes debug-useful information.
+        /// </summary>
+        /// <param name="args">Arguments which will be merged into a line.</param>
+        public void WriteDebug(params object[] args)
+        {
+            WriteDebug(string.Concat(args.Select(i => $"[{i}]")));
         }
 
         /// <summary>

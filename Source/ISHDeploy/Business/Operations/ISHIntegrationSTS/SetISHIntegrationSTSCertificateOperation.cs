@@ -66,19 +66,20 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 
             if (validationMode != null)
             {
+                // Author web Config
                 _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // WS web Config
+                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
+                    InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // InputParameters.xml
+                _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, 
+                    InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
             }
 
 			// WS web Config
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
 				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
-
-            if (validationMode != null)
-            {
-                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
-                    InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
-            }
 
             // STS web Config
             string configurationInfoShareSTSCertificateThumbprint = string.Empty;
@@ -100,10 +101,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
             }
 
             // InputParameters.xml
-            if (validationMode != null)
-            {
-                _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
-            }
             _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateThumbprintXPath, thumbprint));
         }
 

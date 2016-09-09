@@ -136,7 +136,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Arrange
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -232,7 +232,7 @@ namespace ISHDeploy.Tests.Data.Managers
             _xmlConfigManager.UncommentNodesByInnerPattern(_filePath, testCommentPattern);
 
             // Assert
-            Logger.Received(1).WriteWarning($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already uncommented node by searched pattern '{testCommentPattern}'.");
         }
 
         [TestMethod]
@@ -357,7 +357,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
+            Logger.Received(1).WriteVerbose($"{_filePath} does not contain uncommented node within the xpath {testXPath}");
         }
 
         [TestMethod]
@@ -383,7 +383,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
+            Logger.Received(1).WriteVerbose($"{_filePath} contains already commented node following after pattern {testCommentPattern}");
         }
 
         [TestMethod]
@@ -999,7 +999,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose(Arg.Any<string>());
+            Logger.Received(2).WriteVerbose(Arg.Any<string>());
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -1055,7 +1055,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning(Arg.Any<string>());
+            Logger.Received(1).WriteVerbose(Arg.Any<string>());
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }
@@ -1119,7 +1119,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning(Arg.Is($"The element with xpath '{relativeNodeXPath}' already contains element '{nodeAsXmlString}' before it."));
+            Logger.Received(1).WriteVerbose(Arg.Is($"The element with xpath '{relativeNodeXPath}' already contains element '{nodeAsXmlString}' before it."));
         }
 
         [TestMethod]

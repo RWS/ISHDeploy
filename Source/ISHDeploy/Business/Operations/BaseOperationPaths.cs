@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
@@ -370,6 +371,23 @@ namespace ISHDeploy.Business.Operations
             XopusConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
 
             #endregion
+        }
+
+        /// <summary>
+        /// Gets the normalized thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns>Normalized thumbprint</returns>
+        protected string GetNormalizedThumbprint(string thumbprint)
+        {
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+            if (normalizedThumbprint.Length != thumbprint.Length)
+            {
+                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+            }
+
+            return normalizedThumbprint;
         }
 
         /// <summary>

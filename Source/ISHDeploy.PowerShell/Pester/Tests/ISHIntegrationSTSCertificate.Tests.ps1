@@ -169,7 +169,7 @@ Describe "Testing ISHIntegrationSTSCertificate"{
     It "Set ISHIntegrationSTSCertificate several times"{        
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer", "PeerOrChainTrust"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer222", "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, "testThumbprint", "testIssuer222", "PeerOrChainTrust"
         
         #Assert
         remoteReadTargetXML -Thumbprint "testThumbprint" -ValidationMode "PeerOrChainTrust"
@@ -182,7 +182,6 @@ Describe "Testing ISHIntegrationSTSCertificate"{
         $wsWebConfigIssuer | Should be "testIssuer222"
         $stsWebConfigNodesCount | Should be 1
         $stsWebConfigAddActAsTrustedIssuerNodeCount | Should be 1
-        $Warning | Should Match "contains already uncommented node by searched pattern '<add name=`"addActAsTrustedIssuer`"'." 
     }
 
     It "Set ISHIntegrationSTSCertificate normalizes thumbprint"{       

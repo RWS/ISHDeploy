@@ -29,12 +29,7 @@ namespace ISHDeploy.Business.Operations
             /// <summary>
             /// The xpath of "configuration/trisoft.infoshare.web.externalpreviewmodule/identity" element in ~\Web\Author\ASP\Web.config file
             /// </summary>
-            public const string ExternalPreviewModuleXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity";
-
-            /// <summary>
-            /// The attribute name of "configuration/trisoft.infoshare.web.externalpreviewmodule/identity" element in ~\Web\Author\ASP\Web.config file
-            /// </summary>
-            public const string ExternalPreviewModuleAttributeName = "externalId";
+            public const string ExternalPreviewModuleAttributeXPath = "configuration/trisoft.infoshare.web.externalpreviewmodule/identity/@externalId";
 
             /// <summary>
             /// The xpath of "configuration/system.webServer/modules/add[@name='TrisoftExternalPreviewModule']" element in ~\Web\Author\ASP\Web.config file

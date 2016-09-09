@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -46,15 +45,9 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+            thumbprint = GetNormalizedThumbprint(thumbprint);
 
-		    if (normalizedThumbprint.Length != thumbprint.Length)
-		    {
-                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-		        thumbprint = normalizedThumbprint;
-		    }
-
-		    var menuItem = new IssuerThumbprintItem()
+            var menuItem = new IssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer

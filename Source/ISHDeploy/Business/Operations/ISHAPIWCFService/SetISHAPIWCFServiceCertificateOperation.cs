@@ -44,7 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <param name="validationMode">The certificate validation mode.</param>
-        public SetISHAPIWCFServiceCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, X509CertificateValidationMode validationMode) :
+        public SetISHAPIWCFServiceCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, X509CertificateValidationMode? validationMode) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
@@ -83,14 +83,16 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateThumbprintXPath, thumbprint));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
 
-            // validationMode
-            _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
-
+            if (validationMode != null)
+            {
+                // validationMode
+                _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+                _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+                _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
+            }
 
             // Recycling Application pool for STS
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));

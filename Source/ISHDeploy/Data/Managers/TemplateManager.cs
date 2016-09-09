@@ -55,6 +55,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string GenerateDocument(string templateFileName, IDictionary<string, string> parameters)
         {
+            _logger.WriteDebug($"Generate output document from the template file `{templateFileName}`");
             string templateFile = $"{TemplateBaseFolder}.{templateFileName}";
             string templateContent;
 
@@ -70,6 +71,7 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteDebug("Replacing all parameters in template: " + string.Join("; ", parameters.Select(param => $"{param.Key}={param.Value}").ToArray()));
             templateContent = parameters.Aggregate(templateContent, (current, parameter) => current.Replace(parameter.Key, parameter.Value));
 
+            _logger.WriteDebug($"The output document from the template file `{templateFileName}` has been generated");
             return templateContent;
         }
     }

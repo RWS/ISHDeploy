@@ -119,8 +119,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// Delete the folder
 		/// </summary>
 		/// <param name="folderPath">Path to folder to be deleted</param>
-		/// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise, False.</param>
-		void DeleteFolder(string folderPath, bool recursive = true);
+		void DeleteFolder(string folderPath);
 
 	    /// <summary>
 	    /// Makes sure directory exists, if not, then creates it

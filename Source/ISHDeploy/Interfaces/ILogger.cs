@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.Runtime.CompilerServices;
 
 namespace ISHDeploy.Interfaces
 {
@@ -51,6 +52,12 @@ namespace ISHDeploy.Interfaces
         void WriteDebug(string message);
 
         /// <summary>
+        /// Writes debug-useful information.
+        /// </summary>
+        /// <param name="args">Arguments which will be merged into a line.</param>
+        void WriteDebug(params object[] args);
+
+        /// <summary>
         /// Writes warning message.
         /// </summary>
         /// <param name="message">Warning message.</param>
@@ -62,5 +69,11 @@ namespace ISHDeploy.Interfaces
         /// <param name="ex">Exception as a result of the error.</param>
         /// <param name="errorObject">Object that caused error.</param>
         void WriteError(Exception ex, object errorObject = null);
+        
+        /// <summary>
+        /// Emulate Write-Host operation.
+        /// </summary>
+        /// <param name="message">Write-Host message.</param>
+        void WriteHostEmulation(string message);
     }
 }

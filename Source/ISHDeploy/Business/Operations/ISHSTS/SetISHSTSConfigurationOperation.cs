@@ -15,9 +15,8 @@
  */
 
 using System;
-using System.Linq;
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Business.Operations.ISHIntegrationSTSWS;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
@@ -53,6 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
@@ -70,7 +70,18 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
+
+            string authenticationType = string.Empty;
+            (new GetValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath,
+                    result => authenticationType = result)).Execute();
+
+            if (authenticationType == AuthenticationTypes.Windows.ToString())
+            {
+                var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
+                AddActionsToSetCertificateFilePermission(applicationPoolUser, GetNormalizedThumbprint(thumbprint));
+            }
             AddActionsToStartSTSApplicationPool();
         }
 
@@ -88,6 +99,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS authentication type");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
         }
@@ -117,18 +129,27 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         }
 
         /// <summary>
+        /// Ensure STS DataBase file exists.
+        /// </summary>
+        private void EnsureSTSDataBaseFileExists()
+        {
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (!isDataBaseFileExist)
+            {
+                _invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
+                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+                _invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSDataBasePath));
+            }
+        }
+
+        /// <summary>
         /// Adds actions for setting STS token signing certificate.
         /// </summary>
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
         private void AddActionsToSetTokenSigningCertificate(string thumbprint)
         {
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-
-            if (normalizedThumbprint.Length != thumbprint.Length)
-            {
-                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-                thumbprint = normalizedThumbprint;
-            }
+            thumbprint = GetNormalizedThumbprint(thumbprint);
 
             var subjectThumbprint = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
@@ -136,20 +157,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-            // It is the responsibility of SetISHIntegrationSTSCertificateOperation to add or uncomment <add name="addActAsTrustedIssuer" node in ~\Web\InfoShareSTS\Web.config file  
-            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
-            //    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            // if the database exists we update the database
-            bool isDataBaseFileExist = false;
-            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
-            if (isDataBaseFileExist)
-            {
-                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                    InfoShareSTSDataBaseConnectionString,
-                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
-                            subjectThumbprint)));
-            }
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                InfoShareSTSDataBaseConnectionString,
+                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                        subjectThumbprint)));
         }
 
         /// <summary>
@@ -179,11 +191,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
-                string pathToCertificate = string.Empty;
-                (new GetPathToCertificateByThumbprintAction(Logger,
-                    InputParameters.ServiceCertificateThumbprint, s => pathToCertificate = s)).Execute();
-
-                _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                AddActionsToSetCertificateFilePermission(applicationPoolUser, InputParameters.ServiceCertificateThumbprint);
                 _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 if (ishDeployment.AppPath != ishDeployment.DataPath)
                 {
@@ -220,6 +228,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath, authenticationType.ToString()));
+        }
+
+        private void AddActionsToSetCertificateFilePermission(string applicationPoolUser, string certificateThumbprint)
+        {
+            string pathToCertificate = string.Empty;
+            (new GetPathToCertificateByThumbprintAction(Logger, certificateThumbprint, s => pathToCertificate = s)).Execute();
+
+            _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
         }
 
         /// <summary>

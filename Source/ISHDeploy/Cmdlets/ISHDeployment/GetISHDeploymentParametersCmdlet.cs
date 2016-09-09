@@ -49,7 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// </example>
 
     [Cmdlet(VerbsCommon.Get, "ISHDeploymentParameters")]
-    public sealed class GetISHDeploymentParametersCmdlet : BaseHistoryEntryCmdlet
+    public sealed class GetISHDeploymentParametersCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Switch parameter to get data from original file

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Interfaces;
@@ -64,12 +65,12 @@ namespace ISHDeploy.Data.Actions.DataBase
         public override void Execute()
         {
             string updateSQLCommand =
-                $"UPDATE {_tableName} SET {string.Join(", ", _fields.Select(x => $"{x.Key} = '{x.Value}'"))} WHERE {$"{_key} = '{_fields[_key]}'"}";
+                $"UPDATE {_tableName} SET {string.Join(", ", _fields.Select(x => x.Value == null ? $"{x.Key} = NULL" : $"{x.Key} = '{x.Value}'"))} WHERE {$"{_key} = '{_fields[_key]}'"}";
 
             if (SQLCommandExecuter.ExecuteNonQuery(updateSQLCommand) == 0)
             {
                 string insertSQLCommand =
-                    $"INSERT INTO {_tableName} ({string.Join(", ", _fields.Keys)}) VALUES ({string.Join(", ", _fields.Values.Select(x => $"'{x}'"))})";
+                    $"INSERT INTO {_tableName} ({string.Join(", ", _fields.Keys)}) VALUES ({string.Join(", ", _fields.Values.Select(x => x == null ? "NULL" : $"'{x}'"))})";
 
                 SQLCommandExecuter.ExecuteNonQuery(insertSQLCommand);
             }

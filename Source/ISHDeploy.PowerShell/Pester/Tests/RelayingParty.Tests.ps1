@@ -89,9 +89,9 @@ $scriptBlockSetRelayingParty = {
         $ishDeployName,
         $name,
         $realm,
-        $encriptionCertificate,
         $lc,
-        $bl
+        $bl,
+        $encriptionCertificate = $null
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
@@ -104,8 +104,11 @@ $scriptBlockSetRelayingParty = {
     elseif ($bl){
         Set-ISHSTSRelyingParty -ISHDeployment $ishDeploy -Name $name -Realm $realm -BL
     }
-    else{
+    elseif ($encriptionCertificate){
          Set-ISHSTSRelyingParty -ISHDeployment $ishDeploy -Name $name -Realm $realm -EncryptingCertificate $encriptionCertificate
+    }
+    else {
+         Set-ISHSTSRelyingParty -ISHDeployment $ishDeploy -Name $name -Realm $realm
     }
 }
 
@@ -189,7 +192,7 @@ Describe "Testing ISHRelaying party"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
     }
     
-     It "Get ISHSTSRelyingParty"{
+    It "Get ISHSTSRelyingParty"{
         WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
@@ -232,7 +235,7 @@ Describe "Testing ISHRelaying party"{
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'LC%'"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameLC", "testRealmLC", "testcert", $true, $false
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameLC", "https://testRealmLC.sdl.com", $true, $false, "testcert"
             
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName, $false, $true, $false
         $rpList = remoteQuerryDatabase -command $dbQuerryCommandSelect -stringOutput $true
@@ -246,13 +249,13 @@ Describe "Testing ISHRelaying party"{
         $rpTextConcat -eq $commandletTextConcat | Should be $true
     }
 
-     It "Get ISHSTSRelyingParty with BL key"{
+    It "Get ISHSTSRelyingParty with BL key"{
         WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
         $dbQuerryCommandSelect = "SELECT Name, Id, Enabled, Realm FROM RelyingParties WHERE Name Like 'BL%'"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameBL", "testRealmLC", "testcert", $false, $true
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameBL", "https://testRealmLC.sdl.com", $false, $true, "testcert"
         $rpList = remoteQuerryDatabase -command $dbQuerryCommandSelect -stringOutput $true
       
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName, $false, $false, $true
@@ -270,7 +273,7 @@ Describe "Testing ISHRelaying party"{
        WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"
 
       
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
@@ -282,8 +285,8 @@ Describe "Testing ISHRelaying party"{
         WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "SecondName", "testRealm", "testcert", $false, $false
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "SecondName", "https://testRealm.sdl.com", $false, $false, "testcert"
       
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
 
@@ -295,7 +298,7 @@ Describe "Testing ISHRelaying party"{
         WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameLC", "testRealmLC", "testcert", $true, $false
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameLC", "https://testRealmLC.sdl.com", $true, $false, "testcert"
 
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
 
@@ -306,10 +309,22 @@ Describe "Testing ISHRelaying party"{
         WebRequestToSTS $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
 
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameBL", "testRealmBL", "testcert", $false, $true
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameBL", "https://testRealmBL.sdl.com", $false, $true, "testcert"
 
         $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
         $commandletList.Name -contains "BL: testNameBL" | Should be $true
+    }
+ 
+    It "Set ISHSTSRelyingParty - if EncryptingCertificate is Null"{
+       WebRequestToSTS $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testNameEncryptingCertificateIsNull", "https://testRealm.sdl.com", $false, $false
+      
+        $commandletList = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName 
+
+        $rp = $commandletList | Where-Object { $_.Name -eq "testNameEncryptingCertificateIsNull" }
+        $rp.EncryptingCertificate | Should be $null
     }
     
     It "Get ISHSTSRelyingParty when db not exists"{
@@ -323,9 +338,24 @@ Describe "Testing ISHRelaying party"{
 
     It "Set ISHSTSRelyingParty when db not exists"{
         Invoke-CommandRemoteOrLocal -ScriptBlock {if (Test-Path $dbPath){ Remove-Item $dbPath }} -Session $session -ArgumentList $dbPath
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "testRealm", "testcert", $false, $false} | Should not Throw 
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"} | Should not Throw 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
     }
+    
+    It "Set ISHSTSRelyingParty - Realm validate pattern"{
+       WebRequestToSTS $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName2", "https://testRealm.com", $false, $false, "testcert"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName3", "https://testRealm.global.sdl.corp", $false, $false, "testcert"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName4", "https://testRealm", $false, $false, "testcert" } | Should Throw "Cannot validate argument on parameter 'Realm'. The argument `"https://testRealm`" does not match the"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName5", "https://testRealm.c", $false, $false, "testcert" } | Should Throw "Cannot validate argument on parameter 'Realm'. The argument `"https://testRealm.c`" does not match the"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName7", "https://testRealmApi25.global.sdl.corp/InfoShareWS/Wcf/API25/User.svc", $false, $false, "testcert"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName8", "http://testRealm.corp", $false, $false, "testcert"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName9", "http://testRealmApi25.global.sdl.corp/InfoShareWS/Wcf/API25/User.svc", $false, $false, "testcert"
+    }
+
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName
 }
 

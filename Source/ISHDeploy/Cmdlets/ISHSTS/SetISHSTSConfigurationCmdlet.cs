@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHSTS;
+﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Business.Operations.ISHSTS;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets STS token signing certificate and/or type of authentication.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets STS token signing certificate and/or type of authentication.</para>
-    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Get-ISHSTSRelyingParty</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Reset-ISHSTS</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHSTSRelyingParty</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
     /// <example>

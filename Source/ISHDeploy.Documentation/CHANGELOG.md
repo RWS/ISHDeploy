@@ -2,6 +2,29 @@
 
 ## release-1.0
 
+1. General 
+  1. Documentation
+    - Related links render as links and provide a quick navigation.	   
+
+1. Integration STS
+  1. Cmdlets
+	- `Enable-ISHIntegrationSTSInternalAuthentication` and  `Disablee-ISHIntegrationSTSInternalAuthentication` enable access for internal users. **[New]**
+  1. Articles
+    - Security Token Service\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
+	- Security Token Service\ADFS\Integrating with Security Token Service mentiones how to enable internal user authentication. **[Update]**
+
+1. ISHSTS
+    1. Cmdlets
+	      - Set-ISHSTSConfiguration does check - is Windows Authentication feature installed on environment or not.
+		  - Set-ISHSTSRelyingParty `-Realm` is required to be a proper url with schema.
+
+**Fixed known issues**
+
+- When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
+
+**Known issues**
+
+- Due to internal dependencies to the product, avoid sequencing first `Set-ISHIntegrationSTSCertificate` and then `Set-ISHSTSConfiguration` because they will break the deployment.
 
 ## beta-0.9 (Pre-release)
 

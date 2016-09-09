@@ -15,20 +15,21 @@
  */
 ﻿using System.Management.Automation;
 using System.ServiceModel.Security;
-using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
-namespace ISHDeploy.Cmdlets.ISHSTS
+namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
 {
     /// <summary>
     ///		<para type="synopsis">Sets STS certificate.</para>
     ///		<para type="description">The Set-ISHIntegrationSTSCertificate cmdlet sets Thumbprint and issuers values to configuration.</para>
-    ///     <para type="link">Get-ISHSTSRelyingPartyCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
-    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
+    ///		<para type="link">Disable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackage</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrust</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
+    /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>
     ///		<code>PS C:\&gt;Set-ISHIntegrationSTSCertificate -ISHDeployment $deployment -Thumbprint "t1" -Issuer "20151028ADFS"</code>
     ///		<para>This command sets STS trusted issuer credentials.
@@ -59,10 +60,10 @@ namespace ISHDeploy.Cmdlets.ISHSTS
 		public string Issuer { get; set; }
 		
 		/// <summary>
-		/// <para type="description">Selected validation mode. Default value is 'ChainTrust'.</para>
+		/// <para type="description">Selected validation mode.</para>
 		/// </summary>
 		[Parameter(Mandatory = false, HelpMessage = "Selected validation mode")]
-		public X509CertificateValidationMode ValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
+		public X509CertificateValidationMode? ValidationMode { get; set; }
 
 		/// <summary>
 		/// Executes cmdlet

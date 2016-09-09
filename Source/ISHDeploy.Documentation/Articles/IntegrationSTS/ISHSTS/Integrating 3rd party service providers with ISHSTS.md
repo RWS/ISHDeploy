@@ -87,12 +87,12 @@ This script adds three relying parties and then returns the set.
 ```powershell
 $deploymentName="InfoShare"
 $name="3rd party"
-$realm="3rdparty.example.com"
+$realm="https://3rdparty.example.com/"
 
 #set the relying parties
 Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm
-Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name "Content Review" -Realm "lc.example.com" -LC
-Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name "Quality Assistant" -Realm "bl.example.com" -BL
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name "Content Review" -Realm "https://lc.example.com/" -LC
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name "Quality Assistant" -Realm "https://bl.example.com/" -BL
 
 # get the relying parties
 Get-ISHSTSRelyingParty -ISHDeployment $deploymentName |Format-Table Name,Realm
@@ -103,8 +103,8 @@ The script output
 ```text
 Name                                                          Realm                                                                          
 ----                                                          -----                                                                          
-3rd party                                                     3rdparty.example.com                                                           
-BL: Quality Assistant                                         bl.example.com                                                                 
+3rd party                                                     https://3rdparty.example.com/
+BL: Quality Assistant                                         https://bl.example.com/
 ISH: ishcm@ish.example.com                                    https://ish.example.com/ishcm/                                 
 ISH: ishws@ish.example.com                                    https://ish.example.com/ishws/                                 
 ISH: Wcf/API/Application.svc@ish.example.com(https)           https://ish.example.com/ishws/Wcf/API/Application.svc          
@@ -138,6 +138,6 @@ ISH: Wcf/API25/TranslationTemplate.svc@ish.example.com(https) https://ish.exampl
 ISH: Wcf/API25/User.svc@ish.example.com(https)                https://ish.example.com/ishws/Wcf/API25/User.svc               
 ISH: Wcf/API25/UserGroup.svc@ish.example.com(https)           https://ish.example.com/ishws/Wcf/API25/UserGroup.svc          
 ISH: Wcf/API25/UserRole.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API25/UserRole.svc           
-LC: Content Review                                            lc.example.com                                                                 
+LC: Content Review                                            https://lc.example.com/
 ```
 

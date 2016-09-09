@@ -92,7 +92,7 @@ namespace ISHDeploy.Data.Managers
                 dictionary.Add(name, currentValue);
             }
 
-            _logger.WriteDebug($"The input parameters from file `{filePath}` has been retrieved");
+            _logger.WriteVerbose($"The input parameters from file `{filePath}` has been retrieved");
 
             return dictionary;
         }
@@ -448,7 +448,10 @@ namespace ISHDeploy.Data.Managers
             var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
             if (attr == null)
             {
-                throw new WrongXPathException(filePath, attributeXpath);
+                // TODO: Create TryGetElementByXPath action or something similar to use it before run SetAttributeValue to avoid access to nonexistent elements
+                // and change WriteVerbose on "throw new WrongXPathException(filePath, attributeXpath);" 
+                _logger.WriteVerbose($"{filePath} does not contain attribute at '{attributeXpath}'.");
+                return;
             }
 
             attr.SetValue(value);

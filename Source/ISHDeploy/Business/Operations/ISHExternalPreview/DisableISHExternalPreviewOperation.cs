@@ -62,24 +62,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// </summary>
         public void Run()
         {
-            // TODO: Create get status operation and use it before run the invoker to check whether external preview already disabled or not, 
-            // and remove this try/catch block
-            // This block has been added as workaround solution, because we try to set value for commented xml attribute? instead of do above check
-            try
-            {
-                _invoker.Invoke();
-            }
-            catch (WrongXPathException ex)
-            {
-                if (ex.Message.Contains(InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath))
-                {
-                    Logger.WriteVerbose("External preview for Content Manager has already been disabled");
-                }
-                else
-                {
-                    throw ex;
-                }
-            }
+            _invoker.Invoke();
         }
     }
 }

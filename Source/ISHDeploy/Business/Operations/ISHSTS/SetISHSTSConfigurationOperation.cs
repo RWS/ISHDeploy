@@ -54,6 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
@@ -71,6 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
 
             string authenticationType = string.Empty;
@@ -99,6 +101,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS authentication type");
 
             AddActionsToStopSTSApplicationPool();
+            EnsureSTSDataBaseFileExists();
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
         }
@@ -128,6 +131,21 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         }
 
         /// <summary>
+        /// Ensure STS DataBase file exists.
+        /// </summary>
+        private void EnsureSTSDataBaseFileExists()
+        {
+            bool isDataBaseFileExist = false;
+            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
+            if (!isDataBaseFileExist)
+            {
+                _invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
+                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+                _invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSDataBasePath));
+            }
+        }
+
+        /// <summary>
         /// Adds actions for setting STS token signing certificate.
         /// </summary>
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
@@ -141,20 +159,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
-            // It is the responsibility of SetISHIntegrationSTSCertificateOperation to add or uncomment <add name="addActAsTrustedIssuer" node in ~\Web\InfoShareSTS\Web.config file  
-            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(Logger, InfoShareSTSWebConfigPath,
-            //    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
 
-            // if the database exists we update the database
-            bool isDataBaseFileExist = false;
-            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
-            if (isDataBaseFileExist)
-            {
-                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                    InfoShareSTSDataBaseConnectionString,
-                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
-                            subjectThumbprint)));
-            }
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                InfoShareSTSDataBaseConnectionString,
+                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+                        subjectThumbprint)));
         }
 
         private string GetNormalizedThumbprint(string thumbprint)

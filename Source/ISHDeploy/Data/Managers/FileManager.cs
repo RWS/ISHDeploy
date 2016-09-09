@@ -145,7 +145,7 @@ namespace ISHDeploy.Data.Managers
 		/// <param name="folderPath">Path to folder to be deleted</param>
 		public void DeleteFolder(string folderPath)
 		{
-			_logger.WriteDebug($"Delete folder {(recursive ? " recursively" : "")}", folderPath);
+			_logger.WriteDebug("Delete folder", folderPath);
 			if (FolderExists(folderPath))
 			{
                 // known c# issue

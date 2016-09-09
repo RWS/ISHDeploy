@@ -218,7 +218,7 @@ namespace ISHDeploy.Data.Managers
             if (nodes.Length == 0)
             {
                 _logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
-                _logger.WriteWarning("Do not able to find the node that you trying to move");
+                _logger.WriteWarning("Not able to find the target node");
                 return;
             }
 
@@ -240,7 +240,7 @@ namespace ISHDeploy.Data.Managers
             if (insertAfterNode == null)
             {
                 _logger.WriteVerbose($"Do not able to find target node within the xpath `{insertAfterXpath}` in file `{filePath}` to insert after it the node `{xpath}`");
-                _logger.WriteWarning("Do not able to find target node to insert after");
+                _logger.WriteWarning("Not able to find the target node");
                 return;
             }
 

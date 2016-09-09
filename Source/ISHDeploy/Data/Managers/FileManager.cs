@@ -334,11 +334,6 @@ namespace ISHDeploy.Data.Managers
                 isFound = TryToFindLicenseFile(licenseFolderPath, hostName.Substring(i + 1), licenseFileExtension, out filePath);
             }
 
-            if (!isFound)
-            {
-                _logger.WriteWarning($"The license file for `{hostName}` has not been found.");
-            }
-
             return isFound;
         }
 

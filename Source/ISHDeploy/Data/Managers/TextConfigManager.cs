@@ -57,9 +57,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void CommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"[{filePath}][Comment blocks matched to `{searchPattern}`]");
+            _logger.WriteDebug($"Comment blocks matched to `{searchPattern}`", filePath);
 
-			var strLines = _fileManager.ReadAllLines(filePath);
+            var strLines = _fileManager.ReadAllLines(filePath);
 
             var patternIndex = -2;
 
@@ -79,7 +79,7 @@ namespace ISHDeploy.Data.Managers
 
             if (patternIndex >= 0)
             {
-                _logger.WriteWarning($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
+                _logger.WriteWarning($"Can not find end of the comment pattern `{searchPattern}` in the file `{filePath}`");
             }
             else if (patternIndex == -2)
             {
@@ -88,7 +88,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Commented][Comment blocks matched to `{searchPattern}`]");
+            _logger.WriteVerbose($"Blocks matched to `{searchPattern}` in file `{filePath}` have been commented");
 
         }
 
@@ -99,9 +99,9 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that is searched for</param>
         public void UncommentBlock(string filePath, string searchPattern)
         {
-			_logger.WriteDebug($"[{filePath}][Uncommenting blocks matched to `{searchPattern}`]");
+            _logger.WriteDebug($"Uncomment blocks matched to `{searchPattern}`", filePath);
 
-			var strLines = _fileManager.ReadAllLines(filePath);
+            var strLines = _fileManager.ReadAllLines(filePath);
 
             var patternIndex = -2;
 
@@ -121,7 +121,7 @@ namespace ISHDeploy.Data.Managers
 
             if (patternIndex >= 0)
             {
-                _logger.WriteWarning($"Cannot not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
+                _logger.WriteWarning($"Can not find end of the comment pattern '{searchPattern}' in the file: {filePath}");
             }
             else if (patternIndex == -2)
             {
@@ -130,7 +130,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.WriteAllLines(filePath, strLines);
-            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncommenting blocks matched to `{searchPattern}`]");
+            _logger.WriteVerbose($"Blocks matched to `{searchPattern}` in file `{filePath}` have been uncommented");
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAnyUncommented)
             {
-                _logger.WriteWarning("Text block is already fully commented");
+                _logger.WriteVerbose("Text block is already fully commented");
                 return;
             }
             
@@ -173,7 +173,7 @@ namespace ISHDeploy.Data.Managers
             
             if (!isAllCommented)
             {
-                _logger.WriteWarning("Text block contains uncommented lines");
+                _logger.WriteVerbose("Text block contains uncommented lines");
                 return;
             }
 

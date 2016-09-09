@@ -171,7 +171,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
-            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{"//Translation Jobs hack"}' in the file: {FilePath}"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Can not find end of the comment pattern `{"//Translation Jobs hack"}` in the file `{FilePath}`"));
             Assert.IsTrue(result.SequenceEqual(CommentedBrokenPatternBlock));
         }
 
@@ -238,7 +238,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             FileManager.Received(1).WriteAllLines(FilePath, Arg.Any<string[]>());
-            Logger.Received(1).WriteWarning(Arg.Is($"Cannot not find end of the comment pattern '{"//Translation Jobs hack"}' in the file: {FilePath}"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Can not find end of the comment pattern '{"//Translation Jobs hack"}' in the file: {FilePath}"));
             Assert.IsTrue(result.SequenceEqual(UncommentedBrokenPatternBlock));
         }
     }

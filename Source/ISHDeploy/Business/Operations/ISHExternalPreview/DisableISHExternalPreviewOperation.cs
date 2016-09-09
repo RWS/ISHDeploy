@@ -15,7 +15,8 @@
  */
 ﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Data.Exceptions;
+﻿using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHExternalPreview
 {
@@ -43,8 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
             _invoker.AddAction(new SetAttributeValueAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath,
                     "THE_FISHEXTERNALID_TO_USE"));
 
             _invoker.AddAction(new CommentNodeByXPathAction(

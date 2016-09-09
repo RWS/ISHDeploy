@@ -67,3 +67,29 @@ To keep the relying parties updated, then
 
 1. Use `Save-ISHIntegrationSTSConfigurationPackage` to get the latest integration script
 1. Execute `Invoke-ADFSIntegrationISH.ps1` with `-Action Set`
+
+# Enable authentication with Content Manager internal users.
+
+While the deployment is integrated with an ADFS, it could be requested that the system allows access for internal users without modifying the integration. 
+An internal user is one that has username and password in the Content Manager database and the credential will be validated by ISHSTS.
+
+```powershell
+# Just Content Manager (ISH)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+```
+
+If the deployment is integrated with Content Delivery then provide the necessary values like this:
+
+```powershell
+# When the deployment is integrated with a Content Delivery (LC)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost "lc.example.com" -LCWebAppName "ContentDelivery"
+```
+
+`Enable-ISHIntegrationSTSInternalAuthentication` will enable a special url at `https://ish.example.com/ISHWS/Internal/`. 
+Provide this url to any user that wishes to login with internal users.
+
+To disable this mode use `Disable-ISHIntegrationSTSInternalAuthentication`.
+
+```powershell
+Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+```

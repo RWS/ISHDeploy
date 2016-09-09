@@ -15,7 +15,8 @@
  */
 ﻿using ISHDeploy.Interfaces;
 using System;
-using System.Management.Automation;
+﻿using System.Linq;
+﻿using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -83,6 +84,16 @@ namespace ISHDeploy.Cmdlets
         }
 
         /// <summary>
+        /// Writes message as Write-Host wrapper.
+        /// </summary>
+        /// <param name="message">Verbose message.</param>
+        public void WriteHostEmulation(string message)
+        {
+            // !!!Warning, please use carefully.
+            _cmdlet.SessionState.InvokeCommand.InvokeScript("Write-Host \""+ message+ "\"");
+        }
+
+        /// <summary>
         /// Reports progress.
         /// </summary>
         /// <param name="activity">Activity that takes place.</param>
@@ -130,6 +141,15 @@ namespace ISHDeploy.Cmdlets
         public void WriteDebug(string message)
         {
             _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}");
+        }
+
+        /// <summary>
+        /// Writes debug-useful information.
+        /// </summary>
+        /// <param name="args">Arguments which will be merged into a line.</param>
+        public void WriteDebug(params object[] args)
+        {
+            WriteDebug(string.Concat(args.Select(i => $"[{i}]")));
         }
 
         /// <summary>

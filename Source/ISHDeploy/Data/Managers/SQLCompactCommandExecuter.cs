@@ -79,6 +79,8 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = commandText;
 
+            _logger.WriteDebug("Execut SQL command", _command.CommandText);
+
             if (_connection.State != ConnectionState.Open)
             {
                 _connection.Open();
@@ -89,8 +91,9 @@ namespace ISHDeploy.Data.Managers
                 _transaction = _connection.BeginTransaction();
             }
 
-            _logger.WriteDebug($"Executing command {_command.CommandText}.");
             int result = _command.ExecuteNonQuery();
+
+            _logger.WriteVerbose($"The SQL command `{_command.CommandText}` has been executed");
 
             return result;
         }
@@ -106,6 +109,8 @@ namespace ISHDeploy.Data.Managers
             _command.CommandType = CommandType.Text;
             _command.CommandText = sqlQuery;
 
+            _logger.WriteDebug("Execut SQL command", _command.CommandText);
+
             if (_connection.State != ConnectionState.Open)
             { 
                 _connection.Open();
@@ -116,7 +121,6 @@ namespace ISHDeploy.Data.Managers
                 _transaction = _connection.BeginTransaction();
             }
 
-            _logger.WriteDebug($"Executing command {_command.CommandText}.");
 
             //Create a new DataTable.
             DataTable resultTable = new DataTable();
@@ -127,6 +131,8 @@ namespace ISHDeploy.Data.Managers
                 resultTable.Load(sqlReader);
             }
 
+            _logger.WriteVerbose($"The SQL command `{_command.CommandText}` has been executed");
+
             return resultTable;
         }
 
@@ -135,14 +141,15 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         public void TransactionRollback()
         {
+            _logger.WriteDebug("Roll back SQL command", _command.CommandText);
             if (IsCommitted)
             {
-                _logger.WriteDebug($"Cannot rollback command because it has been already committed {_command.CommandText}.");
+                _logger.WriteVerbose($"Cannot rollback command `{_command.CommandText}` because it has been already committed.");
                 return;
             }
 
-            _logger.WriteDebug($"Rolling back command {_command.CommandText}.");
             _transaction?.Rollback();
+            _logger.WriteVerbose($"The command `{_command.CommandText}` has been rolled back");
         }
 
         /// <summary>
@@ -150,7 +157,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         public void TransactionCommit()
         {
-            _logger.WriteDebug($"Commiting transaction with command {_command.CommandText}.");
+            _logger.WriteDebug("Commit transaction", _command.CommandText);
             _transaction?.Commit();
             IsCommitted = true;
         }

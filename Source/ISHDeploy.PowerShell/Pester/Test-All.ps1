@@ -8,8 +8,8 @@
 
 & "$PSScriptRoot\Helpers\Init-TestData.ps1" -dataFilePath $testDataFilePath
 
-$DebugPreference = "SilentlyContinue"
-$VerbosePreference = "SilentlyContinue"
+$DebugPreference = "Continue"
+$VerbosePreference = "Continue"
 
 $session = $null
 if($targetPC){

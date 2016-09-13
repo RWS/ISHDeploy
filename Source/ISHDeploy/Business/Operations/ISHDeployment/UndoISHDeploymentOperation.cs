@@ -61,6 +61,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+                // Cleaning up STS App_Data folder
+                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
+                _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
             }
 
             // Disable Windows Authentication for STS web site
@@ -80,9 +83,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Removing licenses
             _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
-
-            // Cleaning up STS App_Data folder
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
 
             // Restore InputParameters.xml
             bool isInputParameterBackupFileExist = false;

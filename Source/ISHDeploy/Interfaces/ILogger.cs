@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.Runtime.CompilerServices;
 
 namespace ISHDeploy.Interfaces
 {
@@ -49,6 +50,12 @@ namespace ISHDeploy.Interfaces
         /// </summary>
         /// <param name="message">Debug message.</param>
         void WriteDebug(string message);
+
+        /// <summary>
+        /// Writes debug-useful information.
+        /// </summary>
+        /// <param name="args">Arguments which will be merged into a line.</param>
+        void WriteDebug(params object[] args);
 
         /// <summary>
         /// Writes warning message.

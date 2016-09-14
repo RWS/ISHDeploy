@@ -19,7 +19,6 @@ using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
@@ -62,7 +61,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
                 _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
                 // Cleaning up STS App_Data folder
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
                 _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
             }
 

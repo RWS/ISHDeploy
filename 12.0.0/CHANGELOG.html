@@ -57,6 +57,57 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="version-notes">Version notes</h1>
               
+<h2 id="release-1-0">release-1.0</h2>
+<p><strong>Summary of release</strong></p>
+<ul>
+<li>Control internal user authentication when the deployment is integrated with an external security token service (STS)</li>
+<li>Fine tune Cmdlets</li>
+<li>Bug fixing</li>
+<li>Solve previous known issue:<blockquote><p>When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the <code>Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows</code>.</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>Cmdlets and documentatin changes</strong></p>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>Less warning messages. Warnings are issued when it’s important to share. <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
+</ul>
+</li>
+<li>Documentation - Commands<ul>
+<li>Related links render as links and provide a quicker navigation experience. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration STS<ol>
+<li>Cmdlets<ul>
+<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
+<li><code>Enable-ISHIntegrationSTSInternalAuthentication</code> and  <code>Disable-ISHIntegrationSTSInternalAuthentication</code> enable access for internal user authentication. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Documentation - Articles<ul>
+<li>Security Token Service\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
+<li>Security Token Service\ADFS\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHSTSConfiguration</code> will force the initialization of ISHSTS&#39;s database. <strong>[Update]</strong></li>
+<li><code>Set-ISHSTSConfiguration</code> does check - is Windows Authentication feature installed on environment or not. <strong>[Update]</strong> </li>
+<li><code>Set-ISHSTSRelyingParty</code> parameter <code>-Realm</code> is required to be a proper url with schema. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>Known issues</strong></p>
+<ul>
+<li>Due to internal dependencies to the product, avoid sequencing first <code>Set-ISHIntegrationSTSCertificate</code> and then <code>Set-ISHSTSConfiguration</code> because they will break the deployment.</li>
+</ul>
 <h2 id="beta-0-9-pre-release-">beta-0.9 (Pre-release)</h2>
 <ol>
 <li>Working with deployments<ol>

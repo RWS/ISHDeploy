@@ -89,8 +89,8 @@ With a Vanilla deployment the referenced certificate serves multiple purposes:</
 <p>On the 15th December 2016 the following sequence is executed:</p>
 <ol>
 <li>All users sign out.</li>
-<li>The current issuer validation configuration is extended with the new issuer certificate with thumbprint <code>20161201.Thumbprint</code>.The cmdlet for this step is <code>Set-ISHIntegrationSTSCertificate</code>. </li>
 <li>The current ISHSTS token signing certificate with thumbprint <code>20160101.Thumbprint</code> is replaced with the newer <code>20160101.Thumbprint</code> is replaced by the newer <code>20161201.Thumbprint</code>. The cmdlet for this step is <code>Set-ISHSTSConfiguration</code>. </li>
+<li>The current issuer validation configuration is extended with the new issuer certificate with thumbprint <code>20161201.Thumbprint</code>.The cmdlet for this step is <code>Set-ISHIntegrationSTSCertificate</code>. </li>
 <li>The current service certificate with thumbprint <code>20160101.Thumbprint</code> is replaced with the newer <code>20161201.Thumbprint</code>. The cmdlet for this step is <code>Set-ISHAPIWCFServiceCertificate</code>. </li>
 <li>Users sign in.</li>
 </ol>
@@ -99,15 +99,16 @@ With a Vanilla deployment the referenced certificate serves multiple purposes:</
 $certificateName=&quot;ISHSTS (20161201)&quot;
 $certificateThumbprint=&quot;20161201.Thumbprint&quot;
 
-# Set Token signing certificate
-Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $certificateName -Thumbprint $certificateThumbprint
-
 # Set the ISHSTS token signing certificate
 Set-ISHSTSConfiguration -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
+
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $certificateName -Thumbprint $certificateThumbprint
 
 # Set service certificate
 Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
 </code></pre>
+<p>Please note that the order of execution between <code>Set-ISHIntegrationSTSCertificate</code> and <code>Set-ISHSTSConfiguration</code> must not be changed otherwise it might break the deployment.</p>
 <h2 id="remove-the-old-certificate">Remove the old certificate</h2>
 <p>As a cleanup process, all service providers should remove their old issuer certificate references.</p>
 <pre><code class="lang-powershell">Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer &quot;Issuer&quot;

@@ -49,10 +49,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 			// WS web Config
 			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfigPath, 
 				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
-
-            // STS web Config
-            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfigPath,
-				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, issuer)));
 		}
 
 		/// <summary>

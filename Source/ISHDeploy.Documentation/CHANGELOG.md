@@ -1,6 +1,6 @@
 # Version notes
 
-## stable-1.0
+## stable-1.1
 
 **Summary of release**
 

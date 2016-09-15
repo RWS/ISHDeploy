@@ -15,10 +15,8 @@
  */
 
 using ISHDeploy.Business.Operations.ISHUIOperation;
-using ISHDeploy.Data.Managers;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
-using System.Xml.Linq;
 
 namespace ISHDeploy.Cmdlets.ISHUIComponents
 {
@@ -44,8 +42,9 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var menu = new MainMenuModel(Label, null, null, null);
-            menu.Remove(Logger, ISHDeployment);
+            var model = new MainMenuModel(Label);
+            var operation = new RemoveUIOperation(Logger, ISHDeployment, model);
+            operation.Run();
         }
     }
 

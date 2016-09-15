@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using System.Xml.Linq;
 using ISHDeploy.Models;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Actions.ISHUIAction
 {
@@ -31,41 +32,28 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         /// </summary>
         private readonly IXmlConfigManager _xmlConfigManager;
 
-        private string _filePath;
-        private string _root;
-        private string _childElement;
-        private XElement _element;
-        private string _updateAttributeName;
+        private ISHFilePath _filePath;
+        private BaseUIModel _model;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUIAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public SetUIAction(ILogger logger,
-            ISHFilePath filePath, 
-            string root, 
-            string childElement, 
-            XElement element, 
-            string updateAttributeName) :
+            ISHFilePath filePath,
+            BaseUIModel model) :
             base(logger, filePath)
         {
-            _filePath = filePath.AbsolutePath;
-            _root = root;
-            _childElement = childElement;
-            _element = element;
-            _updateAttributeName = updateAttributeName;
-
+            _filePath = filePath;
+            _model = model;
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
         public override void Execute()
         {
             _xmlConfigManager.InsertUpdateElement(
-                _filePath,
-                _root,
-                _childElement,
-                _element,
-                _updateAttributeName);
+                _filePath.AbsolutePath,
+                _model);
         }
     }
 }

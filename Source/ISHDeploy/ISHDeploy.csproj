@@ -309,8 +309,7 @@
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
     <Compile Include="Models\UI\MainMenuModel.cs" />
-    <Compile Include="Models\UI\UIBase.cs" />
-    <Compile Include="Models\UI\UIBindingAttribute.cs" />
+    <Compile Include="Models\UI\BaseUIModel.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

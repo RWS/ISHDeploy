@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
-using System.Xml.Linq;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Actions.ISHUIAction
 {
@@ -33,10 +34,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         private readonly IXmlConfigManager _xmlConfigManager;
 
         private string _filePath;
-        private string _root;
-        private string _childElement;
-        private XElement _element;
-        private string _updateAttributeName;
+        private BaseUIModel _model;
         private OperationType _operation;
         private string _after;
 
@@ -46,19 +44,13 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         /// <param name="logger">The logger.</param>
         public MoveUIAction(ILogger logger,
             ISHFilePath filePath,
-            string root,
-            string childElement,
-            XElement element,
-            string updateAttributeName,
+            BaseUIModel model, 
             OperationType operation,
             string after) :
             base(logger, filePath)
         {
             _filePath = filePath.AbsolutePath;
-            _root = root;
-            _childElement = childElement;
-            _element = element;
-            _updateAttributeName = updateAttributeName;
+            _model = model;
             _operation = operation;
             _after = after;
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -68,10 +60,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         {
             _xmlConfigManager.MoveElement(
                 _filePath,
-                _root,
-                _childElement,
-                _element,
-                _updateAttributeName,
+                _model,
                 _operation,
                 _after);
         }

@@ -16,10 +16,8 @@
 
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Operations.ISHUIOperation;
-using ISHDeploy.Data.Managers;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
-using System.Xml.Linq;
 
 namespace ISHDeploy.Cmdlets.ISHUIComponents
 {
@@ -66,28 +64,25 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            OperationType operation;
+            OperationType operationType;
             switch (ParameterSetName)
             {
                 case "Last":
-                    operation = OperationType.Last;
+                    operationType = OperationType.Last;
                     break;
                 case "First":
-                    operation = OperationType.First;
+                    operationType = OperationType.First;
                     break;
                 case "After":
-                    operation = OperationType.After;
+                    operationType = OperationType.After;
                     break;
                 default:
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
             }
 
-            var menu = new MainMenuModel(Label, null, null, null);
-            menu.Move(
-                Logger, 
-                ISHDeployment,
-                operation,
-                After);
+            var model = new MainMenuModel(Label);
+            var operation = new MoveUIOperation(Logger, ISHDeployment, model, operationType, After);
+            operation.Run();
         }
     }
 

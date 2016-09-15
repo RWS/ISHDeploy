@@ -23,7 +23,11 @@ using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
 using System.Text.RegularExpressions;
 using System;
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
 using ISHDeploy.Business.Enums;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -541,21 +545,22 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"[{filePath}][Inserted]");
         }
 
-        public void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
+        public void InsertUpdateElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Insert/Update element]");
             var doc = _fileManager.Load(filePath);
+            var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+            var found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
             if (found.Count() == 0)
             {// creating new
-                var MemberList = doc.Element(root).Elements(childElement);
+                var MemberList = doc.Element(model.RootPath).Elements(model.ChildItemPath);
                 if (MemberList.Count() == 0)
                 {// no elements at all
-                    doc.Element(root).Add(element);
+                    doc.Element(model.RootPath).Add(element);
                 }
                 else
                 {
@@ -574,14 +579,16 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        public void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
+        public void RemoveElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Remove element]");
             var doc = _fileManager.Load(filePath);
 
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+            var element = XElement.Parse(Serialize(model));
+
+            var found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
             if (found.Count() == 0)
             {// not found
@@ -596,20 +603,17 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        public void MoveElement(string filePath, 
-            string root, 
-            string childElement, 
-            XElement element, 
-            string updateAttributeName, 
-            OperationType operation, 
+        public void MoveElement(string filePath, BaseUIModel model, OperationType operation, 
             string after)
         {
             _logger.WriteDebug($"[{filePath}][Move element]");
             var doc = _fileManager.Load(filePath);
 
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+            var element = XElement.Parse(Serialize(model));
+
+            var found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
             string verboseMessage = "";
             if (found.Count() == 0)
@@ -622,14 +626,14 @@ namespace ISHDeploy.Data.Managers
                 switch (operation)
                 {
                     case OperationType.First: // Move to first position
-                        doc.Element(root).AddFirst(foundElement);
+                        doc.Element(model.RootPath).AddFirst(foundElement);
                         verboseMessage = "Moved to the first position";
                         break;
                     case OperationType.Last: // Move to last
-                        var MemberList = doc.Element(root).Elements(childElement);
+                        var MemberList = doc.Element(model.RootPath).Elements(model.ChildItemPath);
                         if (MemberList.Count() == 0)
                         {// no elements at all
-                            doc.Element(root).Add(foundElement);
+                            doc.Element(model.RootPath).Add(foundElement);
                         }
                         else
                         {
@@ -638,15 +642,15 @@ namespace ISHDeploy.Data.Managers
                         verboseMessage = "Moved to the last position";
                         break;
                     case OperationType.After://After certain item
-                        var List = doc.Element(root)
-                            .Elements(childElement)
-                            .Where(item => item.Attribute(updateAttributeName).Value == after);
+                        var List = doc.Element(model.RootPath)
+                            .Elements(model.ChildItemPath)
+                            .Where(item => item.Attribute(model.KeyAttribute).Value == after);
                         if (List.Count() == 0)
                         {// no target element
                             throw new Exception("Could not find target element");
                         }
                         List.First().AddAfterSelf(foundElement);
-                        verboseMessage = $"Moved after {List.First().Attribute(updateAttributeName).Value}";
+                        verboseMessage = $"Moved after {List.First().Attribute(model.KeyAttribute).Value}";
                         break;
                     default:
                         throw new Exception("Unknown operation");
@@ -713,6 +717,36 @@ namespace ISHDeploy.Data.Managers
             return element.Value;
         }
 
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public string Serialize<T>(T value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var serializer = new XmlSerializer(value.GetType());
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                {
+                    serializer.Serialize(xmlWriter, value, ns);
+                }
+                return textWriter.ToString();
+            }
+        }
         #region private methods
 
         /// <summary>

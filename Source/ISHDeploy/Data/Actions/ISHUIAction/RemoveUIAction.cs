@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions;
+using System;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
-using System.Xml.Linq;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Actions.ISHUIAction
 {
@@ -34,10 +33,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         private readonly IXmlConfigManager _xmlConfigManager;
 
         private string _filePath;
-        private string _root;
-        private string _childElement;
-        private XElement _element;
-        private string _updateAttributeName;
+        private BaseUIModel _model;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveUIAction"/> class.
@@ -45,17 +41,11 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         /// <param name="logger">The logger.</param>
         public RemoveUIAction(ILogger logger,
             ISHFilePath filePath,
-            string root,
-            string childElement,
-            XElement element,
-            string updateAttributeName) :
+            BaseUIModel model) :
             base(logger, filePath)
         {
             _filePath = filePath.AbsolutePath;
-            _root = root;
-            _childElement = childElement;
-            _element = element;
-            _updateAttributeName = updateAttributeName;
+            _model = model;
 
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
@@ -64,10 +54,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
         {
             _xmlConfigManager.RemoveElement(
                 _filePath,
-                _root,
-                _childElement,
-                _element,
-                _updateAttributeName);
+                _model);
         }
     }
 }

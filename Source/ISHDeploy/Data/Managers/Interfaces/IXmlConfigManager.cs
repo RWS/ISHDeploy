@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Interfaces;
 using System.Xml.Linq;
 using ISHDeploy.Business.Enums;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -136,9 +139,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>The element value.</returns>
         string GetValue(string filePath, string xpath);
 
-        void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
-        void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
-        void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation, string after);
+        void InsertUpdateElement(string filePath, BaseUIModel model);
 
+        void RemoveElement(string filePath, BaseUIModel model);
+        void MoveElement(string filePath, BaseUIModel model, OperationType operation, string after);
+
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        string Serialize<T>(T value);
     }
 }

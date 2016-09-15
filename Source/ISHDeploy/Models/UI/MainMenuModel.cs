@@ -13,32 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI
 {
-    class MainMenuModel : UIBase
+    [XmlRoot("menuitem", Namespace = "")]
+    public class MainMenuModel : BaseUIModel
     {
-        [UIBindingAttribute ("label")]
-        public string _label { set; get; }
-        [UIBindingAttribute("userrole", true)]
-        public string[] _userRole { set; get; }
-        [UIBindingAttribute("action")]
-        public string _action { set; get; }
-        [UIBindingAttribute("id")]
-        public string _id { set; get; }
-        public MainMenuModel(string label, string[] userRole, string action, string id)
-        {
-            element = new XElement("menuitem");
-            filePath = @"Author\ASP\XSL\MainMenuBar.xml";
-            rootPath = "mainmenubar";
-            childItemPath = "menuitem";
-            keyAttribute = "label";
+        [XmlAttribute("label")]
+        public string Label { set; get; }
 
-            _label = label;
-            _userRole = userRole;
-            _action = action;
-            _id = id;
+        [XmlElement("userrole")]
+        public string[] UserRoles { set; get; }
+
+        [XmlAttribute("action")]
+        public string Action { set; get; }
+
+        [XmlAttribute("id")]
+        public string Id { set; get; }
+
+        private MainMenuModel()
+        {
+
+        }
+
+        public MainMenuModel(string label, string[] userRoles = null, string action = null, string id = null)
+        {
+            RelativeFilePath = @"Author\ASP\XSL\MainMenuBar.xml";
+            RootPath = "mainmenubar";
+            ChildItemPath = "menuitem";
+            KeyAttribute = "label";
+
+            Label = label;
+            UserRoles = userRoles;
+            Action = action;
+            Id = id;
         }
     }
 }

@@ -18,7 +18,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIAction;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
-using System.Xml.Linq;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Business.Operations.ISHUIOperation
 {
@@ -40,22 +40,15 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
         /// <param name="ishDeployment">The instance of the deployment.</param>
         public RemoveUIOperation(ILogger logger, 
             Models.ISHDeployment ishDeployment,
-            string filePath, 
-            string root, 
-            string childElement, 
-            XElement element, 
-            string updateAttributeName) :
+            BaseUIModel model) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Remove UI/XML element");
             
             _invoker.AddAction(new RemoveUIAction(
                 logger,
-                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, filePath),
-                root, 
-                childElement, 
-                element, 
-                updateAttributeName));
+                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath),
+                model));
         }
 
         /// <summary>

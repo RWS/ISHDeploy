@@ -15,10 +15,8 @@
  */
 
 using ISHDeploy.Business.Operations.ISHUIOperation;
-using ISHDeploy.Data.Managers;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
-using System.Xml.Linq;
 
 namespace ISHDeploy.Cmdlets.ISHUIComponents
 {
@@ -56,10 +54,12 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
             if (ID == null)
             {
                 //ID = GenearateId("Label");
+                ID = Label.ToUpper();
             }
 
-            var menu = new MainMenuModel(Label, UserRole, Action, ID);
-            menu.Set(Logger, ISHDeployment);
+            var model = new MainMenuModel(Label, UserRole, Action, ID);
+            var setOperation = new SetUIOperation(Logger, ISHDeployment, model);
+            setOperation.Run();
         }
     }
 }

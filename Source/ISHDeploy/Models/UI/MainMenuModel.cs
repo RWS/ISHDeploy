@@ -29,11 +29,11 @@ namespace ISHDeploy.Models.UI
         public string _id { set; get; }
         public MainMenuModel(string label, string[] userRole, string action, string id)
         {
-            element = new XElement("menuitem");
             filePath = @"Author\ASP\XSL\MainMenuBar.xml";
             rootPath = "mainmenubar";
             childItemPath = "menuitem";
             keyAttribute = "label";
+            element = new XElement(childItemPath);
 
             _label = label;
             _userRole = userRole;

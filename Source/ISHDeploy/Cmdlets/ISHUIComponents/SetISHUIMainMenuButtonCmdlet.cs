@@ -55,7 +55,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         {
             if (ID == null)
             {
-                //ID = GenearateId("Label");
+                ID = Label.ToUpper();
             }
 
             var menu = new MainMenuModel(Label, UserRole, Action, ID);

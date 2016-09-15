@@ -85,11 +85,6 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath EventMonitorMenuBarXmlPath { get; }
 
         /// <summary>
-        /// The path to ~\Web\Author\ASP\XSL\MainMenuBar.xml
-        /// </summary>
-        protected ISHFilePath MainMenuBarXmlPath { get; }
-
-        /// <summary>
         /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
         protected ISHFilePath FeedSDLLiveContentConfigPath { get; }
@@ -260,7 +255,6 @@ namespace ISHDeploy.Business.Operations
             HistoryFilePath = Path.Combine(ISHDeploymentProgramDataFolderPath, "History.ps1");
             AuthorASPTreeHtmPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
             EventMonitorMenuBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
-            MainMenuBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\MainMenuBar.xml");
             FeedSDLLiveContentConfigPath = new ISHFilePath(DataFolderPath, BackupDataFolderPath, @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
             FolderButtonBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\FolderButtonbar.xml");
             LicenceFolderPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\license\");

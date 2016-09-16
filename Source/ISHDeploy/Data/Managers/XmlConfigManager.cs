@@ -556,7 +556,7 @@ namespace ISHDeploy.Data.Managers
             if (model.GetType() == typeof(ButtonBarModel))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
-                           .Where(item => item.Element("INPUT") !=null) 
+                           .Where(item => item.Element("INPUT") != null)
                            .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
             else
                 found = doc.Element(model.RootPath)
@@ -593,8 +593,15 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var element = XElement.Parse(Serialize(model));
+            IEnumerable<XElement> found;
 
-            var found = doc.Element(model.RootPath)
+            if (model.GetType() == typeof(ButtonBarModel))
+                found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Element("INPUT") != null)
+                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
+            else
+                found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
@@ -611,7 +618,7 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        public void MoveElement(string filePath, BaseUIModel model, OperationType operation, 
+        public void MoveElement(string filePath, BaseUIModel model, OperationType operation,
             string after)
         {
             _logger.WriteDebug($"[{filePath}][Move element]");
@@ -619,7 +626,15 @@ namespace ISHDeploy.Data.Managers
 
             var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(model.RootPath)
+            IEnumerable<XElement> found;
+
+            if (model.GetType() == typeof(ButtonBarModel))
+                found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Element("INPUT") != null)
+                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
+            else
+                found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 

@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     /// <para type="link">Delete-ISHUIButtonBar</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUIMainMenuButton -ISHDeployment $deployment </code>
+    /// <code>PS C:\>Set-ISHUIButtonBar -ISHDeployment $deployment -ButtonBar DefaultSettingsButtonbar -ISHTYPE VDOCTYPEILLUSTRATION, VDOCTYPEMAP -Name "test" -OnClick "refresh();"</code>
     /// <para>This command add/update main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>

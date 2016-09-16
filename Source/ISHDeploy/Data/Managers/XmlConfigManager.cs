@@ -551,7 +551,14 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
             var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(model.RootPath)
+            IEnumerable<XElement> found;
+
+            if (model.GetType()== typeof(ButtonBarModel))
+                found = doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
+            else
+                found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
@@ -577,6 +584,14 @@ namespace ISHDeploy.Data.Managers
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Updated]");
             }
+        }
+
+        IEnumerable<XElement> GetParentNodeForInputElement(XDocument doc, BaseUIModel model, XElement element)
+        {
+            return doc.Element(model.RootPath)
+                           .Elements(model.ChildItemPath)
+                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
+
         }
 
         public void RemoveElement(string filePath, BaseUIModel model)

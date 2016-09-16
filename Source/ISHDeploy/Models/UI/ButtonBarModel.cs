@@ -37,12 +37,15 @@ namespace ISHDeploy.Models.UI
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}.xml";
             RootPath = "BUTTONBAR";
             ChildItemPath = "BUTTON";
-            KeyAttribute = "Name";
+            KeyAttribute = "NAME";
 
             Input = new Input();
             Input.Value = name;
+            Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
+            ISHTYPE= ishtype;
+
         }
     }
     public class Input

@@ -42,7 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new MainMenuModel(Label);
+            var model = new MainMenuBarItemModel(Label);
             var operation = new RemoveUIOperation(Logger, ISHDeployment, model);
             operation.Run();
         }

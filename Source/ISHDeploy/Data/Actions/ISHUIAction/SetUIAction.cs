@@ -51,7 +51,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
 
         public override void Execute()
         {
-            _xmlConfigManager.InsertUpdateElement(
+            _xmlConfigManager.InsertOrUpdateUIElement(
                 _filePath.AbsolutePath,
                 _model);
         }

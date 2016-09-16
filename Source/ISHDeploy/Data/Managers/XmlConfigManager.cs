@@ -545,7 +545,12 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"[{filePath}][Inserted]");
         }
 
-        public void InsertUpdateElement(string filePath, BaseUIModel model)
+        /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void InsertOrUpdateUIElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Insert/Update element]");
             var doc = _fileManager.Load(filePath);
@@ -553,33 +558,39 @@ namespace ISHDeploy.Data.Managers
 
             var found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
-                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+                           .FirstOrDefault(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
-            if (found.Count() == 0)
-            {// creating new
-                var MemberList = doc.Element(model.RootPath).Elements(model.ChildItemPath);
-                if (MemberList.Count() == 0)
-                {// no elements at all
+            if (found == null)
+            {
+                var memberList = doc.Element(model.RootPath).Elements(model.ChildItemPath).ToList();
+                if (!memberList.Any())
+                {
                     doc.Element(model.RootPath).Add(element);
                 }
                 else
                 {
-                    MemberList.Last().AddAfterSelf(element);
+                    memberList.Last().AddAfterSelf(element);
                 }
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Inserted]");
             }
             else
-            { //update existing
-                found.First().ReplaceWith(element);
+            {
+                found.ReplaceWith(element);
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Updated]");
             }
         }
 
-        public void RemoveElement(string filePath, BaseUIModel model)
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <exception cref="System.Exception">Could not find element</exception>
+        public void RemoveUIElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Remove element]");
             var doc = _fileManager.Load(filePath);
@@ -588,22 +599,23 @@ namespace ISHDeploy.Data.Managers
 
             var found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
-                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+                           .FirstOrDefault(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
 
-            if (found.Count() == 0)
-            {// not found
-                throw new Exception("Could not find element");
+            if (found == null)
+            {
+                // TODO: change output
+                _logger.WriteWarning($"{filePath} does not contain ");
             }
             else
             {
-                found.First().Remove();
+                found.Remove();
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Removed]");
             }
         }
 
-        public void MoveElement(string filePath, BaseUIModel model, OperationType operation, 
+        public void MoveUIElement(string filePath, BaseUIModel model, OperationType operation, 
             string after)
         {
             _logger.WriteDebug($"[{filePath}][Move element]");

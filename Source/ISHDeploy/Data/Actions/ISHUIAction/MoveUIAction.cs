@@ -58,7 +58,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
 
         public override void Execute()
         {
-            _xmlConfigManager.MoveElement(
+            _xmlConfigManager.MoveUIElement(
                 _filePath,
                 _model,
                 _operation,

@@ -139,10 +139,10 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>The element value.</returns>
         string GetValue(string filePath, string xpath);
 
-        void InsertUpdateElement(string filePath, BaseUIModel model);
+        void InsertOrUpdateUIElement(string filePath, BaseUIModel model);
 
-        void RemoveElement(string filePath, BaseUIModel model);
-        void MoveElement(string filePath, BaseUIModel model, OperationType operation, string after);
+        void RemoveUIElement(string filePath, BaseUIModel model);
+        void MoveUIElement(string filePath, BaseUIModel model, OperationType operation, string after);
 
         /// <summary>
         /// Serializes the specified value.

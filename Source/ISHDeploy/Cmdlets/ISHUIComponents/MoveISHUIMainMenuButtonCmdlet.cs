@@ -80,7 +80,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
             }
 
-            var model = new MainMenuModel(Label);
+            var model = new MainMenuBarItemModel(Label);
             var operation = new MoveUIOperation(Logger, ISHDeployment, model, operationType, After);
             operation.Run();
         }

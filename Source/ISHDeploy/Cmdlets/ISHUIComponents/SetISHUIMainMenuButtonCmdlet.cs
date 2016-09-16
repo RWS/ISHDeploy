@@ -57,7 +57,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
                 ID = Label.ToUpper();
             }
 
-            var model = new MainMenuModel(Label, UserRole, Action, ID);
+            var model = new MainMenuBarItemModel(Label, UserRole, Action, ID);
             var setOperation = new SetUIOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }

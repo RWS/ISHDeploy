@@ -52,7 +52,7 @@ namespace ISHDeploy.Data.Actions.ISHUIAction
 
         public override void Execute()
         {
-            _xmlConfigManager.RemoveElement(
+            _xmlConfigManager.RemoveUIElement(
                 _filePath,
                 _model);
         }

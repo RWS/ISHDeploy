@@ -79,3 +79,29 @@ Inside the zip file you will find two files
 
 - `CM Security Token Service Requirements.md` that is a markdown file with the specific deployment information.
 - `ishws.cer` that is the public key of the **ISHWS** service certificate. This is added for your convienience.
+
+# Enable authentication with Content Manager internal users.
+
+While the deployment is integrated with an external security token service (STS), it could be requested that the system allows access for internal users without modifying the integration. 
+An internal user is one that has username and password in the Content Manager database and the credential will be validated by ISHSTS.
+
+```powershell
+# Just Content Manager (ISH)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+```
+
+If the deployment is integrated with Content Delivery then provide the necessary values like this:
+
+```powershell
+# When the deployment is integrated with a Content Delivery (LC)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost "lc.example.com" -LCWebAppName "ContentDelivery"
+```
+
+`Enable-ISHIntegrationSTSInternalAuthentication` will enable a special url at `https://ish.example.com/ISHWS/Internal/`. 
+Provide this url to any user that wishes to login with internal users.
+
+To disable this mode use `Disable-ISHIntegrationSTSInternalAuthentication`.
+
+```powershell
+Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+```

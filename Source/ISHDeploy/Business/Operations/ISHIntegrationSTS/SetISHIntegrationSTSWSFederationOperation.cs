@@ -18,7 +18,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHIntegrationSTSWS
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
     /// <summary>
     /// Sets WSFederation configuration.

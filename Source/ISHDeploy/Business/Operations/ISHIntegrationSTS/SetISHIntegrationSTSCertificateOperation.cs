@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models.ISHXmlNodes;
 
-namespace ISHDeploy.Business.Operations.ISHSTS
+namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
     /// <summary>
     /// Sets Thumbprint and issuers values to configuration.
@@ -41,20 +40,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <param name="issuer">The certificate issuer.</param>
         /// <param name="validationMode">The certificate validation mode.</param>
-        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
+        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode? validationMode) : 
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+            thumbprint = GetNormalizedThumbprint(thumbprint);
 
-		    if (normalizedThumbprint.Length != thumbprint.Length)
-		    {
-                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-		        thumbprint = normalizedThumbprint;
-		    }
-
-		    var menuItem = new IssuerThumbprintItem()
+            var menuItem = new IssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer
@@ -64,30 +57,43 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfigPath, 
 				string.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
-				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+            if (validationMode != null)
+            {
+                // Author web Config
+                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
+                    InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // WS web Config
+                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
+                    InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // InputParameters.xml
+                _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, 
+                    InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
+            }
 
 			// WS web Config
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
 				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
-				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
-
             // STS web Config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
+            string configurationInfoShareSTSCertificateThumbprint = string.Empty;
+            new GetValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, result => configurationInfoShareSTSCertificateThumbprint = result).Execute();
 
-            // To avoid following problem: "The issuer certificate Thumbprint '09bc09cc1221a5d813f5f195eda6612b7bd2ca0a' already exists in the set of configured trusted issuers."
-            // there is no need to set or uncomment a Issuer with the same thumbprint in file ~\Web\InfoShareSTS\Web.config 
-            // because the trusted issuer being already set in file ~\Web\InfoShareWS\Web.config in line 71
-            // _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
-            // string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
+            if (configurationInfoShareSTSCertificateThumbprint != thumbprint)
+            {
+                var actAsTrustedIssuerThumbprintItem = new ActAsTrustedIssuerThumbprintItem()
+                {
+                    Thumbprint = thumbprint,
+                    Issuer = issuer
+                };
+                
+                _invoker.AddAction(new SetNodeAction(logger, InfoShareSTSWebConfigPath,
+                    string.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByThumbprintXPath, menuItem.Thumbprint), actAsTrustedIssuerThumbprintItem));
 
-            //_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
-            //	InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+                _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, InfoShareSTSWebConfigPath,
+                    InfoShareSTSWebConfig.TrustedIssuerBehaviorExtensions));
+            }
 
             // InputParameters.xml
-            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateThumbprintXPath, thumbprint));
         }
 

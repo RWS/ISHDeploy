@@ -47,10 +47,10 @@ namespace ISHDeploy.Cmdlets.ISHAPIWCFService
         public string Thumbprint { get; set; }
 
         /// <summary>
-        /// <para type="description">Selected validation mode. Default value is 'ChainTrust'.</para>
+        /// <para type="description">Selected validation mode.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Selected validation mode")]
-        public X509CertificateValidationMode ValidationMode { get; set; } = X509CertificateValidationMode.ChainTrust;
+        public X509CertificateValidationMode? ValidationMode { get; set; }
 
         /// <summary>
         /// Executes cmdlet

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -69,6 +67,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>InputParameters containing all parameters from InputParameters.xml file for specified deployment</returns>
         public InputParameters GetInputParameters(string deploymentName)
         {
+            _logger.WriteDebug("Get input parameters", deploymentName);
             // Get installed deployment from the registry.
             var projectRegKey = _registryManager.GetInstalledProjectsKeys(deploymentName).FirstOrDefault();
             var installParamsPath = _registryManager.GetInstallParamFilePath(projectRegKey);
@@ -87,7 +86,11 @@ namespace ISHDeploy.Data.Managers
 
             var dictionary = _xmlConfigManager.GetAllInputParamsValues(installParamFile);
 
-            return new InputParameters(installParamFile, dictionary);
+            var inputParameters = new InputParameters(installParamFile, dictionary);
+
+            _logger.WriteVerbose($"Input parameters for `{deploymentName}` deployment has been got");
+
+            return inputParameters;
         }
     }
 }

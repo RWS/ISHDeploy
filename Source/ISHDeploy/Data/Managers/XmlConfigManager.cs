@@ -553,9 +553,10 @@ namespace ISHDeploy.Data.Managers
 
             IEnumerable<XElement> found;
 
-            if (model.GetType()== typeof(ButtonBarModel))
+            if (model.GetType() == typeof(ButtonBarModel))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
+                           .Where(item => item.Element("INPUT") !=null) 
                            .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
             else
                 found = doc.Element(model.RootPath)
@@ -584,14 +585,6 @@ namespace ISHDeploy.Data.Managers
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"[{filePath}][Updated]");
             }
-        }
-
-        IEnumerable<XElement> GetParentNodeForInputElement(XDocument doc, BaseUIModel model, XElement element)
-        {
-            return doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
-
         }
 
         public void RemoveElement(string filePath, BaseUIModel model)

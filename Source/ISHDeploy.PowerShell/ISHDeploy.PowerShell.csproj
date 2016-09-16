@@ -63,6 +63,7 @@
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationDBSTSSQLServerConfiguration.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationSTSInternalAuthentication.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />

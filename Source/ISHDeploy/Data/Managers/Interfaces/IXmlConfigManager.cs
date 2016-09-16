@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Interfaces;
 using System.Xml.Linq;
 using ISHDeploy.Business.Enums;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -136,9 +139,42 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>The element value.</returns>
         string GetValue(string filePath, string xpath);
 
-        void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
-        void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName);
-        void MoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName, OperationType operation, string after);
+        /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        void InsertOrUpdateUIElement(string filePath, BaseUIElement model);
 
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        void RemoveUIElement(string filePath, BaseUIElement model);
+
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it.</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after);
+
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        string Serialize<T>(T value);
     }
 }

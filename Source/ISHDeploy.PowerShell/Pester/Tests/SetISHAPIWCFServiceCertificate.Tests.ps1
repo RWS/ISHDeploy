@@ -172,7 +172,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
 
         $wsWebConfigNodesCount | Should be 1
         $authorWebConfigNodesCount | Should be 1
-        $stsConfigNodesCount | Should be 1
+        $stsConfigNodesCount | Should be 0
         $feedSDLLCConfigNodesCount | Should be 1
         $translationOrganizerConfigNodesCount | Should be 1
         $synchronizeToLCConfigNodesCount | Should be 1

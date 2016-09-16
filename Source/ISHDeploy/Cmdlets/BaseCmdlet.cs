@@ -19,8 +19,6 @@ using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -61,7 +59,7 @@ namespace ISHDeploy.Cmdlets
 
             if (enumerable != null)
             {
-                    WriteObject(obj, true);
+                WriteObject(obj, true);
             }
             else
             {

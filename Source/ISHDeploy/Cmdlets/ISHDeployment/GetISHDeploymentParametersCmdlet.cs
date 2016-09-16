@@ -23,6 +23,9 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <para type="synopsis">Acquire the input parameters of a specific deployment.</para>
     /// <para type="description">The Get-ISHDeploymentParameters cmdlet gets parameters for Content Manager deployment.</para>
     /// <para type="link">Get-ISHDeployment</para>
+    /// <para type="link">Get-ISHDeploymentHistory</para>
+    /// <para type="link">Undo-ISHDeployment</para>
+    /// <para type="link">Clear-ISHDeploymentHistory</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment</code>
@@ -46,7 +49,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// </example>
 
     [Cmdlet(VerbsCommon.Get, "ISHDeploymentParameters")]
-    public sealed class GetISHDeploymentParametersCmdlet : BaseHistoryEntryCmdlet
+    public sealed class GetISHDeploymentParametersCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Switch parameter to get data from original file

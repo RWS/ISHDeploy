@@ -23,7 +23,11 @@ using ISHDeploy.Interfaces;
 using ISHDeploy.Data.Exceptions;
 using System.Text.RegularExpressions;
 using System;
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
 using ISHDeploy.Business.Enums;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -79,7 +83,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Dictionary with parameters</returns>
         public Dictionary<string, string> GetAllInputParamsValues(string filePath)
         {
-            _logger.WriteDebug($"[{filePath}][Retrieve input parameters]");
+            _logger.WriteDebug("Retrieve input parameters", filePath);
 
             var doc = _fileManager.Load(filePath);
             var dictionary = new Dictionary<string, string>();
@@ -94,6 +98,8 @@ namespace ISHDeploy.Data.Managers
                 dictionary.Add(name, currentValue);
             }
 
+            _logger.WriteVerbose($"The input parameters from file `{filePath}` has been retrieved");
+
             return dictionary;
         }
 
@@ -104,14 +110,14 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched node</param>
         public void RemoveSingleNode(string filePath, string xpath)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Remove]");
+            _logger.WriteDebug("Remove node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
             var node = SelectSingleNode(ref doc, xpath);
             if (node == null)
             {
-                _logger.WriteWarning($"{filePath} does not contain node within the xpath {xpath}");
+                _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
                 return;
             }
 
@@ -119,8 +125,7 @@ namespace ISHDeploy.Data.Managers
 
             _fileManager.Save(filePath, doc);
 
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
-
+            _logger.WriteVerbose($"The node within the xpath `{xpath}` has been removed from file `{filePath}`");
         }
 
         /// <summary>
@@ -130,21 +135,21 @@ namespace ISHDeploy.Data.Managers
         /// <param name="xpath">XPath to searched nodes</param>
         public void RemoveNodes(string filePath, string xpath)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Remove nodes]");
+            _logger.WriteDebug("Remove nodes", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
                 return;
             }
 
             nodes.Remove();
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Removed]");
+            _logger.WriteVerbose($"Nodes within the xpath `{xpath}` have been removed from file `{filePath}`");
         }
 
         /// <summary>
@@ -155,14 +160,15 @@ namespace ISHDeploy.Data.Managers
         /// <param name="insertBeforeXpath">XPath to searched node</param>
         public void MoveBeforeNode(string filePath, string xpath, string insertBeforeXpath)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Move node before `{insertBeforeXpath}]");
+            _logger.WriteDebug($"Move node before `{insertBeforeXpath}`", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning("Do not able to find target node to insert before");
                 return;
             }
 
@@ -199,7 +205,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
+            _logger.WriteVerbose($"The node within the xpath `{xpath}` has been moved before `{insertBeforeXpath}` in file `{filePath}`");
         }
 
         /// <summary>
@@ -210,14 +216,15 @@ namespace ISHDeploy.Data.Managers
 	    /// <param name="insertAfterXpath">XPath to searched node</param>
 	    public void MoveAfterNode(string filePath, string xpath, string insertAfterXpath)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Move node after `{insertAfterXpath}`]");
+            _logger.WriteDebug($"Move node after `{insertAfterXpath}`", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteWarning($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteVerbose($"{filePath} does not contain nodes within the xpath {xpath}");
+                _logger.WriteWarning("Not able to find the target node");
                 return;
             }
 
@@ -238,7 +245,8 @@ namespace ISHDeploy.Data.Managers
 
             if (insertAfterNode == null)
             {
-                _logger.WriteWarning($"{filePath} does not contain target node to insert after");
+                _logger.WriteVerbose($"Do not able to find target node within the xpath `{insertAfterXpath}` in file `{filePath}` to insert after it the node `{xpath}`");
+                _logger.WriteWarning("Not able to find the target node");
                 return;
             }
 
@@ -254,7 +262,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Moved]");
+            _logger.WriteVerbose($"The node within the xpath `{xpath}` has been moved after `{insertAfterXpath}` in file `{filePath}`");
         }
 
         /// <summary>
@@ -265,7 +273,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="encodeInnerXml">True if content of the comment should be encoded; otherwise False.</param>
         public void CommentNode(string filePath, string xpath, bool encodeInnerXml = false)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
+            _logger.WriteDebug($"Comment{(encodeInnerXml ? " and encode" : "")} xml node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -273,7 +281,7 @@ namespace ISHDeploy.Data.Managers
 
             if (uncommentedNode == null)
             {
-                _logger.WriteWarning($"{filePath} does not contain uncommented node within the xpath {xpath}");
+                _logger.WriteVerbose($"{filePath} does not contain uncommented node within the xpath {xpath}");
                 return;
             }
 
@@ -289,7 +297,7 @@ namespace ISHDeploy.Data.Managers
             uncommentedNode.ReplaceWith(commentedNode);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][{xpath}][Commented][Comment {(encodeInnerXml ? "and encoding " : "")}xml node]");
+            _logger.WriteVerbose($"The node within the xpath `{xpath}` has been commented{(encodeInnerXml ? " and encoded" : "")} in file `{filePath}`");
         }
 
         /// <summary>
@@ -299,7 +307,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node</param>
         public void CommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-            _logger.WriteDebug($"[{filePath}][Comment all nodes that has {searchPattern}]");
+            _logger.WriteDebug($"Comment all nodes that have `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -324,7 +332,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (uncommentedNode.NodeType == XmlNodeType.Comment)
                 {
-                    _logger.WriteWarning($"{filePath} contains already commented node following after pattern {searchPattern}");
+                    _logger.WriteVerbose($"{filePath} contains already commented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -338,7 +346,7 @@ namespace ISHDeploy.Data.Managers
             if (commentedNode != null) // means that file was changed
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Commented][Comment all nodes that has {searchPattern}]");
+                _logger.WriteVerbose($"All nodes that have `{searchPattern}` have been commented in file `{filePath}`");
             }
         }
 
@@ -349,7 +357,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="searchPattern">Comment pattern that precedes the searched node.</param>
         public void UncommentNodesByPrecedingPattern(string filePath, string searchPattern)
         {
-            _logger.WriteDebug($"[{filePath}][Uncomment all nodes that has {searchPattern}]");
+            _logger.WriteDebug($"Unomment all nodes that have `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -374,7 +382,7 @@ namespace ISHDeploy.Data.Managers
 
                 if (commentedNode.NodeType != XmlNodeType.Comment)
                 {
-                    _logger.WriteWarning($"{filePath} contains already uncommented node following after pattern {searchPattern}");
+                    _logger.WriteVerbose($"{filePath} contains already uncommented node following after pattern {searchPattern}");
                     continue;
                 }
 
@@ -388,7 +396,7 @@ namespace ISHDeploy.Data.Managers
             if (isFileChanged)
             {
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment all nodes that has {searchPattern}]");
+                _logger.WriteVerbose($"All nodes that have `{searchPattern}` have been uncommented in file `{filePath}`");
             }
         }
 
@@ -400,7 +408,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         public void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false)
         {
-            _logger.WriteDebug($"[{filePath}][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
+            _logger.WriteDebug($"Uncomment{(decodeInnerXml ? " and decoding" : "")} all xml nodes that can be found by `{searchPattern}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -416,7 +424,7 @@ namespace ISHDeploy.Data.Managers
 
             if (!commentedNodes.Any())
             {
-                _logger.WriteWarning($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
+                _logger.WriteVerbose($"{filePath} contains already uncommented node by searched pattern '{searchPattern}'.");
                 return;
             }
 
@@ -429,7 +437,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Uncommented][Uncomment {(decodeInnerXml ? "and decoding " : "")}all xml nodes in `` xml file that can be found by `{searchPattern}`]");
+            _logger.WriteVerbose($"All xml nodes that can be found by `{searchPattern}` have been uncommented{(decodeInnerXml ? " and decoded" : "")} in file `{filePath}`");
         }
 
         /// <summary>
@@ -440,19 +448,21 @@ namespace ISHDeploy.Data.Managers
         /// <param name="value">Attribute new value</param>
         public void SetAttributeValue(string filePath, string attributeXpath, string value)
         {
-            _logger.WriteDebug($"[{filePath}][{attributeXpath}][Set attribute value to '{value}']");
+            _logger.WriteDebug($"Set new value `{value}` for attribute `{attributeXpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
             var attr = ((IEnumerable<object>)doc.XPathEvaluate(attributeXpath)).OfType<XAttribute>().SingleOrDefault();
             if (attr == null)
             {
-                _logger.WriteWarning($"{filePath} does not contain attribute at '{attributeXpath}'.");
+                // TODO: Create TryGetElementByXPath action or something similar to use it before run SetAttributeValue to avoid access to nonexistent elements
+                // and change WriteVerbose on "throw new WrongXPathException(filePath, attributeXpath);" 
+                _logger.WriteVerbose($"{filePath} does not contain attribute at '{attributeXpath}'.");
                 return;
             }
 
             attr.SetValue(value);
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"The value of attribute `{attributeXpath}` has been set to '{value}' in file `{filePath}`");
         }
 
         /// <summary>
@@ -464,7 +474,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Set node]");
+            _logger.WriteDebug("Set node", xpath ,filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();
@@ -487,7 +497,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                _logger.WriteWarning($"No modifications was done to the file `{filePath}`");
+                _logger.WriteDebug($"No modifications was done to the file `{filePath}`");
                 return;
             }
 
@@ -502,7 +512,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"The node with xpath `{xpath}` has been set in file `{filePath}`");
         }
 
         /// <summary>
@@ -514,7 +524,7 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WrongXPathException"></exception>
         public void InsertBeforeNode(string filePath, string xpath, string xmlString)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Insert new node before]");
+            _logger.WriteDebug($"Insert new node before `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -530,7 +540,7 @@ namespace ISHDeploy.Data.Managers
             {
                 if (equalityComparer.Equals(node, newElement))
                 {
-                    _logger.WriteWarning($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
+                    _logger.WriteVerbose($"The element with xpath '{xpath}' already contains element '{xmlString}' before it.");
                     return;
                 }
             }
@@ -538,126 +548,163 @@ namespace ISHDeploy.Data.Managers
             relativeElement.AddBeforeSelf(newElement);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Inserted]");
+            _logger.WriteVerbose($"The new node has been inserted before node with xpath `{xpath}` in file `{filePath}`");
         }
 
-        public void InsertUpdateElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
+        /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
         {
-            _logger.WriteDebug($"[{filePath}][Insert/Update element]");
+            _logger.WriteDebug("Insert/Update UI element", filePath);
             var doc = _fileManager.Load(filePath);
+            var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
 
-            if (found.Count() == 0)
-            {// creating new
-                var MemberList = doc.Element(root).Elements(childElement);
-                if (MemberList.Count() == 0)
-                {// no elements at all
-                    doc.Element(root).Add(element);
+            if (found == null)
+            {
+                _logger.WriteDebug("Insert UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+                var memberList = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).ToList();
+                if (!memberList.Any())
+                {
+                    doc.Element(model.NameOfRootElement).Add(element);
                 }
                 else
                 {
-                    MemberList.Last().AddAfterSelf(element);
+                    memberList.Last().AddAfterSelf(element);
                 }
 
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Inserted]");
-            }
-            else
-            { //update existing
-                found.First().ReplaceWith(element);
-
-                _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Updated]");
-            }
-        }
-
-        public void RemoveElement(string filePath, string root, string childElement, XElement element, string updateAttributeName)
-        {
-            _logger.WriteDebug($"[{filePath}][Remove element]");
-            var doc = _fileManager.Load(filePath);
-
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
-
-            if (found.Count() == 0)
-            {// not found
-                throw new Exception("Could not find element");
+                _logger.WriteVerbose($"The new element has been inserted in file `{filePath}`");
             }
             else
             {
-                found.First().Remove();
+                _logger.WriteDebug("Update UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+                found.ReplaceWith(element);
 
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Removed]");
+                _logger.WriteVerbose($"The element has been updated in file `{filePath}`");
             }
         }
 
-        public void MoveElement(string filePath, 
-            string root, 
-            string childElement, 
-            XElement element, 
-            string updateAttributeName, 
-            OperationType operation, 
-            string after)
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void RemoveUIElement(string filePath, BaseUIElement model)
         {
-            _logger.WriteDebug($"[{filePath}][Move element]");
+            _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
+
             var doc = _fileManager.Load(filePath);
 
-            var found = doc.Element(root)
-                           .Elements(childElement)
-                           .Where(item => item.Attribute(updateAttributeName).Value == element.Attribute(updateAttributeName).Value);
+            var element = XElement.Parse(Serialize(model));
 
-            string verboseMessage = "";
-            if (found.Count() == 0)
-            {// not found
-                throw new Exception("Could not find source element");
-            }
-            else
+            _logger.WriteDebug("Remove UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
             {
-                var foundElement = found.First();
-                switch (operation)
+                found.Remove();
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The element `{element.Attribute(model.KeyAttribute).Value}` has been removed from file `{filePath}`");
+            }
+        }
+
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it.</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after)
+        {
+            _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
+            var doc = _fileManager.Load(filePath);
+
+            var element = XElement.Parse(Serialize(model));
+
+            _logger.WriteDebug($"Move UI element <{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`> {(direction == MoveElementDirection.After ? $"{direction} {after}" : $"to {direction} position")}", filePath);
+
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
+            {
+                string verboseMessage = "";
+                switch (direction)
                 {
-                    case OperationType.First: // Move to first position
-                        doc.Element(root).AddFirst(foundElement);
-                        verboseMessage = "Moved to the first position";
+                    case MoveElementDirection.First:
+                        doc.Element(model.NameOfRootElement).AddFirst(found);
+                        verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case OperationType.Last: // Move to last
-                        var MemberList = doc.Element(root).Elements(childElement);
-                        if (MemberList.Count() == 0)
-                        {// no elements at all
-                            doc.Element(root).Add(foundElement);
+                    case MoveElementDirection.Last:
+                        var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
+                        if (lastElement != null)
+                        {
+                            lastElement.AddAfterSelf(found);
                         }
                         else
                         {
-                            MemberList.Last().AddAfterSelf(foundElement);
+                            doc.Element(model.NameOfRootElement).Add(found);
                         }
-                        verboseMessage = "Moved to the last position";
+                        verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case OperationType.After://After certain item
-                        var List = doc.Element(root)
-                            .Elements(childElement)
-                            .Where(item => item.Attribute(updateAttributeName).Value == after);
-                        if (List.Count() == 0)
-                        {// no target element
-                            throw new Exception("Could not find target element");
+                    case MoveElementDirection.After:
+                        var afterElement = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, after);
+                        if (afterElement == null)
+                        {
+                            verboseMessage = $"Do not able to find target element `{after}` to insert after it the node `{element.Attribute(model.KeyAttribute).Value}`";
+                            _logger.WriteWarning("Not able to find the target node");
                         }
-                        List.First().AddAfterSelf(foundElement);
-                        verboseMessage = $"Moved after {List.First().Attribute(updateAttributeName).Value}";
+                        else
+                        {
+                            afterElement.AddAfterSelf(found);
+                            verboseMessage = $"The UI element has been moved after {after}";
+                        }
                         break;
-                    default:
-                        throw new Exception("Unknown operation");
                 }
 
-                foundElement.Remove(); // Remove old element
+                found.Remove();
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][{verboseMessage}]");
+                _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
             }
         }
 
+        /// <summary>
+        /// Finds the element.
+        /// </summary>
+        /// <param name="doc">The document.</param>
+        /// <param name="nameOfRootElement">The name of root element.</param>
+        /// <param name="nameOfItem">The name of item.</param>
+        /// <param name="keyAttribute">The key attribute.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        private XElement FindElement(XDocument doc, string nameOfRootElement, string nameOfItem, string keyAttribute, string value)
+        {
+            var element = doc.Element(nameOfRootElement)
+                           .Elements(nameOfItem)
+                           .FirstOrDefault(item => item.Attribute(keyAttribute).Value == value);
+
+            if (element == null)
+            {
+                _logger.WriteDebug("Does not contain element", $"<{nameOfItem} {keyAttribute}=`{value}`>");
+                _logger.WriteVerbose($"The file does not contain item with identifier {value}");
+            }
+
+            return element;
+        }
 
         /// <summary>
         /// Set element value.
@@ -667,7 +714,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="value">The new value of element.</param>
         public void SetElementValue(string filePath, string xpath, string value)
         {
-            _logger.WriteDebug($"[{filePath}][{xpath}][Set element new value '{value}']");
+            _logger.WriteDebug($"Set new value '{value}' for element `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
 
@@ -681,7 +728,7 @@ namespace ISHDeploy.Data.Managers
             element.SetValue(value);
 
             _fileManager.Save(filePath, doc);
-            _logger.WriteVerbose($"[{filePath}][Setted]");
+            _logger.WriteVerbose($"The new value '{value}' has been set for element with xpath `{xpath}` in file `{filePath}`");
         }
 
         /// <summary>
@@ -692,7 +739,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The element value.</returns>
         public string GetValue(string filePath, string xpath)
         {
-            _logger.WriteDebug($"[`{filePath}][{xpath}][Get value]");
+            _logger.WriteDebug($"Get value of element `{xpath}`", filePath);
 
             var doc = _fileManager.Load(filePath);
             var node = ((IEnumerable<object>)doc.XPathEvaluate(xpath)).SingleOrDefault();
@@ -704,15 +751,45 @@ namespace ISHDeploy.Data.Managers
             if (node is XAttribute)
             {
                 var attr = (XAttribute)node;
-                _logger.WriteDebug($"Retrieved value of attribute node is: {attr.Value}");
+                _logger.WriteVerbose($"The value of element with xpath `{xpath}` has been retrieved from file `{filePath}`");
                 return attr.Value;
             }
 
             var element = (XElement)node;
-            _logger.WriteVerbose($"Retrieved value of element node is: {element.Value}");
+            _logger.WriteVerbose($"The value of element with xpath `{xpath}` has been retrieved from file `{filePath}`");
             return element.Value;
         }
 
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public string Serialize<T>(T value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var serializer = new XmlSerializer(value.GetType());
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                {
+                    serializer.Serialize(xmlWriter, value, ns);
+                }
+                return textWriter.ToString();
+            }
+        }
         #region private methods
 
         /// <summary>

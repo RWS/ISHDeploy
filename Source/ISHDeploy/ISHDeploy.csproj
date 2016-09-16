@@ -75,7 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Enums\OperationType.cs" />
+    <Compile Include="Business\Enums\MoveElementDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -134,9 +134,9 @@
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIOperation\MoveUIOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIOperation\RemoveUIOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIOperation\SetUIOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\MoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\RemoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\SetUIElementOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -192,9 +192,9 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIComponents\MoveISHUIMainMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIComponents\RemoveISHUIMainMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIComponents\SetISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
@@ -225,9 +225,9 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
-    <Compile Include="Data\Actions\ISHUIAction\MoveUIAction.cs" />
-    <Compile Include="Data\Actions\ISHUIAction\RemoveUIAction.cs" />
-    <Compile Include="Data\Actions\ISHUIAction\SetUIAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\MoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\RemoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\SetUIElementAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\StringActions\CreateIndexHTMLAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
@@ -313,8 +313,8 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
-    <Compile Include="Models\UI\MainMenuBarItemModel.cs" />
-    <Compile Include="Models\UI\BaseUIModel.cs" />
+    <Compile Include="Models\UI\MainMenuBarItem.cs" />
+    <Compile Include="Models\UI\BaseUIElement.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

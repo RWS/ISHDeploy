@@ -556,22 +556,21 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void InsertOrUpdateUIElement(string filePath, BaseUIModel model)
+        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
         {
-            _logger.WriteDebug($"[{filePath}][Insert/Update element]");
+            _logger.WriteDebug("Insert/Update UI element", filePath);
             var doc = _fileManager.Load(filePath);
             var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .FirstOrDefault(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
 
             if (found == null)
             {
-                var memberList = doc.Element(model.RootPath).Elements(model.ChildItemPath).ToList();
+                _logger.WriteDebug("Insert UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+                var memberList = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).ToList();
                 if (!memberList.Any())
                 {
-                    doc.Element(model.RootPath).Add(element);
+                    doc.Element(model.NameOfRootElement).Add(element);
                 }
                 else
                 {
@@ -579,14 +578,15 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Inserted]");
+                _logger.WriteVerbose($"The new element has been inserted in file `{filePath}`");
             }
             else
             {
+                _logger.WriteDebug("Update UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
                 found.ReplaceWith(element);
 
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Updated]");
+                _logger.WriteVerbose($"The element has been updated in file `{filePath}`");
             }
         }
 
@@ -595,91 +595,116 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        /// <exception cref="System.Exception">Could not find element</exception>
-        public void RemoveUIElement(string filePath, BaseUIModel model)
+        public void RemoveUIElement(string filePath, BaseUIElement model)
         {
-            _logger.WriteDebug($"[{filePath}][Remove element]");
+            _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
+
             var doc = _fileManager.Load(filePath);
 
             var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .FirstOrDefault(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            _logger.WriteDebug("Remove UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
 
-            if (found == null)
-            {
-                // TODO: change output
-                _logger.WriteWarning($"{filePath} does not contain ");
-            }
-            else
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
             {
                 found.Remove();
-
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][Removed]");
+                _logger.WriteVerbose($"The element `{element.Attribute(model.KeyAttribute).Value}` has been removed from file `{filePath}`");
             }
         }
 
-        public void MoveUIElement(string filePath, BaseUIModel model, OperationType operation, 
-            string after)
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it.</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after)
         {
-            _logger.WriteDebug($"[{filePath}][Move element]");
+            _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
             var doc = _fileManager.Load(filePath);
 
             var element = XElement.Parse(Serialize(model));
 
-            var found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            _logger.WriteDebug($"Move UI element <{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`> {(direction == MoveElementDirection.After ? $"{direction} {after}" : $"to {direction} position")}", filePath);
 
-            string verboseMessage = "";
-            if (found.Count() == 0)
-            {// not found
-                throw new Exception("Could not find source element");
-            }
-            else
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
             {
-                var foundElement = found.First();
-                switch (operation)
+                string verboseMessage = "";
+                switch (direction)
                 {
-                    case OperationType.First: // Move to first position
-                        doc.Element(model.RootPath).AddFirst(foundElement);
-                        verboseMessage = "Moved to the first position";
+                    case MoveElementDirection.First:
+                        doc.Element(model.NameOfRootElement).AddFirst(found);
+                        verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case OperationType.Last: // Move to last
-                        var MemberList = doc.Element(model.RootPath).Elements(model.ChildItemPath);
-                        if (MemberList.Count() == 0)
-                        {// no elements at all
-                            doc.Element(model.RootPath).Add(foundElement);
+                    case MoveElementDirection.Last:
+                        var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
+                        if (lastElement != null)
+                        {
+                            lastElement.AddAfterSelf(found);
                         }
                         else
                         {
-                            MemberList.Last().AddAfterSelf(foundElement);
+                            doc.Element(model.NameOfRootElement).Add(found);
                         }
-                        verboseMessage = "Moved to the last position";
+                        verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case OperationType.After://After certain item
-                        var List = doc.Element(model.RootPath)
-                            .Elements(model.ChildItemPath)
-                            .Where(item => item.Attribute(model.KeyAttribute).Value == after);
-                        if (List.Count() == 0)
-                        {// no target element
-                            throw new Exception("Could not find target element");
+                    case MoveElementDirection.After:
+                        var afterElement = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, after);
+                        if (afterElement == null)
+                        {
+                            verboseMessage = $"Do not able to find target element `{after}` to insert after it the node `{element.Attribute(model.KeyAttribute).Value}`";
+                            _logger.WriteWarning("Not able to find the target node");
                         }
-                        List.First().AddAfterSelf(foundElement);
-                        verboseMessage = $"Moved after {List.First().Attribute(model.KeyAttribute).Value}";
+                        else
+                        {
+                            afterElement.AddAfterSelf(found);
+                            verboseMessage = $"The UI element has been moved after {after}";
+                        }
                         break;
-                    default:
-                        throw new Exception("Unknown operation");
                 }
 
-                foundElement.Remove(); // Remove old element
+                found.Remove();
                 _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"[{filePath}][{verboseMessage}]");
+                _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
             }
         }
 
+        /// <summary>
+        /// Finds the element.
+        /// </summary>
+        /// <param name="doc">The document.</param>
+        /// <param name="nameOfRootElement">The name of root element.</param>
+        /// <param name="nameOfItem">The name of item.</param>
+        /// <param name="keyAttribute">The key attribute.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        private XElement FindElement(XDocument doc, string nameOfRootElement, string nameOfItem, string keyAttribute, string value)
+        {
+            var element = doc.Element(nameOfRootElement)
+                           .Elements(nameOfItem)
+                           .FirstOrDefault(item => item.Attribute(keyAttribute).Value == value);
+
+            if (element == null)
+            {
+                _logger.WriteDebug("Does not contain element", $"<{nameOfItem} {keyAttribute}=`{value}`>");
+                _logger.WriteVerbose($"The file does not contain item with identifier {value}");
+            }
+
+            return element;
+        }
 
         /// <summary>
         /// Set element value.

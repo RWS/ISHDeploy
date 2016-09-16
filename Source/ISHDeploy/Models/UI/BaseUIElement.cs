@@ -19,10 +19,10 @@ using System.Xml.Serialization;
 namespace ISHDeploy.Models.UI
 {
     /// <summary>
-    /// <para type="description">Base class for UI Models</para>
+    /// <para type="description">Base class to represent UI element</para>
     /// </summary>
-    [XmlInclude(typeof(MainMenuBarItemModel))]
-    public abstract class BaseUIModel
+    [XmlInclude(typeof(MainMenuBarItem))]
+    public abstract class BaseUIElement
     {
         /// <summary>
         /// Gets or sets the relative file path.
@@ -34,22 +34,22 @@ namespace ISHDeploy.Models.UI
         public string RelativeFilePath { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the path to root element.
+        /// Gets or sets the name of root element.
         /// </summary>
         /// <value>
         /// The root path.
         /// </value>
         [XmlIgnore]
-        public string RootPath { get; protected set; }
+        public string NameOfRootElement { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the child item path.
+        /// Gets or sets the name of item.
         /// </summary>
         /// <value>
         /// The child item path.
         /// </value>
         [XmlIgnore]
-        public string ChildItemPath { get; protected set; }
+        public string NameOfItem { get; protected set; }
 
         /// <summary>
         /// Gets or sets the key attribute.

@@ -14,46 +14,56 @@
  * limitations under the License.
  */
 
-using System;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 
-namespace ISHDeploy.Data.Actions.ISHUIAction
+namespace ISHDeploy.Data.Actions.ISHUIElement
 {
     /// <summary>
-    /// Remove xml node from file.
+    /// Action that inserts or update the element of UI.
     /// </summary>
-    public class RemoveUIAction : SingleXmlFileAction
+    public class SetUIElementAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xml configuration manager.
         /// </summary>
         private readonly IXmlConfigManager _xmlConfigManager;
 
-        private string _filePath;
-        private BaseUIModel _model;
+        /// <summary>
+        /// The file path to XML file.
+        /// </summary>
+        private readonly ISHFilePath _filePath;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveUIAction"/> class.
+        /// The model that represents UI element.
+        /// </summary>
+        private readonly BaseUIElement _model;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetUIElementAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public RemoveUIAction(ILogger logger,
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public SetUIElementAction(ILogger logger,
             ISHFilePath filePath,
-            BaseUIModel model) :
+            BaseUIElement model) :
             base(logger, filePath)
         {
-            _filePath = filePath.AbsolutePath;
+            _filePath = filePath;
             _model = model;
-
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
+        /// <summary>
+        /// Executes current action.
+        /// </summary>
         public override void Execute()
         {
-            _xmlConfigManager.RemoveUIElement(
-                _filePath,
+            _xmlConfigManager.InsertOrUpdateUIElement(
+                _filePath.AbsolutePath,
                 _model);
         }
     }

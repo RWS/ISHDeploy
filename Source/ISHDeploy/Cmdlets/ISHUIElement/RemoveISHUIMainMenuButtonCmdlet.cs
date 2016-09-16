@@ -14,26 +14,31 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Operations.ISHUIOperation;
+using ISHDeploy.Business.Operations.ISHUIElement;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
 
-namespace ISHDeploy.Cmdlets.ISHUIComponents
+namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
-    /// <para type="synopsis">Remove main menu item.</para>
-    /// <para type="description">The Remove-ISHUIMainMenuButton cmdlet remove exist menu item.</para>
-    /// <para type="link">Move-ISHUIMainMenuButton</para>    
-    /// <para type="link">Set-ISHUIMainMenuButton</para>
-    /// </summary>
-    /// <example>
-    /// <code>PS C:\>Remove-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Inbox2"</code>
-    /// <para>This command remove main menu item.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    /// </example>
+	///		<para type="synopsis">Removes button from MainMenuBar.</para>
+	///		<para type="description">The Removes-ISHUIMainMenuButton cmdlet removes Buttons definitions from Content Manager deployment.</para>
+	///		<para type="link">Set-ISHUIMainMenuButton</para>
+	///		<para type="link">Move-ISHUIMainMenuButton</para>
+	/// </summary>
+	/// <example>
+	///		<code>PS C:\>Remove-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Translation"</code>
+	///		<para>Removes definition of the button with label "Translation".
+	/// This command removes XML definitions from EventMonitor.
+	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+	///		</para>
+	/// </example>
     [Cmdlet(VerbsCommon.Remove, "ISHUIMainMenuButton")]
     public sealed class RemoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
+        /// <summary>
+        /// <para type="description">Label of menu item.</para>
+        /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
         public string Label { get; set; }
 
@@ -42,8 +47,8 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new MainMenuBarItemModel(Label);
-            var operation = new RemoveUIOperation(Logger, ISHDeployment, model);
+            var model = new MainMenuBarItem(Label);
+            var operation = new RemoveUIElementOperation(Logger, ISHDeployment, model);
             operation.Run();
         }
     }

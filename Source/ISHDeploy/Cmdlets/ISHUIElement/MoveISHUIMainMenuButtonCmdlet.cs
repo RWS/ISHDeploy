@@ -15,26 +15,40 @@
  */
 
 using ISHDeploy.Business.Enums;
-using ISHDeploy.Business.Operations.ISHUIOperation;
+using ISHDeploy.Business.Operations.ISHUIElement;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
 
-namespace ISHDeploy.Cmdlets.ISHUIComponents
+namespace ISHDeploy.Cmdlets.ISHUIElement
 {
+
     /// <summary>
-    /// <para type="synopsis">Remove main menu item.</para>
-    /// <para type="description">The Remove-ISHUIMainMenuButton cmdlet remove exist menu item.</para>
-    /// <para type="link">Move-ISHUIMainMenuButton</para>    
-    /// <para type="link">Set-ISHUIMainMenuButton</para>
+    ///		<para type="synopsis">Manipulates with definitions in MainMenuBar.</para>
+    ///		<para type="description">The Move-ISHUIMainMenuButton cmdlet moves Buttons definitions in Content Manager deployment.</para>
+    ///		<para type="link">Set-ISHUIMainMenuButton</para>
+    ///		<para type="link">Remove-ISHUIMainMenuButton</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Remove-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Inbox2"</code>
-    /// <para>This command remove main menu item.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -First</code>
+    ///		<para>Moves definition of the "Publish" to the top.</para>
     /// </example>
+    /// <example>
+    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -Last</code>
+    ///		<para>Moves definition of the "Publish" to the bottom.</para>
+    /// </example>
+    /// <example>
+    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
+    ///		<para>Moves definition of the "Translation" after "Publish".</para> 
+    /// </example>
+    /// <para>This command manipulates XML definitions nodes in MainMenuBar.
+    ///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+    /// </para>
     [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuButton")]
     public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
+        /// <summary>
+        /// <para type="description">Label of menu item.</para>
+        /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
         public string Label { get; set; }
         
@@ -64,26 +78,25 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            OperationType operationType;
+            MoveElementDirection operationType;
             switch (ParameterSetName)
             {
                 case "Last":
-                    operationType = OperationType.Last;
+                    operationType = MoveElementDirection.Last;
                     break;
                 case "First":
-                    operationType = OperationType.First;
+                    operationType = MoveElementDirection.First;
                     break;
                 case "After":
-                    operationType = OperationType.After;
+                    operationType = MoveElementDirection.After;
                     break;
                 default:
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
             }
 
-            var model = new MainMenuBarItemModel(Label);
-            var operation = new MoveUIOperation(Logger, ISHDeployment, model, operationType, After);
+            var model = new MainMenuBarItem(Label);
+            var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, operationType, After);
             operation.Run();
         }
     }
-
 }

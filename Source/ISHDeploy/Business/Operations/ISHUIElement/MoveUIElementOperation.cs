@@ -16,18 +16,18 @@
 
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIAction;
+using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 
-namespace ISHDeploy.Business.Operations.ISHUIOperation
+namespace ISHDeploy.Business.Operations.ISHUIElement
 {
     /// <summary>
-    /// Move UI item.
+    /// Moves UI item.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class MoveUIOperation : BaseOperationPaths, IOperation
+    public class MoveUIElementOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -35,24 +35,28 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MoveUIOperation"/> class.
+        /// Initializes a new instance of the <see cref="MoveUIElementOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        public MoveUIOperation(ILogger logger, 
+        /// <param name="ishDeployment">The ish deployment.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it.</param>
+        public MoveUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
-            BaseUIModel model,
-            OperationType operation,
+            BaseUIElement model,
+            MoveElementDirection direction,
             string after) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Move UI/XML element");
-            
-            _invoker.AddAction(new MoveUIAction(
+            var filePath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, $"Move `{model.NameOfItem}` element in file {filePath.AbsolutePath}");
+
+            _invoker.AddAction(new MoveUIElementAction(
                 logger,
-                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath),
+                filePath,
                 model,
-                operation,
+                direction,
                 after));
         }
 

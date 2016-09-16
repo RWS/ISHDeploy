@@ -20,9 +20,9 @@ namespace ISHDeploy.Models.UI
     /// <summary>
     ///	<para type="description">Represents the item of MainMenuBar (~\Author\ASP\XSL\MainMenuBar.xml).</para>
     /// </summary>
-    /// <seealso cref="BaseUIModel" />
+    /// <seealso cref="BaseUIElement" />
     [XmlRoot("menuitem", Namespace = "")]
-    public class MainMenuBarItemModel : BaseUIModel
+    public class MainMenuBarItem : BaseUIElement
     {
         /// <summary>
         /// Gets or sets the label of the menu item.
@@ -61,25 +61,25 @@ namespace ISHDeploy.Models.UI
         public string Id { set; get; }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="MainMenuBarItemModel"/> class from being created.
+        /// Prevents a default instance of the <see cref="MainMenuBarItem"/> class from being created.
         /// </summary>
-        private MainMenuBarItemModel()
+        private MainMenuBarItem()
         {
 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainMenuBarItemModel"/> class.
+        /// Initializes a new instance of the <see cref="MainMenuBarItem"/> class.
         /// </summary>
         /// <param name="label">The label of the menu item.</param>
         /// <param name="userRoles">The users for whom the menu item is available.</param>
         /// <param name="action">The action which occurs on click on the menu item.</param>
         /// <param name="id">The menu item identifier.</param>
-        public MainMenuBarItemModel(string label, string[] userRoles = null, string action = null, string id = null)
+        public MainMenuBarItem(string label, string[] userRoles = null, string action = null, string id = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\MainMenuBar.xml";
-            RootPath = "mainmenubar";
-            ChildItemPath = "menuitem";
+            NameOfRootElement = "mainmenubar";
+            NameOfItem = "menuitem";
             KeyAttribute = "label";
 
             Label = label;

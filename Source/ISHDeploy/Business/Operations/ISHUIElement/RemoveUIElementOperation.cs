@@ -15,18 +15,18 @@
  */
 
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIAction;
+using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 
-namespace ISHDeploy.Business.Operations.ISHUIOperation
+namespace ISHDeploy.Business.Operations.ISHUIElement
 {
     /// <summary>
     /// Remove UI item.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class RemoveUIOperation : BaseOperationPaths, IOperation
+    public class RemoveUIElementOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -34,20 +34,21 @@ namespace ISHDeploy.Business.Operations.ISHUIOperation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveUIOperation"/> class.
+        /// Initializes a new instance of the <see cref="RemoveUIElementOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public RemoveUIOperation(ILogger logger, 
+        public RemoveUIElementOperation(ILogger logger, 
             Models.ISHDeployment ishDeployment,
-            BaseUIModel model) :
+            BaseUIElement model) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Remove UI/XML element");
+            var filePath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, $"Remove `{model.NameOfItem}` element in file {filePath.AbsolutePath}");
             
-            _invoker.AddAction(new RemoveUIAction(
+            _invoker.AddAction(new RemoveUIElementAction(
                 logger,
-                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath),
+                filePath,
                 model));
         }
 

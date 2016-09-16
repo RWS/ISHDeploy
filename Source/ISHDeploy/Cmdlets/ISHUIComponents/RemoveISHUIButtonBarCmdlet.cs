@@ -38,12 +38,15 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         [Parameter(Mandatory = true, HelpMessage = "Button bar name")]
         public string Name { get; set; }
 
+        [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
+        public ButtonBarType ButtonBar { get; set; }
+
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarModel(ButtonBarType.CategoryMasterButtonbar, Name);
+            var model = new ButtonBarModel(ButtonBar, Name);
             var operation = new RemoveUIOperation(Logger, ISHDeployment, model);
             operation.Run();
         }

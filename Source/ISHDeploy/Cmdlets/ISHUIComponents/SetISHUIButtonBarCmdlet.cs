@@ -58,7 +58,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarModel(ButtonBar, ISHTYPE, Name, Icon, OnClick, Checkaccess);
+            var model = new ButtonBarModel(ButtonBar, Name, ISHTYPE, Icon, OnClick, Checkaccess);
             var setOperation = new SetUIOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }

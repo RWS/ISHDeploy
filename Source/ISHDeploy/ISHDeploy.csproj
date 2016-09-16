@@ -79,6 +79,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Enums\ButtonBarType.cs" />
+    <Compile Include="Business\Enums\CardType.cs" />
     <Compile Include="Business\Enums\OperationType.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
@@ -190,8 +192,11 @@
     <Compile Include="Cmdlets\ISHSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIComponents\MoveISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIComponents\MoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIComponents\RemoveISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIComponents\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIComponents\SetISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIComponents\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
@@ -308,6 +313,7 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
+    <Compile Include="Models\UI\ButtonBarModel.cs" />
     <Compile Include="Models\UI\MainMenuModel.cs" />
     <Compile Include="Models\UI\BaseUIModel.cs" />
     <Compile Include="ObjectFactory.cs" />

@@ -194,8 +194,10 @@
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Models\UI\SearchMenuModel.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />

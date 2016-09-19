@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using ISHDeploy.Business.Enums;
+using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Data.Exceptions;
-using System.Text.RegularExpressions;
-using System;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-using ISHDeploy.Business.Enums;
 using ISHDeploy.Models.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -474,7 +473,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug("Set node", xpath ,filePath);
+            _logger.WriteDebug("Set node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();

@@ -18,41 +18,63 @@ namespace ISHDeploy.Business.Enums
 {
     public enum CardType
     {
-        /// <summary>
-        /// No objects allowed except subfolders (VDOCTYPENONE)
-        /// </summary>
-        VDOCTYPENONE,
-        /// <summary>
-        /// Modules/Maps/Topics (VDOCTYPEMAP)
-        /// </summary>
-        VDOCTYPEMAP,
-        /// <summary>
-        /// MasterDocuments/Masters/BookMaps/DocumentOutlines (VDOCTYPEMASTER)
-        /// </summary>
-        VDOCTYPEMASTER,
-        /// <summary>
-        /// Libraries (VDOCTYPELIB)
-        /// </summary>
-        VDOCTYPELIB,
-        /// <summary>
-        /// Templates (VDOCTYPETEMPLATE)
-        /// </summary>
-        VDOCTYPETEMPLATE,
-        /// <summary>
-        /// Illustrations/Images/Graphics (VDOCTYPEILLUSTRATION)
-        /// </summary>
         VDOCTYPEILLUSTRATION,
-        /// <summary>
-        /// Publication objects (VDOCTYPEPUBLICATION)
-        /// </summary>
-        VDOCTYPEPUBLICATION,
-        /// <summary>
-        /// Document references (VDOCTYPEREFERENCE)
-        /// </summary>
+        VDOCTYPEMAP,
+        VDOCTYPEMASTER,
+        VDOCTYPETEMPLATE,
+        CTCONFIGURATION,
+        REPORT,
+        SEARCH,
+        EVENT,
+        VDOCTYPELIB,
         VDOCTYPEREFERENCE,
-        /// <summary>
-        /// Query Folders (VDOCTYPEQUERY)
-        /// </summary>
         VDOCTYPEQUERY,
+        VDOCTYPEPUBLICATION,
+        CTMAP,
+        CTMASTER,
+        CTTEMPLATE,
+        CTIMG,
+        CTCATEGORYHIERARCHY,
+        CTLIB,
+        CTPUBLICATION,
+        CTOUTPUTFORMAT,
+        REVISIONS,
+        SEARCHNEW,
+        SEARCHOBJECTFRAGMENTS,
+        SEARCHPUBLICATIONS,
+        CTTRANSLATIONJOB,
+        CTTRANSLATIONJOBCONTAINER,
+        TRANSLATIONMGMTREPORT,
+        USER,
+        CTUSERGROUP,
+        CTUSERROLE,
+        //ELECTRONIC DOCUMENT,
+        CTDOCMAP,
+        CTMASTERV,
+        CTMASTERL,
+        CTMAPV,
+        CTMAPL,
+        CTIMGV,
+        CTIMGL,
+        CTTEMPLATEV,
+        CTTEMPLATEL,
+        CTLIBV,
+        CTLIBL,
+        CTREUSEOBJ,
+        CTREUSEOBJV,
+        CTREUSEOBJL,
+        CTREUSEOBJCONFIGURATION,
+        EDT,
+        CTPUBLICATIONV,
+        CTPUBLICATIONOUTPUT,
+        CTBASELINE,
+        CTCONTEXT,
+        CTTRANSJOB,
+        CISREPROOT,
+        CCONFIGURATION,
+        CREUSEOBJCONFIGURATION,
+        CISHFOLDERSYSTEM,
+        CISHFOLDERCONDITIONMANAGEMENT,
+        ISHCONDITIONMANAGEMENT,
     }
 }

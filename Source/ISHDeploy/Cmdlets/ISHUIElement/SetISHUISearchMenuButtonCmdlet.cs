@@ -35,22 +35,22 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Set, "ISHUISearchMenuButton")]
     public sealed class SetISHUISearchMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
-        [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
+        [Parameter(Mandatory = true, HelpMessage = "Menu Label.")]
         public string Label { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "Nested roles")]
+        [Parameter(Mandatory = true, HelpMessage = "Nested roles.")]
         public string[] UserRole { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu")]
+        [Parameter(Mandatory = true, HelpMessage = "Search type to choose asp page.")]
         public SearchType SearchType { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu")]
+        [Parameter(Mandatory = true, HelpMessage = "Title for a menu.")]
         public string Title { get; set; }
 
-        [Parameter(HelpMessage = "Icon for a menu")]
+        [Parameter(HelpMessage = "Icon for a menu.")]
         public string Icon { get; set; }
 
-        [Parameter(HelpMessage = "Action to do after choosing menu")]
+        [Parameter(HelpMessage = "Action to do after choosing menu.")]
         public string SearchXML { get; set; }
 
         /// <summary>

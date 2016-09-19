@@ -46,8 +46,55 @@ namespace ISHDeploy.Models.UI
             Input.OnClick = onClick;
             ISHTYPE= ishtype;
 
+            if (ishtype == null) { //for default card type list
+                switch (buttonBar)
+                {
+                    case ButtonBarType.CategoryMasterButtonbar:
+                        ISHTYPE = new CardType[] { CardType.VDOCTYPEILLUSTRATION, CardType.VDOCTYPEMAP, CardType.VDOCTYPEMASTER };
+                        break;
+                    case ButtonBarType.DefaultSettingsButtonbar:
+                        break;
+                    case ButtonBarType.DetailButtonbar:
+                        break;
+                    case ButtonBarType.EventMonitorButtonbar:
+                        break;
+                    case ButtonBarType.EventMonitorDetailButtonbar:
+                        break;
+                    case ButtonBarType.FolderButtonbar:
+                        break;
+                    case ButtonBarType.InboxButtonBar:
+                        break;
+                    case ButtonBarType.LanguageDocumentButtonbar:
+                        break;
+                    case ButtonBarType.OutputFormatButtonbar:
+                        break;
+                    case ButtonBarType.RevisionsButtonbar:
+                        break;
+                    case ButtonBarType.SearchButtonbar:
+                        break;
+                    case ButtonBarType.TopDocumentButtonbar:
+                        break;
+                    case ButtonBarType.TranslationJobButtonbar:
+                        break;
+                    case ButtonBarType.TranslationJobContainerButtonbar:
+                        break;
+                    case ButtonBarType.TranslationMgmtReportButtonBar:
+                        break;
+                    case ButtonBarType.UserButtonbar:
+                        break;
+                    case ButtonBarType.UserGroupButtonbar:
+                        break;
+                    case ButtonBarType.UserRoleButtonbar:
+                        break;
+                    case ButtonBarType.XmlSettingsButtonBar:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
+
     public class Input
     {
         [XmlAttribute("type")]

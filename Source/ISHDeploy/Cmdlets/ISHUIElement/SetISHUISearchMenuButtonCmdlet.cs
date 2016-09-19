@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Operations.ISHUIElement;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
@@ -27,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     /// <para type="link">Remove-ISHUISearchMenuButton</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Search" -Action "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=Search" -UserRole Author, Reviewer</code>
+    /// <code>PS C:\>Set-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Search" -SearchType Publication -Title "Publications" -UserRole Author, Reviewer</code>
     /// <para>This command add/update main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
@@ -40,15 +41,40 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         [Parameter(Mandatory = true, HelpMessage = "Nested roles")]
         public string[] UserRole { get; set; }
 
+        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu")]
+        public SearchType SearchType { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu")]
+        public string Title { get; set; }
+
+        [Parameter(HelpMessage = "Icon for a menu")]
+        public string Icon { get; set; }
+
         [Parameter(HelpMessage = "Action to do after choosing menu")]
-        public string Action { get; set; }
+        public string SearchXML { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new SearchMenuModel(Label, UserRole, Action);
+            string searchType;
+            if (SearchType == SearchType.Publication)
+            {
+                searchType = "SearchFrame";
+            }
+            else
+            {
+                searchType = "SearchNewPublications";
+            }
+
+            if (SearchXML == null)
+            {
+                SearchXML = searchType;
+            }
+
+            string action = $"{searchType}.asp?SearchXml={SearchXML}&amp;Title={Title}";
+            var model = new SearchMenuItem(Label, UserRole, Icon, action);
             var setOperation = new SetUIElementOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }

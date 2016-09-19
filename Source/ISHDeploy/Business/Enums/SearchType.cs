@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Business.Enums
+ namespace ISHDeploy.Business.Enums
 {
-    public enum MoveElementDirection
+    public enum SearchType
     {
-        First,
-        Last,
-        After
+        Publication,
+        Frame,
     }
 }

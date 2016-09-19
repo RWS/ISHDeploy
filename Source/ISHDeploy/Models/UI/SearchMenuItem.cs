@@ -18,11 +18,11 @@ using System.Xml.Serialization;
 namespace ISHDeploy.Models.UI
 {
     /// <summary>
-    ///	<para type="description">Represents the item of SearchMenuModel (~\Author\ASP\XSL\SearchMenuBar.xml).</para>
+    ///	<para type="description">Represents the item of SearchMenuItem (~\Author\ASP\XSL\SearchMenuBar.xml).</para>
     /// </summary>
     /// <seealso cref="BaseUIElement" />
     [XmlRoot("menuitem", Namespace = "")]
-    public class SearchMenuModel : BaseUIElement
+    public class SearchMenuItem : BaseUIElement
     {
         /// <summary>
         /// Gets or sets the label of the menu item.
@@ -41,6 +41,15 @@ namespace ISHDeploy.Models.UI
         /// </value>
         [XmlElement("userrole")]
         public string[] UserRoles { set; get; }
+        
+        /// <summary>
+        /// Set icon for a menu item.
+        /// </summary>
+        /// <value>
+        /// The action.
+        /// </value>
+        [XmlAttribute("icon")]
+        public string Icon { set; get; }
 
         /// <summary>
         /// Gets or sets the action which occurs on click on the menu item.
@@ -51,22 +60,22 @@ namespace ISHDeploy.Models.UI
         [XmlAttribute("action")]
         public string Action { set; get; }
 
-
         /// <summary>
-        /// Prevents a default instance of the <see cref="SearchMenuModel"/> class from being created.
+        /// Prevents a default instance of the <see cref="SearchMenuItem"/> class from being created.
         /// </summary>
-        private SearchMenuModel()
+        private SearchMenuItem()
         {
 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchMenuModel"/> class.
+        /// Initializes a new instance of the <see cref="SearchMenuItem"/> class.
         /// </summary>
         /// <param name="label">The label of the menu item.</param>
         /// <param name="userRoles">The users for whom the menu item is available.</param>
+        /// <param name="icon">Icon for a menu item.</param>
         /// <param name="action">The action which occurs on click on the menu item.</param>
-        public SearchMenuModel(string label, string[] userRoles = null, string action = null)
+        public SearchMenuItem(string label, string[] userRoles = null, string icon = null, string action = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\SearchMenuBar.xml";
             NameOfRootElement = "searchmenubar";
@@ -76,6 +85,7 @@ namespace ISHDeploy.Models.UI
             Label = label;
             UserRoles = userRoles;
             Action = action;
+            Icon = icon;
         }
     }
 }

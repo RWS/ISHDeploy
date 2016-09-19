@@ -313,7 +313,7 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
-    <Compile Include="Models\UI\ButtonBarModel.cs" />
+    <Compile Include="Models\UI\ButtonBarItem.cs" />
     <Compile Include="Models\UI\MainMenuModel.cs" />
     <Compile Include="Models\UI\BaseUIModel.cs" />
     <Compile Include="ObjectFactory.cs" />

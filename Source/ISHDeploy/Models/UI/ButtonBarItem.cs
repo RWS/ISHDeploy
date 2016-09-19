@@ -19,20 +19,23 @@ using System.Xml.Serialization;
 namespace ISHDeploy.Models.UI
 {
     [XmlRoot("BUTTON", Namespace = "")]
-    public class ButtonBarModel : BaseUIModel
+    public class ButtonBarItem : BaseUIModel
     {
+        [XmlAttribute("CHECKACCESS")]
+        public string CheckAccess { set; get; }
+
         [XmlElement("CARDTYPE")]
         public CardType[] ISHTYPE { set; get; }
 
         [XmlElement("INPUT")]
         public Input Input { set; get; }
 
-        private ButtonBarModel()
+        private ButtonBarItem()
         {
 
         }
 
-        public ButtonBarModel(ButtonBarType buttonBar, string name, CardType[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null)
+        public ButtonBarItem(ButtonBarType buttonBar, string name, CardType[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}.xml";
             RootPath = "BUTTONBAR";
@@ -44,9 +47,12 @@ namespace ISHDeploy.Models.UI
             Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
-            ISHTYPE= ishtype;
+            ISHTYPE = ishtype;
+            CheckAccess = checkaccess;
 
-            if (ishtype == null) { //for default card type list
+            //for default card type list
+            if (ishtype == null) 
+            { 
                 switch (buttonBar)
                 {
                     case ButtonBarType.CategoryMasterButtonbar:

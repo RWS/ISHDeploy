@@ -51,14 +51,14 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         public string OnClick { get; set; }
 
         [Parameter(HelpMessage = "files for settings")]
-        public string Checkaccess { get; set; }
+        public string Checkaccess { get; set; } = "N";
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarModel(ButtonBar, Name, ISHTYPE, Icon, OnClick, Checkaccess);
+            var model = new ButtonBarItem(ButtonBar, Name, ISHTYPE, Icon, OnClick, Checkaccess);
             var setOperation = new SetUIOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }

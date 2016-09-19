@@ -553,7 +553,7 @@ namespace ISHDeploy.Data.Managers
 
             IEnumerable<XElement> found;
 
-            if (model.GetType() == typeof(ButtonBarModel))
+            if (model.GetType() == typeof(ButtonBarItem))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Element("INPUT") != null)
@@ -595,7 +595,7 @@ namespace ISHDeploy.Data.Managers
             var element = XElement.Parse(Serialize(model));
             IEnumerable<XElement> found;
 
-            if (model.GetType() == typeof(ButtonBarModel))
+            if (model.GetType() == typeof(ButtonBarItem))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Element("INPUT") != null)
@@ -628,7 +628,7 @@ namespace ISHDeploy.Data.Managers
 
             IEnumerable<XElement> found;
 
-            if (model.GetType() == typeof(ButtonBarModel))
+            if (model.GetType() == typeof(ButtonBarItem))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Element("INPUT") != null)

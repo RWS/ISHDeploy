@@ -46,7 +46,7 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarModel(ButtonBar, Name);
+            var model = new ButtonBarItem(ButtonBar, Name);
             var operation = new RemoveUIOperation(Logger, ISHDeployment, model);
             operation.Run();
         }

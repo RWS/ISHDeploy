@@ -551,7 +551,7 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
             var element = XElement.Parse(Serialize(model));
 
-            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
+            IEnumerable<XElement> found = FindAllElemtnts(model, doc, element);
 
             if (found.Count() == 0)
             {// creating new
@@ -577,7 +577,7 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        private static IEnumerable<XElement> FoundAllElemtnts(BaseUIModel model, XDocument doc, XElement element)
+        private static IEnumerable<XElement> FindAllElemtnts(BaseUIModel model, XDocument doc, XElement element)
         {
             IEnumerable<XElement> found;
             if (model.GetType() == typeof(ButtonBarItem))
@@ -598,7 +598,7 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
 
             var element = XElement.Parse(Serialize(model));
-            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
+            IEnumerable<XElement> found = FindAllElemtnts(model, doc, element);
 
             if (found.Count() == 0)
             {// not found
@@ -621,7 +621,7 @@ namespace ISHDeploy.Data.Managers
 
             var element = XElement.Parse(Serialize(model));
 
-            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
+            IEnumerable<XElement> found = FindAllElemtnts(model, doc, element);
 
             string verboseMessage = "";
             if (found.Count() == 0)

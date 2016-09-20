@@ -12,6 +12,7 @@ $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
 $testLabelName = "test"
+$invalidLabel = "Invalid"
 #endregion
 
 #region Script Blocks 
@@ -35,8 +36,6 @@ function compareArray([string[]]$firstArray, [string[]]$secondArray){
 function getMainMenuButton{
     param([string]$Label)
 
-    #[System.Xml.Linq.XDocument]$menuitemXml = System.Xml.Linq.XDocument.Load("$xmlPath\MainMenuBar.xml")
-
     [System.Xml.XmlDocument]$xmlMainMenuBar = new-object System.Xml.XmlDocument
     $xmlMainMenuBar.load("$xmlPath\MainMenuBar.xml")
     $menuitemXml = $xmlMainMenuBar.SelectSingleNode("mainmenubar/menuitem[@label='$Label']")
@@ -54,6 +53,16 @@ function getMainMenuButton{
     {
         return $null 
     }
+}
+
+function getCountMainMenuButton{
+    param([string]$Label)
+
+    [System.Xml.XmlDocument]$xmlMainMenuBar = new-object System.Xml.XmlDocument
+    $xmlMainMenuBar.load("$xmlPath\MainMenuBar.xml")
+    $menuitemXml = $xmlMainMenuBar.SelectNodes("mainmenubar/menuitem[@label='$Label']")
+    
+    return $menuitemXml.Count
 }
 
 function checkAmountOFUserroles{
@@ -144,264 +153,250 @@ Describe "Testing ISHUIMainMenuButton"{
         $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        getCountMainMenuButton -Label $params.Label | Should be 1
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         #Assert
         $item = getMainMenuButton -Label $params.Label
         $item | Should be $null
+        getCountMainMenuButton -Label $params.Label | Should be 0
     }
        
- #   It "Sets main menu button with no XML"{
- #       #Arrange
- #       Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
- #       $params = @{label = $testLabelName; Description = $testDescription}
- #       #Act/Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
- #       #Rollback
- #       Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
- #   }    
-
- #   It "Sets main menu button with no XML"{
- #       #Arrange
- #       Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
- #       #Act/Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} |Should Throw "Could not find file" 
- #       #Rollback
- #       Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
- #   }  
+    It "Sets main menu button with no XML"{
+        #Arrange
+        Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
+        #Rollback
+        Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
+    }    
       
- #   It "Sets main menu button with wrong XML"{
- #       #Arrange
- #       # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
- #       Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
- #       New-Item "$xmlPath\MainMenuBar.xml" -type file |Out-Null
- #       $params = @{label = $testLabelName; Description = $testDescription}
- #       #Act/Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
- #       #Rollback
- #       Remove-Item "$xmlPath\MainMenuBar.xml"
- #       Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
- #   }
+    It "Sets main menu button with wrong XML"{
+        #Arrange
+        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
+        Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
+        New-Item "$xmlPath\MainMenuBar.xml" -type file |Out-Null
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
+        #Rollback
+        Remove-Item "$xmlPath\MainMenuBar.xml"
+        Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
+    }
   
- #   It "Remove main menu button with no XML"{
- #       #Arrange
- #       # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
- #       Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
- #       New-Item "$xmlPath\MainMenuBar.xml" -type file |Out-Null
- #       #Act/Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} |Should Throw "Root element is missing" 
- #       #Rollback
- #       Remove-Item "$xmlPath\MainMenuBar.xml"
- #       Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
- #   }
+    It "Remove main menu button with no XML"{
+        #Arrange
+        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
+        Rename-Item "$xmlPath\MainMenuBar.xml" "_MainMenuBar.xml"
+        New-Item "$xmlPath\MainMenuBar.xml" -type file |Out-Null
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} |Should Throw "Root element is missing" 
+        #Rollback
+        Remove-Item "$xmlPath\MainMenuBar.xml"
+        Rename-Item "$xmlPath\_MainMenuBar.xml" "MainMenuBar.xml"
+    }
 
- #   It "Set existing main menu button"{
- #       #Arrange
- #       $params = @{label = $testLabelName; Description = $testDescription}
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
- #       #Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
- #       RetryCommand -numberOfRetries 10 -command {checkMainMenuBarExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Added" | Should be "Added"
- #   }
+    It "Set existing main menu button"{
+        #Arrange
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
+        getCountMainMenuButton -Label $params.Label | Should be 1
+    }
 
- #   It "Remove unexisting main menu button"{
- #       #Arrange
- #       $nodeExist = checkMainMenuBarExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description
- #       if($nodeExist -eq "Added"){
- #           Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
- #       }
- #       RetryCommand -numberOfRetries 10 -command {checkMainMenuBarExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted"| Should be "Deleted"
- #       $params = @{label = $testLabelName; Description = $testDescription}
- #       #Act/Assert
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} | Should Not Throw
- #       RetryCommand -numberOfRetries 10 -command {checkMainMenuBarExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted" | Should be "Deleted"
- #   }
+    It "Remove unexisting main menu button"{
+        #Arrange
+        if((getCountMainMenuButton -Label $params.Label) -gt 0){
+        Write-Host "Remove"
+            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
+        }
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} | Should Not Throw
+    }
 
- #   It "Move After"{
- #       #Arrange
- #       #getting 2 arrays with labels of nodes of Event Monitor Menu bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
- #       $tempArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #get label that will be moved
- #       $moveblelabel = $labelArray[$arrayLength -1]
+    It "Move After"{
+        #Arrange
+        #getting 2 arrays with labels of nodes of Event Monitor Menu bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
+        $tempArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #get label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
 
- #       #Move array object in same way, as Move commandklet will move nodes
- #       $labelArray[1] = $moveblelabel
- #       for ($i=2; $i -le $arrayLength - 1;$i++){
- #           $labelArray[$i] = $tempArray[$i-1]
- #       }
- #       $params = @{label = $moveblelabel; After = $tempArray[0]}
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Move array object in same way, as Move commandklet will move nodes
+        $labelArray[1] = $moveblelabel
+        for ($i=2; $i -le $arrayLength - 1;$i++){
+            $labelArray[$i] = $tempArray[$i-1]
+        }
+        $params = @{label = $moveblelabel; After = $tempArray[0]}
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
 
- #       #read the updated xml file
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $thirdArray =$XmlMainMenuBar.menubar.menuitem.label 
+        #read the updated xml file
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $thirdArray =$XmlMainMenuBar.mainmenubar.menuitem.label 
     
- #       #Compare 2 arrays
- #       $compareArrayResult = 0
- #       for ($i=0; $i -le $arrayLength - 1;$i++){
- #           if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
- #       }
- #       $checkResult = $compareArrayResult -eq 0
+        #Compare 2 arrays
+        $compareArrayResult = 0
+        for ($i=0; $i -le $arrayLength - 1;$i++){
+            if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
+        }
+        $checkResult = $compareArrayResult -eq 0
     
- #       #Assert
- #       $CheckResult | Should Be "True"
- #   }
+        #Assert
+        $checkResult | Should Be "True"
+    }
 
- #   It "Move Last"{
- #       #Arrange
- #       #getting 2 arrays with labels of nodes of Event Monitor Menu bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
- #       $tempArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #get label that will be moved
- #       $moveblelabel = $labelArray[0]
+    It "Move Last"{
+        #Arrange
+        #getting 2 arrays with labels of nodes of Event Monitor Menu bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
+        $tempArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #get label that will be moved
+        $moveblelabel = $labelArray[0]
 
- #       #Move array object in same way, as Move commandklet will move nodes
- #       $labelArray[$arrayLength-1] = $moveblelabel
- #       for ($i=0; $i -le $arrayLength - 2;$i++){
- #           $labelArray[$i] = $tempArray[$i+1]
- #       }
- #       $params = @{label = $moveblelabel;}
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params, "Last"
+        #Move array object in same way, as Move commandklet will move nodes
+        $labelArray[$arrayLength-1] = $moveblelabel
+        for ($i=0; $i -le $arrayLength - 2;$i++){
+            $labelArray[$i] = $tempArray[$i+1]
+        }
+        $params = @{label = $moveblelabel;}
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params, "Last"
 
- #       #read the updated xml file
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $thirdArray =$XmlMainMenuBar.menubar.menuitem.label 
+        #read the updated xml file
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $thirdArray =$XmlMainMenuBar.mainmenubar.menuitem.label 
     
- #       #Compare 2 arrays
- #       $compareArrayResult = 0
- #       for ($i=0; $i -le $arrayLength - 1;$i++){
- #           if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
- #       }
- #       $checkResult = $compareArrayResult -eq 0 
- #       #Assert
- #       $checkResult | Should Be "True"
- #   }
+        #Compare 2 arrays
+        $compareArrayResult = 0
+        for ($i=0; $i -le $arrayLength - 1;$i++){
+            if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
+        }
+        $checkResult = $compareArrayResult -eq 0 
+        #Assert
+        $checkResult | Should Be "True"
+    }
 
- #   It "Move After itsels"{
- #       #Arrange
- #       #get array with labels on nodes in Event Monitor Menu Bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #select label that will be moved
- #       $moveblelabel = $labelArray[$arrayLength -1]
- #       $params = @{label = $moveblelabel; After = $moveblelabel }
- #       #Act
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
+    It "Move After itsels"{
+        #Arrange
+        #get array with labels on nodes in Event Monitor Menu Bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #select label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
+        $params = @{label = $moveblelabel; After = $moveblelabel }
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
- #       #Get updated array with labels
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $compareArray =$XmlMainMenuBar.menubar.menuitem.label
- #       #Compare 2 arrays - before move and after - they should be same
- #       $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
+        #Get updated array with labels
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $compareArray =$XmlMainMenuBar.mainmenubar.menuitem.label
+        #Compare 2 arrays - before move and after - they should be same
+        $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
- #       #Assert
- #       ($compareArrayResult -eq 0) | Should Be "True"
- #   }
+        #Assert
+        ($compareArrayResult -eq 0) | Should Be "True"
+    }
 
- #   It "Move After non-existing label"{
- #       #Arrange
- #       #get array with labels on nodes in Event Monitor Menu Bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #select label that will be moved
- #       $moveblelabel = $labelArray[$arrayLength -1]
- #       $params = @{label = $moveblelabel; After = $invalidLabel }
- #       #Act
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
+    It "Move After non-existing label"{
+        #Arrange
+        #get array with labels on nodes in Event Monitor Menu Bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #select label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
+        $params = @{label = $moveblelabel; After = $invalidLabel }
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
- #       #Get updated array with labels
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $compareArray =$XmlMainMenuBar.menubar.menuitem.label
- #       #Compare 2 arrays - before move and after - they should be same
- #       $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
+        #Get updated array with labels
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $compareArray =$XmlMainMenuBar.mainmenubar.menuitem.label
+        #Compare 2 arrays - before move and after - they should be same
+        $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
- #       #Assert
- #       ($compareArrayResult -eq 0) | Should Be "True"
- #   }
+        #Assert
+        ($compareArrayResult -eq 0) | Should Be "True"
+    }
 
- #   It "Move After non-existing label"{
- #       #Arrange
- #       #get array with labels on nodes in Event Monitor Menu Bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #select label that will be moved
- #       $moveblelabel = $labelArray[$arrayLength -1]
- #       $params = @{label = $invalidLabel ; After = $moveblelabel }
- #       #Act
- #       {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
+    It "Move After non-existing label"{
+        #Arrange
+        #get array with labels on nodes in Event Monitor Menu Bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #select label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
+        $params = @{label = $invalidLabel ; After = $moveblelabel }
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
- #       #Get updated array with labels
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $compareArray =$XmlMainMenuBar.menubar.menuitem.label
- #       #Compare 2 arrays - before move and after - they should be same
- #       $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
+        #Get updated array with labels
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $compareArray =$XmlMainMenuBar.mainmenubar.menuitem.label
+        #Compare 2 arrays - before move and after - they should be same
+        $compareArrayResult = compareArray -firstArray $labelArray -secondArray $compareArray
     
- #       #Assert
- #       ($compareArrayResult -eq 0)| Should Be "True"
- #   }
+        #Assert
+        ($compareArrayResult -eq 0)| Should Be "True"
+    }
 
- #   It "Move First"{
- #       #Arrange
- #       #getting 2 arrays with labels of nodes of Event Monitor Menu bar
- #       [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
- #       $labelArray = $XmlMainMenuBar.menubar.menuitem.label
- #       #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
- #       $tempArray = $XmlMainMenuBar.menubar.menuitem.label
- #       $arrayLength = $labelArray.Length
- #       #get label that will be moved
- #       $moveblelabel = $labelArray[$arrayLength -1]
+    It "Move First"{
+        #Arrange
+        #getting 2 arrays with labels of nodes of Event Monitor Menu bar
+        [xml]$XmlMainMenuBar= Get-Content "$xmlPath\MainMenuBar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
+        $tempArray = $XmlMainMenuBar.mainmenubar.menuitem.label
+        $arrayLength = $labelArray.Length
+        #get label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
 
- #       #Move array object in same way, as Move commandklet will move nodes
- #       $labelArray[0] = $moveblelabel
- #       for ($i=1; $i -le $arrayLength - 1;$i++){
- #           $labelArray[$i] = $tempArray[$i-1]
- #       }
- #       $params = @{label = $moveblelabel}
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params, "First"
+        #Move array object in same way, as Move commandklet will move nodes
+        $labelArray[0] = $moveblelabel
+        for ($i=1; $i -le $arrayLength - 1;$i++){
+            $labelArray[$i] = $tempArray[$i-1]
+        }
+        $params = @{label = $moveblelabel}
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params, "First"
 
- #       #read the updated xml file
- #       [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
- #       $thirdArray =$XmlMainMenuBar.menubar.menuitem.label 
+        #read the updated xml file
+        [xml]$XmlMainMenuBar = RemoteReadXML "$xmlPath\MainMenuBar.xml"
+        $thirdArray =$XmlMainMenuBar.mainmenubar.menuitem.label 
     
- #       #Compare 2 arrays
- #       $compareArrayResult = 0
- #       for ($i=0; $i -le $arrayLength - 1;$i++){
- #           if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
- #       }
- #       $checkResult = $compareArrayResult -eq 0 
- #       $CheckResult | Should Be "True"
- #    }
+        #Compare 2 arrays
+        $compareArrayResult = 0
+        for ($i=0; $i -le $arrayLength - 1;$i++){
+            if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
+        }
+        $checkResult = $compareArrayResult -eq 0 
+        $CheckResult | Should Be "True"
+     }
 
- #   It "Set all optional fields"{
- #       #Arrange
- #       $params = @{label = $testLabelName; Description = $testDescription;EventTypesFilter = @("NotDef", "2423");SelectedStatusFilter = "All";ModifiedSinceMinutesFilter = "2000";UserRole = "User"  }
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
- #       #Assert
- #       RetryCommand -numberOfRetries 10 -command {checkMainMenuBarExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 2000 -Description $params.Description -EventTypesFilter "NotDef, 2423" -UserRole "User" -SelectedButtonTitle "Show%20All"} -expectedResult "Added" | Should be "Added"
- #   }
-
-	#It "Set accepts multiple roles"{
- #       #Arrange
- #       $params =  $params = @{label = $testLabelName; Description = $testDescription;EventTypesFilter = @("NotDef", "2423");SelectedStatusFilter = "All";ModifiedSinceMinutesFilter = "2000";UserRole = "User", "Administrator"  }
- #       #Act
- #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
- #       #Assert
- #       RetryCommand -numberOfRetries 10 -command {checkAmountOFUserroles -Label $params.label } -expectedResult 2 | Should be 2
- #   }
+	It "Update existing item"{
+        #Arrange
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        $item = getMainMenuButton -Label $params.Label
+        $item.UserRole.Count | Should Be 2
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator", "Reviewer"); Action = "TestPage.asp" }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetMainMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        $item = getMainMenuButton -Label $params.Label
+        $item.UserRole.Count | Should Be 3
+    }
 }

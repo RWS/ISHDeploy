@@ -545,6 +545,12 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"[{filePath}][Inserted]");
         }
 
+        /// <summary>
+        /// Inserts or Update element based on model.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="model">Based on model xml node will be created.</param>
+        /// <exception cref="WrongXPathException"></exception>
         public void InsertUpdateElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Insert/Update element]");
@@ -577,7 +583,13 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        private static IEnumerable<XElement> FindAllElemtnts(BaseUIModel model, XDocument doc, XElement element)
+        /// <summary>
+        /// Internal function to select all element for special model.
+        /// </summary>
+        /// <param name="doc">XML document.</param>
+        /// <param name="model">Based on model xml node will be created.</param>
+        /// <param name="element">Element to get key attribute.</param>
+        private IEnumerable<XElement> FindAllElemtnts(BaseUIModel model, XDocument doc, XElement element)
         {
             IEnumerable<XElement> found;
             if (model.GetType() == typeof(ButtonBarItem))
@@ -592,6 +604,12 @@ namespace ISHDeploy.Data.Managers
             return found;
         }
 
+        /// <summary>
+        /// Remove xml node special model.
+        /// </summary>
+        /// <param name="model">Based on model xml node will be created.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <exception cref="WrongXPathException"></exception>
         public void RemoveElement(string filePath, BaseUIModel model)
         {
             _logger.WriteDebug($"[{filePath}][Remove element]");
@@ -613,6 +631,14 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
+        /// <summary>
+        /// Move xml node to first, last, after name for special model.
+        /// </summary>
+        /// <param name="model">Based on model xml node will be created.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="operation">Kind of operation.</param>
+        /// <param name="after">Name of xml node to put after.</param>
+        /// <exception cref="WrongXPathException"></exception>
         public void MoveElement(string filePath, BaseUIModel model, OperationType operation,
             string after)
         {

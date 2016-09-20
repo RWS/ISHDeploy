@@ -551,17 +551,7 @@ namespace ISHDeploy.Data.Managers
             var doc = _fileManager.Load(filePath);
             var element = XElement.Parse(Serialize(model));
 
-            IEnumerable<XElement> found;
-
-            if (model.GetType() == typeof(ButtonBarItem))
-                found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Element("INPUT") != null)
-                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
-            else
-                found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
 
             if (found.Count() == 0)
             {// creating new
@@ -587,14 +577,9 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-        public void RemoveElement(string filePath, BaseUIModel model)
+        private static IEnumerable<XElement> FoundAllElemtnts(BaseUIModel model, XDocument doc, XElement element)
         {
-            _logger.WriteDebug($"[{filePath}][Remove element]");
-            var doc = _fileManager.Load(filePath);
-
-            var element = XElement.Parse(Serialize(model));
             IEnumerable<XElement> found;
-
             if (model.GetType() == typeof(ButtonBarItem))
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
@@ -604,6 +589,16 @@ namespace ISHDeploy.Data.Managers
                 found = doc.Element(model.RootPath)
                            .Elements(model.ChildItemPath)
                            .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            return found;
+        }
+
+        public void RemoveElement(string filePath, BaseUIModel model)
+        {
+            _logger.WriteDebug($"[{filePath}][Remove element]");
+            var doc = _fileManager.Load(filePath);
+
+            var element = XElement.Parse(Serialize(model));
+            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
 
             if (found.Count() == 0)
             {// not found
@@ -626,17 +621,7 @@ namespace ISHDeploy.Data.Managers
 
             var element = XElement.Parse(Serialize(model));
 
-            IEnumerable<XElement> found;
-
-            if (model.GetType() == typeof(ButtonBarItem))
-                found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Element("INPUT") != null)
-                           .Where(item => item.Element("INPUT").Attribute(model.KeyAttribute).Value == element.Element("INPUT").Attribute(model.KeyAttribute).Value);
-            else
-                found = doc.Element(model.RootPath)
-                           .Elements(model.ChildItemPath)
-                           .Where(item => item.Attribute(model.KeyAttribute).Value == element.Attribute(model.KeyAttribute).Value);
+            IEnumerable<XElement> found = FoundAllElemtnts(model, doc, element);
 
             string verboseMessage = "";
             if (found.Count() == 0)

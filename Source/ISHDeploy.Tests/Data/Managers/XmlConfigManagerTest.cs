@@ -1594,5 +1594,23 @@ namespace ISHDeploy.Tests.Data.Managers
         }
 
         #endregion
+
+        #region RemoveUIElement
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void Serialize()
+        {
+            // Arrange
+
+            var serializedItem = "<?xml version=\"1.0\" encoding=\"utf-16\"?><menuitem label=\"Event Log 1\" />";
+            // Act
+            var result = _xmlConfigManager.Serialize(new MainMenuBarItem("Event Log 1"));
+
+            // Assert
+            Assert.IsTrue(serializedItem == result, "Node has not been removed");
+        }
+
+        #endregion
     }
 }

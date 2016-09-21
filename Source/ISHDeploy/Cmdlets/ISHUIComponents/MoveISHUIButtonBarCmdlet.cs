@@ -35,9 +35,15 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Move, "ISHUIButtonBar")]
     public sealed class MoveISHUIButtonBarCmdlet : BaseHistoryEntryCmdlet
     {
+        /// <summary>
+		/// <para type="description">Name of Button Bar.</para>
+		/// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Button bar name")]
         public string Name { get; set; }
 
+        /// <summary>
+		/// <para type="description">Type or file name correspond to Button Bar.</para>
+		/// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
         public ButtonBarType ButtonBar { get; set; }
 
@@ -88,5 +94,4 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
             operation.Run();
         }
     }
-
 }

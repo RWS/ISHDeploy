@@ -35,21 +35,36 @@ namespace ISHDeploy.Cmdlets.ISHUIComponents
     [Cmdlet(VerbsCommon.Set, "ISHUIButtonBar")]
     public sealed class SetISHUIButtonBarCmdlet : BaseHistoryEntryCmdlet
     {
+        /// <summary>
+		/// <para type="description">Type or file name correspond to Button Bar.</para>
+		/// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
         public ButtonBarType ButtonBar { get; set; }
 
+        /// <summary>
+        /// <para type="description">ISHType is a list of the card type.</para>
+        /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
         public CardType[] ISHTYPE { get; set; }
 
+        /// <summary>
+        /// <para type="description">Name of Button Bar.</para>
+        /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Name of button bar")]
         public string Name { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Icon file name")]
         public string Icon { get; set; }
 
+        /// <summary>
+        /// <para type="description">Javascript or asp page need to be invoken after click.</para>
+        /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "OnClick javascript function name")]
         public string OnClick { get; set; }
-
+        
+        /// <summary>
+        /// <para type="description">Check access.</para>
+        /// </summary>
         [Parameter(HelpMessage = "files for settings")]
         public string Checkaccess { get; set; } = "N";
 

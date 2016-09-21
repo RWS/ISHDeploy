@@ -22,7 +22,7 @@ using ISHDeploy.Models.UI;
 namespace ISHDeploy.Data.Actions.ISHUIElement
 {
     /// <summary>
-    /// Action that inserts or update the element of UI.
+    /// Action that inserts or updates the element of UI.
     /// </summary>
     public class SetUIElementAction : SingleXmlFileAction
     {

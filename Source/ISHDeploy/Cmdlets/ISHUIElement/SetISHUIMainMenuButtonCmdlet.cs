@@ -23,10 +23,6 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <summary>
     ///		<para type="synopsis">Update or add a new MainMenuBar button.</para>
     ///		<para type="description">The Set-ISHUIMainMenuButton cmdlet updates or adds new Button definitions to Content Manager deployment.</para>
-    ///		<para type="description">If Icon is not specified, the default value '~/UIFramework/events.32x32.png' is taken.</para>
-    ///		<para type="description">If UserRole is not specified, the default value 'Administrator' is taken.</para>
-    ///		<para type="description">If ModifiedSinceMinutesFilter is not specified, the default value '1440' is taken.</para>
-    ///		<para type="description">If SelectedStatusFilter is not specified, the default value 'Recent' is taken.</para>
     ///		<para type="link">Move-ISHUIMainMenuButton</para>
     ///		<para type="link">Remove-ISHUIMainMenuButton</para>
     /// </summary>

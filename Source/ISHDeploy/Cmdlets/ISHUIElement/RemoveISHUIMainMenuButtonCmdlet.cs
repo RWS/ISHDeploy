@@ -52,5 +52,4 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             operation.Run();
         }
     }
-
 }

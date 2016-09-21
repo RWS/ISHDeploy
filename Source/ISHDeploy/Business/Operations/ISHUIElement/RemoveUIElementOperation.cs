@@ -23,7 +23,7 @@ using ISHDeploy.Models.UI;
 namespace ISHDeploy.Business.Operations.ISHUIElement
 {
     /// <summary>
-    /// Remove UI item.
+    /// Remove UI element.
     /// </summary>
     /// <seealso cref="IOperation" />
     public class RemoveUIElementOperation : BaseOperationPaths, IOperation
@@ -38,6 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="model">The model that represents UI element.</param>
         public RemoveUIElementOperation(ILogger logger, 
             Models.ISHDeployment ishDeployment,
             BaseUIElement model) :

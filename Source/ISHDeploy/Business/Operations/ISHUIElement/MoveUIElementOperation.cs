@@ -24,7 +24,7 @@ using ISHDeploy.Models.UI;
 namespace ISHDeploy.Business.Operations.ISHUIElement
 {
     /// <summary>
-    /// Moves UI item.
+    /// Moves UI element.
     /// </summary>
     /// <seealso cref="IOperation" />
     public class MoveUIElementOperation : BaseOperationPaths, IOperation
@@ -38,7 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// Initializes a new instance of the <see cref="MoveUIElementOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The ish deployment.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="model">The model that represents UI element.</param>
         /// <param name="direction">The direction to move.</param>
         /// <param name="after">The id of element to move after it.</param>

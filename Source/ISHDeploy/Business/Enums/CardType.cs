@@ -16,6 +16,9 @@
 
 namespace ISHDeploy.Business.Enums
 {
+    /// <summary>
+    /// Specify the card type that will be used in Button Bar.
+    /// </summary>
     public enum CardType
     {
         VDOCTYPEILLUSTRATION,

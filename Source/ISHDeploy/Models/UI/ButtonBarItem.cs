@@ -18,23 +18,47 @@ using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI
 {
+    /// <summary>
+    /// <para type="description">Represents the item depend on button bar type.</para>
+    /// </summary>
     [XmlRoot("BUTTON", Namespace = "")]
     public class ButtonBarItem : BaseUIElement
     {
+        /// <summary>
+        /// Y or N to check access.
+        /// </summary>
         [XmlAttribute("CHECKACCESS")]
         public string CheckAccess { set; get; }
 
+        /// <summary>
+        /// List of associated cards.
+        /// </summary>
         [XmlElement("CARDTYPE")]
         public CardType[] CardTypes { set; get; }
 
+        /// <summary>
+        /// To create Input type xml node
+        /// </summary>
         [XmlElement("INPUT")]
         public Input Input { set; get; }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ButtonBarItem"/> class from being created.
+        /// </summary>
         private ButtonBarItem()
         {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonBarItem"/> class.
+        /// </summary>
+        /// <param name="buttonBar">Button bar type of the item.</param>
+        /// <param name="name">Button bar name.</param>
+        /// <param name="ishtype">List of associated cards.</param>
+        /// <param name="icon">Icon for button bar.</param>
+        /// <param name="onClick">Javascript to be executed after click.</param>
+        /// <param name="checkaccess">Y or N to check access.</param>
         public ButtonBarItem(ButtonBarType buttonBar, string name, CardType[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}.xml";

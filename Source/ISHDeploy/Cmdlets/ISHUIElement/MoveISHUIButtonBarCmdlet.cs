@@ -22,14 +22,14 @@ using System.Management.Automation;
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
-    /// <para type="synopsis">Remove main menu item.</para>
-    /// <para type="description">The Remove-ISHUIButtonBar cmdlet remove exist menu item.</para>
-    /// <para type="link">Move-ISHUIButtonBar</para>    
+    /// <para type="synopsis">Move main menu item.</para>
+    /// <para type="description">The Move-ISHUIButtonBar cmdlet remove exist menu item.</para>
+    /// <para type="link">Remove-ISHUIButtonBar</para>    
     /// <para type="link">Set-ISHUIButtonBar</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Remove-ISHUIButtonBar -ISHDeployment $deployment -Label "Inbox2"</code>
-    /// <para>This command remove main menu item.
+    /// <code>PS C:\>Move-ISHUIButtonBar -ISHDeployment $deployment -Name "Test"</code>
+    /// <para>This command move main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Move, "ISHUIButtonBar")]

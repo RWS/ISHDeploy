@@ -317,11 +317,6 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath XopusConfigXmlPath { get; }
 
-        /// <summary>
-        /// The path to ~\Author\ASP\XSL\MainMenuBar.xml
-        /// </summary>
-        protected ISHFilePath MainMenuXmlPath { get; }
-
         #endregion
 
         /// <summary>
@@ -374,7 +369,6 @@ namespace ISHDeploy.Business.Operations
             XopusBluelionConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
-            MainMenuXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\MainMenuBar.xml");
 
             #endregion
         }

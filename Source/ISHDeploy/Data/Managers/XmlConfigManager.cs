@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using ISHDeploy.Business.Enums;
+using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Data.Exceptions;
-using System.Text.RegularExpressions;
-using System;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-using ISHDeploy.Business.Enums;
 using ISHDeploy.Models.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -474,7 +473,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug("Set node", xpath ,filePath);
+            _logger.WriteDebug("Set node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();
@@ -613,6 +612,10 @@ namespace ISHDeploy.Data.Managers
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"The element `{element.Attribute(model.KeyAttribute).Value}` has been removed from file `{filePath}`");
             }
+            else
+            {
+                _logger.WriteWarning("Not able to find the target node");
+            }
         }
 
         /// <summary>
@@ -621,7 +624,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
         /// <param name="direction">The direction to move.</param>
-        /// <param name="after">The id of element to move after it.</param>
+        /// <param name="after">The id of element to move after it. Is Null by default</param>
         /// <exception cref="System.Exception">
         /// Could not find source element
         /// or
@@ -629,8 +632,9 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after)
+        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after = null)
         {
+            string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
             var doc = _fileManager.Load(filePath);
 
@@ -642,7 +646,6 @@ namespace ISHDeploy.Data.Managers
 
             if (found != null)
             {
-                string verboseMessage = "";
                 switch (direction)
                 {
                     case MoveElementDirection.First:
@@ -665,7 +668,6 @@ namespace ISHDeploy.Data.Managers
                         var afterElement = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, after);
                         if (afterElement == null)
                         {
-                            verboseMessage = $"Do not able to find target element `{after}` to insert after it the node `{element.Attribute(model.KeyAttribute).Value}`";
                             _logger.WriteWarning("Not able to find the target node");
                         }
                         else
@@ -677,9 +679,18 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 found.Remove();
-                _fileManager.Save(filePath, doc);
-                _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
+
+                if (!string.IsNullOrEmpty(verboseMessage))
+                {
+                    _fileManager.Save(filePath, doc);
+                }
             }
+            else
+            {
+                verboseMessage = $"Do not able to find target element `{after}` to insert after it the node `{element.Attribute(model.KeyAttribute).Value}`";
+                _logger.WriteWarning("Not able to find the target node");
+            }
+            _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
         }
 
         /// <summary>

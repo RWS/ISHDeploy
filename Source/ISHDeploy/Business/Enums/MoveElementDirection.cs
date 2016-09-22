@@ -15,10 +15,25 @@
  */
 namespace ISHDeploy.Business.Enums
 {
+    /// <summary>
+    /// Directions to move an item to change an order in list of UI elements.
+    ///	<para type="description">Enumeration of directions to move an item to change an order in list of UI elements.</para>
+    /// </summary>
     public enum MoveElementDirection
     {
+        /// <summary>
+        /// Move to first position in list.
+        /// </summary>
         First,
+
+        /// <summary>
+        /// Move to last position in list.
+        /// </summary>
         Last,
+
+        /// <summary>
+        /// Move to the position after.
+        /// </summary>
         After
     }
 }

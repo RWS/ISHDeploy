@@ -48,7 +48,7 @@ namespace ISHDeploy.Models.UI
             Input.OnClick = onClick;
             CardTypes = ishtype;
             CheckAccess = checkaccess;
-            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']";
+            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
             XPath = string.Format(XPathFormat, name);
 
             //for default card type list

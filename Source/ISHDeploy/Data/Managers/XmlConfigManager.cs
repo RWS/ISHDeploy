@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using ISHDeploy.Business.Enums;
+using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Models.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -468,7 +473,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug("Set node", xpath ,filePath);
+            _logger.WriteDebug("Set node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();
@@ -546,6 +551,173 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
+        {
+            _logger.WriteDebug("Insert/Update UI element", filePath);
+            var doc = _fileManager.Load(filePath);
+            var element = XElement.Parse(Serialize(model));
+
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found == null)
+            {
+                _logger.WriteDebug("Insert UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+                var memberList = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).ToList();
+                if (!memberList.Any())
+                {
+                    doc.Element(model.NameOfRootElement).Add(element);
+                }
+                else
+                {
+                    memberList.Last().AddAfterSelf(element);
+                }
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The new element has been inserted in file `{filePath}`");
+            }
+            else
+            {
+                _logger.WriteDebug("Update UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+                found.ReplaceWith(element);
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The element has been updated in file `{filePath}`");
+            }
+        }
+
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void RemoveUIElement(string filePath, BaseUIElement model)
+        {
+            _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
+
+            var doc = _fileManager.Load(filePath);
+
+            var element = XElement.Parse(Serialize(model));
+
+            _logger.WriteDebug("Remove UI element", $"<{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`>", filePath);
+
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
+            {
+                found.Remove();
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The element `{element.Attribute(model.KeyAttribute).Value}` has been removed from file `{filePath}`");
+            }
+            else
+            {
+                _logger.WriteWarning("Not able to find the target node");
+            }
+        }
+
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it. Is Null by default</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after = null)
+        {
+            string verboseMessage = "";
+            _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
+            var doc = _fileManager.Load(filePath);
+
+            var element = XElement.Parse(Serialize(model));
+
+            _logger.WriteDebug($"Move UI element <{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`> {(direction == MoveElementDirection.After ? $"{direction} {after}" : $"to {direction} position")}", filePath);
+
+            var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
+
+            if (found != null)
+            {
+                switch (direction)
+                {
+                    case MoveElementDirection.First:
+                        doc.Element(model.NameOfRootElement).AddFirst(found);
+                        verboseMessage = "The UI element has been moved to the first position";
+                        break;
+                    case MoveElementDirection.Last:
+                        var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
+                        if (lastElement != null)
+                        {
+                            lastElement.AddAfterSelf(found);
+                        }
+                        else
+                        {
+                            doc.Element(model.NameOfRootElement).Add(found);
+                        }
+                        verboseMessage = "The UI element has been moved to the last position";
+                        break;
+                    case MoveElementDirection.After:
+                        var afterElement = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, after);
+                        if (afterElement == null)
+                        {
+                            _logger.WriteWarning("Not able to find the target node");
+                        }
+                        else
+                        {
+                            afterElement.AddAfterSelf(found);
+                            verboseMessage = $"The UI element has been moved after {after}";
+                        }
+                        break;
+                }
+
+                found.Remove();
+
+                if (!string.IsNullOrEmpty(verboseMessage))
+                {
+                    _fileManager.Save(filePath, doc);
+                }
+            }
+            else
+            {
+                verboseMessage = $"Do not able to find target element `{after}` to insert after it the node `{element.Attribute(model.KeyAttribute).Value}`";
+                _logger.WriteWarning("Not able to find the target node");
+            }
+            _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
+        }
+
+        /// <summary>
+        /// Finds the element.
+        /// </summary>
+        /// <param name="doc">The document.</param>
+        /// <param name="nameOfRootElement">The name of root element.</param>
+        /// <param name="nameOfItem">The name of item.</param>
+        /// <param name="keyAttribute">The key attribute.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        private XElement FindElement(XDocument doc, string nameOfRootElement, string nameOfItem, string keyAttribute, string value)
+        {
+            var element = doc.Element(nameOfRootElement)
+                           .Elements(nameOfItem)
+                           .FirstOrDefault(item => item.Attribute(keyAttribute).Value == value);
+
+            if (element == null)
+            {
+                _logger.WriteDebug("Does not contain element", $"<{nameOfItem} {keyAttribute}=`{value}`>");
+                _logger.WriteVerbose($"The file does not contain item with identifier {value}");
+            }
+
+            return element;
+        }
+
+        /// <summary>
         /// Set element value.
         /// </summary>
         /// <param name="filePath">Path to the file that is modified.</param>
@@ -599,6 +771,36 @@ namespace ISHDeploy.Data.Managers
             return element.Value;
         }
 
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public string Serialize<T>(T value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var serializer = new XmlSerializer(value.GetType());
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                {
+                    serializer.Serialize(xmlWriter, value, ns);
+                }
+                return textWriter.ToString();
+            }
+        }
         #region private methods
 
         /// <summary>

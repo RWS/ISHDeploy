@@ -19,7 +19,7 @@ using ISHDeploy.Business.Operations.ISHUIElement;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
 
-namespace ISHDeploy.Cmdlets.ISHUIComponents
+namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
     /// <para type="synopsis">Create/Update search menu item.</para>

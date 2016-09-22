@@ -78,8 +78,6 @@ namespace ISHDeploy.Models.UI
         public MainMenuBarItem(string label, string[] userRoles = null, string action = null, string id = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\MainMenuBar.xml";
-            XPathFormat = "mainmenubar/menuitem[@label='{0}']";
-            XPath = string.Format(XPathFormat, Label);
             NameOfRootElement = "mainmenubar";
             NameOfItem = "menuitem";
 
@@ -87,6 +85,8 @@ namespace ISHDeploy.Models.UI
             UserRoles = userRoles;
             Action = action;
             Id = id;
+            XPathFormat = "mainmenubar/menuitem[@label='{0}']";
+            XPath = string.Format(XPathFormat, Label);
         }
     }
 }

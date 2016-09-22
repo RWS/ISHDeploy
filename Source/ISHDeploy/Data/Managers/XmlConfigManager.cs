@@ -635,6 +635,8 @@ namespace ISHDeploy.Data.Managers
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
             var doc = _fileManager.Load(filePath);
+            bool doSave = true;
+
 
             _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == MoveElementDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
 
@@ -666,6 +668,7 @@ namespace ISHDeploy.Data.Managers
                         {
                             _logger.WriteWarning("Not able to find the target node");
                             verboseMessage = $"Do not able to find target element `{insertAfterXpath}` to insert after it the node `{model.XPath}`";
+                            doSave = false;
                         }
                         else
                         {
@@ -677,7 +680,7 @@ namespace ISHDeploy.Data.Managers
 
                 found.Remove();
 
-                if (!string.IsNullOrEmpty(verboseMessage))
+                if (doSave)
                 {
                     _fileManager.Save(filePath, doc);
                 }

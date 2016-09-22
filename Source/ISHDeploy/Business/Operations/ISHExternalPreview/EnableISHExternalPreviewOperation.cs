@@ -55,8 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
                 new SetAttributeValueAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleXPath,
-                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeName, 
+                    InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath,
                     externalId));
         }
 

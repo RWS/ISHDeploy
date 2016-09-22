@@ -139,10 +139,35 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>The element value.</returns>
         string GetValue(string filePath, string xpath);
 
-        void InsertUpdateElement(string filePath, BaseUIModel model);
+        /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        void InsertOrUpdateUIElement(string filePath, BaseUIElement model);
 
-        void RemoveElement(string filePath, BaseUIModel model);
-        void MoveElement(string filePath, BaseUIModel model, OperationType operation, string after);
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        void RemoveUIElement(string filePath, BaseUIElement model);
+
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="insertAfterXpath">The XPath to element to move after it. It is Null by default</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string insertAfterXpath = null);
 
         /// <summary>
         /// Serializes the specified value.

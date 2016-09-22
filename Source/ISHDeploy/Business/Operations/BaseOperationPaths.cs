@@ -16,9 +16,10 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-﻿using ISHDeploy.Models;
+using ISHDeploy.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -73,6 +74,105 @@ namespace ISHDeploy.Business.Operations
         /// The path to C:\ProgramData\ISHDeploy.X.X.X folder
         /// </summary>
         protected string ISHDeploymentProgramDataFolderPath { get; }
+
+        /// <summary>
+        /// Url for STS path
+        /// </summary>
+        protected string InternalSTSLoginUrlSTS
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameSTS + "/";
+            }
+        }
+        
+        /// <summary>
+        /// Url for CM path
+        /// </summary>
+        protected string InternalSTSLoginUrlCM
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameCM + "/";
+            }
+        }
+
+        /// <summary>
+        /// Url for WS path with new folder
+        /// </summary>
+        protected string InternalSTSLoginUrlWSWithNewFolder
+        {
+            get
+            {
+                return InputParameters.BaseUrl + "/" + InputParameters.WebAppNameWS + "/" + InternalSTSLogin.TargetFolderName;
+            }
+        }
+        
+        /// <summary>
+        /// Url for WS path with new folder
+        /// </summary>
+        protected string InternalSTSSouceFolder
+        {
+            get
+            {
+                return Path.Combine(AuthorFolderPath, "InfoShareWS");
+            }
+        }
+
+        /// <summary>
+        /// File which will be copied
+        /// </summary>
+        protected string InternalSTSSourceConnectionConfigurationFile
+        {
+            get
+            {
+                return InternalSTSSouceFolder + InternalSTSLogin.FileToCopy;
+            }
+        }
+
+        /// <summary>
+        /// Create path for new derectory for 2 files
+        /// </summary>
+        protected ISHFilePath InternalSTSFilelPath
+        {
+            get
+            {
+                return new ISHFilePath(InternalSTSSouceFolder, BackupWebFolderPath, InternalSTSLogin.TargetFolderName);
+            }
+        }
+
+        /// <summary>
+        /// New connection file path
+        /// </summary>
+        protected ISHFilePath InternalSTSNewConnectionConfigPath
+        {
+            get
+            {
+                return new ISHFilePath(InternalSTSFolderToChange, BackupWebFolderPath, InternalSTSFileToChange);
+            }
+        }
+
+        /// <summary>
+        /// Folder will be created
+        /// </summary>
+        protected string InternalSTSFolderToChange
+        {
+            get
+            {
+                return Path.Combine(InternalSTSSouceFolder, InternalSTSLogin.TargetFolderName);
+            }
+        }
+
+        /// <summary>
+        /// XML file will be changed in new directory
+        /// </summary>
+        protected string InternalSTSFileToChange
+        {
+            get
+            {
+                return InternalSTSFolderToChange + InternalSTSLogin.FileToCopy;
+            }
+        }
 
         /// <summary>
         /// The path to ~\Web\Author\ASP\Tree.htm
@@ -217,11 +317,6 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath XopusConfigXmlPath { get; }
 
-        /// <summary>
-        /// The path to ~\Author\ASP\XSL\MainMenuBar.xml
-        /// </summary>
-        protected ISHFilePath MainMenuXmlPath { get; }
-
         #endregion
 
         /// <summary>
@@ -274,9 +369,25 @@ namespace ISHDeploy.Business.Operations
             XopusBluelionConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
-            MainMenuXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\MainMenuBar.xml");
 
             #endregion
+        }
+
+        /// <summary>
+        /// Gets the normalized thumbprint.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        /// <returns>Normalized thumbprint</returns>
+        protected string GetNormalizedThumbprint(string thumbprint)
+        {
+            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+
+            if (normalizedThumbprint.Length != thumbprint.Length)
+            {
+                Logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
+            }
+
+            return normalizedThumbprint;
         }
 
         /// <summary>

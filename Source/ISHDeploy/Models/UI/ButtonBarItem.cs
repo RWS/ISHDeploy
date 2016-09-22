@@ -19,13 +19,13 @@ using System.Xml.Serialization;
 namespace ISHDeploy.Models.UI
 {
     [XmlRoot("BUTTON", Namespace = "")]
-    public class ButtonBarItem : BaseUIModel
+    public class ButtonBarItem : BaseUIElement
     {
         [XmlAttribute("CHECKACCESS")]
         public string CheckAccess { set; get; }
 
         [XmlElement("CARDTYPE")]
-        public CardType[] ISHTYPE { set; get; }
+        public CardType[] CardTypes { set; get; }
 
         [XmlElement("INPUT")]
         public Input Input { set; get; }
@@ -38,17 +38,18 @@ namespace ISHDeploy.Models.UI
         public ButtonBarItem(ButtonBarType buttonBar, string name, CardType[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}.xml";
-            RootPath = "BUTTONBAR";
-            ChildItemPath = "BUTTON";
-            KeyAttribute = "NAME";
+            NameOfRootElement = "BUTTONBAR";
+            NameOfItem = "BUTTON";
 
             Input = new Input();
             Input.Value = name;
             Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
-            ISHTYPE = ishtype;
+            CardTypes = ishtype;
             CheckAccess = checkaccess;
+            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']";
+            XPath = string.Format(XPathFormat, name);
 
             //for default card type list
             if (ishtype == null) 
@@ -56,7 +57,7 @@ namespace ISHDeploy.Models.UI
                 switch (buttonBar)
                 {
                     case ButtonBarType.CategoryMasterButtonbar:
-                        ISHTYPE = new CardType[] { CardType.VDOCTYPEILLUSTRATION, CardType.VDOCTYPEMAP, CardType.VDOCTYPEMASTER };
+                        CardTypes = new [] { CardType.VDOCTYPEILLUSTRATION, CardType.VDOCTYPEMAP, CardType.VDOCTYPEMASTER };
                         break;
                     case ButtonBarType.DefaultSettingsButtonbar:
                         break;
@@ -99,26 +100,5 @@ namespace ISHDeploy.Models.UI
                 }
             }
         }
-    }
-
-    public class Input
-    {
-        [XmlAttribute("type")]
-        public string Type { set; get; } = "button";
-
-        [XmlAttribute("NAME")]
-        public string Name { set; get; }
-
-        [XmlAttribute("onClick")]
-        public string OnClick { set; get; }
-
-        [XmlAttribute("VALUE")]
-        public string Value { set; get; }
-
-        [XmlAttribute("CLASS")]
-        public string Class { set; get; } = "button";
-
-        [XmlAttribute("ICON")]
-        public string Icon { set; get; }
     }
 }

@@ -78,24 +78,24 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            MoveElementDirection operationType;
+            UIElementMoveDirection direction;
             switch (ParameterSetName)
             {
                 case "Last":
-                    operationType = MoveElementDirection.Last;
+                    direction = UIElementMoveDirection.Last;
                     break;
                 case "First":
-                    operationType = MoveElementDirection.First;
+                    direction = UIElementMoveDirection.First;
                     break;
                 case "After":
-                    operationType = MoveElementDirection.After;
+                    direction = UIElementMoveDirection.After;
                     break;
                 default:
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUISearchMenuButtonCmdlet)} should be defined.");
             }
 
             var model = new SearchMenuItem(Label);
-            var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, operationType, After);
+            var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, direction, After);
             operation.Run();
         }
     }

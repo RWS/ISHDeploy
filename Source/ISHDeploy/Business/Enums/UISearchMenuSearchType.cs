@@ -15,9 +15,19 @@
  */
  namespace ISHDeploy.Business.Enums
 {
-    public enum SearchType
+    /// <summary>
+    /// Search type will choose asp page SearchFrame.asp or SearchNewPublications.asp.
+    ///	<para type="description">Enumeration of search type to choose asp page SearchFrame.asp or SearchNewPublications.asp.</para>
+    /// </summary>
+    public enum UISearchMenuSearchType
     {
+        /// <summary>
+        /// The SearchNewPublications.asp
+        /// </summary>
         Publication,
+        /// <summary>
+        /// The SearchFrame.asp
+        /// </summary>
         Frame,
     }
 }

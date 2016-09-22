@@ -19,7 +19,7 @@ namespace ISHDeploy.Business.Enums
     /// Directions to move an item to change an order in list of UI elements.
     ///	<para type="description">Enumeration of directions to move an item to change an order in list of UI elements.</para>
     /// </summary>
-    public enum MoveElementDirection
+    public enum UIElementMoveDirection
     {
         /// <summary>
         /// Move to first position in list.

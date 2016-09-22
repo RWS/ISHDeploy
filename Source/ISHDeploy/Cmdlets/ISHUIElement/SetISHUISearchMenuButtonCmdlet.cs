@@ -48,10 +48,10 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public string[] UserRole { get; set; }
 
         /// <summary>
-        /// <para type="description">Search type will choose asp page SearchFrame.asp or SearchNewPublications.asp .</para>
+        /// <para type="description">Search type will choose asp page SearchFrame.asp or SearchNewPublications.asp.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Search type to choose asp page.")]
-        public SearchType SearchType { get; set; }
+        public UISearchMenuSearchType SearchType { get; set; }
 
         /// <summary>
         /// <para type="description">Title for a menu.</para>
@@ -77,7 +77,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public override void ExecuteCmdlet()
         {
             string searchType;
-            if (SearchType == SearchType.Frame)
+            if (SearchType == UISearchMenuSearchType.Frame)
             {
                 searchType = "SearchFrame";
             }

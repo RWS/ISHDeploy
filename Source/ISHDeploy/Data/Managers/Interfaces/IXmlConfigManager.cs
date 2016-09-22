@@ -167,7 +167,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// or
         /// Unknown operation
         /// </exception>
-        void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after = null);
+        void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string after = null);
 
         /// <summary>
         /// Serializes the specified value.

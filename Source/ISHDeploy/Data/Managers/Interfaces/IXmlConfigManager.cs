@@ -159,7 +159,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
         /// <param name="direction">The direction to move.</param>
-        /// <param name="insertAfterXpath">The XPath to element to move after it. It is Null by default</param>
+        /// <param name="insertAfterXPath">The XPath to element to move after it. It is Null by default</param>
         /// <exception cref="System.Exception">
         /// Could not find source element
         /// or
@@ -167,7 +167,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// or
         /// Unknown operation
         /// </exception>
-        void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string insertAfterXpath = null);
+        void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXPath = null);
 
         /// <summary>
         /// Serializes the specified value.

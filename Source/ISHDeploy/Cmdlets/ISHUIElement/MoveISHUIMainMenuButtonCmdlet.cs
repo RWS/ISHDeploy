@@ -78,17 +78,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            MoveElementDirection operationType;
+            UIElementMoveDirection operationType;
             switch (ParameterSetName)
             {
                 case "Last":
-                    operationType = MoveElementDirection.Last;
+                    operationType = UIElementMoveDirection.Last;
                     break;
                 case "First":
-                    operationType = MoveElementDirection.First;
+                    operationType = UIElementMoveDirection.First;
                     break;
                 case "After":
-                    operationType = MoveElementDirection.After;
+                    operationType = UIElementMoveDirection.After;
                     break;
                 default:
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");

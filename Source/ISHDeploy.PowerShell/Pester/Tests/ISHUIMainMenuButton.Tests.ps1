@@ -109,9 +109,6 @@ $scriptBlockMoveMainMenuButton = {
     else{
         Move-ISHUIMainMenuButton -ISHDeployment $ishDeploy @parametersHash
     }
-
-    
-    #Set-ISHUIMainMenuButton -ISHDeployment $ishDeploy -Label $label -EventTypesFilter $eventTypesFilter -Icon $icon -SelectedStatusFilter $selectedStatusFilter -ModifiedSinceMinutesFilter $modifiedSinceMinutesFilter -UserRole $userRole -Description $description
 }
 
 $scriptBlockRemoveMainMenuBar= {

@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Business.Enums
+ namespace ISHDeploy.Business.Enums
 {
     /// <summary>
-    /// Directions to move an item to change an order in list of UI elements.
-    ///	<para type="description">Enumeration of directions to move an item to change an order in list of UI elements.</para>
+    /// Search type will choose asp page SearchFrame.asp or SearchNewPublications.asp.
+    ///	<para type="description">Enumeration of search type to choose asp page SearchFrame.asp or SearchNewPublications.asp.</para>
     /// </summary>
-    public enum MoveElementDirection
+    public enum UISearchMenuSearchType
     {
         /// <summary>
-        /// Move to first position in list.
+        /// The SearchNewPublications.asp
         /// </summary>
-        First,
-
+        Publication,
         /// <summary>
-        /// Move to last position in list.
+        /// The SearchFrame.asp
         /// </summary>
-        Last,
-
-        /// <summary>
-        /// Move to the position after.
-        /// </summary>
-        After
+        Frame,
     }
 }

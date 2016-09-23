@@ -45,12 +45,12 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <summary>
         /// The direction to move.
         /// </summary>
-        private readonly MoveElementDirection _direction;
+        private readonly UIElementMoveDirection _direction;
 
         /// <summary>
         /// The XPath to element to move after it.
         /// </summary>
-        private readonly string _insertAfterXpath;
+        private readonly string _insertAfterXPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveUIElementAction"/> class.
@@ -62,8 +62,8 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <param name="after">The id of element to move after it.</param>
         public MoveUIElementAction(ILogger logger,
             ISHFilePath filePath,
-            BaseUIElement model, 
-            MoveElementDirection direction,
+            BaseUIElement model,
+            UIElementMoveDirection direction,
             string after = null) :
             base(logger, filePath)
         {
@@ -72,9 +72,9 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
             _model = model;
             _direction = direction;
 
-            if (!string.IsNullOrEmpty(after))
+            if (direction == UIElementMoveDirection.After && !string.IsNullOrEmpty(after))
             {
-                _insertAfterXpath = string.Format(model.XPathFormat, after);
+                _insertAfterXPath = string.Format(model.XPathFormat, after);
             }
         }
 
@@ -87,7 +87,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
                 _filePath,
                 _model,
                 _direction,
-                _insertAfterXpath);
+                _insertAfterXPath);
         }
     }
 }

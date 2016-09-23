@@ -630,7 +630,7 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string insertAfterXpath = null)
+        public void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXpath = null)
         {
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
@@ -638,7 +638,7 @@ namespace ISHDeploy.Data.Managers
             bool doSave = true;
 
 
-            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == MoveElementDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
+            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == UIElementMoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
 
             var found = SelectSingleNode(ref doc, model.XPath);
 
@@ -646,11 +646,11 @@ namespace ISHDeploy.Data.Managers
             {
                 switch (direction)
                 {
-                    case MoveElementDirection.First:
+                    case UIElementMoveDirection.First:
                         doc.Element(model.NameOfRootElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case MoveElementDirection.Last:
+                    case UIElementMoveDirection.Last:
                         var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
@@ -662,7 +662,7 @@ namespace ISHDeploy.Data.Managers
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case MoveElementDirection.After:
+                    case UIElementMoveDirection.After:
                         var afterElement = SelectSingleNode(ref doc, insertAfterXpath); ;
                         if (afterElement == null)
                         {

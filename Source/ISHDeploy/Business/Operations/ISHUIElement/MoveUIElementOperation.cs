@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         public MoveUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
             BaseUIElement model,
-            MoveElementDirection direction,
+            UIElementMoveDirection direction,
             string after) :
             base(logger, ishDeployment)
         {

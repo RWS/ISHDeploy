@@ -77,7 +77,8 @@
   <ItemGroup>
     <Compile Include="Business\Enums\ButtonBarType.cs" />
     <Compile Include="Business\Enums\CardType.cs" />
-    <Compile Include="Business\Enums\MoveElementDirection.cs" />
+    <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
+    <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -194,13 +195,17 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />

@@ -15,7 +15,10 @@
  */
 
  namespace ISHDeploy.Business.Enums
-{
+{    
+    /// <summary>
+     /// Specify the type of Button Bar.
+     /// </summary>
     public enum ButtonBarType
     {
         CategoryMasterButtonbar,

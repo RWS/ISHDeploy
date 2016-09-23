@@ -18,6 +18,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Castle.DynamicProxy.Generators;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -1463,7 +1464,8 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, "Event Log 5");
+            var menuItem = new MainMenuBarItem("Event Log 2");
+            _xmlConfigManager.MoveUIElement(_filePath, menuItem, UIElementMoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());

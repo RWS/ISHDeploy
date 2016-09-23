@@ -15,10 +15,11 @@
  */
 
  namespace ISHDeploy.Business.Enums
-{    
+{
     /// <summary>
-     /// Specify the type of Button Bar.
-     /// </summary>
+    /// Specify the type of Button Bar.
+    /// </summary>
+    #pragma warning disable 1591
     public enum ButtonBarType
     {
         CategoryMasterButtonbar,

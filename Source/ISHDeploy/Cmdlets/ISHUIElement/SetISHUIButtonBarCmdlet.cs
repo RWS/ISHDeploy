@@ -48,11 +48,14 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public CardType[] ISHTYPE { get; set; }
 
         /// <summary>
-        /// <para type="description">Name of Button Bar.</para>
+        /// <para type="description">Name of the button.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Name of button bar")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// <para type="description">Icon for the button.</para>
+        /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Icon file name")]
         public string Icon { get; set; }
 

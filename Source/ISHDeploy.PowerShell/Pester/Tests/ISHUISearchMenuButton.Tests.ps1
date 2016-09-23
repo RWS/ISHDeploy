@@ -145,6 +145,20 @@ Describe "Testing ISHUISearchMenuButton"{
         $item.UserRole[1] | Should Match $params.UserRole[1]
     }
 
+    It "Set search menu button if SearchXML is null"{
+        #Arrange
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        $item = getSearchMenuButton -Label $params.Label
+        $item.Label | Should be $params.Label
+        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchFrame&amp;Title=TestTitle"
+        $item.Icon | Should be $params.Icon
+        $item.UserRole[0] | Should Match $params.UserRole[0]
+        $item.UserRole[1] | Should Match $params.UserRole[1]
+    }
+
     It "Remove search menu button"{
         #Arrange
         $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }

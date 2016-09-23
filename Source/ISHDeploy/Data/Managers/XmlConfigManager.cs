@@ -632,7 +632,7 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, MoveElementDirection direction, string after = null)
+        public void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string after = null)
         {
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
@@ -640,7 +640,7 @@ namespace ISHDeploy.Data.Managers
 
             var element = XElement.Parse(Serialize(model));
 
-            _logger.WriteDebug($"Move UI element <{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`> {(direction == MoveElementDirection.After ? $"{direction} {after}" : $"to {direction} position")}", filePath);
+            _logger.WriteDebug($"Move UI element <{model.NameOfItem} {model.KeyAttribute}=`{element.Attribute(model.KeyAttribute).Value}`> {(direction == UIElementMoveDirection.After ? $"{direction} {after}" : $"to {direction} position")}", filePath);
 
             var found = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, element.Attribute(model.KeyAttribute).Value);
 
@@ -648,11 +648,11 @@ namespace ISHDeploy.Data.Managers
             {
                 switch (direction)
                 {
-                    case MoveElementDirection.First:
+                    case UIElementMoveDirection.First:
                         doc.Element(model.NameOfRootElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case MoveElementDirection.Last:
+                    case UIElementMoveDirection.Last:
                         var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
@@ -664,7 +664,7 @@ namespace ISHDeploy.Data.Managers
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case MoveElementDirection.After:
+                    case UIElementMoveDirection.After:
                         var afterElement = FindElement(doc, model.NameOfRootElement, model.NameOfItem, model.KeyAttribute, after);
                         if (afterElement == null)
                         {

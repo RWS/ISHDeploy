@@ -45,7 +45,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <summary>
         /// The direction to move.
         /// </summary>
-        private readonly MoveElementDirection _direction;
+        private readonly UIElementMoveDirection _direction;
 
         /// <summary>
         /// The id of element to move after it.
@@ -63,7 +63,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         public MoveUIElementAction(ILogger logger,
             ISHFilePath filePath,
             BaseUIElement model, 
-            MoveElementDirection direction,
+            UIElementMoveDirection direction,
             string after) :
             base(logger, filePath)
         {

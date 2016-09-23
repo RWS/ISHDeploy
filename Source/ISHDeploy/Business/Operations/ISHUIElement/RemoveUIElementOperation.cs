@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
             base(logger, ishDeployment)
         {
             var filePath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath);
-            _invoker = new ActionInvoker(logger, $"Remove `{model.NameOfItem}` element in file {filePath.AbsolutePath}");
+            _invoker = new ActionInvoker(logger, $"Remove `{model.XPath}` element in file {filePath.AbsolutePath}");
             
             _invoker.AddAction(new RemoveUIElementAction(
                 logger,

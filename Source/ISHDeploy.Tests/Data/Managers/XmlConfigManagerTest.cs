@@ -18,6 +18,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Castle.DynamicProxy.Generators;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -1236,7 +1237,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             // Assert
             Assert.IsNotNull(result, "Node has not been added");
-            Assert.IsTrue(result.XPathSelectElements("userrole").Count() == 2, "Node has not been added");
+            Assert.IsTrue(result.XPathSelectElements("userrole").Count() == 2, "Node has not been updated");
         }
 
         [TestMethod]
@@ -1406,7 +1407,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.After, "Event Log 1");
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1437,7 +1438,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, "Event Log 2");
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1463,7 +1464,8 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, "Event Log 5");
+            var menuItem = new MainMenuBarItem("Event Log 2");
+            _xmlConfigManager.MoveUIElement(_filePath, menuItem, UIElementMoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());

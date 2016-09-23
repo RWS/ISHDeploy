@@ -206,11 +206,6 @@ Describe "Testing ISHUIMainMenuButton"{
     }
 
     It "Remove unexisting main menu button"{
-        #Arrange
-        if((getCountMainMenuButton -Label $params.Label) -gt 0){
-        Write-Host "Remove"
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
-        }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveMainMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName} | Should Not Throw
     }

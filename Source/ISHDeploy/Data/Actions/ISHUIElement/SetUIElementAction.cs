@@ -52,9 +52,9 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
             BaseUIElement model) :
             base(logger, filePath)
         {
+            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _filePath = filePath;
             _model = model;
-            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
         }
 
         /// <summary>

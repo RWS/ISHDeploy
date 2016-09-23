@@ -25,7 +25,7 @@ namespace ISHDeploy.Models.UI
     public abstract class BaseUIElement
     {
         /// <summary>
-        /// Gets or sets the relative file path.
+        /// Gets the relative file path.
         /// </summary>
         /// <value>
         /// The relative file path.
@@ -34,7 +34,7 @@ namespace ISHDeploy.Models.UI
         public string RelativeFilePath { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the name of root element.
+        /// Gets the name of root element.
         /// </summary>
         /// <value>
         /// The root path.
@@ -43,7 +43,7 @@ namespace ISHDeploy.Models.UI
         public string NameOfRootElement { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the name of item.
+        /// Gets the name of item.
         /// </summary>
         /// <value>
         /// The child item path.
@@ -52,12 +52,21 @@ namespace ISHDeploy.Models.UI
         public string NameOfItem { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the key attribute.
+        /// Gets the XPath that allows to definitely find this element in XML document.
         /// </summary>
         /// <value>
-        /// The key attribute.
+        /// The root path.
         /// </value>
         [XmlIgnore]
-        public string KeyAttribute { get; protected set; }
+        public string XPath { get; protected set; }
+
+        /// <summary>
+        /// Gets the format of XPath that allows to find other element in XML document.
+        /// </summary>
+        /// <value>
+        /// The root path.
+        /// </value>
+        [XmlIgnore]
+        public string XPathFormat { get; protected set; }
     }
 }

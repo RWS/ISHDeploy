@@ -75,6 +75,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Enums\ButtonBarType.cs" />
+    <Compile Include="Business\Enums\CardType.cs" />
     <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
     <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
@@ -200,6 +202,9 @@
     <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
@@ -318,8 +323,10 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
+    <Compile Include="Models\UI\Input.cs" />
     <Compile Include="Models\UI\MainMenuBarItem.cs" />
     <Compile Include="Models\UI\BaseUIElement.cs" />
+    <Compile Include="Models\UI\ButtonBarItem.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

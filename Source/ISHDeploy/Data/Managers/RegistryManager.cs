@@ -109,7 +109,7 @@ namespace ISHDeploy.Data.Managers
 
             foreach (var name in projectsKeyNames)
             {
-                if (name == CoreRegName || (projectName != null && name != projectName))
+                if (name == CoreRegName || (!string.IsNullOrEmpty(projectName) && name != projectName))
                 {
                     continue;
                 }

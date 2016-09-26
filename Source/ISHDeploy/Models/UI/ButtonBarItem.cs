@@ -76,6 +76,7 @@ namespace ISHDeploy.Models.UI
             XPath = string.Format(XPathFormat, name);
 
             //for default card type list
+            /* Separate story TS-11796 will add values
             if (ishtype == null) 
             { 
                 switch (buttonBar)
@@ -122,7 +123,7 @@ namespace ISHDeploy.Models.UI
                     default:
                         break;
                 }
-            }
+            }*/
         }
     }
 }

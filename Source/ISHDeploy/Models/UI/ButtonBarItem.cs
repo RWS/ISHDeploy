@@ -15,6 +15,7 @@
  */
 using ISHDeploy.Business.Enums;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace ISHDeploy.Models.UI
 {
@@ -34,7 +35,7 @@ namespace ISHDeploy.Models.UI
         /// List of associated cards.
         /// </summary>
         [XmlElement("CARDTYPE")]
-        public CardType[] CardTypes { set; get; }
+        public string[] CardTypes { set; get; }
 
         /// <summary>
         /// To create Input type xml node
@@ -70,12 +71,18 @@ namespace ISHDeploy.Models.UI
             Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
-            CardTypes = ishtype;
             CheckAccess = checkaccess;
             XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
             XPath = string.Format(XPathFormat, name);
 
+            if(ishtype != null)
+                CardTypes = ishtype.Select(x => { if (x == CardType.ELECTRONIC_DOCUMENT)
+                                                    return "ELECTRONIC DOCUMENT";
+                                                  else
+                                                    return x.ToString(); }).ToArray();
+
             //for default card type list
+            /* Separate story TS-11796 will add values
             if (ishtype == null) 
             { 
                 switch (buttonBar)
@@ -122,7 +129,7 @@ namespace ISHDeploy.Models.UI
                     default:
                         break;
                 }
-            }
+            }*/
         }
     }
 }

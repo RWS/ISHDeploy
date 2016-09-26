@@ -25,7 +25,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <para type="synopsis">Create/Update button bar item.</para>
     /// <para type="description">The Set-ISHUIButtonBar cmdlet add or update button bar item.</para>
     /// <para type="link">Move-ISHUIButtonBar</para>    
-    /// <para type="link">Delete-ISHUIButtonBar</para>
+    /// <para type="link">Remove-ISHUIButtonBar</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHUIButtonBar -ISHDeployment $deployment -ButtonBar DefaultSettingsButtonbar -ISHTYPE VDOCTYPEILLUSTRATION, VDOCTYPEMAP -Name "test" -OnClick "refresh();"</code>

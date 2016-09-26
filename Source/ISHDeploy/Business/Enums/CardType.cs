@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Enums
         USER,
         CTUSERGROUP,
         CTUSERROLE,
-        //ELECTRONIC DOCUMENT,
+        ELECTRONIC_DOCUMENT,
         CTDOCMAP,
         CTMASTERV,
         CTMASTERL,

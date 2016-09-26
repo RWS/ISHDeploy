@@ -2,7 +2,13 @@
 
 ## stable-1.2
 
-
+1. General 
+	1. Cmdlets
+		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
+			- When there is only one available deployment detected then this one will be used.
+			- Where there are more than one available deployments detected then the cmdlet will throw an error.
+	1. Documentation - Articles
+		- New article on how to work with one deployment. **[Update]**
 
 ## stable-1.1
 

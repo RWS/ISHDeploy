@@ -53,7 +53,10 @@ namespace ISHDeploy.Cmdlets
                 }
                 else
                 {
-                    throw new ArgumentException("You have not one installed environment, please specify one.");
+                    if (deployments.Count() > 1)
+                        throw new ArgumentException ("More than one deployments detected. Please specify one");
+                    else
+                        throw new ArgumentException ("You have not one installed environment, please install one.");
                 }
             }
         }

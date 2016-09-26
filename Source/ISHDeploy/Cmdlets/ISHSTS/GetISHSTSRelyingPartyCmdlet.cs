@@ -22,18 +22,27 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// <summary>
     ///     <para type="synopsis">Gets all relying parties from the infosharests database. The switches acts as filter based on the RP name.</para>
     ///     <para type="description">The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Reset-ISHSTSCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHSTSConfigurationCmdlet</para>
-    ///     <para type="link">Set-ISHSTSRelyingPartyCmdlet</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Reset-ISHSTS</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHSTSConfiguration</para>
+    ///     <para type="link">Set-ISHSTSRelyingParty</para>
     /// </summary>
     /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH</code>
+    ///     <para>This command gets all relying parties from the infosharests database where name of relying party starts with "ISH".</para>
+    /// </example>
+    /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC</code>
+    ///     <para>This command gets all relying parties from the infosharests database where name of relying party starts with "LC".</para>
+    /// </example>
+    /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL</code>
+    ///     <para>This command gets all relying parties from the infosharests database where name of relying party starts with "BL".</para>
+    /// </example>
+    /// <example>
     ///     <code>PS C:\>Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination</code>
-    ///     <para>This command gets t all relying parties from the infosharests database.
+    ///     <para>This command gets all relying parties from the infosharests database.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHSTSRelyingParty")]

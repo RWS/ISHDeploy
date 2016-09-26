@@ -22,12 +22,12 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     /// <summary>
     ///		<para type="synopsis">Removes additional login redirect.</para>
     ///		<para type="description">Deleted directory with created for internal login STS files.</para>
-    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthenticationCmdlet</para>
-    ///     <para type="link">Remove-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSCertificateCmdlet</para>
-    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackageCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSFederationCmdlet</para>
-    ///     <para type="link">Set-ISHIntegrationSTSWSTrustCmdlet</para>
+    ///     <para type="link">Enable-ISHIntegrationSTSInternalAuthentication</para>
+    ///     <para type="link">Remove-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Set-ISHIntegrationSTSCertificate</para>
+    ///     <para type="link">Save-ISHIntegrationSTSConfigurationPackage</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSFederation</para>
+    ///     <para type="link">Set-ISHIntegrationSTSWSTrust</para>
     /// </summary>
     /// <seealso cref="ISHDeploy.Cmdlets.ISHIntegrationSTS" />
     /// <example>

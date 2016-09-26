@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Linq;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -41,20 +40,14 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// <param name="thumbprint">The certificate thumbprint.</param>
         /// <param name="issuer">The certificate issuer.</param>
         /// <param name="validationMode">The certificate validation mode.</param>
-        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode validationMode) : 
+        public SetISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, string issuer, X509CertificateValidationMode? validationMode) : 
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
-            var normalizedThumbprint = new string(thumbprint.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+            thumbprint = GetNormalizedThumbprint(thumbprint);
 
-		    if (normalizedThumbprint.Length != thumbprint.Length)
-		    {
-                logger.WriteWarning($"The thumbprint '{thumbprint}' has been normalized to '{normalizedThumbprint}'");
-		        thumbprint = normalizedThumbprint;
-		    }
-
-		    var menuItem = new IssuerThumbprintItem()
+            var menuItem = new IssuerThumbprintItem()
 			{
 				Thumbprint = thumbprint,
 				Issuer = issuer
@@ -64,15 +57,22 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareAuthorWebConfigPath, 
 				string.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
 
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
-				InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+            if (validationMode != null)
+            {
+                // Author web Config
+                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath,
+                    InfoShareAuthorWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // WS web Config
+                _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
+                    InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
+                // InputParameters.xml
+                _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, 
+                    InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
+            }
 
 			// WS web Config
 			_invoker.AddAction(new SetNodeAction(logger, InfoShareWSWebConfigPath, 
 				string.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByThumbprintXPath, menuItem.Thumbprint), menuItem));
-
-			_invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath,
-				InfoShareWSWebConfig.CertificateValidationModeXPath, validationMode.ToString()));
 
             // STS web Config
             string configurationInfoShareSTSCertificateThumbprint = string.Empty;
@@ -94,7 +94,6 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
             }
 
             // InputParameters.xml
-            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateValidationModeXPath, validationMode.ToString()));
             _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerCertificateThumbprintXPath, thumbprint));
         }
 

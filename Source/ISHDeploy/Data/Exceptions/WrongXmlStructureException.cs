@@ -21,6 +21,7 @@ namespace ISHDeploy.Data.Exceptions
     /// The exception that is thrown when xml file has wrong and unexpected structure.
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class WrongXmlStructureException : Exception
     {
         /// <summary>

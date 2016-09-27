@@ -18,59 +18,8 @@ $invalidLabel = "Invalid"
 
 #region Script Blocks 
 
-# Script block for Enable-ISHUIQualityAssistant
-$scriptBlockEnable = {
-    param (
-        [Parameter(Mandatory=$true)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-        $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-        Enable-ISHUIQualityAssistant -ISHDeployment $ishDeploy
-  
-}
-
-# Script block for Disable-ISHUIQualityAssistant
-$scriptBlockDisable = {
-    param (
-        [Parameter(Mandatory=$true)]
-        $ishDeployname 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Disable-ISHUIQualityAssistant -ISHDeployment $ishDeploy
-}
-
-#endregion
-
-
-
 # Function reads target files and their content, searches for specified nodes in xm
-function readTargetXML() {
-	[xml]$XmlConfig = Get-Content "$xmlPath\EventMonitorMenuBar.xml" -ErrorAction SilentlyContinue
 
-    [xml]$XmlBlueLionConfig = Get-Content "$xmlPath\bluelion-EventMonitorMenuBar.xml" -ErrorAction SilentlyContinue
-
-    [xml]$XmlEnrichWebConfig = Get-Content "$configPath\BlueLion-Plugin\web.config" -ErrorAction SilentlyContinue
-
-    $global:textConfig = $XmlConfig.config.javascript | ? {$_.src -eq "../BlueLion-Plugin/Bootstrap/bootstrap.js"}
-    $global:textBlueLionConfig = $XmlBlueLionConfig.SelectNodes("*/*[local-name()='import'][@src='../BlueLion-Plugin/create-toolbar.xml']")
-    $global:textEnrichBluelionWebConfigJsonMimeMapNodes = $XmlEnrichWebConfig.SelectNodes("configuration/system.webServer/staticContent/mimeMap[@fileExtension='.json']")
-
-	if($textConfig -and $textBlueLionConfig.Count -eq 1 -and $textEnrichBluelionWebConfigJsonMimeMapNodes.Count -eq 1){
-		Return "Enabled"
-	}
-	else{
-		Return "Disabled"
-	}
-
-}
 function compareArray([string[]]$firstArray, [string[]]$secondArray){
     if ($firstArray.Length -eq $secondArray.Length){
         

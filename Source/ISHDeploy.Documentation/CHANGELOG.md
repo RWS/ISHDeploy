@@ -1,8 +1,17 @@
 # Version notes
 
 ## stable-1.2
-
-
+1. General 
+    1. Cmdlets
+	      - `Set-ISHUIButtonBar` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
+	      - `Remove-ISHUIButtonBar` . **[New]**
+	      - `Move-ISHUIButtonBar` . **[New]**
+	      - `Move-ISHUIMainMenuButton` . **[New]**
+	      - `Remove-ISHUIMainMenuButton` . **[New]**
+	      - `Set-ISHUIMainMenuButton` . **[New]**
+	      - `Move-ISHUISearchMenuButton` . **[New]**
+	      - `Remove-ISHUISearchMenuButton` . **[New]**
+	      - `Set-ISHUISearchMenuButton` . **[New]**
 
 ## stable-1.1
 

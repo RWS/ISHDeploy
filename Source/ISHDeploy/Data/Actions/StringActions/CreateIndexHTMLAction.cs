@@ -75,12 +75,16 @@ namespace ISHDeploy.Data.Actions.StringActions
     </div>
 ";
         /// <summary>
-        /// Initializes new instance of the <see cref="CreateIndexHTMLAction"/>
+        /// Initializes a new instance of the <see cref="CreateIndexHTMLAction"/> class.
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
-        /// <param name="lCHost">Host name.</param>
-        /// <param name="lCWebAppName">Application name.</param>
-        /// <param name="returnResult">The delegate that returns content for index.html file.</param>
+        /// <param name="linkISHCM">The link ishcm.</param>
+        /// <param name="linkISHWS">The link ishws.</param>
+        /// <param name="linkISHSTS">The link ishsts.</param>
+        /// <param name="lCHost">The host name.</param>
+        /// <param name="lCWebAppName">Name of the lc web application.</param>
+        /// <param name="returnResult">The return result.</param>
+        /// 
         public CreateIndexHTMLAction(ILogger logger,
             string linkISHCM,
             string linkISHWS,

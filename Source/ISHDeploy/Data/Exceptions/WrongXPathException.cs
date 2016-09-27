@@ -21,6 +21,7 @@ namespace ISHDeploy.Data.Exceptions
     /// The exception that is thrown when XPath should return a result but does not return anything.
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class WrongXPathException : Exception
     {
         /// <summary>

@@ -368,7 +368,7 @@
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*&quot; &quot;$(OutDir)x86&quot;" />
     <Exec Command="if not exist &quot;$(OutDir)amd64&quot; md &quot;$(OutDir)amd64&quot;" />
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*&quot; &quot;$(OutDir)amd64 &quot;" />
-    <Warning Text="Natives copied" />
+    <Message Text="Natives copied" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

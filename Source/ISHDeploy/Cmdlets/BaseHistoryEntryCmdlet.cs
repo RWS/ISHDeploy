@@ -102,7 +102,7 @@ namespace ISHDeploy.Cmdlets
 
 			if (boundParameter.Value is IEnumerable)
 			{
-				var arrayStringValue = string.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
+				var arrayStringValue = string.Join(", ", ((IEnumerable) boundParameter.Value).Cast<object>().Select(x => $"\"{x.ToString().Replace("\"", "\"\"")}\""));
 				return string.IsNullOrEmpty(arrayStringValue)
 					? (KeyValuePair<string, object>?) null
 					: new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");

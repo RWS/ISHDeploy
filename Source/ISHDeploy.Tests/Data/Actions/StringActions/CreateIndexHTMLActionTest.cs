@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 using ISHDeploy.Data.Actions.StringActions;
-using ISHDeploy.Data.Actions.WebAdministration;
-using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
-using System.Linq;
 
 namespace ISHDeploy.Tests.Data.Actions.WebAdministration
 {

@@ -21,6 +21,7 @@ namespace ISHDeploy.Data.Exceptions
     /// The exception that is thrown when user wants to enable or disable windows authentication on IIS but WindowsAuthentication module has not been installed
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class WindowsAuthenticationModuleIsNotInstalledException : Exception
     {
         /// <summary>

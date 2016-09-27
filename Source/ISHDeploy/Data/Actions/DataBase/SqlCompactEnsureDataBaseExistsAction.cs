@@ -27,7 +27,7 @@ namespace ISHDeploy.Data.Actions.DataBase
     /// </summary>
     /// <seealso cref="BaseAction" />
     /// <seealso cref="IRestorableAction" />
-    public class SqlCompactEnsureDataBaseExistsAction : BaseAction, IDisposable
+    public class SqlCompactEnsureDataBaseExistsAction : BaseAction
     {
         /// <summary>
         /// Path to database File.
@@ -109,14 +109,6 @@ namespace ISHDeploy.Data.Actions.DataBase
                     throw new Exception($"While checking the existence of the database file {_dbFilePath} and trying to make an webrequest to assignment {_baseUrl} the following error has occurred: {e.Message}");
                 }
             }
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-
         }
     }
 }

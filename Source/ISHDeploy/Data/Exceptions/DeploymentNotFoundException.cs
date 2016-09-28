@@ -21,6 +21,7 @@ namespace ISHDeploy.Data.Exceptions
     /// The exception that is thrown when user wants to retrieve deployment by name that does not exist on the system.
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class DeploymentNotFoundException : Exception
     {
         /// <summary>

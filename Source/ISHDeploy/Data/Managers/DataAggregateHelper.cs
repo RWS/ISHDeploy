@@ -25,7 +25,7 @@ namespace ISHDeploy.Data.Managers
     /// <summary>
     /// Aggregates data from different places.
     /// </summary>
-    /// <seealso cref="IDataAggregator" />
+    /// <seealso cref="IDataAggregateHelper" />
     public class DataAggregateHelper : IDataAggregateHelper
     {
         /// <summary>

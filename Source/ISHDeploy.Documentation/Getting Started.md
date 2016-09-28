@@ -80,20 +80,20 @@ Install-Module {ModuleName} -Scope CurrentUser -Force
 # Verify the module presense
 To verify that the module is installed and check the version execute:
 ```powershell
-Get-Module ISHDeploy.12.0.0 -ListAvailable |Format-Table Name,Version
+Get-Module ISHDeploy.12.0.1 -ListAvailable |Format-Table Name,Version
 ```
 
 if the module is available then the result should be one line such as
 ```
 Name                                                        Version
 ----                                                        -------
-ISHDeploy.12.0.0                                            0.1
+ISHDeploy.12.0.1                                            0.1
 ```
 
 # Available cmdlets
 To retrieve all cmdlets offered by the module then execute:
 ```powershell
-Get-Command -Module ISHDeploy.12.0.0 | Select-Object Name
+Get-Command -Module ISHDeploy.12.0.1 | Select-Object Name
 ```
 
 Each cmdlet offers support for the `Get-Help` cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 
@@ -108,7 +108,8 @@ Although the module contains help for each cmdlet from within the module, this d
 [Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
 
 Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
-For example [Work with deployments](articles/Module/Work with deployments.md) explains how to work with the core cmdlets of the module.
+For example [Work with one or multiple deployments](articles/Module/Work with one or multiple deployments.md) explains how to work with the core cmdlets of the module against a specific deployment. 
+When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in [Work with one deployment](articles/Module/Work with one deployment.md).
 
 # Open source and feedback
 The module's code and the content of this portal is availabe on [github](https://github.com/sdl/{ModuleName}/). 

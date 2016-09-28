@@ -20,6 +20,7 @@ namespace ISHDeploy.Data.Exceptions
     /// The exception that is thrown when deployment state is changes and is those changes prevent cmdlets from successful operation.
     /// </summary>
     /// <seealso cref="System.Exception" />
+    [Serializable]
     public class CorruptedInstallationException : Exception
     {
         /// <summary>

@@ -46,7 +46,7 @@ namespace ISHDeploy.Cmdlets
             // don't log if cmdlet was executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
-				Logger.WriteVerbose($"Commandlet was executed with `-WhatIf` parameter, no history logging required.");
+				Logger.WriteVerbose("Commandlet was executed with `-WhatIf` parameter, no history logging required.");
 				return;
             }
             
@@ -61,6 +61,12 @@ namespace ISHDeploy.Cmdlets
         private string GetInvocationLine()
         {
             var strBldr = new StringBuilder(MyInvocation.MyCommand.Name);
+
+            // If default ISHDeployment without name was invoked
+            if (MyInvocation.BoundParameters.All(a => a.Key != "ISHDeployment"))
+            {
+                strBldr.Append(" -ISHDeployment $deploymentName");
+            }
 
             foreach (var boundParameter in MyInvocation.BoundParameters)
             {
@@ -102,7 +108,7 @@ namespace ISHDeploy.Cmdlets
 
 			if (boundParameter.Value is IEnumerable)
 			{
-				var arrayStringValue = string.Join(", ", ((IEnumerable<string>)boundParameter.Value).Select(x => $"\"{x.Replace("\"", "\"\"")}\""));
+				var arrayStringValue = string.Join(", ", ((IEnumerable) boundParameter.Value).Cast<object>().Select(x => $"\"{x.ToString().Replace("\"", "\"\"")}\""));
 				return string.IsNullOrEmpty(arrayStringValue)
 					? (KeyValuePair<string, object>?) null
 					: new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");

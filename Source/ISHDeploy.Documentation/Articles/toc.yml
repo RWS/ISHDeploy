@@ -1,5 +1,9 @@
 - name: Work with deployments
-  href: ../obj/doc/articles/Module/Work with deployments.md
+  items:
+  - name: Work with one or multiple deployments
+    href: ../obj/doc/articles/Module/Work with one or multiple deployments.md
+  - name: Work with one deployment
+    href: ../obj/doc/articles/Module/Work with one deployment.md
 - name: Work with files
   href: ../obj/doc/articles/Module/Work with files.md
 - name: Work with UI Features

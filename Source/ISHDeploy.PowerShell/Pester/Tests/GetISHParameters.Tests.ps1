@@ -156,7 +156,7 @@ Describe "Testing Get-ISHDeploymentParameters"{
         $databasepassword | Should be "*******"
     }
 
-    It "Get-ISHDeploymentParameters shows password when swithc is provided"{
+    It "Get-ISHDeploymentParameters shows password when switch is provided"{
         #Arrange
         $params = @{Original = $true; Changed = $false; Showpassword  = $true}
         

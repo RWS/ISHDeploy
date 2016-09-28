@@ -45,7 +45,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugSkipVersion\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SKIPVERSION</DefineConstants>
-    <DocumentationFile>bin\Debug\ISHDeploy.12.0.0.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\ISHDeploy.12.0.1.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -75,7 +75,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Operations\InternalSTSLogin.cs" />
+    <Compile Include="Business\Enums\ButtonBarType.cs" />
+    <Compile Include="Business\Enums\CardType.cs" />
+    <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
+    <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -130,7 +133,13 @@
     <Compile Include="Business\Operations\InputParametersXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\InternalSTSLogin.cs">
+      <DependentUpon>BaseOperationPaths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\MoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\RemoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\SetUIElementOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -186,7 +195,17 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Models\UI\SearchMenuItem.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
@@ -216,6 +235,9 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\MoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\RemoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\SetUIElementAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\StringActions\CreateIndexHTMLAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
@@ -301,6 +323,10 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
+    <Compile Include="Models\UI\Input.cs" />
+    <Compile Include="Models\UI\MainMenuBarItem.cs" />
+    <Compile Include="Models\UI\BaseUIElement.cs" />
+    <Compile Include="Models\UI\ButtonBarItem.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
@@ -342,7 +368,7 @@
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*&quot; &quot;$(OutDir)x86&quot;" />
     <Exec Command="if not exist &quot;$(OutDir)amd64&quot; md &quot;$(OutDir)amd64&quot;" />
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*&quot; &quot;$(OutDir)amd64 &quot;" />
-    <Warning Text="Natives copied" />
+    <Message Text="Natives copied" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

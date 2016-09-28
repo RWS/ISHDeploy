@@ -79,8 +79,9 @@
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Save-ISHIntegrationDBSTSSQLServerConfiguration.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Set-ISHSTSConfiguration.Authentication.ps1" />
     <None Include="Articles\Module\FeatureToggle.ps1" />
+    <None Include="Articles\Module\Work with one deployment.md" />
     <None Include="Articles\Module\Work with files.md" />
-    <None Include="Articles\Module\Work with deployments.md" />
+    <None Include="Articles\Module\Work with one or multiple deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="index.md" />
     <None Include="Tools\Copy-Changelog.ps1" />

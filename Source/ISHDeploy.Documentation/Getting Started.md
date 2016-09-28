@@ -108,7 +108,8 @@ Although the module contains help for each cmdlet from within the module, this d
 [Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
 
 Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
-For example [Work with deployments](articles/Module/Work with deployments.md) explains how to work with the core cmdlets of the module.
+For example [Work with one or multiple deployments](articles/Module/Work with one or multiple deployments.md) explains how to work with the core cmdlets of the module against a specific deployment. 
+When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in [Work with one deployment](articles/Module/Work with one deployment.md).
 
 # Open source and feedback
 The module's code and the content of this portal is availabe on [github](https://github.com/sdl/{ModuleName}/). 

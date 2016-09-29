@@ -16,6 +16,7 @@
 
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Operations.ISHUIElement;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Models.UI;
 using System.Management.Automation;
 
@@ -28,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <para type="link">Remove-ISHUISearchMenuButton</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Search" -SearchType Publication -Title "Publications" -UserRole Author, Reviewer</code>
+    /// <code>PS C:\>Set-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Search" -SearchXML "SearchNewGeneral" -Type Publication -UserRole Author, Reviewer</code>
     /// <para>This command add/update search menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
@@ -51,13 +52,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">Search type will choose asp page SearchFrame.asp or SearchNewPublications.asp.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Search type to choose asp page.")]
-        public UISearchMenuSearchType SearchType { get; set; }
-
-        /// <summary>
-        /// <para type="description">Title for a menu.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Title for a menu.")]
-        public string Title { get; set; }
+        public UISearchMenuSearchType Type { get; set; }
 
         /// <summary>
         /// <para type="description">Icon for a menu.</para>
@@ -68,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">SearchXML parameter in action. By default is the same as SearchType.</para>
         /// </summary>
-        [Parameter(HelpMessage = "Action to do after choosing menu.")]
+        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu.")]
         public string SearchXML { get; set; }
 
         /// <summary>
@@ -77,21 +72,29 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public override void ExecuteCmdlet()
         {
             string searchType;
-            if (SearchType == UISearchMenuSearchType.Frame)
+            if (Type == UISearchMenuSearchType.Default)
             {
                 searchType = "SearchFrame";
+                if(Icon == null)
+                    Icon = "./UIFramework/search.32x32.png";
             }
             else
             {
                 searchType = "SearchNewPublications";
+                if(Icon == null)
+                    Icon = "./UIFramework/search_publication_32_color.png";
             }
 
-            if (SearchXML == null)
+
+            //generate warning if file does not exist
+            string projectSuffix = ObjectFactory.GetInstance<IDataAggregateHelper>().GetInputParameters(ISHDeployment.Name).ProjectSuffix;
+            string fullFileName = ISHDeployment.WebPath + $@"\Web{projectSuffix}\Author\ASP\XSL\{SearchXML}.xml";
+            if (!ObjectFactory.GetInstance<IFileManager>().FileExists(fullFileName))
             {
-                SearchXML = searchType;
+                Logger.WriteWarning($"File {SearchXML}.xml does not exist");
             }
 
-            string action = $"{searchType}.asp?SearchXml={SearchXML}&amp;Title={Title}";
+            string action = $"{searchType}.asp?SearchXml={SearchXML}&Title={Label}";// '&' will be serialized as '&amp;'
             var model = new SearchMenuItem(Label, UserRole, Icon, action);
             var setOperation = new SetUIElementOperation(Logger, ISHDeployment, model);
             setOperation.Run();

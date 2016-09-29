@@ -86,9 +86,9 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             }
 
 
-            //generate warning if file does not exist
+            // Generate warning if file does not exist
             string projectSuffix = ObjectFactory.GetInstance<IDataAggregateHelper>().GetInputParameters(ISHDeployment.Name).ProjectSuffix;
-            string fullFileName = ISHDeployment.WebPath + $@"\Web{projectSuffix}\Author\ASP\XSL\{SearchXML}.xml";
+            string fullFileName =  $@"{ISHDeployment.WebPath}\Web{projectSuffix}\Author\ASP\XSL\{SearchXML}.xml";
             if (!ObjectFactory.GetInstance<IFileManager>().FileExists(fullFileName))
             {
                 Logger.WriteWarning($"File {SearchXML}.xml does not exist");

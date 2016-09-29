@@ -1,22 +1,26 @@
-# Version notes
+# Release notes
 
 ## stable-1.2
 1. General 
     1. Cmdlets
-	      - `Set-ISHUIButtonBar` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
-	      - `Remove-ISHUIButtonBar` . **[New]**
-	      - `Move-ISHUIButtonBar` . **[New]**
-	      - `Move-ISHUIMainMenuButton` . **[New]**
-	      - `Remove-ISHUIMainMenuButton` . **[New]**
-	      - `Set-ISHUIMainMenuButton` . **[New]**
-	      - `Move-ISHUISearchMenuButton` . **[New]**
-	      - `Remove-ISHUISearchMenuButton` . **[New]**
-	      - `Set-ISHUISearchMenuButton` . **[New]**
-              - For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
+	    - `Set-ISHUIButtonBar` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
+	    - `Remove-ISHUIButtonBar` . **[New]**
+	    - `Move-ISHUIButtonBar` . **[New]**
+	    - `Move-ISHUIMainMenuButton` . **[New]**
+	    - `Remove-ISHUIMainMenuButton` . **[New]**
+	    - `Set-ISHUIMainMenuButton` . **[New]**
+	    - `Move-ISHUISearchMenuButton` . **[New]**
+	    - `Remove-ISHUISearchMenuButton` . **[New]**
+	    - `Set-ISHUISearchMenuButton` . **[New]**
+		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
     2. Documentation - Articles
-              - New article on how to work with one deployment. **[Update]**
+		- New article on how to work with one deployment. **[Update]**
+		- Reorganize former "Configuring features using the module" article into three more specialized. **[Update]**
+			- Toggling Web Components
+			- Configuring ISHCM web UI menu bars
+			- Configuring ISHCM web UI button bars
 
 ## stable-1.1
 

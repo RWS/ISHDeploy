@@ -133,14 +133,14 @@ Describe "Testing ISHUISearchMenuButton"{
 
     It "Set search menu button"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; Type = "Default"; SearchXML = "SearchNewGeneralNotExist" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Type = "Default"; SearchXML = "SearchNewGeneralNotExist" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params -WarningVariable Warning
         #Assert
         $item = getSearchMenuButton -Label $params.Label
         $item.Label | Should be $params.Label
         $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=$testLabelName"
-        $item.Icon | Should be $params.Icon
+        $item.Icon | Should be "./UIFramework/search.32x32.png"
         $item.UserRole[0] | Should Match $params.UserRole[0]
         $item.UserRole[1] | Should Match $params.UserRole[1]
         $Warning | Should be "File SearchNewGeneralNotExist.xml does not exist" 

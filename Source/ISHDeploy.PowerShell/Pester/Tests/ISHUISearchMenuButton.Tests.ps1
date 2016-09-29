@@ -133,13 +133,13 @@ Describe "Testing ISHUISearchMenuButton"{
 
     It "Set search menu button"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
         $item = getSearchMenuButton -Label $params.Label
         $item.Label | Should be $params.Label
-        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=TestTitle"
+        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=$testLabelName"
         $item.Icon | Should be $params.Icon
         $item.UserRole[0] | Should Match $params.UserRole[0]
         $item.UserRole[1] | Should Match $params.UserRole[1]
@@ -147,13 +147,13 @@ Describe "Testing ISHUISearchMenuButton"{
 
     It "Set search menu button if SearchXML is null"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
         $item = getSearchMenuButton -Label $params.Label
         $item.Label | Should be $params.Label
-        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchFrame&amp;Title=TestTitle"
+        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchFrame&amp;Title=$testLabelName"
         $item.Icon | Should be $params.Icon
         $item.UserRole[0] | Should Match $params.UserRole[0]
         $item.UserRole[1] | Should Match $params.UserRole[1]
@@ -161,7 +161,7 @@ Describe "Testing ISHUISearchMenuButton"{
 
     It "Remove search menu button"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         getCountSearchMenuButton -Label $params.Label | Should be 1
@@ -175,7 +175,7 @@ Describe "Testing ISHUISearchMenuButton"{
     It "Sets search menu button with no XML"{
         #Arrange
         Rename-Item "$xmlPath\SearchMenuBar.xml" "_SearchMenuBar.xml"
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
         #Rollback
@@ -188,7 +188,7 @@ Describe "Testing ISHUISearchMenuButton"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveSearchMenuBar -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         Rename-Item "$xmlPath\SearchMenuBar.xml" "_SearchMenuBar.xml"
         New-Item "$xmlPath\SearchMenuBar.xml" -type file |Out-Null
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
         #Rollback
@@ -211,7 +211,7 @@ Describe "Testing ISHUISearchMenuButton"{
 
     It "Set existing search menu button"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -399,11 +399,11 @@ Describe "Testing ISHUISearchMenuButton"{
 
 	It "Update existing item"{
         #Arrange
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         $item = getSearchMenuButton -Label $params.Label
         $item.UserRole.Count | Should Be 2
-        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator", "Reviewer"); Title = "TestTitle"; Icon = "icon.png"; SearchType = "Frame"; SearchXML = "SearchNewGeneral" }
+        $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator", "Reviewer"); Icon = "icon.png"; SearchType = "Default"; SearchXML = "SearchNewGeneral" }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetSearchMenuButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert

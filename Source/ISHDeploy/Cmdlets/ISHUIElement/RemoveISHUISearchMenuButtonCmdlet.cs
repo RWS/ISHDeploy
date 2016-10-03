@@ -22,19 +22,19 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
 	///		<para type="synopsis">Removes button from SearchMenuBar.</para>
-	///		<para type="description">The Removes-ISHUISearchMenuBarItem cmdlet removes Buttons definitions from Content Manager deployment.</para>
-	///		<para type="link">Set-ISHUISearchMenuBarItem</para>
-	///		<para type="link">Move-ISHUISearchMenuBarItem</para>
+	///		<para type="description">The Removes-ISHUISearchMenuButton cmdlet removes Buttons definitions from Content Manager deployment.</para>
+	///		<para type="link">Set-ISHUISearchMenuButton</para>
+	///		<para type="link">Move-ISHUISearchMenuButton</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHUISearchMenuBarItem -ISHDeployment $deployment -Label "Translation"</code>
+	///		<code>PS C:\>Remove-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Translation"</code>
 	///		<para>Removes definition of the button with label "Translation".
 	/// This command removes XML definitions from EventMonitor.
 	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	///		</para>
 	/// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHUISearchMenuBarItem")]
-    public sealed class RemoveISHUISearchMenuBarItemCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Remove, "ISHUISearchMenuButton")]
+    public sealed class RemoveISHUISearchMenuButtonCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Label of menu item.</para>

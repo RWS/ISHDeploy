@@ -15,37 +15,37 @@
  */
 ﻿using System.Collections.Generic;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
+using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
 using ISHDeploy.Models.ISHXmlNodes;
 
-namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
+namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
     /// <summary>
     ///		<para type="synopsis">Update or add a new EventMonitor tab.</para>
-    ///		<para type="description">The Set-ISHUIEventMonitorMenuBarItem cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
+    ///		<para type="description">The Set-ISHUIEventMonitorTab cmdlet updates or adds new Tab definitions to Content Manager deployment.</para>
     ///		<para type="description">If Icon is not specified, the default value '~/UIFramework/events.32x32.png' is taken.</para>
     ///		<para type="description">If UserRole is not specified, the default value 'Administrator' is taken.</para>
     ///		<para type="description">If ModifiedSinceMinutesFilter is not specified, the default value '1440' is taken.</para>
     ///		<para type="description">If SelectedStatusFilter is not specified, the default value 'Recent' is taken.</para>
-    ///		<para type="link">Move-ISHUIEventMonitorMenuBarItem</para>
-    ///		<para type="link">Remove-ISHUIEventMonitorMenuBarItem</para>
+    ///		<para type="link">Move-ISHUIEventMonitorTab</para>
+    ///		<para type="link">Remove-ISHUIEventMonitorTab</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole @("Administrator","Author") -Description "Tab using all available parameters"</code>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole @("Administrator","Author") -Description "Tab using all available parameters"</code>
     ///		<para>Sets new tab with all sets of available and provided parameters.</para>
     ///		<para>This command sets XML definitions to EventMonitor.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
     ///		<para>Sets new tab with default set of provided parameters.</para>
     ///		<para>This command sets XML definitions to EventMonitor.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>/// 
-    [Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorMenuBarItem")]
-    public class SetISHUIEventMonitorMenuBarItemCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Set, "ISHUIEventMonitorTab")]
+    public class SetISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
     {
 		/// <summary>
 		/// Status filter enum
@@ -145,7 +145,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        var operation = new SetISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, new EventLogMenuItem()
+	        var operation = new SetISHUIEventMonitorTabOperation(Logger, ISHDeployment, new EventLogMenuItem()
 			{
 				Label = Label,
 				Description = Description,

@@ -3,15 +3,15 @@
 ## stable-1.2
 1. General 
     1. Cmdlets
-	      - `Set-ISHUIButtonBarItem` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
-	      - `Remove-ISHUIButtonBarItem` . **[New]**
-	      - `Move-ISHUIButtonBarItem` . **[New]**
-	      - `Move-ISHUISearchMenuBarItem` . **[New]**
-	      - `Remove-ISHUISearchMenuBarItem` . **[New]**
-	      - `Set-ISHUISearchMenuBarItem` . **[New]**
-	      - `Move-ISHUISearchMenuBarItem` . **[New]**
-	      - `Remove-ISHUISearchMenuBarItem` . **[New]**
-	      - `Set-ISHUISearchMenuBarItem` . **[New]**
+	      - `Set-ISHUIButtonBar` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
+	      - `Remove-ISHUIButtonBar` . **[New]**
+	      - `Move-ISHUIButtonBar` . **[New]**
+	      - `Move-ISHUIMainMenuButton` . **[New]**
+	      - `Remove-ISHUIMainMenuButton` . **[New]**
+	      - `Set-ISHUIMainMenuButton` . **[New]**
+	      - `Move-ISHUISearchMenuButton` . **[New]**
+	      - `Remove-ISHUISearchMenuButton` . **[New]**
+	      - `Set-ISHUISearchMenuButton` . **[New]**
               - For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
@@ -62,7 +62,7 @@
 	      - All Get-ISH* cmdlets e.g. `Get-ISHDeployment` can be piped. e.g. `Get-ISHDeployment | ForEach-Object {$_}`. **[Update]**
 1. Feature toggle
     1. Cmdlets
-	      - Set-ISHUIEventMonitorMenuBarItem can accept multiple user roles in parameter `-UserRole`. **[Update]**
+	      - Set-ISHUIEventMonitorTab can accept multiple user roles in parameter `-UserRole`. **[Update]**
 1. ISHSTS
     1. Cmdlets
 	      - Set-ISHSTSConfiguration. (Fixed) **[Update]**
@@ -119,9 +119,9 @@ Initial release
 	      - Enable-ISHUIContentEditor
 	      - Enable-ISHUIQualityAssistant
 	      - Enable-ISHUITranslationJob
-	      - Move-ISHUIEventMonitorMenuBarItem
-	      - Remove-ISHUIEventMonitorMenuBarItem
-	      - Set-ISHUIEventMonitorMenuBarItem
+	      - Move-ISHUIEventMonitorTab
+	      - Remove-ISHUIEventMonitorTab
+	      - Set-ISHUIEventMonitorTab
 	      - Test-ISHContentEditor
     1. Articles
 	      - Work with UI Features  

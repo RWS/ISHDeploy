@@ -92,7 +92,7 @@ $scriptBlockSetEventMonitor = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy @parametersHash
+    Set-ISHUIEventMonitorTab -ISHDeployment $ishDeploy @parametersHash
 }
 
 $scriptBlockMoveEventMonitor = {
@@ -107,17 +107,17 @@ $scriptBlockMoveEventMonitor = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     if ($switchState -eq "First"){
-        Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy @parametersHash -First
+        Move-ISHUIEventMonitorTab -ISHDeployment $ishDeploy @parametersHash -First
     }
     elseif($switchState -eq "Last"){
-        Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy @parametersHash -Last
+        Move-ISHUIEventMonitorTab -ISHDeployment $ishDeploy @parametersHash -Last
     }
     else{
-        Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy @parametersHash
+        Move-ISHUIEventMonitorTab -ISHDeployment $ishDeploy @parametersHash
     }
 
     
-    #Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy -Label $label -EventTypesFilter $eventTypesFilter -Icon $icon -SelectedStatusFilter $selectedStatusFilter -ModifiedSinceMinutesFilter $modifiedSinceMinutesFilter -UserRole $userRole -Description $description
+    #Set-ISHUIEventMonitorTab -ISHDeployment $ishDeploy -Label $label -EventTypesFilter $eventTypesFilter -Icon $icon -SelectedStatusFilter $selectedStatusFilter -ModifiedSinceMinutesFilter $modifiedSinceMinutesFilter -UserRole $userRole -Description $description
 }
 
 $scriptBlockRemoveEventMonitorTab= {
@@ -132,10 +132,10 @@ $scriptBlockRemoveEventMonitorTab= {
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHUIEventMonitorMenuBarItem -ISHDeployment $ishDeploy -Label $label
+    Remove-ISHUIEventMonitorTab -ISHDeployment $ishDeploy -Label $label
 }
 
-Describe "Testing ISHUIEventMonitorMenuBarItem"{
+Describe "Testing ISHUIEventMonitorTab"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "EventMonitorMenuBar.xml"
 		UndoDeploymentBackToVanila $testingDeploymentName $true

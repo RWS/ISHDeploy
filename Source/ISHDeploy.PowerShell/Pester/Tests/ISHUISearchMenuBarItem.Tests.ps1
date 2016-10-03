@@ -139,7 +139,7 @@ Describe "Testing ISHUISearchMenuBarItem"{
         #Assert
         $item = getSearchMenuButton -Label $params.Label
         $item.Label | Should be $params.Label
-        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=$testLabelName"
+        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneralNotExist&Title=$testLabelName"
         $item.Icon | Should be "./UIFramework/search.32x32.png"
         $item.UserRole[0] | Should Match $params.UserRole[0]
         $item.UserRole[1] | Should Match $params.UserRole[1]

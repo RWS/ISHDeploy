@@ -68,5 +68,14 @@ namespace ISHDeploy.Models.UI
         /// </value>
         [XmlIgnore]
         public string XPathFormat { get; protected set; }
+
+        /// <summary>
+        /// Gets the format of XPath to define special node to create new element before this special element in XML document.
+        /// </summary>
+        /// <value>
+        /// The root path.
+        /// </value>
+        [XmlIgnore]
+        public string InsertBeforeSpecialXPath { get; protected set; }
     }
 }

@@ -3,23 +3,19 @@
 ## stable-1.2
 1. General 
     1. Cmdlets
-	      - `Set-ISHUIButtonBarItem` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
-	      - `Remove-ISHUIButtonBarItem` . **[New]**
-	      - `Move-ISHUIButtonBarItem` . **[New]**
-	      - `Move-ISHUIMainMenuBarItem` . **[New]**
-	      - `Remove-ISHUIMainMenuBarItem` . **[New]**
-	      - `Set-ISHUIMainMenuBarItem` . **[New]**
-	      - `Move-ISHUISearchMenuBarItem` . **[New]**
-	      - `Remove-ISHUISearchMenuBarItem` . **[New]**
-	      - `Set-ISHUISearchMenuBarItem` . **[New]**
-              - For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
-			- When there is only one available deployment detected then this one will be used.
-			- Where there are more than one available deployments detected then the cmdlet will throw an error.
-    2. Documentation - Articles
-              - New article on how to work with one deployment. **[Update]**
-	1. Documentation - Commands
-		- Fixed bug where parameter set names showed up as *UNNAMED_PARAMETER_SET_1*. **[Update]**
-
+	      - Changed name from `Set-ISHUIButtonBar` to `Set-ISHUIButtonBarItem` .
+	      - Changed name from `Remove-ISHUIButtonBar` to `Remove-ISHUIButtonBarItem` .
+	      - Changed name from `Move-ISHUIButtonBar` to `Move-ISHUIButtonBarItem` .
+	      - Changed name from `Move-ISHUIMainMenuButton` to `Move-ISHUIMainMenuBarItem` .
+	      - Changed name from `Remove-ISHUIMainMenuButton` to `Remove-ISHUIMainMenuBarItem` .
+	      - Changed name from `Set-ISHUIMainMenuButton` to `Set-ISHUIMainMenuBarItem` .
+	      - Changed name from `Move-ISHUISearchMenuButton` to `Move-ISHUISearchMenuBarItem` .
+	      - Changed name from `Remove-ISHUISearchMenuButton` to `Remove-ISHUISearchMenuBarItem` .
+	      - Changed name from `Set-ISHUISearchMenuButton` to `Set-ISHUISearchMenuBarItem` .
+	      - Changed name from `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem` .
+	      - Changed name from `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem` .
+	      - Changed name from `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem` .
+		  - Changed signature of  `Set-ISHUISearchMenuBarItem` cmdlet.
 ## stable-1.1
 
 **Summary of release**

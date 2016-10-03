@@ -17,6 +17,8 @@
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
     2. Documentation - Articles
               - New article on how to work with one deployment. **[Update]**
+	1. Documentation - Commands
+		- Fixed bug where parameter set names showed up as *UNNAMED_PARAMETER_SET_1*. **[Update]**
 
 ## stable-1.1
 

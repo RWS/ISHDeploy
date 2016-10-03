@@ -35,19 +35,21 @@ if (-not (Get-Module -ListAvailable -Name platyPS))
 
 try
 {
-	Import-Module platyPS
-	Get-Command -Module platyPS | Select-Object -ExpandProperty Name
+	$modulePath=Join-Path $ModuleDir "$ModuleName.psd1"
+	Import-Module $modulePath
+	Write-Verbose "Imported module from $modulePath"
 
-	Write-Verbose "Processing maml file ($MamlFilePath)"
-	# Generating markdown form maml file
-	New-MarkdownHelp -MamlFile  $MamlFilePath -OutputFolder $ExportPath
-
-	if(!(Test-Path $ExportPath ))
+	if(Test-Path $ExportPath)
 	{
-		Write-Host "Creating Module Folder at '$ExportPath'."
-		New-Item -ItemType directory -Path $ExportPath
+		Remove-Item "$ExportPath" -Recurse -Force	
 	}
+	New-Item -ItemType Directory -Path $ExportPath 
+	Write-Verbose "Reset export path at $ExportPath."
 	
+	# Generating markdown from module
+	New-MarkdownHelp -Module  $ModuleName -OutputFolder $ExportPath -NoMetadata -Force
+	Write-Verbose "Exported markdown files from $ModuleName in $ExportPath."
+
 	# From schema https://github.com/PowerShell/platyPS/blob/master/platyPS.schema.md
 	# platyPS generates link elements like [{link name}]({link url}) but the {link url} is always empty resulting in ugly links
 	# The following block reads each file and promotes the {link name} to {link url}

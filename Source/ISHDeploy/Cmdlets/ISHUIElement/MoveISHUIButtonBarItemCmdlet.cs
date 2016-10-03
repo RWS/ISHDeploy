@@ -21,37 +21,32 @@ using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
-
     /// <summary>
-    ///		<para type="synopsis">Manipulates with definitions in MainMenuBar.</para>
-    ///		<para type="description">The Move-ISHUIMainMenuButton cmdlet moves Buttons definitions in Content Manager deployment.</para>
-    ///		<para type="link">Set-ISHUIMainMenuButton</para>
-    ///		<para type="link">Remove-ISHUIMainMenuButton</para>
+    /// <para type="synopsis">Move main menu item.</para>
+    /// <para type="description">The Move-ISHUIButtonBarItem cmdlet remove exist menu item.</para>
+    /// <para type="link">Remove-ISHUIButtonBarItem</para>    
+    /// <para type="link">Set-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -First</code>
-    ///		<para>Moves definition of the "Publish" to the top.</para>
+    /// <code>PS C:\>Move-ISHUIButtonBarItem -ISHDeployment $deployment -Name "Test"</code>
+    /// <para>This command move main menu item.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -Last</code>
-    ///		<para>Moves definition of the "Publish" to the bottom.</para>
-    /// </example>
-    /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
-    ///		<para>Moves definition of the "Translation" after "Publish".</para> 
-    /// </example>
-    /// <para>This command manipulates XML definitions nodes in MainMenuBar.
-    ///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-    /// </para>
-    [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuButton")]
-    public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Move, "ISHUIButtonBarItem")]
+    public sealed class MoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
-        /// <para type="description">Label of menu item.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Menu Label")]
-        public string Label { get; set; }
-        
+		/// <para type="description">Name of Button Bar.</para>
+		/// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Button bar name")]
+        public string Name { get; set; }
+
+        /// <summary>
+		/// <para type="description">Type or file name correspond to Button Bar.</para>
+		/// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
+        public ButtonBarType ButtonBar { get; set; }
+
         /// <summary>
 		/// <para type="description">Menu item move to the last position.</para>
 		/// </summary>
@@ -78,24 +73,24 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            UIElementMoveDirection operationType;
+            UIElementMoveDirection direction;
             switch (ParameterSetName)
             {
                 case "Last":
-                    operationType = UIElementMoveDirection.Last;
+                    direction = UIElementMoveDirection.Last;
                     break;
                 case "First":
-                    operationType = UIElementMoveDirection.First;
+                    direction = UIElementMoveDirection.First;
                     break;
                 case "After":
-                    operationType = UIElementMoveDirection.After;
+                    direction = UIElementMoveDirection.After;
                     break;
                 default:
-                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
+                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
             }
 
-            var model = new MainMenuBarItem(Label);
-            var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, operationType, After);
+            var model = new ButtonBarItem(ButtonBar, Name);
+            var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, direction, After);
             operation.Run();
         }
     }

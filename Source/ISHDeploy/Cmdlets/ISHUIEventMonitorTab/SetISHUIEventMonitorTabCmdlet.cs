@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using ISHDeploy.Business.Operations.ISHUIElement;
+using ISHDeploy.Models.UI;
+using System.Collections.Generic;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
-using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 {
@@ -31,14 +31,14 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
     ///		<para type="link">Remove-ISHUIEventMonitorTab</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole @("Administrator","Author") -Description "Tab using all available parameters"</code>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "All Parameters" -Icon "~/UIFramework/new-tab.job.32x32.png" -UserRole @("Administrator","Author") -EventTypesFilter @("EXPORTFORPUBLICATION", "EXPORTFORPUBLICATIONPDF", "EXPORTFORPUBLICATIONZIP") -SelectedStatusFilter "All" -ModifiedSinceMinutesFilter "3600" -UserRole @("Administrator","Author") -Description "Tab using all available parameters"</code>
     ///		<para>Sets new tab with all sets of available and provided parameters.</para>
     ///		<para>This command sets XML definitions to EventMonitor.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters" -UserRole @("Administrator","Author")</code>
     ///		<para>Sets new tab with default set of provided parameters.</para>
     ///		<para>This command sets XML definitions to EventMonitor.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
@@ -130,9 +130,9 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
 		/// <summary>
 		/// <para type="description">Action of menu item. Default value is 'Administrator'.</para>
 		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Action of menu item")]
+		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-        public string[] UserRole { get; set; } = new string[] {"Administrator"};
+        public string[] UserRole { get; set; }
 
 		/// <summary>
 		/// <para type="description">User role description.</para>
@@ -145,23 +145,22 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        var operation = new SetISHUIEventMonitorTabOperation(Logger, ISHDeployment, new EventLogMenuItem()
-			{
-				Label = Label,
-				Description = Description,
-				Icon = Icon,
-				UserRoles = UserRole, // we need single form in powershell
-				Action = new EventLogMenuItemAction()
-				{
-					SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],
-					ModifiedSinceMinutesFilter = ModifiedSinceMinutesFilter,
-					SelectedMenuItemTitle = Label,
-					StatusFilter = StatusFilter.All.ToString(), // By default 'All' is used
-					EventTypesFilter = EventTypesFilter
-				}
-			});
+            var model = new EventLogMenuItem(
+                Label,
+                UserRole, // we need single form in powershell
+                Icon = Icon,
+                new Models.ISHXmlNodes.EventLogMenuItemAction()
+                {
+                    SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],
+                    ModifiedSinceMinutesFilter = ModifiedSinceMinutesFilter,
+                    SelectedMenuItemTitle = Label,
+                    StatusFilter = StatusFilter.All.ToString(), // By default 'All' is used
+                    EventTypesFilter = EventTypesFilter
+                }.ToQueryString(),
+                Description
+			);
 
-			operation.Run();
+            new SetUIElementOperation(Logger, ISHDeployment, model).Run();
         }
     }
 }

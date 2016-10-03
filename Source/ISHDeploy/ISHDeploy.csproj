@@ -199,6 +199,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Models\UI\EventLogMenuItem.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />

@@ -18,13 +18,13 @@ using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models.ISHXmlNodes;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
+namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 {
 	/// <summary>
 	/// Sets Event Monitor Tab.
 	/// </summary>
 	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
+	public class SetISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker
@@ -32,12 +32,12 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHUIEventMonitorTabOperation" /> class.
+        /// Initializes a new instance of the <see cref="SetISHUIEventMonitorMenuBarItemOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="menuItem">The menu item object.</param>
-        public SetISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
+        public SetISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
             base(logger, ishDeployment)
 		{
 			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");

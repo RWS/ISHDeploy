@@ -28,6 +28,6 @@
         /// <summary>
         /// The SearchFrame.asp
         /// </summary>
-        Frame,
+        Default,
     }
 }

@@ -23,17 +23,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
     /// <para type="synopsis">Move main menu item.</para>
-    /// <para type="description">The Move-ISHUIButtonBar cmdlet remove exist menu item.</para>
-    /// <para type="link">Remove-ISHUIButtonBar</para>    
-    /// <para type="link">Set-ISHUIButtonBar</para>
+    /// <para type="description">The Move-ISHUIButtonBarItem cmdlet remove exist menu item.</para>
+    /// <para type="link">Remove-ISHUIButtonBarItem</para>    
+    /// <para type="link">Set-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Move-ISHUIButtonBar -ISHDeployment $deployment -Name "Test"</code>
+    /// <code>PS C:\>Move-ISHUIButtonBarItem -ISHDeployment $deployment -Name "Test"</code>
     /// <para>This command move main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Move, "ISHUIButtonBar")]
-    public sealed class MoveISHUIButtonBarCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Move, "ISHUIButtonBarItem")]
+    public sealed class MoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
 		/// <para type="description">Name of Button Bar.</para>
@@ -86,7 +86,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     direction = UIElementMoveDirection.After;
                     break;
                 default:
-                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarCmdlet)} should be defined.");
+                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
             }
 
             var model = new ButtonBarItem(ButtonBar, Name);

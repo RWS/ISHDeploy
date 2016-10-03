@@ -22,19 +22,19 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
     ///		<para type="synopsis">Update or add a new MainMenuBar button.</para>
-    ///		<para type="description">The Set-ISHUIMainMenuButton cmdlet updates or adds new Button definitions to Content Manager deployment.</para>
-    ///		<para type="link">Move-ISHUIMainMenuButton</para>
-    ///		<para type="link">Remove-ISHUIMainMenuButton</para>
+    ///		<para type="description">The Set-ISHUIMainMenuBarItem cmdlet updates or adds new Button definitions to Content Manager deployment.</para>
+    ///		<para type="link">Move-ISHUIMainMenuBarItem</para>
+    ///		<para type="link">Remove-ISHUIMainMenuBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Inbox" -Action "ShowSubMenu.asp?Menu=2" -UserRole Author, Reviewer</code>
+    /// <code>PS C:\>Set-ISHUIMainMenuBarItem -ISHDeployment $deployment -Label "Inbox" -Action "ShowSubMenu.asp?Menu=2" -UserRole Author, Reviewer</code>
     ///		<para>This command add/update main menu item.</para>
     ///		<para>This command sets XML definitions to MainMenuBar.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuButton")]
-    public sealed class SetISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuBarItem")]
+    public sealed class SetISHUIMainMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Label of menu item.</para>

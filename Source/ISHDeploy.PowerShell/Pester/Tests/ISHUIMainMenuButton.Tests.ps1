@@ -86,7 +86,7 @@ $scriptBlockSetMainMenuButton = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHUIMainMenuButton -ISHDeployment $ishDeploy @parametersHash
+    Set-ISHUIMainMenuBarItem -ISHDeployment $ishDeploy @parametersHash
 }
 
 $scriptBlockMoveMainMenuButton = {
@@ -101,13 +101,13 @@ $scriptBlockMoveMainMenuButton = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     if ($switchState -eq "First"){
-        Move-ISHUIMainMenuButton -ISHDeployment $ishDeploy @parametersHash -First
+        Move-ISHUIMainMenuBarItem -ISHDeployment $ishDeploy @parametersHash -First
     }
     elseif($switchState -eq "Last"){
-        Move-ISHUIMainMenuButton -ISHDeployment $ishDeploy @parametersHash -Last
+        Move-ISHUIMainMenuBarItem -ISHDeployment $ishDeploy @parametersHash -Last
     }
     else{
-        Move-ISHUIMainMenuButton -ISHDeployment $ishDeploy @parametersHash
+        Move-ISHUIMainMenuBarItem -ISHDeployment $ishDeploy @parametersHash
     }
 }
 
@@ -123,10 +123,10 @@ $scriptBlockRemoveMainMenuBar= {
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHUIMainMenuButton -ISHDeployment $ishDeploy -Label $label
+    Remove-ISHUIMainMenuBarItem -ISHDeployment $ishDeploy -Label $label
 }
 
-Describe "Testing ISHUIMainMenuButton"{
+Describe "Testing ISHUIMainMenuBarItem"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "MainMenuBar.xml"
 		UndoDeploymentBackToVanila $testingDeploymentName $true

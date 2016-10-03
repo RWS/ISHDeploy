@@ -15,33 +15,33 @@
  */
 ﻿using System;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
+using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
 
-namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
+namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 {
 	/// <summary>
 	///		<para type="synopsis">Manipulates with definitions in EventMonitorTab.</para>
-	///		<para type="description">The Move-ISHUIEventMonitorTab cmdlet moves Tabs definitions in Content Manager deployment.</para>
-	///		<para type="link">Set-ISHUIEventMonitorTab</para>
-	///		<para type="link">Remove-ISHUIEventMonitorTab</para>
+	///		<para type="description">The Move-ISHUIEventMonitorMenuBarItem cmdlet moves Tabs definitions in Content Manager deployment.</para>
+	///		<para type="link">Set-ISHUIEventMonitorMenuBarItem</para>
+	///		<para type="link">Remove-ISHUIEventMonitorMenuBarItem</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Publish" -First</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Publish" -First</code>
 	///		<para>Moves definition of the "Publish" to the top.</para>
 	/// </example>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Publish" -Last</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Publish" -Last</code>
 	///		<para>Moves definition of the "Publish" to the bottom.</para>
 	/// </example>
 	/// <example>
-	///		<code>PS C:\>Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
+	///		<code>PS C:\>Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
 	///		<para>Moves definition of the "Translation" after "Publish".</para> 
 	/// </example>
 	/// <para>This command manipulates XML definitions nodes in EventMonitor.
 	///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	/// </para>
-	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorTab")]
-    public class MoveISHUIEventMonitorTabCmdlet : BaseHistoryEntryCmdlet
+	[Cmdlet(VerbsCommon.Move, "ISHUIEventMonitorMenuBarItem")]
+    public class MoveISHUIEventMonitorMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
 		/// <summary>
 		/// <para type="description">Label of menu item.</para>
@@ -76,21 +76,21 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorTab
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        MoveISHUIEventMonitorTabOperation operation;
+	        MoveISHUIEventMonitorMenuBarItemOperation operation;
             
 			switch (ParameterSetName)
 	        {
 				case "Last":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertAfter);
 					break;
 				case "First":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertBefore);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertBefore);
 					break;
 				case "After":
-					operation = new MoveISHUIEventMonitorTabOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorTabOperation.OperationType.InsertAfter, After);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertAfter, After);
 					break;
 				default:
-					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorTabCmdlet)} should be defined.");
+					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorMenuBarItemCmdlet)} should be defined.");
 	        }
 
 			operation.Run();

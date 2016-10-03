@@ -17,13 +17,13 @@
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
+namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 {
 	/// <summary>
 	/// Moves Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class MoveISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
+	public class MoveISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// Operation type enum
@@ -49,14 +49,14 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation" /> class.
+        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorMenuBarItemOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="label">Label of the element</param>
         /// <param name="operationType">Type of the operation.</param>
         /// <param name="targetLabel">The target label.</param>
-        public MoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, OperationType operationType, string targetLabel = null) :
+        public MoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, OperationType operationType, string targetLabel = null) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");

@@ -24,27 +24,27 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 
     /// <summary>
     ///		<para type="synopsis">Manipulates with definitions in MainMenuBar.</para>
-    ///		<para type="description">The Move-ISHUIMainMenuButton cmdlet moves Buttons definitions in Content Manager deployment.</para>
-    ///		<para type="link">Set-ISHUIMainMenuButton</para>
-    ///		<para type="link">Remove-ISHUIMainMenuButton</para>
+    ///		<para type="description">The Move-ISHUIMainMenuBarItem cmdlet moves Buttons definitions in Content Manager deployment.</para>
+    ///		<para type="link">Set-ISHUIMainMenuBarItem</para>
+    ///		<para type="link">Remove-ISHUIMainMenuBarItem</para>
     /// </summary>
     /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -First</code>
+    ///		<code>PS C:\>Move-ISHUIMainMenuBarItem -ISHDeployment $deployment -Label "Publish" -First</code>
     ///		<para>Moves definition of the "Publish" to the top.</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Publish" -Last</code>
+    ///		<code>PS C:\>Move-ISHUIMainMenuBarItem -ISHDeployment $deployment -Label "Publish" -Last</code>
     ///		<para>Moves definition of the "Publish" to the bottom.</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Move-ISHUIMainMenuButton -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
+    ///		<code>PS C:\>Move-ISHUIMainMenuBarItem -ISHDeployment $deployment -Label "Translation" -After "Publish"</code>
     ///		<para>Moves definition of the "Translation" after "Publish".</para> 
     /// </example>
     /// <para>This command manipulates XML definitions nodes in MainMenuBar.
     ///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// </para>
-    [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuButton")]
-    public sealed class MoveISHUIMainMenuButtonCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Move, "ISHUIMainMenuBarItem")]
+    public sealed class MoveISHUIMainMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Label of menu item.</para>
@@ -91,7 +91,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     operationType = UIElementMoveDirection.After;
                     break;
                 default:
-                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuButtonCmdlet)} should be defined.");
+                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIMainMenuBarItemCmdlet)} should be defined.");
             }
 
             var model = new MainMenuBarItem(Label);

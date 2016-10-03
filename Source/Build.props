@@ -3,11 +3,11 @@
     <Major>1</Major>
     <Minor>1</Minor>
     <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
-    <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmm"))</AdvBuild>
+    <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmmss"))</AdvBuild>
     <Revision>0</Revision>
     <ModuleVersion>$(Major).$(Minor).0.$(Revision)</ModuleVersion>
     <ModuleBuildVersion>$(Major).$(Minor).$(Build).$(Revision)</ModuleBuildVersion>
-    <ModuleManifestVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</ModuleManifestVersion>
+    <ModuleManifestVersion>$(Major).$(Minor).$(AdvBuild).$(Revision)</ModuleManifestVersion>
     <ProductName>ISHDeploy</ProductName>
     <ReleaseYear>2016</ReleaseYear>
     <SupportedCMVersion>12.0.1</SupportedCMVersion>

@@ -573,7 +573,18 @@ namespace ISHDeploy.Data.Managers
                 }
                 else
                 {
-                    memberList.Last().AddAfterSelf(element);
+                    // to put element before special element if it is mentioned
+                    if (model.InsertBeforeSpecialXPath != null)
+                    {
+                        var foundSpecialElement = SelectSingleNode(ref doc, model.InsertBeforeSpecialXPath);
+
+                        if (foundSpecialElement != null)
+                            foundSpecialElement.AddBeforeSelf(element);
+                        else
+                            memberList.Last().AddAfterSelf(element);
+                    }
+                    else
+                        memberList.Last().AddAfterSelf(element);
                 }
 
                 _fileManager.Save(filePath, doc);
@@ -691,7 +702,7 @@ namespace ISHDeploy.Data.Managers
             }
             _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
         }
-        
+
         /// <summary>
         /// Set element value.
         /// </summary>

@@ -579,12 +579,24 @@ namespace ISHDeploy.Data.Managers
                         var foundSpecialElement = SelectSingleNode(ref doc, model.InsertBeforeSpecialXPath);
 
                         if (foundSpecialElement != null)
-                            foundSpecialElement.AddBeforeSelf(element);
+                        {
+                            // We put element before comment node if it is exist
+                            if (foundSpecialElement.PreviousNode != null && foundSpecialElement.PreviousNode.NodeType == XmlNodeType.Comment)
+                                foundSpecialElement.PreviousNode.AddBeforeSelf(element);
+                            else
+                                foundSpecialElement.AddBeforeSelf(element);
+                        }
                         else
                             memberList.Last().AddAfterSelf(element);
                     }
                     else
                         memberList.Last().AddAfterSelf(element);
+
+                    // If commentary exist we will create it
+                    if (model.CommentNode != null)
+                    {
+                        element.AddBeforeSelf(model.CommentNode);
+                    }
                 }
 
                 _fileManager.Save(filePath, doc);
@@ -594,6 +606,13 @@ namespace ISHDeploy.Data.Managers
             {
                 _logger.WriteDebug("Update UI element", model.XPath, filePath);
                 found.ReplaceWith(element);
+
+                // If commentary exist we update it
+                if (model.CommentNode != null)
+                {
+                    if (element.PreviousNode != null && element.PreviousNode.NodeType == XmlNodeType.Comment)
+                        element.PreviousNode.ReplaceWith(model.CommentNode);
+                }
 
                 _fileManager.Save(filePath, doc);
                 _logger.WriteVerbose($"The element has been updated in file `{filePath}`");

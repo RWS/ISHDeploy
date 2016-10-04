@@ -23,7 +23,7 @@ namespace ISHDeploy.Models.UI
     /// </summary>
     /// <seealso cref="BaseUIElement" />
     [XmlRoot("menuitem", Namespace = "")]
-    public class EventLogMenuItem : BaseUIElement
+    public class EventMonitorMenuBarItem : BaseUIElement
     {
         /// <summary>
         /// Gets or sets the label of the menu item.
@@ -71,21 +71,21 @@ namespace ISHDeploy.Models.UI
         public string Description { set; get; }
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="EventLogMenuItem"/> class from being created.
+        /// Prevents a default instance of the <see cref="EventMonitorMenuBarItem"/> class from being created.
         /// </summary>
-        private EventLogMenuItem()
+        private EventMonitorMenuBarItem()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventLogMenuItem"/> class.
+        /// Initializes a new instance of the <see cref="EventMonitorMenuBarItem"/> class.
         /// </summary>
         /// <param name="label">The label of the menu item.</param>
         /// <param name="userRoles">The users for whom the menu item is available.</param>
         /// <param name="icon">Icon for a menu item.</param>
         /// <param name="action">The action which occurs on click on the menu item.</param>
         /// <param name="description">The description for the menu item.</param>
-        public EventLogMenuItem(string label, string[] userRoles = null, string icon = null, string action = null, string description = null)
+        public EventMonitorMenuBarItem(string label, string[] userRoles = null, string icon = null, string action = null, string description = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\EventMonitorMenuBar.xml";
             NameOfRootElement = "menubar";
@@ -98,7 +98,7 @@ namespace ISHDeploy.Models.UI
             Description = description;
             XPathFormat = "menubar/menuitem[@label='{0}']";
             XPath = string.Format(XPathFormat, Label);
-            //InsertBeforeSpecialXPath = string.Format(XPathFormat, "All Events"); 
+            InsertBeforeSpecialXPath = string.Format(XPathFormat, "All Events"); 
             CommentNode = GetNodeComment();
         }
 

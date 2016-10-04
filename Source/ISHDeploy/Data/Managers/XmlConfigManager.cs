@@ -608,10 +608,9 @@ namespace ISHDeploy.Data.Managers
                 found.ReplaceWith(element);
 
                 // If commentary exist we update it
-                if (model.CommentNode != null)
+                if (model.CommentNode != null && element.PreviousNode != null && element.PreviousNode.NodeType == XmlNodeType.Comment)
                 {
-                    if (element.PreviousNode != null && element.PreviousNode.NodeType == XmlNodeType.Comment)
-                        element.PreviousNode.ReplaceWith(model.CommentNode);
+                    element.PreviousNode.ReplaceWith(model.CommentNode);
                 }
 
                 _fileManager.Save(filePath, doc);

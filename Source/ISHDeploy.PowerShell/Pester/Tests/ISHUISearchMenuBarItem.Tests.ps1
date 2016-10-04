@@ -85,7 +85,7 @@ $scriptBlockSetSearchMenuButton = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHUISearchMenuButton -ISHDeployment $ishDeploy @parametersHash
+    Set-ISHUISearchMenuBarItem -ISHDeployment $ishDeploy @parametersHash
 }
 
 $scriptBlockMoveSearchMenuButton = {
@@ -100,13 +100,13 @@ $scriptBlockMoveSearchMenuButton = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     if ($switchState -eq "First"){
-        Move-ISHUISearchMenuButton -ISHDeployment $ishDeploy @parametersHash -First
+        Move-ISHUISearchMenuBarItem -ISHDeployment $ishDeploy @parametersHash -First
     }
     elseif($switchState -eq "Last"){
-        Move-ISHUISearchMenuButton -ISHDeployment $ishDeploy @parametersHash -Last
+        Move-ISHUISearchMenuBarItem -ISHDeployment $ishDeploy @parametersHash -Last
     }
     else{
-        Move-ISHUISearchMenuButton -ISHDeployment $ishDeploy @parametersHash
+        Move-ISHUISearchMenuBarItem -ISHDeployment $ishDeploy @parametersHash
     }
 }
 
@@ -122,10 +122,10 @@ $scriptBlockRemoveSearchMenuBar= {
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHUISearchMenuButton -ISHDeployment $ishDeploy -Label $label
+    Remove-ISHUISearchMenuBarItem -ISHDeployment $ishDeploy -Label $label
 }
 
-Describe "Testing ISHUISearchMenuButton"{
+Describe "Testing ISHUISearchMenuBarItem"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "SearchMenuBar.xml"
 		UndoDeploymentBackToVanila $testingDeploymentName $true
@@ -139,7 +139,7 @@ Describe "Testing ISHUISearchMenuButton"{
         #Assert
         $item = getSearchMenuButton -Label $params.Label
         $item.Label | Should be $params.Label
-        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneral&amp;Title=$testLabelName"
+        $item.Action | Should be "SearchFrame.asp?SearchXml=SearchNewGeneralNotExist&Title=$testLabelName"
         $item.Icon | Should be "./UIFramework/search.32x32.png"
         $item.UserRole[0] | Should Match $params.UserRole[0]
         $item.UserRole[1] | Should Match $params.UserRole[1]

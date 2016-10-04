@@ -23,17 +23,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
     /// <para type="synopsis">Remove main menu item.</para>
-    /// <para type="description">The Remove-ISHUIButtonBar cmdlet remove exist menu item.</para>
-    /// <para type="link">Move-ISHUIButtonBar</para>    
-    /// <para type="link">Set-ISHUIButtonBar</para>
+    /// <para type="description">The Remove-ISHUIButtonBarItem cmdlet remove exist menu item.</para>
+    /// <para type="link">Move-ISHUIButtonBarItem</para>    
+    /// <para type="link">Set-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Remove-ISHUIButtonBar -ISHDeployment $deployment -Name "Test"</code>
+    /// <code>PS C:\>Remove-ISHUIButtonBarItem -ISHDeployment $deployment -Name "Test"</code>
     /// <para>This command remove main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHUIButtonBar")]
-    public sealed class RemoveISHUIButtonBarCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Remove, "ISHUIButtonBarItem")]
+    public sealed class RemoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
 		/// <para type="description">Name of Button Bar.</para>

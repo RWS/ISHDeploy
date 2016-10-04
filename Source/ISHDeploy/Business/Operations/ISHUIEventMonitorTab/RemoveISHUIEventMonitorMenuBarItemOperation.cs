@@ -17,13 +17,13 @@
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Interfaces;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
+namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 {
 	/// <summary>
 	/// Removes Event Monitor Tab".
 	/// </summary>
 	/// <seealso cref="IOperation" />
-	public class RemoveISHUIEventMonitorTabOperation : BaseOperationPaths, IOperation
+	public class RemoveISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -31,12 +31,12 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorTabOperation"/> class.
+        /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorMenuBarItemOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="label">Label of the element</param>
-        public RemoveISHUIEventMonitorTabOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label) :
+        public RemoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");

@@ -3,21 +3,19 @@
 ## stable-1.2
 1. General 
     1. Cmdlets
-	      - `Set-ISHUIButtonBar` . **[New]**  For 'ELECTRONIC DOCUMENT' please use 'ELECTRONIC_DOCUMENT'
-	      - `Remove-ISHUIButtonBar` . **[New]**
-	      - `Move-ISHUIButtonBar` . **[New]**
-	      - `Move-ISHUIMainMenuButton` . **[New]**
-	      - `Remove-ISHUIMainMenuButton` . **[New]**
-	      - `Set-ISHUIMainMenuButton` . **[New]**
-	      - `Move-ISHUISearchMenuButton` . **[New]**
-	      - `Remove-ISHUISearchMenuButton` . **[New]**
-	      - `Set-ISHUISearchMenuButton` . **[New]**
-              - For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
-			- When there is only one available deployment detected then this one will be used.
-			- Where there are more than one available deployments detected then the cmdlet will throw an error.
-    2. Documentation - Articles
-              - New article on how to work with one deployment. **[Update]**
-
+	      - Changed name from `Set-ISHUIButtonBar` to `Set-ISHUIButtonBarItem` .
+	      - Changed name from `Remove-ISHUIButtonBar` to `Remove-ISHUIButtonBarItem` .
+	      - Changed name from `Move-ISHUIButtonBar` to `Move-ISHUIButtonBarItem` .
+	      - Changed name from `Move-ISHUIMainMenuButton` to `Move-ISHUIMainMenuBarItem` .
+	      - Changed name from `Remove-ISHUIMainMenuButton` to `Remove-ISHUIMainMenuBarItem` .
+	      - Changed name from `Set-ISHUIMainMenuButton` to `Set-ISHUIMainMenuBarItem` .
+	      - Changed name from `Move-ISHUISearchMenuButton` to `Move-ISHUISearchMenuBarItem` .
+	      - Changed name from `Remove-ISHUISearchMenuButton` to `Remove-ISHUISearchMenuBarItem` .
+	      - Changed name from `Set-ISHUISearchMenuButton` to `Set-ISHUISearchMenuBarItem` .
+	      - Changed name from `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem` .
+	      - Changed name from `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem` .
+	      - Changed name from `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem` .
+		  - Changed signature of  `Set-ISHUISearchMenuBarItem` cmdlet.
 ## stable-1.1
 
 **Summary of release**
@@ -60,7 +58,7 @@
 	      - All Get-ISH* cmdlets e.g. `Get-ISHDeployment` can be piped. e.g. `Get-ISHDeployment | ForEach-Object {$_}`. **[Update]**
 1. Feature toggle
     1. Cmdlets
-	      - Set-ISHUIEventMonitorTab can accept multiple user roles in parameter `-UserRole`. **[Update]**
+	      - Set-ISHUIEventMonitorMenuBarItem can accept multiple user roles in parameter `-UserRole`. **[Update]**
 1. ISHSTS
     1. Cmdlets
 	      - Set-ISHSTSConfiguration. (Fixed) **[Update]**
@@ -117,9 +115,9 @@ Initial release
 	      - Enable-ISHUIContentEditor
 	      - Enable-ISHUIQualityAssistant
 	      - Enable-ISHUITranslationJob
-	      - Move-ISHUIEventMonitorTab
-	      - Remove-ISHUIEventMonitorTab
-	      - Set-ISHUIEventMonitorTab
+	      - Move-ISHUIEventMonitorMenuBarItem
+	      - Remove-ISHUIEventMonitorMenuBarItem
+	      - Set-ISHUIEventMonitorMenuBarItem
 	      - Test-ISHContentEditor
     1. Articles
 	      - Work with UI Features  

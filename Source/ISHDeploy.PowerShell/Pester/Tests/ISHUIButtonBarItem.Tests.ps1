@@ -82,7 +82,7 @@ $scriptBlockSetButtonBarButton = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHUIButtonBar -ISHDeployment $ishDeploy @parametersHash
+    Set-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash
 }
 
 $scriptBlockMoveButtonBarButton = {
@@ -97,13 +97,13 @@ $scriptBlockMoveButtonBarButton = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     if ($switchState -eq "First"){
-        Move-ISHUIButtonBar -ISHDeployment $ishDeploy @parametersHash -First
+        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash -First
     }
     elseif($switchState -eq "Last"){
-        Move-ISHUIButtonBar -ISHDeployment $ishDeploy @parametersHash -Last
+        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash -Last
     }
     else{
-        Move-ISHUIButtonBar -ISHDeployment $ishDeploy @parametersHash
+        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash
     }
 }
 
@@ -121,10 +121,10 @@ $scriptBlockRemoveButtonBarBar= {
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHUIButtonBar -ISHDeployment $ishDeploy -Name $name -ButtonBar $buttonBar
+    Remove-ISHUIButtonBarItem -ISHDeployment $ishDeploy -Name $name -ButtonBar $buttonBar
 }
 
-Describe "Testing ISHUIButtonBarButton"{
+Describe "Testing ISHUIButtonBarItemButton"{
     BeforeEach {
 		ArtifactCleaner -filePath $xmlPath -fileName "CategoryMasterButtonbar.xml"
 		UndoDeploymentBackToVanila $testingDeploymentName $true

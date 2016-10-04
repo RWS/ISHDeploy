@@ -87,6 +87,7 @@ namespace ISHDeploy.Models.UI
             Icon = icon;
             XPathFormat = "searchmenubar/menuitem[@label='{0}']";
             XPath = string.Format(XPathFormat, Label);
+            InsertBeforeSpecialXPath = string.Format(XPathFormat, "Locate"); 
         }
     }
 }

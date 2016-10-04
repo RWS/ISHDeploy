@@ -177,9 +177,9 @@
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSCertificateOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorMenuBarItemOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorMenuBarItemOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
@@ -195,20 +195,20 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuButtonCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuButtonCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
     <Compile Include="Data\Actions\Certificate\GetCertificateSubjectByThumbprintAction.cs" />
@@ -351,7 +351,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\AssemblyInfo.targets" />
-    <None Include="Properties\ModuleManifest.targets" />
+    <None Include="Properties\ModuleManifest.targets">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

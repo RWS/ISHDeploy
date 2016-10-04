@@ -21,20 +21,20 @@ using System.Management.Automation;
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
     /// <summary>
-	///		<para type="synopsis">Removes button from SearchMenuBar.</para>
-	///		<para type="description">The Removes-ISHUISearchMenuButton cmdlet removes Buttons definitions from Content Manager deployment.</para>
-	///		<para type="link">Set-ISHUISearchMenuButton</para>
-	///		<para type="link">Move-ISHUISearchMenuButton</para>
+	///		<para type="synopsis">Removes button from MainMenuBar.</para>
+	///		<para type="description">The Removes-ISHUIMainMenuBarItem cmdlet removes Buttons definitions from Content Manager deployment.</para>
+	///		<para type="link">Set-ISHUIMainMenuBarItem</para>
+	///		<para type="link">Move-ISHUIMainMenuBarItem</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHUISearchMenuButton -ISHDeployment $deployment -Label "Translation"</code>
+	///		<code>PS C:\>Remove-ISHUIMainMenuBarItem -ISHDeployment $deployment -Label "Translation"</code>
 	///		<para>Removes definition of the button with label "Translation".
 	/// This command removes XML definitions from EventMonitor.
 	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	///		</para>
 	/// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHUISearchMenuButton")]
-    public sealed class RemoveISHUISearchMenuButtonCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Remove, "ISHUIMainMenuBarItem")]
+    public sealed class RemoveISHUIMainMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Label of menu item.</para>
@@ -47,10 +47,9 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new SearchMenuItem(Label);
+            var model = new MainMenuBarItem(Label);
             var operation = new RemoveUIElementOperation(Logger, ISHDeployment, model);
             operation.Run();
         }
     }
-
 }

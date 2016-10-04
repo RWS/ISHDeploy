@@ -3,4 +3,4 @@
     Description="Show all custom events"
     EventTypesFilter="CUSTOM"
 }
-Set-ISHUIEventMonitorTab -ISHDeployment $deploymentName @hash
+Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash

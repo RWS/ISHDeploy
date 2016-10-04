@@ -20,9 +20,9 @@
 	    - `Remove-ISHUISearchMenuBarItem` . **[New]**
 	    - `Set-ISHUISearchMenuBarItem` . **[New]**
 	    - Renamed cmdlets for event monitor:  **[Update]**
-		- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
-	    - From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
-	    - From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
+			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
+			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
+			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
     2. Documentation - Articles
 		- Reorganize former "Configuring features using the module" article into three more specialized. **[Update]**
 			- Toggling Web Components

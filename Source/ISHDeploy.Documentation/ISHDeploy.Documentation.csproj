@@ -48,8 +48,9 @@
   <ItemGroup>
     <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
     <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
-    <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
-    <None Include="Articles\FeatureToggle\Work with UI Features.md" />
+    <None Include="Articles\FeatureToggle\Configuring ISHCM web UI button bars.md" />
+    <None Include="Articles\FeatureToggle\Configuring ISHCM web UI menu bars.md" />
+    <None Include="Articles\FeatureToggle\Toggling Web Components.md" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Windows.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Username.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.User.ps1" />

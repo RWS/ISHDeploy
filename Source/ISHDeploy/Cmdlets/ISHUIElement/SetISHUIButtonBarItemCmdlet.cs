@@ -18,6 +18,11 @@ using ISHDeploy.Models.UI;
 using ISHDeploy.Business.Enums;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIElement;
+using System.ComponentModel;
+using System.Collections;
+using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
@@ -28,25 +33,13 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <para type="link">Remove-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUIButtonBarItem -ISHDeployment $deployment -ButtonBar DefaultSettingsButtonbar -ISHTYPE VDOCTYPEILLUSTRATION, VDOCTYPEMAP -Name "test" -OnClick "refresh();"</code>
+    /// <code>PS C:\>Set-ISHUIButtonBarItem -ISHDeployment $deployment -Logical -ISHTYPE ISHIllustration, ISHMasterDoc -Name "test" -Action "refresh();" -Icon "~/UIFramework/new-tab.job.32x32.png"</code>
     /// <para>This command add/update main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIButtonBarItem")]
     public sealed class SetISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
-        /// <summary>
-		/// <para type="description">Type or file name correspond to Button Bar.</para>
-		/// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
-        public ButtonBarType ButtonBar { get; set; }
-
-        /// <summary>
-        /// <para type="description">ISHType is a list of the card type.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
-        public CardType[] ISHTYPE { get; set; }
-
         /// <summary>
         /// <para type="description">Name of the button.</para>
         /// </summary>
@@ -56,29 +49,116 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">Icon for the button.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Icon file name")]
+        [Parameter(Mandatory = true, HelpMessage = "Icon file name")]
         public string Icon { get; set; }
 
         /// <summary>
         /// <para type="description">Javascript or asp page need to be invoken after click.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "OnClick javascript function name")]
-        public string OnClick { get; set; }
-        
+        public string Action { get; set; }
+
         /// <summary>
         /// <para type="description">Check access.</para>
         /// </summary>
-        [Parameter(HelpMessage = "files for settings")]
-        public string Checkaccess { get; set; } = "N";
+        [Parameter(HelpMessage = "Files for settings")]
+        public string Checkaccess { get; set; }
+
+        /// <summary>
+        /// <para type="description">Hide text.</para>
+        /// </summary>
+        [Parameter(HelpMessage = "Hides text")]
+        public SwitchParameter HideText { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Logical" especially for FolderButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Using for FolderButtonbar.xml")]
+        public SwitchParameter Logical { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Version" especially for LanguageDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Version", HelpMessage = "Using for LanguageDocumentButtonbar.xml")]
+        public SwitchParameter Version { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Language" especially for TopDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Language", HelpMessage = "Using for TopDocumentButtonbar.xml")]
+        public SwitchParameter Language { get; set; }
+
+        /// <summary>
+        /// <para type="description">ISHType is a list of the card type.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
+        public string[] ISHTYPE { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarItem(ButtonBar, Name, ISHTYPE, Icon, OnClick, Checkaccess);
+            string buttonBarFile = null;
+            string[] cards = null;
+            switch (ParameterSetName)
+            {
+                case "Logical":
+                    buttonBarFile = "FolderButtonbar.xml";
+                    cards = GetCardsArray(ISHTYPE, logicalDictionary);
+                    if (Checkaccess == null)
+                        Checkaccess = "N";
+                    break;
+                case "Version":
+                    buttonBarFile = "LanguageDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHTYPE, versionDictionary);
+                    if (Checkaccess == null)
+                        Checkaccess = "N";
+                    break;
+                case "Language":
+                    buttonBarFile = "TopDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHTYPE, versionDictionary); // is the same as in Version
+                    if (Checkaccess == null)
+                        Checkaccess = "N";
+                    break;
+                default:
+                    break;
+            }
+
+            var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, Action, Checkaccess, HideText.IsPresent);
             var setOperation = new SetUIElementOperation(Logger, ISHDeployment, model);
             setOperation.Run();
+        }
+
+        private Dictionary<string, string> logicalDictionary =new Dictionary<string, string>(){
+                        {"ISHIllustration", "VDOCTYPEILLUSTRATION"},
+                        {"ISHMasterDoc", "VDOCTYPEMAP"},
+                        {"ISHModule", "VDOCTYPEMASTER"},
+                        {"ISHTemplate","VDOCTYPETEMPLATE"},
+                        {"ISHLibrary","VDOCTYPELIB"},
+                        {"ISHReference","VDOCTYPEREFERENCE"},
+                        {"ISHQuery","VDOCTYPEQUERY"},
+                        {"ISHPublication","VDOCTYPEPUBLICATION"}};
+        private Dictionary<string, string> versionDictionary =new Dictionary<string, string>(){
+                        {"ISHModule","TMAP"},
+                        {"ISHMasterDoc","TMASTER"},
+                        {"ISHTemplate","TTEMPLATE"},
+                        {"ISHIllustration","TIMG"},
+                        {"ISHLibrary","TLIB"},
+                        {"ISHPublication","CTPUBLICATION"}};
+
+        private string[] GetCardsArray(string[] ishTypes, Dictionary<string, string> dict)
+        {
+            List<string> cards = new List<string>();
+            foreach (string type in ishTypes) {
+                string value;
+                if (!dict.TryGetValue(type, out value))
+                {
+                    throw new ArgumentException ($"Cannot find card type for {type}.");
+                }
+                cards.Add(value);
+            }
+            return cards.ToArray();
         }
     }
 }

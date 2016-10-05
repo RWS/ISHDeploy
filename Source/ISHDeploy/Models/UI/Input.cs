@@ -42,5 +42,12 @@ namespace ISHDeploy.Models.UI
         /// </summary>
         [XmlAttribute("ICON")]
         public string Icon { set; get; }
+        
+        
+        /// <summary>
+        /// Correspond icon.
+        /// </summary>
+        [XmlAttribute("SHOWTEXT")]
+        public string Showtext { set; get; }
     }
 }

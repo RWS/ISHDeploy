@@ -45,7 +45,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 		/// <para type="description">Type or file name correspond to Button Bar.</para>
 		/// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
-        public ButtonBarType ButtonBar { get; set; }
+        public string ButtonBar { get; set; }
 
         /// <summary>
 		/// <para type="description">Menu item move to the last position.</para>
@@ -89,7 +89,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
             }
 
-            var model = new ButtonBarItem(ButtonBar, Name);
+            var model = new ButtonBarItem("", Name);
             var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, direction, After);
             operation.Run();
         }

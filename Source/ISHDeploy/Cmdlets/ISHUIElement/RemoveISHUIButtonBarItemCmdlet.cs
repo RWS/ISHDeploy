@@ -45,14 +45,14 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">Type or file name correspond to Button Bar.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
-        public ButtonBarType ButtonBar { get; set; }
+        public string ButtonBar { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarItem(ButtonBar, Name);
+            var model = new ButtonBarItem("", Name);
             var operation = new RemoveUIElementOperation(Logger, ISHDeployment, model);
             operation.Run();
         }

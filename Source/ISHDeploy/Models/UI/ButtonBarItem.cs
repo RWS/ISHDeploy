@@ -60,9 +60,10 @@ namespace ISHDeploy.Models.UI
         /// <param name="icon">Icon for button bar.</param>
         /// <param name="onClick">Javascript to be executed after click.</param>
         /// <param name="checkaccess">Y or N to check access.</param>
-        public ButtonBarItem(ButtonBarType buttonBar, string name, CardType[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null)
+        /// <param name="hideText">Hides text.</param>
+        public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null, bool hideText = false)
         {
-            RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}.xml";
+            RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
             NameOfRootElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
 
@@ -71,65 +72,15 @@ namespace ISHDeploy.Models.UI
             Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
+
             CheckAccess = checkaccess;
             XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
             XPath = string.Format(XPathFormat, name);
 
-            if(ishtype != null)
-                CardTypes = ishtype.Select(x => { if (x == CardType.ELECTRONIC_DOCUMENT)
-                                                    return "ELECTRONIC DOCUMENT";
-                                                  else
-                                                    return x.ToString(); }).ToArray();
-
-            //for default card type list
-            /* Separate story TS-11796 will add values
-            if (ishtype == null) 
-            { 
-                switch (buttonBar)
-                {
-                    case ButtonBarType.CategoryMasterButtonbar:
-                        CardTypes = new [] { CardType.VDOCTYPEILLUSTRATION, CardType.VDOCTYPEMAP, CardType.VDOCTYPEMASTER };
-                        break;
-                    case ButtonBarType.DefaultSettingsButtonbar:
-                        break;
-                    case ButtonBarType.DetailButtonbar:
-                        break;
-                    case ButtonBarType.EventMonitorButtonbar:
-                        break;
-                    case ButtonBarType.EventMonitorDetailButtonbar:
-                        break;
-                    case ButtonBarType.FolderButtonbar:
-                        break;
-                    case ButtonBarType.InboxButtonBar:
-                        break;
-                    case ButtonBarType.LanguageDocumentButtonbar:
-                        break;
-                    case ButtonBarType.OutputFormatButtonbar:
-                        break;
-                    case ButtonBarType.RevisionsButtonbar:
-                        break;
-                    case ButtonBarType.SearchButtonbar:
-                        break;
-                    case ButtonBarType.TopDocumentButtonbar:
-                        break;
-                    case ButtonBarType.TranslationJobButtonbar:
-                        break;
-                    case ButtonBarType.TranslationJobContainerButtonbar:
-                        break;
-                    case ButtonBarType.TranslationMgmtReportButtonBar:
-                        break;
-                    case ButtonBarType.UserButtonbar:
-                        break;
-                    case ButtonBarType.UserGroupButtonbar:
-                        break;
-                    case ButtonBarType.UserRoleButtonbar:
-                        break;
-                    case ButtonBarType.XmlSettingsButtonBar:
-                        break;
-                    default:
-                        break;
-                }
-            }*/
+            if (hideText)
+            {
+                Input.Showtext = "N";
+            }
         }
     }
 }

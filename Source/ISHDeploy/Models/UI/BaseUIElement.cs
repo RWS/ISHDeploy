@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI
@@ -77,5 +78,14 @@ namespace ISHDeploy.Models.UI
         /// </value>
         [XmlIgnore]
         public string InsertBeforeSpecialXPath { get; protected set; }
+
+        /// <summary>
+        /// If node need comment.
+        /// </summary>
+        /// <value>
+        /// The root path.
+        /// </value>
+        [XmlIgnore]
+        public XComment CommentNode { get; protected set; }
     }
 }

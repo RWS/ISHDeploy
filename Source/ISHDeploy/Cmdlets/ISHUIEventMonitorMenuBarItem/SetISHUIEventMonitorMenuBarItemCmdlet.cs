@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
+using ISHDeploy.Business.Operations.ISHUIElement;
+using ISHDeploy.Models.UI;
+using System.Collections.Generic;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
-using ISHDeploy.Models.ISHXmlNodes;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 {
@@ -38,7 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
     ///		</para>
     /// </example>
     /// <example>
-    ///		<code>PS C:\>Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters"</code>
+    ///		<code>PS C:\>Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deployment -Label "Defaults" -Description "Using default parameters" -UserRole @("Administrator","Author")</code>
     ///		<para>Sets new tab with default set of provided parameters.</para>
     ///		<para>This command sets XML definitions to EventMonitor.
     ///			Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
@@ -128,11 +128,11 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 		#endregion
 
 		/// <summary>
-		/// <para type="description">Action of menu item. Default value is 'Administrator'.</para>
+		/// <para type="description">Can be applied for roles.</para>
 		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Action of menu item")]
+		[Parameter(Mandatory = true, HelpMessage = "Action of menu item")]
 		[ValidateNotNullOrEmpty]
-        public string[] UserRole { get; set; } = new string[] {"Administrator"};
+        public string[] UserRole { get; set; }
 
 		/// <summary>
 		/// <para type="description">User role description.</para>
@@ -145,23 +145,22 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
         /// </summary>
         public override void ExecuteCmdlet()
         {
-	        var operation = new SetISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, new EventLogMenuItem()
-			{
-				Label = Label,
-				Description = Description,
-				Icon = Icon,
-				UserRoles = UserRole, // we need single form in powershell
-				Action = new EventLogMenuItemAction()
-				{
-					SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],
-					ModifiedSinceMinutesFilter = ModifiedSinceMinutesFilter,
-					SelectedMenuItemTitle = Label,
-					StatusFilter = StatusFilter.All.ToString(), // By default 'All' is used
-					EventTypesFilter = EventTypesFilter
-				}
-			});
+            var model = new EventMonitorMenuBarItem(
+                Label,
+                UserRole, // we need single form in powershell
+                Icon = Icon,
+                new Models.ISHXmlNodes.EventLogMenuItemAction()
+                {
+                    SelectedButtonTitle = _statusFilterDesctiptions[SelectedStatusFilter],
+                    ModifiedSinceMinutesFilter = ModifiedSinceMinutesFilter,
+                    SelectedMenuItemTitle = Label,
+                    StatusFilter = StatusFilter.All.ToString(), // By default 'All' is used
+                    EventTypesFilter = EventTypesFilter
+                }.ToQueryString(),
+                Description
+			);
 
-			operation.Run();
+            new SetUIElementOperation(Logger, ISHDeployment, model).Run();
         }
     }
 }

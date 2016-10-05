@@ -143,7 +143,7 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
 
     It "Set monitor tab"{
         #Arrange
-        $params = @{label = $testLabelName; Description = $testDescription}
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -160,7 +160,7 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
     It "Sets monitor tab with no XML"{
         #Arrange
         Rename-Item "$xmlPath\EventMonitorMenuBar.xml" "_EventMonitorMenuBar.xml"
-        $params = @{label = $testLabelName; Description = $testDescription}
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
         #Rollback
@@ -182,7 +182,7 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         Rename-Item "$xmlPath\EventMonitorMenuBar.xml" "_EventMonitorMenuBar.xml"
         New-Item "$xmlPath\EventMonitorMenuBar.xml" -type file |Out-Null
-        $params = @{label = $testLabelName; Description = $testDescription}
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
         #Rollback
@@ -205,7 +205,7 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
 
     It "Set existing monitor tab"{
         #Arrange
-        $params = @{label = $testLabelName; Description = $testDescription}
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -220,7 +220,7 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
             Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName
         }
         RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted"| Should be "Deleted"
-        $params = @{label = $testLabelName; Description = $testDescription}
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, $testLabelName} | Should Not Throw
         RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Deleted" | Should be "Deleted"
@@ -411,4 +411,32 @@ Describe "Testing ISHUIEventMonitorMenuBarItem"{
         #Assert
         RetryCommand -numberOfRetries 10 -command {checkAmountOFUserroles -Label $params.label } -expectedResult 2 | Should be 2
     }
+
+	It "Set creates tab before All Events"{
+        #Arrange
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Added"| Should be "Added"
+		#Get array with labels
+        [xml]$XmlEventMonitorBar = RemoteReadXML "$xmlPath\EventMonitorMenuBar.xml"
+        $tabArray =$XmlEventMonitorBar.menubar.menuitem.label
+		#Find created tab position
+		 for ($i=1; $i -le $tabArray.Legth - 1;$i++){
+			if($tabArray[$i] -eq $testLabelName){
+				$tabArray[$i+1] -eq "All Events" | Should be $true
+			}
+        }
+    }
+
+	It "Set creates tab if All Events does not exist"{
+        #Arrange
+        $params = @{label = $testLabelName; Description = $testDescription; UserRole = "Administrator"}
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveEventMonitorTab -Session $session -ArgumentList $testingDeploymentName, "All Events"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetEventMonitor -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        RetryCommand -numberOfRetries 10 -command {checkEventMonitorTabExist -Label $params.label -Icon "~/UIFramework/events.32x32.png" -SelectedMenuItemTitle $params.label -ModifiedSinceMinutesFilter 1440 -Description $params.Description} -expectedResult "Added"| Should be "Added"
+   }
 }

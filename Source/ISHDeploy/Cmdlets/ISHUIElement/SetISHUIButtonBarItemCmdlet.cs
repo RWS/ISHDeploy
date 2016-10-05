@@ -128,19 +128,19 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 
         private Dictionary<string, string> logicalDictionary = new Dictionary<string, string>(){
                         {"ISHIllustration", "VDOCTYPEILLUSTRATION"},
-                        {"ISHMasterDoc", "VDOCTYPEMAP"},
-                        {"ISHModule", "VDOCTYPEMASTER"},
+                        {"ISHModule", "VDOCTYPEMAP"},
+                        {"ISHMasterDoc", "VDOCTYPEMASTER"},
                         {"ISHTemplate","VDOCTYPETEMPLATE"},
                         {"ISHLibrary","VDOCTYPELIB"},
                         {"ISHReference","VDOCTYPEREFERENCE"},
                         {"ISHQuery","VDOCTYPEQUERY"},
                         {"ISHPublication","VDOCTYPEPUBLICATION"}};
         private Dictionary<string, string> versionDictionary = new Dictionary<string, string>(){
-                        {"ISHModule","TMAP"},
-                        {"ISHMasterDoc","TMASTER"},
-                        {"ISHTemplate","TTEMPLATE"},
-                        {"ISHIllustration","TIMG"},
-                        {"ISHLibrary","TLIB"},
+                        {"ISHModule","CTMAP"},
+                        {"ISHMasterDoc","CTMASTER"},
+                        {"ISHTemplate","CTTEMPLATE"},
+                        {"ISHIllustration","CTIMG"},
+                        {"ISHLibrary","CTLIB"},
                         {"ISHPublication","CTPUBLICATION"}};
 
         private string[] GetCardsArray(string[] ishTypes, Dictionary<string, string> dict)

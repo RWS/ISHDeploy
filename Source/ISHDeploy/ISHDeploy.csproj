@@ -199,6 +199,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
@@ -206,9 +207,9 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuBarItemCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorMenuBarItemCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\SetISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\MoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\RemoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
     <Compile Include="Data\Actions\Certificate\GetCertificateSubjectByThumbprintAction.cs" />

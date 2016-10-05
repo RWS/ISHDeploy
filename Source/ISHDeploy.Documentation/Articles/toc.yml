@@ -6,8 +6,14 @@
     href: ../obj/doc/articles/Module/Work with one deployment.md
 - name: Work with files
   href: ../obj/doc/articles/Module/Work with files.md
-- name: Work with UI Features
-  href: ../obj/doc/articles/FeatureToggle/Work with UI Features.md
+- name: Working with ISHCM web UI features
+  items:
+  - name: Toggling Web Components
+    href: ../obj/doc/articles/FeatureToggle/Toggling Web Components.md
+  - name: Configuring ISHCM web UI menu bars
+    href: ../obj/doc/articles/FeatureToggle/Configuring ISHCM web UI menu bars.md
+  - name: Configuring ISHCM web UI button bars
+    href: ../obj/doc/articles/FeatureToggle/Configuring ISHCM web UI button bars.md
 - name: Work with Security Token Service
   items:
   - name: Integrating with Security Token Service

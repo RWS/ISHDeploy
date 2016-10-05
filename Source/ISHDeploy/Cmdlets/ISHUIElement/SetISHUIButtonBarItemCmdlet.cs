@@ -15,12 +15,8 @@
  */
 
 using ISHDeploy.Models.UI;
-using ISHDeploy.Business.Enums;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIElement;
-using System.ComponentModel;
-using System.Collections;
-using System.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -122,7 +118,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                         Checkaccess = "N";
                     break;
                 default:
-                    break;
+                    throw new ArgumentException($"Unknown parameter {ParameterSetName}");
             }
 
             var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, Action, Checkaccess, HideText.IsPresent);
@@ -130,7 +126,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             setOperation.Run();
         }
 
-        private Dictionary<string, string> logicalDictionary =new Dictionary<string, string>(){
+        private Dictionary<string, string> logicalDictionary = new Dictionary<string, string>(){
                         {"ISHIllustration", "VDOCTYPEILLUSTRATION"},
                         {"ISHMasterDoc", "VDOCTYPEMAP"},
                         {"ISHModule", "VDOCTYPEMASTER"},
@@ -139,7 +135,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                         {"ISHReference","VDOCTYPEREFERENCE"},
                         {"ISHQuery","VDOCTYPEQUERY"},
                         {"ISHPublication","VDOCTYPEPUBLICATION"}};
-        private Dictionary<string, string> versionDictionary =new Dictionary<string, string>(){
+        private Dictionary<string, string> versionDictionary = new Dictionary<string, string>(){
                         {"ISHModule","TMAP"},
                         {"ISHMasterDoc","TMASTER"},
                         {"ISHTemplate","TTEMPLATE"},
@@ -150,11 +146,12 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         private string[] GetCardsArray(string[] ishTypes, Dictionary<string, string> dict)
         {
             List<string> cards = new List<string>();
-            foreach (string type in ishTypes) {
+            foreach (string type in ishTypes)
+            {
                 string value;
                 if (!dict.TryGetValue(type, out value))
                 {
-                    throw new ArgumentException ($"Cannot find card type for {type}.");
+                    throw new ArgumentException($"Cannot find card type for {type}.");
                 }
                 cards.Add(value);
             }

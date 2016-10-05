@@ -42,17 +42,45 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public string Name { get; set; }
 
         /// <summary>
-        /// <para type="description">Type or file name correspond to Button Bar.</para>
+        /// <para type="description">Type "Logical" especially for FolderButtonbar.xml.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
-        public string ButtonBar { get; set; }
+        [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Using for FolderButtonbar.xml")]
+        public SwitchParameter Logical { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Version" especially for LanguageDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Version", HelpMessage = "Using for LanguageDocumentButtonbar.xml")]
+        public SwitchParameter Version { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Language" especially for TopDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Language", HelpMessage = "Using for TopDocumentButtonbar.xml")]
+        public SwitchParameter Language { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var model = new ButtonBarItem("", Name);
+            string buttonBarFile = null;
+            switch (ParameterSetName)
+            {
+                case "Logical":
+                    buttonBarFile = "FolderButtonbar.xml";
+                    break;
+                case "Version":
+                    buttonBarFile = "LanguageDocumentButtonbar.xml";
+                    break;
+                case "Language":
+                    buttonBarFile = "TopDocumentButtonbar.xml";
+                    break;
+                default:
+                    break;
+            }
+
+            var model = new ButtonBarItem(buttonBarFile, Name);
             var operation = new RemoveUIElementOperation(Logger, ISHDeployment, model);
             operation.Run();
         }

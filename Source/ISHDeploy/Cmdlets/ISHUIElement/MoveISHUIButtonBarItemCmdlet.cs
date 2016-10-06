@@ -36,37 +36,58 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     public sealed class MoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
-		/// <para type="description">Name of Button Bar.</para>
-		/// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Button bar name")]
-        public string Name { get; set; }
-
-        /// <summary>
-		/// <para type="description">Type or file name correspond to Button Bar.</para>
-		/// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Button bar type")]
-        public string ButtonBar { get; set; }
-
-        /// <summary>
-		/// <para type="description">Menu item move to the last position.</para>
-		/// </summary>
-		[Parameter(Mandatory = false, HelpMessage = "Menu item move to the last position", ParameterSetName = "Last")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter Last { get; set; }
+        /// <para type="description">Menu item move position.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Logical After")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version After")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language After")]
+        public string After { get; set; }
 
         /// <summary>
         /// <para type="description">Menu item move to the first position.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Menu item move to the first position", ParameterSetName = "First")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(Mandatory = true, ParameterSetName = "Logical First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language First")]
         public SwitchParameter First { get; set; }
 
         /// <summary>
-        /// <para type="description">Menu item move position.</para>
+        /// <para type="description">Menu item move to the last position.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Menu item move position", ParameterSetName = "After")]
-        [ValidateNotNullOrEmpty]
-        public string After { get; set; }
+        [Parameter(Mandatory = true, ParameterSetName = "Logical Last")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language First")]
+        public SwitchParameter Last { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Logical" especially for FolderButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Logical Last")]
+        [Parameter(Mandatory = true, ParameterSetName = "Logical First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Logical After")]
+        public SwitchParameter Logical { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Version" especially for LanguageDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Version Last")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version After")]
+        public SwitchParameter Version { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type "Language" especially for TopDocumentButtonbar.xml.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, ParameterSetName = "Language Last")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language After")]
+        public SwitchParameter Language { get; set; }
+
+        /// <summary>
+        /// <para type="description">Name of Button Bar.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Button bar name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -74,22 +95,26 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public override void ExecuteCmdlet()
         {
             UIElementMoveDirection direction;
-            switch (ParameterSetName)
-            {
-                case "Last":
-                    direction = UIElementMoveDirection.Last;
-                    break;
-                case "First":
-                    direction = UIElementMoveDirection.First;
-                    break;
-                case "After":
-                    direction = UIElementMoveDirection.After;
-                    break;
-                default:
-                    throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
-            }
 
-            var model = new ButtonBarItem("", Name);
+            if (ParameterSetName.Contains("Last"))
+                direction = UIElementMoveDirection.Last;
+            if (ParameterSetName.Contains("First"))
+                direction = UIElementMoveDirection.First;
+            if (ParameterSetName.Contains("After"))
+                direction = UIElementMoveDirection.After;
+            if (!(ParameterSetName.Contains("Last") || ParameterSetName.Contains("First") || ParameterSetName.Contains("After")))
+                throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
+
+            string buttonBarFile = null;
+            if (ParameterSetName.Contains("Logical"))
+                buttonBarFile = "FolderButtonbar.xml";
+            if (ParameterSetName.Contains("Version"))
+                buttonBarFile = "LanguageDocumentButtonbar.xml";
+            if (ParameterSetName.Contains("Language"))
+                buttonBarFile = "TopDocumentButtonbar.xml";
+
+
+            var model = new ButtonBarItem(buttonBarFile, Name);
             var operation = new MoveUIElementOperation(Logger, ISHDeployment, model, direction, After);
             operation.Run();
         }

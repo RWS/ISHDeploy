@@ -72,6 +72,7 @@ namespace ISHDeploy.Models.UI
             Input.Name = name;
             Input.Icon = icon;
             Input.OnClick = onClick;
+            CardTypes = ishtype;
 
             CheckAccess = checkaccess;
             XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";

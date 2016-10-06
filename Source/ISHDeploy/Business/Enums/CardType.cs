@@ -19,6 +19,7 @@
     /// STS issuer authentication types.
     ///	<para type="description">Enumeration of Card Types.</para>
     /// </summary>
+    #pragma warning disable 1591
     public enum CardType
     {
         ISHIllustration,

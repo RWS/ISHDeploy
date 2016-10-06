@@ -20,6 +20,7 @@ using ISHDeploy.Business.Operations.ISHUIElement;
 using System;
 using System.Collections.Generic;
 using ISHDeploy.Business.Enums;
+using System.Linq;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
@@ -148,6 +149,9 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 
         private string[] GetCardsArray(CardType[] ishTypes, Dictionary<string, string> dict)
         {
+            if (ishTypes == null) {
+                return dict.Values.ToArray();
+            }
             List<string> cards = new List<string>();
             foreach (CardType type in ishTypes)
             {

@@ -19,6 +19,7 @@ using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIElement;
 using System;
 using System.Collections.Generic;
+using ISHDeploy.Business.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
@@ -88,7 +89,9 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">ISHType is a list of the card type.</para>
         /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
-        public string[] ISHTYPE { get; set; }
+        [Parameter(Mandatory = true, ParameterSetName = "Version", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
+        public CardType[] ISHType { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -101,19 +104,19 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             {
                 case "Logical":
                     buttonBarFile = "FolderButtonbar.xml";
-                    cards = GetCardsArray(ISHTYPE, logicalDictionary);
+                    cards = GetCardsArray(ISHType, logicalDictionary);
                     if (Checkaccess == null)
                         Checkaccess = "N";
                     break;
                 case "Version":
                     buttonBarFile = "LanguageDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHTYPE, versionDictionary);
+                    cards = GetCardsArray(ISHType, versionDictionary);
                     if (Checkaccess == null)
                         Checkaccess = "N";
                     break;
                 case "Language":
                     buttonBarFile = "TopDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHTYPE, versionDictionary); // is the same as in Version
+                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
                     if (Checkaccess == null)
                         Checkaccess = "N";
                     break;
@@ -143,13 +146,13 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                         {"ISHLibrary","CTLIB"},
                         {"ISHPublication","CTPUBLICATION"}};
 
-        private string[] GetCardsArray(string[] ishTypes, Dictionary<string, string> dict)
+        private string[] GetCardsArray(CardType[] ishTypes, Dictionary<string, string> dict)
         {
             List<string> cards = new List<string>();
-            foreach (string type in ishTypes)
+            foreach (CardType type in ishTypes)
             {
                 string value;
-                if (!dict.TryGetValue(type, out value))
+                if (!dict.TryGetValue(type.ToString(), out value))
                 {
                     throw new ArgumentException($"Cannot find card type for {type}.");
                 }

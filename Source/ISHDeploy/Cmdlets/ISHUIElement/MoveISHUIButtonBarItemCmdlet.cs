@@ -94,7 +94,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            UIElementMoveDirection direction;
+            UIElementMoveDirection direction = UIElementMoveDirection.Last;
 
             if (ParameterSetName.Contains("Last"))
                 direction = UIElementMoveDirection.Last;

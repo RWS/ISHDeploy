@@ -86,11 +86,11 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public SwitchParameter Language { get; set; }
 
         /// <summary>
-        /// <para type="description">ISHType is a list of the card type.</para>
+        /// <para type="description">ISHType is a list of names for correspond card type.</para>
         /// </summary>
-        [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
-        [Parameter(Mandatory = true, ParameterSetName = "Version", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
-        [Parameter(Mandatory = true, ParameterSetName = "Language", HelpMessage = "Array of enum/object -in xml filed name is CARDTYPE")]
+        [Parameter(Mandatory = true, ParameterSetName = "Logical", HelpMessage = "Array of enum/object for correspond in xml CARDTYPE")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version", HelpMessage = "Array of enum/object for correspond in xml CARDTYPE")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language", HelpMessage = "Array of enum/object for correspond in xml CARDTYPE")]
         public CardType[] ISHType { get; set; }
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">Check access.</para>
         /// </summary>
         [Parameter(HelpMessage = "Files for settings")]
-        public string Checkaccess { get; set; }
+        public SwitchParameter Checkaccess { get; set; }
 
         /// <summary>
         /// <para type="description">Hide text.</para>
@@ -101,31 +101,29 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         {
             string buttonBarFile = null;
             string[] cards = null;
+            string checkAccess = null;
             switch (ParameterSetName)
             {
                 case "Logical":
                     buttonBarFile = "FolderButtonbar.xml";
                     cards = GetCardsArray(ISHType, logicalDictionary);
-                    if (Checkaccess == null)
-                        Checkaccess = "N";
+                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
                     break;
                 case "Version":
                     buttonBarFile = "LanguageDocumentButtonbar.xml";
                     cards = GetCardsArray(ISHType, versionDictionary);
-                    if (Checkaccess == null)
-                        Checkaccess = "N";
+                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
                     break;
                 case "Language":
                     buttonBarFile = "TopDocumentButtonbar.xml";
                     cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
-                    if (Checkaccess == null)
-                        Checkaccess = "N";
+                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
                     break;
                 default:
                     throw new ArgumentException($"Unknown parameter {ParameterSetName}");
             }
 
-            var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, Action, Checkaccess, HideText.IsPresent);
+            var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, Action, checkAccess, HideText.IsPresent);
             var setOperation = new SetUIElementOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }
@@ -149,7 +147,8 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 
         private string[] GetCardsArray(CardType[] ishTypes, Dictionary<string, string> dict)
         {
-            if (ishTypes == null) {
+            if (ishTypes == null)
+            {
                 return dict.Values.ToArray();
             }
             List<string> cards = new List<string>();

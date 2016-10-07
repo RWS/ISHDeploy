@@ -75,7 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Enums\ButtonBarType.cs" />
     <Compile Include="Business\Enums\CardType.cs" />
     <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
     <Compile Include="Business\Enums\UIElementMoveDirection.cs" />

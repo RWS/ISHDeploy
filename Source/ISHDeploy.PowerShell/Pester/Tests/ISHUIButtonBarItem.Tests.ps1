@@ -88,23 +88,15 @@ $scriptBlockSetButtonBarButton = {
 $scriptBlockMoveButtonBarButton = {
     param (
         $ishDeployName,
-        $parametersHash,
-        $switchState
+        $parametersHash
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    if ($switchState -eq "First"){
-        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash -First
-    }
-    elseif($switchState -eq "Last"){
-        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash -Last
-    }
-    else{
-        Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash
-    }
+
+    Move-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash
 }
 
 $scriptBlockRemoveButtonBarBar= {
@@ -132,7 +124,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Set button"{
         #Arrange
-        $params = @{Logical; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -144,7 +136,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Remove main menu button"{
         #Arrange
-        $params = @{Logical; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         getCountButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar" | Should be 1
@@ -158,7 +150,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
     It "Sets button with no XML"{
         #Arrange
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
-        $params = @{Logical; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
         #Rollback
@@ -171,7 +163,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
         New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
-        $params = @{Logical; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
         #Rollback
@@ -194,7 +186,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Set existing button"{
         #Arrange
-        $params = @{Logical; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -223,7 +215,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         for ($i=2; $i -le $arrayLength - 1;$i++){
             $labelArray[$i] = $tempArray[$i-1]
         }
-        $params = @{Name = $moveblelabel; ButtonBar = "FolderButtonbar"; After = $tempArray[0]}
+        $params = @{Name = $moveblelabel; After = $tempArray[0]; Logical = $true; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
 
@@ -258,9 +250,9 @@ Describe "Testing ISHUIButtonBarItemButton"{
         for ($i=0; $i -le $arrayLength - 2;$i++){
             $labelArray[$i] = $tempArray[$i+1]
         }
-        $params = @{Name = $moveblelabel; ButtonBar = "FolderButtonbar";}
+        $params = @{Name = $moveblelabel; Last = $true; Logical = $true; }
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params, "Last"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
 
         #read the updated xml file
         [xml]$XmlButtonBarBar = RemoteReadXML "$xmlPath\FolderButtonbar.xml"
@@ -284,7 +276,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $arrayLength = $labelArray.Length
         #select label that will be moved
         $moveblelabel = $labelArray[$arrayLength -1]
-        $params = @{Name = $moveblelabel; ButtonBar = "FolderButtonbar"; After = $moveblelabel }
+        $params = @{Name = $moveblelabel; After = $moveblelabel; Logical = $true; }
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
@@ -306,7 +298,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $arrayLength = $labelArray.Length
         #select label that will be moved
         $moveblelabel = $labelArray[$arrayLength -1]
-        $params = @{Name = $moveblelabel; ButtonBar = "FolderButtonbar"; After = $invalidName }
+        $params = @{Name = $moveblelabel; After = $invalidName; Logical = $true; }
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
@@ -328,7 +320,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $arrayLength = $labelArray.Length
         #select label that will be moved
         $moveblelabel = $labelArray[$arrayLength -1]
-        $params = @{Name = $invalidName; ButtonBar = "FolderButtonbar";After = $moveblelabel }
+        $params = @{Name = $invalidName; After = $moveblelabel; Logical = $true; }
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} | Should Not Throw
 
@@ -358,9 +350,9 @@ Describe "Testing ISHUIButtonBarItemButton"{
         for ($i=1; $i -le $arrayLength - 1;$i++){
             $labelArray[$i] = $tempArray[$i-1]
         }
-        $params = @{Name = $moveblelabel; ButtonBar = "FolderButtonbar"; }
+        $params = @{Name = $moveblelabel; First = $true; Logical = $true; }
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params, "First"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
 
         #read the updated xml file
         [xml]$XmlButtonBarBar = RemoteReadXML "$xmlPath\FolderButtonbar.xml"

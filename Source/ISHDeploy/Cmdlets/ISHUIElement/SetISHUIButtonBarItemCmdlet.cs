@@ -157,7 +157,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                 string value;
                 if (!dict.TryGetValue(type.ToString(), out value))
                 {
-                    throw new ArgumentException($"Cannot find card type for {type}.");
+                    throw new ArgumentException($"Unable to find correspond card type for {type}.");
                 }
                 cards.Add(value);
             }

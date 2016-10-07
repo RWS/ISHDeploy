@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <para type="link">Set-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Move-ISHUIButtonBarItem -ISHDeployment $deployment -Name "Test"</code>
+    /// <code>PS C:\>Move-ISHUIButtonBarItem -ISHDeployment $deployment -Logical -First -Name "test"</code>
     /// <para>This command move main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>

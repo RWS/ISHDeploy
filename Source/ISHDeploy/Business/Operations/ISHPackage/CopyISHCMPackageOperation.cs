@@ -21,9 +21,10 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
-﻿using ISHDeploy.Interfaces;
+using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -66,9 +67,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // Get files list with paths
             var filesList = fileManager.GetFiles(temporaryDirectory, "*.*", true);
 
-            // Separate _config.xml file ans any *Buttonbar.xml from other files
-            var configFile = filesList.SingleOrDefault(x => !x.ToLower().Contains("_config.xml"));
-            var buttonbarFiles = filesList.Where(x => !x.ToLower().Contains("buttonbar.xml"));
+            // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)
+            var configFile = filesList
+                .Where (x => x.ToLower().Contains("_config.xml"))
+                .Where (x => x.ToLower().Contains("12.0.0"))
+                .FirstOrDefault();
+
+            var buttonbarFiles = filesList
+                .Where(x => x.ToLower().Contains("buttonbar.xml"))
+                .Where (x => x.ToLower().Contains("12.0.0"));
 
             // if _config.xml exist do update _config.xml
             if (configFile != null)
@@ -86,14 +93,21 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 if (fileManager.FileExists(actualPath))
                 {
                     // Get list of ButtonBarItem models
-                    IEnumerable<ButtonBarItem> buttonBarItems = new List<ButtonBarItem>();
+                    ButtonBarItemCollection buttonBarItems = null;
 
-                    foreach (var item in buttonBarItems)
+                    XmlSerializer serializer = new XmlSerializer(typeof(ButtonBarItem));
+
+                    StreamReader reader = new StreamReader(buttonbarFile);
+                    buttonBarItems = (ButtonBarItemCollection)serializer.Deserialize(reader);
+                    reader.Close();
+
+                    foreach (var item in buttonBarItems.ButtonBarItemArray)
                     {
-                        _invoker.AddAction(new SetUIElementAction(Logger, new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
+                        _invoker.AddAction(new SetUIElementAction(Logger, 
+                            new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                     }
 
-                    filesList.Remove(buttonbarFile);
+                    filesList.Remove(buttonbarFile); 
                 }
 
             }
@@ -105,9 +119,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 //_invoker.AddAction(new );
             }
 
-
-
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
         }
 
         /// <summary>

@@ -16,9 +16,19 @@
 using ISHDeploy.Business.Enums;
 using System.Xml.Serialization;
 using System.Linq;
+using System;
 
 namespace ISHDeploy.Models.UI
 {
+    [Serializable()]
+    [System.Xml.Serialization.XmlRoot("CarCollection")]
+    public class ButtonBarItemCollection
+    {
+        [XmlArray("BUTTONBAR")]
+        [XmlArrayItem("BUTTON", typeof(ButtonBarItem))]
+        public ButtonBarItem[] ButtonBarItemArray { get; set; }
+    }
+
     /// <summary>
     /// <para type="description">Represents the item depend on button bar type.</para>
     /// </summary>

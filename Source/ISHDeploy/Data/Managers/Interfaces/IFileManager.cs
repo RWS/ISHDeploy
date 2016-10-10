@@ -161,6 +161,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationDirectoryPath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        void ExtractPackageToDirectory(string sourceDirectoryPath, string destinationDirectoryPath);
+
+        /// <summary>
         /// Determines whether is the specified file locked.
         /// </summary>
         /// <param name="filePath">The file path.</param>

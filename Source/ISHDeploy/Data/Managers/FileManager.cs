@@ -361,6 +361,25 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceArchiveFilePath">The path to archive.</param>
+        /// <param name="destinationDirectoryPath">The path to destination folder.</param>
+        public void ExtractPackageToDirectory(string sourceArchiveFilePath, string destinationDirectoryPath)
+        {
+            _logger.WriteDebug("Unzip folder", sourceArchiveFilePath, destinationDirectoryPath);
+
+            if (FolderExists(destinationDirectoryPath))
+            {
+                DeleteDirectory(destinationDirectoryPath);
+            }
+
+            ZipFile.ExtractToDirectory(sourceArchiveFilePath, destinationDirectoryPath);
+
+            _logger.WriteVerbose($"The source package `{sourceArchiveFilePath}` has been extracted to `{destinationDirectoryPath}`");
+        }
+
+        /// <summary>
         /// Determines whether is the specified file locked.
         /// </summary>
         /// <param name="filePath">The file path.</param>

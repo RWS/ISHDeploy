@@ -87,6 +87,7 @@
     <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
+    <Compile Include="Business\Operations\ISHPackage\CopyISHCMPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationOperation.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\CopyISHCMPackage.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />

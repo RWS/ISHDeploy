@@ -25,6 +25,7 @@ using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 using System.Xml.Serialization;
+using System.IO;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -103,6 +104,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                     foreach (var item in buttonBarItems.ButtonBarItemArray)
                     {
+                        item.ChangeButtonBarItemProperties(Path.GetFileName(buttonbarFile));
                         _invoker.AddAction(new SetUIElementAction(Logger, 
                             new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                     }

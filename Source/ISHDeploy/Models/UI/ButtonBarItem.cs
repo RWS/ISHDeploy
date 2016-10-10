@@ -20,10 +20,16 @@ using System;
 
 namespace ISHDeploy.Models.UI
 {
+    /// <summary>
+    /// <para type="description">Represents collection of ButtonBarItem.</para>
+    /// </summary>
     [Serializable()]
     [System.Xml.Serialization.XmlRoot("CarCollection")]
     public class ButtonBarItemCollection
     {
+        /// <summary>
+        /// Array of ButtonBarItems.
+        /// </summary>
         [XmlArray("BUTTONBAR")]
         [XmlArrayItem("BUTTON", typeof(ButtonBarItem))]
         public ButtonBarItem[] ButtonBarItemArray { get; set; }
@@ -59,6 +65,18 @@ namespace ISHDeploy.Models.UI
         private ButtonBarItem()
         {
 
+        }
+        
+        /// <summary>
+        /// Change some fileds for created one.
+        /// </summary>
+        public void ChangeButtonBarItemProperties(string fileName)
+        {
+            RelativeFilePath = $@"Author\ASP\XSL\{fileName}";
+            NameOfRootElement = "BUTTONBAR";
+            NameOfItem = "BUTTON";
+            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
+            XPath = string.Format(XPathFormat, Input.Name);
         }
 
         /// <summary>

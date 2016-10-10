@@ -56,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _zipFilePath = zipFilePath;
 
-            string temporaryDirectory = @"f:\tempfolder";
+            string temporaryDirectory = @"c:\tempfolder";
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
@@ -71,12 +71,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)
             var configFile = filesList
                 .Where (x => x.ToLower().Contains("_config.xml"))
-                .Where (x => x.ToLower().Contains("12.0.0"))
+                .Where (x => x.ToLower().Contains("12.x"))
                 .FirstOrDefault();
 
             var buttonbarFiles = filesList
                 .Where(x => x.ToLower().Contains("buttonbar.xml"))
-                .Where (x => x.ToLower().Contains("12.0.0"));
+                .Where (x => x.ToLower().Contains("12.x"));
 
             // if _config.xml exist do update _config.xml
             if (configFile != null)
@@ -89,9 +89,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // For each *Buttonbar.xml do update appropriate *Buttonbar.xml
             foreach (var buttonbarFile in buttonbarFiles)
             {
-                // Get actualPath 
-                string actualPath = buttonbarFile; //Path.Combine(ishDeployment.) buttonbarFile
-                if (fileManager.FileExists(actualPath))
+                string fileName = Path.GetFileName(buttonbarFile); 
+                string projectSuffix = 
+                    ObjectFactory.GetInstance<IDataAggregateHelper>().GetInputParameters(ishDeployment.Name).ProjectSuffix;
+
+                if (fileManager.FileExists($@"{ishDeployment.WebPath}\Web{projectSuffix}\Author\ASP\XSL\{fileName}"))
                 {
                     // Get list of ButtonBarItem models
                     ButtonBarItemCollection buttonBarItems = null;
@@ -104,7 +106,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                     foreach (var item in buttonBarItems.ButtonBarItemArray)
                     {
-                        item.ChangeButtonBarItemProperties(Path.GetFileName(buttonbarFile));
+                        item.ChangeButtonBarItemProperties(fileName);
                         _invoker.AddAction(new SetUIElementAction(Logger, 
                             new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                     }

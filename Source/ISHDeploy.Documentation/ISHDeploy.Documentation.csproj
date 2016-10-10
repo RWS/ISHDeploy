@@ -46,8 +46,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
-    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateSearchMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateMainMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateEventMonitorMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifySearchMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyMainMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyEventMonitorMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\Configuring ISHCM web UI button bars.md" />
     <None Include="Articles\FeatureToggle\Configuring ISHCM web UI menu bars.md" />
     <None Include="Articles\FeatureToggle\Toggling Web Components.md" />

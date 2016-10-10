@@ -1,6 +1,7 @@
 ﻿$hash=@{
     Label="Custom Event"
     Description="Show all custom events"
-    EventTypesFilter="CUSTOM"
+    UserRole="Administrator"
+	EventTypesFilter="CUSTOM"
 }
 Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash

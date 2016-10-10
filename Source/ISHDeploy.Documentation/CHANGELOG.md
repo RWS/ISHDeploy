@@ -25,8 +25,8 @@
 			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
     2. Documentation - Articles
 		- Reorganize former "Configuring features using the module" article into three more specialized. **[Update]**
-			- Toggling Web Components
-			- Configuring ISHCM web UI menu bars
+			- Toggling Web Components. **[Update]**
+			- Configuring ISHCM web UI menu bars. **[Update]**
 			- Configuring ISHCM web UI button bars
 
 ## stable-1.1

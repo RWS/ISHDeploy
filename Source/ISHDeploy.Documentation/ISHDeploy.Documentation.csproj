@@ -46,9 +46,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Articles\FeatureToggle\01.CreateButtonBarItem.ps1" />
     <None Include="Articles\FeatureToggle\01.CreateSearchMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\01.CreateMainMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\01.CreateEventMonitorMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyButtonBarItem.ps1" />
     <None Include="Articles\FeatureToggle\02.ModifySearchMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\02.ModifyMainMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\02.ModifyEventMonitorMenuBarItem.ps1" />

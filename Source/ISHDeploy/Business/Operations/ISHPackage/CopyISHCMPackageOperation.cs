@@ -22,8 +22,6 @@ using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
-using System.Xml.Serialization;
-using System.Xml;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.Directory;
 
@@ -87,12 +85,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 // Add action to update _config.xml file
 
-                configuration config = null;
-                XmlSerializer ser = new XmlSerializer(typeof(configuration));
-                using (XmlReader reader = XmlReader.Create(configFile))
-                {
-                    config = (configuration)ser.Deserialize(reader);
-                }
+                configuration config = xmlManager.Deserialize<configuration>(configFile);
+
                 config.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
                 _invoker.AddAction(new SetUIElementAction(Logger,
                                 new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, config.RelativeFilePath), config));

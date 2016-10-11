@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-
 using ISHDeploy.Models.UI;
 /// <remarks/>
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public class configuration : BaseUIElement
+[System.Xml.Serialization.XmlRootAttribute("resourceGroups", Namespace = "", IsNullable = false)]
+public class ResourceGroups : BaseUIElement
 {
     /// <summary>
     /// Change some fileds for created one.
@@ -32,36 +31,13 @@ public class configuration : BaseUIElement
         XPathToParentElement = "configuration/resourceGroups";
         NameOfItem = "resourceGroup";
         XPathFormat = "configuration/resourceGroups/resourceGroup[@name='{0}']";
-        XPath = string.Format(XPathFormat, resourceGroups.resourceGroup.name);
+        XPath = string.Format(XPathFormat, resourceGroup.name);
     }
 
-    private configurationResourceGroups resourceGroupsField;
+    private resourceGroupsResourceGroup resourceGroupField;
 
     /// <remarks/>
-    public configurationResourceGroups resourceGroups
-    {
-        get
-        {
-            return this.resourceGroupsField;
-        }
-        set
-        {
-            this.resourceGroupsField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroups
-{
-
-    private configurationResourceGroupsResourceGroup resourceGroupField;
-
-    /// <remarks/>
-    public configurationResourceGroupsResourceGroup resourceGroup
+    public resourceGroupsResourceGroup resourceGroup
     {
         get
         {
@@ -78,16 +54,16 @@ public partial class configurationResourceGroups
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroupsResourceGroup
+public partial class resourceGroupsResourceGroup
 {
 
-    private configurationResourceGroupsResourceGroupFile[] filesField;
+    private resourceGroupsResourceGroupFile[] filesField;
 
     private string nameField;
 
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("file", IsNullable = false)]
-    public configurationResourceGroupsResourceGroupFile[] files
+    public resourceGroupsResourceGroupFile[] files
     {
         get
         {
@@ -118,7 +94,7 @@ public partial class configurationResourceGroupsResourceGroup
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroupsResourceGroupFile
+public partial class resourceGroupsResourceGroupFile
 {
 
     private string nameField;
@@ -137,4 +113,5 @@ public partial class configurationResourceGroupsResourceGroupFile
         }
     }
 }
+
 

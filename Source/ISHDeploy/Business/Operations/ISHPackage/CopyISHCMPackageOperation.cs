@@ -87,15 +87,17 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 // Add action to update _config.xml file
 
-                configuration config = null;
-                XmlSerializer ser = new XmlSerializer(typeof(configuration));
+                ResourceGroups resourceGroup = null;
+
+                XmlSerializer ser = new XmlSerializer(typeof(ResourceGroups));
                 using (XmlReader reader = XmlReader.Create(configFile))
                 {
-                    config = (configuration)ser.Deserialize(reader);
+                    reader.ReadToDescendant("resourceGroups");
+                    resourceGroup = (ResourceGroups)ser.Deserialize(reader.ReadSubtree());
                 }
-                config.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
+                resourceGroup.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
                 _invoker.AddAction(new SetUIElementAction(Logger,
-                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, config.RelativeFilePath), config));
+                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
                 filesList.Remove(configFile);
             }
 

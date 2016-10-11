@@ -16,6 +16,8 @@
 
 using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -24,6 +26,7 @@ using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.Directory;
+using ISHDeploy.Models.UI.CUIFConfig;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -83,13 +86,18 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // if _config.xml exist do update _config.xml
             if (configFile != null)
             {
-                // Add action to update _config.xml file
+                resourceGroup resourceGroup = null;
 
-                configuration config = xmlManager.Deserialize<configuration>(configFile);
+                XmlSerializer ser = new XmlSerializer(typeof(resourceGroup));
+                using (XmlReader reader = XmlReader.Create(configFile))
+                {
+                    reader.ReadToDescendant("resourceGroup");
+                    resourceGroup = (resourceGroup)ser.Deserialize(reader.ReadSubtree());
+                }
+                resourceGroup.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
 
-                config.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
                 _invoker.AddAction(new SetUIElementAction(Logger,
-                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, config.RelativeFilePath), config));
+                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
                 filesList.Remove(configFile);
             }
 
@@ -100,7 +108,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                 if (fileManager.FileExists($@"{AuthorFolderPath}\Author\ASP\XSL\{fileName}"))
                 {
-                    // Get list of ButtonBarItem models
                     ButtonBarItemCollection buttonBarItems =
                         xmlManager.Deserialize<ButtonBarItemCollection>(buttonbarFile);
 
@@ -112,9 +119,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                                 new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                         }
                     }
+
                     filesList.Remove(buttonbarFile); 
                 }
-
             }
 
             // For other files do copy with overwrite

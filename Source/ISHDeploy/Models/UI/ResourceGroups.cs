@@ -14,15 +14,38 @@
  * limitations under the License.
  */
 
-
 using ISHDeploy.Models.UI;
+///// <remarks/>
+//[System.SerializableAttribute()]
+//[System.ComponentModel.DesignerCategoryAttribute("code")]
+//[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+//[System.Xml.Serialization.XmlRootAttribute("resourceGroups", Namespace = "", IsNullable = false)]
+//public class ResourceGroups
+//{
+
+//    private resourceGroup resourceGroupField;
+
+//    /// <remarks/>
+//    public resourceGroup resourceGroup
+//    {
+//        get
+//        {
+//            return this.resourceGroupField;
+//        }
+//        set
+//        {
+//            this.resourceGroupField = value;
+//        }
+//    }
+//}
+
 /// <remarks/>
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public class configuration : BaseUIElement
+public class resourceGroup : BaseUIElement
 {
+
     /// <summary>
     /// Change some fileds for created one.
     /// </summary>
@@ -32,62 +55,15 @@ public class configuration : BaseUIElement
         XPathToParentElement = "configuration/resourceGroups";
         NameOfItem = "resourceGroup";
         XPathFormat = "configuration/resourceGroups/resourceGroup[@name='{0}']";
-        XPath = string.Format(XPathFormat, resourceGroups.resourceGroup.name);
+        XPath = string.Format(XPathFormat, name);
     }
-
-    private configurationResourceGroups resourceGroupsField;
-
-    /// <remarks/>
-    public configurationResourceGroups resourceGroups
-    {
-        get
-        {
-            return this.resourceGroupsField;
-        }
-        set
-        {
-            this.resourceGroupsField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroups
-{
-
-    private configurationResourceGroupsResourceGroup resourceGroupField;
-
-    /// <remarks/>
-    public configurationResourceGroupsResourceGroup resourceGroup
-    {
-        get
-        {
-            return this.resourceGroupField;
-        }
-        set
-        {
-            this.resourceGroupField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroupsResourceGroup
-{
-
-    private configurationResourceGroupsResourceGroupFile[] filesField;
+    private resourceGroupsResourceGroupFile[] filesField;
 
     private string nameField;
 
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("file", IsNullable = false)]
-    public configurationResourceGroupsResourceGroupFile[] files
+    public resourceGroupsResourceGroupFile[] files
     {
         get
         {
@@ -118,7 +94,7 @@ public partial class configurationResourceGroupsResourceGroup
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationResourceGroupsResourceGroupFile
+public partial class resourceGroupsResourceGroupFile
 {
 
     private string nameField;
@@ -137,4 +113,5 @@ public partial class configurationResourceGroupsResourceGroupFile
         }
     }
 }
+
 

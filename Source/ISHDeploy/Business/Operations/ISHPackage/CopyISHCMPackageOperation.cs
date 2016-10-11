@@ -78,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .FirstOrDefault();
 
             var buttonbarFiles = filesList
-                .Where(x => x.ToLower().Contains("buttonbar.xml"));
+                .Where(x => x.ToLower().Contains("buttonbar.xml")).ToList();
 
             // if _config.xml exist do update _config.xml
             if (configFile != null)
@@ -111,7 +111,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                                 new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                         }
                     }
-                    //filesList.Remove(buttonbarFile); 
+                    filesList.Remove(buttonbarFile); 
                 }
 
             }

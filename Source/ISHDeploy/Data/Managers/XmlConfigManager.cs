@@ -806,6 +806,25 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(ButtonBarItemCollection));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                return (T)ser.Deserialize(reader);
+            }
+        }
+
         #region private methods
 
         /// <summary>

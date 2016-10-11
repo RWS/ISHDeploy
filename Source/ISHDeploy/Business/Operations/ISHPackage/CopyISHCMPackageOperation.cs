@@ -59,6 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             string temporaryDirectory = @"c:\tempfolder";
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var xmlManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
             _invoker = new ActionInvoker(logger, "Copying package to environment");
 
@@ -96,14 +97,10 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 if (fileManager.FileExists($@"{AuthorFolderPath}\Author\ASP\XSL\{fileName}"))
                 {
                     // Get list of ButtonBarItem models
-                    ButtonBarItemCollection buttonBarItems = null;
-                    XmlSerializer ser = new XmlSerializer(typeof(ButtonBarItemCollection));
-                    using (XmlReader reader = XmlReader.Create(buttonbarFile))
-                    {
-                        buttonBarItems = (ButtonBarItemCollection)ser.Deserialize(reader);
-                    }
+                    ButtonBarItemCollection buttonBarItems =
+                        xmlManager.Deserialize<ButtonBarItemCollection>(buttonbarFile);
 
-                    if(buttonBarItems.ButtonBarItemArray != null) {
+                    if (buttonBarItems.ButtonBarItemArray != null) {
                         foreach (var item in buttonBarItems.ButtonBarItemArray)
                          {
                             item.ChangeButtonBarItemProperties(fileName);

@@ -176,5 +176,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="value">The value.</param>
         /// <returns></returns>
         string Serialize<T>(T value);
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <returns>Deserialized object of type T</returns>
+        T Deserialize<T>(string xmlFilePath);
     }
 }

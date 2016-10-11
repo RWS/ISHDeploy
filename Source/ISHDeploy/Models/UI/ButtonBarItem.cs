@@ -31,6 +31,34 @@ namespace ISHDeploy.Models.UI
     }
 
     /// <summary>
+    /// Java script Node
+    /// </summary>
+    [XmlRoot("SCRIPT", Namespace = "")]
+    public class Script
+    {
+        /// <summary>
+        /// LANGUAGE
+        /// </summary>
+        [XmlAttribute("LANGUAGE")]
+        public string Language { get; set; }
+        /// <summary>
+        /// type
+        /// </summary>
+        [XmlAttribute("type")]
+        public string Type { get; set; }
+        /// <summary>
+        /// src
+        /// </summary>
+        [XmlAttribute("src")]
+        public string Src { get; set; }
+        /// <summary>
+        /// text body
+        /// </summary>
+        [XmlText]
+        public string ScriptBody { get; set; }
+    }
+
+    /// <summary>
     /// <para type="description">Represents the item depend on button bar type.</para>
     /// </summary>
     [XmlRoot("BUTTON", Namespace = "")]
@@ -52,7 +80,7 @@ namespace ISHDeploy.Models.UI
         /// Javascript file.
         /// </summary>
         [XmlElement("SCRIPT")]
-        public string[] Script { set; get; }
+        public Script[] Script { set; get; }
 
         /// <summary>
         /// To create Input type xml node

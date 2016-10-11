@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 using System.Xml.Serialization;
-using System.IO;
 using System.Xml;
+using ISHDeploy.Data.Actions.File;
+using ISHDeploy.Data.Actions.Directory;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -78,14 +77,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .FirstOrDefault();
 
             var buttonbarFiles = filesList
-                .Where(x => x.ToLower().Contains("buttonbar.xml")).ToList();
+                .Where(x => x.ToLower().Contains("buttonbar.xml"))
+                .ToList();
 
             // if _config.xml exist do update _config.xml
             if (configFile != null)
             {
                 // Add action to update _config.xml file
 
-                //filesList.Remove(configFile);
+                filesList.Remove(configFile);
             }
 
             // For each *Buttonbar.xml do update appropriate *Buttonbar.xml
@@ -116,12 +116,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             }
 
-            // For other files do copy with overwrite 
-            //foreach (var otherFile in filesList)
-            //{
-            //    // Add copy with replace action
-            //    //_invoker.AddAction(new );
-            //}
+            // For other files do copy with overwrite
+            foreach (var otherFile in filesList)
+            {
+                // Add copy with replace action
+                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\")+4);
+                var newDestination = new ISHFilePath($@"{AuthorFolderPath}\{filenameWithPartialPath}", BackupWebFolderPath, "");
+                _invoker.AddAction(new DirectoryCreateAction(logger,newDestination.AbsolutePath));
+                _invoker.AddAction(new FileCopyToDirectoryAction(logger, otherFile, newDestination, true));
+            }
 
         }
 

@@ -1,4 +1,8 @@
-﻿- name: Articles
+﻿- name: Getting started
+  href: obj/doc/Getting Started.md
+- name: Tutorials
   href: Articles/
-- name: Commands
+- name: Cmdlet documentation
   href: obj/doc/commands/
+- name: Release notes
+  href: obj/doc/CHANGELOG.md

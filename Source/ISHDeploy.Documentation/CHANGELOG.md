@@ -27,7 +27,7 @@
 		- Reorganize former "Configuring features using the module" article into three more specialized. **[Update]**
 			- Toggling Web Components. **[Update]**
 			- Configuring ISHCM web UI menu bars. **[Update]**
-			- Configuring ISHCM web UI button bars
+			- Configuring ISHCM web UI button bars. **[New]**
 
 ## stable-1.1
 

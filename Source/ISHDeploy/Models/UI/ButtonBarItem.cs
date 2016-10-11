@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Enums;
 using System.Xml.Serialization;
-using System.Linq;
-using System;
 
 namespace ISHDeploy.Models.UI
 {
@@ -77,7 +74,7 @@ namespace ISHDeploy.Models.UI
         public void ChangeButtonBarItemProperties(string fileName)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{fileName}";
-            NameOfRootElement = "BUTTONBAR";
+            XPathToParentElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
             XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
             XPath = string.Format(XPathFormat, Input.Name);
@@ -96,7 +93,7 @@ namespace ISHDeploy.Models.UI
         public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null, bool hideText = false)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
-            NameOfRootElement = "BUTTONBAR";
+            XPathToParentElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
 
             Input = new Input();

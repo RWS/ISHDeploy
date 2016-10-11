@@ -566,10 +566,11 @@ namespace ISHDeploy.Data.Managers
             if (found == null)
             {
                 _logger.WriteDebug("Insert UI element", model.XPath, filePath);
-                var memberList = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).ToList();
+                var parent = doc.XPathSelectElement(model.XPathToParentElement);
+                var memberList = parent.Elements(model.NameOfItem).ToList();
                 if (!memberList.Any())
                 {
-                    doc.Element(model.NameOfRootElement).Add(element);
+                    parent.Add(element);
                 }
                 else
                 {
@@ -676,18 +677,18 @@ namespace ISHDeploy.Data.Managers
                 switch (direction)
                 {
                     case UIElementMoveDirection.First:
-                        doc.Element(model.NameOfRootElement).AddFirst(found);
+                        doc.Element(model.XPathToParentElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
                     case UIElementMoveDirection.Last:
-                        var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
+                        var lastElement = doc.Element(model.XPathToParentElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
                             lastElement.AddAfterSelf(found);
                         }
                         else
                         {
-                            doc.Element(model.NameOfRootElement).Add(found);
+                            doc.Element(model.XPathToParentElement).Add(found);
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;

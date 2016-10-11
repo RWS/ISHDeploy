@@ -8,6 +8,8 @@
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
     2. Documentation - Articles
 		- New article on how to work with one deployment. **[Update]**
+		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
+		- Renamed items in the top bar to *Tutorials** and **Cmdlet Documentation**. **[Update]**
 1. Working with ISHCM web UI features
     1. Cmdlets
 	    - `Set-ISHUIButtonBarItem` . **[New]**

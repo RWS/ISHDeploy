@@ -35,22 +35,7 @@ public class configuration : BaseUIElement
         XPath = string.Format(XPathFormat, resourceGroups.resourceGroup.name);
     }
 
-    private configurationAppSettings appSettingsField;
-
     private configurationResourceGroups resourceGroupsField;
-
-    /// <remarks/>
-    public configurationAppSettings appSettings
-    {
-        get
-        {
-            return this.appSettingsField;
-        }
-        set
-        {
-            this.appSettingsField = value;
-        }
-    }
 
     /// <remarks/>
     public configurationResourceGroups resourceGroups
@@ -62,69 +47,6 @@ public class configuration : BaseUIElement
         set
         {
             this.resourceGroupsField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationAppSettings
-{
-
-    private configurationAppSettingsSetting settingField;
-
-    /// <remarks/>
-    public configurationAppSettingsSetting setting
-    {
-        get
-        {
-            return this.settingField;
-        }
-        set
-        {
-            this.settingField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class configurationAppSettingsSetting
-{
-
-    private string nameField;
-
-    private string valueField;
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public string name
-    {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public string value
-    {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
         }
     }
 }

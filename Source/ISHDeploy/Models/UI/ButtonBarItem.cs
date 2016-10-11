@@ -23,15 +23,13 @@ namespace ISHDeploy.Models.UI
     /// <summary>
     /// <para type="description">Represents collection of ButtonBarItem.</para>
     /// </summary>
-    [Serializable()]
-    [System.Xml.Serialization.XmlRoot("CarCollection")]
+    [XmlRoot("BUTTONBAR", Namespace = "")]
     public class ButtonBarItemCollection
     {
         /// <summary>
         /// Array of ButtonBarItems.
         /// </summary>
-        [XmlArray("BUTTONBAR")]
-        [XmlArrayItem("BUTTON", typeof(ButtonBarItem))]
+        [XmlElement("BUTTON")]
         public ButtonBarItem[] ButtonBarItemArray { get; set; }
     }
 
@@ -52,6 +50,12 @@ namespace ISHDeploy.Models.UI
         /// </summary>
         [XmlElement("CARDTYPE")]
         public string[] CardTypes { set; get; }
+        
+        /// <summary>
+        /// Javascript file.
+        /// </summary>
+        [XmlElement("SCRIPT")]
+        public string[] Script { set; get; }
 
         /// <summary>
         /// To create Input type xml node

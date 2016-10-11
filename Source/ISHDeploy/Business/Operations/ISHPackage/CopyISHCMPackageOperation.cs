@@ -26,6 +26,7 @@ using ISHDeploy.Models;
 using ISHDeploy.Models.UI;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -66,62 +67,61 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             fileManager.ExtractPackageToDirectory(zipFilePath, temporaryDirectory);
 
             // Get files list with paths
-            var filesList = fileManager.GetFiles(temporaryDirectory, "*.*", true);
+            var filesList = fileManager
+                .GetFiles(temporaryDirectory, "*.*", true)
+                .Where(x => x.ToLower().Contains("12.x"))
+                .ToList();
 
             // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)
             var configFile = filesList
                 .Where (x => x.ToLower().Contains("_config.xml"))
-                .Where (x => x.ToLower().Contains("12.x"))
                 .FirstOrDefault();
 
             var buttonbarFiles = filesList
-                .Where(x => x.ToLower().Contains("buttonbar.xml"))
-                .Where (x => x.ToLower().Contains("12.x"));
+                .Where(x => x.ToLower().Contains("buttonbar.xml"));
 
             // if _config.xml exist do update _config.xml
             if (configFile != null)
             {
                 // Add action to update _config.xml file
 
-                filesList.Remove(configFile);
+                //filesList.Remove(configFile);
             }
 
             // For each *Buttonbar.xml do update appropriate *Buttonbar.xml
             foreach (var buttonbarFile in buttonbarFiles)
             {
                 string fileName = Path.GetFileName(buttonbarFile); 
-                string projectSuffix = 
-                    ObjectFactory.GetInstance<IDataAggregateHelper>().GetInputParameters(ishDeployment.Name).ProjectSuffix;
 
-                if (fileManager.FileExists($@"{ishDeployment.WebPath}\Web{projectSuffix}\Author\ASP\XSL\{fileName}"))
+                if (fileManager.FileExists($@"{AuthorFolderPath}\Author\ASP\XSL\{fileName}"))
                 {
                     // Get list of ButtonBarItem models
                     ButtonBarItemCollection buttonBarItems = null;
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(ButtonBarItem));
-
-                    StreamReader reader = new StreamReader(buttonbarFile);
-                    buttonBarItems = (ButtonBarItemCollection)serializer.Deserialize(reader);
-                    reader.Close();
-
-                    foreach (var item in buttonBarItems.ButtonBarItemArray)
+                    XmlSerializer ser = new XmlSerializer(typeof(ButtonBarItemCollection));
+                    using (XmlReader reader = XmlReader.Create(buttonbarFile))
                     {
-                        item.ChangeButtonBarItemProperties(fileName);
-                        _invoker.AddAction(new SetUIElementAction(Logger, 
-                            new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
+                        buttonBarItems = (ButtonBarItemCollection)ser.Deserialize(reader);
                     }
 
-                    filesList.Remove(buttonbarFile); 
+                    if(buttonBarItems.ButtonBarItemArray != null) {
+                        foreach (var item in buttonBarItems.ButtonBarItemArray)
+                         {
+                            item.ChangeButtonBarItemProperties(fileName);
+                            _invoker.AddAction(new SetUIElementAction(Logger,
+                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
+                        }
+                    }
+                    //filesList.Remove(buttonbarFile); 
                 }
 
             }
 
             // For other files do copy with overwrite 
-            foreach (var otherFile in filesList)
-            {
-                // Add copy with replace action
-                //_invoker.AddAction(new );
-            }
+            //foreach (var otherFile in filesList)
+            //{
+            //    // Add copy with replace action
+            //    //_invoker.AddAction(new );
+            //}
 
         }
 

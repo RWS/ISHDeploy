@@ -77,6 +77,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .Where (x => x.ToLower().Contains("_config.xml"))
                 .FirstOrDefault();
 
+            // Get list of ButtonBarItem models
             var buttonbarFiles = filesList
                 .Where(x => x.ToLower().Contains("buttonbar.xml"))
                 .ToList();
@@ -86,6 +87,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 // Add action to update _config.xml file
 
+                configuration config = null;
+                XmlSerializer ser = new XmlSerializer(typeof(configuration));
+                using (XmlReader reader = XmlReader.Create(configFile))
+                {
+                    config = (configuration)ser.Deserialize(reader);
+                }
+                config.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
+                _invoker.AddAction(new SetUIElementAction(Logger,
+                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, config.RelativeFilePath), config));
                 filesList.Remove(configFile);
             }
 
@@ -117,7 +127,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             foreach (var otherFile in filesList)
             {
                 // Add copy with replace action
-                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\")+4);
+                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\")+4); //for now for Web directory only.
                 var newDestination = new ISHFilePath($@"{AuthorFolderPath}\{filenameWithPartialPath}", BackupWebFolderPath, "");
                 _invoker.AddAction(new DirectoryCreateAction(logger,newDestination.AbsolutePath));
                 _invoker.AddAction(new FileCopyToDirectoryAction(logger, otherFile, newDestination, true));

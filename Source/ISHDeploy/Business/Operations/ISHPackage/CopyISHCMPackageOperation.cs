@@ -57,7 +57,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _zipFilePath = zipFilePath;
 
-            string temporaryDirectory = @"c:\tempfolder";
+            string temporaryDirectory = BackupFolderPath  + @"\unzipfolder";
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlManager = ObjectFactory.GetInstance<IXmlConfigManager>();

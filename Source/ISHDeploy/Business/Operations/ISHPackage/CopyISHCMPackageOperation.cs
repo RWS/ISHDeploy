@@ -70,7 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // Get files list with paths
             var filesList = fileManager
                 .GetFiles(temporaryDirectory, "*.*", true)
-                .Where(x => x.ToLower().Contains("12.x"))
+                .Where(x => x.ToLower().Contains($"{ishDeployment.SoftwareVersion.Major}.x"))
                 .ToList();
 
             // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)

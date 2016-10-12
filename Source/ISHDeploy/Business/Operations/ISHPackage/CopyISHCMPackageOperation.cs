@@ -27,6 +27,7 @@ using ISHDeploy.Models.UI;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Models.UI.CUIFConfig;
+using System.IO.Compression;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -42,11 +43,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Path to zip file
-        /// </summary>
-        private readonly string _zipFilePath;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CopyISHCMPackageOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -55,13 +51,32 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public CopyISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath) :
             base(logger, ishDeployment)
         {
-            _zipFilePath = zipFilePath;
-
-            string temporaryDirectory = BackupFolderPath  + @"\unzipfolder";
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
-            var xmlManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
+            string temporaryDirectory = (BackupFolderPath  + @"\Custom").Replace("\\", "/");
+
+            using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
+            {
+                var filesList = fileManager
+                    .GetFiles($@"{AuthorFolderPath}\Author\ASP\UI\", "*.*", true)
+                    .Select(x => x.Substring(x.IndexOf(@"\UI\") + 4).Replace("\\", "/"));
+                archive
+                    .Entries
+                    .Where(x => !filesList.Any(y => y == x.FullName))
+                    .ToList()
+                    .ForEach(x=> {
+                        if (x.Length != 0)
+                        {
+                            string fileName = temporaryDirectory + '/' + x;
+                            fileManager.CreateDirectory(Path.GetDirectoryName(fileName));  
+                            x.ExtractToFile(fileName, true);
+                        }});
+            }
+
+//.Except(filesList) .Where(x => !zipFilesList.Any(y => y == x.FullName))
+            //var xmlManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            /*
             _invoker = new ActionInvoker(logger, "Copying package to environment");
 
             // Unzip package
@@ -137,7 +152,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 _invoker.AddAction(new DirectoryCreateAction(logger, newDestination.AbsolutePath));
                 _invoker.AddAction(new FileCopyToDirectoryAction(logger, otherFile, newDestination, true));
             }
-
+            */
         }
 
         /// <summary>
@@ -145,7 +160,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            //_invoker.Invoke();
         }
     }
 }

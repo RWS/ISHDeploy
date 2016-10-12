@@ -75,7 +75,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)
             var configFile = filesList
-                .Where (x => x.ToLower().Contains("_config.xml"))
+                .Where(x => x.ToLower().Contains("_config.xml"))
                 .FirstOrDefault();
 
             // Get list of ButtonBarItem models
@@ -86,41 +86,45 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             // if _config.xml exist do update _config.xml
             if (configFile != null)
             {
-                resourceGroup resourceGroup = null;
+                ResourceGroups resourceGroups = null;
 
-                XmlSerializer ser = new XmlSerializer(typeof(resourceGroup));
+                XmlSerializer ser = new XmlSerializer(typeof(ResourceGroups));
                 using (XmlReader reader = XmlReader.Create(configFile))
                 {
-                    reader.ReadToDescendant("resourceGroup");
-                    resourceGroup = (resourceGroup)ser.Deserialize(reader.ReadSubtree());
+                    reader.ReadToDescendant("resourceGroups");
+                    resourceGroups = (ResourceGroups)ser.Deserialize(reader.ReadSubtree());
                 }
-                resourceGroup.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
+                foreach (var resourceGroup in resourceGroups.resourceGroups)
+                {
+                    resourceGroup.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
+                    _invoker.AddAction(new SetUIElementAction(Logger,
+                                    new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
+                }
 
-                _invoker.AddAction(new SetUIElementAction(Logger,
-                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
                 filesList.Remove(configFile);
             }
 
             // For each *Buttonbar.xml do update appropriate *Buttonbar.xml
             foreach (var buttonbarFile in buttonbarFiles)
             {
-                string fileName = Path.GetFileName(buttonbarFile); 
+                string fileName = Path.GetFileName(buttonbarFile);
 
                 if (fileManager.FileExists($@"{AuthorFolderPath}\Author\ASP\XSL\{fileName}"))
                 {
                     ButtonBarItemCollection buttonBarItems =
                         xmlManager.Deserialize<ButtonBarItemCollection>(buttonbarFile);
 
-                    if (buttonBarItems.ButtonBarItemArray != null) {
+                    if (buttonBarItems.ButtonBarItemArray != null)
+                    {
                         foreach (var item in buttonBarItems.ButtonBarItemArray)
-                         {
+                        {
                             item.ChangeButtonBarItemProperties(fileName);
                             _invoker.AddAction(new SetUIElementAction(Logger,
                                 new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
                         }
                     }
 
-                    filesList.Remove(buttonbarFile); 
+                    filesList.Remove(buttonbarFile);
                 }
             }
 
@@ -128,9 +132,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             foreach (var otherFile in filesList)
             {
                 // Add copy with replace action
-                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\")+4); //for now for Web directory only.
+                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\") + 4); //for now for Web directory only.
                 var newDestination = new ISHFilePath($@"{AuthorFolderPath}\{filenameWithPartialPath}", BackupWebFolderPath, "");
-                _invoker.AddAction(new DirectoryCreateAction(logger,newDestination.AbsolutePath));
+                _invoker.AddAction(new DirectoryCreateAction(logger, newDestination.AbsolutePath));
                 _invoker.AddAction(new FileCopyToDirectoryAction(logger, otherFile, newDestination, true));
             }
 

@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
+using System.Xml.Serialization;
+
 namespace ISHDeploy.Models.UI.CUIFConfig
 {
+    /// <summary>
+    /// <para type="description">Represents collection of resourceGroup.</para>
+    /// </summary>
+    [XmlRoot("resourceGroups", Namespace = "")]
+    public class ResourceGroups
+    {
+        /// <summary>
+        /// Array of resourceGroups.
+        /// </summary>
+        [XmlElement("resourceGroup")]
+        public resourceGroup[] resourceGroups { get; set; }
+    }
+
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

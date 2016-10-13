@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// 
     /// </summary>
     /// <seealso cref="BaseOperationPaths" />
-    public class CopyISHCMPackageOperation : BaseOperationPaths
+    public class SetISHCMCUILResourceGroupOperation : BaseOperationPaths
     {
         /// <summary>
         /// The actions invoker
@@ -43,12 +43,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CopyISHCMPackageOperation"/> class.
+        /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="zipFilePath">Path to zip file.</param>
-        public CopyISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath) :
+        public SetISHCMCUILResourceGroupOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath) :
             base(logger, ishDeployment)
         {
 

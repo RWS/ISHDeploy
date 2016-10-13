@@ -26,8 +26,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <code>PS C:\>Copy-ISHCMPackage -FileName "F:\test\example-extension.zip"</code>
     /// <para></para>
     /// </example>
-    [Cmdlet(VerbsCommon.Copy, "ISHCMPackage")]
-    public class CopyISHCMPackage : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
+    public class CopyISHCMFileCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// <para type="description">Path to zip file.</para>
@@ -40,9 +40,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new CopyISHCMPackageOperation(Logger, ISHDeployment, FileName);
+            var operation = new CopyISHCMFileOperation(Logger, ISHDeployment, FileName);
 
-            operation.Run();
         }
     }
 }

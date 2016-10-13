@@ -33,7 +33,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// <para type="description">Path to zip file.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Path to zip file")]
-        public string FileName { get; set; }
+        public string[] FileName { get; set; }
 
         /// <summary>
         /// <para type="description">Menu item move to the last position.</para>

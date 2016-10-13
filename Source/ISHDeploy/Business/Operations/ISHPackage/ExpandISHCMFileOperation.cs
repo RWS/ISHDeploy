@@ -16,17 +16,8 @@
 
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
-using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
-using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Models.UI.CUIFConfig;
 using System.IO.Compression;
 using System.Collections.Generic;
 
@@ -38,7 +29,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// <seealso cref="BaseOperationPaths" />
     public class ExpandISHCMFileOperation : BaseOperationPaths
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpandISHCMFileOperation"/> class.
         /// </summary>
@@ -52,8 +42,10 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            string expandDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin").Replace("\\", "/")
-                                                : ($@"{AuthorFolderPath}\Author\ASP\Custom").Replace("\\", "/");
+            string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
+                                                : ($@"{AuthorFolderPath}\Author\ASP\Custom");
+
+            destinationDirectory = destinationDirectory.Replace("\\", "/");
 
             using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
             {

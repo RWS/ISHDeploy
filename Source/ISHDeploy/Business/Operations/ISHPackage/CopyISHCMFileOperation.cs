@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
-using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
-using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Models.UI.CUIFConfig;
-using System.IO.Compression;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -43,36 +32,19 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="zipFilePath">Path to zip file.</param>
+        /// <param name="files">Relative path to file.</param>
         /// <param name="toBinary">If ToBinary switched.</param>
-        public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary=false) :
+        public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] files, bool toBinary = false) :
             base(logger, ishDeployment)
         {
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            string temporaryDirectory = toBinary?($@"{AuthorFolderPath}\Author\ASP\bin").Replace("\\", "/")
-                                                :(BackupFolderPath + @"\Custom").Replace("\\", "/");
+            string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
+                                                : ($@"{AuthorFolderPath}\Author\ASP\Custom");
 
-            using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
-            {
-                var filesList = fileManager
-                    .GetFiles($@"{AuthorFolderPath}\Author\ASP\UI\", "*.*", true)
-                    .Select(x => x.Substring(x.IndexOf(@"\UI\") + 4).Replace("\\", "/"));
-                archive
-                    .Entries
-                    .Where(x => !filesList.Any(y => y == x.FullName))
-                    .ToList()
-                    .ForEach(x =>
-                    {
-                        if (x.Length != 0)
-                        {
-                            string fileName = temporaryDirectory + '/' + x;
-                            fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
-                            x.ExtractToFile(fileName, true);
-                        }
-                    });
-            }
+
+            files.ToList().ForEach(x => fileManager.CopyToDirectory($@"{BackupFolderPath}\Package\"+x, destinationDirectory));
         }
     }
 }

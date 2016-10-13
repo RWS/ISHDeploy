@@ -40,7 +40,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
+        /// Initializes a new instance of the <see cref="ExpandISHCMFileOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
@@ -57,23 +57,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
             {
-                IEnumerable<ZipArchiveEntry> files;
+                IEnumerable<ZipArchiveEntry> files = archive.Entries;
                 if (toBinary)
                 {
                     var filesList = fileManager
                     .GetFiles($@"{AuthorFolderPath}\Author\ASP\bin", "*.*", true)
                     .Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
 
-                    files = archive
-                    .Entries
-                    .Where(x => !filesList.Any(y => y == x.FullName));
+                    files = files.Where(x => !filesList.Any(y => y == x.FullName));
                 }
-                else
-                {
-                    files = archive
-                        .Entries;
-                }
-
 
                 files
                 .ToList()

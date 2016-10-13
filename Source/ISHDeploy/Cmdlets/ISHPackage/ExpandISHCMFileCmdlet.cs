@@ -23,11 +23,11 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="description"></para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName "F:\test\example-extension.zip"</code>
+    /// <code>PS C:\>Expand-ISHCMFile -ToCustom -FileName "F:\test\example-extension.zip"</code>
     /// <para></para>
     /// </example>
-    [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
-    public class CopyISHCMFileCmdlet : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsData.Expand, "ISHCMFile")]
+    public class ExpandISHCMFileCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// <para type="description">Path to zip file.</para>
@@ -38,7 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// <summary>
         /// <para type="description">Menu item move to the last position.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Copy not exist files to Custom folder", ParameterSetName = "ToCustom")]
+        [Parameter(Mandatory = true, HelpMessage = "Copy not files to Custom folder", ParameterSetName = "ToCustom")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter ToCustom { get; set; }
 
@@ -54,7 +54,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new CopyISHCMFileOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
+            var operation = new ExpandISHCMFileOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
         }
     }
 }

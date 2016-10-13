@@ -44,13 +44,15 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="zipFilePath">Path to zip file.</param>
-        public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath) :
+        /// <param name="toBinary">If ToBinary switched.</param>
+        public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary=false) :
             base(logger, ishDeployment)
         {
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
-            string temporaryDirectory = (BackupFolderPath + @"\Custom").Replace("\\", "/");
+            string temporaryDirectory = toBinary?($@"{AuthorFolderPath}\Author\ASP\bin").Replace("\\", "/")
+                                                :(BackupFolderPath + @"\Custom").Replace("\\", "/");
 
             using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
             {

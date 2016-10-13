@@ -23,7 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="description"></para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Copy-ISHCMPackage -FileName "F:\test\example-extension.zip"</code>
+    /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName "F:\test\example-extension.zip"</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
@@ -34,6 +34,20 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Path to zip file")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// <para type="description">Menu item move to the last position.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Copy not exist files to Custom folder", ParameterSetName = "ToCustom")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter ToCustom { get; set; }
+
+        /// <summary>
+        /// <para type="description">Menu item move to the first position.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Copy extra dll to Bin folder", ParameterSetName = "ToBin")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter ToBin { get; set; }
 
         /// <summary>
         /// Executes cmdlet

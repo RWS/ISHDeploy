@@ -65,7 +65,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 {
                     if (x.Length != 0)
                     {
-                        string fileName = expandDirectory + '/' + x;
+                        string fileName = destinationDirectory + '/' + x;
                         fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
                         x.ExtractToFile(fileName, true);
                     }

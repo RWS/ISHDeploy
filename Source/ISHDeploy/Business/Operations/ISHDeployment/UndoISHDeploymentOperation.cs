@@ -106,7 +106,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
-		}
+
+            // Remove Author\ASP\Custom
+            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{AuthorFolderPath}\Author\ASP\Custom"));
+        }
 
         /// <summary>
         /// Runs current operation.

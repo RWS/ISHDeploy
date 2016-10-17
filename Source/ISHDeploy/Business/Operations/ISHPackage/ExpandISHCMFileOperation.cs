@@ -20,6 +20,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.IO.Compression;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -29,6 +30,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// <seealso cref="BaseOperationPaths" />
     public class ExpandISHCMFileOperation : BaseOperationPaths
     {
+        
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpandISHCMFileOperation"/> class.
         /// </summary>
@@ -57,6 +60,16 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     .Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
 
                     files = files.Where(x => !filesList.Any(y => y == x.FullName));
+
+                    string vanilaFile = destinationDirectory + "/vanila.bak";
+                    if (!fileManager.FileExists(vanilaFile)) {
+                        var filesFromFolder = Directory.GetFiles(destinationDirectory);
+                        using (var outputFile = File.Create(vanilaFile))
+                        {
+                            var serializer = new XmlSerializer(typeof(string[]));
+                            serializer.Serialize(outputFile, filesFromFolder);
+                        }
+                    }
                 }
 
                 files

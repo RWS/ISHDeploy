@@ -203,6 +203,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
     <Compile Include="Models\UI\CUIFConfig\resourceGroup.cs" />
     <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />

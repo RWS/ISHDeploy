@@ -53,7 +53,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">Javascript or asp page need to be invoken after click.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "OnClick javascript function name")]
+        [Parameter(Mandatory = true, HelpMessage = "OnClick javascript function name")]
         public string Action { get; set; }
 
         /// <summary>

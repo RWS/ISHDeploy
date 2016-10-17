@@ -1003,6 +1003,7 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(2).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");

@@ -17,7 +17,7 @@ $deploymentName="InfoShare"
 ## Configure main menu
 To create a new menu item that targets custom page `custom.html`:
 
-CopyCodeBlock(01.CreateEventMonitorMenuBarItem.ps1)  
+CopyCodeBlock(01.CreateMainMenuBarItem.ps1)  
    
 To change this item to 
 
@@ -25,7 +25,7 @@ To change this item to
 - add the user role `Author`
 - place it first
 
-CopyCodeBlock(02.ModifyEventMonitorMenuBarItem.ps1)  
+CopyCodeBlock(02.ModifyMainMenuBarItem.ps1)  
    
 
 ## Configure event monitor

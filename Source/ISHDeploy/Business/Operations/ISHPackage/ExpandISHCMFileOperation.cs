@@ -61,8 +61,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                     files = files.Where(x => !filesList.Any(y => y == x.FullName));
 
-                    string vanilaFile = destinationDirectory + "/vanila.bak";
+                    string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
                     if (!fileManager.FileExists(vanilaFile)) {
+                        fileManager.CreateDirectory(BackupFolderPath);
                         var filesFromFolder = Directory.GetFiles(destinationDirectory);
                         using (var outputFile = File.Create(vanilaFile))
                         {

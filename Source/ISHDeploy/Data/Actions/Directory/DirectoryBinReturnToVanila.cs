@@ -42,17 +42,24 @@ namespace ISHDeploy.Data.Actions.Directory
         private readonly string _backupFile;
 
         /// <summary>
+        /// Path to BIN folder
+        /// </summary>
+        private readonly string _binFolderPath;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryRemoveAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-		/// <param name="folderPath">The folder that will be removed.</param>
+        /// <param name="folderPath">The folder that will be removed.</param>
         /// <param name="backupFile">The file with list to be leaved the rest will be removed.</param>
-        public DirectoryBinReturnToVanila(ILogger logger, string folderPath, string backupFile)
+        /// <param name="binFolderPath">Path to BIN folder.</param>
+        public DirectoryBinReturnToVanila(ILogger logger, string folderPath, string backupFile, string binFolderPath)
 			: base(logger)
 		{
 			_fileManager = ObjectFactory.GetInstance<IFileManager>();
             _folderPath = folderPath;
             _backupFile = backupFile;
+            _binFolderPath = binFolderPath;
         }
 
         /// <summary>
@@ -66,7 +73,7 @@ namespace ISHDeploy.Data.Actions.Directory
                 var doc = _fileManager.Load(fullBackupfile);
 
                 System.IO.Directory
-                    .GetFiles(_folderPath)
+                    .GetFiles(_binFolderPath)
                     .Except(doc
                             .Element("ArrayOfString")
                             .Elements("string")

@@ -143,6 +143,7 @@ namespace ISHDeploy.Data.Managers
             if (nodes.Length == 0)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
+                _logger.WriteWarning("Not able to find target nodes");
                 return;
             }
 

@@ -18,7 +18,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Castle.DynamicProxy.Generators;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -1060,6 +1059,7 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find target nodes"));
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }

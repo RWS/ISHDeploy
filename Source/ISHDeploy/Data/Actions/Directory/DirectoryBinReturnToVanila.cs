@@ -25,7 +25,7 @@ namespace ISHDeploy.Data.Actions.Directory
     /// </summary>
     /// <seealso cref="BaseAction" />
     public class DirectoryBinReturnToVanila : BaseAction
-	{
+    {
         /// <summary>
         /// The file manager.
         /// </summary>
@@ -54,9 +54,9 @@ namespace ISHDeploy.Data.Actions.Directory
         /// <param name="backupFile">The file with list to be leaved the rest will be removed.</param>
         /// <param name="binFolderPath">Path to BIN folder.</param>
         public DirectoryBinReturnToVanila(ILogger logger, string folderPath, string backupFile, string binFolderPath)
-			: base(logger)
-		{
-			_fileManager = ObjectFactory.GetInstance<IFileManager>();
+            : base(logger)
+        {
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _folderPath = folderPath;
             _backupFile = backupFile;
             _binFolderPath = binFolderPath;
@@ -66,22 +66,27 @@ namespace ISHDeploy.Data.Actions.Directory
         /// Executes current action.
         /// </summary>
         public override void Execute()
-		{
-            string fullBackupfile = Path.Combine(_folderPath, _backupFile);
-            if (_fileManager.FileExists(fullBackupfile))
+        {
+            string fullBackupFile = Path.Combine(_folderPath, _backupFile);
+            if (_fileManager.FileExists(fullBackupFile))
             {
-                var doc = _fileManager.Load(fullBackupfile);
+                var doc = _fileManager.Load(fullBackupFile);
 
                 System.IO.Directory
-                    .GetFiles(_binFolderPath)
+                    .GetFileSystemEntries(_binFolderPath, "*.*", SearchOption.AllDirectories)
                     .Except(doc
                             .Element("ArrayOfString")
                             .Elements("string")
-                            .Select(x => x.Value
-                            .Replace("/", "\\")))
+                            .Select(x => x.Value))
                     .ToList()
-                    .ForEach(x => _fileManager.Delete(x));
+                    .ForEach(x =>
+                    {
+                        if (System.IO.Directory.Exists(x))
+                            System.IO.Directory.Delete(x, true);
+                        if (System.IO.File.Exists(x))
+                            System.IO.File.Delete(x);
+                    });
             }
-		}
-	}
+        }
+    }
 }

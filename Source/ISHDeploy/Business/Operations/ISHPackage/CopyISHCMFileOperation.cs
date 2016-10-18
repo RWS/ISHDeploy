@@ -17,6 +17,9 @@
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using System.IO;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -43,8 +46,34 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
                                                 : ($@"{AuthorFolderPath}\Author\ASP\Custom");
 
-
+            files = WorkWithBinaryFolder(toBinary, fileManager, files);
             files.ToList().ForEach(x => fileManager.CopyToDirectory($@"{BackupFolderPath}\Package\"+x, destinationDirectory));
+        }
+
+        private string[] WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, string[] files)
+        {
+            if (toBinary)
+            {
+                var fullFileList = Directory.GetFileSystemEntries(
+                    $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
+
+                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+
+                files = files.Except(filesList).ToArray();
+
+                string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
+                if (!fileManager.FileExists(vanilaFile))
+                {
+                    fileManager.CreateDirectory(BackupFolderPath);
+                    using (var outputFile = File.Create(vanilaFile))
+                    {
+                        var serializer = new XmlSerializer(typeof(string[]));
+                        serializer.Serialize(outputFile, fullFileList);
+                    }
+                }
+            }
+
+            return files;
         }
     }
 }

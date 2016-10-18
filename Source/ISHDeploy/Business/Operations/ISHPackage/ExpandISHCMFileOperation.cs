@@ -53,25 +53,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
             {
                 IEnumerable<ZipArchiveEntry> files = archive.Entries;
-                if (toBinary)
-                {
-                    var fullFileList = Directory.GetFileSystemEntries(
-                        $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
-
-                    var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
-
-                    files = files.Where(x => !filesList.Any(y => y == x.FullName));
-
-                    string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
-                    if (!fileManager.FileExists(vanilaFile)) {
-                        fileManager.CreateDirectory(BackupFolderPath);
-                        using (var outputFile = File.Create(vanilaFile))
-                        {
-                            var serializer = new XmlSerializer(typeof(string[]));
-                            serializer.Serialize(outputFile, fullFileList);
-                        }
-                    }
-                }
+                files = WorkWithBinaryFolder(toBinary, fileManager, files);
 
                 files
                 .ToList()
@@ -85,6 +67,32 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     }
                 });
             }
+        }
+
+        private IEnumerable<ZipArchiveEntry> WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, IEnumerable<ZipArchiveEntry> files)
+        {
+            if (toBinary)
+            {
+                var fullFileList = Directory.GetFileSystemEntries(
+                    $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
+
+                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+
+                files = files.Where(x => !filesList.Any(y => y == x.FullName));
+
+                string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
+                if (!fileManager.FileExists(vanilaFile))
+                {
+                    fileManager.CreateDirectory(BackupFolderPath);
+                    using (var outputFile = File.Create(vanilaFile))
+                    {
+                        var serializer = new XmlSerializer(typeof(string[]));
+                        serializer.Serialize(outputFile, fullFileList);
+                    }
+                }
+            }
+
+            return files;
         }
     }
 }

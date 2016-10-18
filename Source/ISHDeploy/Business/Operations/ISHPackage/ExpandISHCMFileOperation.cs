@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             destinationDirectory = destinationDirectory.Replace("\\", "/");
 
-            using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, Path.GetFileName(zipFilePath))))
+            using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, zipFilePath)))
             {
                 IEnumerable<ZipArchiveEntry> files = archive.Entries;
                 files = WorkWithBinaryFolder(toBinary, fileManager, files);

@@ -48,7 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             files = WorkWithBinaryFolder(toBinary, fileManager, files);
             files
-                .Select(x => Path.Combine(PackagesFolderPath, Path.GetFileName(x)))
+                .Select(x => Path.Combine(PackagesFolderPath, x))
                 .ToList()
                 .ForEach(x => {
                     fileManager.CreateDirectory(destinationDirectory);

@@ -71,7 +71,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
 
             // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, AuthorFolderPath));
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
@@ -87,7 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
             if (isInputParameterBackupFileExist)
             {
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath,
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
 

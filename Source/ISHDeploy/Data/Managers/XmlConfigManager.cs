@@ -566,10 +566,10 @@ namespace ISHDeploy.Data.Managers
             if (found == null)
             {
                 _logger.WriteDebug("Insert UI element", model.XPath, filePath);
-                var memberList = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).ToList();
+                var memberList = doc.XPathSelectElement(model.XPathToParentElement).Elements(model.NameOfItem).ToList();
                 if (!memberList.Any())
                 {
-                    doc.Element(model.NameOfRootElement).Add(element);
+                    doc.XPathSelectElement(model.XPathToParentElement).Add(element);
                 }
                 else
                 {
@@ -676,18 +676,18 @@ namespace ISHDeploy.Data.Managers
                 switch (direction)
                 {
                     case UIElementMoveDirection.First:
-                        doc.Element(model.NameOfRootElement).AddFirst(found);
+                        doc.Element(model.XPathToParentElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
                     case UIElementMoveDirection.Last:
-                        var lastElement = doc.Element(model.NameOfRootElement).Elements(model.NameOfItem).LastOrDefault();
+                        var lastElement = doc.Element(model.XPathToParentElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
                             lastElement.AddAfterSelf(found);
                         }
                         else
                         {
-                            doc.Element(model.NameOfRootElement).Add(found);
+                            doc.Element(model.XPathToParentElement).Add(found);
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;
@@ -805,6 +805,34 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <param name="readToDescendantName">The name of node to read to. Empty string by default</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath, string readToDescendantName = "")
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                if (!string.IsNullOrEmpty(readToDescendantName))
+                {
+                    reader.ReadToDescendant(readToDescendantName);
+                    return (T) ser.Deserialize(reader.ReadSubtree());
+                }
+                else
+                {
+                    return (T)ser.Deserialize(reader);
+                }
+            }
+        }
+
         #region private methods
 
         /// <summary>

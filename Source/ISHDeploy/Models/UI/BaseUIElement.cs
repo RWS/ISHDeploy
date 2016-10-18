@@ -41,7 +41,7 @@ namespace ISHDeploy.Models.UI
         /// The root path.
         /// </value>
         [XmlIgnore]
-        public string NameOfRootElement { get; protected set; }
+        public string XPathToParentElement { get; protected set; }
 
         /// <summary>
         /// Gets the name of item.

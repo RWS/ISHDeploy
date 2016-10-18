@@ -64,7 +64,7 @@ namespace ISHDeploy.Models.UI
         public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null, bool hideText = false)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
-            NameOfRootElement = "BUTTONBAR";
+            XPathToParentElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
 
             Input = new Input();

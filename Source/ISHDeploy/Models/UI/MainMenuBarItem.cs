@@ -78,7 +78,7 @@ namespace ISHDeploy.Models.UI
         public MainMenuBarItem(string label, string[] userRoles = null, string action = null, string id = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\MainMenuBar.xml";
-            NameOfRootElement = "mainmenubar";
+            XPathToParentElement = "mainmenubar";
             NameOfItem = "menuitem";
 
             Label = label;

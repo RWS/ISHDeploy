@@ -91,7 +91,7 @@ namespace ISHDeploy.Business.Operations.ISHCM
                 }
                 else
                 {
-                    throw new FileNotFoundException("Could not find file", absolutePath);
+                    throw new FileNotFoundException($"Could not find file {absolutePath}");
                 }
             }
         }

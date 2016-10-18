@@ -23,7 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="description"></para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName "F:\test\example-extension.zip"</code>
+    /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName bevers.js</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]

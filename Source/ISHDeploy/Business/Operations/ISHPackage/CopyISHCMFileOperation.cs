@@ -47,7 +47,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                                                 : ($@"{AuthorFolderPath}\Author\ASP\Custom");
 
             files = WorkWithBinaryFolder(toBinary, fileManager, files);
-            files.ToList().ForEach(x => fileManager.CopyToDirectory($@"{BackupFolderPath}\Package\"+x, destinationDirectory));
+            files
+                .Select(x => Path.Combine(PackagesFolderPath, Path.GetFileName(x)))
+                .ToList()
+                .ForEach(x => {
+                    fileManager.CreateDirectory(destinationDirectory);
+                    fileManager.CopyToDirectory(x, destinationDirectory, true); });
         }
 
         private string[] WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, string[] files)

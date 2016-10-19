@@ -48,8 +48,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
                                                 : ($@"{AuthorFolderPath}\Author\ASP\Custom");
 
-            destinationDirectory = destinationDirectory.Replace("\\", "/");
-
             using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, zipFilePath)))
             {
                 IEnumerable<ZipArchiveEntry> files = archive.Entries;
@@ -61,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 {
                     if (x.Length != 0)
                     {
-                        string fileName = destinationDirectory + '/' + x;
+                        string fileName = destinationDirectory.Replace("\\", "/") + '/' + x; //zip library works with "/" in path
                         bool present = fileManager.FileExists(fileName);
                         fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
                         x.ExtractToFile(fileName, true);
@@ -79,11 +77,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 var fullFileList = Directory.GetFileSystemEntries(
                     $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
 
-                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/")); //zip library works with "/" in path
 
                 files = files.Where(x => !filesList.Any(y => y == x.FullName));
 
-                string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
+                string vanilaFile = BackupFolderPath + "\\vanilla.web.author.asp.bin.xml";
                 if (!fileManager.FileExists(vanilaFile))
                 {
                     fileManager.CreateDirectory(BackupFolderPath);

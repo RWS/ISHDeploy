@@ -28,18 +28,18 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// 
     /// </summary>
     /// <seealso cref="BaseOperationPaths" />
-    public class ExpandISHCMFileOperation : BaseOperationPaths
+    public class ExpandISHCMPackageOperation : BaseOperationPaths
     {
         
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpandISHCMFileOperation"/> class.
+        /// Initializes a new instance of the <see cref="ExpandISHCMPackageOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="zipFilePath">Path to zip file.</param>
         /// <param name="toBinary">If ToBinary switched.</param>
-        public ExpandISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary = false) :
+        public ExpandISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary = false) :
             base(logger, ishDeployment)
         {
 
@@ -99,7 +99,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 files
                     .Where(x => filesList.Any(y => y == x.FullName))
                     .ToList()
-                    .ForEach(x => Logger.WriteWarning($"File {x} skipped."));
+                    .ForEach(x => Logger.WriteWarning($"File {x} skipped, because it present in vanilla version."));
 
                 files = files.Where(x => !filesList.Any(y => y == x.FullName));
 

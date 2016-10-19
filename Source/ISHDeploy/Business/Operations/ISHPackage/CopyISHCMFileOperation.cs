@@ -89,7 +89,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 files
                     .Where(x => filesList.Any(y => y == x))
                     .ToList()
-                    .ForEach(x => Logger.WriteWarning($"File {x} skipped."));
+                    .ForEach(x => Logger.WriteWarning($"File {x} skipped, because it present in vanilla version."));
 
                 files = files.Except(filesList).ToArray();
 

@@ -54,7 +54,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new ExpandISHCMFileOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
+            var operation = new ExpandISHCMPackageOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
         }
     }
 }

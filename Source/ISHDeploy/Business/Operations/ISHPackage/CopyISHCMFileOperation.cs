@@ -52,7 +52,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .ToList()
                 .ForEach(x => {
                     fileManager.CreateDirectory(destinationDirectory);
-                    fileManager.CopyToDirectory(x, destinationDirectory, true); });
+                    string newFullFileName = Path.Combine(destinationDirectory,  Path.GetFileName(x));
+                    bool present = fileManager.FileExists(newFullFileName);
+                    fileManager.CopyToDirectory(x, destinationDirectory, true);
+                    if (present)
+                        logger.WriteWarning($"File {newFullFileName} was overritten");
+                });
         }
 
         private string[] WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, string[] files)

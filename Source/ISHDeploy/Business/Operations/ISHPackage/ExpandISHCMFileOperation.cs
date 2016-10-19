@@ -62,8 +62,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     if (x.Length != 0)
                     {
                         string fileName = destinationDirectory + '/' + x;
+                        bool present = fileManager.FileExists(fileName);
                         fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
                         x.ExtractToFile(fileName, true);
+                        if (present)
+                            logger.WriteWarning($"File {fileName} was overritten");
                     }
                 });
             }

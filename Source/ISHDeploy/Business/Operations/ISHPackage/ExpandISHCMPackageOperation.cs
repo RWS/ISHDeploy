@@ -57,7 +57,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .ToList()
                 .ForEach(x =>
                 {
-                    if (x.Length != 0)
+                    if (!string.IsNullOrEmpty(x.Name))
                     {
                         string fileName = destinationDirectory.Replace("\\", "/") + '/' + x; //zip library works with "/" in path
                         bool present = fileManager.FileExists(fileName);

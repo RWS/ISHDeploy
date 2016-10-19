@@ -23,7 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="description"></para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Expand-ISHCMFile -ToCustom -FileName "example-extension.zip"</code>
+    /// <code>PS C:\>Expand-ISHCMPackage -ToCustom -FileName "example-extension.zip"</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]

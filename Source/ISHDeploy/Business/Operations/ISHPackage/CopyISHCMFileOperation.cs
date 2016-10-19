@@ -48,13 +48,14 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             files = WorkWithBinaryFolder(toBinary, fileManager, files);
             files
-                .Select(x => Path.Combine(PackagesFolderPath, x))
                 .ToList()
-                .ForEach(x => {
-                    fileManager.CreateDirectory(destinationDirectory);
-                    string newFullFileName = Path.Combine(destinationDirectory,  Path.GetFileName(x));
+                .ForEach(x =>
+                {
+                    string newFullFileName = Path.Combine(destinationDirectory, x);
+                    string newFolderName = Path.GetDirectoryName(newFullFileName);
+                    fileManager.CreateDirectory(newFolderName);
                     bool present = fileManager.FileExists(newFullFileName);
-                    fileManager.CopyToDirectory(x, destinationDirectory, true);
+                    fileManager.CopyToDirectory(Path.Combine(PackagesFolderPath, x), newFolderName, true);
                     if (present)
                         logger.WriteWarning($"File {newFullFileName} was overritten");
                 });
@@ -67,11 +68,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 var fullFileList = Directory.GetFileSystemEntries(
                     $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
 
-                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+                var filesList = fullFileList.Select(x => x.Substring(x.IndexOf(@"\bin\") + 5));
 
                 files = files.Except(filesList).ToArray();
 
-                string vanilaFile = BackupFolderPath + "/vanilla.web.author.asp.bin.xml";
+                string vanilaFile = BackupFolderPath + "\\vanilla.web.author.asp.bin.xml";
                 if (!fileManager.FileExists(vanilaFile))
                 {
                     fileManager.CreateDirectory(BackupFolderPath);

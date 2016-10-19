@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using System;
 using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Interfaces;
-using System.Xml.Linq;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Models.UI;
 
@@ -41,14 +38,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
 		/// </summary>
 		/// <param name="filePath">Path to the file that is modified</param>
 		/// <param name="xpath">XPath to searched node</param>
-		void RemoveSingleNode(string filePath, string xpath);
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+		void RemoveSingleNode(string filePath, string xpath, bool outputWarnings = true);
 
         /// <summary>
         /// Removes nodes in xml file that can be found by <paramref name="xpath"/>
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched nodes</param>
-        void RemoveNodes(string filePath, string xpath);
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        void RemoveNodes(string filePath, string xpath, bool outputWarnings = true);
 
         /// <summary>
         /// Removes node from xml file that can be found by <paramref name="xpath"/>

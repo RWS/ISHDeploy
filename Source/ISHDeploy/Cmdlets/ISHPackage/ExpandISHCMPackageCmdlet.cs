@@ -26,8 +26,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <code>PS C:\>Expand-ISHCMFile -ToCustom -FileName "example-extension.zip"</code>
     /// <para></para>
     /// </example>
-    [Cmdlet(VerbsData.Expand, "ISHCMFile")]
-    public class ExpandISHCMFileCmdlet : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsData.Expand, "ISHCMPackage")]
+    public class ExpandISHCMPackageCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// <para type="description">Path to zip file.</para>

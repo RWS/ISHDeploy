@@ -18,7 +18,6 @@ using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.IO;
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace ISHDeploy.Business.Operations.ISHPackage

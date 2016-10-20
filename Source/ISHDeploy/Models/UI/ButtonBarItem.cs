@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI
@@ -51,12 +53,50 @@ namespace ISHDeploy.Models.UI
         /// </summary>
         [XmlAttribute("src")]
         public string Src { get; set; }
+
+        /// <summary>
+        /// Content dor CDData part.
+        /// </summary>
+        [XmlIgnore]
+        public string Content { get; set; }
+
         /// <summary>
         /// text body
         /// </summary>
         [XmlText]
-        public string ScriptBody { get; set; }
+        public XmlNode[] ScriptBody
+        {
+            get
+            {
+                if (Content == null)
+                    return null;
+                return new XmlNode[] { new XmlDocument().CreateCDataSection(Content) };
+            }
+            set
+            {
+                if (value == null)
+                {
+                    Content = null;
+                    return;
+                }
+
+                if (value.Length != 1)
+                {
+                    throw new InvalidOperationException($"Invalid array length {value.Length}");
+                }
+
+                var node0 = value[0];
+                var cdata = node0 as XmlCDataSection;
+                if (cdata == null)
+                {
+                    throw new InvalidOperationException($"Invalid node type {node0.NodeType}");
+                }
+
+                Content = cdata.Data;
+            }
+        }
     }
+
 
     /// <summary>
     /// <para type="description">Represents the item depend on button bar type.</para>
@@ -158,12 +198,10 @@ namespace ISHDeploy.Models.UI
                         },
                     new Script{
                         Language = "JAVASCRIPT",
-                        ScriptBody = @"
-      <![CDATA[
+                        Content = @"
       // Load the extension resources
-      Trisoft.Helpers.ExtensionsLoader.enableExtensions(""../../"");
-      ]]>"
-                        },
+      Trisoft.Helpers.ExtensionsLoader.enableExtensions(""../../"");"
+                        }
 
                 };
             }

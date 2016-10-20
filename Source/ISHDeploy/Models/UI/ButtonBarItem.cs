@@ -142,7 +142,7 @@ namespace ISHDeploy.Models.UI
             }
 
             if (jArgumentList != null) {
-                string parameters = string.Join(jArgumentList, ", "); //'Hello Alex!', true, 0
+                string parameters = string.Join(", ", jArgumentList ); //'Hello Alex!', true, 0
                 onClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
                 Script = new Script[] {
                     new Script{

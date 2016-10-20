@@ -119,7 +119,7 @@ namespace ISHDeploy.Models.UI
         /// <param name="checkaccess">Y or N to check access.</param>
         /// <param name="hideText">Hides text.</param>
         /// <param name="jArgumentList">Hides text.</param>
-        public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, object[] jArgumentList = null , string checkaccess = null, bool hideText = false)
+        public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, object[] jArgumentList = null, string checkaccess = null, bool hideText = false)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
             NameOfRootElement = "BUTTONBAR";
@@ -141,9 +141,15 @@ namespace ISHDeploy.Models.UI
                 Input.Showtext = "N";
             }
 
-            if (jArgumentList != null) {
-                string parameters = string.Join(", ", jArgumentList ); //'Hello Alex!', true, 0
-                onClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
+            if (jArgumentList != null)
+            {
+                // will add ' before and after in a case of string type
+                for (int index = 0; index < jArgumentList.Length; index++)
+                    if (jArgumentList[index].GetType() == typeof(string))
+                        jArgumentList[index] = "'" + jArgumentList[index] + "'";
+
+                string parameters = string.Join(", ", jArgumentList); //'Hello Alex!', true, 0
+                Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
                 Script = new Script[] {
                     new Script{
                         Language = "JAVASCRIPT",

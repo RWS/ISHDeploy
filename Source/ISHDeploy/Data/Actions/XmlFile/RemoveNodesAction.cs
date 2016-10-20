@@ -29,16 +29,23 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// </summary>
         private readonly string _xpath;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RemoveSingleNodeAction"/> class.
-		/// </summary>
-		/// <param name="logger">The logger.</param>
-		/// <param name="filePath">The xml file path.</param>
-		/// <param name="xpath">The xpath to the node that needs to be removed.</param>
-		public RemoveNodesAction(ILogger logger, ISHFilePath filePath, string xpath)
+        /// <summary>
+        /// Output warnings or not.
+        /// </summary>
+        private readonly bool _outputWarnings;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveSingleNodeAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="filePath">The xml file path.</param>
+        /// <param name="xpath">The xpath to the node that needs to be removed.</param>
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public RemoveNodesAction(ILogger logger, ISHFilePath filePath, string xpath, bool outputWarnings = true)
 			: base(logger, filePath)
         {
             _xpath = xpath;
+            _outputWarnings = outputWarnings;
         }
 
         /// <summary>
@@ -46,7 +53,7 @@ namespace ISHDeploy.Data.Actions.XmlFile
         /// </summary>
         public override void Execute()
         {
-			XmlConfigManager.RemoveNodes(FilePath, _xpath);
+			XmlConfigManager.RemoveNodes(FilePath, _xpath, _outputWarnings);
         }
     }
 }

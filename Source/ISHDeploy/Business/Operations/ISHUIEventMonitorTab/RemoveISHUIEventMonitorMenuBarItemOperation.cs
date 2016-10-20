@@ -45,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
 			// First we should remove comment as it is dependent to its sibling node
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath));
+			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath, false));
 
 			// Then we removing item itself
 			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemXPath));

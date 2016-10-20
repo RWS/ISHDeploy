@@ -19,8 +19,8 @@ using ISHDeploy.Business.Operations.ISHPackage;
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
-    /// <para type="synopsis"></para>
-    /// <para type="description"></para>
+    /// <para type="synopsis">Copy files from several files to Custom or Bin directory.</para>
+    /// <para type="description">Will copy files from packages directory to Custom or Bin directory depends on switch.</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName bevers.js</code>

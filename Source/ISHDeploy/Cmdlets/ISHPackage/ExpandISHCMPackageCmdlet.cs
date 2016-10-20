@@ -19,21 +19,21 @@ using ISHDeploy.Business.Operations.ISHPackage;
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
-    /// <para type="synopsis"></para>
-    /// <para type="description"></para>
+    /// <para type="synopsis">Extract files from several zip files to Custom or Bin directory.</para>
+    /// <para type="description">Will extract files from packages directory to Custom or Bin directory depends on switch.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Expand-ISHCMPackage -ToCustom -FileName "example-extension.zip"</code>
+    /// <code>PS C:\>Expand-ISHCMPackage -ToCustom -FileName "example-extension.zip", temp.zip</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]
     public class ExpandISHCMPackageCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
-        /// <para type="description">Path to zip file.</para>
+        /// <para type="description">Array of zip files.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Path to zip file")]
-        public string FileName { get; set; }
+        public string[] FileName { get; set; }
 
         /// <summary>
         /// <para type="description">Menu item move to the last position.</para>

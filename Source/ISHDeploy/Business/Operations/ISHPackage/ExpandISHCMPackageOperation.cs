@@ -21,6 +21,7 @@ using ISHDeploy.Interfaces;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -35,39 +36,41 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="zipFilePath">Path to zip file.</param>
+        /// <param name="zipFilePathArray">Array of zip files.</param>
         /// <param name="toBinary">If ToBinary switched.</param>
-        public ExpandISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary = false) :
+        public ExpandISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] zipFilePathArray, bool toBinary = false) :
             base(logger, ishDeployment)
         {
             // Validate if file exist
-            ValidateFileExist(PackagesFolderPath, zipFilePath);
+            ValidateFilesExist(PackagesFolderPath, zipFilePathArray);
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 
             string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
                                                 : ($@"{AuthorFolderPath}\Author\ASP\Custom");
-
-            using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, zipFilePath)))
+            Array.ForEach(zipFilePathArray, zipFilePath =>
             {
-                IEnumerable<ZipArchiveEntry> files = archive.Entries;
-                files = WorkWithBinaryFolder(toBinary, fileManager, files);
-
-                files
-                .ToList()
-                .ForEach(x =>
+                using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, zipFilePath)))
                 {
-                    if (!string.IsNullOrEmpty(x.Name))
+                    IEnumerable<ZipArchiveEntry> files = archive.Entries;
+                    files = WorkWithBinaryFolder(toBinary, fileManager, files);
+
+                    files
+                    .ToList()
+                    .ForEach(x =>
                     {
-                        string fileName = destinationDirectory.Replace("\\", "/") + '/' + x; //zip library works with "/" in path
-                        bool present = fileManager.FileExists(fileName);
-                        fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
-                        x.ExtractToFile(fileName, true);
-                        if (present)
-                            logger.WriteWarning($"File {fileName} was overritten.");
-                    }
-                });
-            }
+                        if (!string.IsNullOrEmpty(x.Name))
+                        {
+                            string fileName = destinationDirectory.Replace("\\", "/") + '/' + x; //zip library works with "/" in path
+                            bool present = fileManager.FileExists(fileName);
+                            fileManager.CreateDirectory(Path.GetDirectoryName(fileName));
+                            x.ExtractToFile(fileName, true);
+                            if (present)
+                                logger.WriteWarning($"File {fileName} was overritten.");
+                        }
+                    });
+                }
+            });
         }
 
         private IEnumerable<ZipArchiveEntry> WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, IEnumerable<ZipArchiveEntry> files)

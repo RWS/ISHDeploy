@@ -13,12 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Enums;
 using System.Xml.Serialization;
-using System.Linq;
 
 namespace ISHDeploy.Models.UI
 {
+    /// <summary>
+    /// <para type="description">Represents collection of ButtonBarItem.</para>
+    /// </summary>
+    [XmlRoot("BUTTONBAR", Namespace = "")]
+    public class ButtonBarItemCollection
+    {
+        /// <summary>
+        /// Array of ButtonBarItems.
+        /// </summary>
+        [XmlElement("BUTTON")]
+        public ButtonBarItem[] ButtonBarItemArray { get; set; }
+    }
+
+    /// <summary>
+    /// Java script Node
+    /// </summary>
+    [XmlRoot("SCRIPT", Namespace = "")]
+    public class Script
+    {
+        /// <summary>
+        /// LANGUAGE
+        /// </summary>
+        [XmlAttribute("LANGUAGE")]
+        public string Language { get; set; }
+        /// <summary>
+        /// type
+        /// </summary>
+        [XmlAttribute("type")]
+        public string Type { get; set; }
+        /// <summary>
+        /// src
+        /// </summary>
+        [XmlAttribute("src")]
+        public string Src { get; set; }
+        /// <summary>
+        /// text body
+        /// </summary>
+        [XmlText]
+        public string ScriptBody { get; set; }
+    }
+
     /// <summary>
     /// <para type="description">Represents the item depend on button bar type.</para>
     /// </summary>
@@ -38,6 +77,12 @@ namespace ISHDeploy.Models.UI
         public string[] CardTypes { set; get; }
 
         /// <summary>
+        /// Javascript file.
+        /// </summary>
+        [XmlElement("SCRIPT")]
+        public Script[] Script { set; get; }
+
+        /// <summary>
         /// To create Input type xml node
         /// </summary>
         [XmlElement("INPUT")]
@@ -52,6 +97,18 @@ namespace ISHDeploy.Models.UI
         }
 
         /// <summary>
+        /// Change some fileds for created one.
+        /// </summary>
+        public void ChangeButtonBarItemProperties(string fileName)
+        {
+            RelativeFilePath = $@"Author\ASP\XSL\{fileName}";
+            NameOfRootElement = "BUTTONBAR";
+            NameOfItem = "BUTTON";
+            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
+            XPath = string.Format(XPathFormat, Input.Name);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ButtonBarItem"/> class.
         /// </summary>
         /// <param name="buttonBar">Button bar type of the item.</param>
@@ -61,7 +118,8 @@ namespace ISHDeploy.Models.UI
         /// <param name="onClick">Javascript to be executed after click.</param>
         /// <param name="checkaccess">Y or N to check access.</param>
         /// <param name="hideText">Hides text.</param>
-        public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, string checkaccess = null, bool hideText = false)
+        /// <param name="jArgumentList">Hides text.</param>
+        public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, object[] jArgumentList = null , string checkaccess = null, bool hideText = false)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
             NameOfRootElement = "BUTTONBAR";
@@ -81,6 +139,27 @@ namespace ISHDeploy.Models.UI
             if (hideText)
             {
                 Input.Showtext = "N";
+            }
+
+            if (jArgumentList != null) {
+                string parameters = string.Join(jArgumentList, ", "); //'Hello Alex!', true, 0
+                onClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
+                Script = new Script[] {
+                    new Script{
+                        Language = "JAVASCRIPT",
+                        Type = "text/javascript",
+                        Src="../../UI/Helpers/ExtensionsLoader.js"
+                        },
+                    new Script{
+                        Language = "JAVASCRIPT",
+                        ScriptBody = @"
+      <![CDATA[
+      // Load the extension resources
+      Trisoft.Helpers.ExtensionsLoader.enableExtensions(""../../"");
+      ]]>"
+                        },
+
+                };
             }
         }
     }

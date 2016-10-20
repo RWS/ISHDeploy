@@ -54,7 +54,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">Javascript or asp page need to be invoken after click.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "OnClick javascript function name")]
-        public string Action { get; set; }
+        public string JSFunction { get; set; }
 
         /// <summary>
         /// <para type="description">Check access.</para>
@@ -95,6 +95,14 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public CardType[] ISHType { get; set; }
 
         /// <summary>
+        /// <para type="description">JSArgumentsList is a Javascript argument list.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, ParameterSetName = "Logical", HelpMessage = "Javascript argument list")]
+        [Parameter(Mandatory = false, ParameterSetName = "Version", HelpMessage = "Javascript argument list")]
+        [Parameter(Mandatory = false, ParameterSetName = "Language", HelpMessage = "Javascript argument list")]
+        public object[] JSArgumentsList { get; set; }
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -123,7 +131,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     throw new ArgumentException($"Unknown parameter {ParameterSetName}");
             }
 
-            var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, Action, checkAccess, HideText.IsPresent);
+            var model = new ButtonBarItem(buttonBarFile, Name, cards, Icon, JSFunction, JSArgumentsList, checkAccess, HideText.IsPresent);
             var setOperation = new SetUIElementOperation(Logger, ISHDeployment, model);
             setOperation.Run();
         }

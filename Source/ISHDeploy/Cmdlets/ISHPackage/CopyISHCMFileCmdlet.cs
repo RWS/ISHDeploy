@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
+using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHPackage;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
@@ -32,7 +32,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// <summary>
         /// <para type="description">Path to zip file.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Path to zip file")]
+        [Parameter(Mandatory = true, HelpMessage = "Paths to files")]
         public string[] FileName { get; set; }
 
         /// <summary>

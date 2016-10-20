@@ -30,8 +30,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// <seealso cref="BaseOperationPaths" />
     public class ExpandISHCMPackageOperation : BaseOperationPaths
     {
-        
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpandISHCMPackageOperation"/> class.
         /// </summary>
@@ -42,6 +40,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public ExpandISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath, bool toBinary = false) :
             base(logger, ishDeployment)
         {
+            // Validate if file exist
+            ValidateFileExist(PackagesFolderPath, zipFilePath);
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 

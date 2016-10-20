@@ -399,5 +399,34 @@ namespace ISHDeploy.Business.Operations
         {
             return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
         }
+
+        /// <summary>
+        /// Performs the validation.
+        /// </summary>
+        /// <param name="files">Array of the files.</param>
+        /// <param name="relativePath">Relative path to be added.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when files are not present on certain location.
+        /// </exception>
+        protected void ValidateFilesExist(string relativePath, string[] files)
+        {
+            Array.ForEach(files, x =>ValidateFileExist(relativePath, x));
+        }
+
+        /// <summary>
+        /// Performs the validation.
+        /// </summary>
+        /// <param name="file">File to be checked.</param>
+        /// <param name="relativePath">Relative path to be added.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when file are not present on certain location.
+        /// </exception>
+        protected void ValidateFileExist(string relativePath, string file)
+        {
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            string fullPath = Path.Combine(relativePath, file);
+            if (!fileManager.FileExists(fullPath))
+                throw new ArgumentException($"InvalidPath for {fullPath} file.");
+        }
     }
 }

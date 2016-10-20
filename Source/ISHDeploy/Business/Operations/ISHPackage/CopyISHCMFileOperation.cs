@@ -39,6 +39,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] files, bool toBinary = false) :
             base(logger, ishDeployment)
         {
+            // Validate if files exist
+            ValidateFilesExist(PackagesFolderPath, files);
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
 

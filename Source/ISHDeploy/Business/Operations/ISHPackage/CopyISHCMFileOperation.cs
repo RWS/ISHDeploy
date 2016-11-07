@@ -18,7 +18,9 @@ using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.IO;
-using System.Xml.Serialization;
+using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Directory;
+using ISHDeploy.Data.Actions.File;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -26,8 +28,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
     /// 
     /// </summary>
     /// <seealso cref="BaseOperationPaths" />
-    public class CopyISHCMFileOperation : BaseOperationPaths
+    public class CopyISHCMFileOperation : BaseOperationPaths, IOperation
     {
+        /// <summary>
+        /// The actions invoker
+        /// </summary>
+        private readonly IActionInvoker _invoker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
@@ -39,6 +45,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] files, bool toBinary = false) :
             base(logger, ishDeployment)
         {
+            _invoker = new ActionInvoker(logger, "Copy ISHCM files.");
+
             // Validate if files exist
             ValidateFilesExist(PackagesFolderPath, files);
 
@@ -54,9 +62,10 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 {
                     string newFullFileName = Path.Combine(destinationDirectory, x);
                     string newFolderName = Path.GetDirectoryName(newFullFileName);
-                    fileManager.CreateDirectory(newFolderName);
+                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, newFolderName));
                     bool present = fileManager.FileExists(newFullFileName);
-                    fileManager.CopyToDirectory(Path.Combine(PackagesFolderPath, x), newFolderName, true);
+                    _invoker.AddAction(new FileCopyToDirectoryAction(
+                        logger, Path.Combine(PackagesFolderPath, x), newFolderName, true));
                     if (present)
                         logger.WriteWarning($"File {newFullFileName} was overritten.");
                 });
@@ -66,18 +75,16 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             if (toBinary)
             {
-                var fullFileList = Directory.GetFileSystemEntries(
+                var fullFileList = fileManager.GetFileSystemEntries(
                     $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
 
-                string vanilaFile = BackupFolderPath + "\\vanilla.web.author.asp.bin.xml";
+                string vanilaFile = BackupFolderPath + CopyExtractISHCMFile.vanilaFileName;
                 if (!fileManager.FileExists(vanilaFile))
                 {
-                    fileManager.CreateDirectory(BackupFolderPath);
-                    using (var outputFile = File.Create(vanilaFile))
-                    {
-                        var serializer = new XmlSerializer(typeof(string[]));
-                        serializer.Serialize(outputFile, fullFileList);
-                    }
+                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, BackupFolderPath));
+                    ObjectFactory.GetInstance<IXmlConfigManager>()
+                        .SerializeToFile(vanilaFile, fullFileList);
+     
                 }
 
                 var doc = fileManager.Load(vanilaFile);
@@ -98,6 +105,14 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             }
 
             return files;
+        }
+
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            _invoker.Invoke();
         }
     }
 }

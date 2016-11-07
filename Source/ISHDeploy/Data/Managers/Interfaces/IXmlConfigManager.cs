@@ -184,5 +184,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="xmlFilePath">The path to XML file.</param>
         /// <returns>Deserialized object of type T</returns>
         T Deserialize<T>(string xmlFilePath);
+        
+        /// <summary>
+        /// Serializes object to special file.
+        /// </summary>
+        /// <param name="filename">File name.</param>
+        /// <param name="data">Object to serialize.</param>
+        /// <returns></returns>
+        void SerializeToFile(string filename, object data);
     }
 }

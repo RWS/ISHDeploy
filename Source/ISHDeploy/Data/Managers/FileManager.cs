@@ -489,5 +489,18 @@ namespace ISHDeploy.Data.Managers
             }
             return list;
         }
+
+        /// <summary>
+        /// Gets list of system entries
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="searchOption">Search option.</param>
+        /// <returns></returns>
+        public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            _logger.WriteDebug("Get list of system entries", searchPattern, path);
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
+        }
     }
 }

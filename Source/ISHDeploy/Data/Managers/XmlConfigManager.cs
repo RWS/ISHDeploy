@@ -806,6 +806,20 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+        /// <summary>
+        /// Serializes object to special file.
+        /// </summary>
+        /// <param name="filename">File name.</param>
+        /// <param name="data">Object to serialize.</param>
+        /// <returns></returns>
+        public void SerializeToFile(string filename, object data)
+        {
+            using (var outputFile = File.Create(filename))
+            {
+                var serializer = new XmlSerializer(typeof(string[]));
+                serializer.Serialize(outputFile, data);
+            }
+        }
 
         /// <summary>
         /// Deserialize the XML document to type T.

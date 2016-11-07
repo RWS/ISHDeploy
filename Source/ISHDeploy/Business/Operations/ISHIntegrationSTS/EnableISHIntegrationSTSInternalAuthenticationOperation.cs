@@ -62,7 +62,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 
             // Create index.html and copy connectionconfiguration.xml files
             _invoker.AddAction(new FileCreateAction(Logger, InternalSTSFilelPath, InternalSTSLogin.IndexName, indexContent));
-            _invoker.AddAction(new FileCopyToDirectoryAction(logger, InternalSTSSourceConnectionConfigurationFile, InternalSTSFilelPath, true));
+            _invoker.AddAction(new FileCopyToDirectoryAction(logger, InternalSTSSourceConnectionConfigurationFile, InternalSTSFilelPath.AbsolutePath, true));
 
             // Get authenticationType attribute value from Web\InfoShareSTS\Configuration\infoShareSTS.config 
             string authenticationToChange, urlToChange, authenticationType = string.Empty;

@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Security.AccessControl;
 using System.Xml.Linq;
 
@@ -204,5 +205,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="recurse">Search in all directories or just in top one.</param>
         /// <returns></returns>
         List<string> GetFiles(string path, string searchPattern, bool recurse);
+
+        /// <summary>
+        /// Gets list of system entries
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="searchOption">Search option.</param>
+        /// <returns></returns>
+        string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
     }
 }

@@ -53,11 +53,11 @@ namespace ISHDeploy.Data.Actions.File
         /// <param name="sourcePath">The source file path.</param>
         /// <param name="destinationPath">The destination file path.</param>
         /// <param name="force">Replaces existing file if true.</param>
-        public FileCopyToDirectoryAction(ILogger logger, string sourcePath, ISHFilePath destinationPath, bool force = false) 
+        public FileCopyToDirectoryAction(ILogger logger, string sourcePath, string destinationPath, bool force = false) 
 			: base(logger)
         {
             _sourcePath = sourcePath;
-			_destinationPath = destinationPath.AbsolutePath;
+			_destinationPath = destinationPath;
             _force = force;
 
             _fileManager = ObjectFactory.GetInstance<IFileManager>();

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System.IO;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 
@@ -45,66 +48,67 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public CopyISHCMFileOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] files, bool toBinary = false) :
             base(logger, ishDeployment)
         {
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             _invoker = new ActionInvoker(logger, "Copy ISHCM files.");
 
-            // Validate if files exist
-            ValidateFilesExist(PackagesFolderPath, files);
+            #region Ensure the list of vanilla files has been saved as file
 
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            if (!fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            {
+                fileManager.EnsureDirectoryExists(BackupFolderPath);
 
-            string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
-                                                : ($@"{AuthorFolderPath}\Author\ASP\Custom");
+                var fullFileList = fileManager.GetFileSystemEntries(
+                    AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-            files = WorkWithBinaryFolder(toBinary, fileManager, files);
+                ObjectFactory.GetInstance<IXmlConfigManager>()
+                    .SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+            }
+
+            #endregion
+
+            var destinationDirectory = AuthorAspCustomFolderPath;
+            IEnumerable<string> ignoreFiles = null;
+
+            if (toBinary)
+            {
+                destinationDirectory = AuthorAspBinFolderPath;
+
+                var doc = fileManager.Load(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
+
+                ignoreFiles = doc
+                           .Element("ArrayOfString")
+                           .Elements("string")
+                           .Select(y => y.Value.Substring(y.Value.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+            }
+
             files
                 .ToList()
                 .ForEach(x =>
                 {
-                    string newFullFileName = Path.Combine(destinationDirectory, x);
-                    string newFolderName = Path.GetDirectoryName(newFullFileName);
-                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, newFolderName));
-                    bool present = fileManager.FileExists(newFullFileName);
+                    var sourceFilePath = Path.Combine(PackagesFolderPath, x);
+                    if (!fileManager.FileExists(sourceFilePath))
+                    {
+                        throw new ArgumentException($"InvalidPath for {sourceFilePath} file.");
+                    }
+
+                    if (ignoreFiles != null && ignoreFiles.Any(y => y == x))
+                    {
+                        _invoker.AddAction(new WriteWarningAction(Logger,
+                            () => (true),
+                            $"Skip file {x}, because it present in vanilla version."));
+                        return;
+                    }
+
+                    string destinationFilePath = Path.Combine(destinationDirectory, x);
+                    string destinatioFolderPath = Path.GetDirectoryName(destinationFilePath);
+                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, destinatioFolderPath));
+
+                    bool destinationFileExists = fileManager.FileExists(destinationFilePath);
                     _invoker.AddAction(new FileCopyToDirectoryAction(
-                        logger, Path.Combine(PackagesFolderPath, x), newFolderName, true));
-                    if (present)
-                        logger.WriteWarning($"File {newFullFileName} was overritten.");
+                        logger, sourceFilePath, destinatioFolderPath, true));
+
+                    _invoker.AddAction(new WriteWarningAction(Logger, () => ( destinationFileExists ), $"File {destinationFilePath} has been overritten."));
                 });
-        }
-
-        private string[] WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, string[] files)
-        {
-            if (toBinary)
-            {
-                var fullFileList = fileManager.GetFileSystemEntries(
-                    $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
-
-                string vanilaFile = BackupFolderPath + CopyExtractISHCMFile.vanilaFileName;
-                if (!fileManager.FileExists(vanilaFile))
-                {
-                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, BackupFolderPath));
-                    ObjectFactory.GetInstance<IXmlConfigManager>()
-                        .SerializeToFile(vanilaFile, fullFileList);
-     
-                }
-
-                var doc = fileManager.Load(vanilaFile);
-
-                var filesList = doc
-                           .Element("ArrayOfString")
-                           .Elements("string")
-                           .Select(x => x.Value.Substring(x.Value.IndexOf(@"\bin\") + 5));
-
-
-                files
-                    .Where(x => filesList.Any(y => y == x))
-                    .ToList()
-                    .ForEach(x => Logger.WriteWarning($"File {x} skipped, because it present in vanilla version."));
-
-                files = files.Except(filesList).ToArray();
-
-            }
-
-            return files;
         }
 
         /// <summary>

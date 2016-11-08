@@ -78,7 +78,6 @@
     <Compile Include="Business\Enums\CardType.cs" />
     <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
     <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
-    <Compile Include="Business\Operations\CopyExtractISHCMFile.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -204,6 +203,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
     <Compile Include="Models\UI\CUIFConfig\resourceGroup.cs" />
     <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />

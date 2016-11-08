@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.IO;
 using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
@@ -61,7 +62,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
                 result => indexContent = result)).Execute();
 
             // Create index.html and copy connectionconfiguration.xml files
-            _invoker.AddAction(new FileCreateAction(Logger, InternalSTSFilelPath, InternalSTSLogin.IndexName, indexContent));
+            _invoker.AddAction(new FileCreateAction(Logger, Path.Combine(InternalSTSFilelPath.AbsolutePath, InternalSTSLogin.IndexName), indexContent));
             _invoker.AddAction(new FileCopyToDirectoryAction(logger, InternalSTSSourceConnectionConfigurationFile, InternalSTSFilelPath.AbsolutePath, true));
 
             // Get authenticationType attribute value from Web\InfoShareSTS\Configuration\infoShareSTS.config 

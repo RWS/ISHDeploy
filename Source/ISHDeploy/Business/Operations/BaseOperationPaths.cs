@@ -46,6 +46,16 @@ namespace ISHDeploy.Business.Operations
         protected string AuthorFolderPath { get; }
 
         /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string AuthorAspBinFolderPath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\Custom folder.
+        /// </summary>
+        protected string AuthorAspCustomFolderPath { get; }
+
+        /// <summary>
         /// Gets the path to the App+Suffix Author folder.
         /// </summary>
         protected string AppFolderPath { get; }
@@ -210,6 +220,11 @@ namespace ISHDeploy.Business.Operations
         protected string BackupFolderPath { get; }
 
         /// <summary>
+        /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
+
+        /// <summary>
         /// The path to Web back up folder
         /// </summary>
         protected string BackupWebFolderPath { get; }
@@ -341,7 +356,10 @@ namespace ISHDeploy.Business.Operations
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
+            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
             AuthorFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
+            AuthorAspBinFolderPath = Path.Combine(AuthorFolderPath, @"Author\ASP\bin");
+            AuthorAspCustomFolderPath = Path.Combine(AuthorFolderPath, @"Author\ASP\Custom");
             AppFolderPath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}");
             DataFolderPath = Path.Combine(InputParameters.DataPath, $"Data{InputParameters.ProjectSuffix}");
             WebNameSTS = Path.Combine(AuthorFolderPath, "InfoShareSTS");
@@ -398,35 +416,6 @@ namespace ISHDeploy.Business.Operations
         private string ConvertLocalFolderPathToUNCPath(string localPath)
         {
             return $@"\\{System.Net.Dns.GetHostName()}\{localPath.Replace(":", "$")}";
-        }
-
-        /// <summary>
-        /// Performs the validation.
-        /// </summary>
-        /// <param name="files">Array of the files.</param>
-        /// <param name="relativePath">Relative path to be added.</param>
-        /// <exception cref="ArgumentException">
-        /// Thrown when files are not present on certain location.
-        /// </exception>
-        protected void ValidateFilesExist(string relativePath, string[] files)
-        {
-            Array.ForEach(files, x =>ValidateFileExist(relativePath, x));
-        }
-
-        /// <summary>
-        /// Performs the validation.
-        /// </summary>
-        /// <param name="file">File to be checked.</param>
-        /// <param name="relativePath">Relative path to be added.</param>
-        /// <exception cref="ArgumentException">
-        /// Thrown when file are not present on certain location.
-        /// </exception>
-        protected void ValidateFileExist(string relativePath, string file)
-        {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
-            string fullPath = Path.Combine(relativePath, file);
-            if (!fileManager.FileExists(fullPath))
-                throw new ArgumentException($"InvalidPath for {fullPath} file.");
         }
     }
 }

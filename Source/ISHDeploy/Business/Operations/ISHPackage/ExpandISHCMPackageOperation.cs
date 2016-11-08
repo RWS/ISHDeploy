@@ -18,11 +18,10 @@ using System.IO;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using System.IO.Compression;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.IO.Compression;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.Directory;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -38,6 +37,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
+        /// The file manager
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ExpandISHCMPackageOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -47,75 +51,51 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public ExpandISHCMPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string[] zipFilePathArray, bool toBinary = false) :
             base(logger, ishDeployment)
         {
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _invoker = new ActionInvoker(logger, "Extract ISHCM files.");
 
-            // Validate if file exist
-            ValidateFilesExist(PackagesFolderPath, zipFilePathArray);
 
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            #region Ensure the list of vanilla files has been saved as file
 
-            string destinationDirectory = toBinary ? ($@"{AuthorFolderPath}\Author\ASP\bin")
-                                                : ($@"{AuthorFolderPath}\Author\ASP\Custom");
+            if (!_fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            {
+                _fileManager.EnsureDirectoryExists(BackupFolderPath);
+
+                var fullFileList = _fileManager.GetFileSystemEntries(
+                    AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
+
+                ObjectFactory.GetInstance<IXmlConfigManager>()
+                    .SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+            }
+
+            #endregion
+
             Array.ForEach(zipFilePathArray, zipFilePath =>
             {
-                using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(PackagesFolderPath, zipFilePath)))
-                {
-                    IEnumerable<ZipArchiveEntry> files = archive.Entries;
-                    files = WorkWithBinaryFolder(toBinary, fileManager, files);
+                var absoluteZipFilePath = Path.Combine(PackagesFolderPath, zipFilePath);
 
-                    files
-                    .ToList()
-                    .ForEach(x =>
-                    {
-                        if (!string.IsNullOrEmpty(x.Name))
-                        {
-                            string fileName = destinationDirectory.Replace("\\", "/") + '/' + x; //zip library works with "/" in path
-                            bool present = fileManager.FileExists(fileName);
-                            _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, BackupFolderPath));
-                            x.ExtractToFile(fileName, true);
-                            if (present)
-                                logger.WriteWarning($"File {fileName} was overritten.");
-                        }
-                    });
+                if (!_fileManager.FileExists(absoluteZipFilePath))
+                {
+                    throw new ArgumentException($"InvalidPath for {absoluteZipFilePath} file.");
+                }
+
+                if (toBinary)
+                {
+                    var doc = _fileManager.Load(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
+
+                    var filesList = doc
+                               .Element("ArrayOfString")
+                               .Elements("string")
+                               .Select(x => x.Value.Substring(x.Value.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+
+                    ExtractZipFile(zipFilePath, AuthorAspBinFolderPath, filesList);
+                }
+                else
+                {
+                    ExtractZipFile(zipFilePath, AuthorAspCustomFolderPath);
                 }
             });
         }
-
-        private IEnumerable<ZipArchiveEntry> WorkWithBinaryFolder(bool toBinary, IFileManager fileManager, IEnumerable<ZipArchiveEntry> files)
-        {
-            if (toBinary)
-            {
-                var fullFileList = fileManager.GetFileSystemEntries(
-                    $@"{AuthorFolderPath}\Author\ASP\bin", "*.*", SearchOption.AllDirectories);
-
-                string vanilaFile = BackupFolderPath + CopyExtractISHCMFile.vanilaFileName;
-                if (!fileManager.FileExists(vanilaFile))
-                {
-                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, BackupFolderPath));
-                    ObjectFactory.GetInstance<IXmlConfigManager>()
-                        .SerializeToFile(vanilaFile, fullFileList);
-                }
-
-                var doc = fileManager.Load(vanilaFile);
-
-                var filesList = doc
-                           .Element("ArrayOfString")
-                           .Elements("string")
-                           .Select(x => x.Value.Substring(x.Value.IndexOf(@"\bin\") + 5).Replace("\\", "/"));//zip library works with "/" in path
-
-
-                files
-                    .Where(x => filesList.Any(y => y == x.FullName))
-                    .ToList()
-                    .ForEach(x => Logger.WriteWarning($"File {x} skipped, because it present in vanilla version."));
-
-                files = files.Where(x => !filesList.Any(y => y == x.FullName));
-
-            }
-
-            return files;
-        }
-
 
         /// <summary>
         /// Runs current operation.
@@ -123,6 +103,43 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public void Run()
         {
             _invoker.Invoke();
+        }
+
+        /// <summary>
+        /// Extracts file to specified folder
+        /// </summary>
+        /// <param name="zipFilePath">The path to zip file.</param>
+        /// <param name="destinationDirectory">The destination directory.</param>
+        /// <param name="ignoreFiles">List of files to ignore. Null by default</param>
+        private void ExtractZipFile(string zipFilePath, string destinationDirectory, IEnumerable<string> ignoreFiles = null)
+        {
+            using (var archive = ZipFile.OpenRead(zipFilePath))
+            {
+                var files = archive.Entries.ToList();
+
+                files
+                .ForEach(x =>
+                {
+                    if (string.IsNullOrEmpty(x.Name)) return;
+
+                    if (ignoreFiles != null && ignoreFiles.Any(y => y == x.FullName))
+                    {
+                        Logger.WriteWarning($"Skip file {x}, because it present in vanilla version.");
+                        return;
+                    }
+
+                    string destinationFilePath = $"{destinationDirectory}/{x}";
+
+                    var present = _fileManager.FileExists(destinationFilePath);
+
+                    x.ExtractToFile(destinationFilePath, true);
+
+                    if (present)
+                    {
+                        Logger.WriteWarning($"File {destinationFilePath} has been overritten.");
+                    }
+                });
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Data.Actions.Asserts
@@ -21,7 +20,7 @@ namespace ISHDeploy.Data.Actions.Asserts
         private readonly string _message;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileReadAllTextAction"/> class.
+        /// Initializes a new instance of the <see cref="AssertAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="condition">The condition to check.</param>

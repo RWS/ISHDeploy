@@ -397,7 +397,7 @@ namespace ISHDeploy.Business.Operations
         /// <returns>Path to folder in UTC format</returns>
         private string ConvertLocalFolderPathToUNCPath(string localPath)
         {
-            return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
+            return $@"\\{System.Net.Dns.GetHostName()}\{localPath.Replace(":", "$")}";
         }
 
         /// <summary>

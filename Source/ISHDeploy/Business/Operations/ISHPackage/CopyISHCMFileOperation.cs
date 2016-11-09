@@ -78,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 ignoreFiles = doc
                            .Element("ArrayOfString")
                            .Elements("string")
-                           .Select(y => y.Value.Substring(y.Value.IndexOf(@"\bin\") + 5).Replace("\\", "/"));
+                           .Select(y => y.Value.Substring(y.Value.IndexOf(@"\bin\") + 5));
             }
 
             files

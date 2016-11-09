@@ -38,6 +38,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     /// </example>
 
     [Cmdlet(VerbsLifecycle.Disable, "ISHIntegrationSTSInternalAuthentication")]
+    [AdministratorRights]
     public sealed class DisableISHIntegrationSTSInternalAuthenticationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

@@ -29,6 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHUIQualityAssistant
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHUIQualityAssistant")]
+    [AdministratorRights]
     public sealed class DisableISHUIQualityAssistantCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

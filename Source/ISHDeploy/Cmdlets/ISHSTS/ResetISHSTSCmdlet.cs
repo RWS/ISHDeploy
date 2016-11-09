@@ -35,7 +35,8 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Reset, "ISHSTS")]
-	public sealed class ResetISHSTSCmdlet : BaseHistoryEntryCmdlet
+    [AdministratorRights]
+    public sealed class ResetISHSTSCmdlet : BaseHistoryEntryCmdlet
 	{
 		/// <summary>
 		/// Executes cmdlet

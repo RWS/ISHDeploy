@@ -37,6 +37,7 @@ namespace ISHDeploy.Cmdlets.ISHAPIWCFService
 	///		</para>
 	/// </example>
     [Cmdlet(VerbsCommon.Set, "ISHAPIWCFServiceCertificate")]
+    [AdministratorRights]
     public class SetISHAPIWCFServiceCertificateCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

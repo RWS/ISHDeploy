@@ -45,6 +45,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSTrust")]
+    [AdministratorRights]
     public class SetISHIntegrationSTSWSTrustCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

@@ -53,7 +53,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             #region Ensure the list of vanilla files has been saved as file
 
-            if (!fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            if (toBinary && !fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
             {
                 fileManager.EnsureDirectoryExists(BackupFolderPath);
 
@@ -86,11 +86,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .ForEach(x =>
                 {
                     var sourceFilePath = Path.Combine(PackagesFolderPath, x);
-                    if (!fileManager.FileExists(sourceFilePath))
-                    {
-                        throw new ArgumentException($"InvalidPath for {sourceFilePath} file.");
-                    }
-
                     if (ignoreFiles != null && ignoreFiles.Any(y => y == x))
                     {
                         _invoker.AddAction(new WriteWarningAction(Logger,

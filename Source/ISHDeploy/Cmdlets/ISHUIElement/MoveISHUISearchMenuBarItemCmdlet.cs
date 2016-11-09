@@ -44,6 +44,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     ///		Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// </para>
     [Cmdlet(VerbsCommon.Move, "ISHUISearchMenuBarItem")]
+    [AdministratorRights]
     public sealed class MoveISHUISearchMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

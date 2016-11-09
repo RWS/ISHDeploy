@@ -187,9 +187,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         /// Serializes object to special file.
         /// </summary>
-        /// <param name="filename">File name.</param>
+        /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
         /// <returns></returns>
-        void SerializeToFile(string filename, object data);
+        void SerializeToFile<T>(string filePath, T data);
     }
 }

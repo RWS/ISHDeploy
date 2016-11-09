@@ -42,6 +42,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IFileManager _fileManager;
 
         /// <summary>
+        /// The xml manager
+        /// </summary>
+        private readonly IXmlConfigManager _xmlConfigManager;
+
+        /// <summary>
         /// Array of zip files
         /// </summary>
         private readonly string[] _zipFilePathArray;
@@ -62,6 +67,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             base(logger, ishDeployment)
         {
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _zipFilePathArray = zipFilePathArray;
             _toBinary = toBinary;
 
@@ -76,8 +82,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 var fullFileList = _fileManager.GetFileSystemEntries(
                     AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-                ObjectFactory.GetInstance<IXmlConfigManager>()
-                    .SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+                _xmlConfigManager.SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
             }
 
             #endregion
@@ -100,14 +105,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                 if (_toBinary)
                 {
-                    var doc = _fileManager.Load(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
+                    var ignoreFiles = _xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
 
-                    var filesList = doc
-                               .Element("ArrayOfString")
-                               .Elements("string")
-                               .Select(x => x.Value.Substring(x.Value.IndexOf(@"\bin\") + 5));
-
-                    ExtractZipFile(absoluteZipFilePath, AuthorAspBinFolderPath, filesList);
+                    ExtractZipFile(absoluteZipFilePath, AuthorAspBinFolderPath, ignoreFiles);
                 }
                 else
                 {
@@ -133,15 +133,14 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 {
                     if (string.IsNullOrEmpty(x.Name)) return;
 
-                    string fileArchivePath = x.FullName.Replace("/", "\\");
+                    string destinationFilePath = Path.Combine(destinationDirectory, x.FullName.Replace("/", "\\"));
 
-                    if (ignoreFiles != null && ignoreFiles.Any(y => y == fileArchivePath))
+                    if (ignoreFiles != null && ignoreFiles.Any(y => y == destinationFilePath))
                     {
                         Logger.WriteWarning($"Skip file {x}, because it present in vanilla version.");
                         return;
                     }
 
-                    string destinationFilePath = Path.Combine(destinationDirectory, fileArchivePath);
                     string destinatioFolderPath = Path.GetDirectoryName(destinationFilePath);
                     _fileManager.EnsureDirectoryExists(destinatioFolderPath);
                     var present = _fileManager.FileExists(destinationFilePath);

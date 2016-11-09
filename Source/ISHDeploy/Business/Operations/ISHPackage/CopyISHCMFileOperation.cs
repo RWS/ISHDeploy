@@ -49,6 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             base(logger, ishDeployment)
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _invoker = new ActionInvoker(logger, "Copy ISHCM files.");
 
             #region Ensure the list of vanilla files has been saved as file
@@ -60,8 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 var fullFileList = fileManager.GetFileSystemEntries(
                     AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-                ObjectFactory.GetInstance<IXmlConfigManager>()
-                    .SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+                xmlConfigManager.SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
             }
 
             #endregion
@@ -73,12 +73,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 destinationDirectory = AuthorAspBinFolderPath;
 
-                var doc = fileManager.Load(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
-
-                ignoreFiles = doc
-                           .Element("ArrayOfString")
-                           .Elements("string")
-                           .Select(y => y.Value.Substring(y.Value.IndexOf(@"\bin\") + 5));
+                ignoreFiles = xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
             }
 
             files
@@ -86,7 +81,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .ForEach(x =>
                 {
                     var sourceFilePath = Path.Combine(PackagesFolderPath, x);
-                    if (ignoreFiles != null && ignoreFiles.Any(y => y == x))
+                    string destinationFilePath = Path.Combine(destinationDirectory, x);
+                    if (ignoreFiles != null && ignoreFiles.Any(y => y == destinationFilePath))
                     {
                         _invoker.AddAction(new WriteWarningAction(Logger,
                             () => (true),
@@ -94,7 +90,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                         return;
                     }
 
-                    string destinationFilePath = Path.Combine(destinationDirectory, x);
                     string destinatioFolderPath = Path.GetDirectoryName(destinationFilePath);
                     _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, destinatioFolderPath));
 

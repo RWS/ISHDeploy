@@ -818,17 +818,18 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+
         /// <summary>
         /// Serializes object to special file.
         /// </summary>
-        /// <param name="filename">File name.</param>
+        /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
         /// <returns></returns>
-        public void SerializeToFile(string filename, object data)
+        public void SerializeToFile<T>(string filePath, T data)
         {
-            using (var outputFile = File.Create(filename))
+            using (var outputFile = File.Create(filePath))
             {
-                var serializer = new XmlSerializer(typeof(string[]));
+                var serializer = new XmlSerializer(typeof(T));
                 serializer.Serialize(outputFile, data);
             }
         }

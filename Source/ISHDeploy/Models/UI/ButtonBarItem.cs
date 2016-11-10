@@ -13,12 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Enums;
 using System.Xml.Serialization;
-using System.Linq;
 
 namespace ISHDeploy.Models.UI
 {
+    /// <summary>
+    /// <para type="description">Represents collection of ButtonBarItem.</para>
+    /// </summary>
+    [XmlRoot("BUTTONBAR", Namespace = "")]
+    public class ButtonBarItemCollection
+    {
+        /// <summary>
+        /// Array of ButtonBarItems.
+        /// </summary>
+        [XmlElement("BUTTON")]
+        public ButtonBarItem[] ButtonBarItemArray { get; set; }
+    }
+
+    /// <summary>
+    /// Java script Node
+    /// </summary>
+    [XmlRoot("SCRIPT", Namespace = "")]
+    public class Script
+    {
+        /// <summary>
+        /// LANGUAGE
+        /// </summary>
+        [XmlAttribute("LANGUAGE")]
+        public string Language { get; set; }
+        /// <summary>
+        /// type
+        /// </summary>
+        [XmlAttribute("type")]
+        public string Type { get; set; }
+        /// <summary>
+        /// src
+        /// </summary>
+        [XmlAttribute("src")]
+        public string Src { get; set; }
+        /// <summary>
+        /// text body
+        /// </summary>
+        [XmlText]
+        public string ScriptBody { get; set; }
+    }
+
     /// <summary>
     /// <para type="description">Represents the item depend on button bar type.</para>
     /// </summary>
@@ -36,6 +75,12 @@ namespace ISHDeploy.Models.UI
         /// </summary>
         [XmlElement("CARDTYPE")]
         public string[] CardTypes { set; get; }
+        
+        /// <summary>
+        /// Javascript file.
+        /// </summary>
+        [XmlElement("SCRIPT")]
+        public Script[] Script { set; get; }
 
         /// <summary>
         /// To create Input type xml node
@@ -49,6 +94,18 @@ namespace ISHDeploy.Models.UI
         private ButtonBarItem()
         {
 
+        }
+        
+        /// <summary>
+        /// Change some fileds for created one.
+        /// </summary>
+        public void ChangeButtonBarItemProperties(string fileName)
+        {
+            RelativeFilePath = $@"Author\ASP\XSL\{fileName}";
+            XPathToParentElement = "BUTTONBAR";
+            NameOfItem = "BUTTON";
+            XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
+            XPath = string.Format(XPathFormat, Input.Name);
         }
 
         /// <summary>

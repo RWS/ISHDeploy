@@ -107,7 +107,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched node</param>
-        public void RemoveSingleNode(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveSingleNode(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove node", xpath, filePath);
 
@@ -117,7 +118,10 @@ namespace ISHDeploy.Data.Managers
             if (node == null)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
-                _logger.WriteWarning("Not able to find the target node");
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find the target node");
+                }
                 return;
             }
 
@@ -133,7 +137,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched nodes</param>
-        public void RemoveNodes(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveNodes(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove nodes", xpath, filePath);
 
@@ -143,7 +148,12 @@ namespace ISHDeploy.Data.Managers
             if (nodes.Length == 0)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
-                _logger.WriteWarning("Not able to find target nodes");
+
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find target nodes");
+                }
+
                 return;
             }
 
@@ -568,10 +578,11 @@ namespace ISHDeploy.Data.Managers
             if (found == null)
             {
                 _logger.WriteDebug("Insert UI element", model.XPath, filePath);
-                var memberList = doc.XPathSelectElement(model.XPathToParentElement).Elements(model.NameOfItem).ToList();
+                var parent = doc.XPathSelectElement(model.XPathToParentElement);
+                var memberList = parent.Elements(model.NameOfItem).ToList();
                 if (!memberList.Any())
                 {
-                    doc.XPathSelectElement(model.XPathToParentElement).Add(element);
+                    parent.Add(element);
                 }
                 else
                 {
@@ -807,6 +818,40 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+
+        /// <summary>
+        /// Serializes object to special file.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="data">Object to serialize.</param>
+        /// <returns></returns>
+        public void SerializeToFile<T>(string filePath, T data)
+        {
+            using (var outputFile = File.Create(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(outputFile, data);
+            }
+        }
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                return (T)ser.Deserialize(reader);
+            }
+        }
+
 
         /// <summary>
         /// Deserialize the XML document to type T.

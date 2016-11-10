@@ -32,6 +32,7 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 	///		</para>
 	/// </example>
 	[Cmdlet(VerbsCommon.Remove, "ISHUIEventMonitorMenuBarItem")]
+    [AdministratorRights]
     public class RemoveISHUIEventMonitorMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
 		/// <summary>

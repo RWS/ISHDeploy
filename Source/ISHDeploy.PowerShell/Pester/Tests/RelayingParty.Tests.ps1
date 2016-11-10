@@ -4,7 +4,7 @@
 )
 
 . "$PSScriptRoot\Common.ps1"
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
+$computerName = If ($session) {$session.ComputerName} Else {[System.Net.Dns]::GetHostName()}
 
 # Script block for getting ISH deployment
 $scriptBlockGetDeployment = {

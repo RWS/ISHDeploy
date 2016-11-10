@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.IO;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -33,10 +31,6 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         private readonly IFileManager _fileManager;
 
-        /// <summary>
-        /// The file name that will be created.
-        /// </summary>
-        private readonly string _fileName;
 
         /// <summary>
         /// The file content
@@ -53,14 +47,12 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="destinationPath">The destination path.</param>
-        /// <param name="fileName">Name of the file that will be created.</param>
         /// <param name="fileContent">Content of the new file.</param>
-        public FileCreateAction(ILogger logger, ISHFilePath destinationPath, string fileName, string fileContent) 
+        public FileCreateAction(ILogger logger, string destinationPath, string fileContent) 
 			: base(logger)
         {
-			_fileName = fileName;
 			_fileContent = fileContent;
-			_destinationPath = destinationPath.AbsolutePath;
+			_destinationPath = destinationPath;
 
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
@@ -70,7 +62,7 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         public override void Execute()
 		{
-			_fileManager.Write(GetDestinationFileName(), _fileContent);
+			_fileManager.Write(_destinationPath, _fileContent);
 		}
 
         /// <summary>
@@ -78,11 +70,10 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         public virtual void Rollback()
 		{
-			var createdFileName = GetDestinationFileName();
-			Logger.WriteDebug($"Rolling back file creatiog {createdFileName}.");
-			if (_fileManager.FileExists(createdFileName))
+			Logger.WriteDebug($"Rolling back file creatiog {_destinationPath}.");
+			if (_fileManager.FileExists(_destinationPath))
 			{
-				_fileManager.Delete(createdFileName);
+				_fileManager.Delete(_destinationPath);
 			}
 		}
 
@@ -94,13 +85,5 @@ namespace ISHDeploy.Data.Actions.File
             // This actions does not require backup
             //	So do nothing here
         }
-
-        /// <summary>
-        /// Gets name of the file to be created
-        /// </summary>
-        private string GetDestinationFileName()
-		{
-			return Path.Combine(_destinationPath, _fileName);
-		}
 	}
 }

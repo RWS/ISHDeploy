@@ -361,6 +361,25 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceArchiveFilePath">The path to archive.</param>
+        /// <param name="destinationDirectoryPath">The path to destination folder.</param>
+        public void ExtractPackageToDirectory(string sourceArchiveFilePath, string destinationDirectoryPath)
+        {
+            _logger.WriteDebug("Unzip folder", sourceArchiveFilePath, destinationDirectoryPath);
+
+            if (FolderExists(destinationDirectoryPath))
+            {
+                DeleteDirectory(destinationDirectoryPath);
+            }
+
+            ZipFile.ExtractToDirectory(sourceArchiveFilePath, destinationDirectoryPath);
+
+            _logger.WriteVerbose($"The source package `{sourceArchiveFilePath}` has been extracted to `{destinationDirectoryPath}`");
+        }
+
+        /// <summary>
         /// Determines whether is the specified file locked.
         /// </summary>
         /// <param name="filePath">The file path.</param>
@@ -469,6 +488,19 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{path}` has been got");
             }
             return list;
+        }
+
+        /// <summary>
+        /// Gets list of system entries
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="searchOption">Search option.</param>
+        /// <returns></returns>
+        public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            _logger.WriteDebug("Get list of system entries", searchPattern, path);
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
         }
     }
 }

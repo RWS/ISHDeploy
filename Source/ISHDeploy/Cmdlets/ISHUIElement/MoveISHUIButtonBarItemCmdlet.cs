@@ -56,8 +56,8 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <para type="description">Menu item move to the last position.</para>
         /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = "Logical Last")]
-        [Parameter(Mandatory = true, ParameterSetName = "Version First")]
-        [Parameter(Mandatory = true, ParameterSetName = "Language First")]
+        [Parameter(Mandatory = true, ParameterSetName = "Version Last")]
+        [Parameter(Mandatory = true, ParameterSetName = "Language Last")]
         public SwitchParameter Last { get; set; }
 
         /// <summary>

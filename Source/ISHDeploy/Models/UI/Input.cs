@@ -3,7 +3,7 @@
 namespace ISHDeploy.Models.UI
 {    
      /// <summary>
-     /// <para type="description">Internal clalss for ButtonBar usage.</para>
+     /// <para type="description">Internal class for ButtonBar usage.</para>
      /// </summary>
     public class Input
     {

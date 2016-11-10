@@ -78,7 +78,7 @@ namespace ISHDeploy.Models.UI
         public SearchMenuItem(string label, string[] userRoles = null, string icon = null, string action = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\SearchMenuBar.xml";
-            NameOfRootElement = "searchmenubar";
+            XPathToParentElement = "searchmenubar";
             NameOfItem = "menuitem";
 
             Label = label;

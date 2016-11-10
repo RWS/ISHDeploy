@@ -31,7 +31,7 @@ $secondZipPath = Join-Path $uncZipPath $secondZip
 $scriptBlockExpandISHCMPackage = {
     param (
         [Parameter(Mandatory=$true)]
-        $ishDeployName ,
+        $ishDeployName,
         [Parameter(Mandatory=$true)]
         $fileName,
         [Parameter(Mandatory=$true)]
@@ -93,7 +93,7 @@ Describe "Testing Expand-ISHCMPackage"{
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         #Invoke-CommandRemoteOrLocal -ScriptBlock{Test-Path "$packagePath\test.file"} -Session $session -ArgumentList $packagePath | Should Be "True"
         
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "TobiN"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToBiN"
         #Assert
         RemotePathCheck $binFile | Should Be "True"
     }
@@ -132,7 +132,6 @@ Describe "Testing Expand-ISHCMPackage"{
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "InvalidPath for"
-
     }
 
     It "Expand-ISHCMPackage does not owerwrite CM files in bin folder"{
@@ -141,8 +140,8 @@ Describe "Testing Expand-ISHCMPackage"{
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         #Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw 
-
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToBin" -WarningVariable Warning
+        $Warning | should Match "Skip file"
     }
     
     It "Expand-ISHCMPackage can copy multiple files"{

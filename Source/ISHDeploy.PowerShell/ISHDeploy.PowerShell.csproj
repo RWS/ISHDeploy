@@ -57,7 +57,6 @@
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
     <None Include="Pester\Tests\CopyISHCMFile.Tests.ps1" />
-    <None Include="Pester\Tests\Expand-ISHCMPackage.Tests.ps1" />
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Business.Invokers;
+
+using System.IO;
+using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
 
@@ -41,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         {
             _invoker = new ActionInvoker(logger, "Setting of new license for Content Editor");
 
-            _invoker.AddAction(new FileCreateAction(logger, LicenceFolderPath, fileName, fileContent));
+            _invoker.AddAction(new FileCreateAction(logger, Path.Combine(LicenceFolderPath.AbsolutePath, fileName), fileContent));
         }
 
         /// <summary>

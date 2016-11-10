@@ -88,7 +88,7 @@ namespace ISHDeploy.Models.UI
         public EventMonitorMenuBarItem(string label, string[] userRoles = null, string icon = null, string action = null, string description = null)
         {
             RelativeFilePath = @"Author\ASP\XSL\EventMonitorMenuBar.xml";
-            NameOfRootElement = "menubar";
+            XPathToParentElement = "menubar";
             NameOfItem = "menuitem";
 
             Label = label;

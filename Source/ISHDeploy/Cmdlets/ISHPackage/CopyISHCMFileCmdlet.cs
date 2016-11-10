@@ -27,6 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
+    [AdministratorRights]
     public class CopyISHCMFileCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
@@ -55,6 +56,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         public override void ExecuteCmdlet()
         {
             var operation = new CopyISHCMFileOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
+            operation.Run();
         }
     }
 }

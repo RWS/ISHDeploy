@@ -36,6 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIButtonBarItem")]
+    [AdministratorRights]
     public sealed class SetISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
@@ -53,7 +54,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">Javascript or asp page need to be invoken after click.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "OnClick javascript function name")]
+        [Parameter(Mandatory = true, HelpMessage = "OnClick javascript function name")]
         public string Action { get; set; }
 
         /// <summary>

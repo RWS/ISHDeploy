@@ -27,6 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]
+    [AdministratorRights]
     public class ExpandISHCMPackageCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
@@ -55,6 +56,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         public override void ExecuteCmdlet()
         {
             var operation = new ExpandISHCMPackageOperation(Logger, ISHDeployment, FileName, ToBin.IsPresent);
+            operation.Run();
         }
     }
 }

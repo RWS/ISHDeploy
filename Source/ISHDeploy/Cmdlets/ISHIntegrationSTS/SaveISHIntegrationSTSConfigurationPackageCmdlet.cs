@@ -44,6 +44,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationSTSConfigurationPackage")]
+    [AdministratorRights]
     public class SaveISHIntegrationSTSConfigurationPackageCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

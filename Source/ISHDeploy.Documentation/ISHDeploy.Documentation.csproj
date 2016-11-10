@@ -46,8 +46,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
-    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateButtonBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateSearchMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateMainMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\01.CreateEventMonitorMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyButtonBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifySearchMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyMainMenuBarItem.ps1" />
+    <None Include="Articles\FeatureToggle\02.ModifyEventMonitorMenuBarItem.ps1" />
     <None Include="Articles\FeatureToggle\Configuring ISHCM web UI button bars.md" />
     <None Include="Articles\FeatureToggle\Configuring ISHCM web UI menu bars.md" />
     <None Include="Articles\FeatureToggle\Toggling Web Components.md" />
@@ -114,12 +120,12 @@
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-Changelog.ps1" -ExportPath "$(ProjectDir)obj\doc" -Verbose</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" />
+  <Import Project="..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets'))" />
+    <Error Condition="!Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

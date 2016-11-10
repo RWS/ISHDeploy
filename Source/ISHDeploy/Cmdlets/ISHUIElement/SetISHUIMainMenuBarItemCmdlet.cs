@@ -34,6 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuBarItem")]
+    [AdministratorRights]
     public sealed class SetISHUIMainMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
@@ -51,7 +52,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">The action which occurs on click on the menu item.</para>
         /// </summary>
-        [Parameter(HelpMessage = "Action to do after choosing menu")]
+        [Parameter(Mandatory = true, HelpMessage = "Action to do after choosing menu")]
         public string Action { get; set; }
 
         /// <summary>

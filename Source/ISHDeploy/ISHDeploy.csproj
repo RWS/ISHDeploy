@@ -199,6 +199,7 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
+    <Compile Include="Cmdlets\AdministratorRightsAttribute.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />

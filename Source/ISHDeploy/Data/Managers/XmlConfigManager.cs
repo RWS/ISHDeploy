@@ -107,7 +107,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched node</param>
-        public void RemoveSingleNode(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveSingleNode(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove node", xpath, filePath);
 
@@ -117,6 +118,10 @@ namespace ISHDeploy.Data.Managers
             if (node == null)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find the target node");
+                }
                 return;
             }
 
@@ -132,7 +137,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched nodes</param>
-        public void RemoveNodes(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveNodes(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove nodes", xpath, filePath);
 
@@ -142,6 +148,12 @@ namespace ISHDeploy.Data.Managers
             if (nodes.Length == 0)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
+
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find target nodes");
+                }
+
                 return;
             }
 
@@ -806,17 +818,18 @@ namespace ISHDeploy.Data.Managers
                 return textWriter.ToString();
             }
         }
+
         /// <summary>
         /// Serializes object to special file.
         /// </summary>
-        /// <param name="filename">File name.</param>
+        /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
         /// <returns></returns>
-        public void SerializeToFile(string filename, object data)
+        public void SerializeToFile<T>(string filePath, T data)
         {
-            using (var outputFile = File.Create(filename))
+            using (var outputFile = File.Create(filePath))
             {
-                var serializer = new XmlSerializer(typeof(string[]));
+                var serializer = new XmlSerializer(typeof(T));
                 serializer.Serialize(outputFile, data);
             }
         }

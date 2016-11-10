@@ -377,3 +377,18 @@ Function ArtifactCleaner
             RemoteRenameItem "$filePath\_$fileName" "$fileName"
         }
 }
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+function Unzip
+{
+    param([string]$zipfile, [string]$outpath)
+
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+}
+
+function ZipFolder
+{
+    param([string]$zipfile, [string]$folderPath)
+
+    [System.IO.Compression.ZipFile]::CreateFromDirectory($folderPath, $zipfile)
+}

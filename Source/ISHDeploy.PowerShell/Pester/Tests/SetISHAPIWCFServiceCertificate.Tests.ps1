@@ -110,7 +110,7 @@ $scriptBlockReadTargetXML = {
     $existCommand = New-Object "System.Data.SqlServerCe.SqlCeCommand"
 	$existCommand.CommandType = [System.Data.CommandType]::Text
 	$existCommand.Connection = $connection
-    $myServer = $env:COMPUTERNAME + "." + $env:USERDNSDOMAIN
+    $myServer = $computerName + "." + $env:USERDNSDOMAIN
 	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/$infosharewswebappname/Wcf/API20/Folder.svc")
 	$existCommand.CommandText = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=@realm"
 

@@ -3,9 +3,11 @@ $certificateName="ISHSTS (20161201)"
 $certificateThumbprint="20161201.Thumbprint"
 
 # Set the ISHSTS token signing certificate
-Set-ISHSTSConfiguration -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
+# Execute before Set-ISHIntegrationSTSCertificate
+Set-ISHSTSConfiguration -ISHDeployment $deploymentName -TokenSigningCertificateThumbprint $certificateThumbprint
 
 # Set Token signing certificate
+# Execute after Set-ISHSTSConfiguration
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $certificateName -Thumbprint $certificateThumbprint
 
 # Set service certificate

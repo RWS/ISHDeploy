@@ -502,5 +502,24 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteDebug("Get list of system entries", searchPattern, path);
             return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
         }
+
+        /// <summary>
+        /// Copy files with directory and file template.
+        /// </summary>
+        public void CopyWithTemplate(string sourcePath, string destinationPath, string directoryTepmlate, string fileTemplate)
+        {
+
+            string[] directories = Directory.GetDirectories(sourcePath, directoryTepmlate, SearchOption.AllDirectories);
+            Array.ForEach(directories, dirPath =>
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
+            });
+
+            string[] files = Directory.GetFiles(sourcePath, fileTemplate, SearchOption.AllDirectories);
+            Array.ForEach(files, newPath =>
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, destinationPath));
+            });
+        }
     }
 }

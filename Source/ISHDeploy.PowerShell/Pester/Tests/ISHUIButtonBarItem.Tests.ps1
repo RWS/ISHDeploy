@@ -124,19 +124,19 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Set button"{
         #Arrange
-        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
         $item = getButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar"
         $item.Name | Should be $params.Name
         $item.Icon | Should be $params.Icon
-        $item.OnClick | Should be $params.Action
+        $item.OnClick | Should be $params.JSFunction
     }
 
     It "Remove main menu button"{
         #Arrange
-        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         getCountButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar" | Should be 1
@@ -150,7 +150,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
     It "Sets button with no XML"{
         #Arrange
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
-        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Could not find file" 
         #Rollback
@@ -163,7 +163,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
         New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
-        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
         #Act/Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params} |Should Throw "Root element is missing" 
         #Rollback
@@ -186,7 +186,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Set existing button"{
         #Arrange
-        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; Action = "testOnClick();"; }
+        $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         #Assert
@@ -369,11 +369,11 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
 	#It "Update existing item"{
  #       #Arrange
- #       $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); Action = "TestPage.asp" }
+ #       $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator"); JSFunction = "TestPage.asp" }
  #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
  #       $item = getButtonBarButton -Label $params.Label
  #       $item.UserRole.Count | Should Be 2
- #       $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator", "Reviewer"); Action = "TestPage.asp" }
+ #       $params = @{Label = $testLabelName; UserRole = @("Administrator", "Translator", "Reviewer"); JSFunction = "TestPage.asp" }
  #       #Act
  #       Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
  #       #Assert

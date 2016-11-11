@@ -35,7 +35,7 @@ $scriptBlockCreateCertificate = {
     $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
     return $sslCertificate 
 }
-$computerName = If ($session) {$session.ComputerName} Else {$env:COMPUTERNAME}
+$computerName = If ($session) {$session.ComputerName} Else {[System.Net.Dns]::GetHostName()}
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 
@@ -274,7 +274,7 @@ Function Log($Message)
 {
     $date=Get-Date -Format "HHmmss.fff"
     $threadID=[System.Threading.Thread]::CurrentThread.ManagedThreadId
-    $computerName=$env:COMPUTERNAME
+    $computerName=[System.Net.Dns]::GetHostName()
 
     Write-Debug "$computerName $date [$threadID] - $Message"
 }
@@ -376,4 +376,19 @@ Function ArtifactCleaner
             }
             RemoteRenameItem "$filePath\_$fileName" "$fileName"
         }
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+function Unzip
+{
+    param([string]$zipfile, [string]$outpath)
+
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+}
+
+function ZipFolder
+{
+    param([string]$zipfile, [string]$folderPath)
+
+    [System.IO.Compression.ZipFile]::CreateFromDirectory($folderPath, $zipfile)
 }

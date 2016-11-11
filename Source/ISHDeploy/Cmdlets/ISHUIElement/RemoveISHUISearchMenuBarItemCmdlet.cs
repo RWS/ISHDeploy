@@ -34,6 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 	///		</para>
 	/// </example>
     [Cmdlet(VerbsCommon.Remove, "ISHUISearchMenuBarItem")]
+    [AdministratorRights]
     public sealed class RemoveISHUISearchMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

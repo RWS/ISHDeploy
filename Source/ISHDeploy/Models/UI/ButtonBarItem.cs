@@ -142,7 +142,7 @@ namespace ISHDeploy.Models.UI
         public void ChangeButtonBarItemProperties(string fileName)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{fileName}";
-            NameOfRootElement = "BUTTONBAR";
+            XPathToParentElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
             XPathFormat = "BUTTONBAR/BUTTON/INPUT[@NAME='{0}']/parent::BUTTON";
             XPath = string.Format(XPathFormat, Input.Name);
@@ -162,7 +162,7 @@ namespace ISHDeploy.Models.UI
         public ButtonBarItem(string buttonBar, string name, string[] ishtype = null, string icon = null, string onClick = null, object[] jArgumentList = null, string checkaccess = null, bool hideText = false)
         {
             RelativeFilePath = $@"Author\ASP\XSL\{buttonBar}";
-            NameOfRootElement = "BUTTONBAR";
+            XPathToParentElement = "BUTTONBAR";
             NameOfItem = "BUTTON";
 
             Input = new Input();

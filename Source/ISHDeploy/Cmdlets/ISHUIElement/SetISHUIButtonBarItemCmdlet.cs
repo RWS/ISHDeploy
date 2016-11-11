@@ -36,6 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIButtonBarItem")]
+    [AdministratorRights]
     public sealed class SetISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

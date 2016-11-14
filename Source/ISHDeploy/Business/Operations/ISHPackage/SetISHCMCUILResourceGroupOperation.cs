@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
-using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Models.UI.CUIFConfig;
-using System.IO.Compression;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
     /// <summary>
-    /// 
+    /// Set resource group in ~\Author\ASP\UI\Extensions\_config.xml.
     /// </summary>
-    /// <seealso cref="BaseOperationPaths" />
-    public class SetISHCMCUILResourceGroupOperation : BaseOperationPaths
+    /// <seealso cref="IOperation" />
+    public class SetISHCMCUILResourceGroupOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -43,116 +37,52 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="zipFilePath">Path to zip file.</param>
-        public SetISHCMCUILResourceGroupOperation(ILogger logger, Models.ISHDeployment ishDeployment, string zipFilePath) :
+        /// <param name="name">The name of resource group.</param>
+        /// <param name="relativePaths">Relative paths to resource files.</param>
+        public SetISHCMCUILResourceGroupOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string[] relativePaths) :
             base(logger, ishDeployment)
         {
+            _invoker = new ActionInvoker(logger, $"Setting resource group in {CUIFConfigFilePath.RelativePath}");
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
-            string temporaryDirectory = (BackupFolderPath  + @"\Custom").Replace("\\", "/");
+            var resourceGroups = xmlConfigManager.Deserialize<ResourceGroups>(CUIFConfigFilePath.AbsolutePath, "resourceGroups");
 
-            using (ZipArchive archive = ZipFile.OpenRead(zipFilePath))
+            var resourceGroup = resourceGroups?.resources == null
+                ? new resourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name }
+                : resourceGroups.resources.SingleOrDefault(x => x.name == name) ?? new resourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
+
+            resourceGroup.ChangeItemProperties(CUIFConfigFilePath.RelativePath);
+
+            foreach (var relativePath in relativePaths)
             {
-                var filesList = fileManager
-                    .GetFiles($@"{WebFolderPath}\Author\ASP\UI\", "*.*", true)
-                    .Select(x => x.Substring(x.IndexOf(@"\UI\") + 4).Replace("\\", "/"));
-                archive
-                    .Entries
-                    .Where(x => !filesList.Any(y => y == x.FullName))
-                    .ToList()
-                    .ForEach(x=> {
-                        if (x.Length != 0)
-                        {
-                            string fileName = temporaryDirectory + '/' + x;
-                            fileManager.CreateDirectory(Path.GetDirectoryName(fileName));  
-                            x.ExtractToFile(fileName, true);
-                        }});
-            }
+                string absolutePath = Path.Combine(AuthorAspCustomFolderPath, relativePath);
 
-//.Except(filesList) .Where(x => !zipFilesList.Any(y => y == x.FullName))
-            //var xmlManager = ObjectFactory.GetInstance<IXmlConfigManager>();
-            /*
-            _invoker = new ActionInvoker(logger, "Copying package to environment");
-
-            // Unzip package
-            fileManager.ExtractPackageToDirectory(zipFilePath, temporaryDirectory);
-
-            // Get files list with paths
-            var filesList = fileManager
-                .GetFiles(temporaryDirectory, "*.*", true)
-                .Where(x => x.ToLower().Contains($"{ishDeployment.SoftwareVersion.Major}.x"))
-                .ToList();
-
-            // Separate _config.xml file ans any *Buttonbar.xml from other files (contains both filename and version)
-            var configFile = filesList
-                .Where(x => x.ToLower().Contains("_config.xml"))
-                .FirstOrDefault();
-
-            // Get list of ButtonBarItem models
-            var buttonbarFiles = filesList
-                .Where(x => x.ToLower().Contains("buttonbar.xml"))
-                .ToList();
-
-            // if _config.xml exist do update _config.xml
-            if (configFile != null)
-            {
-                ResourceGroups resourceGroups = null;
-
-                XmlSerializer ser = new XmlSerializer(typeof(ResourceGroups));
-                using (XmlReader reader = XmlReader.Create(configFile))
+                if (fileManager.FileExists(absolutePath))
                 {
-                    reader.ReadToDescendant("resourceGroups");
-                    resourceGroups = (ResourceGroups)ser.Deserialize(reader.ReadSubtree());
-                }
-                foreach (var resourceGroup in resourceGroups.resourceGroups)
-                {
-                    resourceGroup.ChangeButtonBarItemProperties(Path.GetFileName(configFile));
-                    _invoker.AddAction(new SetUIElementAction(Logger,
-                                    new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
-                }
-
-                filesList.Remove(configFile);
-            }
-
-            // For each *Buttonbar.xml do update appropriate *Buttonbar.xml
-            foreach (var buttonbarFile in buttonbarFiles)
-            {
-                string fileName = Path.GetFileName(buttonbarFile);
-
-                if (fileManager.FileExists($@"{AuthorFolderPath}\Author\ASP\XSL\{fileName}"))
-                {
-                    ButtonBarItemCollection buttonBarItems =
-                        xmlManager.Deserialize<ButtonBarItemCollection>(buttonbarFile);
-
-                    if (buttonBarItems.ButtonBarItemArray != null)
+                    // Update ~\Author\ASP\UI\Extensions\_config.xml
+                    string fileName = $@"../../Custom/{relativePath.Replace(@"\", "/")}";
+                    if (resourceGroup.files.All(x => x.name != fileName))
                     {
-                        foreach (var item in buttonBarItems.ButtonBarItemArray)
+                        resourceGroup.files.Add(new resourceGroupsResourceGroupFile
                         {
-                            item.ChangeButtonBarItemProperties(fileName);
-                            _invoker.AddAction(new SetUIElementAction(Logger,
-                                new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, item.RelativeFilePath), item));
-                        }
+                            name = fileName
+                        });
                     }
 
-                    filesList.Remove(buttonbarFile);
+                    _invoker.AddAction(new SetUIElementAction(Logger,
+                                    new ISHFilePath(WebFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
+                }
+                else
+                {
+                    throw new FileNotFoundException($"Could not find file {absolutePath}");
                 }
             }
-
-            // For other files do copy with overwrite
-            foreach (var otherFile in filesList)
-            {
-                // Add copy with replace action
-                string filenameWithPartialPath = Path.GetDirectoryName(otherFile).Substring(otherFile.IndexOf(@"Web\") + 4); //for now for Web directory only.
-                var newDestination = new ISHFilePath($@"{AuthorFolderPath}\{filenameWithPartialPath}", BackupWebFolderPath, "");
-                _invoker.AddAction(new DirectoryCreateAction(logger, newDestination.AbsolutePath));
-                _invoker.AddAction(new FileCopyToDirectoryAction(logger, otherFile, newDestination, true));
-            }
-            */
         }
 
         /// <summary>
@@ -160,7 +90,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public void Run()
         {
-            //_invoker.Invoke();
+            _invoker.Invoke();
         }
     }
 }

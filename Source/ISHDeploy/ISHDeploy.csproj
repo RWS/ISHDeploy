@@ -78,7 +78,6 @@
     <Compile Include="Business\Enums\CardType.cs" />
     <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
     <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
-    <Compile Include="Business\Operations\ISHCM\SetISHCMCUILResourceGroupOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -185,7 +184,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHCM\SetISHCMCUILResourceGroupCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\SetISHCMCUILResourceGroupCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentParametersCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.cs" />

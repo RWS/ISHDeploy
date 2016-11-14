@@ -35,7 +35,7 @@ namespace ISHDeploy.Models.UI
         public string RelativeFilePath { get; protected set; }
 
         /// <summary>
-        /// Gets the name of root element.
+        /// Gets the XPath to parent element.
         /// </summary>
         /// <value>
         /// The root path.

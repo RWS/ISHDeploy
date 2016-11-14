@@ -28,6 +28,6 @@ namespace ISHDeploy.Models.UI.CUIFConfig
         /// Array of resourceGroups.
         /// </summary>
         [XmlElement("resourceGroup")]
-        public resourceGroup[] resources { get; set; }
+        public ResourceGroup[] resources { get; set; }
     }
 }

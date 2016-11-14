@@ -46,6 +46,16 @@ namespace ISHDeploy.Business.Operations
         protected string WebFolderPath { get; }
 
         /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string AuthorAspBinFolderPath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\Custom folder.
+        /// </summary>
+        protected string AuthorAspCustomFolderPath { get; }
+
+        /// <summary>
         /// Gets the path to the App+Suffix Author folder.
         /// </summary>
         protected string AppFolderPath { get; }
@@ -210,6 +220,11 @@ namespace ISHDeploy.Business.Operations
         protected string BackupFolderPath { get; }
 
         /// <summary>
+        /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
+
+        /// <summary>
         /// The path to Web back up folder
         /// </summary>
         protected string BackupWebFolderPath { get; }
@@ -321,10 +336,6 @@ namespace ISHDeploy.Business.Operations
         /// Gets the path to the ~\Author\ASP\UI folder.
         /// </summary>
         protected string AuthorAspUIFolderPath { get; }
-        /// <summary>
-        /// Gets the path to the ~\Author\ASP\UI\Custom folder.
-        /// </summary>
-        protected string AuthorAspCustomFolderPath { get; }
 
         /// <summary>
         /// Gets the path to ~\Web\Author\ASP\UI\Extensions\_config.xml
@@ -360,8 +371,10 @@ namespace ISHDeploy.Business.Operations
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
+            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
+            AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
             AuthorAspCustomFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\Custom");
             AppFolderPath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}");
             DataFolderPath = Path.Combine(InputParameters.DataPath, $"Data{InputParameters.ProjectSuffix}");
@@ -420,7 +433,7 @@ namespace ISHDeploy.Business.Operations
         /// <returns>Path to folder in UTC format</returns>
         private string ConvertLocalFolderPathToUNCPath(string localPath)
         {
-            return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
+            return $@"\\{System.Net.Dns.GetHostName()}\{localPath.Replace(":", "$")}";
         }
     }
 }

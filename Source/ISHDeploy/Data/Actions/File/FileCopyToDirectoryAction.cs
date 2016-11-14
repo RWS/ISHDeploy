@@ -17,7 +17,6 @@
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using ISHDeploy.Interfaces.Actions;
-using ISHDeploy.Models;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -32,9 +31,9 @@ namespace ISHDeploy.Data.Actions.File
         private readonly string _sourcePath;
 
         /// <summary>
-        /// The destination file path
+        /// The path to destination folder
         /// </summary>
-        private readonly string _destinationPath;
+        private readonly string _destinationDirectory;
 
         /// <summary>
         /// The force switch identifies if file needs to be replaced.
@@ -51,13 +50,13 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="sourcePath">The source file path.</param>
-        /// <param name="destinationPath">The destination file path.</param>
+        /// <param name="destinationDirectory">The path to destination folder.</param>
         /// <param name="force">Replaces existing file if true.</param>
-        public FileCopyToDirectoryAction(ILogger logger, string sourcePath, ISHFilePath destinationPath, bool force = false) 
+        public FileCopyToDirectoryAction(ILogger logger, string sourcePath, string destinationDirectory, bool force = false) 
 			: base(logger)
         {
             _sourcePath = sourcePath;
-			_destinationPath = destinationPath.AbsolutePath;
+			_destinationDirectory = destinationDirectory;
             _force = force;
 
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
@@ -68,7 +67,7 @@ namespace ISHDeploy.Data.Actions.File
 		/// </summary>
 		public override void Execute()
 		{
-			_fileManager.CopyToDirectory(_sourcePath, _destinationPath, _force);
+			_fileManager.CopyToDirectory(_sourcePath, _destinationDirectory, _force);
 		}
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace ISHDeploy.Data.Actions.File
 		        return;
 		    }
 
-			var copiedFileName = Path.Combine(_destinationPath, fileName);
+			var copiedFileName = Path.Combine(_destinationDirectory, fileName);
 			if (_fileManager.FileExists(copiedFileName))
 		    {
 				_fileManager.Delete(copiedFileName);

@@ -34,6 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUIMainMenuBarItem")]
+    [AdministratorRights]
     public sealed class SetISHUIMainMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

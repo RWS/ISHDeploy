@@ -29,7 +29,8 @@ namespace ISHDeploy.Cmdlets.ISHContentEditor
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
 	[Cmdlet(VerbsCommon.Set, "ISHContentEditor")]
-	public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
+    [AdministratorRights]
+    public class SetISHContentEditorCmdlet : BaseHistoryEntryCmdlet
 	{
         /// <summary>
         /// Hardcoded value of the license file type

@@ -42,7 +42,8 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSConfiguration")]
-	public sealed class SetISHSTSConfigurationCmdlet : BaseHistoryEntryCmdlet
+    [AdministratorRights]
+    public sealed class SetISHSTSConfigurationCmdlet : BaseHistoryEntryCmdlet
 	{
         /// <summary>
         /// <para type="description">Token signing certificate Thumbprint.</para>

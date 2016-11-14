@@ -51,6 +51,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
 
+            // Remove redundant files from BIN
+            _invoker.AddAction(new DirectoryBinReturnToVanila(
+                logger, 
+                BackupFolderPath, 
+                "vanilla.web.author.asp.bin.xml",
+                $@"{WebFolderPath}\Author\ASP\bin"));
+
             // Disable internal STS login (remove directory) 
             _invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
 
@@ -106,7 +113,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
-		}
+
+            // Remove Author\ASP\Custom
+            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
+        }
 
         /// <summary>
         /// Runs current operation.

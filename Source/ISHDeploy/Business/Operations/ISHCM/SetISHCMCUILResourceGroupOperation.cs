@@ -65,8 +65,8 @@ namespace ISHDeploy.Business.Operations.ISHCM
             var resourceGroups = xmlConfigManager.Deserialize<ResourceGroups>(CUIFConfigFilePath.AbsolutePath, "resourceGroups");
 
             var resourceGroup = resourceGroups?.resources == null
-                ? new resourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name}
-                : resourceGroups.resources.SingleOrDefault(x => x.name == name) ?? new resourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
+                ? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name}
+                : resourceGroups.resources.SingleOrDefault(x => x.name == name) ?? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
             
             resourceGroup.ChangeItemProperties(CUIFConfigFilePath.RelativePath);
 

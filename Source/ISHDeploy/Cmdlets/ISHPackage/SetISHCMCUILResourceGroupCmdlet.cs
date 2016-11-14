@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHCM;
+﻿using ISHDeploy.Business.Operations.ISHPackage;
 
-namespace ISHDeploy.Cmdlets.ISHCM
+namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
     ///		<para type="synopsis">Sets resource group in ~\Author\ASP\UI\Extensions\_config.xml.</para>

@@ -24,6 +24,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// </summary>
     /// <example>
     /// <code>PS C:\>Backup-ISHDeployment -Web -Path Author\ASP\Web.config </code>
+    /// <code>PS C:\>Backup-ISHDeployment -Web -Path bin\*.txt </code>
+    /// <code>PS C:\>Backup-ISHDeployment -Web -Path Trisoft*.dll </code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Backup, "ISHDeployment")]

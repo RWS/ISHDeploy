@@ -510,16 +510,19 @@ namespace ISHDeploy.Data.Managers
         {
 
             string[] directories = Directory.GetDirectories(sourcePath, directoryTepmlate, SearchOption.AllDirectories);
-            Array.ForEach(directories, dirPath =>
-            {
-                Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
-            });
 
             string[] files = Directory.GetFiles(sourcePath, fileTemplate, SearchOption.AllDirectories);
-            Array.ForEach(files, newPath =>
-            {
-                File.Copy(newPath, newPath.Replace(sourcePath, destinationPath));
-            });
+
+            files
+                .ToList()
+                .Where (x=> directories.Any(x.Contains))
+                .ToList()
+                .ForEach(newPath =>
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourcePath, destinationPath)));
+                        File.Copy(newPath, newPath.Replace(sourcePath, destinationPath));
+                        _logger.WriteDebug($"File {newPath} was backuped");
+                    });
         }
     }
 }

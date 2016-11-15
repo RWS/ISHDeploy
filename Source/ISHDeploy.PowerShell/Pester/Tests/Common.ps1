@@ -35,7 +35,7 @@ $scriptBlockCreateCertificate = {
     $sslCertificate  = New-SelfSignedCertificate -DnsName "testDNS" -CertStoreLocation "cert:\LocalMachine\My"
     return $sslCertificate 
 }
-$computerName = If ($session) {$session.ComputerName} Else {[System.Net.Dns]::GetHostName()}
+$computerName = If ($session) {$session.ComputerName} Else {[System.Net.Dns]::GetHostName() + "." + $env:USERDNSDOMAIN}
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 

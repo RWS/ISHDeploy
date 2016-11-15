@@ -60,7 +60,8 @@ $scriptBlockReadTargetXML = {
         $suffix,
         $xmlPath,
         $absolutePath,
-        $infosharewswebappname
+        $infosharewswebappname,
+        $computerName
     )
     #read all files that are touched with commandlet
     
@@ -110,15 +111,14 @@ $scriptBlockReadTargetXML = {
     $existCommand = New-Object "System.Data.SqlServerCe.SqlCeCommand"
 	$existCommand.CommandType = [System.Data.CommandType]::Text
 	$existCommand.Connection = $connection
-    $myServer = $computerName + "." + $env:USERDNSDOMAIN
-	$parameter=$existCommand.Parameters.Add("@realm","https://$myServer/$infosharewswebappname/Wcf/API20/Folder.svc")
+	$parameter=$existCommand.Parameters.Add("@realm", "https://$computerName/$infosharewswebappname/Wcf/API20/Folder.svc")
 	$existCommand.CommandText = "SELECT EncryptingCertificate FROM RelyingParties WHERE Realm=@realm"
 
 	#Execute Command
 	try
 	{
 		$connection.Open()
-		$result["encryptingCertificate"] =$existCommand.ExecuteScalar().ToString()
+		$result["encryptingCertificate"] = $existCommand.ExecuteScalar().ToString()
 	}
     catch{
         Write-Host $Error
@@ -139,7 +139,7 @@ function remoteReadTargetXML() {
     
     $infosharewswebappname = $inputParameters["infosharewswebappname"]
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname, $computerName
 
 
     #get variables and nodes from files

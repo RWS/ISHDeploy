@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using ISHDeploy.Business.Operations.ISHDeployment;
+using ISHDeploy.Cmdlets.ISHPackage;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -28,6 +29,20 @@ namespace ISHDeploy.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentCmdlet
     {
+        /// <summary>
+        /// History prefix for Copy and Expand cmdlet
+        /// </summary>
+        private readonly string _prefix =
+@"if($IncludeCustomFile)
+{
+";
+        /// <summary>
+        /// History postfix for Copy and Expand cmdlet
+        /// </summary>
+        private readonly string _postfix =
+@"
+}";
+
         /// <summary>
         /// Overrides ProcessRecord from Cmdlet class
         /// </summary>
@@ -46,11 +61,23 @@ namespace ISHDeploy.Cmdlets
             // don't log if cmdlet was executed with WhatIf parameter
             if (MyInvocation.BoundParameters.ContainsKey("WhatIf"))
             {
-				Logger.WriteVerbose("Commandlet was executed with `-WhatIf` parameter, no history logging required.");
-				return;
+                Logger.WriteVerbose("Commandlet was executed with `-WhatIf` parameter, no history logging required.");
+                return;
             }
-            
-            var operation = new AddHistoryEntryOperation(Logger, ISHDeployment, GetInvocationLine());
+
+            // TS-11913
+            string prefix = "", postfix = "";
+            if (this.GetType() == typeof(CopyISHCMFileCmdlet) ||
+                this.GetType() == typeof(ExpandISHCMPackageCmdlet))
+            {
+                prefix = _prefix;
+                postfix = _postfix;
+            }
+
+            var operation = new AddHistoryEntryOperation(
+                Logger,
+                ISHDeployment,
+                prefix + GetInvocationLine() + postfix);
 
             operation.Run();
         }
@@ -95,7 +122,7 @@ namespace ISHDeploy.Cmdlets
 
             if (boundParameter.Value is SwitchParameter)
             {
-                return ((SwitchParameter) boundParameter.Value).IsPresent
+                return ((SwitchParameter)boundParameter.Value).IsPresent
                     ? new KeyValuePair<string, object>(boundParameter.Key, string.Empty)
                     : (KeyValuePair<string, object>?)null;
             }
@@ -106,16 +133,16 @@ namespace ISHDeploy.Cmdlets
                 return new KeyValuePair<string, object>(boundParameter.Key, $"\"{stringValue}\"");
             }
 
-			if (boundParameter.Value is IEnumerable)
-			{
-				var arrayStringValue = string.Join(", ", ((IEnumerable) boundParameter.Value).Cast<object>().Select(x => $"\"{x.ToString().Replace("\"", "\"\"")}\""));
-				return string.IsNullOrEmpty(arrayStringValue)
-					? (KeyValuePair<string, object>?) null
-					: new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");
+            if (boundParameter.Value is IEnumerable)
+            {
+                var arrayStringValue = string.Join(", ", ((IEnumerable)boundParameter.Value).Cast<object>().Select(x => $"\"{x.ToString().Replace("\"", "\"\"")}\""));
+                return string.IsNullOrEmpty(arrayStringValue)
+                    ? (KeyValuePair<string, object>?)null
+                    : new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");
 
-			}
+            }
 
-			return boundParameter;
+            return boundParameter;
         }
     }
 }

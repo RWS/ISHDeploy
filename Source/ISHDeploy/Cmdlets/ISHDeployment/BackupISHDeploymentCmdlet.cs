@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHPackage;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
-namespace ISHDeploy.Cmdlets.ISHPackage
+namespace ISHDeploy.Cmdlets.ISHDeployment
 {
     /// <summary>
     /// <para type="synopsis">Backup data from Web, App, Data folders.</para>

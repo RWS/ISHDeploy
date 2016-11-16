@@ -15,18 +15,11 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using System.IO;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.Asserts;
-using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Cmdlets.ISHPackage;
 
-namespace ISHDeploy.Business.Operations.ISHPackage
+namespace ISHDeploy.Business.Operations.ISHDeployment
 {
     /// <summary>
     /// Backup data from Web, App, Data folders.
@@ -40,7 +33,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
+        /// Initializes a new instance of the <see cref="BackupISHDeploymentOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
@@ -66,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     destinationFolderPath = BackupDataFolderPath;
                     break;
                 default:
-                    throw new ArgumentException($"Folder for {nameof(BackupISHDeploymentCmdlet)} should be defined.");
+                    throw new ArgumentException($"Folder for {nameof(BackupISHDeploymentOperation)} should be defined.");
             }
 
             foreach (var template in path)

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -30,20 +31,20 @@ namespace ISHDeploy.Data.Actions.File
         /// <summary>
         /// History header
         /// </summary>
-        private readonly string _header = 
- @"<#ISHDeployScriptInfo
+        private readonly string _header =
+ $@"<#ISHDeployScriptInfo
 
 .VERSION 1.0
 
-.MODULE ISHDEPLOY.12.0.1
+.MODULE {System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}
 
 .CREATEDBYMODULEVERSION(ModuleVersion)
 
 .UPDATEDBYMODULEVERSION(ModuleVersion)
 
-.CREATEDFORISHVERSION 12.0.1
+.CREATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
 
-.UPDATEDFORISHVERSION 12.0.1
+.UPDATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
 
 #>
 

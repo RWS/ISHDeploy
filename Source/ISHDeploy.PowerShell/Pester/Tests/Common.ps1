@@ -1,5 +1,5 @@
 ﻿#Invokes command in session or locally, depending on -session parameter
-Function Invoke-CommandRemoteOrLocal {
+function Invoke-CommandRemoteOrLocal {
     param (
         [Parameter(Mandatory=$true)]
         $ScriptBlock,
@@ -87,7 +87,7 @@ $scriptBlockGetInputParameters = {
     return $result
     
 }
-Function Get-InputParameters
+function Get-InputParameters
 {
     param (
         [Parameter(Mandatory=$true)]
@@ -98,7 +98,7 @@ Function Get-InputParameters
 $inputParameters = Get-InputParameters $testingDeploymentName
 
 #Gets suffix from project name
-Function GetProjectSuffix($projectName)
+function GetProjectSuffix($projectName)
 {
     return $projectName.Replace("InfoShare", "")
 }
@@ -114,7 +114,7 @@ $scriptBlockTestPath = {
     )
     Test-Path $path
 }
-Function RemotePathCheck {
+function RemotePathCheck {
     param (
         [Parameter(Mandatory=$true)]
         $path
@@ -145,7 +145,7 @@ $scriptBlockWebRequest = {
     }
 }
 
-Function WebRequestToSTS
+function WebRequestToSTS
 {
     param (
         [Parameter(Mandatory=$true)]
@@ -180,7 +180,7 @@ $scriptBlockUndoDeployment = {
     Undo-ISHDeployment -ISHDeployment $ishDeploy
 }
 
-Function UndoDeploymentBackToVanila {
+function UndoDeploymentBackToVanila {
     param (
         [Parameter(Mandatory=$true)]
         $deploymentName,
@@ -224,7 +224,7 @@ $scriptBlockRemoveItem = {
     )
     Remove-Item $path
 }
-Function RemoteRemoveItem {
+function RemoteRemoveItem {
     param (
         [Parameter(Mandatory=$true)]
         $path
@@ -242,7 +242,7 @@ $scriptBlockRenameItem = {
     )
     Rename-Item $path, $name
 }
-Function RemoteRenameItem {
+function RemoteRenameItem {
     param (
         [Parameter(Mandatory=$true)]
         $path,
@@ -270,7 +270,7 @@ function RetryCommand {
 }
 
 #Logs debug info
-Function Log($Message)
+function Log($Message)
 {
     $date=Get-Date -Format "HHmmss.fff"
     $threadID=[System.Threading.Thread]::CurrentThread.ManagedThreadId
@@ -321,7 +321,21 @@ $scriptBlockStopWebAppPool = {
 	    Stop-WebAppPool -Name "TrisoftAppPool$infosharestswebappname"
     }
 }
-Function StopPool
+
+$scriptBlockGetHistory = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
+}
+
+function StopPool
 {
     param (
         [Parameter(Mandatory=$true)]
@@ -331,7 +345,7 @@ Function StopPool
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopWebAppPool -Session $session -ArgumentList $result["infoshareauthorwebappname"], $result["infosharewswebappname"], $result["infosharestswebappname"]
 }
 
-Function UndoDeployment
+function UndoDeployment
 {
     param (
         [Parameter(Mandatory=$true)]
@@ -341,7 +355,7 @@ Function UndoDeployment
 }
 
 # Get Test Data variable
-Function Get-TestDataValue
+function Get-TestDataValue
 {
     param (
         [Parameter(Mandatory=$true)]
@@ -359,7 +373,7 @@ Function Get-TestDataValue
     return $value
 }
 
-Function ArtifactCleaner
+function ArtifactCleaner
 {
     param (
         [Parameter(Mandatory=$true)]

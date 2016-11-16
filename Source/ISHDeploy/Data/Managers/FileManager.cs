@@ -520,7 +520,7 @@ namespace ISHDeploy.Data.Managers
                 .ForEach(newPath =>
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourcePath, destinationPath)));
-                        File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), false);// if already exist we do not copy - it is already backuped
+                        File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);// if already exist we do not copy - it is already backuped
                         _logger.WriteDebug($"File {newPath} was backuped");
                     });
         }

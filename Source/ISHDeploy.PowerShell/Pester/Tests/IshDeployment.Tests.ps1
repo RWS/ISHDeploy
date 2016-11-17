@@ -92,19 +92,6 @@ $scriptBlockSetVersionValue = {
     Set-ItemProperty -Path HKLM:\Software\Wow6432Node\Trisoft\InstallTool\InfoShare\$ishDeployName\History\$currentInstall -Name Version -Value $value
 }
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 $scriptBlockGetAmountOfInstalledDeployments = {
     $RegistryInstallToolPath = "SOFTWARE\\Trisoft\\InstallTool"
     if ([System.Environment]::Is64BitOperatingSystem)

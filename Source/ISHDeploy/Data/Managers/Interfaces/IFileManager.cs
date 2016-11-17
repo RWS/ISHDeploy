@@ -57,6 +57,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         bool FolderExists(string path);
 
         /// <summary>
+        /// Copy files with directory and file template.
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to source directory</param>
+        /// <param name="destinationDirectoryPath">The path to source directory</param>
+        /// <param name="searchPattern">The search pattern</param>
+        void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern);
+
+        /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
         /// </summary>
         /// <param name="filePath">The file to open for reading.</param>

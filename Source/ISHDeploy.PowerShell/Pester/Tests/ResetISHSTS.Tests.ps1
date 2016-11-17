@@ -11,19 +11,6 @@ $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCe
 $absolutePath = $testingDeployment.WebPath
 $computerName = $computerName.split(".")[0]
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 $scriptBlockResetISHSTS = {
     param (
         [Parameter(Mandatory=$false)]

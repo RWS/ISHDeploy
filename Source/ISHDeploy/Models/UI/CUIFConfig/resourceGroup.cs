@@ -15,13 +15,15 @@
  */
 
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI.CUIFConfig
 {
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRoot("resourceGroup", Namespace = "")]
     public class ResourceGroup : BaseUIElement
     {
 

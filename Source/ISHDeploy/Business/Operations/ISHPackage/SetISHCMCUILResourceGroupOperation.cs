@@ -65,7 +65,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             var resourceGroup = resourceGroups?.resources == null
                 ? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name }
-                : resourceGroups.resources.SingleOrDefault(x => x.name == name) ?? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
+                : resourceGroups.resources.SingleOrDefault(x => x.name.ToLower() == name.ToLower()) ?? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
 
             resourceGroup.ChangeItemProperties(CUIFConfigFilePath.RelativePath);
 

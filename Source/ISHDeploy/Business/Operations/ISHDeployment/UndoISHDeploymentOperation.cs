@@ -138,7 +138,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             {
                 Logger.WriteDebug("Delete file", ExtensionsLoaderFilePath.RelativePath);
 
-                _invoker.AddAction(new FileDeleteAction(Logger, LicenceFolderPath.AbsolutePath));
+                _invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
             }
         }
 

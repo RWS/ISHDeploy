@@ -24,7 +24,7 @@ namespace ISHDeploy.Models.UI.CUIFConfig
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRoot("resourceGroup", Namespace = "")]
-    public class ResourceGroup2 : BaseUIElement
+    public class ResourceGroup : BaseUIElement
     {
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace ISHDeploy.Models.UI.CUIFConfig
             XPath = string.Format(XPathFormat, name);
         }
 
-        private List<ResourceGroupsResourceGroupFile2> filesField;
+        private List<ResourceGroupsResourceGroupFile> filesField;
 
         private string nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("file", IsNullable = false)]
-        public List<ResourceGroupsResourceGroupFile2> files
+        public List<ResourceGroupsResourceGroupFile> files
         {
             get { return this.filesField; }
             set { this.filesField = value; }

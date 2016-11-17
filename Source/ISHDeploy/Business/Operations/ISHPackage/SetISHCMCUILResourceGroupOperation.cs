@@ -95,7 +95,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             }
         }
 
-
         /// <summary>
         /// Creates ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js file if file does not exist.
         /// </summary>

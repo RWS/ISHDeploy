@@ -174,6 +174,6 @@ Describe "Testing Backup-ISHDeployment"{
         #Assert
         $listOfBackupFiles = GetListOfFiles $pathToBackupWebFolder "*.*"
 
-        $listOfBackupFiles.Count | Should be 100
+        $listOfBackupFiles.Count | Should be 155
     }
 }

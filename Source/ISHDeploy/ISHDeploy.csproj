@@ -87,6 +87,7 @@
     <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\BackupISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\ExpandISHCMPackageOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\SetISHCMCUILResourceGroupOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\CopyISHCMFileOperation.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\BackupISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\ExpandISHCMPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\CopyISHCMFileCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Models\UI\CUIFConfig\resourceGroupsResourceGroupFile.cs" />
     <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
+    <Compile Include="Data\Actions\File\BackupAction.cs" />
     <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />

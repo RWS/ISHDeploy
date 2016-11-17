@@ -55,19 +55,6 @@ $scriptBlockExpandISHCMPackage = {
     }
 }
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 Describe "Testing Expand-ISHCMPackage"{
     BeforeEach {
 		ArtifactCleaner -filePath $uncPackagePath -fileName "test.file"
@@ -150,10 +137,10 @@ Describe "Testing Expand-ISHCMPackage"{
         New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
 
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
-        Move-Item -Path $zipPath -Destination $uncPackagePath -Force -type file |Out-Null
+        Move-Item -Path $zipPath -Destination $uncPackagePath -Force 
 
         ZipFolder -zipfile $secondZipPath -folderPath $uncPackagePath
-        Move-Item -Path $secondZipPath -Destination $uncPackagePath -Force -type file |Out-Null
+        Move-Item -Path $secondZipPath -Destination $uncPackagePath -Force 
 
         #Assert
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "copyMultiple", $secondZip  

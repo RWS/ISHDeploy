@@ -64,8 +64,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             var resourceGroups = xmlConfigManager.Deserialize<ResourceGroups>(CUIFConfigFilePath.AbsolutePath, "resourceGroups");
 
             var resourceGroup = resourceGroups?.resources == null
-                ? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name }
-                : resourceGroups.resources.SingleOrDefault(x => x.name.ToLower() == name.ToLower()) ?? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
+                ? new ResourceGroup2 { files = new List<ResourceGroupsResourceGroupFile2>(), name = name }
+                : resourceGroups.resources.SingleOrDefault(x => x.name.ToLower() == name.ToLower()) ?? new ResourceGroup2 { files = new List<ResourceGroupsResourceGroupFile2>(), name = name };
 
             resourceGroup.ChangeItemProperties(CUIFConfigFilePath.RelativePath);
 
@@ -79,7 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     string fileName = $@"../../Custom/{relativePath.Replace(@"\", "/")}";
                     if (resourceGroup.files.All(x => x.name != fileName))
                     {
-                        resourceGroup.files.Add(new resourceGroupsResourceGroupFile
+                        resourceGroup.files.Add(new ResourceGroupsResourceGroupFile2
                         {
                             name = fileName
                         });

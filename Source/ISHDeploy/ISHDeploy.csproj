@@ -207,9 +207,9 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
-    <Compile Include="Models\UI\CUIFConfig\ResourceGroup2.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
-    <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile2.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />
     <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
     <Compile Include="Data\Actions\File\BackupAction.cs" />

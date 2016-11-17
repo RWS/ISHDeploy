@@ -19,7 +19,7 @@ namespace ISHDeploy.Models.UI.CUIFConfig
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public class ResourceGroupsResourceGroupFile2
+    public class ResourceGroupsResourceGroupFile
     {
 
         private string nameField;

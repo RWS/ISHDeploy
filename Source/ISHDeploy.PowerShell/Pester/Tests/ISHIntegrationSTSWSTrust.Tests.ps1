@@ -34,19 +34,6 @@ $scriptBlockSetWSTrust = {
     }
 }
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 #endregion
 
 

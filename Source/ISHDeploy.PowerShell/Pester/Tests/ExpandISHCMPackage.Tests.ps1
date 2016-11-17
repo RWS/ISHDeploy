@@ -55,19 +55,6 @@ $scriptBlockExpandISHCMPackage = {
     }
 }
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 Describe "Testing Expand-ISHCMPackage"{
     BeforeEach {
 		ArtifactCleaner -filePath $uncPackagePath -fileName "test.file"

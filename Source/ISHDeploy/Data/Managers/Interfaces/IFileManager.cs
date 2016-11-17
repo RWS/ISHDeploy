@@ -55,11 +55,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="path">The folder to check.</param>
         /// <returns>True if folder exists</returns>
         bool FolderExists(string path);
-        
+
         /// <summary>
         /// Copy files with directory and file template.
         /// </summary>
-        void CopyWithTemplate(string sourceFolderPath, string destinationFolderPath, string directoryTepmlate, string fileTemplate);
+        /// <param name="sourceDirectoryPath">The path to source directory</param>
+        /// <param name="destinationDirectoryPath">The path to source directory</param>
+        /// <param name="searchPattern">The search pattern</param>
+        void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern);
 
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.

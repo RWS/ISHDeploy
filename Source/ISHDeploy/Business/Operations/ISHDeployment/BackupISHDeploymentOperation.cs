@@ -42,6 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public BackupISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string parameterSetName, string[] path) :
             base(logger, ishDeployment)
         {
+            _invoker = new ActionInvoker(logger, "Backup files.");
             string sourceFolderPath, destinationFolderPath;
 
             switch (parameterSetName)
@@ -64,7 +65,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             foreach (var template in path)
             {
-                _invoker = new ActionInvoker(logger, $"Backup {sourceFolderPath}\\{template} files.");
                 _invoker.AddAction(new BackupAction(logger, sourceFolderPath, destinationFolderPath, template));
             }
         }

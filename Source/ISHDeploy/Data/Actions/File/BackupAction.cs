@@ -68,16 +68,7 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         public override void Execute()
         {
-            string directoryTepmlate = Path.GetDirectoryName(_template);
-            string fileTemplate = Path.GetFileName(_template);
-
-            if (string.IsNullOrEmpty(directoryTepmlate))
-                directoryTepmlate = "*.*";
-            if (string.IsNullOrEmpty(fileTemplate))
-                fileTemplate = "*.*";
-
-            _fileManager.CopyWithTemplate(_sourceFolderPath, _destinationFolderPath, directoryTepmlate, fileTemplate);
+            _fileManager.CopyWithTemplate(_sourceFolderPath, _destinationFolderPath, _template);
         }
-               
     }
 }

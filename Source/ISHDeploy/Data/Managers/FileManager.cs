@@ -506,21 +506,55 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Copy files with directory and file template.
         /// </summary>
-        public void CopyWithTemplate(string sourcePath, string destinationPath, string directoryTepmlate, string fileTemplate)
+        /// <param name="sourceDirectoryPath">The path to source directory</param>
+        /// <param name="destinationDirectoryPath">The path to source directory</param>
+        /// <param name="searchPattern">The search pattern</param>
+        public void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
         {
+            Func<string[]> getFiles;
 
-            string[] directories = Directory.GetDirectories(sourcePath, directoryTepmlate, SearchOption.AllDirectories);
+            if (string.IsNullOrEmpty(searchPattern))
+            {
+                getFiles = () => Directory.GetFiles(sourceDirectoryPath, "*.*");
+            }
+            else
+            { 
+                string directoryTepmlate = Path.GetDirectoryName(searchPattern);
+                string fileTemplate = Path.GetFileName(searchPattern);
 
-            string[] files = Directory.GetFiles(sourcePath, fileTemplate, SearchOption.AllDirectories);
+                if (string.IsNullOrEmpty(fileTemplate))
+                {
+                    getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*");
+                }
+                else
+                {
+                    if (fileTemplate == "*")
+                    {
+                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*", SearchOption.AllDirectories);
+                    }
+                    else if (fileTemplate.Contains(".") && !fileTemplate.Contains("*"))
+                    {
+                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate);
+                    }
+                    else if (fileTemplate.Contains(".") && fileTemplate.Contains("*"))
+                    {
+                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate, SearchOption.AllDirectories);
+                    }
+                    else
+                    {
+                        getFiles = () => Directory.GetFiles(Path.Combine(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate), "*.*");
+                    }
+                }
+            }
+
+            string[] files = getFiles();
 
             files
                 .ToList()
-                .Where (x=> directories.Any(x.Contains))
-                .ToList()
                 .ForEach(newPath =>
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourcePath, destinationPath)));
-                        File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);// if already exist we do not copy - it is already backuped
+                        Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourceDirectoryPath, destinationDirectoryPath)));
+                        File.Copy(newPath, newPath.Replace(sourceDirectoryPath, destinationDirectoryPath), true);// if already exist we do not copy - it is already backuped
                         _logger.WriteDebug($"File {newPath} was backuped");
                     });
         }

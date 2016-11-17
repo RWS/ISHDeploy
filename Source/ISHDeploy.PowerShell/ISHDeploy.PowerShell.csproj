@@ -78,6 +78,7 @@
     <None Include="Pester\Tests\RelayingParty.Tests.ps1" />
     <None Include="Pester\Tests\ResetISHSTS.Tests.ps1" />
     <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\SetISHCMCUILResourceGroup.Tests.ps1" />
     <None Include="Pester\Tests\SetISHSTSConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />

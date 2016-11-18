@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]
     [AdministratorRights]
-    public class ExpandISHCMPackageCmdlet : BaseISHDeploymentCmdlet
+    public class ExpandISHCMPackageCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Array of zip files.</para>

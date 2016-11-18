@@ -167,19 +167,24 @@ Describe "Testing Expand-ISHCMPackage"{
         RemotePathCheck $customFile | Should Be "True"
         RemotePathCheck $secondCustomFile | Should Be "True"
     }
-    <#
+    
      It "Expand-ISHCMPackage writes history"{
         #Act
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
+        Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
-        $history.Contains('Expand-ISHCMPackage -ISHDeployment $deploymentName -FileName $test.file -ToCustom') | Should be "True"
+        $history.Contains('if($IncludeCustomFile)
+{
+Expand-ISHCMPackage -ISHDeployment $deploymentName -FileName @("test.zip") -ToCustom 
+}') | Should be "True"
               
    } 
 
-    #>
+    
 
     UndoDeploymentBackToVanila $testingDeploymentName $true
 }

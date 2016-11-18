@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -26,6 +27,34 @@ namespace ISHDeploy.Data.Actions.File
 	/// </summary>
     public class FileAddHistoryEntryAction : BaseAction
     {
+
+        /// <summary>
+        /// History header
+        /// </summary>
+        private readonly string _header =
+ $@"<#ISHDeployScriptInfo
+
+.VERSION 1.0
+
+.MODULE {System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}
+
+.CREATEDBYMODULEVERSION(ModuleVersion)
+
+.UPDATEDBYMODULEVERSION(ModuleVersion)
+
+.CREATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
+
+.UPDATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
+
+#>
+
+param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
+";
+
         /// <summary>
         /// The file path
         /// </summary>
@@ -77,6 +106,7 @@ namespace ISHDeploy.Data.Actions.File
             {
                 Logger.WriteVerbose("Creating history file.");
 
+                historyEntry.AppendLine(_header);
                 historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deploymentName = '{_ishDeploymentName}'");
             }

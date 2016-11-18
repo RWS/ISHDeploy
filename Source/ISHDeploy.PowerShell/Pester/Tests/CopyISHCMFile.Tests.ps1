@@ -125,15 +125,18 @@ Describe "Testing Copy-ISHCMFile"{
         RemotePathCheck $secondCustomFile | Should Be "True"
     }
     
-    #It "Copy-ISHCMFile writes history"{
-    #    #Act
-    #    New-Item -Path $uncPackagePath -Name "test.file" -Force
-    #    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
-    #    $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
+    It "Copy-ISHCMFile writes history"{
+        #Act
+        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
-    #    #Assert
-    #    $history.Contains('Copy-ISHCMFile -ISHDeployment $deploymentName -FileName $test.file -ToCustom') | Should be "True"
-    #}
+        #Assert
+        $history.Contains('if($IncludeCustomFile)
+{
+Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.file") -ToCustom 
+}') | Should be "True"
+    }
 
     It "Undo-ISHDeployment deletes copied files"{      
         #Act

@@ -200,7 +200,7 @@ namespace ISHDeploy.Models.UI
                         Language = "JAVASCRIPT",
                         Content = @"
       // Load the extension resources
-      Trisoft.Helpers.ExtensionsLoader.enableExtensions("");"
+      Trisoft.Helpers.ExtensionsLoader.enableExtensions("""");"
                         }
 
                 };

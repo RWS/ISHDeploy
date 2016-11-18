@@ -56,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 logger, 
                 BackupFolderPath, 
                 "vanilla.web.author.asp.bin.xml",
-                $@"{AuthorFolderPath}\Author\ASP\bin"));
+                $@"{WebFolderPath}\Author\ASP\bin"));
 
             // Disable internal STS login (remove directory) 
             _invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
@@ -78,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
 
             // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, AuthorFolderPath));
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
@@ -115,7 +115,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
 
             // Remove Author\ASP\Custom
-            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{AuthorFolderPath}\Author\ASP\Custom"));
+            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
         }
 
         /// <summary>

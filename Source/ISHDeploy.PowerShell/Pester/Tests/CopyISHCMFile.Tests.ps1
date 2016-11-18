@@ -68,7 +68,7 @@ Describe "Testing Copy-ISHCMFile"{
         New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         #Invoke-CommandRemoteOrLocal -ScriptBlock{Test-Path "$packagePath\test.file"} -Session $session -ArgumentList $packagePath | Should Be "True"
         
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "TobiN"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToBiN"
         #Assert
         RemotePathCheck $binFile | Should Be "True"
     }

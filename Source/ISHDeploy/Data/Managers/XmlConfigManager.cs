@@ -852,6 +852,34 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <param name="readToDescendantName">The name of node to read to. Empty string by default</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath, string readToDescendantName = "")
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                if (!string.IsNullOrEmpty(readToDescendantName))
+                {
+                    reader.ReadToDescendant(readToDescendantName);
+                    return (T)ser.Deserialize(reader.ReadSubtree());
+                }
+                else
+                {
+                    return (T)ser.Deserialize(reader);
+                }
+            }
+        }
+
         #region private methods
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
             string after) :
             base(logger, ishDeployment)
         {
-            var filePath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, model.RelativeFilePath);
+            var filePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, model.RelativeFilePath);
             _invoker = new ActionInvoker(logger, $"Move `{model.XPath}` element in file {filePath.AbsolutePath}");
 
             _invoker.AddAction(new MoveUIElementAction(

@@ -63,7 +63,7 @@ function readTargetXML() {
 	[xml]$config = Get-Content $uncConfigPath -ErrorAction SilentlyContinue
 	
 	$global:resourceGroup = $config.configuration.resourceGroups.ResourceGroup | ? {$_.NAME -eq $recourceGroupName}
-    $count = $config.SelectNodes("configuration/resourceGroups/ResourceGroup[@name='$recourceGroupName']").Count
+    $count = $config.SelectNodes("configuration/resourceGroups/resourceGroup[@name='$recourceGroupName']").Count
     $file = $resourceGroup.files.file | ? {$_.NAME -eq "../../Custom/$recourceGroupPath"}
     if($count -eq 1){
 	    if($file){
@@ -76,6 +76,16 @@ function readTargetXML() {
     else{
         Return "$count similar recource groups detected"
     }
+}
+
+function getCountOfFilesInRecourceGroup() {
+    param (
+            $recourceGroupName
+    )
+	[xml]$config = Get-Content $uncConfigPath -ErrorAction SilentlyContinue
+	
+	$global:resourceGroup = $config.configuration.resourceGroups.ResourceGroup | ? {$_.NAME -eq $recourceGroupName}
+    Return $config.SelectNodes("configuration/resourceGroups/resourceGroup[@name='$recourceGroupName']/files/file").Count
 }
 
 Describe "Testing Set-ISHCMCUILResourceGroup"{
@@ -94,13 +104,11 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
 
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
-
     }
 
     It "Set-ISHCMCUILResourceGroup throws when no custom file"{
 		#Arrange
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"} | Should Throw "Could not find file"
-
     }
 
     It "Set-ISHCMCUILResourceGroup updates entry in config filer"{
@@ -115,7 +123,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         #Assert
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test2.js"
         $result | Should be "Set"
-
     }
 
     It "Set-ISHCMCUILResourceGroup set same multiple times"{
@@ -129,7 +136,18 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
 
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
+    }
 
+    It "Set-ISHCMCUILResourceGroup set few files to the same resource group"{
+		#Arrange
+        New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
+        New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
+        New-Item -Path "$uncCustomFolderPath\Custom" -Name "test2.js" -Force -type file |Out-Null
+        New-Item -Path "$uncCustomFolderPath\Custom" -Name "test3.js" -Force -type file |Out-Null
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", @("test.js", "test2.js", "test2.js", "test3.js")
+        #Assert
+        $result = getCountOfFilesInRecourceGroup -recourceGroupName test
+        $result | Should be 3
     }
 
     #For 12.x only

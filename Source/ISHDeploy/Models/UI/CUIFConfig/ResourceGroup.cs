@@ -15,13 +15,15 @@
  */
 
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Models.UI.CUIFConfig
 {
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRoot("resourceGroup", Namespace = "")]
     public class ResourceGroup : BaseUIElement
     {
 
@@ -37,13 +39,13 @@ namespace ISHDeploy.Models.UI.CUIFConfig
             XPath = string.Format(XPathFormat, name);
         }
 
-        private List<resourceGroupsResourceGroupFile> filesField;
+        private List<ResourceGroupsResourceGroupFile> filesField;
 
         private string nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("file", IsNullable = false)]
-        public List<resourceGroupsResourceGroupFile> files
+        public List<ResourceGroupsResourceGroupFile> files
         {
             get { return this.filesField; }
             set { this.filesField = value; }

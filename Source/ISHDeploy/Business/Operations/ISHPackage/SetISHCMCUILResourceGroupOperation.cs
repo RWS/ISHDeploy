@@ -64,8 +64,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             var resourceGroups = xmlConfigManager.Deserialize<ResourceGroups>(CUIFConfigFilePath.AbsolutePath, "resourceGroups");
 
             var resourceGroup = resourceGroups?.resources == null
-                ? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name }
-                : resourceGroups.resources.SingleOrDefault(x => x.name == name) ?? new ResourceGroup { files = new List<resourceGroupsResourceGroupFile>(), name = name };
+                ? new ResourceGroup { files = new List<ResourceGroupsResourceGroupFile>(), name = name }
+                : resourceGroups.resources.SingleOrDefault(x => x.name.ToLower() == name.ToLower()) ?? new ResourceGroup { files = new List<ResourceGroupsResourceGroupFile>(), name = name };
 
             resourceGroup.ChangeItemProperties(CUIFConfigFilePath.RelativePath);
 
@@ -79,7 +79,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     string fileName = $@"../../Custom/{relativePath.Replace(@"\", "/")}";
                     if (resourceGroup.files.All(x => x.name != fileName))
                     {
-                        resourceGroup.files.Add(new resourceGroupsResourceGroupFile
+                        resourceGroup.files.Add(new ResourceGroupsResourceGroupFile
                         {
                             name = fileName
                         });
@@ -94,7 +94,6 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 }
             }
         }
-
 
         /// <summary>
         /// Creates ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js file if file does not exist.

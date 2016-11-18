@@ -48,7 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             switch (parameterSetName)
             {
                 case "Web":
-                    sourceFolderPath = AuthorFolderPath;
+                    sourceFolderPath = WebFolderPath;
                     destinationFolderPath = BackupWebFolderPath;
                     break;
                 case "App":

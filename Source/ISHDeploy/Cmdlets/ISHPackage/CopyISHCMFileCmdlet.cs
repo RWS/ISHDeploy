@@ -28,7 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
     [AdministratorRights]
-    public class CopyISHCMFileCmdlet : BaseISHDeploymentCmdlet
+    public class CopyISHCMFileCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Path to zip file.</para>

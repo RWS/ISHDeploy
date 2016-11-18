@@ -194,13 +194,13 @@ namespace ISHDeploy.Models.UI
                     new Script{
                         Language = "JAVASCRIPT",
                         Type = "text/javascript",
-                        Src="../../UI/Helpers/ExtensionsLoader.js"
+                        Src="UI/Helpers/ExtensionsLoader.js"
                         },
                     new Script{
                         Language = "JAVASCRIPT",
                         Content = @"
       // Load the extension resources
-      Trisoft.Helpers.ExtensionsLoader.enableExtensions(""../../"");"
+      Trisoft.Helpers.ExtensionsLoader.enableExtensions("");"
                         }
 
                 };

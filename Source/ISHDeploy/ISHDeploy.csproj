@@ -185,6 +185,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\SetISHCMCUILResourceGroupCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentParametersCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.cs" />
@@ -206,10 +207,12 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />
     <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
     <Compile Include="Data\Actions\File\BackupAction.cs" />
-    <Compile Include="Models\UI\CUIFConfig\resourceGroup.cs" />
     <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
     <Compile Include="Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />
@@ -367,6 +370,10 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Resources\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />

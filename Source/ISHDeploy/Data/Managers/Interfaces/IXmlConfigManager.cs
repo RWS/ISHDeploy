@@ -181,6 +181,18 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <param name="readToDescendantName">The name of node to read to. Empty string by default</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        T Deserialize<T>(string xmlFilePath, string readToDescendantName = "");
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
         /// <returns>Deserialized object of type T</returns>
         T Deserialize<T>(string xmlFilePath);
         

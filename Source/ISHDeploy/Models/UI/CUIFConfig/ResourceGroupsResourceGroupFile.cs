@@ -13,43 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
 namespace ISHDeploy.Models.UI.CUIFConfig
 {
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlTypeAttribute(AnonymousType = true)]
-    [XmlRoot("resourceGroup", Namespace = "")]
-    public class ResourceGroup : BaseUIElement
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public class ResourceGroupsResourceGroupFile
     {
 
-        /// <summary>
-        /// Change some fileds for created one.
-        /// </summary>
-        public void ChangeItemProperties(string relativePath)
-        {
-            RelativeFilePath = relativePath;
-            XPathToParentElement = "configuration/resourceGroups";
-            NameOfItem = "resourceGroup";
-            XPathFormat = "configuration/resourceGroups/resourceGroup[@name='{0}']";
-            XPath = string.Format(XPathFormat, name);
-        }
-
-        private List<ResourceGroupsResourceGroupFile> filesField;
-
         private string nameField;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("file", IsNullable = false)]
-        public List<ResourceGroupsResourceGroupFile> files
-        {
-            get { return this.filesField; }
-            set { this.filesField = value; }
-        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -60,5 +33,3 @@ namespace ISHDeploy.Models.UI.CUIFConfig
         }
     }
 }
-
-

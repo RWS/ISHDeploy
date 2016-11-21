@@ -21,7 +21,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <summary>
     ///		<para type="synopsis">Sets resource group in ~\Author\ASP\UI\Extensions\_config.xml.</para>
     ///		<para type="description">The Set-ISHCMCUILResourceGroup cmdlet sets resource group in "~\Author\ASP\UI\Extensions\_config.xml".</para>
-    ///     <para type="link">Expand-ISHCMFile</para>
+    ///     <para type="link">Expand-ISHCMPackage</para>
     ///     <para type="link">Copy-ISHCMFile</para>
     /// </summary>
     /// <seealso cref="BaseHistoryEntryCmdlet" />

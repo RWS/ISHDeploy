@@ -23,6 +23,9 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="description">The Get-ISHPackageFolderPath cmdlet gets the path of a folder where the commandlets output files or packages or use them as input. This folder is specific per deployment.
     /// The folder contains archives or files that were created as output of other cmdlets of the module.
     /// The folder contains also archives or files that are used as input to other cmdlets of the module.</para>
+    /// <para type="link">Expand-ISHCMPackage</para>
+    /// <para type="link">Copy-ISHCMFile</para>
+    /// <para type="link">Set-ISHCMCUILResourceGroup</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHPackageFolderPath -ISHDeployment $deployment -UNC</code>

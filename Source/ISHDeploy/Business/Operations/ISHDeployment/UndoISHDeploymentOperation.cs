@@ -34,11 +34,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// The file manager
-        /// </summary>
-        private readonly IFileManager _fileManager;
-
-        /// <summary>
         /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
         /// Please, see https://jira.sdl.com/browse/TS-11329
         /// </summary>
@@ -56,7 +51,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
-            _fileManager = ObjectFactory.GetInstance<IFileManager>();
 
             // Remove redundant files from BIN
             _invoker.AddAction(new DirectoryBinReturnToVanila(

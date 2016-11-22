@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHPackage;
+﻿using System.Management.Automation;
+﻿using ISHDeploy.Business.Operations.ISHPackage;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
     ///		<para type="synopsis">Sets resource group in ~\Author\ASP\UI\Extensions\_config.xml.</para>
     ///		<para type="description">The Set-ISHCMCUILResourceGroup cmdlet sets resource group in "~\Author\ASP\UI\Extensions\_config.xml".</para>
-    ///     <para type="link">Expand-ISHCMFile</para>
+    ///     <para type="link">Expand-ISHCMPackage</para>
     ///     <para type="link">Copy-ISHCMFile</para>
     /// </summary>
     /// <seealso cref="BaseHistoryEntryCmdlet" />
@@ -38,14 +38,14 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHCMCUILResourceGroup")]
-    public sealed class SetISHCMCUILResourceGroupCmdlet : BaseHistoryEntryCmdlet
-    {
+	public sealed class SetISHCMCUILResourceGroupCmdlet : BaseHistoryEntryCmdlet
+	{
         /// <summary>
         /// <para type="description">Name of resource group in "~\Author\ASP\UI\Extensions\_config.xml".</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Name of resource group")]
-        [ValidateNotNullOrEmpty]
-        public string Name { get; set; }
+		[ValidateNotNullOrEmpty]
+		public string Name { get; set; }
 
         /// <summary>
         /// <para type="description">Path or paths to resource files.</para>
@@ -59,9 +59,9 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
-        {
+		{
             var operation = new SetISHCMCUILResourceGroupOperation(Logger, ISHDeployment, Name, Path);
             operation.Run();
-        }
-    }
+		}
+	}
 }

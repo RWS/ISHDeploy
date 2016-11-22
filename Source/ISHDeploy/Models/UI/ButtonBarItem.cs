@@ -190,12 +190,7 @@ namespace ISHDeploy.Models.UI
 
                 string parameters = string.Join(", ", jArgumentList); //'Hello Alex!', true, 0
                 Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
-                Script = new Script[] {
-                    new Script{
-                        Language = "JAVASCRIPT",
-                        Type = "text/javascript",
-                        Src="UI/Helpers/ExtensionsLoader.js"
-                        },
+                Script = new [] {
                     new Script{
                         Language = "JAVASCRIPT",
                         Content = @"

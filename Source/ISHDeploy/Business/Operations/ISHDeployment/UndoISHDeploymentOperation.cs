@@ -18,6 +18,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -31,6 +32,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// The actions invoker
         /// </summary>
         private readonly IActionInvoker _invoker;
+
+        /// <summary>
+        /// The file manager
+        /// </summary>
+        private readonly IFileManager _fileManager;
 
         /// <summary>
         /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
@@ -50,6 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
 
             // Remove redundant files from BIN
             _invoker.AddAction(new DirectoryBinReturnToVanila(
@@ -94,7 +101,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
             if (isInputParameterBackupFileExist)
             {
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath,
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
 

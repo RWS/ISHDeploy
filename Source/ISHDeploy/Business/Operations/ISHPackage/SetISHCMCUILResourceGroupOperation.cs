@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -37,6 +39,11 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         private readonly IActionInvoker _invoker;
 
         /// <summary>
+        /// The file manager
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -48,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _invoker = new ActionInvoker(logger, $"Setting resource group in {CUIFConfigFilePath.RelativePath}");
 
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
             var resourceGroups = xmlConfigManager.Deserialize<ResourceGroups>(CUIFConfigFilePath.AbsolutePath, "resourceGroups");
@@ -63,7 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 string absolutePath = Path.Combine(AuthorAspCustomFolderPath, relativePath);
 
-                if (fileManager.FileExists(absolutePath))
+                if (_fileManager.FileExists(absolutePath))
                 {
                     // Update ~\Author\ASP\UI\Extensions\_config.xml
                     string fileName = $@"../../Custom/{relativePath.Replace(@"\", "/")}";

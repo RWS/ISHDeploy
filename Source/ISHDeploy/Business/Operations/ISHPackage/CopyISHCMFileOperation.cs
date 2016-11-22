@@ -79,6 +79,12 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 .ForEach(x =>
                 {
                     var sourceFilePath = Path.Combine(PackagesFolderPath, x);
+
+                    if (!fileManager.FileExists(sourceFilePath))
+                    {
+                        throw new ArgumentException($"InvalidPath for {sourceFilePath} file.");
+                    }
+
                     string destinationFilePath = Path.Combine(destinationDirectory, x);
                     if (ignoreFiles != null && ignoreFiles.Any(y => y == destinationFilePath))
                     {

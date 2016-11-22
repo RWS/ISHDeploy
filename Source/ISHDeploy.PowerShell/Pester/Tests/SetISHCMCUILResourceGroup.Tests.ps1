@@ -99,7 +99,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         #Assert
-
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
@@ -130,7 +129,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         #Assert
-
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
@@ -145,21 +143,5 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         #Assert
         $result = getCountOfFilesInRecourceGroup -recourceGroupName test
         $result | Should be 3
-    }
-
-    #For 12.x only
-
-    if($moduleName -like "*12*"){
-        It "Undo-ISHDeployment deletes extentionLoader file on 12 version"{      
-            #Act
-		    #Arrange
-            New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
-            New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
-            #Assert
-
-            UndoDeploymentBackToVanila $testingDeploymentName $true
-		    RemotePathCheck $extentionLoaderPath | Should Be "False"
-        }
     }
 }

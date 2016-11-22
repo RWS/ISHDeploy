@@ -21,9 +21,10 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <summary>
     /// <para type="synopsis">Extract files from several zip files to Custom or Bin directory.</para>
     /// <para type="description">Will extract files from packages directory to Custom or Bin directory depends on switch.</para>
+    /// <para type="link">Set-ISHCMCUILResourceGroup</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Expand-ISHCMPackage -ToCustom -FileName "example-extension.zip", temp.zip</code>
+    /// <code>PS C:\&gt;Expand-ISHCMPackage -ISHDeployment $deployment -ToCustom -FileName "example-extension.zip", temp.zip</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]

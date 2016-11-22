@@ -342,11 +342,6 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath CUIFConfigFilePath { get; }
 
-        /// <summary>
-        /// Gets the path to ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js
-        /// </summary>
-        protected ISHFilePath ExtensionsLoaderFilePath { get; }
-
         #endregion
 
         /// <summary>
@@ -371,9 +366,9 @@ namespace ISHDeploy.Business.Operations
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
+            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
-            AuthorAspCustomFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\Custom");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
             AuthorAspCustomFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\Custom");
             AppFolderPath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}");
@@ -404,8 +399,6 @@ namespace ISHDeploy.Business.Operations
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
-            ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
-            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
 
             #endregion
         }

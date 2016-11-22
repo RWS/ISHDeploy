@@ -18,6 +18,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -94,7 +95,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
             if (isInputParameterBackupFileExist)
             {
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath,
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
 

@@ -35,7 +35,7 @@ To change this item to
 
 CopyCodeBlock(_nopublish\02.ModifyButtonBarItem.ps1)  
 
-With the `Set-ISHUIButtonBarItem`, `Move-ISHUIButtonBarItem` and `Remove-ISHUIButtonBarItem` each level is targetted with different parameter set that is driven by one of the following mandatory switch parameters:
+With the `Set-ISHUIButtonBarItem`, `Move-ISHUIButtonBarItem` and `Remove-ISHUIButtonBarItem` each level is targeted with different parameter set that is driven by one of the following mandatory switch parameters:
 - `-Logical` (Top)
 - `-Version` (Bottom horizontal)
 - `-Language` (Bottom and right vertical)

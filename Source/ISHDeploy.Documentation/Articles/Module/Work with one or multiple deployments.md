@@ -68,7 +68,7 @@ $deploymentName="InfoShare"
 Get-ISHDeploymentHistory -ISHDeployment $deploymentName
 ```
 
-Using the deployment name paradigm is the preffered way for remote invocation purposes.
+Using the deployment name paradigm is the preferred way for remote invocation purposes.
  
 ### Get the history of a deployment
 All actions through the module's cmdlets are tracked and stored in a history file.
@@ -160,7 +160,7 @@ Undo-ISHDeployment -ISHDeployment $deploymentName
 ```
  
 ## Clear history artifacts
-Because the module's codebase is not connected with the `InstallTool.exe` when you unistall the module's artificats will not be removed.
+Because the module's codebase is not connected with the `InstallTool.exe` when you uninstall the module's artifacts will not be removed.
 The `Clear-ISHDeploymentHistory` takes care of this by removing all artifacts. You must use this commandlet before uninstalling.
  
 ```powershell

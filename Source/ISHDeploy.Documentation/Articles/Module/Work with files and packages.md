@@ -154,7 +154,7 @@ Expand-ISHCMFile -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
 ## Modify a file on the deployment without the module
 
 When necessary to modify a file of the deployment that is not controlled by the module, it's best practice to take a backup first using `Backup-ISHDeployment`. 
-It is adviced to modify the target file with code that applies a delta when possible instead of overwriting. 
+It is advised to modify the target file with code that applies a delta when possible instead of overwriting. 
 
 For example, before modifying the ISHCM's web config file take a backup like this
 

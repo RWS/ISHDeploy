@@ -3,7 +3,7 @@
 ## stable-1.2
 1. General 
     1. Cmdlets
-		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
+		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when omitted with the following reasoning:  **[Update]**
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
     2. Documentation
@@ -48,11 +48,11 @@
 - Solve previous known issue:
 > When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
 
-**Cmdlets and documentatin changes**
+**Cmdlets and documentation changes**
 
 1. General 
 	1. Cmdlets
-		- Less warning messages. Warnings are issued when it’s important to share. **[Update]**
+		- Less warning messages. Warnings are issued when itï¿½s important to share. **[Update]**
 		- `Get-ISHDeploymentHistory` returns less. Get-* cmdlets are ignored. **[Update]**
 	1. Documentation - Commands
 		- Related links render as links and provide a quicker navigation experience. **[Update]**

@@ -29,33 +29,6 @@ namespace ISHDeploy.Data.Actions.File
     {
 
         /// <summary>
-        /// History header
-        /// </summary>
-        private readonly string _header =
- $@"<#ISHDeployScriptInfo
-
-.VERSION 1.0
-
-.MODULE {System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}
-
-.CREATEDBYMODULEVERSION(ModuleVersion)
-
-.UPDATEDBYMODULEVERSION(ModuleVersion)
-
-.CREATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
-
-.UPDATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
-
-#>
-
-param(
-    [Parameter(Mandatory=$false)]
-    [switch]$IncludeCustomFile=$false
-)
-
-";
-
-        /// <summary>
         /// The file path
         /// </summary>
         private readonly string _path;
@@ -106,7 +79,6 @@ param(
             {
                 Logger.WriteVerbose("Creating history file.");
 
-                historyEntry.AppendLine(_header);
                 historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deploymentName = '{_ishDeploymentName}'");
             }
@@ -118,7 +90,8 @@ param(
 		    historyEntry.AppendLine(_text);
 
             _fileManager.Append(_path, historyEntry.ToString());
-		}
+            _fileManager.WriteHistoryHeader(_path);
+        }
 
 
         /// <summary>

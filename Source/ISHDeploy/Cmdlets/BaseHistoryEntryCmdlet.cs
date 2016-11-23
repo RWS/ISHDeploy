@@ -35,7 +35,7 @@ namespace ISHDeploy.Cmdlets
         private readonly string _prefix =
 @"if($IncludeCustomFile)
 {
-";
+     ";
         /// <summary>
         /// History postfix for Copy and Expand cmdlet
         /// </summary>

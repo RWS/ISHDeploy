@@ -79,6 +79,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         string[] ReadAllLines(string filePath);
 
         /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        void WriteHistoryHeader(string filePath);
+
+        /// <summary>
         /// Creates a new file, write the specified string array to the file, and then closes the file.
         /// </summary>
         /// <param name="filePath">The file to write to.</param>

@@ -283,6 +283,10 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"The content has been {(append ? "appended" : "written")} to file `{filePath}`");
         }
 
+        /// <summary>
+        /// Version of History file
+        /// </summary>
+        private readonly string _historyFileVersion = "1.0";
 
         /// <summary>
         /// Header params
@@ -302,7 +306,7 @@ namespace ISHDeploy.Data.Managers
             return
  $@"<#ISHDeployScriptInfo
 
-.VERSION 1.0
+.VERSION {_historyFileVersion}
 
 .MODULE {name}
 
@@ -312,8 +316,6 @@ namespace ISHDeploy.Data.Managers
 #>
 
 " + _headerParams;
-
-
         }
 
         /// <summary>

@@ -1,0 +1,38 @@
+﻿@startuml
+
+title Work with files and packages
+
+
+box "Server" #LightBlue
+    entity "ISHDeploy module" as ISHDeploy
+    boundary "ISHDeploy staging folder (Get-ISHPackageFolderPath)" as PD
+end box
+actor "Script actor" as Actor
+
+== Outbound flow from deployment ==
+
+ISHDeploy -> PD : A cmdlet that exports complex data into a file/package
+note over ISHDeploy, PD
+	e.g. Save-ISHIntegrationDBSTSSQLServerConfiguration
+	e.g. Save-ISHIntegrationSTSConfigurationPackage
+end note
+PD -> Actor : Get/Download file/package
+note over PD, Actor
+	e.g. Local
+	e.g. Remote
+end note
+
+== Inbound flow to deployment ==
+
+Actor -> PD : Copy/Upload customizaton file/package
+note over PD, Actor
+	e.g. Local
+	e.g. Remote
+end note
+PD -> ISHDeploy : A cmdlet that applies customization into deployment
+note over ISHDeploy, PD
+	e.g. Copy-ISHCMFile
+	e.g. Expand-ISHCMPackage
+end note
+
+@enduml

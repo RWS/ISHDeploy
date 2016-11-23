@@ -6,23 +6,24 @@
 		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when ommited with the following reasoning:  **[Update]**
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
-    2. Documentation - Tutorials
+    2. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
-		- New tutorial on how to work with one deployment. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
-		- Fixed invalid parameter reference in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
-		- Added remarks for the importance of execution order in PowerShell examples in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
+1. Module
+    2. Documentation - Tutorials
+		- New tutorial on how to work with one deployment. **[Update]**
+        - Renamed and extended tutorial **Work with files** to **Work with files and packages**. **[Update]**
 1. Working with ISHCM web UI features
     1. Cmdlets
-	    - `Set-ISHUIButtonBarItem` . **[New]**
-	    - `Remove-ISHUIButtonBarItem` . **[New]**
-	    - `Move-ISHUIButtonBarItem` . **[New]**
-	    - `Move-ISHUIMainMenuBarItem` . **[New]**
-	    - `Remove-ISHUIMainMenuBarItem` . **[New]**
-	    - `Set-ISHUIMainMenuBarItem` . **[New]**
-	    - `Move-ISHUISearchMenuBarItem` . **[New]**
-	    - `Remove-ISHUISearchMenuBarItem` . **[New]**
-	    - `Set-ISHUISearchMenuBarItem` . **[New]**
+	    - `Set-ISHUIButtonBarItem`. **[New]**
+	    - `Remove-ISHUIButtonBarItem`. **[New]**
+	    - `Move-ISHUIButtonBarItem`. **[New]**
+	    - `Move-ISHUIMainMenuBarItem`. **[New]**
+	    - `Remove-ISHUIMainMenuBarItem`. **[New]**
+	    - `Set-ISHUIMainMenuBarItem`. **[New]**
+	    - `Move-ISHUISearchMenuBarItem`. **[New]**
+	    - `Remove-ISHUISearchMenuBarItem`. **[New]**
+	    - `Set-ISHUISearchMenuBarItem`. **[New]**
 	    - Renamed cmdlets for event monitor:  **[Update]**
 			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
 			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
@@ -32,6 +33,10 @@
 			- Toggling Web Components. **[Update]**
 			- Configuring ISHCM web UI menu bars. **[Update]**
 			- Configuring ISHCM web UI button bars. **[New]**
+1. Integration STS
+	1. Documentation - Tutorials
+		- Fixed invalid parameter reference in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
+		- Added remarks for the importance of execution order in PowerShell examples in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
 
 ## stable-1.1
 

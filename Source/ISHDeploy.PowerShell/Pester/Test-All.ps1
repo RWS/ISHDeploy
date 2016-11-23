@@ -25,10 +25,12 @@ if ($result.FailedCount -ne 0) {
     Write-Host ""
     Write-Host "------------------------------------------------------------------------------------------------"
     Write-HOST "Switch PublishPackageToTest variable to false"
-    $ENV:PublishPackageToTest = $false
+    throw "Test errors $result.FailedCount detected"
 }
 
 
 if ($session) {
     Remove-PSSession $session
 }
+
+return $result.FailedCount

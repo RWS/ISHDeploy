@@ -16,7 +16,7 @@ if($targetPC){
 	$session = New-PSSession -ComputerName $targetPC
 }
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$testsFolder = Join-Path $executingScriptDirectory "Tests\BackupISHDeployment.Tests.ps1" 
+$testsFolder = Join-Path $executingScriptDirectory "Tests" 
 
 $result = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile -PassThru
 
@@ -24,7 +24,9 @@ $result = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDep
 if ($result.FailedCount -ne 0) {
     Write-Host ""
     Write-Host "------------------------------------------------------------------------------------------------"
-    Write-HOST "Switch PublishPackageToTest variable to false"
+    Write-HOST "No Publishing to Nexus will be made because some tests failed"
+	Write-Host "------------------------------------------------------------------------------------------------"
+	Write-Host ""
     throw "Test errors $result.FailedCount detected"
 }
 

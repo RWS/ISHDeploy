@@ -27,6 +27,9 @@ if ($result.FailedCount -ne 0) {
     Write-HOST "No Publishing to Nexus will be made because some tests failed"
 	Write-Host "------------------------------------------------------------------------------------------------"
 	Write-Host ""
+	if ($session) {
+		Remove-PSSession $session
+	}
     throw "Test errors $result.FailedCount detected"
 }
 

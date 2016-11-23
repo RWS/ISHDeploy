@@ -103,7 +103,7 @@ Describe "Testing Copy-ISHCMFile"{
 		#Arrange
         New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "Could not find file"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "InvalidPath for"
     }
 
     It "Copy-ISHCMFile does not owerwrite CM files in bin folder"{

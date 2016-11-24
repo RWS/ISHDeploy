@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -22,7 +23,6 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
-using System;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {

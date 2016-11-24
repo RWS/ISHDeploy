@@ -22,6 +22,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {

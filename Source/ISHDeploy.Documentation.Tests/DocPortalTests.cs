@@ -15,7 +15,7 @@ namespace ISHDeploy.Documentation.Tests
         public string LinkAsItIsInFile { get; set; }
     }
 
-    public class Links
+    public class FileWithBrokenLinks
     {
         public string FilePath { get; set; }
         public List<Link> BrokenLinksList { get; set; }
@@ -26,7 +26,14 @@ namespace ISHDeploy.Documentation.Tests
     {
         #region Methods to get broken links
 
-        private Uri GetUriToFolderWithHtmlFile(string baseUri, string pathToHtmlFile, string pathToWebFolder)
+        /// <summary>
+        /// Returns Uri to folder where the HTML file situated
+        /// </summary>
+        /// <param name="baseUri">Base Uri to Website in string format</param>
+        /// <param name="pathToWebFolder">The path to the root folder of Website. Will be replaced on baseUri to define Uri to HTML file</param>
+        /// <param name="pathToHtmlFile">The path to HTML file. This path is needed to build Uri to folder where this file is situated</param>
+        /// <returns>Returns Uri to folder where the HTML file situated</returns>
+        private Uri GetUriToFolderByPathToHtmlFile(string baseUri, string pathToWebFolder, string pathToHtmlFile)
         {
             var relativePathToFolderOfHtmlFile = pathToHtmlFile.Replace(pathToWebFolder, string.Empty).Replace(Path.GetFileName(pathToHtmlFile), string.Empty);
             return
@@ -34,6 +41,12 @@ namespace ISHDeploy.Documentation.Tests
                     $"{baseUri}{relativePathToFolderOfHtmlFile.Substring(relativePathToFolderOfHtmlFile.IndexOf('\\') + 1).Replace("\\", "/")}");
         }
 
+        /// <summary>
+        /// Returns real path to element from HTML file as path to file in file system
+        /// </summary>
+        /// <param name="uriToElementFromHtmlFile">Real Uri to element from a Html file</param>
+        /// <param name="pathToWebFolder">The path to the root folder of Website where element is situated</param>
+        /// <returns>Returns real path to element from HTML file as path to file in file system</returns>
         private string GetRealPathToElementByUri(Uri uriToElementFromHtmlFile, string pathToWebFolder)
         {
             return Path.Combine(pathToWebFolder,
@@ -41,6 +54,12 @@ namespace ISHDeploy.Documentation.Tests
                                         uriToElementFromHtmlFile.LocalPath.Substring(uriToElementFromHtmlFile.LocalPath.IndexOf('/') + 1).Replace("/", "\\")));
         }
 
+        /// <summary>
+        /// Returns list of HTML files with broken links
+        /// </summary>
+        /// <param name="linkType">The type of link to search ("href" or "src")</param>
+        /// <param name="fileType">The expansion of the element to search it in all HTML files</param>
+        /// <returns>Returns list of HTML files with broken links</returns>
         private string GetBrokenLinks(string linkType, string fileType)
         {
             // Arrange
@@ -49,12 +68,12 @@ namespace ISHDeploy.Documentation.Tests
             var htmlFilesPaths = Directory.GetFiles(pathToWebFolder, "*.html", SearchOption.AllDirectories).ToList();
 
             // Action
-            var taskList = htmlFilesPaths.Select(pathToHtmlFile => Task<Links>.Factory.StartNew(() => {
+            var taskList = htmlFilesPaths.Select(pathToHtmlFile => Task<FileWithBrokenLinks>.Factory.StartNew(() => {
                 var links = new List<Link>();
 
                 // To build Uri to element in file we need to know Uri to folder where this HTML file situated,
                 // because a link in the HTML file can be relative
-                var uriToFolderWithHtmlFile = GetUriToFolderWithHtmlFile(baseUri, pathToHtmlFile, pathToWebFolder);
+                var uriToFolderWithHtmlFile = GetUriToFolderByPathToHtmlFile(baseUri, pathToWebFolder, pathToHtmlFile);
 
                 var content = File.ReadAllText(pathToHtmlFile);
 
@@ -92,7 +111,7 @@ namespace ISHDeploy.Documentation.Tests
                     Console.WriteLine($"The matching operation timed out for file {pathToHtmlFile}");
                 }
 
-                return new Links { FilePath = pathToHtmlFile, BrokenLinksList = links };
+                return new FileWithBrokenLinks { FilePath = pathToHtmlFile, BrokenLinksList = links };
             })).ToList();
             Task.WhenAll(taskList);
 

@@ -127,7 +127,7 @@ Describe "Testing Copy-ISHCMFile"{
     
     It "Copy-ISHCMFile writes history"{
         #Act
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         

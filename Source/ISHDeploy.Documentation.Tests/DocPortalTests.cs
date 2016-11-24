@@ -24,18 +24,39 @@ namespace ISHDeploy.Documentation.Tests
     [TestClass]
     public class DocPortalTests
     {
+        #region Methods to get broken links
+
+        private Uri GetUriToFolderWithHtmlFile(string baseUri, string pathToHtmlFile, string pathToWebFolder)
+        {
+            var relativePathToFolderOfHtmlFile = pathToHtmlFile.Replace(pathToWebFolder, string.Empty).Replace(Path.GetFileName(pathToHtmlFile), string.Empty);
+            return
+                new Uri(
+                    $"{baseUri}{relativePathToFolderOfHtmlFile.Substring(relativePathToFolderOfHtmlFile.IndexOf('\\') + 1).Replace("\\", "/")}");
+        }
+
+        private string GetRealPathToElementByUri(Uri uriToElementFromHtmlFile, string pathToWebFolder)
+        {
+            return Path.Combine(pathToWebFolder,
+                                    string.Join("\\",
+                                        uriToElementFromHtmlFile.LocalPath.Substring(uriToElementFromHtmlFile.LocalPath.IndexOf('/') + 1).Replace("/", "\\")));
+        }
+
         private string GetBrokenLinks(string linkType, string fileType)
         {
             // Arrange
             var pathToWebFolder = @"\\kiev-green-bld.global.sdl.corp\c$\inetpub\ishdeploy-doc-public";
             var baseUri = "http://kiev-green-bld.global.sdl.corp:8081/";
-            var filesList = Directory.GetFiles(pathToWebFolder, "*.html", SearchOption.AllDirectories).ToList();
+            var htmlFilesPaths = Directory.GetFiles(pathToWebFolder, "*.html", SearchOption.AllDirectories).ToList();
 
             // Action
-            var taskList = filesList.Select(path => Task<Links>.Factory.StartNew(() => {
-                var content = File.ReadAllText(path);
-                var directoryRelativePath = path.Replace(pathToWebFolder, string.Empty).Replace(Path.GetFileName(path), string.Empty);
+            var taskList = htmlFilesPaths.Select(pathToHtmlFile => Task<Links>.Factory.StartNew(() => {
                 var links = new List<Link>();
+
+                // To build Uri to element in file we need to know Uri to folder where this HTML file situated,
+                // because a link in the HTML file can be relative
+                var uriToFolderWithHtmlFile = GetUriToFolderWithHtmlFile(baseUri, pathToHtmlFile, pathToWebFolder);
+
+                var content = File.ReadAllText(pathToHtmlFile);
 
                 string pattern = $"{linkType}\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))";
 
@@ -44,23 +65,21 @@ namespace ISHDeploy.Documentation.Tests
                     Match m = Regex.Match(content, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(1));
                     while (m.Success)
                     {
-                        var link = m.Groups[1].ToString();
+                        var linkToElementInHtmlFile = m.Groups[1].ToString();
 
-                        if (!link.StartsWith("http") && link.EndsWith(fileType))
+                        if (!linkToElementInHtmlFile.StartsWith("http") && linkToElementInHtmlFile.EndsWith(fileType))
                         {
-                            if (links.All(x => x.LinkAsItIsInFile == link))
+                            if (links.All(x => x.LinkAsItIsInFile == linkToElementInHtmlFile))
                             {
-                                var uri = new Uri(new Uri($"{baseUri}{directoryRelativePath.Substring(directoryRelativePath.IndexOf('\\') + 1).Replace("\\", "/")}"), link);
-                                var filePath = Path.Combine(pathToWebFolder,
-                                    string.Join("\\",
-                                        uri.LocalPath.Substring(uri.LocalPath.IndexOf('/') + 1).Replace("/", "\\")));
+                                var uriToElementFromHtmlFile = new Uri(uriToFolderWithHtmlFile, linkToElementInHtmlFile);
+                                var pathToElementAsToFile = GetRealPathToElementByUri(uriToElementFromHtmlFile, pathToWebFolder);
 
-                                if (!File.Exists(filePath))
+                                if (!File.Exists(pathToElementAsToFile))
                                 {
                                     links.Add(new Link
                                     {
-                                        Uri = uri,
-                                        LinkAsItIsInFile = link
+                                        Uri = uriToElementFromHtmlFile,
+                                        LinkAsItIsInFile = linkToElementInHtmlFile
                                     });
                                 }
                             }
@@ -70,10 +89,10 @@ namespace ISHDeploy.Documentation.Tests
                 }
                 catch (RegexMatchTimeoutException)
                 {
-                    Console.WriteLine($"The matching operation timed out for file {path}");
+                    Console.WriteLine($"The matching operation timed out for file {pathToHtmlFile}");
                 }
 
-                return new Links { FilePath = path, BrokenLinksList = links };
+                return new Links { FilePath = pathToHtmlFile, BrokenLinksList = links };
             })).ToList();
             Task.WhenAll(taskList);
 
@@ -91,20 +110,17 @@ namespace ISHDeploy.Documentation.Tests
 
                 foreach (var link in fileWithBrokenLinks.BrokenLinksList)
                 {
-                    testResults.AppendLine(LinkInfo(link));
+                    testResults.AppendLine($"Link in file: \"{link.LinkAsItIsInFile}\"\n\nBroken Uri: \"{link.Uri}\"");
                 }
             }
 
             return testResults.ToString();
         }
 
-        private string LinkInfo(Link link)
-        {
-            return $"Link in file: \"{link.LinkAsItIsInFile}\"\n\nUri: \"{link.Uri}\"";
-        }
+        #endregion
 
         [TestMethod]
-        public void Check_all_href_of_DOC_portal()
+        public void Check_all_HTML_links_of_DOC_portal()
         {
             var testResults = GetBrokenLinks("href", ".html");
 
@@ -112,7 +128,7 @@ namespace ISHDeploy.Documentation.Tests
         }
 
         [TestMethod]
-        public void Check_all_png_src_of_DOC_portal_returns()
+        public void Check_all_png_links_of_DOC_portal_returns()
         {
             var testResults = GetBrokenLinks("src", ".png");
 

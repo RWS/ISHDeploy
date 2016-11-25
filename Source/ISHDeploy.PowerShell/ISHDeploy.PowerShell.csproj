@@ -56,6 +56,7 @@
     <None Include="Pester\Test-All.ps1" />
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
+    <None Include="Pester\Tests\BackupISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\CopyISHCMFile.Tests.ps1" />
     <None Include="Pester\Tests\ExpandISHCMPackage.Tests.ps1" />
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
@@ -78,6 +79,7 @@
     <None Include="Pester\Tests\RelayingParty.Tests.ps1" />
     <None Include="Pester\Tests\ResetISHSTS.Tests.ps1" />
     <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\SetISHCMCUILResourceGroup.Tests.ps1" />
     <None Include="Pester\Tests\SetISHSTSConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />

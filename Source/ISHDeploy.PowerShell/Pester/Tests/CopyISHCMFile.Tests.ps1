@@ -48,19 +48,6 @@ $scriptBlockCopyISHCMFile = {
     }
 }
 
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 Describe "Testing Copy-ISHCMFile"{
     BeforeEach {
 		ArtifactCleaner -filePath $uncPackagePath -fileName "test.file"
@@ -70,7 +57,7 @@ Describe "Testing Copy-ISHCMFile"{
 
     It "Copy-ISHCMFile copies to custom folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
         #Assert
         RemotePathCheck $customFile | Should Be "True"
@@ -78,7 +65,7 @@ Describe "Testing Copy-ISHCMFile"{
 
     It "Copy-ISHCMFile copies to bin folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         #Invoke-CommandRemoteOrLocal -ScriptBlock{Test-Path "$packagePath\test.file"} -Session $session -ArgumentList $packagePath | Should Be "True"
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "TobiN"
@@ -88,7 +75,7 @@ Describe "Testing Copy-ISHCMFile"{
 
     It "Copy-ISHCMFile owerwrites file in custom folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
 
         #Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom" -WarningVariable Warning} | Should not Throw
@@ -101,7 +88,7 @@ Describe "Testing Copy-ISHCMFile"{
 
     It "Copy-ISHCMFile owerwrites custom file in bin folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToBin"
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToBin" -WarningVariable Warning} | Should not Throw
@@ -114,14 +101,14 @@ Describe "Testing Copy-ISHCMFile"{
    
     It "Copy-ISHCMFile throws error when file does not exist"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "Could not find file"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "InvalidPath for"
     }
 
     It "Copy-ISHCMFile does not owerwrite CM files in bin folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "Trisoft.Web.dll" -Force
+        New-Item -Path $uncPackagePath -Name "Trisoft.Web.dll" -Force -type file |Out-Null
         #Assert
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw 
 
@@ -129,8 +116,8 @@ Describe "Testing Copy-ISHCMFile"{
     
     It "Copy-ISHCMFile can copy multiple files"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "Trisoft.Web.dll" -Force
-        New-Item -Path $uncPackagePath -Name "test.file" -Force
+        New-Item -Path $uncPackagePath -Name "Trisoft.Web.dll" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
         #Assert
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "Test.file", "copyMultiple", "Trisoft.Web.dll" 
         $secondCustomFile = Join-Path $filePath "\Custom\Trisoft.Web.dll"
@@ -138,19 +125,22 @@ Describe "Testing Copy-ISHCMFile"{
         RemotePathCheck $secondCustomFile | Should Be "True"
     }
     
-    #It "Copy-ISHCMFile writes history"{
-    #    #Act
-    #    New-Item -Path $uncPackagePath -Name "test.file" -Force
-    #    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
-    #    $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
+    It "Copy-ISHCMFile writes history"{
+        #Act
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
-    #    #Assert
-    #    $history.Contains('Copy-ISHCMFile -ISHDeployment $deploymentName -FileName $test.file -ToCustom') | Should be "True"
-    #}
+        #Assert
+        $history.Contains('if($IncludeCustomFile)
+{
+Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.file") -ToCustom 
+}') | Should be "True"
+    }
 
     It "Undo-ISHDeployment deletes copied files"{      
         #Act
-		New-Item -Path $uncPackagePath -Name "test.file" -Force
+		New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToBin"
 

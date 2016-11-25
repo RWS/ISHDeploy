@@ -21,14 +21,15 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <summary>
     /// <para type="synopsis">Copy files from several files to Custom or Bin directory.</para>
     /// <para type="description">Will copy files from packages directory to Custom or Bin directory depends on switch.</para>
+    /// <para type="link">Set-ISHCMCUILResourceGroup</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Copy-ISHCMFile -ToCustom -FileName bevers.js</code>
+    /// <code>PS C:\&gt;Copy-ISHCMFile -ISHDeployment $deployment -ToCustom -FileName bevers.js</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
     [AdministratorRights]
-    public class CopyISHCMFileCmdlet : BaseISHDeploymentCmdlet
+    public class CopyISHCMFileCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Path to zip file.</para>

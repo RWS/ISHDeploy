@@ -311,9 +311,9 @@ namespace ISHDeploy.Data.Managers
 
 .MODULE {name}
 
-.CREATEDBYMODULEVERSION({currentVersion})
+.CREATEDBYMODULEVERSION {currentVersion}
 
-.UPDATEDBYMODULEVERSION({updatedVersion})
+.UPDATEDBYMODULEVERSION {updatedVersion}
 
 #>
 
@@ -324,7 +324,8 @@ namespace ISHDeploy.Data.Managers
         /// Writes text header to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
-        public void WriteHistoryHeader(string filePath)
+        /// <param name="version">Module version.</param>
+        public void WriteHistoryHeader(string filePath, Version version)
         {
             _logger.WriteDebug($"Write header", filePath);
 
@@ -337,16 +338,7 @@ namespace ISHDeploy.Data.Managers
             }
 
             string createdModuleVersion, currentModuleVersion;
-
-            string manifestFilePath = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location,"psd1");
-
-            using (var ps = PowerShell.Create())
-            {
-                ps.AddCommand("Test-ModuleManifest").AddParameter("Path", manifestFilePath);
-                var result = ps.Invoke();
-                PSModuleInfo moduleInfo = result[0].BaseObject as PSModuleInfo;
-                createdModuleVersion = currentModuleVersion = moduleInfo.Version.ToString();
-            }
+            createdModuleVersion = currentModuleVersion = version.ToString();
 
             var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION\((.*?)\)").Groups;
             if (groups[1].Success != false)

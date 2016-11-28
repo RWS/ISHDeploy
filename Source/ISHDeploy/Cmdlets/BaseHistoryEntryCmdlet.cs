@@ -77,7 +77,8 @@ namespace ISHDeploy.Cmdlets
             var operation = new AddHistoryEntryOperation(
                 Logger,
                 ISHDeployment,
-                prefix + GetInvocationLine() + postfix);
+                prefix + GetInvocationLine() + postfix,
+                MyInvocation.MyCommand.Module.Version);
 
             operation.Run();
         }

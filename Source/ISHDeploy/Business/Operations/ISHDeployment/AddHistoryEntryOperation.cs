@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Interfaces;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {
@@ -37,11 +38,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="text">The text with description which cmdlet was executed with which parameters.</param>
-        public AddHistoryEntryOperation(ILogger logger, Models.ISHDeployment ishDeployment, string text) :
+        /// <param name="version">Module version.</param>
+        public AddHistoryEntryOperation(ILogger logger, Models.ISHDeployment ishDeployment, string text, Version version) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Adding of entry to the history file about cmdlets usage");
-            _invoker.AddAction(new FileAddHistoryEntryAction(logger, HistoryFilePath, text, ishDeployment.Name));
+            _invoker.AddAction(new FileAddHistoryEntryAction(logger, HistoryFilePath, text, ishDeployment.Name, version));
         }
 
         /// <summary>

@@ -500,7 +500,7 @@ namespace ISHDeploy.Data.Managers
         public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
             _logger.WriteDebug("Get list of system entries", searchPattern, path);
-            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories);
         }
 
         /// <summary>
@@ -518,33 +518,24 @@ namespace ISHDeploy.Data.Managers
                 getFiles = () => Directory.GetFiles(sourceDirectoryPath, "*.*");
             }
             else
-            { 
+            {
                 string directoryTepmlate = Path.GetDirectoryName(searchPattern);
                 string fileTemplate = Path.GetFileName(searchPattern);
 
+                // For directories such as "Author\ASP\bin"
+                if (Directory.Exists(Path.Combine(sourceDirectoryPath, searchPattern))) {
+                    directoryTepmlate = Path.Combine(directoryTepmlate, fileTemplate);
+                    fileTemplate = "";
+                }
+                
                 if (string.IsNullOrEmpty(fileTemplate))
-                {
-                    getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*");
-                }
+                    getFiles = () => Directory.GetFiles(
+                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
+                        "*.*", SearchOption.AllDirectories);
                 else
-                {
-                    if (fileTemplate == "*")
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*", SearchOption.AllDirectories);
-                    }
-                    else if (fileTemplate.Contains(".") && !fileTemplate.Contains("*"))
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate);
-                    }
-                    else if (fileTemplate.Contains(".") && fileTemplate.Contains("*"))
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate, SearchOption.AllDirectories);
-                    }
-                    else
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate), "*.*");
-                    }
-                }
+                    getFiles = () => Directory.GetFiles(
+                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
+                        fileTemplate);
             }
 
             string[] files = getFiles();

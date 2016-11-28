@@ -291,7 +291,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Header params
         /// </summary>
-        private readonly string _headerParams = 
+        private readonly string _headerParams =
 @"param(
     [Parameter(Mandatory=$false)]
     [switch]$IncludeCustomFile=$false
@@ -334,9 +334,13 @@ namespace ISHDeploy.Data.Managers
                 currentContent = File.ReadAllText(filePath);
             }
 
-            string createdModuleVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string createdModuleVersion, currentModuleVersion;
+            createdModuleVersion = currentModuleVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(
+                                            System.Reflection.Assembly.GetExecutingAssembly().Location)
+                                            .FileVersion;
             var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION\((.*?)\)").Groups;
-            if (groups[1].Success != false) { //header already exist
+            if (groups[1].Success != false)
+            { //header already exist
                 createdModuleVersion = groups[1].Value;
                 int found = currentContent.IndexOf(_headerParams);
                 if (found != -1)
@@ -348,11 +352,11 @@ namespace ISHDeploy.Data.Managers
             var header = GetHeader(
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
                 createdModuleVersion,
-                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                currentModuleVersion);
 
 
             File.WriteAllText(filePath, header + currentContent);
-             
+
             _logger.WriteVerbose($"The header has been added to file `{filePath}`");
         }
 
@@ -574,7 +578,7 @@ namespace ISHDeploy.Data.Managers
         public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
             _logger.WriteDebug("Get list of system entries", searchPattern, path);
-            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories);
         }
 
         /// <summary>
@@ -592,7 +596,7 @@ namespace ISHDeploy.Data.Managers
                 getFiles = () => Directory.GetFiles(sourceDirectoryPath, "*.*");
             }
             else
-            { 
+            {
                 string directoryTepmlate = Path.GetDirectoryName(searchPattern);
                 string fileTemplate = Path.GetFileName(searchPattern);
 

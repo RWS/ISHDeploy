@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management.Automation;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -313,6 +314,7 @@ namespace ISHDeploy.Data.Managers
 .CREATEDBYMODULEVERSION({currentVersion})
 
 .UPDATEDBYMODULEVERSION({updatedVersion})
+
 #>
 
 " + _headerParams;
@@ -335,9 +337,17 @@ namespace ISHDeploy.Data.Managers
             }
 
             string createdModuleVersion, currentModuleVersion;
-            createdModuleVersion = currentModuleVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(
-                                            System.Reflection.Assembly.GetExecutingAssembly().Location)
-                                            .FileVersion;
+
+            string manifestFilePath = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location,"psd1");
+
+            using (var ps = PowerShell.Create())
+            {
+                ps.AddCommand("Test-ModuleManifest").AddParameter("Path", manifestFilePath);
+                var result = ps.Invoke();
+                PSModuleInfo moduleInfo = result[0].BaseObject as PSModuleInfo;
+                createdModuleVersion = currentModuleVersion = moduleInfo.Version.ToString();
+            }
+
             var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION\((.*?)\)").Groups;
             if (groups[1].Success != false)
             { //header already exist

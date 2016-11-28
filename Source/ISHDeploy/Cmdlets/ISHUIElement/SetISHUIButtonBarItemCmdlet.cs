@@ -60,8 +60,8 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// <summary>
         /// <para type="description">Check access.</para>
         /// </summary>
-        [Parameter(HelpMessage = "Files for settings")]
-        public SwitchParameter Checkaccess { get; set; }
+        [Parameter(HelpMessage = "Check access")]
+        public SwitchParameter CheckAccess { get; set; }
 
         /// <summary>
         /// <para type="description">Hide text.</para>
@@ -116,17 +116,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                 case "Logical":
                     buttonBarFile = "FolderButtonbar.xml";
                     cards = GetCardsArray(ISHType, logicalDictionary);
-                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
+                    checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Version":
                     buttonBarFile = "LanguageDocumentButtonbar.xml";
                     cards = GetCardsArray(ISHType, versionDictionary);
-                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
+                    checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Language":
                     buttonBarFile = "TopDocumentButtonbar.xml";
                     cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
-                    checkAccess = Checkaccess.IsPresent ? "Y" : "N";
+                    checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 default:
                     throw new ArgumentException($"Unknown parameter {ParameterSetName}");

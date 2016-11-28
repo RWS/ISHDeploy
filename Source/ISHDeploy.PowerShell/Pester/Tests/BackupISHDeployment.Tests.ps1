@@ -104,7 +104,7 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment backup all *.dll files in Author\ASP\bin folder and sub folders"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles  (Join-Path $pathToWebFolder "Author\ASP\bin") "*.dll"
+        $listOfOriginalFiles = GetListOfFiles  (Join-Path $pathToWebFolder "Author\ASP\bin") "*.dll" $false
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\bin\*.dll", "Web"
         #Assert
@@ -115,33 +115,11 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment backup all files in Author\ASP\bin folder"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP\bin") "*.*" $false
+        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP\bin") "*.*"
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\bin", "Web"
         #Assert
         $listOfBackupFiles = GetListOfFiles (Join-Path $pathToBackupWebFolder "Author\ASP\bin") "*.*"
-
-        Compare-Object $listOfBackupFiles $listOfOriginalFiles | Should be $null
-    }
-
-    It "Backup-ISHDeployment backup all Data files"{
-		#Arrange
-        $listOfOriginalFiles = GetListOfFiles $pathToDataFolder "*.*"
-        #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "*", "Data"
-        #Assert
-        $listOfBackupFiles = GetListOfFiles $pathToBackupDataFolder "*.*"
-
-        Compare-Object $listOfBackupFiles $listOfOriginalFiles | Should be $null
-    }
-
-    It "Backup-ISHDeployment backup all App files"{
-		#Arrange
-        $listOfOriginalFiles = GetListOfFiles $pathToAppFolder "*.*"
-        #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "*", "App"
-        #Assert
-        $listOfBackupFiles = GetListOfFiles $pathToBackupAppFolder "*.*"
 
         Compare-Object $listOfBackupFiles $listOfOriginalFiles | Should be $null
     }
@@ -176,32 +154,5 @@ Describe "Testing Backup-ISHDeployment"{
         $listOfBackupFiles = GetListOfFiles (Join-Path $pathToBackupWebFolder "Author\ASP") "Web.config"
 
         Compare-Object $listOfBackupFiles $listOfOriginalFiles | Should be $null
-    }
-
-    It "Backup-ISHDeployment backup Author\ASP\Images"{
-        #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Images", "Web"
-        #Assert
-        $listOfBackupFiles = GetListOfFiles $pathToBackupWebFolder "*.*"
-
-        $listOfBackupFiles.Count | Should be 37
-    }
-
-    It "Backup-ISHDeployment backup Author\ASP\Images\*.gif"{
-        #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Images\*.gif", "Web"
-        #Assert
-        $listOfBackupFiles = GetListOfFiles $pathToBackupWebFolder "*.gif"
-
-        $listOfBackupFiles.Count | Should be 5
-    }
-
-    It "Backup-ISHDeployment backup \Author\ASP\UI\*"{
-        #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\UI\*", "Web"
-        #Assert
-        $listOfBackupFiles = GetListOfFiles $pathToBackupWebFolder "*.*"
-
-        $listOfBackupFiles.Count | Should be 155
     }
 }

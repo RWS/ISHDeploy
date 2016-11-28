@@ -18,8 +18,24 @@ if($targetPC){
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 $testsFolder = Join-Path $executingScriptDirectory "Tests" 
 
-Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile
+$result = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile -PassThru
+
+#Switch $ENV:PublishPackageToTest variable to prevent publishing on Nexus
+if ($result.FailedCount -ne 0) {
+    Write-Host ""
+    Write-Host "------------------------------------------------------------------------------------------------"
+    Write-HOST "No Publishing to Nexus will be made because some tests failed"
+	Write-Host "------------------------------------------------------------------------------------------------"
+	Write-Host ""
+	if ($session) {
+		Remove-PSSession $session
+	}
+    throw "Test errors $result.FailedCount detected"
+}
+
 
 if ($session) {
     Remove-PSSession $session
 }
+
+return $result.FailedCount

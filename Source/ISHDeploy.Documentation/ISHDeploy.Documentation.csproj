@@ -93,6 +93,7 @@
     <None Include="Articles\Module\Work with one or multiple deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="index.md" />
+    <None Include="Tools\Copy-RootItems.ps1" />
     <None Include="Tools\Copy-Changelog.ps1" />
     <None Include="Getting Started.md" />
     <None Include="CHANGELOG.md" />
@@ -123,6 +124,7 @@
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\commands" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles" -Verbose
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-RootItems.ps1" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-Changelog.ps1" -ExportPath "$(ProjectDir)obj\doc" -Verbose</PostBuildEvent>
   </PropertyGroup>

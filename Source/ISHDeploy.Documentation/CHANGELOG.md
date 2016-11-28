@@ -7,6 +7,7 @@
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
         - Improved cmdlet behavior when administrator privileges are required.
+        - History file is enhanced with script info meta language. 
     2. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**

@@ -190,16 +190,21 @@ namespace ISHDeploy.Models.UI
 
                 string parameters = string.Join(", ", jArgumentList); //'Hello Alex!', true, 0
                 Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
-                Script = new [] {
-                    new Script{
-                        Language = "JAVASCRIPT",
-                        Content = @"
-      // Load the extension resources
-      Trisoft.Helpers.ExtensionsLoader.enableExtensions("""");"
-                        }
-
-                };
             }
+            else
+            {
+                Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}')";
+            }
+
+            Script = new [] {
+                new Script{
+                    Language = "JAVASCRIPT",
+                    Content = @"
+    // Load the extension resources
+    Trisoft.Helpers.ExtensionsLoader.enableExtensions("""");"
+                    }
+
+            };
         }
     }
 }

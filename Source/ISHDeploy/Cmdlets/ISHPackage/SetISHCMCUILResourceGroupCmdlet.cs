@@ -26,8 +26,8 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// </summary>
     /// <seealso cref="BaseHistoryEntryCmdlet" />
     /// <example>
-    ///		<code>PS C:\&gt;Set-ISHCMCUILResourceGroup -ISHDeployment $deployment -Name "Trisoft.Extensions" -Path "Extensions\custom\custom.js"</code>
-    ///		<para>This command updates "~\Author\ASP\UI\Extensions\_config.xml" CUIF config file and adds path to "Extensions\custom\custom.js" file in resource group with name "Trisoft.Extensions". In case resource group with such name does not exist this command will add new resource group.
+    ///		<code>PS C:\&gt;Set-ISHCMCUILResourceGroup -ISHDeployment $deployment -Path "Extensions\custom\custom.js"</code>
+    ///		<para>This command updates "~\Author\ASP\UI\Extensions\_config.xml" CUIF config file with default Name "Trisoft.Extensions" and adds path to "Extensions\custom\custom.js" file in resource group with name "Trisoft.Extensions". In case resource group with such name does not exist this command will add new resource group.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     ///		</para>
     /// </example>
@@ -43,9 +43,9 @@ namespace ISHDeploy.Cmdlets.ISHPackage
         /// <summary>
         /// <para type="description">Name of resource group in "~\Author\ASP\UI\Extensions\_config.xml".</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Name of resource group")]
-		[ValidateNotNullOrEmpty]
-		public string Name { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "Name of resource group")]
+        [ValidateNotNullOrEmpty]
+        public string Name { get; set; } = "Trisoft.Extensions";
 
         /// <summary>
         /// <para type="description">Path or paths to resource files.</para>

@@ -9,6 +9,7 @@
     2. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
+		- New icon in top bar. **[Update]**
 1. Module
     2. Documentation - Tutorials
 		- New tutorial on how to work with one deployment. **[Update]**

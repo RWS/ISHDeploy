@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
@@ -77,6 +78,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The file to open for reading.</param>
         /// <returns>A string array containing all lines of the file.</returns>
         string[] ReadAllLines(string filePath);
+
+        /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        void WriteHistoryHeader(string filePath, Version version);
 
         /// <summary>
         /// Creates a new file, write the specified string array to the file, and then closes the file.

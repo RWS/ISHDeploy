@@ -20,7 +20,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management.Automation;
 using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers
@@ -280,6 +282,84 @@ namespace ISHDeploy.Data.Managers
                 fileStream.Write(text);
             }
             _logger.WriteVerbose($"The content has been {(append ? "appended" : "written")} to file `{filePath}`");
+        }
+
+        /// <summary>
+        /// Version of History file
+        /// </summary>
+        private readonly string _historyFileVersion = "1.0";
+
+        /// <summary>
+        /// Header params
+        /// </summary>
+        private readonly string _headerParams =
+@"param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
+";
+        /// <summary>
+        /// Create history header
+        /// </summary>
+        private string GetHeader(string name, string currentVersion, string updatedVersion)
+        {
+            return
+ $@"<#ISHDeployScriptInfo
+
+.VERSION {_historyFileVersion}
+
+.MODULE {name}
+
+.CREATEDBYMODULEVERSION {currentVersion}
+
+.UPDATEDBYMODULEVERSION {updatedVersion}
+
+#>
+
+" + _headerParams;
+        }
+
+        /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        public void WriteHistoryHeader(string filePath, Version version)
+        {
+            _logger.WriteDebug($"Write header", filePath);
+
+            EnsureDirectoryExists(Path.GetDirectoryName(filePath));
+
+            string currentContent = String.Empty;
+            if (File.Exists(filePath))
+            {
+                currentContent = File.ReadAllText(filePath);
+            }
+
+            string createdModuleVersion, currentModuleVersion;
+            createdModuleVersion = currentModuleVersion = version.ToString();
+
+            var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION ([\d\.]*)").Groups;
+            if (groups[1].Success != false)
+            { //header already exist
+                createdModuleVersion = groups[1].Value;
+                int found = currentContent.IndexOf(_headerParams);
+                if (found != -1)
+                {
+                    currentContent = currentContent.Substring(found + _headerParams.Length);
+                }
+            }
+
+            var header = GetHeader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
+                createdModuleVersion,
+                currentModuleVersion);
+
+
+            File.WriteAllText(filePath, header + currentContent);
+
+            _logger.WriteVerbose($"The header has been added to file `{filePath}`");
         }
 
         /// <summary>

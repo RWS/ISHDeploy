@@ -29,33 +29,6 @@ namespace ISHDeploy.Data.Actions.File
     {
 
         /// <summary>
-        /// History header
-        /// </summary>
-        private readonly string _header =
- $@"<#ISHDeployScriptInfo
-
-.VERSION 1.0
-
-.MODULE {System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}
-
-.CREATEDBYMODULEVERSION(ModuleVersion)
-
-.UPDATEDBYMODULEVERSION(ModuleVersion)
-
-.CREATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
-
-.UPDATEDFORISHVERSION {ValidateDeploymentVersion.ModuleInitVersion}
-
-#>
-
-param(
-    [Parameter(Mandatory=$false)]
-    [switch]$IncludeCustomFile=$false
-)
-
-";
-
-        /// <summary>
         /// The file path
         /// </summary>
         private readonly string _path;
@@ -81,19 +54,26 @@ param(
         private readonly IFileManager _fileManager;
 
         /// <summary>
+        /// Module version
+        /// </summary>
+        private readonly Version _version;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FileAddHistoryEntryAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="path">The file path.</param>
         /// <param name="text">The text.</param>
         /// <param name="ishDeploymentName">The deployment name.</param>
-        public FileAddHistoryEntryAction(ILogger logger, string path, string text, string ishDeploymentName) 
+        /// <param name="version">Module version.</param>
+        public FileAddHistoryEntryAction(ILogger logger, string path, string text, string ishDeploymentName, Version version) 
 			: base(logger)
         {
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _path = path;
             _text = text;
             _ishDeploymentName = ishDeploymentName;
+            _version = version;
         }
 
 		/// <summary>
@@ -106,7 +86,6 @@ param(
             {
                 Logger.WriteVerbose("Creating history file.");
 
-                historyEntry.AppendLine(_header);
                 historyEntry.AppendLine($"# {CurrentDate}");
                 historyEntry.AppendLine($"$deploymentName = '{_ishDeploymentName}'");
             }
@@ -118,7 +97,8 @@ param(
 		    historyEntry.AppendLine(_text);
 
             _fileManager.Append(_path, historyEntry.ToString());
-		}
+            _fileManager.WriteHistoryHeader(_path, _version);
+        }
 
 
         /// <summary>

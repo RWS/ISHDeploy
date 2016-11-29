@@ -179,7 +179,7 @@ Describe "Testing Expand-ISHCMPackage"{
         #Assert
         $history.Contains('if($IncludeCustomFile)
 {
-Expand-ISHCMPackage -ISHDeployment $deploymentName -FileName @("test.zip") -ToCustom 
+     Expand-ISHCMPackage -FileName @("test.zip") -ToCustom  -ISHDeployment $deploymentName
 }') | Should be "True"
               
    } 

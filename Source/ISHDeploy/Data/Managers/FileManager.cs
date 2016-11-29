@@ -340,7 +340,7 @@ namespace ISHDeploy.Data.Managers
             string createdModuleVersion, currentModuleVersion;
             createdModuleVersion = currentModuleVersion = version.ToString();
 
-            var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION\((.*?)\)").Groups;
+            var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION ([\d\.]*)").Groups;
             if (groups[1].Success != false)
             { //header already exist
                 createdModuleVersion = groups[1].Value;

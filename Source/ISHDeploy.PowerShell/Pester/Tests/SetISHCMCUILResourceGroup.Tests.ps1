@@ -117,8 +117,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "", "test.js"
         #Assert
-        RemotePathCheck $extentionLoaderPath | Should Be "True"
-
         $result = readTargetXML -recourceGroupName "Trisoft.Extensions" -recourceGroupPath "test.js"
         $result | Should be "Set"
     }

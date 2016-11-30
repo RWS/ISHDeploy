@@ -169,7 +169,6 @@ namespace ISHDeploy.Models.UI
             Input.Value = name;
             Input.Name = name;
             Input.Icon = icon;
-            Input.OnClick = onClick;
             CardTypes = ishtype;
 
             CheckAccess = checkaccess;
@@ -185,26 +184,31 @@ namespace ISHDeploy.Models.UI
             {
                 // will add ' before and after in a case of string type
                 for (int index = 0; index < jArgumentList.Length; index++)
-                    if (jArgumentList[index].GetType() == typeof(string))
+                    if (jArgumentList[index].GetType() == typeof (string))
                         jArgumentList[index] = "'" + jArgumentList[index] + "'";
 
                 string parameters = string.Join(", ", jArgumentList); //'Hello Alex!', true, 0
                 Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}', [{parameters}])";
-                Script = new Script[] {
-                    new Script{
-                        Language = "JAVASCRIPT",
-                        Type = "text/javascript",
-                        Src="UI/Helpers/ExtensionsLoader.js"
-                        },
-                    new Script{
-                        Language = "JAVASCRIPT",
-                        Content = @"
-      // Load the extension resources
-      Trisoft.Helpers.ExtensionsLoader.enableExtensions("""");"
-                        }
-
-                };
             }
+            else
+            {
+                Input.OnClick = $@"Trisoft.Helpers.ExtensionsLoader.executeExtension('{onClick}')";
+            }
+
+            Script = new Script[] {
+                new Script{
+                    Language = "JAVASCRIPT",
+                    Type = "text/javascript",
+                    Src="UI/Helpers/ExtensionsLoader.js"
+                    },
+                new Script{
+                    Language = "JAVASCRIPT",
+                    Content = @"
+    // Load the extension resources
+    Trisoft.Helpers.ExtensionsLoader.enableExtensions("""");"
+                    }
+
+            };
         }
     }
 }

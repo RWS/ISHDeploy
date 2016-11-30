@@ -110,9 +110,9 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             if (ParameterSetName.Contains("Logical"))
                 buttonBarFile = "FolderButtonbar.xml";
             if (ParameterSetName.Contains("Version"))
-                buttonBarFile = "LanguageDocumentButtonbar.xml";
-            if (ParameterSetName.Contains("Language"))
                 buttonBarFile = "TopDocumentButtonbar.xml";
+            if (ParameterSetName.Contains("Language"))
+                buttonBarFile = "LanguageDocumentButtonbar.xml";
 
 
             var model = new ButtonBarItem(buttonBarFile, Name);

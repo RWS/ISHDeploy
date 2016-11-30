@@ -131,7 +131,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $item = getButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar"
         $item.Name | Should be $params.Name
         $item.Icon | Should be $params.Icon
-        $item.OnClick | Should be $params.JSFunction
+        $item.OnClick | Should be "Trisoft.Helpers.ExtensionsLoader.executeExtension('testOnClick();')"
     }
 
     It "Remove main menu button"{

@@ -24,7 +24,7 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para type="link">Set-ISHCMCUILResourceGroup</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\&gt;Copy-ISHCMFile -ISHDeployment $deployment -ToCustom -FileName bevers.js</code>
+    /// <code>PS C:\&gt;Copy-ISHCMFile -ISHDeployment $deployment -ToCustom -FileName test.js</code>
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]

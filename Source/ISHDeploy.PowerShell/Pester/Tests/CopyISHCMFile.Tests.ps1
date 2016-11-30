@@ -134,7 +134,7 @@ Describe "Testing Copy-ISHCMFile"{
         #Assert
         $history.Contains('if($IncludeCustomFile)
 {
-Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.file") -ToCustom 
+     Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.file") -ToCustom 
 }') | Should be "True"
     }
 

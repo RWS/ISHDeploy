@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Build.props = Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISHDeploy.Documentation.Tests", "ISHDeploy.Documentation.Tests\ISHDeploy.Documentation.Tests.csproj", "{7E6C12BA-E301-4C6E-943E-5F2EE0E78EE2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{B45A95C6-90B0-4921-B2D0-6FDA9AE6333B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B45A95C6-90B0-4921-B2D0-6FDA9AE6333B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B45A95C6-90B0-4921-B2D0-6FDA9AE6333B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E6C12BA-E301-4C6E-943E-5F2EE0E78EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E6C12BA-E301-4C6E-943E-5F2EE0E78EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E6C12BA-E301-4C6E-943E-5F2EE0E78EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E6C12BA-E301-4C6E-943E-5F2EE0E78EE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

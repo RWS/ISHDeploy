@@ -147,9 +147,17 @@ Copy-Item $packageRelativePaths $targetUploadPath
 #endregion
 
 #region Expand customization into ISHCM custom folder
-Expand-ISHCMFile -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
+Expand-ISHCMPackage -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
 #endregion
 ```
+
+For backwards compatible reasons, the `Copy-ISHCMFile` and `Expand-ISHCMPackage` will process each file, replace input parameters meta-language artifacts and the place in the correct location. 
+The input parameter meta-language is `#!#installtool:PARAMETERNAME#!#` where `PARAMETERNAME` is retrieved from current deployment's parameters. 
+To get an listing of the parameters and their values execute `Get-ISHDeploymentParameters`. 
+With the input parameter meta-language, `PARAMETERNAME` is important to be in uppercase format.
+
+For example if in a file you need to to create an absolute uri to the ISHCM website then `#!#installtool:BASEURL#!#/#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#/` will be transformed into `https://ish.example.com/ISHCM/`.
+
 
 ## Modify a file on the deployment without the module
 

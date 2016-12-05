@@ -148,4 +148,83 @@ Describe "Testing Copy-ISHCMFile"{
 		RemotePathCheck $customFile | Should Be "False"
         RemotePathCheck $binFile | Should Be "False"
     }
+
+$testFileContent = '<?xml version="1.0"?>
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <string>#!#installtool:datapath#!#</string>
+  <string>#!#installtool:projectsuffix#!#</string>
+  <string>#!#installtool:apppath#!#</string>
+  <string>#!#installtool:machinename#!#</string>
+  <string>#!#installtool:webpath#!#</string>
+  <string>#!#installtool:localservicehostname#!#</string>
+  <string>#!#installtool:infosharewswebappname#!#</string>
+  <string>#!#installtool:servicecertificatevalidationmode#!#</string>
+  <string>#!#installtool:issuerwstrustbindingtype#!#</string>
+  <string>#!#installtool:issuerwstrustendpointurl#!#</string>
+  <string>#!#installtool:basehostname#!#</string>
+  <string>#!#installtool:infoshareauthorwebappname#!#</string>
+  <string>#!#installtool:serviceusername#!#</string>
+  <string>#!#installtool:servicepassword#!#</string>
+  <string>#!#installtool:ps_java_home#!#</string>
+  <string>#!#installtool:softwareversion#!#</string>
+  <string>#!#installtool:osuser#!#</string>
+  <string>#!#installtool:issuercertificatethumbprint#!#</string>
+  <string>#!#installtool:infosharestswebappname#!#</string>
+  <string>#!#installtool:issuerwstrustendpointurl_normalized#!#</string>
+  <string>#!#installtool:ps_javahelp_home#!#</string>
+  <string>#!#installtool:ps_fo_processor_dir#!#</string>
+  <string>#!#installtool:ps_htmlhelp_processor_dir#!#</string>
+  <string>#!#installtool:ps_webworks_automap_application#!#</string>
+  <string>#!#installtool:baseurl#!#</string>
+  <string>#!#installtool:databasetype#!#</string>
+  <string>#!#installtool:connectstring#!#</string>
+  <string>#!#installtool:databaseserverversion#!#</string>
+  <string>#!#installtool:installtoolversion#!#</string>
+  <string>#!#installtool:datetime#!#</string>
+  <string>#!#installtool:databasename#!#</string>
+  <string>#!#installtool:netbiosdomainname#!#</string>
+  <string>#!#installtool:databaseuser#!#</string>
+  <string>#!#installtool:databasesource#!#</string>
+  <string>#!#installtool:databasepassword#!#</string>
+  <string>#!#installtool:issueractorusername#!#</string>
+  <string>#!#installtool:issueractorpassword#!#</string>
+  <string>#!#installtool:issuercertificatevalidationmode#!#</string>
+  <string>#!#installtool:servicecertificatethumbprint#!#</string>
+  <string>#!#installtool:issuerwsfederationendpointurl#!#</string>
+  <string>#!#installtool:authenticationtype#!#</string>
+  <string>#!#installtool:issuerwstrustmexurl#!#</string>
+  <string>#!#installtool:ospassword#!#</string>
+  <string>#!#installtool:solrlucene_service_port#!#</string>
+  <string>#!#installtool:solrlucene_stop_port#!#</string>
+  <string>#!#installtool:websitename#!#</string>
+  <string>#!#installtool:infosharestswindowsauthenticationenabled#!#</string>
+  <string>#!#installtool:srcpath#!#</string>
+  <string>#!#installtool:workspacepath#!#</string>
+</ArrayOfString>'
+
+    It "Copy-ISHCMFile replace installtool input parameters"{
+		#Arrange
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $testFileContent | Out-Null
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom"
+        #Assert
+        $content = Get-Content -Path $customFile
+        $content -Match "#!#" | Should Be $null
+    }
+    
+$testFileContentWithWrongPlaceholder = '<?xml version="1.0"?>
+<ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <string>#!#installtool:infosharestswindowsauthenticationenabled#!#</string>
+  <string>#!#installtool:trisoftxopuswebappname#!#</string>
+  <string>#!#installtool:srcpath#!#</string>
+  <string>#!#installtool:workspacepath#!#</string>
+</ArrayOfString>'
+
+    It "Copy-ISHCMFile replace installtool input parameters"{
+		#Arrange
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $testFileContentWithWrongPlaceholder | Out-Null
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom" -WarningVariable Warning
+        #Assert
+        $content = Get-Content -Path $customFile
+        $Warning | should Match "Could not find the input parameter which correspond to placeholder #!#installtool:trisoftxopuswebappname#!#" 
+    }
 }

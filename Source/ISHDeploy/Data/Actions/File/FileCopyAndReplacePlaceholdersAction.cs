@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
@@ -91,6 +92,9 @@ namespace ISHDeploy.Data.Actions.File
 
                 m = m.NextMatch();
             }
+
+            string destinationFolderPath = Path.GetDirectoryName(_destinationPath);
+            _fileManager.EnsureDirectoryExists(destinationFolderPath);
 
             Logger.WriteDebug("Write content to file", _destinationPath);
             _fileManager.WriteAllText(_destinationPath, content);

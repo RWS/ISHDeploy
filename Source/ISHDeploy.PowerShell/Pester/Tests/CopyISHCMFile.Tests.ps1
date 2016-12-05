@@ -219,7 +219,7 @@ $testFileContentWithWrongPlaceholder = '<?xml version="1.0"?>
   <string>#!#installtool:workspacepath#!#</string>
 </ArrayOfString>'
 
-    It "Copy-ISHCMFile replace installtool input parameters"{
+    It "Copy-ISHCMFile replace installtool input parameters with wrong placeholder"{
 		#Arrange
         New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $testFileContentWithWrongPlaceholder | Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, "test.file", "ToCustom" -WarningVariable Warning

@@ -94,6 +94,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void WriteAllLines(string filePath, string[] lines);
 
         /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        void WriteAllText(string filePath, string content);
+
+        /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>

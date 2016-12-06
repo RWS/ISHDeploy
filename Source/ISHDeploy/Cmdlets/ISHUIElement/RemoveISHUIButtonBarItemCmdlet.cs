@@ -72,10 +72,10 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     buttonBarFile = "FolderButtonbar.xml";
                     break;
                 case "Version":
-                    buttonBarFile = "LanguageDocumentButtonbar.xml";
+                    buttonBarFile = "TopDocumentButtonbar.xml";
                     break;
                 case "Language":
-                    buttonBarFile = "TopDocumentButtonbar.xml";
+                    buttonBarFile = "LanguageDocumentButtonbar.xml";
                     break;
                 default:
                     break;

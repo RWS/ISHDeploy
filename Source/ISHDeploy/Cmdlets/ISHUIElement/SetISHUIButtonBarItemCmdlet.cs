@@ -119,13 +119,13 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Version":
-                    buttonBarFile = "LanguageDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary);
+                    buttonBarFile = "TopDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Language":
-                    buttonBarFile = "TopDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
+                    buttonBarFile = "LanguageDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHType, versionDictionary);
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 default:

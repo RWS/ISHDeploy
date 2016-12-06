@@ -87,7 +87,7 @@ namespace ISHDeploy.Data.Actions.File
                 }
                 else
                 {
-                    Logger.WriteWarning($"Could not find the input parameter which correspond to placeholder {m.Value}");
+                    Logger.WriteWarning($"Input parameter {key} in placeholder {m.Value} is not found.");
                 }
 
                 m = m.NextMatch();

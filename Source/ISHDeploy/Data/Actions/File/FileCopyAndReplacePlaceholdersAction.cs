@@ -70,36 +70,68 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         public override void Execute()
         {
-            Logger.WriteDebug("Reading of file", _sourcePath);
-            string content = _fileManager.ReadAllText(_sourcePath);
-
-            Match m = Regex.Match(content, RegexPlaceHolderPattern);
-            while (m.Success)
-            {
-                var placeHolder = m.Value.ToLower();
-                var key = placeHolder.Replace("installtool:", string.Empty).Replace("#!#", string.Empty);
-                if (_matchesDictionary.ContainsKey(key))
-                {
-                    var value = _matchesDictionary[key];
-                    Logger.WriteDebug("Replace placeholder", m.Value, value);
-                    content = content.Replace(m.Value, value);
-                    Logger.WriteVerbose($"The placeholder {m.Value} has been replaced on {value}");
-                }
-                else
-                {
-                    Logger.WriteWarning($"Input parameter {key} in placeholder {m.Value} is not found.");
-                }
-
-                m = m.NextMatch();
-            }
-
             string destinationFolderPath = Path.GetDirectoryName(_destinationPath);
             _fileManager.EnsureDirectoryExists(destinationFolderPath);
 
-            Logger.WriteDebug("Write content to file", _destinationPath);
-            _fileManager.WriteAllText(_destinationPath, content);
+            if (_sourcePath.ToLower().EndsWith(".txt") | 
+                _sourcePath.ToLower().EndsWith(".bat") |
+                _sourcePath.ToLower().EndsWith(".cmd") |
+                _sourcePath.ToLower().EndsWith(".vbs") | 
+                _sourcePath.ToLower().EndsWith(".wsf") |
+                _sourcePath.ToLower().EndsWith(".ini") |
+                _sourcePath.ToLower().EndsWith(".asp") | 
+                _sourcePath.ToLower().EndsWith(".aspx") |
+                _sourcePath.ToLower().EndsWith(".master") |
+                _sourcePath.ToLower().EndsWith(".xml") | 
+                _sourcePath.ToLower().EndsWith(".xsl") |
+                _sourcePath.ToLower().EndsWith(".config") |
+                _sourcePath.ToLower().EndsWith(".htm") | 
+                _sourcePath.ToLower().EndsWith(".html") |
+                _sourcePath.ToLower().EndsWith(".css") |
+                _sourcePath.ToLower().EndsWith(".js") | 
+                _sourcePath.ToLower().EndsWith(".dtd") |
+                _sourcePath.ToLower().EndsWith(".sql") |
+                _sourcePath.ToLower().EndsWith(".h") | 
+                _sourcePath.ToLower().EndsWith(".p") |
+                _sourcePath.ToLower().EndsWith(".par") |
+                _sourcePath.ToLower().EndsWith(".properties") | 
+                _sourcePath.ToLower().EndsWith(".ps1") |
+                _sourcePath.ToLower().EndsWith(".psm1"))
+            {
 
-            Logger.WriteVerbose($"The file {_destinationPath} has been saved");
+                Logger.WriteDebug("Reading of file", _sourcePath);
+                string content = _fileManager.ReadAllText(_sourcePath);
+
+                Match m = Regex.Match(content, RegexPlaceHolderPattern);
+                while (m.Success)
+                {
+                    var placeHolder = m.Value.ToLower();
+                    var key = placeHolder.Replace("installtool:", string.Empty).Replace("#!#", string.Empty);
+                    if (_matchesDictionary.ContainsKey(key))
+                    {
+                        var value = _matchesDictionary[key];
+                        Logger.WriteDebug("Replace placeholder", m.Value, value);
+                        content = content.Replace(m.Value, value);
+                        Logger.WriteVerbose($"The placeholder {m.Value} has been replaced on {value}");
+                    }
+                    else
+                    {
+                        Logger.WriteWarning($"Input parameter {key} in placeholder {m.Value} is not found.");
+                    }
+
+                    m = m.NextMatch();
+                }
+
+                Logger.WriteDebug("Write content to file", _destinationPath);
+                _fileManager.WriteAllText(_destinationPath, content);
+
+                Logger.WriteVerbose($"The file {_destinationPath} has been saved");
+            }
+            else
+            {
+                _fileManager.Copy(_sourcePath, _destinationPath, true);
+                Logger.WriteVerbose($"The file {_destinationPath} has been copied without replacing of placeholder");
+            }
         }
     }
 }

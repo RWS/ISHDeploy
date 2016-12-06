@@ -13,8 +13,9 @@ $computerName = $computerName.split(".")[0]
 $uncZipPath = "\\$computerName\" + ($zipTempPath.replace(":", "$"))
 $uncPackagePath = "\\$computerName\" + ($packagePath.replace(":", "$"))
 $filePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
-$customFile = Join-Path $filePath "\Custom\test.file"
-$binFile = Join-Path $filePath "\Bin\test.file"
+$customFileName = "test.config"
+$customFile = Join-Path $filePath "\Custom\$customFileName"
+$binFile = Join-Path $filePath "\Bin\$customFileName"
 
 $zipName = "test.zip"
 $zipPath = Join-Path $uncZipPath $zipName
@@ -58,14 +59,15 @@ $scriptBlockExpandISHCMPackage = {
 Describe "Testing Expand-ISHCMPackage"{
     BeforeEach {
 		ArtifactCleaner -filePath $uncPackagePath -fileName "test.file"
-        ArtifactCleaner -filePath $uncPackagePath -fileName "Trisoft.Web.dll"   
+        ArtifactCleaner -filePath $uncPackagePath -fileName "Trisoft.Web.dll"  
+		ArtifactCleaner -filePath $uncPackagePath -fileName $customFileName  
         ArtifactCleaner -filePath $uncPackagePath -fileName $zipName    
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
     It "Expand-ISHCMPackage copies to custom folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
@@ -75,7 +77,7 @@ Describe "Testing Expand-ISHCMPackage"{
 
     It "Expand-ISHCMPackage copies to bin folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         #Invoke-CommandRemoteOrLocal -ScriptBlock{Test-Path "$packagePath\test.file"} -Session $session -ArgumentList $packagePath | Should Be "True"
@@ -87,7 +89,7 @@ Describe "Testing Expand-ISHCMPackage"{
 
     It "Expand-ISHCMPackage owerwrites file in custom folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
@@ -101,7 +103,7 @@ Describe "Testing Expand-ISHCMPackage"{
 
     It "Expand-ISHCMPackage owerwrites custom file in bin folder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToBin"
@@ -115,7 +117,7 @@ Describe "Testing Expand-ISHCMPackage"{
    
    It "Expand-ISHCMPackage throws error when file does not exist"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, "unexistingTest.file", "ToCustom"} | Should throw "InvalidPath for"
@@ -134,7 +136,7 @@ Describe "Testing Expand-ISHCMPackage"{
     It "Expand-ISHCMPackage can copy multiple files"{
 		#Arrange
         New-Item -Path $uncPackagePath -Name "Trisoft.Web.dll" -Force -type file |Out-Null
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
 
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force 
@@ -154,12 +156,10 @@ Describe "Testing Expand-ISHCMPackage"{
         
         New-Item -Path $uncPackagePath -Name "TestFolder" -ItemType directory -Force
         New-Item -Path "$uncPackagePath\TestFolder" -Name "Trisoft.Web.dll" -Force -type file |Out-Null
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
 
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
-
-       
 
         #Assert
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
@@ -170,7 +170,7 @@ Describe "Testing Expand-ISHCMPackage"{
     
      It "Expand-ISHCMPackage writes history"{
         #Act
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
@@ -240,7 +240,7 @@ $testFileContent = '<?xml version="1.0"?>
 
     It "Expand-ISHCMPackage replace installtool input parameters"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $testFileContent |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file -Value $testFileContent |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
@@ -260,15 +260,28 @@ $testFileContentWithWrongPlaceholder = '<?xml version="1.0"?>
 
     It "Expand-ISHCMPackage replace installtool input parameters with wrong placeholder"{
 		#Arrange
-        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $testFileContentWithWrongPlaceholder |Out-Null
+        New-Item -Path $uncPackagePath -Name $customFileName -Force -type file -Value $testFileContentWithWrongPlaceholder |Out-Null
         ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom" -WarningVariable Warning
         #Assert
         $content = Get-Content -Path $customFile
-        $Warning | should Match "Could not find the input parameter which correspond to placeholder #!#installtool:trisoftxopuswebappname#!#" 
+        $Warning | should Match "Input parameter trisoftxopuswebappname in placeholder #!#installtool:trisoftxopuswebappname#!# is not found." 
     }
     
+    $ignoreTestFileContent = '<?xml version="1.0"?><ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><string>#!#installtool:datapath#!#</string></ArrayOfString>'
+
+    It "Expand-ISHCMPackage does not replace palceholders in unknown files"{
+		#Arrange
+        New-Item -Path $uncPackagePath -Name "test.file" -Force -type file -Value $ignoreTestFileContent |Out-Null
+        ZipFolder -zipfile $zipPath -folderPath $uncPackagePath
+        Move-Item -Path $zipPath -Destination $uncPackagePath -Force
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
+        #Assert
+        $pathToTestFile = Join-Path $filePath "\Custom\test.file"
+        $content = Get-Content -Path $pathToTestFile
+        $content | Should Match "<string>#!#installtool:datapath#!#</string>"
+    }
 
     UndoDeploymentBackToVanila $testingDeploymentName $true
 }

@@ -19,8 +19,8 @@ using ISHDeploy.Business.Operations.ISHPackage;
 namespace ISHDeploy.Cmdlets.ISHPackage
 {
     /// <summary>
-    /// <para type="synopsis">Copy files from several files to Custom or Bin directory.</para>
-    /// <para type="description">Will copy files from packages directory to Custom or Bin directory depends on switch.</para>
+    /// <para type="synopsis">Copies several files to Custom or Bin directory and replaces parameters in files on values of the deployment.</para>
+    /// <para type="description">Will copy files from packages directory to Custom or Bin directory depends on switch and replace the placeholders of files with the corresponding values of the deployment. Replacement of values occurs only in files of certain extensions.</para>
     /// <para type="link">Set-ISHCMCUILResourceGroup</para>
     /// </summary>
     /// <example>

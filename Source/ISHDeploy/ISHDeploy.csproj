@@ -207,6 +207,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />

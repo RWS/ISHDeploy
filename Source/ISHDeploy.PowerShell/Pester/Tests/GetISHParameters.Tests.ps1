@@ -9,21 +9,6 @@
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
-$scriptBlockGetParameters = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName,
-        $switshes
-         
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentParameters -ISHDeployment $ishDeploy @switshes
-}
-
 $scriptBlockGetBackUpedParameters = {
     param (
         [Parameter(Mandatory=$true)]

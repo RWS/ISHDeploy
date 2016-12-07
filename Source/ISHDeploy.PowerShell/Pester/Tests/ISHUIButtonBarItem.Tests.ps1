@@ -103,17 +103,14 @@ $scriptBlockRemoveButtonBarBar= {
     param (
         [Parameter(Mandatory=$false)]
         $ishDeployName,
-        [Parameter(Mandatory=$false)]
-        $name,
-        [Parameter(Mandatory=$false)]
-        $buttonBar
+        $parametersHash
     )
     if($PSSenderInfo) {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHUIButtonBarItem -ISHDeployment $ishDeploy -Name $name -Logical
+    Remove-ISHUIButtonBarItem -ISHDeployment $ishDeploy @parametersHash
 }
 
 Describe "Testing ISHUIButtonBarItemButton"{
@@ -131,7 +128,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $item = getButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar"
         $item.Name | Should be $params.Name
         $item.Icon | Should be $params.Icon
-        $item.OnClick | Should be $params.JSFunction
+        $item.OnClick | Should be "Trisoft.Helpers.ExtensionsLoader.executeExtension('testOnClick();')"
     }
 
     It "Remove main menu button"{
@@ -140,7 +137,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
         getCountButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar" | Should be 1
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $params.Name, "FolderButtonbar"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, @{Logical = $true; Name = $params.Name}
         #Assert
         $item = getButtonBarButton -Name $params.Name -ButtonBarType "FolderButtonbar"
         $item | Should be $null
@@ -160,7 +157,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
     It "Sets button with wrong XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, @{Logical = $true; Name = $testName}
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
         New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
         $params = @{Logical = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
@@ -174,11 +171,11 @@ Describe "Testing ISHUIButtonBarItemButton"{
     It "Remove button with no XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, @{Logical = $true; Name = $testName}
         Rename-Item "$xmlPath\FolderButtonbar.xml" "_FolderButtonbar.xml"
         New-Item "$xmlPath\FolderButtonbar.xml" -type file |Out-Null
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"} |Should Throw "Root element is missing" 
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, @{Logical = $true; Name = $testName}} |Should Throw "Root element is missing" 
         #Rollback
         Remove-Item "$xmlPath\FolderButtonbar.xml"
         Rename-Item "$xmlPath\_FolderButtonbar.xml" "FolderButtonbar.xml"
@@ -196,7 +193,7 @@ Describe "Testing ISHUIButtonBarItemButton"{
 
     It "Remove unexisting button"{
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, $testName, "FolderButtonbar"} | Should Not Throw
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName, @{Logical = $true; Name = $testName}} | Should Not Throw
     }
 
     It "Move After"{
@@ -366,6 +363,91 @@ Describe "Testing ISHUIButtonBarItemButton"{
         $checkResult = $compareArrayResult -eq 0 
         $CheckResult | Should Be "True"
      }
+
+    It "Set button of Version level"{
+        #Arrange
+        $params = @{Version = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        $item = getButtonBarButton -Name $params.Name -ButtonBarType "TopDocumentButtonbar"
+        $item.Name | Should be $params.Name
+        $item.Icon | Should be $params.Icon
+        $item.OnClick | Should be "Trisoft.Helpers.ExtensionsLoader.executeExtension('testOnClick();')"
+    }
+    
+    It "Remove Version button"{
+        #Arrange
+        $params = @{Version = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
+        getCountButtonBarButton -Name $params.Name -ButtonBarType "TopDocumentButtonbar" | Should be 1
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName,  @{Name = $testName; Version = $true;}
+        #Assert
+        $item = getButtonBarButton -Name $params.Name -ButtonBarType "TopDocumentButtonbar"
+        $item | Should be $null
+        getCountButtonBarButton -Name $params.Name -ButtonBarType "TopDocumentButtonbar" | Should be 0
+    }
+
+    It "Move Version button After"{
+        #Arrange
+        #getting 2 arrays with labels of nodes of Event Monitor Menu bar
+        [xml]$XmlButtonBarBar= Get-Content "$xmlPath\TopDocumentButtonbar.xml"  -ErrorAction SilentlyContinue
+        $labelArray = $XmlButtonBarBar.BUTTONBAR.BUTTON.INPUT.NAME
+        #don't rewrite this to $tempArray = $labelArray - in powershell it will be link to an object and if one changes - another will change too and test fails
+        $tempArray = $XmlButtonBarBar.BUTTONBAR.BUTTON.INPUT.NAME
+        $arrayLength = $labelArray.Length
+        #get label that will be moved
+        $moveblelabel = $labelArray[$arrayLength -1]
+
+        #Move array object in same way, as Move commandklet will move nodes
+        $labelArray[1] = $moveblelabel
+        for ($i=2; $i -le $arrayLength - 1;$i++){
+            $labelArray[$i] = $tempArray[$i-1]
+        }
+        $params = @{Name = $moveblelabel; After = $tempArray[0]; Version = $true; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockMoveButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
+
+        #read the updated xml file
+        [xml]$XmlButtonBarBar = RemoteReadXML "$xmlPath\TopDocumentButtonbar.xml"
+        $thirdArray =$XmlButtonBarBar.BUTTONBAR.BUTTON.INPUT.NAME 
+    
+        #Compare 2 arrays
+        $compareArrayResult = 0
+        for ($i=0; $i -le $arrayLength - 1;$i++){
+            if ($labelArray[$i] -ne $thirdArray[$i]){$compareArrayResult++}
+        }
+        $checkResult = $compareArrayResult -eq 0
+    
+        #Assert
+        $checkResult | Should Be "True"
+    }
+
+    It "Set button of Language level"{
+        #Arrange
+        $params = @{Language = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
+        #Assert
+        $item = getButtonBarButton -Name $params.Name -ButtonBarType "LanguageDocumentButtonbar"
+        $item.Name | Should be $params.Name
+        $item.Icon | Should be $params.Icon
+        $item.OnClick | Should be "Trisoft.Helpers.ExtensionsLoader.executeExtension('testOnClick();')"
+    }
+    
+    It "Remove Language button"{
+        #Arrange
+        $params = @{Language = $true; Name = $testName; ISHType= "ISHIllustration"; Icon = "~/UIFramework/test.32x32.png"; JSFunction = "testOnClick();"; }
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetButtonBarButton -Session $session -ArgumentList $testingDeploymentName, $params
+        getCountButtonBarButton -Name $params.Name -ButtonBarType "LanguageDocumentButtonbar" | Should be 1
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveButtonBarBar -Session $session -ArgumentList $testingDeploymentName,  @{Name = $testName; Language = $true;}
+        #Assert
+        $item = getButtonBarButton -Name $params.Name -ButtonBarType "LanguageDocumentButtonbar"
+        $item | Should be $null
+        getCountButtonBarButton -Name $params.Name -ButtonBarType "LanguageDocumentButtonbar" | Should be 0
+    }
 
 	#It "Update existing item"{
  #       #Arrange

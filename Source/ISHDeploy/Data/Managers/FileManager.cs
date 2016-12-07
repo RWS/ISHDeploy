@@ -256,6 +256,16 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Writes string to specified file.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        public void WriteAllText(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
+
+        /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>

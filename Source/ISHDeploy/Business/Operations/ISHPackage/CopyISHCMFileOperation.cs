@@ -75,6 +75,8 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 ignoreFiles = xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
             }
 
+            var inputParameters =
+                xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);
             files
                 .ToList()
                 .ForEach(x =>
@@ -99,8 +101,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, destinatioFolderPath));
 
                     bool destinationFileExists = fileManager.FileExists(destinationFilePath);
-                    _invoker.AddAction(new FileCopyToDirectoryAction(
-                        logger, sourceFilePath, destinatioFolderPath, true));
+
+                    _invoker.AddAction(new FileCopyAndReplacePlaceholdersAction(
+                        logger, sourceFilePath, destinationFilePath, inputParameters));
 
                     _invoker.AddAction(new WriteWarningAction(Logger, () => ( destinationFileExists ), $"File {destinationFilePath} has been overritten."));
                 });

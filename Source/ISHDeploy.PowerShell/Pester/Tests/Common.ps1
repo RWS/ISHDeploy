@@ -405,3 +405,18 @@ function ZipFolder
 
     [System.IO.Compression.ZipFile]::CreateFromDirectory($folderPath, $zipfile)
 }
+
+$scriptBlockGetParameters = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName,
+        $switshes
+         
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHDeploymentParameters -ISHDeployment $ishDeploy @switshes
+}

@@ -12,19 +12,10 @@ try
     $moduleName="ISHDeploy.$SupportedCMVersion"
 	Write-Verbose "moduleName=$moduleName"
     
-    $sourcePath=Resolve-Path "$PSScriptRoot\..\"
 	$objPath=Resolve-Path "$PSScriptRoot\..\obj\doc"
-	Write-Verbose "sourcePath=$sourcePath"
 	Write-Verbose "objPath=$objPath"
-	
-	$rootItems=Get-ChildItem $sourcePath -Filter "*.md" 
-	$rootItems| ForEach-Object{ 
-        Write-Debug "Copying $($_.FullName) to $objPath"
-        Copy-Item ($_.FullName) $objPath -Force
-        Write-Verbose "Copyied $($_.FullName) to $objPath"
-    }
 
-	$rootItems=Get-ChildItem $objPath -Filter "*.md"
+	$rootItems=Get-ChildItem $objPath -Filter "*.md" -Recurse
 
 	$rootItems | ForEach-Object {
 		Write-Debug "Loading $($_.FullName)"

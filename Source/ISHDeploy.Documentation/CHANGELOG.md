@@ -6,14 +6,15 @@
 		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when omitted with the following reasoning:  **[Update]**
 			- When there is only one available deployment detected then this one will be used.
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
+        - Improved cmdlet behavior when administrator privileges are required.
+        - History file is enhanced with script info meta language. 
     2. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
 		- New icon in top bar. **[Update]**
-1. Module
-    2. Documentation - Tutorials
 		- New tutorial on how to work with one deployment. **[Update]**
         - Renamed and extended tutorial **Work with files** to **Work with files and packages**. **[Update]**
+        - **Getting Started** has new information about required elevated administrator privileges. **[Update]**
 1. Working with ISHCM web UI features
     1. Cmdlets
 	    - `Set-ISHUIButtonBarItem`. **[New]**
@@ -25,17 +26,22 @@
 	    - `Move-ISHUISearchMenuBarItem`. **[New]**
 	    - `Remove-ISHUISearchMenuBarItem`. **[New]**
 	    - `Set-ISHUISearchMenuBarItem`. **[New]**
+	    - `Set-ISHUISearchMenuBarItem`. **[New]**
+	    - `Copy-ISHCMFile`. **[New]**
+	    - `Expand-ISHCMPackage`. **[New]**
+	    - `Set-ISHCMCUILResourceGroup`. **[New]**
+        - `Backup-ISHDeployment`. **[New]**
 	    - Renamed cmdlets for event monitor:  **[Update]**
 			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
 			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
 			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
-    2. Documentation - Tutorials
+    2. Documentation
 		- Reorganize former "Configuring features using the module" tutorial into three more specialized. **[Update]**
 			- Toggling Web Components. **[Update]**
 			- Configuring ISHCM web UI menu bars. **[Update]**
 			- Configuring ISHCM web UI button bars. **[New]**
 1. Integration STS
-	1. Documentation - Tutorials
+	1. Documentation
 		- Fixed invalid parameter reference in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
 		- Added remarks for the importance of execution order in PowerShell examples in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
 

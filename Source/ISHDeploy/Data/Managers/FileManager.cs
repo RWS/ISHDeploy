@@ -618,15 +618,23 @@ namespace ISHDeploy.Data.Managers
                     directoryTepmlate = Path.Combine(directoryTepmlate, fileTemplate);
                     fileTemplate = "";
                 }
-                
-                if (string.IsNullOrEmpty(fileTemplate))
-                    getFiles = () => Directory.GetFiles(
-                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
-                        "*.*", SearchOption.AllDirectories);
+
+                var pathToDirectory = Path.Combine(sourceDirectoryPath, directoryTepmlate);
+                if (FolderExists(pathToDirectory))
+                {
+                    if (string.IsNullOrEmpty(fileTemplate))
+                        getFiles = () => Directory.GetFiles(
+                            pathToDirectory,
+                            "*.*", SearchOption.AllDirectories);
+                    else
+                        getFiles = () => Directory.GetFiles(
+                            pathToDirectory,
+                            fileTemplate);
+                }
                 else
-                    getFiles = () => Directory.GetFiles(
-                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
-                        fileTemplate);
+                {
+                    getFiles = () => new string[0];
+                }
             }
 
             var files = getFiles();

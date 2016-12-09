@@ -71,6 +71,12 @@ namespace ISHDeploy.Data.Actions.File
         {
             var files = _fileManager.GetFilesByCustomSearchPattern(_sourceFolderPath, _destinationFolderPath, _template);
 
+            if (files.Length == 0)
+            {
+                Logger.WriteWarning("Files not found");
+                return;
+            }
+
             files
                 .ToList()
                 .ForEach(newPath =>

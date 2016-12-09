@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Management.Automation;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -594,13 +593,15 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Copy files with directory and file template.
+        /// Returns a list of files that correspond to search pattern.
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to source directory</param>
         /// <param name="destinationDirectoryPath">The path to source directory</param>
         /// <param name="searchPattern">The search pattern</param>
-        public void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
+        /// <returns>A string array containing list of required files.</returns>
+        public string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
         {
+            _logger.WriteDebug("Get list of files", sourceDirectoryPath, searchPattern);
             Func<string[]> getFiles;
 
             if (string.IsNullOrEmpty(searchPattern))
@@ -628,16 +629,10 @@ namespace ISHDeploy.Data.Managers
                         fileTemplate);
             }
 
-            string[] files = getFiles();
+            var files = getFiles();
+            _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{sourceDirectoryPath}` has been got");
 
-            files
-                .ToList()
-                .ForEach(newPath =>
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourceDirectoryPath, destinationDirectoryPath)));
-                        File.Copy(newPath, newPath.Replace(sourceDirectoryPath, destinationDirectoryPath), true);// if already exist we do not copy - it is already backuped
-                        _logger.WriteDebug($"File {newPath} was backuped");
-                    });
+            return files;
         }
     }
 }

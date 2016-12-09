@@ -83,7 +83,7 @@ To verify that the module is installed and check the version execute:
 Get-Module ISHDeploy.12.0.1 -ListAvailable |Format-Table Name,Version
 ```
 
-if the module is available then the result should be one line such as
+If the module is available then the result should be one line such as
 ```
 Name                                                        Version
 ----                                                        -------
@@ -101,6 +101,13 @@ To show the help of `Get-ISHDeployment` execute
 ```powershell
 Get-Help Get-ISHDeployment -Full
 ``` 
+
+## Administrator privileges required
+
+The purpose of the module is to modify the files of a deployment.
+For this reason, most cmdlets require elevated administrator privileges. 
+Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
+All cmdlets with verb `Get-` such as `Get-ISHDeployment` are exempt from this requirement as they do not modify an files.
 
 # The documentation portal
 

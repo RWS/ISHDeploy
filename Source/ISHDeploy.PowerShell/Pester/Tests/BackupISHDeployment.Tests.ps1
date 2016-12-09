@@ -135,6 +135,20 @@ Describe "Testing Backup-ISHDeployment"{
         $listOfBackupFiles2.Count | Should be 1
     }
 
+    It "Backup-ISHDeployment backup the same file twice"{
+        #Action
+        $uncPackagePath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup\Web\Author\ASP"
+        $backupedFilePath = "$uncPackagePath\Web.config"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web.config", "Web"
+        $d = (get-date)
+        $file = Get-Item $backupedFilePath
+        $file.LastWriteTime = $d
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web.config", "Web"
+        $d2 = [datetime](Get-ChildItem -Path $backupedFilePath |  Select-Object -ExpandProperty LastWriteTime)
+        #Assert
+        $d -eq $d2| Should Be $true
+    }
+
     It "Backup-ISHDeployment backup few files"{
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, @("Author\ASP\Web.config", "Author\ASP\bin\Trisoft.InfoShare.Web.dll", "Author\ASP\XSL\FolderButtonbar.xml"), "Web"

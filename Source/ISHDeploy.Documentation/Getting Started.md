@@ -77,7 +77,7 @@ Install-Module {ModuleName} -Force
 Install-Module {ModuleName} -Scope CurrentUser -Force
 ```
 
-# Verify the module presense
+# Verify the module presence
 To verify that the module is installed and check the version execute:
 ```powershell
 Get-Module ISHDeploy.12.0.1 -ListAvailable |Format-Table Name,Version

@@ -78,7 +78,7 @@ Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileN
 Inside the zip file you will find two files
 
 - `CM Security Token Service Requirements.md` that is a markdown file with the specific deployment information.
-- `ishws.cer` that is the public key of the **ISHWS** service certificate. This is added for your convenience.
+- `ishws.cer` that is the public key of the **ISHWS** service certificate. This was added for your convenience.
 
 # Enable authentication with Content Manager internal users.
 

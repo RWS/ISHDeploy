@@ -24,7 +24,7 @@ end note
 
 == Inbound flow to deployment ==
 
-Actor -> PD : Copy/Upload customizaton file/package
+Actor -> PD : Copy/Upload customization file/package
 note over PD, Actor
 	e.g. Local
 	e.g. Remote

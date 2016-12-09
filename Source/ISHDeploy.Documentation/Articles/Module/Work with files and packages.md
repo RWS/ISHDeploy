@@ -105,7 +105,7 @@ The `Expand-ISHCMPackage` takes an compressed file (package) and copies the cont
 
 Both cmdlet's offer two target locations
 
-- A `Custom` folder in ISHCM. Use this for custom asp,html, javascript and images.
+- A `Custom` folder in ISHCM. Use this for custom asp, html, javascript and images.
 - The `bin` folder in ISHCM. Use this for binary customization files such as an http module.
 
 The following example showcases how to a customization into the ISHCM custom folder. 

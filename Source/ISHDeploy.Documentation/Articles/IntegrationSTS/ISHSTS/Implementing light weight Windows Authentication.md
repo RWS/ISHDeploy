@@ -41,7 +41,7 @@ To execute it there are two conditions:
 
 > WARNING: Current implementation of .ps1 works only with windows authentication.
 
-- [SQLPS](https://msdn.microsoft.com/en-us/library/hh245198.aspx) PowerShell modules is installed. The module is normally installed allong **SQL Server Management Studio**.
+- [SQLPS](https://msdn.microsoft.com/en-us/library/hh245198.aspx) PowerShell modules is installed. The module is normally installed along **SQL Server Management Studio**.
 
 If all conditions are satisfied then executing the script completes the task.
 

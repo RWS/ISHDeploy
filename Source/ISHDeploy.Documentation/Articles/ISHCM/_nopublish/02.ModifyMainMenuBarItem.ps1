@@ -1,6 +1,6 @@
 ﻿$hash=@{
     Label="Custom"
-    Action="custom.V2.html"
+    Action="Custom/HTML/custom..V2.html"
     UserRole=@(
 		"Administrator"
 		"User"

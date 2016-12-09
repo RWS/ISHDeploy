@@ -191,7 +191,8 @@ Describe "Testing Expand-ISHCMPackage"{
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
         #Assert
-        $content = Get-Content -Path $customFile
+        $pathToTestFile = Join-Path $filePath "\Custom\$customFileName"
+        $content = Invoke-CommandRemoteOrLocal -ScriptBlock {param($path) Get-Content $path} -Session $session -ArgumentList $pathToTestFile
         $content -Match "#!#" | Should Be $null
     }
 
@@ -211,7 +212,6 @@ $testFileContentWithWrongPlaceholder = '<?xml version="1.0"?>
         Move-Item -Path $zipPath -Destination $uncPackagePath -Force
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom" -WarningVariable Warning
         #Assert
-        $content = Get-Content -Path $customFile
         $Warning | should Match "Input parameter trisoftxopuswebappname in placeholder #!#installtool:trisoftxopuswebappname#!# is not found." 
     }
     
@@ -225,7 +225,7 @@ $testFileContentWithWrongPlaceholder = '<?xml version="1.0"?>
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockExpandISHCMPackage -Session $session -ArgumentList $testingDeploymentName, $zipName, "ToCustom"
         #Assert
         $pathToTestFile = Join-Path $filePath "\Custom\test.file"
-        $content = Get-Content -Path $pathToTestFile
+        $content = Invoke-CommandRemoteOrLocal -ScriptBlock {param($path) Get-Content $path} -Session $session -ArgumentList $pathToTestFile
         $content | Should Match "<string>#!#installtool:datapath#!#</string>"
     }
 

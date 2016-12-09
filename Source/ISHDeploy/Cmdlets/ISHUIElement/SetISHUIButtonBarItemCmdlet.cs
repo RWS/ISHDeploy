@@ -31,7 +31,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// <para type="link">Remove-ISHUIButtonBarItem</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHUIButtonBarItem -ISHDeployment $deployment -Logical -ISHType ISHIllustration, ISHMasterDoc -Name "test" -Action "refresh();" -Icon "~/UIFramework/new-tab.job.32x32.png"</code>
+    /// <code>PS C:\>Set-ISHUIButtonBarItem -ISHDeployment $deployment -Logical -ISHType ISHIllustration, ISHMasterDoc -Name "test" -Action "refresh();" -Icon "~/Custom/Images/Custom.png"</code>
     /// <para>This command add/update main menu item.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
@@ -119,13 +119,13 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Version":
-                    buttonBarFile = "LanguageDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary);
+                    buttonBarFile = "TopDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Language":
-                    buttonBarFile = "TopDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
+                    buttonBarFile = "LanguageDocumentButtonbar.xml";
+                    cards = GetCardsArray(ISHType, versionDictionary);
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 default:

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
@@ -57,12 +58,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         bool FolderExists(string path);
 
         /// <summary>
-        /// Copy files with directory and file template.
+        /// Returns a list of files that correspond to search pattern.
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to source directory</param>
         /// <param name="destinationDirectoryPath">The path to source directory</param>
         /// <param name="searchPattern">The search pattern</param>
-        void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern);
+        /// <returns>A string array containing list of required files.</returns>
+        string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern);
 
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
@@ -79,11 +81,25 @@ namespace ISHDeploy.Data.Managers.Interfaces
         string[] ReadAllLines(string filePath);
 
         /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        void WriteHistoryHeader(string filePath, Version version);
+
+        /// <summary>
         /// Creates a new file, write the specified string array to the file, and then closes the file.
         /// </summary>
         /// <param name="filePath">The file to write to.</param>
         /// <param name="lines">The string array to write to the file.</param>
         void WriteAllLines(string filePath, string[] lines);
+
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        void WriteAllText(string filePath, string content);
 
         /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.

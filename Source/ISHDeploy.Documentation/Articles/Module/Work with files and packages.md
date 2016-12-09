@@ -105,7 +105,7 @@ The `Expand-ISHCMPackage` takes an compressed file (package) and copies the cont
 
 Both cmdlet's offer two target locations
 
-- A `Custom` folder in ISHCM. Use this for custom asp,html, javascript and images.
+- A `Custom` folder in ISHCM. Use this for custom asp, html, javascript and images.
 - The `bin` folder in ISHCM. Use this for binary customization files such as an http module.
 
 The following example showcases how to a customization into the ISHCM custom folder. 
@@ -147,9 +147,15 @@ Copy-Item $packageRelativePaths $targetUploadPath
 #endregion
 
 #region Expand customization into ISHCM custom folder
-Expand-ISHCMFile -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
+Expand-ISHCMPackage -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
 #endregion
 ```
+`Copy-ISHCMFile` and `Expand-ISHCMPackage` will first process input parameter meta-language in each file and the "copy" it at the target location. 
+For backwards compatible reasons, the `Copy-ISHCMFile` and `Expand-ISHCMPackage` will process each file, replace input parameters meta-language artifacts and the place in the correct location. 
+The input parameter meta-language is `#!#installtool:PARAMETERNAME#!#` where `PARAMETERNAME` must be in uppercase and it is retrieved from the current deployment's parameters. 
+To get an listing of the parameters and their values execute `Get-ISHDeploymentParameters`. 
+
+For example, if to get to the ISHCM website's url use `#!#installtool:BASEURL#!#/#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#/`. This will be transformed into `https://ish.example.com/ISHCM/`.
 
 ## Modify a file on the deployment without the module
 

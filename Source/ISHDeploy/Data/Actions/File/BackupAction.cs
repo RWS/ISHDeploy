@@ -17,6 +17,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -68,7 +69,26 @@ namespace ISHDeploy.Data.Actions.File
         /// </summary>
         public override void Execute()
         {
-            _fileManager.CopyWithTemplate(_sourceFolderPath, _destinationFolderPath, _template);
+            var files = _fileManager.GetFilesByCustomSearchPattern(_sourceFolderPath, _destinationFolderPath, _template);
+
+            files
+                .ToList()
+                .ForEach(newPath =>
+                {
+                    _fileManager.EnsureDirectoryExists(Path.GetDirectoryName(newPath.Replace(_sourceFolderPath, _destinationFolderPath)));
+
+                    var destinationFilePath = newPath.Replace(_sourceFolderPath, _destinationFolderPath);
+
+                    if (_fileManager.FileExists(destinationFilePath))
+                    {
+                        Logger.WriteVerbose($"File {newPath} has been backuped previously");
+                    }
+                    else
+                    {
+                        _fileManager.Copy(newPath, destinationFilePath);
+                        Logger.WriteVerbose($"File {newPath} was backuped");
+                    }
+                });
         }
     }
 }

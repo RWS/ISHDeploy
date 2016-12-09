@@ -21,6 +21,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace ISHDeploy.Data.Managers
@@ -254,6 +255,16 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Writes string to specified file.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        public void WriteAllText(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
+
+        /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
@@ -280,6 +291,84 @@ namespace ISHDeploy.Data.Managers
                 fileStream.Write(text);
             }
             _logger.WriteVerbose($"The content has been {(append ? "appended" : "written")} to file `{filePath}`");
+        }
+
+        /// <summary>
+        /// Version of History file
+        /// </summary>
+        private readonly string _historyFileVersion = "1.0";
+
+        /// <summary>
+        /// Header params
+        /// </summary>
+        private readonly string _headerParams =
+@"param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
+";
+        /// <summary>
+        /// Create history header
+        /// </summary>
+        private string GetHeader(string name, string currentVersion, string updatedVersion)
+        {
+            return
+ $@"<#ISHDeployScriptInfo
+
+.VERSION {_historyFileVersion}
+
+.MODULE {name}
+
+.CREATEDBYMODULEVERSION {currentVersion}
+
+.UPDATEDBYMODULEVERSION {updatedVersion}
+
+#>
+
+" + _headerParams;
+        }
+
+        /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        public void WriteHistoryHeader(string filePath, Version version)
+        {
+            _logger.WriteDebug($"Write header", filePath);
+
+            EnsureDirectoryExists(Path.GetDirectoryName(filePath));
+
+            string currentContent = String.Empty;
+            if (File.Exists(filePath))
+            {
+                currentContent = File.ReadAllText(filePath);
+            }
+
+            string createdModuleVersion, currentModuleVersion;
+            createdModuleVersion = currentModuleVersion = version.ToString();
+
+            var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION ([\d\.]*)").Groups;
+            if (groups[1].Success != false)
+            { //header already exist
+                createdModuleVersion = groups[1].Value;
+                int found = currentContent.IndexOf(_headerParams);
+                if (found != -1)
+                {
+                    currentContent = currentContent.Substring(found + _headerParams.Length);
+                }
+            }
+
+            var header = GetHeader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
+                createdModuleVersion,
+                currentModuleVersion);
+
+
+            File.WriteAllText(filePath, header + currentContent);
+
+            _logger.WriteVerbose($"The header has been added to file `{filePath}`");
         }
 
         /// <summary>
@@ -500,17 +589,19 @@ namespace ISHDeploy.Data.Managers
         public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
             _logger.WriteDebug("Get list of system entries", searchPattern, path);
-            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories); 
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories);
         }
 
         /// <summary>
-        /// Copy files with directory and file template.
+        /// Returns a list of files that correspond to search pattern.
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to source directory</param>
         /// <param name="destinationDirectoryPath">The path to source directory</param>
         /// <param name="searchPattern">The search pattern</param>
-        public void CopyWithTemplate(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
+        /// <returns>A string array containing list of required files.</returns>
+        public string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
         {
+            _logger.WriteDebug("Get list of files", sourceDirectoryPath, searchPattern);
             Func<string[]> getFiles;
 
             if (string.IsNullOrEmpty(searchPattern))
@@ -518,45 +609,30 @@ namespace ISHDeploy.Data.Managers
                 getFiles = () => Directory.GetFiles(sourceDirectoryPath, "*.*");
             }
             else
-            { 
+            {
                 string directoryTepmlate = Path.GetDirectoryName(searchPattern);
                 string fileTemplate = Path.GetFileName(searchPattern);
 
+                // For directories such as "Author\ASP\bin"
+                if (Directory.Exists(Path.Combine(sourceDirectoryPath, searchPattern))) {
+                    directoryTepmlate = Path.Combine(directoryTepmlate, fileTemplate);
+                    fileTemplate = "";
+                }
+                
                 if (string.IsNullOrEmpty(fileTemplate))
-                {
-                    getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*");
-                }
+                    getFiles = () => Directory.GetFiles(
+                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
+                        "*.*", SearchOption.AllDirectories);
                 else
-                {
-                    if (fileTemplate == "*")
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), "*.*", SearchOption.AllDirectories);
-                    }
-                    else if (fileTemplate.Contains(".") && !fileTemplate.Contains("*"))
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate);
-                    }
-                    else if (fileTemplate.Contains(".") && fileTemplate.Contains("*"))
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate, SearchOption.AllDirectories);
-                    }
-                    else
-                    {
-                        getFiles = () => Directory.GetFiles(Path.Combine(Path.Combine(sourceDirectoryPath, directoryTepmlate), fileTemplate), "*.*");
-                    }
-                }
+                    getFiles = () => Directory.GetFiles(
+                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
+                        fileTemplate);
             }
 
-            string[] files = getFiles();
+            var files = getFiles();
+            _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{sourceDirectoryPath}` has been got");
 
-            files
-                .ToList()
-                .ForEach(newPath =>
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(newPath.Replace(sourceDirectoryPath, destinationDirectoryPath)));
-                        File.Copy(newPath, newPath.Replace(sourceDirectoryPath, destinationDirectoryPath), true);// if already exist we do not copy - it is already backuped
-                        _logger.WriteDebug($"File {newPath} was backuped");
-                    });
+            return files;
         }
     }
 }

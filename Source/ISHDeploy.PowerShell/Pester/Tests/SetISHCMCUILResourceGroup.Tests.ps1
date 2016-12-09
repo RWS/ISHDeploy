@@ -39,7 +39,15 @@ $scriptBlockSetISHCMCUILResourceGroup = {
         $VerbosePreference=$Using:VerbosePreference 
     }  
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHCMCUILResourceGroup -Name $name -Path $path -ISHDeployment $ishDeploy
+
+    if ($name)
+    {
+        Set-ISHCMCUILResourceGroup -Name $name -Path $path -ISHDeployment $ishDeploy
+    }
+    else
+    {
+        Set-ISHCMCUILResourceGroup -Path $path -ISHDeployment $ishDeploy
+    }
 }
 
 $scriptBlockGetHistory = {
@@ -94,7 +102,7 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
-    It "Set-ISHCMCUILResourceGroup creates entry in config filer"{
+    It "Set-ISHCMCUILResourceGroup creates entry in config file"{
 		#Arrange
         New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
@@ -103,6 +111,18 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         RemotePathCheck $extentionLoaderPath | Should Be "True"
 
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
+        $result | Should be "Set"
+    }
+
+    It "Set-ISHCMCUILResourceGroup creates entry in config file with default resource name"{
+		#Arrange
+        New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
+        New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "", "test.js"
+        #Assert
+        RemotePathCheck $extentionLoaderPath | Should Be "True"
+
+        $result = readTargetXML -recourceGroupName "Trisoft.Extensions" -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
 

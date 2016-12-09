@@ -36,7 +36,7 @@ Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 [{ModuleName}](https://www.powershellgallery.com/packages/{ModuleName}/) module is available to install from the [PowerShell galery](https://www.powershellgallery.com/) and requires PowerShell version 4.0. 
 If your operating system does not include this version then install it following the instructions on [technet](http://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx).
 
-To work with the PowerShell galery the **PowerShellGet** module is required. **PowerShellGet** module is included in the PowerShell version 5 installation , therefore no action is necessary.
+To work with the PowerShell gallery the **PowerShellGet** module is required. **PowerShellGet** module is included in the PowerShell version 5 installation , therefore no action is necessary.
 For PowerShell version install the module using the [Package Management](https://www.microsoft.com/en-us/download/details.aspx?id=51451) installer. 
 
 To quickly check your installed PowerShell version execute

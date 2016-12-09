@@ -32,6 +32,23 @@ For example either of the following lines will generate the same entry in the hi
 And the history will be
 
 ```powershell
+<#ISHDeployScriptInfo
+
+.VERSION 1.0
+
+.MODULE {ModuleName}
+
+.CREATEDBYMODULEVERSION 1.2
+
+.UPDATEDBYMODULEVERSION 1.2
+
+#>
+
+param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
 # 20160314
 $deploymentName = "InfoShare"
 Enable-ISHUIContentEditor -ISHDeployment $deploymentName

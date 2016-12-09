@@ -5,7 +5,7 @@ This article explains a possible simpler interaction with the module's cmdlets w
 ## Cmdlets without ISHDeployment parameter. 
 
 All cmdlets with the exception of `Get-ISHDeployment` offer the `-ISHDeployment` parameter to help them target a deployment. 
-When there is only one deployment available then it is possible to ommit the `-ISHDeployment` and the module will automatically use the one.
+When there is only one deployment available then it is possible to omit the `-ISHDeployment` and the module will automatically use the one.
 
 For example lets assume that `Get-ISHDeployment` outputs one deployment
 

@@ -65,9 +65,9 @@ If the service provider can be auto-configured through a WS Federation metadata 
 In the alternative case retrieve the information manually:
 
 - The WS Federation endpoint is `https://ish.example.com/ISHSTS/issue/wsfed` and is also provided by the system on the **Application Integration** page `https://ish.example.com/ISHSTS/appintegration`.
-- The token signing certificate is availabe in the **Key Configuration** administration page `https://ish.example.com/ISHSTS/Admin/KeyConfiguration`. On this page the subject name and the thumbprint are visible but to retrieve the entire public key, you need to retrieve it from the certificate store of the operating system hosting Content Manager.
+- The token signing certificate is available in the **Key Configuration** administration page `https://ish.example.com/ISHSTS/Admin/KeyConfiguration`. On this page the subject name and the thumbprint are visible but to retrieve the entire public key, you need to retrieve it from the certificate store of the operating system hosting Content Manager.
 
-To get a list of which relying parties are availabe use the `Get-ISHSTSRelyingParty`. As with the `Set-ISHSTSRelyingParty` optional parameters for known service providers are supported
+To get a list of which relying parties are available use the `Get-ISHSTSRelyingParty`. As with the `Set-ISHSTSRelyingParty` optional parameters for known service providers are supported
 
 | Service provider  | Parameter |
 | ----------------- | --------- |

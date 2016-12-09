@@ -53,7 +53,7 @@ To register or unregister repositories use the `Register-PSRepository` and `Unre
 
 # Install the module
 
-The module is availabe on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
+The module is available on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
 
 To install the module with administrative rights for all users execute
 ```powershell
@@ -77,7 +77,7 @@ Install-Module {ModuleName} -Force
 Install-Module {ModuleName} -Scope CurrentUser -Force
 ```
 
-# Verify the module presense
+# Verify the module presence
 To verify that the module is installed and check the version execute:
 ```powershell
 Get-Module ISHDeploy.12.0.3 -ListAvailable |Format-Table Name,Version
@@ -105,11 +105,11 @@ Get-Help Get-ISHDeployment -Full
 # The documentation portal
 
 Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 
-[Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
+[Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivalent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
 
 Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
 For example [Work with one or multiple deployments](articles/Module/Work with one or multiple deployments.md) explains how to work with the core cmdlets of the module against a specific deployment. 
 When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in [Work with one deployment](articles/Module/Work with one deployment.md).
 
 # Open source and feedback
-The module's code and the content of this portal is availabe on [github](https://github.com/sdl/{ModuleName}/). 
+The module's code and the content of this portal is available on [github](https://github.com/sdl/{ModuleName}/). 

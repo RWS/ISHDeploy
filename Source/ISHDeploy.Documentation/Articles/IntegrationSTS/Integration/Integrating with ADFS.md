@@ -12,7 +12,7 @@ CopyCodeBlock(_nopublish\IntegrationValues.ADFS.ps1)
 
 There are two kind of integrations:
 1. Only the clients not in the server zone use the **STS** at `adfs.example.com` to authenticate. All clients within the server zone continue using the internal **ISHSTS**.
-2. All clients in the user and server zone use the **STS** at `adfs.example.com` to authenticate. Since the authentication type is **Windows**, we don't need to define the **Actor** crendentials.
+2. All clients in the user and server zone use the **STS** at `adfs.example.com` to authenticate. Since the authentication type is **Windows**, we don't need to define the **Actor** credentials.
 
 ## User zone integration
 

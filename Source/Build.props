@@ -1,16 +1,11 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Major>1</Major>
-    <Minor>1</Minor>
     <Build>$([MSBuild]::Add($([MSBuild]::Multiply(1200, $([MSBuild]::Subtract($([System.DateTime]::UtcNow.Year), 2015)))), $([MSBuild]::Add($([MSBuild]::Multiply(100, $([System.DateTime]::UtcNow.Month))),$([System.DateTime]::UtcNow.Day)))))</Build>
     <AdvBuild>$([System.DateTime]::UtcNow.ToString("HHmm"))</AdvBuild>
     <Revision>0</Revision>
     <ModuleVersion>$(Major).$(Minor).0.$(Revision)</ModuleVersion>
     <ModuleBuildVersion>$(Major).$(Minor).$(Build).$(Revision)</ModuleBuildVersion>
-    <ModuleManifestVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</ModuleManifestVersion>
     <ProductName>ISHDeploy</ProductName>
-    <ReleaseYear>2016</ReleaseYear>
-    <SupportedCMVersion>13.0.0</SupportedCMVersion>
     <ModuleName>$(ProductName).$(SupportedCMVersion)</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
     <ModuleDescription>Deployment automation module for SDL Knowledge Center $(Year) Content Manager $(SupportedCMVersion) (LiveContent Architect, Trisoft InfoShare)</ModuleDescription>
@@ -18,9 +13,35 @@
     <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>SDL plc. All rights reserved.</ModuleCopyright>
     <ModuleGuid>68ae5b26-edc0-453a-a720-ecc99d9b603e</ModuleGuid>
-    <MinPowerShellVersion>3.0</MinPowerShellVersion>
-    <MinCLRVersion>4.0</MinCLRVersion>
-    <MinDotNetVersion>4.5</MinDotNetVersion>
     <DocPortalLink>https://sdl.github.io/$(ProductName)/$(SupportedCMVersion)/</DocPortalLink>
   </PropertyGroup>
+  <Choose>
+    <When Condition=" '$(Configuration)' != 'Release-Publish' ">
+      <PropertyGroup>
+        <ModuleManifestVersion>$(Major).$(Minor).$(Build)$(AdvBuild).$(Revision)</ModuleManifestVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ModuleManifestVersion>$(Major).$(Minor)</ModuleManifestVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition=" '$(SupportedCMVersion)' == '12.0.0' ">
+      <PropertyGroup>
+        <SoftwareCMVersion>12.0.2417.0</SoftwareCMVersion>
+      </PropertyGroup>
+    </When>
+    <When Condition=" '$(SupportedCMVersion)' == '12.0.1' ">
+      <PropertyGroup>
+        <SoftwareCMVersion>12.0.3215.1</SoftwareCMVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <SoftwareCMVersion>TBA</SoftwareCMVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
 </Project>

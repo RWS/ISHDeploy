@@ -28,11 +28,6 @@ namespace ISHDeploy.Validators
     internal class ValidateDeploymentVersion : ValidateArgumentsAttribute
     {
         /// <summary>
-        /// The very first release version of the ISHDeploy module.
-        /// </summary>
-        public static readonly Version ModuleInitVersion = new Version("12.0.3");
-
-        /// <summary>
         /// Performs the validation.
         /// </summary>
         /// <param name="arguments">The instance of the <see cref="ISHDeployment"/>.</param>

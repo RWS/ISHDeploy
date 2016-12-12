@@ -13,9 +13,11 @@ For example lets assume that `Get-ISHDeployment` outputs one deployment
 Get-ISHDeployment|Format-Table Name
 ```
 
-    Name                SoftwareVersion DatabaseType    AccessHostName                                
-    ----                --------------- ------------    --------------                                
-    InfoShare           12.0.2417.0     sqlserver2014   ish.example.com                               
+```text
+Name                SoftwareVersion DatabaseType    AccessHostName                                
+----                --------------- ------------    --------------                                
+InfoShare           {SoftwareCMVersion}     sqlserver2014   ish.example.com                               
+```
 
 In this case the following two invocation of `Get-ISHDeploymentHistory` are both equal
 

@@ -4,13 +4,19 @@
     $ReleaseYear,
     [Parameter(Mandatory=$true)]
     [string]
-    $SupportedCMVersion
+    $SupportedCMVersion,
+    [Parameter(Mandatory=$true)]
+    [string]
+    $SoftwareCMVersion
 )
 
 try
 {
     $moduleName="ISHDeploy.$SupportedCMVersion"
 	Write-Verbose "moduleName=$moduleName"
+
+	$supportedCMVersionMajor=($SupportedCMVersion -split '.')[0]
+	$supportedCMVersionRevision=($SupportedCMVersion -split '.')[2]
     
 	$objPath=Resolve-Path "$PSScriptRoot\..\obj\doc"
 	Write-Verbose "objPath=$objPath"
@@ -24,6 +30,9 @@ try
 		$content=$content -replace "{ModuleName}",$moduleName
         $content=$content -replace "{ReleaseYear}",$ReleaseYear
         $content=$content -replace "{SupportedCMVersion}",$SupportedCMVersion
+        $content=$content -replace "{SupportedCMVersionMajor}",$supportedCMVersionMajor
+        $content=$content -replace "{SupportedCMVersionMinor}",$supportedCMVersionMinor
+        $content=$content -replace "{SoftwareCMVersion}",$SoftwareCMVersion
 		Write-Verbose "Processed $($_.FullName)"
 		
 		Write-Debug "Saving $($_.FullName)"

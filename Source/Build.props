@@ -27,21 +27,4 @@
       </PropertyGroup>
     </Otherwise>
   </Choose>
-  <Choose>
-    <When Condition=" '$(SupportedCMVersion)' == '12.0.0' ">
-      <PropertyGroup>
-        <SoftwareCMVersion>12.0.2417.0</SoftwareCMVersion>
-      </PropertyGroup>
-    </When>
-    <When Condition=" '$(SupportedCMVersion)' == '12.0.1' ">
-      <PropertyGroup>
-        <SoftwareCMVersion>12.0.3215.1</SoftwareCMVersion>
-      </PropertyGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <SoftwareCMVersion>TBA</SoftwareCMVersion>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
 </Project>

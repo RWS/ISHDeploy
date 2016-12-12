@@ -560,20 +560,20 @@ namespace ISHDeploy.Data.Managers
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
-        /// <returns></returns>
-        public List<string> GetFiles(string path, string searchPattern, bool recurse)
+        /// <returns>A string array containing list of required files.</returns>
+        public string[] GetFiles(string path, string searchPattern, bool recurse)
         {
-            List<string> list;
+            string[] list;
             if (recurse)
             {
                 _logger.WriteDebug("Get list of files", searchPattern, path, SearchOption.AllDirectories);
-                list = Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+                list = Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);
                 _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{path}` and in all sub-folders has been got");
             }
             else
             {
                 _logger.WriteDebug("Get list of files", searchPattern, path);
-                list = Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly).ToList();
+                list = Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
                 _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{path}` has been got");
             }
             return list;
@@ -585,7 +585,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="searchOption">Search option.</param>
-        /// <returns></returns>
+        /// <returns>A string array containing list of required file entries.</returns>
         public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
             _logger.WriteDebug("Get list of system entries", searchPattern, path);
@@ -596,17 +596,18 @@ namespace ISHDeploy.Data.Managers
         /// Returns a list of files that correspond to search pattern.
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to source directory</param>
-        /// <param name="destinationDirectoryPath">The path to source directory</param>
         /// <param name="searchPattern">The search pattern</param>
         /// <returns>A string array containing list of required files.</returns>
-        public string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern)
+        public string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string searchPattern)
         {
             _logger.WriteDebug("Get list of files", sourceDirectoryPath, searchPattern);
+            string warningMessage = string.Empty;
+
             Func<string[]> getFiles;
 
             if (string.IsNullOrEmpty(searchPattern))
             {
-                getFiles = () => Directory.GetFiles(sourceDirectoryPath, "*.*");
+                getFiles = () => GetFiles(sourceDirectoryPath, "*.*", false);
             }
             else
             {
@@ -614,23 +615,47 @@ namespace ISHDeploy.Data.Managers
                 string fileTemplate = Path.GetFileName(searchPattern);
 
                 // For directories such as "Author\ASP\bin"
-                if (Directory.Exists(Path.Combine(sourceDirectoryPath, searchPattern))) {
+                if (FolderExists(Path.Combine(sourceDirectoryPath, searchPattern))) {
                     directoryTepmlate = Path.Combine(directoryTepmlate, fileTemplate);
                     fileTemplate = "";
                 }
-                
-                if (string.IsNullOrEmpty(fileTemplate))
-                    getFiles = () => Directory.GetFiles(
-                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
-                        "*.*", SearchOption.AllDirectories);
+
+                var pathToDirectory = Path.Combine(sourceDirectoryPath, directoryTepmlate);
+                if (FolderExists(pathToDirectory))
+                {
+                    if (string.IsNullOrEmpty(fileTemplate))
+                    {
+                        getFiles = () => GetFiles(
+                            pathToDirectory,
+                            "*.*", true);
+                    }
+                    else
+                    {
+                        getFiles = () => GetFiles(
+                            pathToDirectory,
+                            fileTemplate,
+                            false);
+                        warningMessage = $"The directory `{pathToDirectory}` has no files that match to `{fileTemplate}`";
+                    }
+                }
                 else
-                    getFiles = () => Directory.GetFiles(
-                        Path.Combine(sourceDirectoryPath, directoryTepmlate),
-                        fileTemplate);
+                {
+                    getFiles = () => new string[0];
+                    warningMessage = $"The directory `{pathToDirectory}` does not exist";
+                }
             }
 
             var files = getFiles();
-            _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{sourceDirectoryPath}` has been got");
+
+            if (files.Length == 0)
+            {
+                _logger.WriteWarning($"{warningMessage}");
+            }
+            else
+            {
+                _logger.WriteVerbose(
+                    $"The list of all `{searchPattern}` files in folder `{sourceDirectoryPath}` has been got");
+            }
 
             return files;
         }

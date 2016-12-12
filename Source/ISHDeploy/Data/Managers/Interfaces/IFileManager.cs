@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using System.Xml.Linq;
@@ -61,10 +60,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Returns a list of files that correspond to search pattern.
         /// </summary>
         /// <param name="sourceDirectoryPath">The path to source directory</param>
-        /// <param name="destinationDirectoryPath">The path to source directory</param>
         /// <param name="searchPattern">The search pattern</param>
         /// <returns>A string array containing list of required files.</returns>
-        string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string destinationDirectoryPath, string searchPattern);
+        string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string searchPattern);
 
         /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
@@ -227,8 +225,8 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
-        /// <returns></returns>
-        List<string> GetFiles(string path, string searchPattern, bool recurse);
+        /// <returns>A string array containing list of required files.</returns>
+        string[] GetFiles(string path, string searchPattern, bool recurse);
 
         /// <summary>
         /// Gets list of system entries
@@ -236,7 +234,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="searchOption">Search option.</param>
-        /// <returns></returns>
+        /// <returns>A string array containing list of required file entries.</returns>
         string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
     }
 }

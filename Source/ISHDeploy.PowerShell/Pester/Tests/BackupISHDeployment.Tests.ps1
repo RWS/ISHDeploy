@@ -158,15 +158,22 @@ Describe "Testing Backup-ISHDeployment"{
         $listOfBackupFiles.Count | Should be 3
     }
 
-    It "Backup-ISHDeployment backup the same file twice"{
+    It "Backup-ISHDeployment when the file is not found it should raise the warning"{
 		#Arrange
         $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP") "Web.config" $false
         #Action
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web.config", "Web"
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web.config", "Web"
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web2.config", "Web" -WarningVariable Warning
         #Assert
-        $listOfBackupFiles = GetListOfFiles (Join-Path $pathToBackupWebFolder "Author\ASP") "Web.config"
+        $Warning | should Match "has no files that match to" 
+    }
 
-        Compare-Object $listOfBackupFiles $listOfOriginalFiles | Should be $null
+    It "Backup-ISHDeployment when the folder is not found it should raise the warning"{
+		#Arrange
+        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP") "Web.config" $false
+        #Action
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP2\", "Web" -WarningVariable Warning
+        #Assert
+        $expectedWarning = "does not exist"
+        $Warning | should Match $expectedWarning
     }
 }

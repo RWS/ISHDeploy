@@ -107,6 +107,13 @@ To show the help of `Get-ISHDeployment` execute
 Get-Help Get-ISHDeployment -Full
 ``` 
 
+## Administrator privileges required
+
+The purpose of the module is to modify the files of a deployment.
+For this reason, most cmdlets require elevated administrator privileges. 
+Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
+All cmdlets with verb `Get-` such as `Get-ISHDeployment` are exempt from this requirement as they do not modify an files.
+
 # The documentation portal
 
 Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 

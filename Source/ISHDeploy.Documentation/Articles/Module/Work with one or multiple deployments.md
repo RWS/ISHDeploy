@@ -89,6 +89,23 @@ CopyCodeBlockAndLink(FeatureToggle.ps1)
 and then again `Get-ISHDeploymentHistory -ISHDeployment $deploymentName` outputs as an example of a history file.
 
 ```powershell
+<#ISHDeployScriptInfo
+
+.VERSION 1.0
+
+.MODULE {ModuleName}
+
+.CREATEDBYMODULEVERSION 1.2
+
+.UPDATEDBYMODULEVERSION 1.2
+
+#>
+
+param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
 # 20160314
 $deploymentName = "InfoShare"
 Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "licensekey" -Domain "ish.example.com"

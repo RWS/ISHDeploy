@@ -164,7 +164,7 @@ Describe "Testing Backup-ISHDeployment"{
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web2.config", "Web" -WarningVariable Warning
         #Assert
-        $Warning | should Match "Files not found" 
+        $Warning | should Match "has no files that match to" 
     }
 
     It "Backup-ISHDeployment when the folder is not found it should raise the warning"{
@@ -173,6 +173,7 @@ Describe "Testing Backup-ISHDeployment"{
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP2\", "Web" -WarningVariable Warning
         #Assert
-        $Warning | should Match "Files not found" 
+        $expectedWarning = "does not exist"
+        $Warning | should Match $expectedWarning
     }
 }

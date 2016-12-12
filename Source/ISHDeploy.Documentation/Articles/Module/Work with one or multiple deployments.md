@@ -16,12 +16,14 @@ $deployments=Get-ISHDeployment
 ```powershell
 $deployments|Format-Table Name,SoftwareVersion,DatabaseType,AccessHostname
 ```
-    Name                SoftwareVersion DatabaseType    AccessHostName                                
-    ----                --------------- ------------    --------------                                
-    InfoShare           12.0.2417.0     sqlserver2014   ish.example.com                               
-    InfoShareSQLADFSU   12.0.2417.0     sqlserver2014   ish.example.com                               
-    InfoShareSQLADFSW   12.0.2417.0     sqlserver2014   ish.example.com                               
-    InfoShareSQLW       12.0.2417.0     sqlserver2014   ish.example.com                               
+
+```text
+Name                SoftwareVersion DatabaseType    AccessHostName                                
+----                --------------- ------------    --------------                                
+InfoShare           {SoftwareCMVersion}     sqlserver2014   ish.example.com                               
+InfoShareExtra1     {SoftwareCMVersion}     sqlserver2014   ish.example.com                               
+InfoShareExtra2     {SoftwareCMVersion}     sqlserver2014   ish.example.com                               
+```
  
 ### Query the server for specific deployment
 To query for one specific deployment use the following command when the `projectsuffix` is empty.
@@ -122,10 +124,10 @@ osuser                                   osuser
 ospassword                               *******
 ...
 databasetype                             sqlserver2014
-apppath                                  C:\InfoShare\12.0.1\ISH
-webpath                                  C:\InfoShare\12.0.1\ISH
-datapath                                 C:\InfoShare\12.0.1\ISH
-workspacepath                            C:\InfoShare\12.0.1\_Workspace
+apppath                                  C:\InfoShare\{SupportedCMVersion}\ISH
+webpath                                  C:\InfoShare\{SupportedCMVersion}\ISH
+datapath                                 C:\InfoShare\{SupportedCMVersion}\ISH
+workspacepath                            C:\InfoShare\{SupportedCMVersion}\_Workspace
 infoshareauthorwebappname                ishcmsql
 infosharewswebappname                    ishwssql
 infosharestswebappname                   ishstssql

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)ModuleVersion.props" />
+  <Import Project="$(SolutionDir)ISHVersion.props" />
   <Import Project="$(SolutionDir)Build.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -132,7 +134,7 @@
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\commands" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles" -Verbose
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -Verbose
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -SoftwareCMVersion "$(SoftwareCMVersion)" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-Changelog.ps1" -ExportPath "$(ProjectDir)obj\doc" -Verbose</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" />

@@ -6,12 +6,14 @@
 [{ModuleName}](https://www.powershellgallery.com/packages/{ModuleName}/) requires PowerShell version 4.0 installed in the operating system.
 
 To quickly check your installed PowerShell version execute
+
 ```powershell
 $PSVersionTable
 ```
 
 A version 4.0 console would return 
-```
+
+```text
 Name                           Value                                                                                   
 ----                           -----                                                                                   
 PSVersion                      4.0                                                                                     
@@ -42,8 +44,7 @@ Get-PSRepository
 ```
 and the outcome should be
 
-```powershell
-
+```text
 Name                      PackageManagementProvider InstallationPolicy   SourceLocation                                
 ----                      ------------------------- ------------------   --------------                                
 PSGallery                 NuGet                     Untrusted            https://www.powershellgallery.com/api/v2/     
@@ -56,11 +57,13 @@ To register or unregister repositories use the `Register-PSRepository` and `Unre
 The module is available on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
 
 To install the module with administrative rights for all users execute
+
 ```powershell
 Install-Module {ModuleName}
 ```
 
 To install only for your user execute
+
 ```powershell
 Install-Module {ModuleName} -Scope CurrentUser
 ```
@@ -79,21 +82,23 @@ Install-Module {ModuleName} -Scope CurrentUser -Force
 
 # Verify the module presence
 To verify that the module is installed and check the version execute:
+
 ```powershell
-Get-Module ISHDeploy.13.0.0 -ListAvailable |Format-Table Name,Version
+Get-Module ISHDeploy.{SupportedCMVersion} -ListAvailable |Format-Table Name,Version
 ```
 
-If the module is available then the result should be one line such as
-```
+if the module is available then the result should be one line such as
+
+```text
 Name                                                        Version
 ----                                                        -------
-ISHDeploy.13.0.0                                            0.1
+ISHDeploy.{SupportedCMVersion}                                            0.1
 ```
 
 # Available cmdlets
 To retrieve all cmdlets offered by the module then execute:
 ```powershell
-Get-Command -Module ISHDeploy.13.0.0 | Select-Object Name
+Get-Command -Module ISHDeploy.{SupportedCMVersion} | Select-Object Name
 ```
 
 Each cmdlet offers support for the `Get-Help` cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 

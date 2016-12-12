@@ -2,6 +2,7 @@
   <PropertyGroup>
     <ReleaseYear>2017</ReleaseYear>
     <SupportedCMVersion>13.0.0</SupportedCMVersion>
+    <SoftwareCMVersion>TBA</SoftwareCMVersion>
     <MinPowerShellVersion>4.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>

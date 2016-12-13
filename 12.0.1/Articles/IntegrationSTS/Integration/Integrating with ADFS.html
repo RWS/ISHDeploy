@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Integrating with ADFS </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Integrating with ADFS ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -80,45 +80,39 @@ $wsTrustMexUri=&quot;https://adfs.example.com/adfs/services/trust/mex&quot;
 $bindingType=&quot;WindowsMixed&quot;
 #Token signing thumbprint
 $tokenSigningCertificateThumbprint=&quot;2509fb22f7671aea2d0a28ae80516f390de0ca21&quot;
-</code></pre>
-<h1 id="implementing-the-integration-on-content-manager">Implementing the integration on Content Manager</h1>
+</code></pre><h1 id="implementing-the-integration-on-content-manager">Implementing the integration on Content Manager</h1>
 <p>There are two kind of integrations:</p>
 <ol>
 <li>Only the clients not in the server zone use the <strong>STS</strong> at <code>adfs.example.com</code> to authenticate. All clients within the server zone continue using the internal <strong>ISHSTS</strong>.</li>
-<li>All clients in the user and server zone use the <strong>STS</strong> at <code>adfs.example.com</code> to authenticate. Since the authentication type is <strong>Windows</strong>, we don&#39;t need to define the <strong>Actor</strong> crendentials.</li>
+<li>All clients in the user and server zone use the <strong>STS</strong> at <code>adfs.example.com</code> to authenticate. Since the authentication type is <strong>Windows</strong>, we don&#39;t need to define the <strong>Actor</strong> credentials.</li>
 </ol>
 <h2 id="user-zone-integration">User zone integration</h2>
 <h3 id="set-deploymentname-variable">Set deploymentName variable</h3>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<p>Then</p>
+</code></pre><p>Then</p>
 <pre><code class="lang-powershell"># Set WS Federation integration
 Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
 # Set WS Trust integration
 Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<h2 id="all-zone-integration">All zone integration</h2>
-<h3 id="set-deploymentname-variable-0">Set deploymentName variable</h3>
+</code></pre><h2 id="all-zone-integration">All zone integration</h2>
+<h3 id="set-deploymentname-variable-1">Set deploymentName variable</h3>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<p>This is an example for a windows authentication</p>
+</code></pre><p>This is an example for a windows authentication</p>
 <pre><code class="lang-powershell"># Set WS Federation integration
 Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
 # Set WS Trust integration
 Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<h1 id="implement-the-integration-on-adfs">Implement the integration on ADFS</h1>
+</code></pre><h1 id="implement-the-integration-on-adfs">Implement the integration on ADFS</h1>
 <p>The <code>Save-ISHIntegrationSTSConfigurationPackage</code> cmdlet supports a parameter <code>-ADFS</code> that generates an extra script that can configure the ADFS server remotely.</p>
 <pre><code class="lang-powershell">$filename=&quot;$(Get-Date -Format &quot;yyyyMMdd&quot;).ADFSIntegrationISH.zip&quot;
 Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename -ADFS
-</code></pre>
-<p>Inside the zip file you will find two files</p>
+</code></pre><p>Inside the zip file you will find two files</p>
 <ul>
 <li><code>CM Security Token Service Requirements.md</code> that is a markdown file with the specific deployment information.</li>
 <li><code>Invoke-ADFSIntegrationISH.ps1</code> that can <strong>set</strong> or <strong>remove</strong> the necessary relying party entries on a target ADFS.</li>
@@ -126,40 +120,41 @@ Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileN
 </ul>
 <p>If <strong>ADFS01</strong> is the computer name for the ADFS server then to set the relying parties execute this</p>
 <pre><code class="lang-powershell">&amp; .\Invoke-ADFSIntegrationISH.ps1 -Computer ADFS01 -Action Set
-</code></pre>
-<p>To remove the relying parties execute this</p>
+</code></pre><p>To remove the relying parties execute this</p>
 <pre><code class="lang-powershell">&amp; .\Invoke-ADFSIntegrationISH.ps1 -Computer ADFS01 -Action Remove
-</code></pre>
-<h1 id="updating-the-encryption-certificate-on-adfs">Updating the encryption certificate on ADFS</h1>
+</code></pre><h1 id="updating-the-encryption-certificate-on-adfs">Updating the encryption certificate on ADFS</h1>
 <p>When invoking <code>Invoke-ADFSIntegrationISH.ps1</code> with <code>-Action Set</code>, it will first search for existing relying parties. When found it will update them with the encryption certificate.</p>
 <p>To keep the relying parties updated, then</p>
 <ol>
 <li>Use <code>Save-ISHIntegrationSTSConfigurationPackage</code> to get the latest integration script</li>
 <li>Execute <code>Invoke-ADFSIntegrationISH.ps1</code> with <code>-Action Set</code></li>
 </ol>
-<h1 id="enable-authentication-with-content-manager-internal-users-">Enable authentication with Content Manager internal users.</h1>
+<h1 id="enable-authentication-with-content-manager-internal-users">Enable authentication with Content Manager internal users.</h1>
 <p>While the deployment is integrated with an ADFS, it could be requested that the system allows access for internal users without modifying the integration. 
 An internal user is one that has username and password in the Content Manager database and the credential will be validated by ISHSTS.</p>
 <pre><code class="lang-powershell"># Just Content Manager (ISH)
 Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
-</code></pre>
-<p>If the deployment is integrated with Content Delivery then provide the necessary values like this:</p>
+</code></pre><p>If the deployment is integrated with Content Delivery then provide the necessary values like this:</p>
 <pre><code class="lang-powershell"># When the deployment is integrated with a Content Delivery (LC)
 Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost &quot;lc.example.com&quot; -LCWebAppName &quot;ContentDelivery&quot;
-</code></pre>
-<p><code>Enable-ISHIntegrationSTSInternalAuthentication</code> will enable a special url at <code>https://ish.example.com/ISHWS/Internal/</code>. 
+</code></pre><p><code>Enable-ISHIntegrationSTSInternalAuthentication</code> will enable a special url at <code>https://ish.example.com/ISHWS/Internal/</code>. 
 Provide this url to any user that wishes to login with internal users.</p>
 <p>To disable this mode use <code>Disable-ISHIntegrationSTSInternalAuthentication</code>.</p>
 <pre><code class="lang-powershell">Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

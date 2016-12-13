@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Resetting ISHSTS </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Resetting ISHSTS ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -69,8 +69,7 @@
 <p>To help reset ISHSTS the module offers the <code>Reset-ISHSTS</code> cmdlet.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
 Reset-ISHSTS -ISHDeployment $deploymentName
-</code></pre>
-<p><code>Reset-ISHSTS</code> is not the same as <code>Undo-ISHDeployment</code>. As a small comparison </p>
+</code></pre><p><code>Reset-ISHSTS</code> is not the same as <code>Undo-ISHDeployment</code>. As a small comparison </p>
 <ul>
 <li><code>Reset-ISHSTS</code> deletes only the SQL compact database. When the database is rebuild, all changes applies from other cmdlets with the exception of <code>Set-ISHSTSRelyingParty</code> are respected. 
 <code>Set-ISHSTSRelyingParty</code> configures ISHSTS for 3rd party integrations and that information will be lost with the reset. To configure the 3rd party systems just execute the commands with <code>Set-ISHSTSRelyingParty</code> as descussed in <a href="Integrating%203rd%20party%20service%20providers%20with%20ISHSTS.html">Integrating 3rd party service providers with ISHSTS</a>.</li>
@@ -82,9 +81,15 @@ Reset-ISHSTS -ISHDeployment $deploymentName
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

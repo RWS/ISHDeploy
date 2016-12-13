@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Implementing light weight Windows Authentication </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Implementing light weight Windows Authentication ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -69,13 +69,11 @@
 <p>Content Manager is installed on <code>ish.example.com</code> and ISHSTS is installed on <code>ish.example.com/ISHSTS</code>. </p>
 <p>Set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<h1 id="enable-windows-authentication">Enable Windows Authentication</h1>
+</code></pre><h1 id="enable-windows-authentication">Enable Windows Authentication</h1>
 <p>Then configure <strong>ISHSTS</strong> to provide windows authentication</p>
 <pre><code class="lang-powershell"># Set ISHSTS to window authentication
 Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType &quot;Windows&quot;
-</code></pre>
-<p><code>Set-ISHSTSConfiguration</code> will raise a warning when the connection combines one all of the following conditions:</p>
+</code></pre><p><code>Set-ISHSTSConfiguration</code> will raise a warning when the connection combines one all of the following conditions:</p>
 <ul>
 <li>That integrated database is a SQL Server</li>
 <li>The connection string used integrated authentication instead of a username/password combination.</li>
@@ -90,8 +88,7 @@ Save-ISHIntegrationDBSTSSQLServerConfiguration -ISHDeployment $deploymentName -T
 
 # Save the sql script to run directly on SQL Server
 Save-ISHIntegrationDBSTSSQLServerConfiguration -ISHDeployment $deploymentName -Type SQL -FileName &quot;GrantPermissions.sql&quot;
-</code></pre>
-<p>If you saved a sql script then execute that on the same SQL Server referenced by the connection string. </p>
+</code></pre><p>If you saved a sql script then execute that on the same SQL Server referenced by the connection string. </p>
 <p>The saved PowerShell script embeds the SQL server name and database and uses windows authentication to access the database. 
 To execute it there are two conditions:</p>
 <ul>
@@ -100,19 +97,24 @@ To execute it there are two conditions:</p>
 <blockquote><p>WARNING: Current implementation of .ps1 works only with windows authentication.</p>
 </blockquote>
 <ul>
-<li><a href="https://msdn.microsoft.com/en-us/library/hh245198.aspx">SQLPS</a> PowerShell modules is installed. The module is normally installed allong <strong>SQL Server Management Studio</strong>.</li>
+<li><a href="https://msdn.microsoft.com/en-us/library/hh245198.aspx">SQLPS</a> PowerShell modules is installed. The module is normally installed along <strong>SQL Server Management Studio</strong>.</li>
 </ul>
 <p>If all conditions are satisfied then executing the script completes the task.</p>
 <pre><code class="lang-powershell">&amp; .\Invoke-GrantPermissionsOnSQLServer.ps1
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

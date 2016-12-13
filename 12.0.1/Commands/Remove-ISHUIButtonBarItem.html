@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Move-ISHUIEventMonitorTab </title>
+    <title>Remove-ISHUIButtonBarItem </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Move-ISHUIEventMonitorTab ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="title" content="Remove-ISHUIButtonBarItem ">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -62,104 +62,100 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="move-ishuieventmonitortab">Move-ISHUIEventMonitorTab</h1>
+              <h1 id="remove-ishuibuttonbaritem">Remove-ISHUIButtonBarItem</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Manipulates with definitions in EventMonitorTab.</p>
+<p>Remove main menu item.</p>
 <h2 id="syntax">SYNTAX</h2>
-<h3 id="unnamed-parameter-set-1">UNNAMED_PARAMETER_SET_1</h3>
-<pre><code>Move-ISHUIEventMonitorTab -Label &lt;string&gt; [-Last] -ISHDeployment &lt;ISHDeployment&gt;
-</code></pre><h3 id="unnamed-parameter-set-2">UNNAMED_PARAMETER_SET_2</h3>
-<pre><code>Move-ISHUIEventMonitorTab -Label &lt;string&gt; [-First] -ISHDeployment &lt;ISHDeployment&gt;
-</code></pre><h3 id="unnamed-parameter-set-3">UNNAMED_PARAMETER_SET_3</h3>
-<pre><code>Move-ISHUIEventMonitorTab -Label &lt;string&gt; -After &lt;string&gt; -ISHDeployment &lt;ISHDeployment&gt;
+<h3 id="logical">Logical</h3>
+<pre><code>Remove-ISHUIButtonBarItem -Name &lt;String&gt; [-Logical] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="version">Version</h3>
+<pre><code>Remove-ISHUIButtonBarItem -Name &lt;String&gt; [-Version] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="language">Language</h3>
+<pre><code>Remove-ISHUIButtonBarItem -Name &lt;String&gt; [-Language] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>The Move-ISHUIEventMonitorTab cmdlet moves Tabs definitions in Content Manager deployment.</p>
+<p>The Remove-ISHUIButtonBarItem cmdlet remove exist menu item.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="-example-1-">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label &quot;Publish&quot; -First
-</code></pre><p>Moves definition of the &quot;Publish&quot; to the top.</p>
-<h3 id="-example-2-">----------  EXAMPLE 2  ----------</h3>
-<pre><code>PS C:\&gt;Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label &quot;Publish&quot; -Last
-</code></pre><p>Moves definition of the &quot;Publish&quot; to the bottom.</p>
-<h3 id="-example-3-">----------  EXAMPLE 3  ----------</h3>
-<pre><code>PS C:\&gt;Move-ISHUIEventMonitorTab -ISHDeployment $deployment -Label &quot;Translation&quot; -After &quot;Publish&quot;
-</code></pre><p>Moves definition of the &quot;Translation&quot; after &quot;Publish&quot;.</p>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
+<pre><code>PS C:\&gt;Remove-ISHUIButtonBarItem -ISHDeployment $deployment -Logical -Name &quot;Test&quot;
+</code></pre><p>This command remove main menu item.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-label">-Label</h3>
-<p>Label of menu item.</p>
-<pre><code class="lang-yaml">Type: string
+<h3 id="-name">-Name</h3>
+<p>Name of Button Bar.</p>
+<pre><code class="lang-yaml">Type: String
 Parameter Sets: (All)
 Aliases: 
 
 Required: True
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-last">-Last</h3>
-<p>Menu item move to the last position.</p>
+</code></pre><h3 id="-logical">-Logical</h3>
+<p>Type &quot;Logical&quot; especially for FolderButtonbar.xml.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: UNNAMED_PARAMETER_SET_1
-Aliases: 
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre>
-<h3 id="-first">-First</h3>
-<p>Menu item move to the first position.</p>
-<pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: UNNAMED_PARAMETER_SET_2
-Aliases: 
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre>
-<h3 id="-after">-After</h3>
-<p>Menu item move position.</p>
-<pre><code class="lang-yaml">Type: string
-Parameter Sets: UNNAMED_PARAMETER_SET_3
+Parameter Sets: Logical
 Aliases: 
 
 Required: True
 Position: Named
-Default value: 
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-ishdeployment">-ISHDeployment</h3>
+</code></pre><h3 id="-version">-Version</h3>
+<p>Type &quot;Version&quot; especially for LanguageDocumentButtonbar.xml.</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: Version
+Aliases: 
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-language">-Language</h3>
+<p>Type &quot;Language&quot; especially for TopDocumentButtonbar.xml.</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: Language
+Aliases: 
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
 Parameter Sets: (All)
 Aliases: 
 
-Required: True
+Required: False
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h2 id="inputs">INPUTS</h2>
+</code></pre><h2 id="inputs">INPUTS</h2>
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="Set-ISHUIEventMonitorTab.html">Set-ISHUIEventMonitorTab</a></p>
-<p><a href="Remove-ISHUIEventMonitorTab.html">Remove-ISHUIEventMonitorTab</a></p>
+<p><a href="Move-ISHUIButtonBarItem.html">Move-ISHUIButtonBarItem</a></p>
+<p><a href="Set-ISHUIButtonBarItem.html">Set-ISHUIButtonBarItem</a></p>
 
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

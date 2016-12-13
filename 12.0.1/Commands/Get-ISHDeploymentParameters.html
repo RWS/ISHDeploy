@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Get-ISHDeploymentParameters </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Get-ISHDeploymentParameters ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -67,28 +67,29 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Acquire the input parameters of a specific deployment.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Get-ISHDeploymentParameters [-Original] [-Changed] [-ShowPassword] -ISHDeployment &lt;ISHDeployment&gt;
+<pre><code>Get-ISHDeploymentParameters [-Original] [-Changed] [-ShowPassword] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Get-ISHDeploymentParameters cmdlet gets parameters for Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="-example-1-">----------  EXAMPLE 1  ----------</h3>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment
 </code></pre><p>This command gets the input parameters of Content Manager deployment with hidden passwords.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="-example-2-">----------  EXAMPLE 2  ----------</h3>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -ShowPassword
 </code></pre><p>This command gets the input parameters of &quot;InfoShare&quot; deployment with real passwords.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="-example-3-">----------  EXAMPLE 3  ----------</h3>
+<h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -Original
 </code></pre><p>This command return original values (from the backup folder) of &quot;InfoShare&quot; deployment.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="-example-4-">----------  EXAMPLE 4  ----------</h3>
+<h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -Changed
 </code></pre><p>This command return only changed parameters of &quot;InfoShare&quot; deployment.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-original">-Original</h3>
+<p>Original flag will return initial parameters.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
@@ -98,8 +99,8 @@ Position: 0
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-changed">-Changed</h3>
+</code></pre><h3 id="-changed">-Changed</h3>
+<p>Changed flag will return changed parameters only.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
@@ -109,8 +110,8 @@ Position: 0
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-showpassword">-ShowPassword</h3>
+</code></pre><h3 id="-showpassword">-ShowPassword</h3>
+<p>ShowPassword flag will show real passwords.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
@@ -120,20 +121,18 @@ Position: 0
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-ishdeployment">-ISHDeployment</h3>
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
 Parameter Sets: (All)
 Aliases: 
 
-Required: True
+Required: False
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h2 id="inputs">INPUTS</h2>
+</code></pre><h2 id="inputs">INPUTS</h2>
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
@@ -146,9 +145,15 @@ Accept wildcard characters: False
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

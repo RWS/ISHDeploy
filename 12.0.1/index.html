@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Introduction </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Introduction ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -93,17 +93,15 @@ With code as configuration, PowerShell authors develop scripts that configure Co
 <pre><code class="lang-powershell">$deploymentName = &quot;InfoShare&quot;
 Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey &quot;licensekey&quot; -Domain &quot;ish.example.com&quot;
 Enable-ISHUIContentEditor -ISHDeployment $deploymentName
-</code></pre>
-<h1 id="getting-started">Getting started</h1>
+</code></pre><h1 id="getting-started">Getting started</h1>
 <p><a href="https://www.powershellgallery.com/packages/ISHDeploy.12.0.1/">ISHDeploy.12.0.1</a> module is available to install from the <a href="https://www.powershellgallery.com/">PowerShell galery</a> and requires PowerShell version 4.0. 
 If your operating system does not include this version then install it following the instructions on <a href="http://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx">technet</a>.</p>
-<p>To work with the PowerShell galery the <strong>PowerShellGet</strong> module is required. <strong>PowerShellGet</strong> module is included in the PowerShell version 5 installation , therefore no action is necessary.
+<p>To work with the PowerShell gallery the <strong>PowerShellGet</strong> module is required. <strong>PowerShellGet</strong> module is included in the PowerShell version 5 installation , therefore no action is necessary.
 For PowerShell version install the module using the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=51451">Package Management</a> installer. </p>
 <p>To quickly check your installed PowerShell version execute</p>
 <pre><code class="lang-powershell">$PSVersionTable
-</code></pre>
-<p>A version 4.0 console would return </p>
-<pre><code>Name                           Value                                                                                   
+</code></pre><p>A version 4.0 console would return </p>
+<pre><code class="lang-text">Name                           Value                                                                                   
 ----                           -----                                                                                   
 PSVersion                      4.0                                                                                     
 WSManStackVersion              3.0                                                                                     
@@ -114,70 +112,92 @@ PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0}
 PSRemotingProtocolVersion      2.2
 </code></pre><p>To install the ISHDeploy.12.0.1 module execute</p>
 <pre><code class="lang-powershell">Install-Module ISHDeploy.12.0.1 -Scope CurrentUser
-</code></pre>
-<p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
-<h1 id="what-is-new-in-this-release-">What is new in this release?</h1>
+</code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
+<h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-1-1">stable-1.1</h2>
-<p><strong>Summary of release</strong></p>
-<ul>
-<li>Control internal user authentication when the deployment is integrated with an external security token service (STS)</li>
-<li>Fine tune Cmdlets</li>
-<li>Bug fixing</li>
-<li>Solve previous known issue:<blockquote><p>When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the <code>Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows</code>.</p>
-</blockquote>
-</li>
-</ul>
-<p><strong>Cmdlets and documentatin changes</strong></p>
+<h2 id="stable-12">stable-1.2</h2>
 <ol>
 <li>General <ol>
 <li>Cmdlets<ul>
-<li>Less warning messages. Warnings are issued when it�s important to share. <strong>[Update]</strong></li>
-<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
+<li>For all cmdlets the &#39;-ISHDeployment&#39; parameter is now optional and calculated when omitted with the following reasoning:  <strong>[Update]</strong><ul>
+<li>When there is only one available deployment detected then this one will be used.</li>
+<li>Where there are more than one available deployments detected then the cmdlet will throw an error.</li>
 </ul>
 </li>
-<li>Documentation - Commands<ul>
-<li>Related links render as links and provide a quicker navigation experience. <strong>[Update]</strong></li>
+<li>Improved cmdlet behavior when administrator privileges are required.</li>
+<li>History file is enhanced with script info meta language. </li>
+</ul>
+</li>
+<li>Documentation<ul>
+<li>Renamed items in the top bar to <strong>Tutorials</strong> and <strong>Cmdlet Documentation</strong>. <strong>[Update]</strong></li>
+<li>New items in the top bar for access to topics such as <strong>Getting started</strong> and <strong>Release notes</strong>. <strong>[Update]</strong></li>
+<li>New icon in top bar. <strong>[Update]</strong></li>
+<li>New tutorial on how to work with one deployment. <strong>[Update]</strong></li>
+<li>Renamed and extended tutorial <strong>Work with files</strong> to <strong>Work with files and packages</strong>. <strong>[Update]</strong></li>
+<li><strong>Getting Started</strong> has new information about required elevated administrator privileges. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Working with ISHCM web UI features<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Copy-ISHCMFile</code>. <strong>[New]</strong></li>
+<li><code>Expand-ISHCMPackage</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHCMCUILResourceGroup</code>. <strong>[New]</strong></li>
+<li><code>Backup-ISHDeployment</code>. <strong>[New]</strong></li>
+<li>Renamed cmdlets for event monitor:  <strong>[Update]</strong><ul>
+<li>From <code>Set-ISHUIEventMonitorTab</code> to <code>Set-ISHUIEventMonitorMenuBarItem</code>.</li>
+<li>From <code>Move-ISHUIEventMonitorTab</code> to <code>Move-ISHUIEventMonitorMenuBarItem</code>.</li>
+<li>From <code>Remove-ISHUIEventMonitorTab</code> to <code>Remove-ISHUIEventMonitorMenuBarItem</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Documentation<ul>
+<li>Reorganize former &quot;Configuring features using the module&quot; tutorial into three more specialized. <strong>[Update]</strong><ul>
+<li>Toggling Web Components. <strong>[Update]</strong></li>
+<li>Configuring ISHCM web UI menu bars. <strong>[Update]</strong></li>
+<li>Configuring ISHCM web UI button bars. <strong>[New]</strong></li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
 </li>
 <li>Integration STS<ol>
-<li>Cmdlets<ul>
-<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
-<li><code>Enable-ISHIntegrationSTSInternalAuthentication</code> and  <code>Disable-ISHIntegrationSTSInternalAuthentication</code> enable access for internal user authentication. <strong>[New]</strong></li>
-</ul>
-</li>
-<li>Documentation - Articles<ul>
-<li>Security Token Service\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
-<li>Security Token Service\ADFS\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
-</ul>
-</li>
-</ol>
-</li>
-<li>ISHSTS<ol>
-<li>Cmdlets<ul>
-<li><code>Set-ISHSTSConfiguration</code> will force the initialization of ISHSTS&#39;s database. <strong>[Update]</strong></li>
-<li><code>Set-ISHSTSConfiguration</code> does check - is Windows Authentication feature installed on environment or not. <strong>[Update]</strong> </li>
-<li><code>Set-ISHSTSRelyingParty</code> parameter <code>-Realm</code> is required to be a proper url with schema. <strong>[Update]</strong></li>
+<li>Documentation<ul>
+<li>Fixed invalid parameter reference in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
+<li>Added remarks for the importance of execution order in PowerShell examples in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
 </ul>
 </li>
 </ol>
 </li>
 </ol>
-<p><strong>Known issues</strong></p>
-<ul>
-<li>Due to internal dependencies to the product, avoid sequencing first <code>Set-ISHIntegrationSTSCertificate</code> and then <code>Set-ISHSTSConfiguration</code> because they will break the deployment.</li>
-</ul>
 <p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

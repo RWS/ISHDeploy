@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Integrating with Security Token Service (STS) </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Integrating with Security Token Service (STS) ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -62,7 +62,7 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="integrating-with-security-token-service-sts-">Integrating with Security Token Service (STS)</h1>
+              <h1 id="integrating-with-security-token-service-sts">Integrating with Security Token Service (STS)</h1>
               
 <p>This article explains how to use the module&#39;s commandlets to integrate with a <strong>Security Token Service</strong> also referred to as <strong>STS</strong>.</p>
 <h1 id="acknowledgements">Acknowledgements</h1>
@@ -88,14 +88,12 @@ $wsTrustMexUri=&quot;https://sts.example.com/wstrust/mex&quot;
 $bindingType=&quot;UsernameMixed&quot;
 #Token signing thumbprint
 $tokenSigningCertificateThumbprint=&quot;2509fb22f7671aea2d0a28ae80516f390de0ca21&quot;
-</code></pre>
-<p>When the authentication type is Windows then the values change like this</p>
+</code></pre><p>When the authentication type is Windows then the values change like this</p>
 <pre><code class="lang-powershell">#WS Trust endpoint
 $wsTrustUri=&quot;sts.example.com/wstrust/WindowsMixed&quot;
 #The authentication type
 $bindingType=&quot;WindowsMixed&quot;
-</code></pre>
-<p>STS required knowledge of the following information:</p>
+</code></pre><p>STS required knowledge of the following information:</p>
 <ul>
 <li>The endpoints to create relying parties for<ul>
 <li>ISHCM e.g. <code>https://ish.example.com/ISHCM</code></li>
@@ -117,21 +115,18 @@ $bindingType=&quot;WindowsMixed&quot;
 <h3 id="set-deploymentname-variable">Set deploymentName variable</h3>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<p>Then</p>
+</code></pre><p>Then</p>
 <pre><code class="lang-powershell"># Set WS Federation integration
 Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
 # Set WS Trust integration
 Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<h2 id="all-zone-integration">All zone integration</h2>
-<h3 id="set-deploymentname-variable-0">Set deploymentName variable</h3>
+</code></pre><h2 id="all-zone-integration">All zone integration</h2>
+<h3 id="set-deploymentname-variable-1">Set deploymentName variable</h3>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<p>The internal clients are all non interactive. That means they required a pre-configured set of credentials to use during authentication.
+</code></pre><p>The internal clients are all non interactive. That means they required a pre-configured set of credentials to use during authentication.
 When these clients are redirected to the <strong>STS</strong> at <code>sts.example.com</code>, then there are two options</p>
 <ul>
 <li>When the authentication type is windows then the <code>osuser</code> credential set will be used</li>
@@ -144,48 +139,48 @@ Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFe
 Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<p>This is an example for a windows authentication</p>
+</code></pre><p>This is an example for a windows authentication</p>
 <pre><code class="lang-powershell"># Set WS Federation integration
 Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
 # Set WS Trust integration
 Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<h1 id="implement-the-integration-on-the-security-token-service">Implement the integration on the Security Token Service</h1>
+</code></pre><h1 id="implement-the-integration-on-the-security-token-service">Implement the integration on the Security Token Service</h1>
 <p>For every STS the configuration is different. Therefore the module&#39;s <code>Save-ISHIntegrationSTSConfigurationPackage</code> generates a set of information that describe the important information for configuring Content Manager&#39;s relying parties.</p>
 <pre><code class="lang-powershell">$filename=&quot;$(Get-Date -Format &quot;yyyyMMdd&quot;).IntegrationISH.zip&quot;
 Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename
-</code></pre>
-<p>Inside the zip file you will find two files</p>
+</code></pre><p>Inside the zip file you will find two files</p>
 <ul>
 <li><code>CM Security Token Service Requirements.md</code> that is a markdown file with the specific deployment information.</li>
-<li><code>ishws.cer</code> that is the public key of the <strong>ISHWS</strong> service certificate. This is added for your convienience.</li>
+<li><code>ishws.cer</code> that is the public key of the <strong>ISHWS</strong> service certificate. This was added for your convenience.</li>
 </ul>
-<h1 id="enable-authentication-with-content-manager-internal-users-">Enable authentication with Content Manager internal users.</h1>
+<h1 id="enable-authentication-with-content-manager-internal-users">Enable authentication with Content Manager internal users.</h1>
 <p>While the deployment is integrated with an external security token service (STS), it could be requested that the system allows access for internal users without modifying the integration. 
 An internal user is one that has username and password in the Content Manager database and the credential will be validated by ISHSTS.</p>
 <pre><code class="lang-powershell"># Just Content Manager (ISH)
 Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
-</code></pre>
-<p>If the deployment is integrated with Content Delivery then provide the necessary values like this:</p>
+</code></pre><p>If the deployment is integrated with Content Delivery then provide the necessary values like this:</p>
 <pre><code class="lang-powershell"># When the deployment is integrated with a Content Delivery (LC)
 Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost &quot;lc.example.com&quot; -LCWebAppName &quot;ContentDelivery&quot;
-</code></pre>
-<p><code>Enable-ISHIntegrationSTSInternalAuthentication</code> will enable a special url at <code>https://ish.example.com/ISHWS/Internal/</code>. 
+</code></pre><p><code>Enable-ISHIntegrationSTSInternalAuthentication</code> will enable a special url at <code>https://ish.example.com/ISHWS/Internal/</code>. 
 Provide this url to any user that wishes to login with internal users.</p>
 <p>To disable this mode use <code>Disable-ISHIntegrationSTSInternalAuthentication</code>.</p>
 <pre><code class="lang-powershell">Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Integrating 3rd party service providers with ISHSTS </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Integrating 3rd party service providers with ISHSTS ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -82,23 +82,20 @@ In the context of this article, the 3rd party service provider is a web applicat
 </ul>
 <p>Set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre>
-<h1 id="configuring-ishsts-for-a-service-provider">Configuring ISHSTS for a service provider</h1>
+</code></pre><h1 id="configuring-ishsts-for-a-service-provider">Configuring ISHSTS for a service provider</h1>
 <p>To add a relying part execute </p>
 <pre><code class="lang-powershell">$name=&quot;3rd party&quot;
 $realm=&quot;https://3rdparty.example.com/&quot;
 # Add relying party
 Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm
-</code></pre>
-<p>By default ISHSTS will compose tokens with only the <code>NameIdentifier</code> of the <code>Subject</code> filled in. For example</p>
+</code></pre><p>By default ISHSTS will compose tokens with only the <code>NameIdentifier</code> of the <code>Subject</code> filled in. For example</p>
 <pre><code class="lang-xml">&lt;saml:Subject&gt;
     &lt;saml:NameIdentifier&gt;user@example.com&lt;/saml:NameIdentifier&gt;
     &lt;saml:SubjectConfirmation&gt;
         &lt;saml:ConfirmationMethod&gt;urn:oasis:names:tc:SAML:1.0:cm:bearer&lt;/saml:ConfirmationMethod&gt;
     &lt;/saml:SubjectConfirmation&gt;
 &lt;/saml:Subject&gt;
-</code></pre>
-<p>For the knowledge center <strong>Content Delivery</strong> and <strong>Quality Assistant</strong> service providers the expected claim transformation rules is already implemented.</p>
+</code></pre><p>For the knowledge center <strong>Content Delivery</strong> and <strong>Quality Assistant</strong> service providers the expected claim transformation rules is already implemented.</p>
 <p>For this purpose the cmdlet <code>Set-ISHSTSRelyingParty</code> provides a set of parameters specific to each one. The mapping is in the following table</p>
 <table>
 <thead>
@@ -126,23 +123,21 @@ Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm
 $realm=&quot;https://review.lc.example.com/&quot;
 # Add relying party
 Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm -LC
-</code></pre>
-<ul>
+</code></pre><ul>
 <li>to add a relying party for a deployment of <strong>Quality Assistant</strong> execute:</li>
 </ul>
 <pre><code class="lang-powershell">$name=&quot;Quality Assistant&quot;
 $realm=&quot;https://bl.example.com/&quot;
 # Add relying party
 Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm -BL
-</code></pre>
-<h1 id="configuring-the-service-provider">Configuring the service provider</h1>
+</code></pre><h1 id="configuring-the-service-provider">Configuring the service provider</h1>
 <p>If the service provider can be auto-configured through a WS Federation metadata exchange endpoint then ISHSTS provides this on<code>https://ish.example.com/ISHSTS/FederationMetadata/2007-06/FederationMetadata.xml</code>. 
 In the alternative case retrieve the information manually:</p>
 <ul>
 <li>The WS Federation endpoint is <code>https://ish.example.com/ISHSTS/issue/wsfed</code> and is also provided by the system on the <strong>Application Integration</strong> page <code>https://ish.example.com/ISHSTS/appintegration</code>.</li>
-<li>The token signing certificate is availabe in the <strong>Key Configuration</strong> administration page <code>https://ish.example.com/ISHSTS/Admin/KeyConfiguration</code>. On this page the subject name and the thumbprint are visible but to retrieve the entire public key, you need to retrieve it from the certificate store of the operating system hosting Content Manager.</li>
+<li>The token signing certificate is available in the <strong>Key Configuration</strong> administration page <code>https://ish.example.com/ISHSTS/Admin/KeyConfiguration</code>. On this page the subject name and the thumbprint are visible but to retrieve the entire public key, you need to retrieve it from the certificate store of the operating system hosting Content Manager.</li>
 </ul>
-<p>To get a list of which relying parties are availabe use the <code>Get-ISHSTSRelyingParty</code>. As with the <code>Set-ISHSTSRelyingParty</code> optional parameters for known service providers are supported</p>
+<p>To get a list of which relying parties are available use the <code>Get-ISHSTSRelyingParty</code>. As with the <code>Set-ISHSTSRelyingParty</code> optional parameters for known service providers are supported</p>
 <table>
 <thead>
 <tr>
@@ -180,8 +175,7 @@ Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -LC
 
 # Get only Quality Assistant specific relying parties
 Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -BL
-</code></pre>
-<h1 id="a-combined-example-for-content-editor-quality-assistant-and-a-3rd-party-service-provider">A combined example for Content Editor, Quality Assistant and a 3rd party service provider</h1>
+</code></pre><h1 id="a-combined-example-for-content-editor-quality-assistant-and-a-3rd-party-service-provider">A combined example for Content Editor, Quality Assistant and a 3rd party service provider</h1>
 <p>This script adds three relying parties and then returns the set.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
 $name=&quot;3rd party&quot;
@@ -194,8 +188,7 @@ Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name &quot;Quality Assist
 
 # get the relying parties
 Get-ISHSTSRelyingParty -ISHDeployment $deploymentName |Format-Table Name,Realm
-</code></pre>
-<p>The script output</p>
+</code></pre><p>The script output</p>
 <pre><code class="lang-text">Name                                                          Realm                                                                          
 ----                                                          -----                                                                          
 3rd party                                                     https://3rdparty.example.com/
@@ -235,14 +228,19 @@ ISH: Wcf/API25/UserGroup.svc@ish.example.com(https)           https://ish.exampl
 ISH: Wcf/API25/UserRole.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API25/UserRole.svc           
 LC: Content Review                                            https://lc.example.com/
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Implementing service certificate replacement </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Implementing service certificate replacement ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -93,8 +93,7 @@ $serviceCertificateThumbprint=&quot;20161201.Thumbprint&quot;
 
 # Set service certificate
 Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint $serviceCertificateThumbprint
-</code></pre>
-<p>The integration with any security token service is discussed in <a href="Integrating%20with%20Security%20Token%20Service.html">Integrating with Security Token Service</a>. 
+</code></pre><p>The integration with any security token service is discussed in <a href="Integrating%20with%20Security%20Token%20Service.html">Integrating with Security Token Service</a>. 
 Use <code>Save-ISHIntegrationSTSConfigurationPackage</code> to extract all necessary information from the deployment.</p>
 <p>The integration with ADFS is discussed in <a href="Integrating%20with%20ADFS.html">Integrating with ADFS</a>. 
 Use <code>Save-ISHIntegrationSTSConfigurationPackage</code> to extract all necessary information and a PowerShell script from the deployment. 
@@ -106,9 +105,15 @@ The script will update all relying party entries when executed against the integ
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

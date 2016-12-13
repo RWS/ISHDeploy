@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Save-ISHIntegrationSTSConfigurationPackage </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Save-ISHIntegrationSTSConfigurationPackage ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -67,33 +67,32 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Saves STS integration configuration to zip archive in package folder.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Save-ISHIntegrationSTSConfigurationPackage -FileName &lt;string&gt; [-ADFS] -ISHDeployment &lt;ISHDeployment&gt;
+<pre><code>Save-ISHIntegrationSTSConfigurationPackage -FileName &lt;String&gt; [-ADFS] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Save-ISHIntegrationSTSConfigurationPackage saves STS integration configuration to zip archive in package folder.</p>
 <p>Cmdlet will overwrite zip archive if there is already one with same name.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="-example-1-">----------  EXAMPLE 1  ----------</h3>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -FileName packageFile.zip
 </code></pre><p>Creates a zip archive in package folder with current STS integration configurations.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="-example-2-">----------  EXAMPLE 2  ----------</h3>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
 <pre><code>PS C:\&gt;Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deployment -ADFS -FileName packageFile.zip
 </code></pre><p>Creates a zip archive in package folder with current STS integration configurations for ADFS.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-filename">-FileName</h3>
 <p>Name of the output package file.</p>
-<pre><code class="lang-yaml">Type: string
+<pre><code class="lang-yaml">Type: String
 Parameter Sets: (All)
 Aliases: 
 
 Required: True
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-adfs">-ADFS</h3>
+</code></pre><h3 id="-adfs">-ADFS</h3>
 <p>Specifies that ADFS configuration should be packed.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
@@ -104,20 +103,18 @@ Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-ishdeployment">-ISHDeployment</h3>
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
 Parameter Sets: (All)
 Aliases: 
 
-Required: True
+Required: False
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h2 id="inputs">INPUTS</h2>
+</code></pre><h2 id="inputs">INPUTS</h2>
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
@@ -133,9 +130,15 @@ Accept wildcard characters: False
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

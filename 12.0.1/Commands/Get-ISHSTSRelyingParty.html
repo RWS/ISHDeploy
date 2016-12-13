@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Get-ISHSTSRelyingParty </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Get-ISHSTSRelyingParty ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -68,20 +68,20 @@
 <p>Gets all relying parties from the infosharests database.
 The switches acts as filter based on the RP name.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Get-ISHSTSRelyingParty [-ISH] [-LC] [-BL] -ISHDeployment &lt;ISHDeployment&gt;
+<pre><code>Get-ISHSTSRelyingParty [-ISH] [-LC] [-BL] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Get-ISHSTSRelyingParty cmdlet gets all relying parties from the infosharests database.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="-example-1-">----------  EXAMPLE 1  ----------</h3>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH
 </code></pre><p>This command gets all relying parties from the infosharests database where name of relying party starts with &quot;ISH&quot;.</p>
-<h3 id="-example-2-">----------  EXAMPLE 2  ----------</h3>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHSTSRelyingParty -ISHDeployment $deployment -LC
 </code></pre><p>This command gets all relying parties from the infosharests database where name of relying party starts with &quot;LC&quot;.</p>
-<h3 id="-example-3-">----------  EXAMPLE 3  ----------</h3>
+<h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHSTSRelyingParty -ISHDeployment $deployment -BL
 </code></pre><p>This command gets all relying parties from the infosharests database where name of relying party starts with &quot;BL&quot;.</p>
-<h3 id="-example-4-">----------  EXAMPLE 4  ----------</h3>
+<h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
 <pre><code>PS C:\&gt;Get-ISHSTSRelyingParty -ISHDeployment $deployment -ISH -BL -LC #Any combination
 </code></pre><p>This command gets all relying parties from the infosharests database.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
@@ -97,8 +97,7 @@ Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-lc">-LC</h3>
+</code></pre><h3 id="-lc">-LC</h3>
 <p>Flag to return relying parties for LiveContent.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
@@ -109,8 +108,7 @@ Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-bl">-BL</h3>
+</code></pre><h3 id="-bl">-BL</h3>
 <p>Flag to return relying parties for BlueLion.</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
@@ -121,20 +119,18 @@ Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-ishdeployment">-ISHDeployment</h3>
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
 Parameter Sets: (All)
 Aliases: 
 
-Required: True
+Required: False
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h2 id="inputs">INPUTS</h2>
+</code></pre><h2 id="inputs">INPUTS</h2>
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
@@ -148,9 +144,15 @@ Accept wildcard characters: False
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

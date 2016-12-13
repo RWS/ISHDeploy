@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Major>1</Major>
-    <Minor>1</Minor>
+    <Minor>2</Minor>
   </PropertyGroup>
 </Project>

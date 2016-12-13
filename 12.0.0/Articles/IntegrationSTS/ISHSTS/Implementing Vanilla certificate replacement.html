@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Implementing Vanilla certificate replacement </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Implementing Vanilla certificate replacement ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -100,21 +100,21 @@ $certificateName=&quot;ISHSTS (20161201)&quot;
 $certificateThumbprint=&quot;20161201.Thumbprint&quot;
 
 # Set the ISHSTS token signing certificate
-Set-ISHSTSConfiguration -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
+# Execute before Set-ISHIntegrationSTSCertificate
+Set-ISHSTSConfiguration -ISHDeployment $deploymentName -TokenSigningCertificateThumbprint $certificateThumbprint
 
 # Set Token signing certificate
+# Execute after Set-ISHSTSConfiguration
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $certificateName -Thumbprint $certificateThumbprint
 
 # Set service certificate
 Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
-</code></pre>
-<p>Please note that the order of execution between <code>Set-ISHIntegrationSTSCertificate</code> and <code>Set-ISHSTSConfiguration</code> must not be changed otherwise it might break the deployment.</p>
+</code></pre><p>Please note that the order of execution between <code>Set-ISHIntegrationSTSCertificate</code> and <code>Set-ISHSTSConfiguration</code> must not be changed otherwise it might break the deployment.</p>
 <h2 id="remove-the-old-certificate">Remove the old certificate</h2>
 <p>As a cleanup process, all service providers should remove their old issuer certificate references.</p>
 <pre><code class="lang-powershell">Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer &quot;Issuer&quot;
-</code></pre>
-<p>The above removes any reference to the certificate with thumbprint <code>20161201.Thumbprint</code>, hence it can be removed from the store.</p>
-<h1 id="replace-the-web-site-s-https-binding-ssl-certificate">Replace the web site&#39;s HTTPS binding SSL certificate</h1>
+</code></pre><p>The above removes any reference to the certificate with thumbprint <code>20161201.Thumbprint</code>, hence it can be removed from the store.</p>
+<h1 id="replace-the-web-sites-https-binding-ssl-certificate">Replace the web site&#39;s HTTPS binding SSL certificate</h1>
 <p>IIS is a web host engine and can support multiple web sites. 
 Content Manager creates application pools under a web site and lets IIS power the secure encryption on the network layer through an HTTPS binding. 
 Content Manager is not responsible for the secure encryption and therefore the module doesn&#39;t offer any specific cmdlet to manage the HTTPS certificate.
@@ -131,20 +131,24 @@ The simplest case is the one offered with a default IIS installation and is summ
 <p>With this configuration the following script updates the certificate on the HTTPS binding to the new one with thumbprint <code>20161201.Thumbprint</code>.</p>
 <pre><code class="lang-powershell">$thumbprint=&quot;20161201.Thumbprint&quot;
 Get-ChildItem &quot;Cert:\LocalMachine\My\$thumbprint&quot; | Set-Item -Path &quot;IIS:\SslBindings\0.0.0.0!443&quot;
-</code></pre>
-<p>If the web site was configured with a host header then the script becomes</p>
+</code></pre><p>If the web site was configured with a host header then the script becomes</p>
 <pre><code class="lang-powershell">$thumbprint=&quot;20161201.Thumbprint&quot;
 $hostHeader=&quot;example.com&quot;
 Get-ChildItem &quot;Cert:\LocalMachine\My\$thumbprint&quot; | Set-Item -Path &quot;IIS:\SslBindings\0.0.0.0!443!$hostHeader&quot; -SSLFlags 1
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

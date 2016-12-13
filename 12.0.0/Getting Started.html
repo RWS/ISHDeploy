@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Getting started </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Getting started ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -62,9 +62,8 @@
 <p><a href="https://www.powershellgallery.com/packages/ISHDeploy.12.0.0/">ISHDeploy.12.0.0</a> requires PowerShell version 4.0 installed in the operating system.</p>
 <p>To quickly check your installed PowerShell version execute</p>
 <pre><code class="lang-powershell">$PSVersionTable
-</code></pre>
-<p>A version 4.0 console would return </p>
-<pre><code>Name                           Value                                                                                   
+</code></pre><p>A version 4.0 console would return </p>
+<pre><code class="lang-text">Name                           Value                                                                                   
 ----                           -----                                                                                   
 PSVersion                      4.0                                                                                     
 WSManStackVersion              3.0                                                                                     
@@ -81,61 +80,64 @@ PSRemotingProtocolVersion      2.2
 <p>PowerShellGet provides a default repository registration for <a href="https://powershellgallery.com/">PowerShell Gallery</a>, therefore no action is necessary. 
 To verify that PowerShell gallery is registered correctly execute:</p>
 <pre><code class="lang-powershell">Get-PSRepository
-</code></pre>
-<p>and the outcome should be</p>
-<pre><code class="lang-powershell">
-Name                      PackageManagementProvider InstallationPolicy   SourceLocation                                
+</code></pre><p>and the outcome should be</p>
+<pre><code class="lang-text">Name                      PackageManagementProvider InstallationPolicy   SourceLocation                                
 ----                      ------------------------- ------------------   --------------                                
 PSGallery                 NuGet                     Untrusted            https://www.powershellgallery.com/api/v2/
-</code></pre>
-<p>To register or unregister repositories use the <code>Register-PSRepository</code> and <code>Unregister-PSRepository</code> cmdlets respectively.</p>
+</code></pre><p>To register or unregister repositories use the <code>Register-PSRepository</code> and <code>Unregister-PSRepository</code> cmdlets respectively.</p>
 <h1 id="install-the-module">Install the module</h1>
-<p>The module is availabe on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy.12.0.0/">here</a>. </p>
+<p>The module is available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy.12.0.0/">here</a>. </p>
 <p>To install the module with administrative rights for all users execute</p>
 <pre><code class="lang-powershell">Install-Module ISHDeploy.12.0.0
-</code></pre>
-<p>To install only for your user execute</p>
+</code></pre><p>To install only for your user execute</p>
 <pre><code class="lang-powershell">Install-Module ISHDeploy.12.0.0 -Scope CurrentUser
-</code></pre>
-<h1 id="upgrading-the-module">Upgrading the module</h1>
+</code></pre><h1 id="upgrading-the-module">Upgrading the module</h1>
 <p>Newer versions of the module will become available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy.12.0.0/">here</a>. </p>
 <p>To install a new version for all users execute</p>
 <pre><code class="lang-powershell"># All users. Requires administration rights
 Install-Module ISHDeploy.12.0.0 -Force
 # Current user. No administration rights are required.
 Install-Module ISHDeploy.12.0.0 -Scope CurrentUser -Force
-</code></pre>
-<h1 id="verify-the-module-presense">Verify the module presense</h1>
+</code></pre><h1 id="verify-the-module-presence">Verify the module presence</h1>
 <p>To verify that the module is installed and check the version execute:</p>
 <pre><code class="lang-powershell">Get-Module ISHDeploy.12.0.0 -ListAvailable |Format-Table Name,Version
-</code></pre>
-<p>if the module is available then the result should be one line such as</p>
-<pre><code>Name                                                        Version
+</code></pre><p>if the module is available then the result should be one line such as</p>
+<pre><code class="lang-text">Name                                                        Version
 ----                                                        -------
 ISHDeploy.12.0.0                                            0.1
 </code></pre><h1 id="available-cmdlets">Available cmdlets</h1>
 <p>To retrieve all cmdlets offered by the module then execute:</p>
 <pre><code class="lang-powershell">Get-Command -Module ISHDeploy.12.0.0 | Select-Object Name
-</code></pre>
-<p>Each cmdlet offers support for the <code>Get-Help</code> cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 
+</code></pre><p>Each cmdlet offers support for the <code>Get-Help</code> cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 
 To show the help of <code>Get-ISHDeployment</code> execute </p>
 <pre><code class="lang-powershell">Get-Help Get-ISHDeployment -Full
-</code></pre>
+</code></pre><h2 id="administrator-privileges-required">Administrator privileges required</h2>
+<p>The purpose of the module is to modify the files of a deployment.
+For this reason, most cmdlets require elevated administrator privileges. 
+Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
+All cmdlets with verb <code>Get-</code> such as <code>Get-ISHDeployment</code> are exempt from this requirement as they do not modify an files.</p>
 <h1 id="the-documentation-portal">The documentation portal</h1>
 <p>Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 
-<a href="Commands/Get-ISHDeployment.html">Get-ISHDeployment</a> for example is the online equivelent for the PowerShell command <code>Get-Help Get-ISHDeployment -Full</code>.</p>
+<a href="Commands/Get-ISHDeployment.html">Get-ISHDeployment</a> for example is the online equivalent for the PowerShell command <code>Get-Help Get-ISHDeployment -Full</code>.</p>
 <p>Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
-For example <a href="Articles/Module/Work%20with%20deployments.html">Work with deployments</a> explains how to work with the core cmdlets of the module.</p>
+For example <a href="Articles/Module/Work%20with%20one%20or%20multiple%20deployments.html">Work with one or multiple deployments</a> explains how to work with the core cmdlets of the module against a specific deployment. 
+When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in <a href="Articles/Module/Work%20with%20one%20deployment.html">Work with one deployment</a>.</p>
 <h1 id="open-source-and-feedback">Open source and feedback</h1>
-<p>The module&#39;s code and the content of this portal is availabe on <a href="https://github.com/sdl/ISHDeploy.12.0.0/">github</a>. </p>
+<p>The module&#39;s code and the content of this portal is available on <a href="https://github.com/sdl/ISHDeploy.12.0.0/">github</a>. </p>
 
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

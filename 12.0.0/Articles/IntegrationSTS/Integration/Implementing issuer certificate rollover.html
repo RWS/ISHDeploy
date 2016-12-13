@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Implementing issuer certificate rollover </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Implementing issuer certificate rollover ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../../favicon.ico">
     <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
@@ -65,7 +65,7 @@
               <h1 id="implementing-issuer-certificate-rollover">Implementing issuer certificate rollover</h1>
               
 <p>This article explains how to execute a issuer certificate roll over when the token signing certificate changes on the <strong>Security Token Service (STS)</strong>.</p>
-<h1 id="what-is-a-certificate-roll-over-">What is a certificate roll over.</h1>
+<h1 id="what-is-a-certificate-roll-over">What is a certificate roll over.</h1>
 <p>Certificates have by design an expiration date. Certificates can be also revoked.</p>
 <p>When this happens certificates become invalid and need to be replaced. The goal of <strong>certificate roll over</strong> is to replace the old certificate dependency with the new one wish as minumum downtime as possible.</p>
 <p>Typically, the owner of the certificate will acquire a new or renewed certificate. For the purpose of this article let’s see what happens with</p>
@@ -92,8 +92,7 @@ $tokenSigningCertificateThumbprint=&quot;20160101.Thumbprint&quot;
 
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<p>The issuer certificate expires in one year, on the <strong>1st January 2017</strong>.</p>
+</code></pre><p>The issuer certificate expires in one year, on the <strong>1st January 2017</strong>.</p>
 <p>On the 1st December 2016 the owner of the certificate receives a expiration reminder and creates a new certificate.</p>
 <h1 id="certificate-rollover-execution">Certificate rollover execution</h1>
 <h2 id="sts-shared-new-issuer-certificate-information">STS shared new issuer certificate information</h2>
@@ -108,8 +107,7 @@ $tokenSigningCertificateThumbprint=&quot;20161201.Thumbprint&quot;
 
 # Set Token signing certificate
 Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
-</code></pre>
-<p>Notice that the <code>-Issuer</code> is changed from <code>Example STS (20160101)</code> to <code>Example STS (20161201)</code>. This is important because <code>-Issuer</code> is the key used by the verb <strong>Set</strong>, to add or update entries.</p>
+</code></pre><p>Notice that the <code>-Issuer</code> is changed from <code>Example STS (20160101)</code> to <code>Example STS (20161201)</code>. This is important because <code>-Issuer</code> is the key used by the verb <strong>Set</strong>, to add or update entries.</p>
 <p>This allows tokens signed with either certificates to be validated.</p>
 <h2 id="sts-switches-token-signing-certificate">STS switches token signing certificate</h2>
 <p>All content manager deployments validate token signing certificates with the value of issuer <code>Example STS (20161201)</code>. Also, all service providers integrated to this STS have made similar adjustments. 
@@ -124,14 +122,19 @@ $issuerName=&quot;Example STS (20160101)&quot;
 # Remove Token signing certificate
 Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

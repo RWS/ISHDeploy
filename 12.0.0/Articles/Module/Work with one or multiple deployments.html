@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Work with deployments </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Work with deployments ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -69,25 +69,21 @@
 <h3 id="query-all-the-server-for-deployments">Query all the server for deployments</h3>
 <p>To query for all deployments use the following command</p>
 <pre><code class="lang-powershell">$deployments=Get-ISHDeployment
-</code></pre>
-<ul>
+</code></pre><ul>
 <li>When the server has no active deployments then <code>$deployments</code> will be empty.</li>
 <li>When the server has one deployment then <code>$deployments</code> will hold a reference to the one deployment, typically known as the default deployment.</li>
 <li>When the server has multiple deployments then you can get a nice report using the <code>Format-Table</code> commandlet.</li>
 </ul>
 <pre><code class="lang-powershell">$deployments|Format-Table Name,SoftwareVersion,DatabaseType,AccessHostname
-</code></pre>
-<pre><code>Name                SoftwareVersion DatabaseType    AccessHostName                                
+</code></pre><pre><code class="lang-text">Name                SoftwareVersion DatabaseType    AccessHostName                                
 ----                --------------- ------------    --------------                                
 InfoShare           12.0.2417.0     sqlserver2014   ish.example.com                               
-InfoShareSQLADFSU   12.0.2417.0     sqlserver2014   ish.example.com                               
-InfoShareSQLADFSW   12.0.2417.0     sqlserver2014   ish.example.com                               
-InfoShareSQLW       12.0.2417.0     sqlserver2014   ish.example.com                               
+InfoShareExtra1     12.0.2417.0     sqlserver2014   ish.example.com                               
+InfoShareExtra2     12.0.2417.0     sqlserver2014   ish.example.com
 </code></pre><h3 id="query-the-server-for-specific-deployment">Query the server for specific deployment</h3>
 <p>To query for one specific deployment use the following command when the <code>projectsuffix</code> is empty.</p>
 <pre><code class="lang-powershell">Get-ISHDeployment -Name InfoShare
-</code></pre>
-<p>This outputs the following</p>
+</code></pre><p>This outputs the following</p>
 <pre><code class="lang-text">SoftwareVersion : 12.0.2929.1
 Name            : InfoShare
 AppPath         : C:\InfoShare
@@ -99,11 +95,9 @@ WebAppNameCM    : InfoShareAuthor
 WebAppNameWS    : InfoShareWS
 WebAppNameSTS   : InfoShareSTS
 WebSiteName     : Default Web Site
-</code></pre>
-<p>If the <code>projectsuffix</code> was not empty then concatenate it after <code>InfoShare</code>. For example</p>
+</code></pre><p>If the <code>projectsuffix</code> was not empty then concatenate it after <code>InfoShare</code>. For example</p>
 <pre><code class="lang-powershell">Get-ISHDeployment -Name InfoShareSQL
-</code></pre>
-<h3 id="using-a-deployment">Using a deployment</h3>
+</code></pre><h3 id="using-a-deployment">Using a deployment</h3>
 <p>All commandlets that target a specific deployment are driven from the <code>-ISHDeployment</code> parameter that expects as value a name of deployment or an instance. 
 To acquire an instance use the <code>Get-ISHDeployment</code>.</p>
 <p>The following two blocks are equal for the default deployment name <code>InfoShare</code>.</p>
@@ -111,19 +105,16 @@ To acquire an instance use the <code>Get-ISHDeployment</code>.</p>
 $deploymentName=&quot;InfoShare&quot;
 $deployment = Get-ISHDeployment -Name $deploymentName
 Get-ISHDeploymentHistory -ISHDeployment $deployment
-</code></pre>
-<pre><code class="lang-powershell"># Using the deployment name
+</code></pre><pre><code class="lang-powershell"># Using the deployment name
 $deploymentName=&quot;InfoShare&quot;
 Get-ISHDeploymentHistory -ISHDeployment $deploymentName
-</code></pre>
-<p>Using the deployment name paradigm is the preffered way for remote invocation purposes.</p>
+</code></pre><p>Using the deployment name paradigm is the preferred way for remote invocation purposes.</p>
 <h3 id="get-the-history-of-a-deployment">Get the history of a deployment</h3>
 <p>All actions through the module&#39;s cmdlets are tracked and stored in a history file.</p>
 <p>You can get the history like this</p>
 <pre><code class="lang-powershell">$deploymentName = &quot;InfoShare&quot;
 Get-ISHDeploymentHistory -ISHDeployment $deploymentName
-</code></pre>
-<p>If you would execute the following.</p>
+</code></pre><p>If you would execute the following.</p>
 <pre><code class="lang-powershell"># $deploymentName is the name of Deployment
 
 # Set the license and enable the Content Editor
@@ -135,18 +126,33 @@ Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
 
 # Enable the External Preview using externalid
 Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId &quot;externalid&quot;
-</code></pre>
-<p><a href="FeatureToggle.ps1">Download</a></p>
+</code></pre><p><a href="FeatureToggle.ps1">Download</a></p>
 <p>and then again <code>Get-ISHDeploymentHistory -ISHDeployment $deploymentName</code> outputs as an example of a history file.</p>
-<pre><code class="lang-powershell"># 20160314
+<pre><code class="lang-powershell">&lt;#ISHDeployScriptInfo
+
+.VERSION 1.0
+
+.MODULE ISHDeploy.12.0.0
+
+.CREATEDBYMODULEVERSION 1.2
+
+.UPDATEDBYMODULEVERSION 1.2
+
+#&gt;
+
+param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
+# 20160314
 $deploymentName = &quot;InfoShare&quot;
 Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey &quot;licensekey&quot; -Domain &quot;ish.example.com&quot;
 Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 Enable-ISHUIQualityAssistant -ISHDeployment $deploymentName
 Enable-ISHExternalPreview -ISHDeployment $deploymentName -ExternalId &quot;externalid&quot;
 Disable-ISHUITranslationJob -ISHDeployment $deploymentName
-</code></pre>
-<h3 id="get-the-input-parameters-of-a-deployment">Get the input parameters of a deployment</h3>
+</code></pre><h3 id="get-the-input-parameters-of-a-deployment">Get the input parameters of a deployment</h3>
 <p>The module&#39;s cmdlets often modify the files on the file system. When the modified value was originally replaced by an <strong>InstallTool</strong>&#39;s input parameter, then the cmdlet will adapt also the current input parameters. 
 Each deployment has two sets of input parameters known to the module. </p>
 <ul>
@@ -159,8 +165,7 @@ Each deployment has two sets of input parameters known to the module. </p>
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName
 # Get original set
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Original
-</code></pre>
-<p>And the shortened outcome looks like this</p>
+</code></pre><p>And the shortened outcome looks like this</p>
 <pre><code class="lang-text">Name                                     Value
 ----                                     -----
 osuser                                   osuser
@@ -176,36 +181,37 @@ infosharewswebappname                    ishwssql
 infosharestswebappname                   ishstssql
 websitename                              Default Web Site
 ...
-</code></pre>
-<p>To get a quick comparison execute</p>
+</code></pre><p>To get a quick comparison execute</p>
 <pre><code class="lang-powershell">$deploymentName = &quot;InfoShare&quot;
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Changed
-</code></pre>
-<p>By default the <code>Get-ISHDeploymentParameters</code> will mask all input parameters whose name contains the word <code>password</code>. 
+</code></pre><p>By default the <code>Get-ISHDeploymentParameters</code> will mask all input parameters whose name contains the word <code>password</code>. 
 To override this behavior use the <code>-ShowPassword</code> parameter.</p>
 <pre><code class="lang-powershell">$deploymentName = &quot;InfoShare&quot;
 # Get current set with clear passwords
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName -ShowPassword
-</code></pre>
-<h2 id="developing-a-deployment">Developing a deployment</h2>
+</code></pre><h2 id="developing-a-deployment">Developing a deployment</h2>
 <p>To help engineers write and debug scripts a commandlet <code>Undo-ISHDeployment</code> is provided.</p>
 <p>All commandlets in this module track and keep a backup of all vanilla files being modified.
 This allows the module to undo all changes without the requirement to uninstall and then re-install.</p>
 <pre><code class="lang-powershell">Undo-ISHDeployment -ISHDeployment $deploymentName
-</code></pre>
-<h2 id="clear-history-artifacts">Clear history artifacts</h2>
-<p>Because the module&#39;s codebase is not connected with the <code>InstallTool.exe</code> when you unistall the module&#39;s artificats will not be removed.
+</code></pre><h2 id="clear-history-artifacts">Clear history artifacts</h2>
+<p>Because the module&#39;s codebase is not connected with the <code>InstallTool.exe</code> when you uninstall the module&#39;s artifacts will not be removed.
 The <code>Clear-ISHDeploymentHistory</code> takes care of this by removing all artifacts. You must use this commandlet before uninstalling.</p>
 <pre><code class="lang-powershell">Clear-ISHDeploymentHistory -ISHDeployment $deploymentName
 </code></pre>
-
             </article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

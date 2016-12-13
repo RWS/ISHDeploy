@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
   
@@ -8,7 +8,7 @@
     <title>Test-ISHContentEditor </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Test-ISHContentEditor ">
-    <meta name="generator" content="docfx 1.9.0.0">
+    <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -67,42 +67,40 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Tests if Content Editor license exists for specific domain name.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Test-ISHContentEditor -Domain &lt;string&gt; -ISHDeployment &lt;ISHDeployment&gt;
+<pre><code>Test-ISHContentEditor -Domain &lt;String&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>Test-ISHContentEditor cmdlet tests if Content Editor license exists for specific domain name.</p>
 <p>If license for &#39;com&#39; domain was created then all domains that ends with &#39;.com&#39; will be valid.</p>
 <p>In that case localhost.com domain will be valid, but localhost.com.net will be invalid.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="-example-1-">----------  EXAMPLE 1  ----------</h3>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Test-ISHContentEditor -Domain &quot;localhost&quot; -ISHDeployment $deployment
 </code></pre><p>This command checks if license for domain name &#39;localhost&#39; exists.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-domain">-Domain</h3>
 <p>Specifies the domain name to be verified.</p>
-<pre><code class="lang-yaml">Type: string
+<pre><code class="lang-yaml">Type: String
 Parameter Sets: (All)
 Aliases: 
 
 Required: True
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h3 id="-ishdeployment">-ISHDeployment</h3>
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
 Parameter Sets: (All)
 Aliases: 
 
-Required: True
+Required: False
 Position: Named
-Default value: 
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre>
-<h2 id="inputs">INPUTS</h2>
+</code></pre><h2 id="inputs">INPUTS</h2>
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
@@ -112,9 +110,15 @@ Accept wildcard characters: False
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
-            <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-            <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
-            </nav>
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
           </div>
         </div>
       </div>

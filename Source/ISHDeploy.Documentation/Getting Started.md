@@ -6,12 +6,14 @@
 [{ModuleName}](https://www.powershellgallery.com/packages/{ModuleName}/) requires PowerShell version 4.0 installed in the operating system.
 
 To quickly check your installed PowerShell version execute
+
 ```powershell
 $PSVersionTable
 ```
 
 A version 4.0 console would return 
-```
+
+```text
 Name                           Value                                                                                   
 ----                           -----                                                                                   
 PSVersion                      4.0                                                                                     
@@ -42,8 +44,7 @@ Get-PSRepository
 ```
 and the outcome should be
 
-```powershell
-
+```text
 Name                      PackageManagementProvider InstallationPolicy   SourceLocation                                
 ----                      ------------------------- ------------------   --------------                                
 PSGallery                 NuGet                     Untrusted            https://www.powershellgallery.com/api/v2/     
@@ -53,14 +54,16 @@ To register or unregister repositories use the `Register-PSRepository` and `Unre
 
 # Install the module
 
-The module is availabe on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
+The module is available on powershell gallery [here](https://powershellgallery.com/packages/{ModuleName}/). 
 
 To install the module with administrative rights for all users execute
+
 ```powershell
 Install-Module {ModuleName}
 ```
 
 To install only for your user execute
+
 ```powershell
 Install-Module {ModuleName} -Scope CurrentUser
 ```
@@ -77,23 +80,25 @@ Install-Module {ModuleName} -Force
 Install-Module {ModuleName} -Scope CurrentUser -Force
 ```
 
-# Verify the module presense
+# Verify the module presence
 To verify that the module is installed and check the version execute:
+
 ```powershell
-Get-Module ISHDeploy.12.0.1 -ListAvailable |Format-Table Name,Version
+Get-Module ISHDeploy.{SupportedCMVersion} -ListAvailable |Format-Table Name,Version
 ```
 
 if the module is available then the result should be one line such as
-```
+
+```text
 Name                                                        Version
 ----                                                        -------
-ISHDeploy.12.0.1                                            0.1
+ISHDeploy.{SupportedCMVersion}                                            0.1
 ```
 
 # Available cmdlets
 To retrieve all cmdlets offered by the module then execute:
 ```powershell
-Get-Command -Module ISHDeploy.12.0.1 | Select-Object Name
+Get-Command -Module ISHDeploy.{SupportedCMVersion} | Select-Object Name
 ```
 
 Each cmdlet offers support for the `Get-Help` cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 
@@ -102,13 +107,21 @@ To show the help of `Get-ISHDeployment` execute
 Get-Help Get-ISHDeployment -Full
 ``` 
 
+## Administrator privileges required
+
+The purpose of the module is to modify the files of a deployment.
+For this reason, most cmdlets require elevated administrator privileges. 
+Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
+All cmdlets with verb `Get-` such as `Get-ISHDeployment` are exempt from this requirement as they do not modify an files.
+
 # The documentation portal
 
 Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 
-[Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivelent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
+[Get-ISHDeployment](commands\Get-ISHDeployment.md) for example is the online equivalent for the PowerShell command `Get-Help Get-ISHDeployment -Full`.
 
 Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
-For example [Work with deployments](articles/Module/Work with deployments.md) explains how to work with the core cmdlets of the module.
+For example [Work with one or multiple deployments](articles/Module/Work with one or multiple deployments.md) explains how to work with the core cmdlets of the module against a specific deployment. 
+When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in [Work with one deployment](articles/Module/Work with one deployment.md).
 
 # Open source and feedback
-The module's code and the content of this portal is availabe on [github](https://github.com/sdl/{ModuleName}/). 
+The module's code and the content of this portal is available on [github](https://github.com/sdl/{ModuleName}/). 

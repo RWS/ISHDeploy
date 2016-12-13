@@ -25,7 +25,7 @@ $scriptBlockGetISHDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+$xmlPath  = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $suffix )
 
 $scriptBlockGetVersionValue = {
     param (
@@ -41,6 +41,44 @@ $scriptBlockGetVersionValue = {
     
 }
 
+$scriptBlockRemoveDeployment = {
+    param (
+        
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeployments = Get-ISHDeployment
+    if($ishDeployments.Count -gt 1){
+        try{
+            for($x =1; $x -lt $ishDeployments.Count; $x++){
+                $name = $ishDeployments[$x].Name
+                $source = "HKLM:\SOFTWARE\WOW6432Node\Trisoft\InstallTool\InfoShare\$name"
+                $target = "HKLM:\SOFTWARE\WOW6432Node\Trisoft\InstallTool\InfoShare\Core"
+
+                Copy-Item -Path $source -Destination $target -Recurse
+                Remove-Item -Path $source -Recurse
+            }
+                Get-ISHDeploymentParameters
+        }
+        Finally{
+            for($x =1; $x -lt $ishDeployments.Count; $x++){
+                $name = $ishDeployments[$x].Name
+                $source = "HKLM:\SOFTWARE\WOW6432Node\Trisoft\InstallTool\InfoShare\$name"
+                $target2 = "HKLM:\SOFTWARE\WOW6432Node\Trisoft\InstallTool\InfoShare\Core\$name"
+                
+                Copy-Item -Path $target2 -Destination $source -Recurse
+                Remove-Item -Path $target2 -Recurse
+            }
+        } 
+    }
+    else{
+        Get-ISHDeploymentParameters
+    }
+}
+
 $scriptBlockSetVersionValue = {
     param (
         $ishDeployName,
@@ -52,19 +90,6 @@ $scriptBlockSetVersionValue = {
     }
     $currentInstall = (Get-ItemProperty -Path HKLM:\Software\Wow6432Node\Trisoft\InstallTool\InfoShare\$ishDeployName).Current
     Set-ItemProperty -Path HKLM:\Software\Wow6432Node\Trisoft\InstallTool\InfoShare\$ishDeployName\History\$currentInstall -Name Version -Value $value
-}
-
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
 }
 
 $scriptBlockGetAmountOfInstalledDeployments = {
@@ -84,6 +109,24 @@ $scriptBlockGetAmountOfInstalledDeployments = {
     }
 
     return $amount
+}
+
+# Function reads target files and their content, searches for specified nodes in xm
+function readTargetXML() {
+	[xml]$XmlFolderButtonbar = Get-Content "$xmlPath\FolderButtonbar.xml" -ErrorAction SilentlyContinue
+	[xml]$XmlInboxButtonBar = Get-Content "$xmlPath\InboxButtonBar.xml" -ErrorAction SilentlyContinue
+	[xml]$XmlLanguageDocumentButtonbar = Get-Content "$xmlPath\LanguageDocumentButtonbar.xml" -ErrorAction SilentlyContinue
+	$global:textFolderButtonbar = $XmlFolderButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "CheckOutWithXopus"}
+	$global:textInboxButtonBar = $XmlInboxButtonBar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "CheckOutWithXopus"}
+	$global:textLanguageDocumentButtonbar = $XmlLanguageDocumentButtonbar.BUTTONBAR.BUTTON.INPUT | ? {$_.NAME -eq "CheckOutWithXopus"}
+
+	if($textFolderButtonbar -and $textInboxButtonBar -and $textLanguageDocumentButtonbar){
+		Return "Enabled"
+	}
+	else{
+		Return "Disabled"
+	}
+
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests
@@ -150,5 +193,20 @@ Describe "Testing Get-ISHDeployment"{
         $inputparameters = Get-InputParameters $testingDeploymentName
         $deploy.WebSiteName -eq $inputparameters["websitename"] | Should be true
     }
+
+    It "Get-ISHDeployment sets default deployment"{
+        #Arrange
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveDeployment -Session $session} | Should not Throw
+        
+    }
+    $amount = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAmountOfInstalledDeployments -Session $session
+    if ($amount -gt 1){
+        It "Get-ISHDeployment don't set default deployment when more then one deployment"{
+            #Arrange
+            {Invoke-CommandRemoteOrLocal -ScriptBlock {Get-ISHDeploymentParameters} -Session $session} | Should Throw "More than one deployments detected. Please specify one"
+        
+        }
+    }
+    
 }
 

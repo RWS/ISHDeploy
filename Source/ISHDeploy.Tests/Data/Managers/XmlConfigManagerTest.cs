@@ -18,12 +18,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using ISHDeploy.Business.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Models.ISHXmlNodes;
+using ISHDeploy.Models.UI;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -1000,6 +1002,7 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(2).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -1056,6 +1059,7 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(1).WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find target nodes"));
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }
@@ -1176,6 +1180,440 @@ namespace ISHDeploy.Tests.Data.Managers
             // Assert
             Assert.Fail("Exception is expected");
         }
+        #endregion
+
+        #region InsertOrUpdateUIElement
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertOrUpdateUIElement_simple_adding()
+        {
+            // Arrange
+            var item = new MainMenuBarItem("Test Menu Item", new[] {"Administrator"}, "TestAction.asp");
+            string resultNodeXPath = $"mainmenubar/menuitem[@label='{item.Label}']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.IsNotNull(result, "Node has not been added");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertOrUpdateUIElement_update()
+        {
+            // Arrange
+            var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
+            string resultNodeXPath = $"mainmenubar/menuitem[@label='{item.Label}']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+
+            item.UserRoles = new[] {"Reader", "Writer"};
+            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+
+            // Assert
+            Assert.IsNotNull(result, "Node has not been added");
+            Assert.IsTrue(result.XPathSelectElements("userrole").Count() == 2, "Node has not been updated");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void InsertOrUpdateUIElement_insert_first_element()
+        {
+            // Arrange
+            var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
+            string resultNodeXPath = $"mainmenubar/menuitem[@label='{item.Label}']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar></mainmenubar>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+
+            // Assert
+            Assert.IsNotNull(result, "Node has not been added");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(XmlException))]
+        public void InsertOrUpdateUIElement_insert_wrong_xml()
+        {
+            // Arrange
+            var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
+            string resultNodeXPath = $"mainmenubar/menuitem[@label='{item.Label}']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        ");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
+
+            // Act
+            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+
+        #endregion
+
+        #region MoveUIElement
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_to_the_last_position()
+        {
+            // Arrange
+            string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
+            string result3NodeXPath = "mainmenubar/menuitem[@label='Event Log 3']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result1 = null;
+            XElement result3 = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document =>
+            {
+                result1 = GetXElementByXPath(document, result1NodeXPath);
+                result3 = GetXElementByXPath(document, result3NodeXPath);
+            }));
+
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"), UIElementMoveDirection.Last);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+            
+            Assert.IsTrue(equalityComparer.Equals(result1.PreviousNode, result3) , "Node has not been moved");
+            Assert.IsNull(result1.NextNode, "Node has not been moved");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_to_the_first_position()
+        {
+            // Arrange
+            string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
+            string result3NodeXPath = "mainmenubar/menuitem[@label='Event Log 3']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result1 = null;
+            XElement result3 = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document =>
+            {
+                result1 = GetXElementByXPath(document, result1NodeXPath);
+                result3 = GetXElementByXPath(document, result3NodeXPath);
+            }));
+
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.First);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+
+            Assert.IsTrue(equalityComparer.Equals(result3.NextNode, result1), "Node has not been moved");
+            Assert.IsNull(result3.PreviousNode, "Node has not been moved");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_after()
+        {
+            // Arrange
+            string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
+            string result2NodeXPath = "mainmenubar/menuitem[@label='Event Log 2']";
+            string result3NodeXPath = "mainmenubar/menuitem[@label='Event Log 3']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result1 = null;
+            XElement result2 = null;
+            XElement result3 = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document =>
+            {
+                result1 = GetXElementByXPath(document, result1NodeXPath);
+                result2 = GetXElementByXPath(document, result2NodeXPath);
+                result3 = GetXElementByXPath(document, result3NodeXPath);
+            }));
+
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+
+            XNodeEqualityComparer equalityComparer = new XNodeEqualityComparer();
+
+            Assert.IsTrue(equalityComparer.Equals(result3.NextNode, result2), "Node has not been moved");
+            Assert.IsTrue(equalityComparer.Equals(result3.PreviousNode, result1), "Node has not been moved");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_after_itself()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_after_not_exist()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            var menuItem = new MainMenuBarItem("Event Log 2");
+            _xmlConfigManager.MoveUIElement(_filePath, menuItem, UIElementMoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
+
+            // Assert
+            FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void MoveUIElement_simple_move_not_exist_item()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+
+            // Assert
+            FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(XmlException))]
+        public void MoveUIElement_simple_move_wrong_xml()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+
+        #endregion
+
+
+        #region RemoveUIElement
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveUIElement_simple_remove()
+        {
+            // Arrange
+            string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
+
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            XElement result = null;
+            FileManager.Load(_filePath).Returns(doc);
+            FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, result1NodeXPath)));
+
+            // Act
+            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"));
+
+            // Assert
+            FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Assert.IsNull(result, "Node has not been removed");
+        }
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void RemoveUIElement_not_exist()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
+                                        <mainmenubar>
+                                            <menuitem label='Event Log 1' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 2' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                            <menuitem label='Event Log 3' action='testAction.asp' id='EVENTLOG'>
+                                                <userrole>Administrator</userrole>
+                                            </menuitem>
+                                        </mainmenubar>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"));
+
+            // Assert
+            FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
+            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+        }
+        
+        [TestMethod]
+        [TestCategory("Data handling")]
+        [ExpectedException(typeof(XmlException))]
+        public void RemoveUIElement_simple_move_wrong_xml()
+        {
+            // Arrange
+            var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>");
+
+            FileManager.Load(_filePath).Returns(doc);
+            // Act
+            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"));
+
+            // Assert
+            Assert.Fail("Exception is expected");
+        }
+
+        #endregion
+
+        #region RemoveUIElement
+
+        [TestMethod]
+        [TestCategory("Data handling")]
+        public void Serialize()
+        {
+            // Arrange
+
+            var serializedItem = "<?xml version=\"1.0\" encoding=\"utf-16\"?><menuitem label=\"Event Log 1\" />";
+            // Act
+            var result = _xmlConfigManager.Serialize(new MainMenuBarItem("Event Log 1"));
+
+            // Assert
+            Assert.IsTrue(serializedItem == result, "Node has not been removed");
+        }
+
         #endregion
     }
 }

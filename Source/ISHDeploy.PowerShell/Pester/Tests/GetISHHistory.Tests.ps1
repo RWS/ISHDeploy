@@ -105,6 +105,21 @@ $scriptBlockGetPackageFolder = {
     }
 } 
 
+$scriptBlockGetParameters = {
+    param (
+        [Parameter(Mandatory=$false)]
+        $ishDeployName,
+        $switshes
+         
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHDeploymentParameters -ISHDeployment $ishDeploy @switshes
+}
+
 function getExpectedHistory{
 $text = '$deploymentName = ''InfoShare''
 Disable-ISHUIQualityAssistant -ISHDeployment $deploymentName
@@ -142,12 +157,13 @@ Describe "Testing Get-ISHDeploymentHistory"{
     }
 
     It "Commandlets that implements base class write no history"{
+		$params = @{Original = $false; Changed = $true; Showpassword  = $false}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableQA -Session $session -ArgumentList $testingDeploymentName 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName, $true
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetPackageFolder -Session $session -ArgumentList $testingDeploymentName
-
+		$inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGet -Session $session -ArgumentList $testingDeploymentName
         $expectedHistory =  getExpectedHistory
         $history.EndsWith($expectedHistory) | Should be "True"

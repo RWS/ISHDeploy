@@ -38,20 +38,6 @@ $scriptBlockSetISHSTSConfiguration = {
  
 }
 
-
-$scriptBlockGetHistory = {
-    param (
-        [Parameter(Mandatory=$false)]
-        $ishDeployName 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHDeploymentHistory -ISHDeployment $ishDeploy
-}
-
 $scriptBlockGetWebConfigurationProperty = {
     param (
         [Parameter(Mandatory=$true)]
@@ -176,13 +162,13 @@ Describe "Testing Set-ISHSTSConfiguration"{
 	    It "Set-ISHSTSConfiguration shows error when no windows feature "{  
             try {
 		        $expectedErrorMessage = "IIS-WindowsAuthentication feature has not been turned on. You can run command: 'Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication' to enable it"
-		        Invoke-CommandRemoteOrLocal -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication } -Session $session 
+		        Invoke-CommandRemoteOrLocal -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication -NoRestart} -Session $session 
             
                 #Act
 		        { Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "Windows"} | Should Throw $expectedErrorMessage
 		    }
 		    finally{
-			    Invoke-CommandRemoteOrLocal -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication} -Session $session 
+			    Invoke-CommandRemoteOrLocal -ScriptBlock {Enable-WindowsOptionalFeature -Online -FeatureName IIS-WindowsAuthentication -NoRestart} -Session $session 
 		    }
         }
 	}

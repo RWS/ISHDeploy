@@ -38,6 +38,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-Publish|AnyCPU'">
+    <OutputPath>bin\Release-Publish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,6 +65,9 @@
     <None Include="Pester\Test-All.ps1" />
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
+    <None Include="Pester\Tests\BackupISHDeployment.Tests.ps1" />
+    <None Include="Pester\Tests\CopyISHCMFile.Tests.ps1" />
+    <None Include="Pester\Tests\ExpandISHCMPackage.Tests.ps1" />
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
@@ -67,12 +79,16 @@
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
-    <None Include="Pester\Tests\ISHUIEventMonitorTab.Tests.ps1" />
+    <None Include="Pester\Tests\ISHUIButtonBarItem.Tests.ps1" />
+    <None Include="Pester\Tests\ISHUISearchMenuBarItem.Tests.ps1" />
+    <None Include="Pester\Tests\ISHUIMainMenuBarItem.Tests.ps1" />
+    <None Include="Pester\Tests\ISHUIEventMonitorMenuBarItem.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIExternalPreview.Tests.ps1" />
     <None Include="Pester\Tests\ISHUITranslationJob.Tests.ps1" />
     <None Include="Pester\Tests\RelayingParty.Tests.ps1" />
     <None Include="Pester\Tests\ResetISHSTS.Tests.ps1" />
     <None Include="Pester\Tests\SetISHAPIWCFServiceCertificate.Tests.ps1" />
+    <None Include="Pester\Tests\SetISHCMCUILResourceGroup.Tests.ps1" />
     <None Include="Pester\Tests\SetISHSTSConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
+using System;
+using System.IO;
 using System.Security.AccessControl;
 using System.Xml.Linq;
 
@@ -56,6 +57,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         bool FolderExists(string path);
 
         /// <summary>
+        /// Returns a list of files that correspond to search pattern.
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to source directory</param>
+        /// <param name="searchPattern">The search pattern</param>
+        /// <returns>A string array containing list of required files.</returns>
+        string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string searchPattern);
+
+        /// <summary>
         /// Opens a text file, reads all lines of the file, and then closes the file.
         /// </summary>
         /// <param name="filePath">The file to open for reading.</param>
@@ -70,11 +79,25 @@ namespace ISHDeploy.Data.Managers.Interfaces
         string[] ReadAllLines(string filePath);
 
         /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        void WriteHistoryHeader(string filePath, Version version);
+
+        /// <summary>
         /// Creates a new file, write the specified string array to the file, and then closes the file.
         /// </summary>
         /// <param name="filePath">The file to write to.</param>
         /// <param name="lines">The string array to write to the file.</param>
         void WriteAllLines(string filePath, string[] lines);
+
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        void WriteAllText(string filePath, string content);
 
         /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.
@@ -161,6 +184,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void PackageDirectory(string sourceDirectoryPath, string destinationArchiveFilePath, bool includeBaseDirectory = false);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to the directory to be archived, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        /// <param name="destinationDirectoryPath">The path of the archive to be created, specified as a relative or absolute path. A relative path is interpreted as relative to the current working directory.</param>
+        void ExtractPackageToDirectory(string sourceDirectoryPath, string destinationDirectoryPath);
+
+        /// <summary>
         /// Determines whether is the specified file locked.
         /// </summary>
         /// <param name="filePath">The file path.</param>
@@ -195,7 +225,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
-        /// <returns></returns>
-        List<string> GetFiles(string path, string searchPattern, bool recurse);
+        /// <returns>A string array containing list of required files.</returns>
+        string[] GetFiles(string path, string searchPattern, bool recurse);
+
+        /// <summary>
+        /// Gets list of system entries
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="searchOption">Search option.</param>
+        /// <returns>A string array containing list of required file entries.</returns>
+        string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
     }
 }

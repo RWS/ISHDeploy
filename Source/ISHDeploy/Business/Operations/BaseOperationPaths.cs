@@ -43,7 +43,17 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// Gets the path to the Web+Suffix Author folder.
         /// </summary>
-        protected string AuthorFolderPath { get; }
+        protected string WebFolderPath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string AuthorAspBinFolderPath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\Custom folder.
+        /// </summary>
+        protected string AuthorAspCustomFolderPath { get; }
 
         /// <summary>
         /// Gets the path to the App+Suffix Author folder.
@@ -115,7 +125,7 @@ namespace ISHDeploy.Business.Operations
         {
             get
             {
-                return Path.Combine(AuthorFolderPath, "InfoShareWS");
+                return Path.Combine(WebFolderPath, "InfoShareWS");
             }
         }
 
@@ -208,6 +218,11 @@ namespace ISHDeploy.Business.Operations
         /// The path to back up folder location for deployment
         /// </summary>
         protected string BackupFolderPath { get; }
+
+        /// <summary>
+        /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
+        /// </summary>
+        protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
 
         /// <summary>
         /// The path to Web back up folder
@@ -317,6 +332,21 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath XopusConfigXmlPath { get; }
 
+        /// <summary>
+        /// Gets the path to the ~\Author\ASP\UI folder.
+        /// </summary>
+        protected string AuthorAspUIFolderPath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\UI\Extensions\_config.xml
+        /// </summary>
+        protected ISHFilePath CUIFConfigFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js
+        /// </summary>
+        protected ISHFilePath ExtensionsLoaderFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -341,34 +371,40 @@ namespace ISHDeploy.Business.Operations
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
-            AuthorFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
+            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
+            AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
+            AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
+            AuthorAspCustomFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\Custom");
             AppFolderPath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}");
             DataFolderPath = Path.Combine(InputParameters.DataPath, $"Data{InputParameters.ProjectSuffix}");
-            WebNameSTS = Path.Combine(AuthorFolderPath, "InfoShareSTS");
+            WebNameSTS = Path.Combine(WebFolderPath, "InfoShareSTS");
             WebNameSTSAppData = Path.Combine(WebNameSTS, "App_Data");
             InputParametersFilePath = new ISHFilePath(InputParameters.FilePath.Replace("inputparameters.xml", string.Empty), BackupFolderPath, "inputparameters.xml");
             HistoryFilePath = Path.Combine(ISHDeploymentProgramDataFolderPath, "History.ps1");
-            AuthorASPTreeHtmPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
-            EventMonitorMenuBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
+            AuthorASPTreeHtmPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
+            EventMonitorMenuBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
             FeedSDLLiveContentConfigPath = new ISHFilePath(DataFolderPath, BackupDataFolderPath, @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
-            FolderButtonBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\FolderButtonbar.xml");
-            LicenceFolderPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\license\");
-            InboxButtonBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\InboxButtonBar.xml");
-            InfoShareAuthorWebConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Web.config");
-            InfoShareSTSConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"InfoShareSTS\Configuration\infoShareSTS.config");
-            InfoShareSTSDataBasePath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf");
+            FolderButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\FolderButtonbar.xml");
+            LicenceFolderPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\license\");
+            InboxButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\InboxButtonBar.xml");
+            InfoShareAuthorWebConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Web.config");
+            InfoShareSTSConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"InfoShareSTS\Configuration\infoShareSTS.config");
+            InfoShareSTSDataBasePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf");
             InfoShareSTSDataBaseConnectionString = $"Data Source = {InfoShareSTSDataBasePath.AbsolutePath}";
-            InfoShareSTSWebConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"InfoShareSTS\Web.config");
-            InfoShareWSConnectionConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"InfoShareWS\connectionconfiguration.xml");
-            InfoShareWSWebConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"InfoShareWS\Web.config");
-            LanguageDocumentButtonbarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\LanguageDocumentButtonbar.xml");
+            InfoShareSTSWebConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"InfoShareSTS\Web.config");
+            InfoShareWSConnectionConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"InfoShareWS\connectionconfiguration.xml");
+            InfoShareWSWebConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"InfoShareWS\Web.config");
+            LanguageDocumentButtonbarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\LanguageDocumentButtonbar.xml");
             SynchronizeToLiveContentConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
-            TopDocumentButtonBarXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
+            TopDocumentButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
             TranslationOrganizerConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
-            TrisoftInfoShareClientConfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Trisoft.InfoShare.Client.config");
-            XopusBluelionConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
-            XopusBlueLionPluginWebCconfigPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
-            XopusConfigXmlPath = new ISHFilePath(AuthorFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
+            TrisoftInfoShareClientConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Trisoft.InfoShare.Client.config");
+            XopusBluelionConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
+            XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
+            XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
+            CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
+            ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
 
             #endregion
         }
@@ -397,7 +433,7 @@ namespace ISHDeploy.Business.Operations
         /// <returns>Path to folder in UTC format</returns>
         private string ConvertLocalFolderPathToUNCPath(string localPath)
         {
-            return $@"\\{Environment.MachineName}\{localPath.Replace(":", "$")}";
+            return $@"\\{System.Net.Dns.GetHostName()}\{localPath.Replace(":", "$")}";
         }
     }
 }

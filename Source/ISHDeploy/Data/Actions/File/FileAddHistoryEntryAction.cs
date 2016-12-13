@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
+using ISHDeploy.Validators;
 
 namespace ISHDeploy.Data.Actions.File
 {
@@ -26,6 +27,7 @@ namespace ISHDeploy.Data.Actions.File
 	/// </summary>
     public class FileAddHistoryEntryAction : BaseAction
     {
+
         /// <summary>
         /// The file path
         /// </summary>
@@ -52,19 +54,26 @@ namespace ISHDeploy.Data.Actions.File
         private readonly IFileManager _fileManager;
 
         /// <summary>
+        /// Module version
+        /// </summary>
+        private readonly Version _version;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FileAddHistoryEntryAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="path">The file path.</param>
         /// <param name="text">The text.</param>
         /// <param name="ishDeploymentName">The deployment name.</param>
-        public FileAddHistoryEntryAction(ILogger logger, string path, string text, string ishDeploymentName) 
+        /// <param name="version">Module version.</param>
+        public FileAddHistoryEntryAction(ILogger logger, string path, string text, string ishDeploymentName, Version version) 
 			: base(logger)
         {
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _path = path;
             _text = text;
             _ishDeploymentName = ishDeploymentName;
+            _version = version;
         }
 
 		/// <summary>
@@ -88,7 +97,8 @@ namespace ISHDeploy.Data.Actions.File
 		    historyEntry.AppendLine(_text);
 
             _fileManager.Append(_path, historyEntry.ToString());
-		}
+            _fileManager.WriteHistoryHeader(_path, _version);
+        }
 
 
         /// <summary>

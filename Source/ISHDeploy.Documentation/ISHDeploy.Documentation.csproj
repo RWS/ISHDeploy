@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)ModuleVersion.props" />
+  <Import Project="$(SolutionDir)ISHVersion.props" />
   <Import Project="$(SolutionDir)Build.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,6 +34,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-Publish|AnyCPU'">
+    <OutputPath>bin\Release-Publish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,10 +57,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Articles\FeatureToggle\01.CreateCustomTab.ps1" />
-    <None Include="Articles\FeatureToggle\02.ModifyCustomTab.ps1" />
-    <None Include="Articles\FeatureToggle\FeatureToggle.ps1" />
-    <None Include="Articles\FeatureToggle\Work with UI Features.md" />
+    <None Include="Articles\ISHCM\_nopublish\03.CreateButtonBarItem - Full.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\01.CreateButtonBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\01.CreateSearchMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\01.CreateMainMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\01.CreateEventMonitorMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\02.ModifyButtonBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\01.RegisterResourceGroup.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\02.ModifySearchMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\02.ModifyMainMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\_nopublish\02.ModifyEventMonitorMenuBarItem.ps1" />
+    <None Include="Articles\ISHCM\Configuring ISHCM web UI button bars.md" />
+    <None Include="Articles\ISHCM\Configuring ISHCM web UI menu bars.md" />
+    <None Include="Articles\ISHCM\Toggling Web Components.md" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Windows.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.All.Username.ps1" />
     <None Include="Articles\IntegrationSTS\Integration\Implementation.User.ps1" />
@@ -79,10 +99,12 @@
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Save-ISHIntegrationDBSTSSQLServerConfiguration.ps1" />
     <None Include="Articles\IntegrationSTS\ISHSTS\_nopublish\Set-ISHSTSConfiguration.Authentication.ps1" />
     <None Include="Articles\Module\FeatureToggle.ps1" />
-    <None Include="Articles\Module\Work with files.md" />
-    <None Include="Articles\Module\Work with deployments.md" />
+    <None Include="Articles\Module\Work with one deployment.md" />
+    <None Include="Articles\Module\Work with files and packages.md" />
+    <None Include="Articles\Module\Work with one or multiple deployments.md" />
     <None Include="Articles\toc.yml" />
     <None Include="index.md" />
+    <None Include="Tools\Copy-RootItems.ps1" />
     <None Include="Tools\Copy-Changelog.ps1" />
     <None Include="Getting Started.md" />
     <None Include="CHANGELOG.md" />
@@ -98,10 +120,14 @@
     <None Include="Tools\Resolve-ModuleName.ps1" />
     <None Include="web.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Folder Include="Articles\Web site\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Articles\Module\_nopublish\Work with files and packages.plantuml" />
     <Content Include="Articles\IntegrationSTS\Integration\All.Zone.Clients.png" />
     <Content Include="Articles\IntegrationSTS\Integration\User.Zone.Clients.png" />
+    <Content Include="Articles\Module\Work with files and packages.png" />
     <Content Include="sdl_logo_transparent.png" />
     <Content Include="template\styles\main.css" />
   </ItemGroup>
@@ -109,15 +135,16 @@
   <PropertyGroup>
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\commands" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles" -Verbose
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -Verbose
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-RootItems.ps1" -Verbose
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -SoftwareCMVersion "$(SoftwareCMVersion)" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -File "$(ProjectDir)Tools\Copy-Changelog.ps1" -ExportPath "$(ProjectDir)obj\doc" -Verbose</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" />
+  <Import Project="..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.1.9.0\build\docfx.msbuild.targets'))" />
+    <Error Condition="!Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

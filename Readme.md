@@ -26,6 +26,7 @@ The module is available in [PowerShell gallery](https://www.powershellgallery.co
 
 The PowerShell module name matches the specific version of [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) release version. For example 
 - **ISHDeploy.12.0.0** targets the release of **12.0.0**
+- **ISHDeploy.12.0.1** targets the release of **12.0.1**
 
 Every cmdlet provides rich help that can be explored with the `Get-Help` PowerShell command.
 

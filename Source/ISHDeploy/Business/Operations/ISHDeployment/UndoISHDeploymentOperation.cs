@@ -18,6 +18,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -31,6 +32,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// The actions invoker
         /// </summary>
         private readonly IActionInvoker _invoker;
+
+        /// <summary>
+        /// The file manager
+        /// </summary>
+        private readonly IFileManager _fileManager;
 
         /// <summary>
         /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
@@ -50,6 +56,18 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
+
+
+            // For version 12.X.X only
+            DeleteExtensionsLoaderFile();
+
+            // Remove redundant files from BIN
+            _invoker.AddAction(new DirectoryBinReturnToVanila(
+                logger, 
+                BackupFolderPath, 
+                "vanilla.web.author.asp.bin.xml",
+                $@"{WebFolderPath}\Author\ASP\bin"));
 
             // Disable internal STS login (remove directory) 
             _invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
@@ -71,7 +89,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
 
             // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, AuthorFolderPath));
+            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
 
 			// Rolling back changes for Data folder
 			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
@@ -87,7 +105,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
             if (isInputParameterBackupFileExist)
             {
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath,
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
 
@@ -106,7 +124,23 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 			// Removing Backup folder
 			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
-		}
+
+            // Remove Author\ASP\Custom
+            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
+        }
+
+        /// <summary>
+        /// Deletes ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js file if file exists.
+        /// </summary>
+        public void DeleteExtensionsLoaderFile()
+        {
+            if (_fileManager.FileExists(ExtensionsLoaderFilePath.AbsolutePath))
+            {
+                Logger.WriteDebug("Delete file", ExtensionsLoaderFilePath.RelativePath);
+
+                _invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
+            }
+        }
 
         /// <summary>
         /// Runs current operation.

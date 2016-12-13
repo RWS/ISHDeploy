@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
+using ISHDeploy.Business.Enums;
+using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
-using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Models.UI;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -102,7 +107,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched node</param>
-        public void RemoveSingleNode(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveSingleNode(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove node", xpath, filePath);
 
@@ -112,6 +118,10 @@ namespace ISHDeploy.Data.Managers
             if (node == null)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find the target node");
+                }
                 return;
             }
 
@@ -127,7 +137,8 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="xpath">XPath to searched nodes</param>
-        public void RemoveNodes(string filePath, string xpath)
+        /// <param name="outputWarnings">Output warnings or not. Is true by default</param>
+        public void RemoveNodes(string filePath, string xpath, bool outputWarnings = true)
         {
             _logger.WriteDebug("Remove nodes", xpath, filePath);
 
@@ -137,6 +148,12 @@ namespace ISHDeploy.Data.Managers
             if (nodes.Length == 0)
             {
                 _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
+
+                if (outputWarnings)
+                {
+                    _logger.WriteWarning("Not able to find target nodes");
+                }
+
                 return;
             }
 
@@ -468,7 +485,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="replaceIfExists">if set to <c>true</c> replaces existing node if exists, otherwise does nothing.</param>
         public void SetNode(string filePath, string xpath, IISHXmlNode xNode, bool replaceIfExists = true)
         {
-            _logger.WriteDebug("Set node", xpath ,filePath);
+            _logger.WriteDebug("Set node", xpath, filePath);
 
             var doc = _fileManager.Load(filePath);
             XNode newNode = xNode.ToXElement();
@@ -546,6 +563,178 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Inserts or update the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
+        {
+            _logger.WriteDebug("Insert/Update UI element", filePath);
+            var doc = _fileManager.Load(filePath);
+            var element = XElement.Parse(Serialize(model));
+
+            var found = SelectSingleNode(ref doc, model.XPath);
+
+            if (found == null)
+            {
+                _logger.WriteDebug("Insert UI element", model.XPath, filePath);
+                var parent = doc.XPathSelectElement(model.XPathToParentElement);
+                var memberList = parent.Elements(model.NameOfItem).ToList();
+                if (!memberList.Any())
+                {
+                    parent.Add(element);
+                }
+                else
+                {
+                    // to put element before special element if it is mentioned
+                    if (model.InsertBeforeSpecialXPath != null)
+                    {
+                        var foundSpecialElement = SelectSingleNode(ref doc, model.InsertBeforeSpecialXPath);
+
+                        if (foundSpecialElement != null)
+                        {
+                            // We put element before comment node if it is exist
+                            if (foundSpecialElement.PreviousNode != null && foundSpecialElement.PreviousNode.NodeType == XmlNodeType.Comment)
+                                foundSpecialElement.PreviousNode.AddBeforeSelf(element);
+                            else
+                                foundSpecialElement.AddBeforeSelf(element);
+                        }
+                        else
+                            memberList.Last().AddAfterSelf(element);
+                    }
+                    else
+                        memberList.Last().AddAfterSelf(element);
+
+                    // If commentary exist we will create it
+                    if (model.CommentNode != null)
+                    {
+                        element.AddBeforeSelf(model.CommentNode);
+                    }
+                }
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The new element has been inserted in file `{filePath}`");
+            }
+            else
+            {
+                _logger.WriteDebug("Update UI element", model.XPath, filePath);
+                found.ReplaceWith(element);
+
+                // If commentary exist we update it
+                if (model.CommentNode != null && element.PreviousNode != null && element.PreviousNode.NodeType == XmlNodeType.Comment)
+                {
+                    element.PreviousNode.ReplaceWith(model.CommentNode);
+                }
+
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The element has been updated in file `{filePath}`");
+            }
+        }
+
+        /// <summary>
+        /// Removes the element of UI.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        public void RemoveUIElement(string filePath, BaseUIElement model)
+        {
+            _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
+
+            var doc = _fileManager.Load(filePath);
+
+            _logger.WriteDebug("Remove UI element", model.XPath, filePath);
+
+            var found = SelectSingleNode(ref doc, model.XPath);
+
+            if (found != null)
+            {
+                found.Remove();
+                _fileManager.Save(filePath, doc);
+                _logger.WriteVerbose($"The element `{model.XPath}` has been removed from file `{filePath}`");
+            }
+            else
+            {
+                _logger.WriteWarning("Not able to find the target node");
+            }
+        }
+
+        /// <summary>
+        /// Moves the UI element.
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="model">The model that represents UI element.</param>
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="insertAfterXpath">The XPath to element to move after it. It is Null by default</param>
+        /// <exception cref="System.Exception">
+        /// Could not find source element
+        /// or
+        /// Could not find target element
+        /// or
+        /// Unknown operation
+        /// </exception>
+        public void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXpath = null)
+        {
+            string verboseMessage = "";
+            _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
+            var doc = _fileManager.Load(filePath);
+            bool doSave = true;
+
+
+            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == UIElementMoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
+
+            var found = SelectSingleNode(ref doc, model.XPath);
+
+            if (found != null)
+            {
+                switch (direction)
+                {
+                    case UIElementMoveDirection.First:
+                        doc.Element(model.XPathToParentElement).AddFirst(found);
+                        verboseMessage = "The UI element has been moved to the first position";
+                        break;
+                    case UIElementMoveDirection.Last:
+                        var lastElement = doc.Element(model.XPathToParentElement).Elements(model.NameOfItem).LastOrDefault();
+                        if (lastElement != null)
+                        {
+                            lastElement.AddAfterSelf(found);
+                        }
+                        else
+                        {
+                            doc.Element(model.XPathToParentElement).Add(found);
+                        }
+                        verboseMessage = "The UI element has been moved to the last position";
+                        break;
+                    case UIElementMoveDirection.After:
+                        var afterElement = SelectSingleNode(ref doc, insertAfterXpath); ;
+                        if (afterElement == null)
+                        {
+                            _logger.WriteWarning("Not able to find the target node");
+                            verboseMessage = $"Do not able to find target element `{insertAfterXpath}` to insert after it the node `{model.XPath}`";
+                            doSave = false;
+                        }
+                        else
+                        {
+                            afterElement.AddAfterSelf(found);
+                            verboseMessage = $"The UI element has been moved after {insertAfterXpath}";
+                        }
+                        break;
+                }
+
+                found.Remove();
+
+                if (doSave)
+                {
+                    _fileManager.Save(filePath, doc);
+                }
+            }
+            else
+            {
+                _logger.WriteWarning("Not able to find the target node");
+            }
+            _logger.WriteVerbose($"{verboseMessage} in file {filePath}");
+        }
+
+        /// <summary>
         /// Set element value.
         /// </summary>
         /// <param name="filePath">Path to the file that is modified.</param>
@@ -597,6 +786,98 @@ namespace ISHDeploy.Data.Managers
             var element = (XElement)node;
             _logger.WriteVerbose($"The value of element with xpath `{xpath}` has been retrieved from file `{filePath}`");
             return element.Value;
+        }
+
+        /// <summary>
+        /// Serializes the specified value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public string Serialize<T>(T value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var serializer = new XmlSerializer(value.GetType());
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                {
+                    serializer.Serialize(xmlWriter, value, ns);
+                }
+                return textWriter.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <param name="readToDescendantName">The name of node to read to. Empty string by default</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath, string readToDescendantName = "")
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                if (!string.IsNullOrEmpty(readToDescendantName))
+                {
+                    reader.ReadToDescendant(readToDescendantName);
+                    return (T) ser.Deserialize(reader.ReadSubtree());
+                }
+                else
+                {
+                    return (T)ser.Deserialize(reader);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Serializes object to special file.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="data">Object to serialize.</param>
+        /// <returns></returns>
+        public void SerializeToFile<T>(string filePath, T data)
+        {
+            using (var outputFile = File.Create(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(outputFile, data);
+            }
+        }
+
+        /// <summary>
+        /// Deserialize the XML document to type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="xmlFilePath">The path to XML file.</param>
+        /// <returns>
+        /// Deserialized object of type T
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public T Deserialize<T>(string xmlFilePath)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            using (XmlReader reader = XmlReader.Create(xmlFilePath))
+            {
+                return (T)ser.Deserialize(reader);
+            }
         }
 
         #region private methods

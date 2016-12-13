@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)ModuleVersion.props" />
+  <Import Project="$(SolutionDir)ISHVersion.props" />
   <Import Project="$(SolutionDir)Build.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,8 +47,18 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugSkipVersion\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SKIPVERSION</DefineConstants>
-    <DocumentationFile>bin\Debug\ISHDeploy.12.0.1.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\$(ModuleName).xml</DocumentationFile>
     <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-Publish|AnyCPU'">
+    <OutputPath>bin\Release-Publish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Release-Publish\$(ModuleName).xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -75,7 +87,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Operations\InternalSTSLogin.cs" />
+    <Compile Include="Business\Enums\CardType.cs" />
+    <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
+    <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
@@ -85,6 +99,10 @@
     <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SaveISHIntegrationSTSConfigurationPackageOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\BackupISHDeploymentOperation.cs" />
+    <Compile Include="Business\Operations\ISHPackage\ExpandISHCMPackageOperation.cs" />
+    <Compile Include="Business\Operations\ISHPackage\SetISHCMCUILResourceGroupOperation.cs" />
+    <Compile Include="Business\Operations\ISHPackage\CopyISHCMFileOperation.cs" />
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationOperation.cs" />
@@ -130,7 +148,13 @@
     <Compile Include="Business\Operations\InputParametersXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\InternalSTSLogin.cs">
+      <DependentUpon>BaseOperationPaths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSConfigurationOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\MoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\RemoveUIElementOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIElement\SetUIElementOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -168,11 +192,12 @@
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustIncludeInternalClientsOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSCertificateOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorTabOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabOperation.cs" />
-    <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\SetISHUIEventMonitorMenuBarItemOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorMenuBarItemOperation.cs" />
+    <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\SetISHCMCUILResourceGroupCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\GetISHDeploymentParametersCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet.cs" />
@@ -181,15 +206,37 @@
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSWSTrustCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\BackupISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\ExpandISHCMPackageCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHPackage\CopyISHCMFileCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
+    <Compile Include="Cmdlets\AdministratorRightsAttribute.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
+    <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />
+    <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
+    <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
+    <Compile Include="Data\Actions\File\BackupAction.cs" />
+    <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
+    <Compile Include="Models\UI\SearchMenuItem.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\SetISHUIEventMonitorTabCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\MoveISHUIEventMonitorTabCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHUIEventMonitorTab\RemoveISHUIEventMonitorTabCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUIButtonBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIElement\SetISHUISearchMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\SetISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\MoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHUIEventMonitorMenuBarItem\RemoveISHUIEventMonitorMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\GetISHPackageFolderPathCmdlet.cs" />
     <Compile Include="Cmdlets\StringToISHDeploymentTransformationAttribute.cs" />
     <Compile Include="Data\Actions\Certificate\GetCertificateSubjectByThumbprintAction.cs" />
@@ -216,6 +263,9 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\MoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\RemoveUIElementAction.cs" />
+    <Compile Include="Data\Actions\ISHUIElement\SetUIElementAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\StringActions\CreateIndexHTMLAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
@@ -301,6 +351,10 @@
     <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
     <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
     <Compile Include="Models\SQL\RelyingParty.cs" />
+    <Compile Include="Models\UI\Input.cs" />
+    <Compile Include="Models\UI\MainMenuBarItem.cs" />
+    <Compile Include="Models\UI\BaseUIElement.cs" />
+    <Compile Include="Models\UI\ButtonBarItem.cs" />
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
@@ -325,8 +379,14 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\AssemblyInfo.targets" />
-    <None Include="Properties\ModuleManifest.targets" />
+    <None Include="Properties\ModuleManifest.targets">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Resources\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />
@@ -342,7 +402,7 @@
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*&quot; &quot;$(OutDir)x86&quot;" />
     <Exec Command="if not exist &quot;$(OutDir)amd64&quot; md &quot;$(OutDir)amd64&quot;" />
     <Exec Command="xcopy /s /y &quot;$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*&quot; &quot;$(OutDir)amd64 &quot;" />
-    <Warning Text="Natives copied" />
+    <Message Text="Natives copied" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

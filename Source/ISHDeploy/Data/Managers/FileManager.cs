@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using System.Threading;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -53,8 +53,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="overwrite">True if the destination file can be overwritten; otherwise False. </param>
         public void Copy(string sourceFilePath, string destFilePath, bool overwrite = false)
         {
-			_logger.WriteDebug($"Copy file `{sourceFilePath}` to `{destFilePath}`, with `overwrite` option set to `{overwrite}`");
-			File.Copy(sourceFilePath, destFilePath, overwrite);
+            _logger.WriteDebug($"Copy file `{sourceFilePath}` to `{destFilePath}`, with `overwrite` option set to `{overwrite}`");
+            File.Copy(sourceFilePath, destFilePath, overwrite);
             _logger.WriteVerbose($"The file `{sourceFilePath}` has been copied to `{destFilePath}`");
         }
 
@@ -76,7 +76,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if the caller has the required permissions and <paramref name="path"/> contains the name of an existing file</returns>
         public bool FileExists(string path)
         {
-			return File.Exists(path);
+            return File.Exists(path);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if folder exists</returns>
         public bool FolderExists(string path)
         {
-			return Directory.Exists(path);
+            return Directory.Exists(path);
         }
 
         /// <summary>
@@ -94,15 +94,15 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="path">Path to the file to be deleted</param>
         public void Delete(string path)
-		{
-			FileInfo fileInfo = new FileInfo(path);
-			if (fileInfo.IsReadOnly)
-			{
-				fileInfo.Attributes = FileAttributes.Normal;
-			}
+        {
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.IsReadOnly)
+            {
+                fileInfo.Attributes = FileAttributes.Normal;
+            }
 
-			_logger.WriteDebug("Delete file", path);
-			File.Delete(path);
+            _logger.WriteDebug("Delete file", path);
+            File.Delete(path);
             _logger.WriteVerbose($"The file `{path}` has been deleted");
         }
 
@@ -112,8 +112,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="folderPath">Path to folder to be created</param>
         public void CreateDirectory(string folderPath)
         {
-			_logger.WriteDebug("Create directory", folderPath);
-			Directory.CreateDirectory(folderPath);
+            _logger.WriteDebug("Create directory", folderPath);
+            Directory.CreateDirectory(folderPath);
             _logger.WriteVerbose($"The folder `{folderPath}` has been created");
         }
 
@@ -122,32 +122,32 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="folderPath">Path to folder to be cleaned up</param>
         public void CleanFolder(string folderPath)
-		{
-			_logger.WriteDebug("Clean folder", folderPath);
-			if (FolderExists(folderPath))
-			{
-				foreach (string subFolderPath in Directory.GetDirectories(folderPath))
-				{
-					DeleteFolder(subFolderPath);
-				}
+        {
+            _logger.WriteDebug("Clean folder", folderPath);
+            if (FolderExists(folderPath))
+            {
+                foreach (string subFolderPath in Directory.GetDirectories(folderPath))
+                {
+                    DeleteFolder(subFolderPath);
+                }
 
-				foreach (string filePath in GetFiles(folderPath, "*", false))
-				{
-					Delete(filePath);
-				}
-			}
+                foreach (string filePath in GetFiles(folderPath, "*", false))
+                {
+                    Delete(filePath);
+                }
+            }
             _logger.WriteVerbose($"The folder `{folderPath}` has been cleaned");
         }
 
-		/// <summary>
-		/// Deletes the folder
-		/// </summary>
-		/// <param name="folderPath">Path to folder to be deleted</param>
-		public void DeleteFolder(string folderPath)
-		{
-			_logger.WriteDebug("Delete folder", folderPath);
-			if (FolderExists(folderPath))
-			{
+        /// <summary>
+        /// Deletes the folder
+        /// </summary>
+        /// <param name="folderPath">Path to folder to be deleted</param>
+        public void DeleteFolder(string folderPath)
+        {
+            _logger.WriteDebug("Delete folder", folderPath);
+            if (FolderExists(folderPath))
+            {
                 // known c# issue
                 // TS-11684
                 // http://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
@@ -185,48 +185,48 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="folderPath">Directory path to verify</param>
         public void EnsureDirectoryExists(string folderPath)
-		{
-			if (!FolderExists(folderPath))
-			{
-				_logger.WriteDebug("The folder not exists, creating it", folderPath);
-				CreateDirectory(folderPath);
-			}
-			else
-			{
-				_logger.WriteDebug("The folder exists", folderPath);
-			}
-		}
+        {
+            if (!FolderExists(folderPath))
+            {
+                _logger.WriteDebug("The folder not exists, creating it", folderPath);
+                CreateDirectory(folderPath);
+            }
+            else
+            {
+                _logger.WriteDebug("The folder exists", folderPath);
+            }
+        }
 
-		/// <summary>
-		/// Copies content from one folder to another
-		/// </summary>
-		/// <param name="sourcePath">Source folder path</param>
-		/// <param name="destinationPath">Destination folder path</param>
-		public void CopyDirectoryContent(string sourcePath, string destinationPath)
-		{
-			_logger.WriteDebug($"Copy directory content from `{sourcePath}` to `{destinationPath}`");
-			if (FolderExists(sourcePath))
-			{
-				//Copy all the files & Replaces any files with the same name
-				foreach (string newPath in GetFiles(sourcePath, "*", true))
-				{
-					Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
-				}
-			}
+        /// <summary>
+        /// Copies content from one folder to another
+        /// </summary>
+        /// <param name="sourcePath">Source folder path</param>
+        /// <param name="destinationPath">Destination folder path</param>
+        public void CopyDirectoryContent(string sourcePath, string destinationPath)
+        {
+            _logger.WriteDebug($"Copy directory content from `{sourcePath}` to `{destinationPath}`");
+            if (FolderExists(sourcePath))
+            {
+                //Copy all the files & Replaces any files with the same name
+                foreach (string newPath in GetFiles(sourcePath, "*", true))
+                {
+                    Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
+                }
+            }
             _logger.WriteVerbose($"The content of the folder `{sourcePath}` has been copied to {destinationPath}");
         }
 
-		/// <summary>
-		/// Opens a text file, reads all lines of the file, and then closes the file.
-		/// </summary>
-		/// <param name="filePath">The file to open for reading.</param>
-		/// <returns>A string array containing all lines of the file.</returns>
-		public string ReadAllText(string filePath)
+        /// <summary>
+        /// Opens a text file, reads all lines of the file, and then closes the file.
+        /// </summary>
+        /// <param name="filePath">The file to open for reading.</param>
+        /// <returns>A string array containing all lines of the file.</returns>
+        public string ReadAllText(string filePath)
         {
-			_logger.WriteDebug("Read all text", filePath);
+            _logger.WriteDebug("Read all text", filePath);
             var text = File.ReadAllText(filePath);
             _logger.WriteVerbose($"All text from file `{filePath}` has been read");
-		    return text;
+            return text;
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>A string array containing all lines of the file.</returns>
         public string[] ReadAllLines(string filePath)
         {
-			_logger.WriteDebug("Read all lines", filePath);
+            _logger.WriteDebug("Read all lines", filePath);
             var lines = File.ReadAllLines(filePath);
             _logger.WriteVerbose($"All lines from file `{filePath}` have been read");
             return lines;
@@ -255,32 +255,120 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Writes string to specified file.
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="content">The string to write to the file</param>
+        public void WriteAllText(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
+
+        /// <summary>
         /// Appends text to the file. Creates new file if it does not exist.
         /// </summary>
         /// <param name="filePath">The file to open for writing.</param>
         /// <param name="text">The text to be appended to the file content.</param>
         public void Append(string filePath, string text)
         {
-			Write(filePath, text, true);
+            Write(filePath, text, true);
         }
 
-		/// <summary>
-		/// Writes text to the file. Creates new file if it does not exist.
-		/// </summary>
-		/// <param name="filePath">The file to open for writing.</param>
-		/// <param name="text">Text to be appended to the file content.</param>
-		/// <param name="append">True to append data to the file; false to overwrite the file.</param>
-		public void Write(string filePath, string text, bool append = false)
-		{
-			_logger.WriteDebug($"{(append ? "Append" : "Write")} content", filePath);
+        /// <summary>
+        /// Writes text to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="text">Text to be appended to the file content.</param>
+        /// <param name="append">True to append data to the file; false to overwrite the file.</param>
+        public void Write(string filePath, string text, bool append = false)
+        {
+            _logger.WriteDebug($"{(append ? "Append" : "Write")} content", filePath);
 
             EnsureDirectoryExists(Path.GetDirectoryName(filePath));
 
             using (var fileStream = new StreamWriter(filePath, append))
-			{
-				fileStream.Write(text);
-			}
+            {
+                fileStream.Write(text);
+            }
             _logger.WriteVerbose($"The content has been {(append ? "appended" : "written")} to file `{filePath}`");
+        }
+
+        /// <summary>
+        /// Version of History file
+        /// </summary>
+        private readonly string _historyFileVersion = "1.0";
+
+        /// <summary>
+        /// Header params
+        /// </summary>
+        private readonly string _headerParams =
+@"param(
+    [Parameter(Mandatory=$false)]
+    [switch]$IncludeCustomFile=$false
+)
+
+";
+        /// <summary>
+        /// Create history header
+        /// </summary>
+        private string GetHeader(string name, string currentVersion, string updatedVersion)
+        {
+            return
+ $@"<#ISHDeployScriptInfo
+
+.VERSION {_historyFileVersion}
+
+.MODULE {name}
+
+.CREATEDBYMODULEVERSION {currentVersion}
+
+.UPDATEDBYMODULEVERSION {updatedVersion}
+
+#>
+
+" + _headerParams;
+        }
+
+        /// <summary>
+        /// Writes text header to the file. Creates new file if it does not exist.
+        /// </summary>
+        /// <param name="filePath">The file to open for writing.</param>
+        /// <param name="version">Module version.</param>
+        public void WriteHistoryHeader(string filePath, Version version)
+        {
+            _logger.WriteDebug($"Write header", filePath);
+
+            EnsureDirectoryExists(Path.GetDirectoryName(filePath));
+
+            string currentContent = String.Empty;
+            if (File.Exists(filePath))
+            {
+                currentContent = File.ReadAllText(filePath);
+            }
+
+            string createdModuleVersion, currentModuleVersion;
+            createdModuleVersion = currentModuleVersion = version.ToString();
+
+            var groups = Regex.Match(currentContent, @".CREATEDBYMODULEVERSION ([\d\.]*)").Groups;
+            if (groups[1].Success != false)
+            { //header already exist
+                createdModuleVersion = groups[1].Value;
+                int found = currentContent.IndexOf(_headerParams);
+                if (found != -1)
+                {
+                    currentContent = currentContent.Substring(found + _headerParams.Length);
+                }
+            }
+
+            var header = GetHeader(
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
+                createdModuleVersion,
+                currentModuleVersion);
+
+
+            File.WriteAllText(filePath, header + currentContent);
+
+            _logger.WriteVerbose($"The header has been added to file `{filePath}`");
         }
 
         /// <summary>
@@ -290,7 +378,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>New instance of <see cref="XDocument" /> with loaded file content</returns>
         public XDocument Load(string filePath)
         {
-			_logger.WriteDebug("Load XML document", filePath);
+            _logger.WriteDebug("Load XML document", filePath);
             var doc = XDocument.Load(filePath);
             _logger.WriteVerbose($"The XML document from file `{filePath}` has been loaded");
             return doc;
@@ -303,7 +391,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="doc">The document to be stored</param>
         public void Save(string filePath, XDocument doc)
         {
-			_logger.WriteDebug("Save XML document", filePath);
+            _logger.WriteDebug("Save XML document", filePath);
             doc.Save(filePath);
             _logger.WriteVerbose($"The XML document has been saved to file `{filePath}`");
         }
@@ -318,13 +406,13 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Returns True if license file is found, otherwise False.</returns>
         public bool TryToFindLicenseFile(string licenseFolderPath, string hostName, string licenseFileExtension, out string filePath)
         {
-			_logger.WriteDebug("Look license file", hostName);
-			filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
+            _logger.WriteDebug("Look license file", hostName);
+            filePath = Path.Combine(licenseFolderPath, string.Concat(hostName, licenseFileExtension));
 
             if (File.Exists(filePath))
             {
-				_logger.WriteVerbose($"The license file `{filePath}` has been found for `{hostName}`");
-				return true;
+                _logger.WriteVerbose($"The license file `{filePath}` has been found for `{hostName}`");
+                return true;
             }
 
             var isFound = false;
@@ -359,6 +447,25 @@ namespace ISHDeploy.Data.Managers
             ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationArchiveFilePath, CompressionLevel.Optimal, includeBaseDirectory);
 
             _logger.WriteVerbose($"The output package `{destinationArchiveFilePath}` has been created");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceArchiveFilePath">The path to archive.</param>
+        /// <param name="destinationDirectoryPath">The path to destination folder.</param>
+        public void ExtractPackageToDirectory(string sourceArchiveFilePath, string destinationDirectoryPath)
+        {
+            _logger.WriteDebug("Unzip folder", sourceArchiveFilePath, destinationDirectoryPath);
+
+            if (FolderExists(destinationDirectoryPath))
+            {
+                DeleteDirectory(destinationDirectoryPath);
+            }
+
+            ZipFile.ExtractToDirectory(sourceArchiveFilePath, destinationDirectoryPath);
+
+            _logger.WriteVerbose($"The source package `{sourceArchiveFilePath}` has been extracted to `{destinationDirectoryPath}`");
         }
 
         /// <summary>
@@ -453,23 +560,104 @@ namespace ISHDeploy.Data.Managers
         /// <param name="path">The path to directory.</param>
         /// <param name="searchPattern">The pattern to search.</param>
         /// <param name="recurse">Search in all directories or just in top one.</param>
-        /// <returns></returns>
-        public List<string> GetFiles(string path, string searchPattern, bool recurse)
+        /// <returns>A string array containing list of required files.</returns>
+        public string[] GetFiles(string path, string searchPattern, bool recurse)
         {
-            List<string> list;
+            string[] list;
             if (recurse)
             {
                 _logger.WriteDebug("Get list of files", searchPattern, path, SearchOption.AllDirectories);
-                list = Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+                list = Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);
                 _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{path}` and in all sub-folders has been got");
             }
             else
             {
                 _logger.WriteDebug("Get list of files", searchPattern, path);
-                list = Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly).ToList();
+                list = Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
                 _logger.WriteVerbose($"The list of all `{searchPattern}` files in folder `{path}` has been got");
             }
             return list;
+        }
+
+        /// <summary>
+        /// Gets list of system entries
+        /// </summary>
+        /// <param name="path">The path to directory.</param>
+        /// <param name="searchPattern">The pattern to search.</param>
+        /// <param name="searchOption">Search option.</param>
+        /// <returns>A string array containing list of required file entries.</returns>
+        public string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            _logger.WriteDebug("Get list of system entries", searchPattern, path);
+            return Directory.GetFileSystemEntries(path, searchPattern, SearchOption.AllDirectories);
+        }
+
+        /// <summary>
+        /// Returns a list of files that correspond to search pattern.
+        /// </summary>
+        /// <param name="sourceDirectoryPath">The path to source directory</param>
+        /// <param name="searchPattern">The search pattern</param>
+        /// <returns>A string array containing list of required files.</returns>
+        public string[] GetFilesByCustomSearchPattern(string sourceDirectoryPath, string searchPattern)
+        {
+            _logger.WriteDebug("Get list of files", sourceDirectoryPath, searchPattern);
+            string warningMessage = string.Empty;
+
+            Func<string[]> getFiles;
+
+            if (string.IsNullOrEmpty(searchPattern))
+            {
+                getFiles = () => GetFiles(sourceDirectoryPath, "*.*", false);
+            }
+            else
+            {
+                string directoryTepmlate = Path.GetDirectoryName(searchPattern);
+                string fileTemplate = Path.GetFileName(searchPattern);
+
+                // For directories such as "Author\ASP\bin"
+                if (FolderExists(Path.Combine(sourceDirectoryPath, searchPattern))) {
+                    directoryTepmlate = Path.Combine(directoryTepmlate, fileTemplate);
+                    fileTemplate = "";
+                }
+
+                var pathToDirectory = Path.Combine(sourceDirectoryPath, directoryTepmlate);
+                if (FolderExists(pathToDirectory))
+                {
+                    if (string.IsNullOrEmpty(fileTemplate))
+                    {
+                        getFiles = () => GetFiles(
+                            pathToDirectory,
+                            "*.*", true);
+                    }
+                    else
+                    {
+                        getFiles = () => GetFiles(
+                            pathToDirectory,
+                            fileTemplate,
+                            false);
+                        warningMessage = $"The directory `{pathToDirectory}` has no files that match to `{fileTemplate}`";
+                    }
+                }
+                else
+                {
+                    getFiles = () => new string[0];
+                    warningMessage = $"The directory `{pathToDirectory}` does not exist";
+                }
+            }
+
+            var files = getFiles();
+
+            if (files.Length == 0)
+            {
+                _logger.WriteWarning($"{warningMessage}");
+            }
+            else
+            {
+                _logger.WriteVerbose(
+                    $"The list of all `{searchPattern}` files in folder `{sourceDirectoryPath}` has been got");
+            }
+
+            return files;
         }
     }
 }

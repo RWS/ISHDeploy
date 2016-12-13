@@ -1,4 +1,49 @@
-# Version notes
+# Release notes
+
+## stable-1.2
+1. General 
+    1. Cmdlets
+		- For all cmdlets the '-ISHDeployment' parameter is now optional and calculated when omitted with the following reasoning:  **[Update]**
+			- When there is only one available deployment detected then this one will be used.
+			- Where there are more than one available deployments detected then the cmdlet will throw an error.
+        - Improved cmdlet behavior when administrator privileges are required.
+        - History file is enhanced with script info meta language. 
+    2. Documentation
+		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
+		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
+		- New icon in top bar. **[Update]**
+		- New tutorial on how to work with one deployment. **[Update]**
+        - Renamed and extended tutorial **Work with files** to **Work with files and packages**. **[Update]**
+        - **Getting Started** has new information about required elevated administrator privileges. **[Update]**
+1. Working with ISHCM web UI features
+    1. Cmdlets
+	    - `Set-ISHUIButtonBarItem`. **[New]**
+	    - `Remove-ISHUIButtonBarItem`. **[New]**
+	    - `Move-ISHUIButtonBarItem`. **[New]**
+	    - `Move-ISHUIMainMenuBarItem`. **[New]**
+	    - `Remove-ISHUIMainMenuBarItem`. **[New]**
+	    - `Set-ISHUIMainMenuBarItem`. **[New]**
+	    - `Move-ISHUISearchMenuBarItem`. **[New]**
+	    - `Remove-ISHUISearchMenuBarItem`. **[New]**
+	    - `Set-ISHUISearchMenuBarItem`. **[New]**
+	    - `Set-ISHUISearchMenuBarItem`. **[New]**
+	    - `Copy-ISHCMFile`. **[New]**
+	    - `Expand-ISHCMPackage`. **[New]**
+	    - `Set-ISHCMCUILResourceGroup`. **[New]**
+        - `Backup-ISHDeployment`. **[New]**
+	    - Renamed cmdlets for event monitor:  **[Update]**
+			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
+			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
+			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
+    2. Documentation
+		- Reorganize former "Configuring features using the module" tutorial into three more specialized. **[Update]**
+			- Toggling Web Components. **[Update]**
+			- Configuring ISHCM web UI menu bars. **[Update]**
+			- Configuring ISHCM web UI button bars. **[New]**
+1. Integration STS
+	1. Documentation
+		- Fixed invalid parameter reference in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
+		- Added remarks for the importance of execution order in PowerShell examples in tutorial **Implementing Vanilla certificate replacement**. **[Update]**
 
 ## stable-1.1
 
@@ -10,11 +55,11 @@
 - Solve previous known issue:
 > When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the `Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows`.
 
-**Cmdlets and documentatin changes**
+**Cmdlets and documentation changes**
 
 1. General 
 	1. Cmdlets
-		- Less warning messages. Warnings are issued when it’s important to share. **[Update]**
+		- Less warning messages. Warnings are issued when itï¿½s important to share. **[Update]**
 		- `Get-ISHDeploymentHistory` returns less. Get-* cmdlets are ignored. **[Update]**
 	1. Documentation - Commands
 		- Related links render as links and provide a quicker navigation experience. **[Update]**

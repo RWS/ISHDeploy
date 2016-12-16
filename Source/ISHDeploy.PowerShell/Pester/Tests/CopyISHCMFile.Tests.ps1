@@ -133,11 +133,9 @@ Describe "Testing Copy-ISHCMFile"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, $customFileName, "ToCustom"
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
+        $history = $history -replace '(^\s+|\s+$)','' -replace '\s+',' '
         #Assert
-        $history.Contains('if($IncludeCustomFile)
-{
-     Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.config") -ToCustom 
-}') | Should be "True"
+        $history.Contains('if($IncludeCustomFile) { Copy-ISHCMFile -ISHDeployment $deploymentName -FileName @("test.config") -ToCustom }') | Should be "True"
     }
 
     It "Undo-ISHDeployment deletes copied files"{      

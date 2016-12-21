@@ -47,7 +47,6 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSRelyingParty")]
-    [AdministratorRights]
     public class SetISHSTSRelyingPartyCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>

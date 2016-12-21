@@ -28,7 +28,6 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Expand, "ISHCMPackage")]
-    [AdministratorRights]
     public class ExpandISHCMPackageCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

@@ -29,7 +29,6 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsData.Backup, "ISHDeployment")]
-    [AdministratorRights]
     public class BackupISHDeploymentCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>

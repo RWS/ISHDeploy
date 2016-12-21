@@ -29,7 +29,6 @@ namespace ISHDeploy.Cmdlets.ISHUIContentEditor
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Enable, "ISHUIContentEditor")]
-    [AdministratorRights]
     public sealed class EnableISHUIContentEditorCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

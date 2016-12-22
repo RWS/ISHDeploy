@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Data.Managers.Interfaces;
+
+using System.ServiceProcess;
+using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Interfaces;
 ﻿using ISHDeploy.Interfaces.Actions;
 
@@ -29,6 +31,11 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// The windows service name.
         /// </summary>
         private readonly string _serviceName;
+
+        /// <summary>
+        /// The status of the service.
+        /// </summary>
+        private ServiceControllerStatus _serviceStatus;
 
         /// <summary>
         /// The windows service manager
@@ -61,7 +68,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public void Backup()
         {
-            
+            _serviceStatus = _serviceManager.GetWindowsServiceStatus(_serviceName);
         }
 
         /// <summary>
@@ -69,7 +76,10 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public void Rollback()
         {
-            //_webAdminManager.RecycleApplicationPool(_appPoolName, true);
+            if (_serviceStatus != ServiceControllerStatus.Running)
+            {
+                _serviceManager.StopWindowsService(_serviceName);
+            }
         }
     }
 }

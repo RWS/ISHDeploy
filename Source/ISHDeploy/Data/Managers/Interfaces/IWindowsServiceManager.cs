@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Data.Exceptions;
+using System.Collections.Generic;
+using System.ServiceProcess;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -28,5 +29,29 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="serviceName">Name of the windows service.</param>
         void StartWindowsService(string serviceName);
+
+        /// <summary>
+        /// Stops specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        void StopWindowsService(string serviceName);
+
+        /// <summary>
+        /// Gets names of all windows services where name contains search criteria.
+        /// </summary>
+        /// <param name="searchCriteria">The search criteria.</param>
+        /// <returns>
+        /// The names of all windows services where name contains search criteria.
+        /// </returns>
+        IEnumerable<string> GetNamesOfWindowsServicesWhereNameContains(string searchCriteria);
+
+        /// <summary>
+        /// Gets current Status of the service.
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        /// <returns>
+        /// The current Status of the service.
+        /// </returns>
+        ServiceControllerStatus GetWindowsServiceStatus(string serviceName);
     }
 }

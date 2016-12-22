@@ -107,6 +107,7 @@
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Cmdlets\ISHDeployment\BackupISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\ExpandISHCMPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\CopyISHCMFileCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />

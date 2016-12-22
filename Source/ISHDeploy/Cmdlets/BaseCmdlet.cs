@@ -47,6 +47,7 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
             ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
+            ObjectFactory.SetInstance<IWindowsServiceManager>(new WindowsServiceManager(Logger));
         }
 
         /// <summary>

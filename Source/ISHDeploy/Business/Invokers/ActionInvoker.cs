@@ -82,6 +82,8 @@ namespace ISHDeploy.Business.Invokers
                 {
                     var action = _actions[i];
 
+                    (action as IRestorableAction)?.Backup();
+
                     action.Execute();
 
 					// If action was executed, we`re adding it to the list to make a rollback if necessary;

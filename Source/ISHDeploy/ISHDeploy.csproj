@@ -78,6 +78,7 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Management.Automation" />
@@ -220,6 +221,9 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
+    <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
+    <Compile Include="Data\Managers\WindowsServiceManager.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
     <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />

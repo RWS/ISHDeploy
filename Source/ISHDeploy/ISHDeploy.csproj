@@ -107,6 +107,7 @@
     <Compile Include="Business\Operations\ISHPackage\GetISHPackageFolderPathOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\DisableISHIntegrationSTSInternalAuthenticationOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\EnableISHIntegrationSTSInternalAuthenticationOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Cmdlets\ISHDeployment\BackupISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\ExpandISHCMPackageCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\CopyISHCMFileCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\ResetISHSTSCmdlet.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
     <Compile Include="Data\Managers\WindowsServiceManager.cs" />

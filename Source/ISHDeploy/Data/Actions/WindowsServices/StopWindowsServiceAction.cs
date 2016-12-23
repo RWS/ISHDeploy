@@ -22,10 +22,10 @@ using ISHDeploy.Interfaces;
 namespace ISHDeploy.Data.Actions.WindowsServices
 {
     /// <summary>
-    /// Starts an windows service.
+    /// Stops an windows service.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class StartWindowsServiceAction : BaseAction, IRestorableAction
+    public class StopWindowsServiceAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The windows service name.
@@ -47,7 +47,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="serviceName">Name of the windows service.</param>
-        public StartWindowsServiceAction(ILogger logger, string serviceName)
+        public StopWindowsServiceAction(ILogger logger, string serviceName)
             : base(logger)
         {
             _serviceName = serviceName;
@@ -60,7 +60,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.StartWindowsService(_serviceName);
+            _serviceManager.StopWindowsService(_serviceName);
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public void Rollback()
         {
-            if (_previousServiceStatus != ServiceControllerStatus.Running)
+            if (_previousServiceStatus == ServiceControllerStatus.Running)
             {
-                _serviceManager.StopWindowsService(_serviceName);
+                _serviceManager.StartWindowsService(_serviceName);
             }
         }
     }

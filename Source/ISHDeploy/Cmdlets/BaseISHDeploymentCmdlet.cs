@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using System.Management.Automation;
-using System.Security.Principal;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
 
@@ -29,22 +28,12 @@ namespace ISHDeploy.Cmdlets
     public abstract class BaseISHDeploymentCmdlet : BaseCmdlet
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        protected BaseISHDeploymentCmdlet()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
-                throw new Exception("For this commandlet, please start powershell with administrator rights.");
-        }
-
-        /// <summary>
         /// <para type="description">Specifies the name or instance of the Content Manager deployment.</para>
         /// </summary>
         [Parameter(Mandatory = false,
             HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
+        [ValidateAdministratorRights]
         [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 

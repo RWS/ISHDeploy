@@ -367,6 +367,7 @@
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Utils\NetUtil.cs" />
+    <Compile Include="Validators\ValidateAdministratorRights.cs" />
     <Compile Include="Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>
   <ItemGroup>

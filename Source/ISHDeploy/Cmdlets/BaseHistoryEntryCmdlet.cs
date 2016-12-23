@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using System.Security.Principal;
 using System.Text;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Cmdlets.ISHPackage;
@@ -30,17 +29,6 @@ namespace ISHDeploy.Cmdlets
     /// </summary>
     public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentCmdlet
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected BaseHistoryEntryCmdlet()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
-                throw new Exception("For this commandlet, please start powershell with administrator rights.");
-        }
-
         /// <summary>
         /// History prefix for Copy and Expand cmdlet
         /// </summary>

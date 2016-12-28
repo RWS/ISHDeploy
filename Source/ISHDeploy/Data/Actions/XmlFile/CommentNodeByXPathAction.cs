@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 ﻿using System.Collections.Generic;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Actions.XmlFile
 {

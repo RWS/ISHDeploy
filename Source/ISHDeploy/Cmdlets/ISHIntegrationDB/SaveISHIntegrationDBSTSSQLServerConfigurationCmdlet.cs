@@ -16,6 +16,7 @@
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
+﻿using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {

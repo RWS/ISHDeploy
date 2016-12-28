@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 ﻿using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.License;
-using ISHDeploy.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHContentEditor
 {

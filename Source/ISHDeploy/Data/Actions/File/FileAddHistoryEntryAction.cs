@@ -16,9 +16,9 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Validators;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Actions.File
 {

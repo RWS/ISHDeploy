@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets
     /// <summary>
     /// Base cmdlet class that writes cmdlet usage into history info
     /// </summary>
-    public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentCmdlet
+    public abstract class BaseHistoryEntryCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
         /// History prefix for Copy and Expand cmdlet

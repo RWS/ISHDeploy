@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System.Management.Automation;
-using System;
 using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
@@ -38,7 +37,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     /// </example>
 
     [Cmdlet(VerbsLifecycle.Disable, "ISHIntegrationSTSInternalAuthentication")]
-    [AdministratorRights]
     public sealed class DisableISHIntegrationSTSInternalAuthenticationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

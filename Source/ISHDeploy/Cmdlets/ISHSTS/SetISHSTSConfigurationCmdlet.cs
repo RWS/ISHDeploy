@@ -42,7 +42,6 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSConfiguration")]
-    [AdministratorRights]
     public sealed class SetISHSTSConfigurationCmdlet : BaseHistoryEntryCmdlet
 	{
         /// <summary>

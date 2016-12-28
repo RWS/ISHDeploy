@@ -38,7 +38,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
     /// </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationDBSTSSQLServerConfiguration")]
-    [AdministratorRights]
     public class SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

@@ -36,7 +36,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///		</para>
     /// </example>
     [Cmdlet(VerbsCommon.Remove, "ISHIntegrationSTSCertificate")]
-    [AdministratorRights]
     public sealed class RemoveISHIntegrationSTSCertificateCmdlet : BaseHistoryEntryCmdlet
 	{
 		/// <summary>

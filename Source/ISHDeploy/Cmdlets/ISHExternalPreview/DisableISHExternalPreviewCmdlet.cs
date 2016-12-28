@@ -29,7 +29,6 @@ namespace ISHDeploy.Cmdlets.ISHExternalPreview
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHExternalPreview")]
-    [AdministratorRights]
     public sealed class DisableISHExternalPreviewCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

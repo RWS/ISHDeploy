@@ -28,7 +28,6 @@ namespace ISHDeploy.Cmdlets.ISHPackage
     /// <para></para>
     /// </example>
     [Cmdlet(VerbsCommon.Copy, "ISHCMFile")]
-    [AdministratorRights]
     public class CopyISHCMFileCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

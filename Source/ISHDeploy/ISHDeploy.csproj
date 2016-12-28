@@ -196,6 +196,7 @@
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\MoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Business\Operations\ISHUIEventMonitorTab\RemoveISHUIEventMonitorMenuBarItemOperation.cs" />
     <Compile Include="Cmdlets\BaseISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\BaseISHDeploymentAdminRightsCmdlet.cs" />
     <Compile Include="Cmdlets\ISHAPIWCFService\SetISHAPIWCFServiceCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHPackage\SetISHCMCUILResourceGroupCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\ClearISHDeploymentHistoryCmdlet.cs" />
@@ -214,7 +215,6 @@
     <Compile Include="Cmdlets\ISHSTS\GetISHSTSRelyingPartyCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHSTS\SetISHSTSConfigurationCmdlet.cs" />
-    <Compile Include="Cmdlets\AdministratorRightsAttribute.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />

@@ -21,7 +21,7 @@
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Managers
 {

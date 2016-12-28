@@ -16,7 +16,8 @@
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {

@@ -19,9 +19,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.DataBase;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.SQL;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.SQL;
 using ISHDeploy.Data.Actions.File;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {

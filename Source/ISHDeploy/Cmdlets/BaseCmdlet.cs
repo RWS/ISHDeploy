@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Management.Automation;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using System;
 using System.Collections;
+using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -47,6 +48,7 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
             ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
+            ObjectFactory.SetInstance<IWindowsServiceManager>(new WindowsServiceManager(Logger));
         }
 
         /// <summary>

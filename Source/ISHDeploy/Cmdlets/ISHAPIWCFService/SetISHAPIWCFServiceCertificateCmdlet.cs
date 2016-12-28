@@ -15,7 +15,6 @@
  */
 using System.Management.Automation;
 using System.ServiceModel.Security;
-using ISHDeploy.Business.Operations;
 using ISHDeploy.Business.Operations.ISHAPIWCFService;
 
 namespace ISHDeploy.Cmdlets.ISHAPIWCFService
@@ -57,7 +56,7 @@ namespace ISHDeploy.Cmdlets.ISHAPIWCFService
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            IOperation operation = new SetISHAPIWCFServiceCertificateOperation(Logger, ISHDeployment, Thumbprint, ValidationMode);
+            var operation = new SetISHAPIWCFServiceCertificateOperation(Logger, ISHDeployment, Thumbprint, ValidationMode);
 
             operation.Run();
         }

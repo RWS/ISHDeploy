@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Business.Invokers
 {

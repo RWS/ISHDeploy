@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using ISHDeploy.Common;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.WebAdministration
 {

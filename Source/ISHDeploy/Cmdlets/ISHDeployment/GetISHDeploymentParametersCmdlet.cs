@@ -57,10 +57,10 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         [Parameter(Position = 0, HelpMessage = "Original flag will return initial parameters.")]
         public SwitchParameter Original
         {
-            get { return _Original; }
-            set { _Original = value; }
+            get { return _original; }
+            set { _original = value; }
         }
-        private bool _Original;
+        private bool _original;
 
         /// <summary>
         /// Switch parameter to get difference from changed and original file
@@ -68,10 +68,10 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         [Parameter(Position = 0, HelpMessage = "Changed flag will return changed parameters only.")]
         public SwitchParameter Changed
         {
-            get { return _Changed; }
-            set { _Changed = value; }
+            get { return _changed; }
+            set { _changed = value; }
         }
-        private bool _Changed;
+        private bool _changed;
 
         /// <summary>
         /// Switch parameter to show real passwords in parameters
@@ -79,11 +79,11 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         [Parameter(Position = 0, HelpMessage = "ShowPassword flag will show real passwords.")]
         public SwitchParameter ShowPassword
         {
-            get { return _ShowPassword; }
-            set { _ShowPassword = value; }
+            get { return _showPassword; }
+            set { _showPassword = value; }
         }
 
-        private bool _ShowPassword;
+        private bool _showPassword;
         /// <summary>
         /// Executes cmdlet
         /// </summary>

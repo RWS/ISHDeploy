@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Management.Automation;
+using System.Security.Principal;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Validators;
 
@@ -33,7 +34,6 @@ namespace ISHDeploy.Cmdlets
         [Parameter(Mandatory = false,
             HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
-        [ValidateAdministratorRights]
         [ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
@@ -50,6 +50,12 @@ namespace ISHDeploy.Cmdlets
                 var deployments = operation.Run().ToList();
                 if (deployments.Count() == 1)
                 {
+                    string errorMessage;
+                    if (!ValidateDeploymentVersion.CheckDeploymentVersion(deployments.First().SoftwareVersion, out errorMessage))
+                    {
+                        throw new ValidationMetadataException(errorMessage);
+                    }
+
                     ISHDeployment = deployments.First();
                 }
                 else

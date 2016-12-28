@@ -32,7 +32,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Clear, "ISHDeploymentHistory")]
-    public class ClearISHDeploymentHistoryCmdlet : BaseISHDeploymentCmdlet
+    public class ClearISHDeploymentHistoryCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
         /// Executes cmdlet

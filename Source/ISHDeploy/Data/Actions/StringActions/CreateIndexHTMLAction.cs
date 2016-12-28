@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System;
 
 namespace ISHDeploy.Data.Actions.StringActions

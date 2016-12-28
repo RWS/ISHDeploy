@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers

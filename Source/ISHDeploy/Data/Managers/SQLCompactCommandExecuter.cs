@@ -16,7 +16,7 @@
 using System.Data;
 using System.Data.SqlServerCe;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Managers
 {

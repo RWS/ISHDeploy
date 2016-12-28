@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Business.Invokers;
 using System.Collections.Generic;
 using ISHDeploy.Data.Actions.ISHProject;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Models;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {

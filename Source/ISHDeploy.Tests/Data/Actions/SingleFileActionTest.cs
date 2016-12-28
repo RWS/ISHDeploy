@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 ﻿using System;
-using ISHDeploy.Data.Actions.XmlFile;
+﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;

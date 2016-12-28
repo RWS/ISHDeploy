@@ -17,7 +17,6 @@
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Operations.ISHDeployment;
-using ISHDeploy.Validators;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -71,7 +70,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
             {
                 string warningMessage;
 
-                if (!ValidateDeploymentVersion.CheckDeploymentVersion(result.First().SoftwareVersion, out warningMessage))
+                if (!Validators.ValidateDeploymentVersion.CheckDeploymentVersion(result.First().SoftwareVersion, out warningMessage))
                 {
                     WriteWarning(warningMessage);
                 }

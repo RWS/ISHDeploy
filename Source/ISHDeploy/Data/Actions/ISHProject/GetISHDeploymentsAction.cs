@@ -16,10 +16,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
+﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Actions.ISHProject
 {

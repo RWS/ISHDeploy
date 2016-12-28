@@ -18,9 +18,10 @@ using System;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Collections.Generic;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 

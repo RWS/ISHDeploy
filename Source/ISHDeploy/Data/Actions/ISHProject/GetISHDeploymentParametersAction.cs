@@ -16,9 +16,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Actions.ISHProject
 {

@@ -16,8 +16,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Business.Invokers
 {
@@ -81,6 +81,8 @@ namespace ISHDeploy.Business.Invokers
                 for (var i = 0; i < _actions.Count; i++)
                 {
                     var action = _actions[i];
+
+                    (action as IRestorableAction)?.Backup();
 
                     action.Execute();
 

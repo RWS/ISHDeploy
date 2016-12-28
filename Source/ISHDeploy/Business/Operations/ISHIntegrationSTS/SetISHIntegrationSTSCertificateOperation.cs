@@ -16,8 +16,9 @@
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.ISHXmlNodes;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.ISHXmlNodes;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {

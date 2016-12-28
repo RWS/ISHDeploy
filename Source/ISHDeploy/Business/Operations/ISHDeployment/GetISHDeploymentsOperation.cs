@@ -15,8 +15,9 @@
  */
 ﻿using System.Collections.Generic;
 using ISHDeploy.Data.Actions.ISHProject;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Business.Invokers;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {

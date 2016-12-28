@@ -17,14 +17,16 @@
 using System.IO;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {

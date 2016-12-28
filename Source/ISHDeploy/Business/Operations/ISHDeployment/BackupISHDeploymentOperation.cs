@@ -15,9 +15,10 @@
  */
 
 using System;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.File;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {

@@ -16,9 +16,10 @@
 
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIElement;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHUIElement
 {
@@ -39,7 +40,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public SetUIElementOperation(ILogger logger, 
+        public SetUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
             BaseUIElement model) :
             base(logger, ishDeployment)

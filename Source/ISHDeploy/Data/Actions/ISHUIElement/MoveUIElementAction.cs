@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Data.Actions.ISHUIElement
 {
@@ -45,7 +46,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <summary>
         /// The direction to move.
         /// </summary>
-        private readonly UIElementMoveDirection _direction;
+        private readonly MoveDirection _direction;
 
         /// <summary>
         /// The XPath to element to move after it.
@@ -63,7 +64,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         public MoveUIElementAction(ILogger logger,
             ISHFilePath filePath,
             BaseUIElement model,
-            UIElementMoveDirection direction,
+            MoveDirection direction,
             string after = null) :
             base(logger, filePath)
         {
@@ -72,7 +73,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
             _model = model;
             _direction = direction;
 
-            if (direction == UIElementMoveDirection.After && !string.IsNullOrEmpty(after))
+            if (direction == MoveDirection.After && !string.IsNullOrEmpty(after))
             {
                 _insertAfterXPath = string.Format(model.XPathFormat, after);
             }

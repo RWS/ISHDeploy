@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 ﻿using System;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Actions
 {

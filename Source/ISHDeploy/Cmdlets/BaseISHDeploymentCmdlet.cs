@@ -17,9 +17,8 @@
 using System;
 using System.Linq;
 using System.Management.Automation;
-using System.Security.Principal;
 using ISHDeploy.Business.Operations.ISHDeployment;
-using ISHDeploy.Validators;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -34,7 +33,7 @@ namespace ISHDeploy.Cmdlets
         [Parameter(Mandatory = false,
             HelpMessage = "Either name or instance of the installed Content Manager deployment.")]
         [StringToISHDeploymentTransformation]
-        [ValidateDeploymentVersion]
+        [Validators.ValidateDeploymentVersion]
         public Models.ISHDeployment ISHDeployment { get; set; }
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace ISHDeploy.Cmdlets
                 if (deployments.Count() == 1)
                 {
                     string errorMessage;
-                    if (!ValidateDeploymentVersion.CheckDeploymentVersion(deployments.First().SoftwareVersion, out errorMessage))
+                    if (!Validators.ValidateDeploymentVersion.CheckDeploymentVersion(deployments.First().SoftwareVersion, out errorMessage))
                     {
                         throw new ValidationMetadataException(errorMessage);
                     }

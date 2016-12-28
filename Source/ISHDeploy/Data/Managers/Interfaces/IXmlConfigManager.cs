@@ -15,9 +15,9 @@
  */
 using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Business.Enums;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -166,7 +166,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// or
         /// Unknown operation
         /// </exception>
-        void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXPath = null);
+        void MoveUIElement(string filePath, BaseUIElement model, MoveDirection direction, string insertAfterXPath = null);
 
         /// <summary>
         /// Serializes the specified value.

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.ISHUIElement;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHUIElement
 {
@@ -45,7 +46,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         public MoveUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
             BaseUIElement model,
-            UIElementMoveDirection direction,
+            MoveDirection direction,
             string after) :
             base(logger, ishDeployment)
         {

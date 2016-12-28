@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Data.Actions.ISHUIElement
 {

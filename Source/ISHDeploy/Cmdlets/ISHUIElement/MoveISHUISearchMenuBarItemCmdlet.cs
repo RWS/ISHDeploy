@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Operations.ISHUIElement;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
@@ -78,17 +78,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            UIElementMoveDirection direction;
+            MoveDirection direction;
             switch (ParameterSetName)
             {
                 case "Last":
-                    direction = UIElementMoveDirection.Last;
+                    direction = MoveDirection.Last;
                     break;
                 case "First":
-                    direction = UIElementMoveDirection.First;
+                    direction = MoveDirection.First;
                     break;
                 case "After":
-                    direction = UIElementMoveDirection.After;
+                    direction = MoveDirection.After;
                     break;
                 default:
                     throw new System.ArgumentException($"Operation type in {nameof(MoveISHUISearchMenuBarItemCmdlet)} should be defined.");

@@ -19,8 +19,8 @@ using System.Linq;
 using ISHDeploy.Data.Actions.DataBase.Mapper;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {

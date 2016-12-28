@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 ﻿using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Common.Enums;
+﻿using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
+namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 {
 	/// <summary>
 	/// Moves Event Monitor Tab".
@@ -25,24 +27,6 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 	/// <seealso cref="IOperation" />
 	public class MoveISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
     {
-        /// <summary>
-        /// Operation type enum
-        ///	<para type="description">Enumeration of Operations Types.</para>
-        /// </summary>
-        public enum OperationType
-		{
-
-			/// <summary>
-			/// Flag to insert after 
-			/// </summary>
-			InsertAfter,
-
-			/// <summary>
-			/// Flag to insert before
-			/// </summary>
-			InsertBefore
-		}
-
         /// <summary>
         /// The actions invoker
         /// </summary>
@@ -54,9 +38,9 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="label">Label of the element</param>
-        /// <param name="operationType">Type of the operation.</param>
+        /// <param name="direction">The direction to move.</param>
         /// <param name="targetLabel">The target label.</param>
-        public MoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, OperationType operationType, string targetLabel = null) :
+        public MoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, MoveDirection direction, string targetLabel = null) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
@@ -69,12 +53,12 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
 			// Combile node and its xPath
 			string nodesToMoveXPath = nodeXPath + "|" + nodeCommentXPath;
 
-			switch (operationType)
+			switch (direction)
 	        {
-				case OperationType.InsertAfter:
+				case MoveDirection.After:
 					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
-				case OperationType.InsertBefore:
+				case MoveDirection.Before:
 					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}

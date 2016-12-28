@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System.IO;
 using System.Linq;
+using ISHDeploy.Common;
 
 namespace ISHDeploy.Data.Actions.Directory
 {

@@ -29,7 +29,6 @@ namespace ISHDeploy.Cmdlets.ISHUITranslationJob
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHUITranslationJob")]
-    [AdministratorRights]
     public class DisableISHUITranslationJobCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

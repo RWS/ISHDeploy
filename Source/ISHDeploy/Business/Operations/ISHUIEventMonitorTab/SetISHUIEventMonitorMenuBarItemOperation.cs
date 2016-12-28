@@ -15,16 +15,17 @@
  */
 ﻿using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.ISHXmlNodes;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.ISHXmlNodes;
+using Models = ISHDeploy.Common.Models;
 
-namespace ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem
+namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 {
-	/// <summary>
-	/// Sets Event Monitor Tab.
-	/// </summary>
-	/// <seealso cref="ISHDeploy.Business.Operations.IOperation" />
-	public class SetISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
+    /// <summary>
+    /// Sets Event Monitor Tab.
+    /// </summary>
+    /// <seealso cref="IOperation" />
+    public class SetISHUIEventMonitorMenuBarItemOperation : BaseOperationPaths, IOperation
 	{
 		/// <summary>
 		/// The actions invoker

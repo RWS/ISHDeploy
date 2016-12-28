@@ -88,14 +88,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Enums\CardType.cs" />
-    <Compile Include="Business\Enums\UISearchMenuSearchType.cs" />
-    <Compile Include="Business\Enums\UIElementMoveDirection.cs" />
+    <Compile Include="Common\Enums\WindowsServiceType.cs" />
+    <Compile Include="Common\Enums\RelyingPartyType.cs" />
+    <Compile Include="Common\Enums\CardType.cs" />
+    <Compile Include="Common\Enums\UISearchMenuSearchType.cs" />
+    <Compile Include="Common\Enums\MoveDirection.cs" />
     <Compile Include="Business\Operations\ISHDeployment\AddHistoryEntryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentParametersOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentHistoryOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\GetISHDeploymentsOperation.cs" />
-    <Compile Include="Business\Operations\ISHIntegrationDB\OutputType.cs" />
+    <Compile Include="Common\Enums\OutputType.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SaveISHIntegrationDBSTSSQLServerConfigurationOperation.cs" />
     <Compile Include="Business\Operations\ISHAPIWCFService\SetISHAPIWCFServiceCertificateOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\SetISHIntegrationSTSWSFederationOperation.cs" />
@@ -112,7 +114,7 @@
     <Compile Include="Business\Operations\ISHSTS\SetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\GetISHSTSRelyingPartyOperation.cs" />
     <Compile Include="Business\Operations\ISHSTS\ResetISHSTSOperation.cs" />
-    <Compile Include="Business\Enums\AuthenticationTypes.cs" />
+    <Compile Include="Common\Enums\AuthenticationType.cs" />
     <Compile Include="Business\Operations\ISHIntegrationSTS\RemoveISHIntegrationSTSCertificateOperation.cs" />
     <Compile Include="Business\Operations\BaseOperationPaths.cs" />
     <Compile Include="Business\Operations\AuthorASPTreeHtm.cs">
@@ -188,7 +190,7 @@
     <Compile Include="Business\Operations\XopusConfigXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
-    <Compile Include="Business\Enums\BindingType.cs" />
+    <Compile Include="Common\Enums\BindingType.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\TestISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHContentEditor\SetISHContentEditorOperation.cs" />
     <Compile Include="Business\Operations\ISHDeployment\ClearISHDeploymentHistoryOperation.cs" />
@@ -229,14 +231,14 @@
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
     <Compile Include="Data\Managers\WindowsServiceManager.cs" />
-    <Compile Include="Models\UI\CUIFConfig\ResourceGroup.cs" />
-    <Compile Include="Models\UI\CUIFConfig\ResourceGroups.cs" />
-    <Compile Include="Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />
+    <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroup.cs" />
+    <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroups.cs" />
+    <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroupsResourceGroupFile.cs" />
     <Compile Include="Data\Actions\Asserts\WriteWarningAction.cs" />
     <Compile Include="Data\Actions\Directory\DirectoryBinReturnToVanila.cs" />
     <Compile Include="Data\Actions\File\BackupAction.cs" />
-    <Compile Include="Models\UI\EventMonitorMenuBarItem.cs" />
-    <Compile Include="Models\UI\SearchMenuItem.cs" />
+    <Compile Include="Common\Models\UI\EventMonitorMenuBarItem.cs" />
+    <Compile Include="Common\Models\UI\SearchMenuItem.cs" />
     <Compile Include="Cmdlets\ISHUIElement\SetISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationSTS\SetISHIntegrationSTSCertificateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIButtonBarItemCmdlet.cs" />
@@ -299,13 +301,13 @@
     <Compile Include="Data\Managers\Interfaces\ICertificateManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ITemplateManager.cs" />
     <Compile Include="Data\Managers\TemplateManager.cs" />
-    <Compile Include="Interfaces\Actions\ISQLRestorableAction.cs" />
-    <Compile Include="Interfaces\IISHXmlNode.cs" />
+    <Compile Include="Common\Interfaces\Actions\ISQLRestorableAction.cs" />
+    <Compile Include="Common\Interfaces\IISHXmlNode.cs" />
     <Compile Include="Data\Actions\XmlFile\InsertBeforeNodeAction.cs" />
-    <Compile Include="Models\InputParameters.cs" />
-    <Compile Include="Models\ISHDeployment.cs" />
-    <Compile Include="Models\ISHDeploymentParameter.cs" />
-    <Compile Include="Models\ISHFilePath.cs" />
+    <Compile Include="Common\Models\InputParameters.cs" />
+    <Compile Include="Common\Models\ISHDeployment.cs" />
+    <Compile Include="Common\Models\ISHDeploymentParameter.cs" />
+    <Compile Include="Common\Models\ISHFilePath.cs" />
     <Compile Include="Business\Operations\ISHDeployment\UndoISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\DisableISHUIQualityAssistantOperation.cs" />
     <Compile Include="Business\Operations\ISHUIQualityAssistant\EnableISHUIQualityAssistantOperation.cs" />
@@ -325,7 +327,7 @@
     <Compile Include="Cmdlets\ISHExternalPreview\EnableISHExternalPreviewCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\DisableISHUIContentEditorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIContentEditor\EnableISHUIContentEditorCmdlet.cs" />
-    <Compile Include="Business\Operations\IOperation.cs" />
+    <Compile Include="Common\Interfaces\IOperation.cs" />
     <Compile Include="Business\Operations\ISHUIContentEditor\DisableISHUIContentEditorOperation.cs" />
     <Compile Include="Cmdlets\ISHUIQualityAssistant\DisableISHUIQualityAssistantCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIQualityAssistant\EnableISHUIQualityAssistantCmdlet.cs" />
@@ -355,29 +357,30 @@
     <Compile Include="Data\Exceptions\WrongXPathException.cs" />
     <Compile Include="Data\Exceptions\DeploymentNotFoundException.cs" />
     <Compile Include="Data\Managers\TextConfigManager.cs" />
-    <Compile Include="Models\ISHXmlNodes\EventLogMenuItemAction.cs" />
-    <Compile Include="Models\ISHXmlNodes\EventLogMenuItem.cs" />
-    <Compile Include="Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
-    <Compile Include="Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
-    <Compile Include="Models\SQL\RelyingParty.cs" />
-    <Compile Include="Models\UI\Input.cs" />
-    <Compile Include="Models\UI\MainMenuBarItem.cs" />
-    <Compile Include="Models\UI\BaseUIElement.cs" />
-    <Compile Include="Models\UI\ButtonBarItem.cs" />
-    <Compile Include="ObjectFactory.cs" />
+    <Compile Include="Common\Models\ISHXmlNodes\EventLogMenuItemAction.cs" />
+    <Compile Include="Common\Models\ISHXmlNodes\EventLogMenuItem.cs" />
+    <Compile Include="Common\Models\ISHXmlNodes\ActAsTrustedIssuerThumbprintItem.cs" />
+    <Compile Include="Common\Models\ISHXmlNodes\IssuerThumbprintItem.cs" />
+    <Compile Include="Common\Models\SQL\RelyingParty.cs" />
+    <Compile Include="Common\Models\UI\Input.cs" />
+    <Compile Include="Common\Models\UI\MainMenuBarItem.cs" />
+    <Compile Include="Common\Models\UI\BaseUIElement.cs" />
+    <Compile Include="Common\Models\UI\ButtonBarItem.cs" />
+    <Compile Include="Common\Models\WindowsService.cs" />
+    <Compile Include="Common\ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />
-    <Compile Include="Interfaces\Actions\IAction.cs" />
+    <Compile Include="Common\Interfaces\Actions\IAction.cs" />
     <Compile Include="Data\Managers\Interfaces\IXmlConfigManager.cs" />
     <Compile Include="Business\Invokers\IActionInvoker.cs" />
-    <Compile Include="Interfaces\Actions\IRestorableAction.cs" />
-    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Common\Interfaces\Actions\IRestorableAction.cs" />
+    <Compile Include="Common\Interfaces\ILogger.cs" />
     <Compile Include="Business\Invokers\ActionInvoker.cs" />
     <Compile Include="Business\Operations\ISHUIContentEditor\EnableISHUIContentEditorOperation.cs" />
     <Compile Include="Data\Managers\XmlConfigManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Utils\NetUtil.cs" />
-    <Compile Include="Validators\ValidateDeploymentVersion.cs" />
+    <Compile Include="Cmdlets\Validators\ValidateDeploymentVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Resources\Templates\Invoke-ADFSIntegrationISH.ps1" />

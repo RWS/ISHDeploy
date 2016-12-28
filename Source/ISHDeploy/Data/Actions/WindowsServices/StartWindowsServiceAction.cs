@@ -15,9 +15,10 @@
  */
 
 using System.ServiceProcess;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-﻿using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces;
+﻿using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.WindowsServices
 {

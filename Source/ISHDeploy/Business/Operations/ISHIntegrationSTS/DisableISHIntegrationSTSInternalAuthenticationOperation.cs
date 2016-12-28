@@ -15,7 +15,8 @@
  */
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {

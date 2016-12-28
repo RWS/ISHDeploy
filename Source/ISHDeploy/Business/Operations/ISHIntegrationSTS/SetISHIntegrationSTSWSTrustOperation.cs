@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 ﻿using System;
-﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {

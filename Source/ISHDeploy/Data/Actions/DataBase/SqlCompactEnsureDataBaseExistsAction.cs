@@ -15,10 +15,11 @@
  */
 using System;
 using System.Net;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.DataBase
 {

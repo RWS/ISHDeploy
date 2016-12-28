@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 ﻿using ISHDeploy.Business.Invokers;
+﻿using ISHDeploy.Common;
 ﻿using ISHDeploy.Data.Actions.WindowsServices;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
-﻿using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {

@@ -18,9 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System.ServiceProcess;
-using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers
 {

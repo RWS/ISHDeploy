@@ -16,8 +16,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Business.Invokers
 {

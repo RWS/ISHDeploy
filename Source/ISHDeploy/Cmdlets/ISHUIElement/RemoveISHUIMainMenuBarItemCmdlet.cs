@@ -15,7 +15,7 @@
  */
 
 using ISHDeploy.Business.Operations.ISHUIElement;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement

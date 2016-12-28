@@ -18,14 +18,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models.ISHXmlNodes;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.ISHXmlNodes;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -1321,7 +1321,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"), MoveDirection.Last);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1363,7 +1363,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.First);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), MoveDirection.First);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1408,7 +1408,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), MoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1439,7 +1439,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), MoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1466,7 +1466,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Load(_filePath).Returns(doc);
             // Act
             var menuItem = new MainMenuBarItem("Event Log 2");
-            _xmlConfigManager.MoveUIElement(_filePath, menuItem, UIElementMoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
+            _xmlConfigManager.MoveUIElement(_filePath, menuItem, MoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1493,7 +1493,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), MoveDirection.Last);
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1510,7 +1510,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), MoveDirection.Last);
 
             // Assert
             Assert.Fail("Exception is expected");

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
+using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
+using System;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
+using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 {
@@ -81,13 +82,13 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 			switch (ParameterSetName)
 	        {
 				case "Last":
-					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertAfter);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveDirection.After);
 					break;
 				case "First":
-					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertBefore);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveDirection.Before);
 					break;
 				case "After":
-					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveISHUIEventMonitorMenuBarItemOperation.OperationType.InsertAfter, After);
+					operation = new MoveISHUIEventMonitorMenuBarItemOperation(Logger, ISHDeployment, Label, MoveDirection.After, After);
 					break;
 				default:
 					throw new ArgumentException($"Operation type in {nameof(MoveISHUIEventMonitorMenuBarItemCmdlet)} should be defined.");

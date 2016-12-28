@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.UI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +27,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using ISHDeploy.Common;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -672,7 +673,7 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXpath = null)
+        public void MoveUIElement(string filePath, BaseUIElement model, MoveDirection direction, string insertAfterXpath = null)
         {
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
@@ -680,7 +681,7 @@ namespace ISHDeploy.Data.Managers
             bool doSave = true;
 
 
-            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == UIElementMoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
+            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == MoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
 
             var found = SelectSingleNode(ref doc, model.XPath);
 
@@ -688,11 +689,11 @@ namespace ISHDeploy.Data.Managers
             {
                 switch (direction)
                 {
-                    case UIElementMoveDirection.First:
+                    case MoveDirection.First:
                         doc.Element(model.XPathToParentElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case UIElementMoveDirection.Last:
+                    case MoveDirection.Last:
                         var lastElement = doc.Element(model.XPathToParentElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
@@ -704,7 +705,7 @@ namespace ISHDeploy.Data.Managers
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case UIElementMoveDirection.After:
+                    case MoveDirection.After:
                         var afterElement = SelectSingleNode(ref doc, insertAfterXpath); ;
                         if (afterElement == null)
                         {

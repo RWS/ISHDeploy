@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Business.Operations.ISHSTS;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
@@ -55,7 +55,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         /// <para type="description">Selected authentication type.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "Selected authentication type")]
-		public AuthenticationTypes AuthenticationType { get; set; }
+		public AuthenticationType AuthenticationType { get; set; }
 
 		/// <summary>
 		/// Executes cmdlet

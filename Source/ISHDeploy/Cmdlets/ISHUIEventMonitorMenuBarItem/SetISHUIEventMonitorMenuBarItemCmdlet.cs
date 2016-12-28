@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 using ISHDeploy.Business.Operations.ISHUIElement;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Collections.Generic;
 using System.Management.Automation;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 {

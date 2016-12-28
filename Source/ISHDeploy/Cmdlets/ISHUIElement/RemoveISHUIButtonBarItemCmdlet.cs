@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIElement;
 

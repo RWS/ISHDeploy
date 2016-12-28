@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Interfaces;
 using System;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
 {

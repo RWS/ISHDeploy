@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
+
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
@@ -20,9 +23,9 @@ namespace ISHDeploy.Common.Enums
     ///	<para type="description">Enumeration of Card Types.</para>
     /// </summary>
     #pragma warning disable 1591
-    public enum WindowsServiceType
+    public enum ISHWindowsServiceType
     {
         TranslationBuilder,
-        TrasnlationOrganizer
+        TranslationOrganizer
     }
 }

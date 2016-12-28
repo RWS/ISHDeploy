@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using ISHDeploy.Common.Enums;
+
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Represents the installed windows services that deployment uses.</para>
+    /// <para type="description">Represents the installed windows services that deployment is used.</para>
     /// </summary>
-    public class WindowsService
+    public class ISHWindowsService
     {
         /// <summary>
         /// The name of windows service.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The type of windows service.
+        /// </summary>
+        public ISHWindowsServiceType Type { get; set; }
     }
 }

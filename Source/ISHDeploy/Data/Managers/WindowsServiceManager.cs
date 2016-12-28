@@ -20,6 +20,8 @@ using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using System.ServiceProcess;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -61,7 +63,7 @@ namespace ISHDeploy.Data.Managers
                 }
                 else
                 {
-                    _logger.WriteVerbose($"Windows service `{serviceName}` has already started");
+                    _logger.WriteVerbose($"Windows service `{serviceName}` was already started");
                 }
             }
             catch (Exception ex)
@@ -88,7 +90,7 @@ namespace ISHDeploy.Data.Managers
                 }
                 else
                 {
-                    _logger.WriteVerbose($"Windows service `{serviceName}` has already stopped");
+                    _logger.WriteVerbose($"Windows service `{serviceName}` was already stopped");
                 }
             }
             catch (Exception ex)
@@ -98,34 +100,26 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Gets names of all windows services where name contains search criteria.
+        /// Gets all windows services of specified type.
         /// </summary>
-        /// <param name="searchCriteria">The search criteria.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
-        /// The names of all windows services where name contains search criteria.
+        /// The windows services of deployment of specified type.
         /// </returns>
-        public IEnumerable<string> GetNamesOfWindowsServicesWhereNameContains(string searchCriteria)
+        public IEnumerable<ISHWindowsService> GetServices(params ISHWindowsServiceType[] types)
         {
-            return
-                ServiceController.GetServices()
-                    .Where(x => x.ServiceName.Contains(searchCriteria))
-                    .Select(x => x.ServiceName);
-        }
+            var services = new List<ISHWindowsService>();
 
-        /// <summary>
-        /// Gets current Status of the service.
-        /// </summary>
-        /// <param name="serviceName">Name of the windows service.</param>
-        /// <returns>
-        /// The current Status of the service.
-        /// </returns>
-        public ServiceControllerStatus GetWindowsServiceStatus(string serviceName)
-        {
-            _logger.WriteDebug("Get Windows service status", serviceName);
-            var service = new ServiceController(serviceName);
-            var status = service.Status;
-            _logger.WriteVerbose($"Windows service `{serviceName}` has status `{status}`");
-            return status;
+            foreach (var type in types)
+            {
+                services.AddRange(
+                    ServiceController.GetServices()
+                        .Where(x => x.ServiceName.Contains(type.ToString()))
+                        .Select(service => new ISHWindowsService { Name = service.ServiceName, Type = type })
+                        .ToList());
+            }
+
+            return services;
         }
     }
 }

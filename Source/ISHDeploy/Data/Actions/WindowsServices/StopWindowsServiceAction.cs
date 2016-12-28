@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-using System.ServiceProcess;
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-﻿using ISHDeploy.Common.Interfaces.Actions;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Actions.WindowsServices
 {
@@ -26,17 +25,12 @@ namespace ISHDeploy.Data.Actions.WindowsServices
     /// Stops an windows service.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class StopWindowsServiceAction : BaseAction, IRestorableAction
+    public class StopWindowsServiceAction : BaseAction
     {
         /// <summary>
-        /// The windows service name.
+        /// The deployment service.
         /// </summary>
-        private readonly string _serviceName;
-
-        /// <summary>
-        /// The status of the service.
-        /// </summary>
-        private ServiceControllerStatus _previousServiceStatus;
+        private readonly ISHWindowsService _service;
 
         /// <summary>
         /// The windows service manager
@@ -47,11 +41,11 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="serviceName">Name of the windows service.</param>
-        public StopWindowsServiceAction(ILogger logger, string serviceName)
+        /// <param name="service">The deployment service.</param>
+        public StopWindowsServiceAction(ILogger logger, ISHWindowsService service)
             : base(logger)
         {
-            _serviceName = serviceName;
+            _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
         }
@@ -61,26 +55,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.StopWindowsService(_serviceName);
-        }
-
-        /// <summary>
-        /// Creates backup of the asset.
-        /// </summary>
-        public void Backup()
-        {
-            _previousServiceStatus = _serviceManager.GetWindowsServiceStatus(_serviceName);
-        }
-
-        /// <summary>
-        /// Reverts an asset to initial state.
-        /// </summary>
-        public void Rollback()
-        {
-            if (_previousServiceStatus == ServiceControllerStatus.Running)
-            {
-                _serviceManager.StartWindowsService(_serviceName);
-            }
+            _serviceManager.StopWindowsService(_service.Name);
         }
     }
 }

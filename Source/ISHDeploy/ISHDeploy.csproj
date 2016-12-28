@@ -88,7 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Enums\WindowsServiceType.cs" />
+    <Compile Include="Common\Enums\ISHWindowsServiceType.cs" />
     <Compile Include="Common\Enums\RelyingPartyType.cs" />
     <Compile Include="Common\Enums\CardType.cs" />
     <Compile Include="Common\Enums\UISearchMenuSearchType.cs" />
@@ -366,7 +366,7 @@
     <Compile Include="Common\Models\UI\MainMenuBarItem.cs" />
     <Compile Include="Common\Models\UI\BaseUIElement.cs" />
     <Compile Include="Common\Models\UI\ButtonBarItem.cs" />
-    <Compile Include="Common\Models\WindowsService.cs" />
+    <Compile Include="Common\Models\ISHWindowsService.cs" />
     <Compile Include="Common\ObjectFactory.cs" />
     <Compile Include="Data\Managers\FileManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IFileManager.cs" />

@@ -16,6 +16,8 @@
 
 using System.Collections.Generic;
 using System.ServiceProcess;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -37,21 +39,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void StopWindowsService(string serviceName);
 
         /// <summary>
-        /// Gets names of all windows services where name contains search criteria.
+        /// Gets all windows services of specified type.
         /// </summary>
-        /// <param name="searchCriteria">The search criteria.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
-        /// The names of all windows services where name contains search criteria.
+        /// The windows services of deployment of specified type.
         /// </returns>
-        IEnumerable<string> GetNamesOfWindowsServicesWhereNameContains(string searchCriteria);
-
-        /// <summary>
-        /// Gets current Status of the service.
-        /// </summary>
-        /// <param name="serviceName">Name of the windows service.</param>
-        /// <returns>
-        /// The current Status of the service.
-        /// </returns>
-        ServiceControllerStatus GetWindowsServiceStatus(string serviceName);
+        IEnumerable<ISHWindowsService> GetServices(params ISHWindowsServiceType[] types);
     }
 }

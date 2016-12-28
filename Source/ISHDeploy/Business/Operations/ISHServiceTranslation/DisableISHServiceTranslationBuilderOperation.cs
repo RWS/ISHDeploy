@@ -15,6 +15,7 @@
  */
 ﻿using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Actions.WindowsServices;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 ﻿using ISHDeploy.Common.Interfaces;
@@ -45,12 +46,12 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var serviceNames = serviceManager.GetNamesOfWindowsServicesWhereNameContains("TranslationBuilder");
+            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder);
 
-            foreach (var name in serviceNames)
+            foreach (var service in services)
             {
                 _invoker.AddAction(
-                    new StopWindowsServiceAction(Logger, name));
+                    new StopWindowsServiceAction(Logger, service));
             }
         }
 

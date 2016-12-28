@@ -18,11 +18,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI.CUIFConfig;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI.CUIFConfig;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {

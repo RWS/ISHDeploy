@@ -15,14 +15,15 @@
  */
 
 using System;
-using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -44,7 +45,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, AuthenticationTypes authenticationType) :
+        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, AuthenticationType authenticationType) :
             base(logger, ishDeployment)
         {
             CheckPermissions();
@@ -77,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             (new GetValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath,
                     result => authenticationType = result)).Execute();
 
-            if (authenticationType == AuthenticationTypes.Windows.ToString())
+            if (authenticationType == AuthenticationType.Windows.ToString())
             {
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 AddActionsToSetCertificateFilePermission(applicationPoolUser, GetNormalizedThumbprint(thumbprint));
@@ -91,7 +92,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, AuthenticationTypes authenticationType) :
+        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, AuthenticationType authenticationType) :
             base(logger, ishDeployment)
         {
             CheckPermissions();
@@ -169,13 +170,13 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        private void AddActionsToSetAuthenticationType(Models.ISHDeployment ishDeployment, AuthenticationTypes authenticationType)
+        private void AddActionsToSetAuthenticationType(Models.ISHDeployment ishDeployment, AuthenticationType authenticationType)
         {
             string currentEndpoint = string.Empty;
             (new GetValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath,
                 result => currentEndpoint = result)).Execute();
 
-            if (authenticationType == AuthenticationTypes.Windows)
+            if (authenticationType == AuthenticationType.Windows)
             {
                 // Enable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));

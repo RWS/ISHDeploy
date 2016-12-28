@@ -15,13 +15,14 @@
  */
 
 using System.IO;
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.StringActions;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {
@@ -70,7 +71,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
             (new GetValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath,
                 result => authenticationType = result)).Execute();
 
-            if (authenticationType != AuthenticationTypes.Windows.ToString())
+            if (authenticationType != AuthenticationType.Windows.ToString())
             {
                 authenticationToChange = BindingType.UserNameMixed.ToString();
                 urlToChange = InternalSTSLoginUrlSTS + "issue/wstrust/mixed/username";

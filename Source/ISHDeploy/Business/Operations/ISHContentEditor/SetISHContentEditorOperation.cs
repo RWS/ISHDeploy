@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-using System.IO;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Interfaces;
+using System.IO;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHContentEditor
 {

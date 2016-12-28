@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System;
-﻿using ISHDeploy.Business.Enums;
-﻿using ISHDeploy.Business.Invokers;
+using System;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 {

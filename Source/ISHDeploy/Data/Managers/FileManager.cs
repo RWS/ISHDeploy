@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;

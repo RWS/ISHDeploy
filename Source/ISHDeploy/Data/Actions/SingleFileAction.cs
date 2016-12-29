@@ -66,7 +66,10 @@ namespace ISHDeploy.Data.Actions
 
             // Make sure Vanilla backup exists
             EnsureVanillaBackUpExists();
-		}
+
+            // Create Backup file
+            Backup();
+        }
 
 		/// <summary>
 		/// Destructor to call dispose

@@ -40,14 +40,14 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The maximum number of objects in one push")]
         [ValidateNotNullOrEmpty]
-        public ushort MaxObjectsInOnePush { get; set; }
+        public int MaxObjectsInOnePush { get; set; }
 
         /// <summary>
         /// <para type="description">The maximum number of objects in one push.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The maximum number of job items cteated in one call")]
         [ValidateNotNullOrEmpty]
-        public ushort MaxJobItemsCreatedInOneCall { get; set; }
+        public int MaxJobItemsCreatedInOneCall { get; set; }
 
         /// <summary>
         /// <para type="description">The life period of completed job.</para>

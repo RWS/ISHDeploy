@@ -61,21 +61,21 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The timeout of processing of job")]
         [ValidateNotNullOrEmpty]
-        public DateTime JobProcessingTimeout { get; set; }
+        public TimeSpan JobProcessingTimeout { get; set; }
 
         /// <summary>
         /// <para type="description">The interval of polling of job.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The interval of polling of job")]
         [ValidateNotNullOrEmpty]
-        public DateTime JobPollingInterval { get; set; }
+        public TimeSpan JobPollingInterval { get; set; }
 
         /// <summary>
         /// <para type="description">The interval of polling of pending job.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The interval of polling of pending job")]
         [ValidateNotNullOrEmpty]
-        public DateTime PendingJobPollingInterval { get; set; }
+        public TimeSpan PendingJobPollingInterval { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -98,13 +98,13 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                         parameters.Add(TranslationBuilderSetting.CompletedJobLifeSpan, CompletedJobLifeSpan);
                         break;
                     case "JobProcessingTimeout":
-                        parameters.Add(TranslationBuilderSetting.JobProcessingTimeout, JobProcessingTimeout.TimeOfDay);
+                        parameters.Add(TranslationBuilderSetting.JobProcessingTimeout, JobProcessingTimeout);
                         break;
                     case "JobPollingInterval":
-                        parameters.Add(TranslationBuilderSetting.JobPollingInterval, JobPollingInterval.TimeOfDay);
+                        parameters.Add(TranslationBuilderSetting.JobPollingInterval, JobPollingInterval);
                         break;
                     case "PendingJobPollingInterval":
-                        parameters.Add(TranslationBuilderSetting.PendingJobPollingInterval, PendingJobPollingInterval.TimeOfDay);
+                        parameters.Add(TranslationBuilderSetting.PendingJobPollingInterval, PendingJobPollingInterval);
                         break;
                 }
             }

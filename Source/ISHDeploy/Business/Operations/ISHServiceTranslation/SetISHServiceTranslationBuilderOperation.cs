@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Common.Enums;
@@ -48,8 +49,33 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             foreach (var parameter in parameters)
             {
                 _invoker.AddAction(
-                    new SetAttributeValueAction(Logger, TranslationBuilderConfigFilePath, TranslationBuilderConfig.AttributeXPaths[parameter.Key], parameter.Value.ToString()));
+                    new SetAttributeValueAction(Logger, 
+                    TranslationBuilderConfigFilePath, 
+                    TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
+                    ValueToString(parameter.Key, parameter.Value)));
             }
+        }
+
+        /// <summary>
+        /// Returns value in appropriate string format
+        /// </summary>
+        /// <param name="type">Type of setting</param>
+        /// <param name="value">The value</param>
+        /// <returns></returns>
+        private string ValueToString(TranslationBuilderSetting type, object value)
+        {
+            if (type == TranslationBuilderSetting.JobPollingInterval || 
+                type == TranslationBuilderSetting.JobProcessingTimeout || 
+                type == TranslationBuilderSetting.PendingJobPollingInterval)
+            {
+                return ((TimeSpan)value).ToString(@"hh\:mm\:ss\.fff");
+            }
+            else if (type == TranslationBuilderSetting.CompletedJobLifeSpan)
+            {
+                return ((TimeSpan)value).ToString(@"d\.hh\:mm\:ss\.fff");
+            }
+
+            return value.ToString();
         }
 
         /// <summary>

@@ -88,6 +88,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
+    <Compile Include="Common\Enums\TranslationBuilderSetting.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceType.cs" />
     <Compile Include="Common\Enums\RelyingPartyType.cs" />
     <Compile Include="Common\Enums\CardType.cs" />
@@ -175,6 +178,9 @@
     <Compile Include="Business\Operations\TopDocumentButtonBarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\TranslationBuilderConfig.cs">
+      <DependentUpon>BaseOperationPaths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\TranslationOrganizerConfig.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -226,6 +232,7 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Common\Models\ISHServiceTranslation\TranslationBuilderSettings.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />

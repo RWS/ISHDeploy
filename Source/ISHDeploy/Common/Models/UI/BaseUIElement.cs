@@ -16,6 +16,7 @@
 
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Common.Models.UI
 {

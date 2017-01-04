@@ -79,6 +79,7 @@
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceTranslationBuilder.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIButtonBarItem.Tests.ps1" />
     <None Include="Pester\Tests\ISHUISearchMenuBarItem.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIMainMenuBarItem.Tests.ps1" />

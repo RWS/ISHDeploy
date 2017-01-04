@@ -7,17 +7,20 @@
 $testCertName = "TestISHAPIWCFServiceCertificate"
 $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
 $testEncriptedCertificate = [System.Convert]::ToBase64String($testCertificate.RawData)
-$dbPath = ("\\$computerName\{0}\Web{1}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $testingDeployment.Webpath, $suffix).replace(":", "$")
+$dbPath = ("\\$computerName\{0}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $webPath).replace(":", "$")
 $testThumbprint = $testCertificate.Thumbprint
 #region variables
 
 # Generating file pathes to remote PC files
-$xmlPath = $testingDeployment.WebPath
-$xmlPath = $xmlPath.ToString().replace(":", "$")
-$xmlPath = "\\$computerName\$xmlPath"
+$xmlAppPath = $appPath.replace(":", "$")
+$xmlAppPath = "\\$computerName\$xmlAppPath"
+$xmlDataPath = $dataPath.replace(":", "$")
+$xmlDataPath = "\\$computerName\$xmlDataPath"
+$xmlWebPath = $webPath.replace(":", "$")
+$xmlWebPath = "\\$computerName\$xmlWebPath"
 
-$filepath = "$xmlPath\Web{0}\Author\ASP" -f $suffix
-$absolutePath = $testingDeployment.WebPath
+$filepath = "$xmlPath\Author\ASP"
+$absolutePath = $webPath
 #endregion
 
 #region Script Blocks
@@ -60,25 +63,26 @@ $scriptBlockGetWebConfigurationProperty = {
 $scriptBlockReadTargetXML = {
     param(
         $thumbprint,
-       $authenticationMode,
-        $suffix,
-        $xmlPath,
+        $authenticationMode,
+        $xmlAppPath,
+        $xmlDataPath,
+        $xmlWebPath,
         $absolutePath,
         $infosharewswebappname
     )
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$ConnectionConfig = new-object System.Xml.XmlDocument
-    $ConnectionConfig.load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $suffix)
+    $ConnectionConfig.load("$xmlWebPath\InfoShareWS\connectionconfiguration.xml" -f $suffix)
     [System.Xml.XmlDocument]$FeedSDLLCConfig = new-object System.Xml.XmlDocument
-    $FeedSDLLCConfig.Load("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $suffix)
+    $FeedSDLLCConfig.Load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $suffix)
     [System.Xml.XmlDocument]$TranslationOrganizerConfig = new-object System.Xml.XmlDocument
-    $TranslationOrganizerConfig.Load("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $suffix)
+    $TranslationOrganizerConfig.Load("$xmlAppPath\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $suffix)
     [System.Xml.XmlDocument]$SynchronizeToLCConfig = new-object System.Xml.XmlDocument
-    $SynchronizeToLCConfig.Load("$xmlPath\App{0}\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $suffix)
+    $SynchronizeToLCConfig.Load("$xmlAppPath\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $suffix)
     [System.Xml.XmlDocument]$TrisoftInfoShareClientConfig = new-object System.Xml.XmlDocument
-    $TrisoftInfoShareClientConfig.Load("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $suffix)
+    $TrisoftInfoShareClientConfig.Load("$xmlWebPath\Author\ASP\Trisoft.InfoShare.Client.config" -f $suffix)
     [System.Xml.XmlDocument]$infoShareSTSConfigThumbprint = new-object System.Xml.XmlDocument
-    $infoShareSTSConfigThumbprint.Load("$xmlPath\Web{0}\InfoShareSTS\Configuration\infoShareSTS.config" -f $suffix)
+    $infoShareSTSConfigThumbprint.Load("$xmlWebPath\InfoShareSTS\Configuration\infoShareSTS.config" -f $suffix)
 
     $result =  @{}
     #get variables and nodes from files
@@ -102,7 +106,7 @@ function remoteReadTargetXML() {
     $infosharewswebappname = $inputParameters["infosharewswebappname"]
     #read all files that are touched with commandlet
     $scriptBlockSetISHIntegrationSTSCertificate
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint,$authenticationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint,$authenticationMode, $xmlAppPath, $xmlDataPath, $xmlWebPath, $absolutePath, $infosharewswebappname
 
     #get variables and nodes from files
 

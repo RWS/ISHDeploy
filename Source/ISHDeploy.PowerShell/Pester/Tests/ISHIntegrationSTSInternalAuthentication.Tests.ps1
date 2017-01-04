@@ -21,7 +21,7 @@ $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDep
 $suffix = GetProjectSuffix($testingDeployment.Name)
 $dnsComputerName = $computerName
 $computerName = $computerName.split(".")[0]
-$internalFolderPath = "{0}\Web{1}\InfoShareWS\Internal" -f $testingDeployment.Webpath, $suffix
+$internalFolderPath = "{0}\InfoShareWS\Internal" -f $webPath
 #endregion
 
 #region Script Blocks 

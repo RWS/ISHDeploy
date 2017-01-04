@@ -9,12 +9,9 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($backupPath.replace(":", "$"))
-$pathToAppFolder = Join-Path $testingDeployment.WebPath ("\App{0}" -f $suffix )
-$pathToDataFolder = Join-Path $testingDeployment.WebPath ("\Data{0}" -f $suffix )
-$pathToWebFolder = Join-Path $testingDeployment.WebPath ("\Web{0}" -f $suffix )
-$pathToBackupAppFolder = Join-Path $backupPath ("\App" -f $suffix )
-$pathToBackupDataFolder = Join-Path $backupPath ("\Data" -f $suffix )
-$pathToBackupWebFolder = Join-Path $backupPath ("\Web" -f $suffix )
+$pathToBackupAppFolder = Join-Path $backupPath ("\App{0}" -f $suffix )
+$pathToBackupDataFolder = Join-Path $backupPath ("\Data{0}" -f $suffix )
+$pathToBackupWebFolder = Join-Path $backupPath ("\Web{0}" -f $suffix )
 
 #endregion
 
@@ -104,7 +101,7 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment backup all *.dll files in Author\ASP\bin folder and sub folders"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles  (Join-Path $pathToWebFolder "Author\ASP\bin") "*.dll" $false
+        $listOfOriginalFiles = GetListOfFiles  (Join-Path $webPath "Author\ASP\bin") "*.dll" $false
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\bin\*.dll", "Web"
         #Assert
@@ -115,7 +112,7 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment backup all files in Author\ASP\bin folder"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP\bin") "*.*"
+        $listOfOriginalFiles = GetListOfFiles (Join-Path $webPath "Author\ASP\bin") "*.*"
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\bin", "Web"
         #Assert
@@ -160,7 +157,7 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment when the file is not found it should raise the warning"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP") "Web.config" $false
+        $listOfOriginalFiles = GetListOfFiles (Join-Path $webPath "Author\ASP") "Web.config" $false
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP\Web2.config", "Web" -WarningVariable Warning
         #Assert
@@ -169,7 +166,7 @@ Describe "Testing Backup-ISHDeployment"{
 
     It "Backup-ISHDeployment when the folder is not found it should raise the warning"{
 		#Arrange
-        $listOfOriginalFiles = GetListOfFiles (Join-Path $pathToWebFolder "Author\ASP") "Web.config" $false
+        $listOfOriginalFiles = GetListOfFiles (Join-Path $webPath "Author\ASP") "Web.config" $false
         #Action
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupISHDeployment -Session $session -ArgumentList $testingDeploymentName, "Author\ASP2\", "Web" -WarningVariable Warning
         #Assert

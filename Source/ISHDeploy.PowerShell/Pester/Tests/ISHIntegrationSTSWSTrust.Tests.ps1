@@ -7,10 +7,13 @@
 #region variables
 
 # Generating file pathes to remote PC files
-$xmlPath = $testingDeployment.WebPath
-$xmlPath = $xmlPath.ToString().replace(":", "$")
-$xmlPath = "\\$computerName\$xmlPath"
-$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
+$xmlAppPath = $appPath.replace(":", "$")
+$xmlAppPath = "\\$computerName\$xmlAppPath"
+$xmlDataPath = $dataPath.replace(":", "$")
+$xmlDataPath = "\\$computerName\$xmlDataPath"
+$xmlWebPath = $webPath.replace(":", "$")
+$xmlWebPath = "\\$computerName\$xmlWebPath"
+$filepath = "$xmlWebPath\InfoShareWS"
 #endregion
 
 #region Script Blocks 
@@ -41,24 +44,25 @@ $scriptBlockSetWSTrust = {
 # Function reads target files and their content, searches for specified nodes in xml
 $scriptBlockReadTargetXML = {
     param(
-        $xmlPath,
-        $suffix,
+        $xmlAppPath,
+        $xmlDataPath,
+        $xmlWebPath,
         $inputParametersPath
     )
     
     #read all files that are touched with commandlet
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
-    $connectionConfig.load("$xmlPath\Web$suffix\InfoShareWS\connectionconfiguration.xml")
+    $connectionConfig.load("$xmlWebPath\InfoShareWS\connectionconfiguration.xml")
     [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlPath\Data$suffix\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
+    $feedSDLLiveContentConfig.load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$translationOrganizerConfig = new-object System.Xml.XmlDocument
-    $translationOrganizerConfig.load("$xmlPath\App$suffix\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
+    $translationOrganizerConfig.load("$xmlAppPath\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
     [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument
-    $synchronizeToLiveContentConfig.load("$xmlPath\App$suffix\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
+    $synchronizeToLiveContentConfig.load("$xmlAppPath\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
     [System.Xml.XmlDocument]$trisoftInfoShareClientConfig = new-object System.Xml.XmlDocument
-    $trisoftInfoShareClientConfig.load("$xmlPath\Web$suffix\Author\ASP\Trisoft.InfoShare.Client.config")
+    $trisoftInfoShareClientConfig.load("$xmlWebPath\Author\ASP\Trisoft.InfoShare.Client.config")
     [System.Xml.XmlDocument]$infoShareWSWebConfig = new-object System.Xml.XmlDocument
-    $infoShareWSWebConfig.load("$xmlPath\Web$suffix\InfoShareWS\Web.config")
+    $infoShareWSWebConfig.load("$xmlWebPath\InfoShareWS\Web.config")
     [System.Xml.XmlDocument]$inputParametersXml = new-object System.Xml.XmlDocument
     $inputParametersXml.load($inputParametersPath)
     $result = @{}
@@ -85,7 +89,7 @@ $scriptBlockReadTargetXML = {
 function readTargetXML() {
     
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlPath, $suffix, $inputParameters["inputparametersFilePath"]
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $xmlAppPath, $xmlDataPath, $xmlWebPath, $inputParameters["inputparametersFilePath"]
 
     #get variables and nodes from files
     $global:connectionConfigWSTrustBindingType = $result["connectionConfigWSTrustBindingType"]

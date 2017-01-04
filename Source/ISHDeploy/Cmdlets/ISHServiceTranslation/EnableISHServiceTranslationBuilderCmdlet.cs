@@ -21,7 +21,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Enables translation builder windows service.</para>
     /// <para type="description">The Enable-ISHServiceTranslationBuilder cmdlet enables translation builder windows service.</para>
-    /// <para type="description">If user id is not specified, the default value 'ServiceUser' is taken.</para>
     /// <para type="link">Disable-ISHExternalPreview</para>
     /// </summary>
     /// <example>

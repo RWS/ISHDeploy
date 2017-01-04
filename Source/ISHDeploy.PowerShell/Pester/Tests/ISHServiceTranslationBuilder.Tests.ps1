@@ -9,7 +9,7 @@ $xmlPath = $testingDeployment.WebPath
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
-$filePath = "$xmlPath\App{0}\TranslationBuilder\Bin" -f $suffix
+$filePath = Join-Path $appPath "TranslationBuilder\Bin"
 
 $MaxObjectsInOnePush = 500
 $MaxJobItemsCreatedInOneCall = 250

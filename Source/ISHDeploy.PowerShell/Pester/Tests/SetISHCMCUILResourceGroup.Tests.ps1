@@ -9,11 +9,11 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 
 $computerName = $computerName.split(".")[0]
 
-$filePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
+$filePath = Join-Path $webPath "Author\ASP"
 
-$configPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\UI\Extensions\_config.xml" -f $suffix )
+$configPath = Join-Path $webPath "Author\ASP\UI\Extensions\_config.xml"
 $uncConfigPath = "\\$computerName\" + ($configPath.replace(":", "$"))
-$extentionLoaderPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\UI\Helpers\ExtensionsLoader.js" -f $suffix )
+$extentionLoaderPath = Join-Path $webPath "Author\ASP\UI\Helpers\ExtensionsLoader.js"
 
 $customFile = Join-Path $filePath "\Custom"
 $uncCustomFolderPath = "\\$computerName\" + ($filePath.replace(":", "$"))

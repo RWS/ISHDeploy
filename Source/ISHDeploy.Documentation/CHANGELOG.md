@@ -2,6 +2,18 @@
 
 ## stable-1.3
 
+1. General 
+    1. Cmdlets
+        - Fixed `Get-ISHDeployment` to return the actual path for the `WebPath`, `DataPath` and `AppPath`. 
+        E.g for `WebPath` the value is `C:\InfoShare\Web` instead of `C:\InfoShare`.  **[Update]**
+    1. Documentation
+        - Minor corrections on **Work with one or multiple deployments** tutorial.  **[Update]**
+1. Integration Translation
+	1. Cmdlets
+		- `Enable-ISHServiceTranslationBuilder`. **[New]**
+		- `Disable-ISHServiceTranslationBuilder`. **[New]**
+		- `Set-ISHServiceTranslationBuilder`. **[New]**
+
 ## stable-1.2
 1. General 
     1. Cmdlets
@@ -10,7 +22,7 @@
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
         - Improved cmdlet behavior when administrator privileges are required.
         - History file is enhanced with script info meta language. 
-    2. Documentation
+    1. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
 		- New icon in top bar. **[Update]**
@@ -37,7 +49,7 @@
 			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
 			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
 			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
-    2. Documentation
+    1. Documentation
 		- Reorganize former "Configuring features using the module" tutorial into three more specialized. **[Update]**
 			- Toggling Web Components. **[Update]**
 			- Configuring ISHCM web UI menu bars. **[Update]**

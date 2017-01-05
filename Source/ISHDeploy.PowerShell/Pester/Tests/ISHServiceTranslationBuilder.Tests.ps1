@@ -5,11 +5,11 @@
 . "$PSScriptRoot\Common.ps1"
 
 #region variables
-$xmlPath = $testingDeployment.WebPath
-$xmlPath = $xmlPath.ToString().replace(":", "$")
+$xmlPath = $webPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
-
-$filePath = "$xmlPath\App{0}\TranslationBuilder\Bin" -f $suffix
+$filePath = $appPath.ToString().replace(":", "$")
+$filePath = "\\$computerName\$filePath"
+$filePath = Join-Path $filePath "TranslationBuilder\Bin"
 
 $MaxObjectsInOnePush = 500
 $MaxJobItemsCreatedInOneCall = 250
@@ -156,8 +156,8 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $params = @{MaxObjectsInOnePush = $MaxObjectsInOnePush; MaxJobItemsCreatedInOneCall = $MaxJobItemsCreatedInOneCall; CompletedJobLifeSpan = $CompletedJobLifeSpan; JobProcessingTimeout = $JobProcessingTimeout; JobPollingInterval = $JobPollingInterval; PendingJobPollingInterval = $PendingJobPollingInterval}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
-        
+
         #Assert
-        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -JobPollingInterval 00:11:10 -MaxObjectsInOnePush 500 -JobProcessingTimeout 00:11:00 -CompletedJobLifeSpan 00:01:00 -MaxJobItemsCreatedInOneCall 250') | Should be "True"     
+        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -CompletedJobLifeSpan 00:01:00 -JobProcessingTimeout 00:11:00 -MaxObjectsInOnePush 500 -MaxJobItemsCreatedInOneCall 250 -JobPollingInterval 00:11:10') | Should be "True"     
     }
 }

@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// ISH windows services types.
-    ///	<para type="description">Enumeration of types of ISH windows services such as TranslationBuilder and TranslationOrganizer.</para>
+    /// Status of ISH windows services.
+    ///	<para type="description">Enumeration of statuses of ISH windows services such as TranslationBuilder and TranslationOrganizer.</para>
     /// </summary>
-#pragma warning disable 1591
-    public enum ISHWindowsServiceType
+    public enum ISHWindowsServiceSequence
     {
-        TranslationBuilder,
-        TranslationOrganizer
+        One = 1,
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5,
+        Six = 6,
+        Seven = 7,
+        Eight = 8,
+        Nine = 9,
+        Ten = 10
     }
 }

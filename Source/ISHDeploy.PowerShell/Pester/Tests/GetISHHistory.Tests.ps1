@@ -9,7 +9,7 @@
 $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 
-$xmlPath = Join-Path ($testingDeployment.WebPath.replace(":", "$")) ("Web{0}\Author\ASP\XSL" -f $suffix )
+$xmlPath = Join-Path ($webPath.replace(":", "$")) "Author\ASP\XSL"
 $xmlPath = "\\$computerName\$xmlPath"
 
 $scriptBlockGet = {

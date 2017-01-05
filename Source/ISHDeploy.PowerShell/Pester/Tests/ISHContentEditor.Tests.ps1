@@ -9,7 +9,7 @@
 $licenseKey=Get-TestDataValue "xopusLicenseKey"
 $domain=Get-TestDataValue "xopusLicenseDomain"
 
-$LicensePath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP" -f $suffix )
+$LicensePath = Join-Path $webPath "Author\ASP"
 $LicensePath = $LicensePath.ToString().replace(":", "$")
 $LicensePath = "\\$computerName\$LicensePath"
 $xmlPath = Join-Path $LicensePath "\XSL"

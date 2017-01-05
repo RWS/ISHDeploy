@@ -11,7 +11,7 @@ $deployments=Get-ISHDeployment
  
 - When the server has no active deployments then `$deployments` will be empty.
 - When the server has one deployment then `$deployments` will hold a reference to the one deployment, typically known as the default deployment.
-- When the server has multiple deployments then you can get a nice report using the `Format-Table` commandlet.
+- When the server has multiple deployments then you can get a nice report using the `Format-Table` cmdlet.
  
 ```powershell
 $deployments|Format-Table Name,SoftwareVersion,DatabaseType,AccessHostname
@@ -35,14 +35,14 @@ This outputs the following
 ```text 
 SoftwareVersion : 12.0.2929.1
 Name            : InfoShare
-AppPath         : C:\InfoShare
-WebPath         : C:\InfoShare
-DataPath        : C:\InfoShare
+AppPath         : C:\InfoShare\App
+WebPath         : C:\InfoShare\Web
+DataPath        : C:\InfoShare\Data
 DatabaseType    : sqlserver2012
 AccessHostName  : ish.example.com
-WebAppNameCM    : InfoShareAuthor
-WebAppNameWS    : InfoShareWS
-WebAppNameSTS   : InfoShareSTS
+WebAppNameCM    : ishcm
+WebAppNameWS    : ishws
+WebAppNameSTS   : ishsts
 WebSiteName     : Default Web Site
 ```
  
@@ -52,7 +52,7 @@ Get-ISHDeployment -Name InfoShareSQL
 ```
 
 ### Using a deployment
-All commandlets that target a specific deployment are driven from the `-ISHDeployment` parameter that expects as value a name of deployment or an instance. 
+All cmdlets that target a specific deployment are driven from the `-ISHDeployment` parameter that expects as value a name of deployment or an instance. 
 To acquire an instance use the `Get-ISHDeployment`.
 
 The following two blocks are equal for the default deployment name `InfoShare`.
@@ -141,13 +141,13 @@ osuser                                   osuser
 ospassword                               *******
 ...
 databasetype                             sqlserver2014
-apppath                                  C:\InfoShare\{SupportedCMVersion}\ISH
-webpath                                  C:\InfoShare\{SupportedCMVersion}\ISH
-datapath                                 C:\InfoShare\{SupportedCMVersion}\ISH
-workspacepath                            C:\InfoShare\{SupportedCMVersion}\_Workspace
-infoshareauthorwebappname                ishcmsql
-infosharewswebappname                    ishwssql
-infosharestswebappname                   ishstssql
+apppath                                  C:\InfoShare
+webpath                                  C:\InfoShare
+datapath                                 C:\InfoShare
+workspacepath                            C:\InfoShare\_Workspace
+infoshareauthorwebappname                ishcm
+infosharewswebappname                    ishws
+infosharestswebappname                   ishsts
 websitename                              Default Web Site
 ...
 ```
@@ -167,11 +167,15 @@ $deploymentName = "InfoShare"
 # Get current set with clear passwords
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName -ShowPassword
 ```
+
+**Notice** that similar values might be different between the output of `Get-ISHDeployment` and `Get-ISHDeploymentParameters`. 
+`Get-ISHDeploymentParameters` will always return the value from the input parameters installation file but `Get-ISHDeployment` will focus on providing output that is more useful when possible.
+For example `webpath` from `Get-ISHDeploymentParameters` is the actual input parameter during installation (e.g. `C:\InfoShare`) where `WebPath` from `Get-ISHDeployment` is derived and points to the exact location of the web applications (e.g. `C:\InfoShare\Web`).
  
 ## Developing a deployment
-To help engineers write and debug scripts a commandlet `Undo-ISHDeployment` is provided.
+To help engineers write and debug scripts a cmdlet `Undo-ISHDeployment` is provided.
  
-All commandlets in this module track and keep a backup of all vanilla files being modified.
+All cmdlets in this module track and keep a backup of all vanilla files being modified.
 This allows the module to undo all changes without the requirement to uninstall and then re-install.
  
 ```powershell
@@ -180,7 +184,7 @@ Undo-ISHDeployment -ISHDeployment $deploymentName
  
 ## Clear history artifacts
 Because the module's codebase is not connected with the `InstallTool.exe` when you uninstall the module's artifacts will not be removed.
-The `Clear-ISHDeploymentHistory` takes care of this by removing all artifacts. You must use this commandlet before uninstalling.
+The `Clear-ISHDeploymentHistory` takes care of this by removing all artifacts. You must use this cmdlet before uninstalling.
  
 ```powershell
 Clear-ISHDeploymentHistory -ISHDeployment $deploymentName

@@ -7,7 +7,7 @@
 #region variables
 
 # Generating file pathes to remote PC files
-$xmlPath = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $suffix )
+$xmlPath = Join-Path $webPath "Author\ASP\XSL"
 $xmlPath = $xmlPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 

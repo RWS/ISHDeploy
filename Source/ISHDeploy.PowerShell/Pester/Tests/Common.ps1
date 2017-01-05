@@ -38,7 +38,9 @@ $scriptBlockCreateCertificate = {
 $computerName = If ($session) {$session.ComputerName} Else {[System.Net.Dns]::GetHostName() + "." + $env:USERDNSDOMAIN}
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-
+$appPath = $testingDeployment.AppPath
+$dataPath = $testingDeployment.DataPath
+$webPath = $testingDeployment.WebPath
 
 #Gets InputParameters
 $scriptBlockGetInputParameters = {
@@ -104,7 +106,7 @@ function GetProjectSuffix($projectName)
 }
 
 $suffix = GetProjectSuffix($testingDeployment.Name)
-$dbPath = ("\\$computerName\{0}\Web{1}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $testingDeployment.Webpath, $suffix).replace(":", "$")
+$dbPath = ("\\$computerName\{0}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $webPath).replace(":", "$")
 
 #check path remotely
 $scriptBlockTestPath = {

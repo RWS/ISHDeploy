@@ -8,7 +8,7 @@
 
 $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
 
-$absolutePath = $testingDeployment.WebPath
+$absolutePath = $webPath
 $computerName = $computerName.split(".")[0]
 
 $scriptBlockResetISHSTS = {
@@ -45,8 +45,6 @@ $scriptBlockSetISHIntegrationSTSCertificate = {
 
 $scriptBlockQuerry = {
     param (
-        
-        $suffix,
         $dbPath,
         $absolutePath,
         $command,
@@ -57,7 +55,7 @@ $scriptBlockQuerry = {
         $VerbosePreference=$Using:VerbosePreference 
     }
      #Create System.Data.SqlServerCe.dll path
-    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\Web$suffix\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
+    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
     
     #Add SQL Server CE Engine
     $var = [Reflection.Assembly]::LoadFile($sqlCEAssemblyPath)
@@ -104,10 +102,10 @@ function remoteQuerryDatabase() {
         $stringOutput
     )
     if($stringOutput){
-        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $suffix, $dbPath, $absolutePath, $command, $stringOutput 
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $dbPath, $absolutePath, $command, $stringOutput 
     }
     else{
-        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $suffix, $dbPath, $absolutePath, $command
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $dbPath, $absolutePath, $command
     }
     return $result
 }

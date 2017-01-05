@@ -112,7 +112,7 @@ Get-Help Get-ISHDeployment -Full
 The purpose of the module is to modify the files of a deployment.
 For this reason, most cmdlets require elevated administrator privileges. 
 Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
-All cmdlets with verb `Get-` such as `Get-ISHDeployment` are exempt from this requirement as they do not modify an files.
+All cmdlets with verb `Get-` such as `Get-ISHDeployment` are exempt from this requirement as they do not modify any files.
 
 # The documentation portal
 

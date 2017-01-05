@@ -5,11 +5,10 @@
 . "$PSScriptRoot\Common.ps1"
 
 #region variables
-$xmlPath = $testingDeployment.WebPath
-$xmlPath = $xmlPath.ToString().replace(":", "$")
+$xmlPath = $webPath.replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 
-$filepath = "$xmlPath\Web{0}\InfoShareWS" -f $suffix
+$filepath = "$xmlPath\InfoShareWS"
 #endregion
 
 #region Script Blocks
@@ -61,11 +60,11 @@ $scriptBlockReadTargetXML = {
     #read all files that are touched with commandlet
     
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
-    $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
+    $authorWebConfig.load("$xmlPath\Author\ASP\Web.config")
     [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
-    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
+    $wsWebConfig.load("$xmlPath\InfoShareWS\Web.config")
     [System.Xml.XmlDocument]$stsWebConfig = new-object System.Xml.XmlDocument
-    $stsWebConfig.load("$xmlPath\Web{0}\InfoShareSTS\Web.config" -f $suffix )
+    $stsWebConfig.load("$xmlPath\InfoShareSTS\Web.config")
     
     $result =  @{}
     #get variables and nodes from files

@@ -1,6 +1,6 @@
 ﻿# Integrating with Security Token Service (STS)
  
-This article explains how to use the module's commandlets to integrate with a **Security Token Service** also referred to as **STS**.
+This article explains how to use the module's cmdlets to integrate with a **Security Token Service** also referred to as **STS**.
 
 # Acknowledgements
 

@@ -25,7 +25,7 @@ $scriptBlockGetISHDeployment = {
 }
 
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
-$xmlPath  = Join-Path $testingDeployment.WebPath ("\Web{0}\Author\ASP\XSL" -f $suffix )
+$xmlPath  = Join-Path $webPath "Author\ASP\XSL"
 
 $scriptBlockGetVersionValue = {
     param (

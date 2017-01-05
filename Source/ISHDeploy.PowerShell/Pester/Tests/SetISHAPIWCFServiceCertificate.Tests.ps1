@@ -11,11 +11,14 @@ $testThumbprint = $testCertificate.Thumbprint
 #region variables
 
 # Generating file pathes to remote PC files
-$xmlPath = $testingDeployment.WebPath
-$xmlPath = $xmlPath.ToString().replace(":", "$")
-$xmlPath = "\\$computerName\$xmlPath"
+$xmlAppPath = $appPath.replace(":", "$")
+$xmlAppPath = "\\$computerName\$xmlAppPath"
+$xmlDataPath = $dataPath.replace(":", "$")
+$xmlDataPath = "\\$computerName\$xmlDataPath"
+$xmlWebPath = $webPath.replace(":", "$")
+$xmlWebPath = "\\$computerName\$xmlWebPath"
 
-$filepath = "$xmlPath\Web{0}\Author\ASP" -f $suffix
+$filepath = "$xmlWebPath\Author\ASP"
 $absolutePath = $testingDeployment.WebPath
 #endregion
 
@@ -43,8 +46,9 @@ $scriptBlockReadTargetXML = {
     param(
         $thumbprint,
         $ValidationMode,
-        $suffix,
-        $xmlPath,
+        $xmlAppPath,
+        $xmlDataPath,
+        $xmlWebPath,
         $absolutePath,
         $infosharewswebappname,
         $computerName
@@ -52,21 +56,21 @@ $scriptBlockReadTargetXML = {
     #read all files that are touched with commandlet
     
     [System.Xml.XmlDocument]$wsWebConfig = new-object System.Xml.XmlDocument
-    $wsWebConfig.load("$xmlPath\Web{0}\InfoShareWS\Web.config" -f $suffix)
+    $wsWebConfig.load("$xmlWebPath\InfoShareWS\Web.config")
     [System.Xml.XmlDocument]$authorWebConfig = new-object System.Xml.XmlDocument
-    $authorWebConfig.load("$xmlPath\Web{0}\Author\ASP\Web.config" -f $suffix)
+    $authorWebConfig.load("$xmlWebPath\Author\ASP\Web.config")
     [System.Xml.XmlDocument]$STSConfig = new-object System.Xml.XmlDocument
-    $STSConfig.Load("$xmlPath\Web{0}\InfoShareSTS\Configuration\infoShareSTS.config" -f $suffix)
+    $STSConfig.Load("$xmlWebPath\InfoShareSTS\Configuration\infoShareSTS.config")
     [System.Xml.XmlDocument]$FeedSDLLCConfig = new-object System.Xml.XmlDocument
-    $FeedSDLLCConfig.Load("$xmlPath\Data{0}\PublishingService\Tools\FeedSDLLiveContent.ps1.config" -f $suffix)
+    $FeedSDLLCConfig.Load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$TranslationOrganizerConfig = new-object System.Xml.XmlDocument
-    $TranslationOrganizerConfig.Load("$xmlPath\App{0}\TranslationOrganizer\Bin\TranslationOrganizer.exe.config" -f $suffix)
+    $TranslationOrganizerConfig.Load("$xmlAppPath\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
     [System.Xml.XmlDocument]$SynchronizeToLCConfig = new-object System.Xml.XmlDocument
-    $SynchronizeToLCConfig.Load("$xmlPath\App{0}\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config" -f $suffix)
+    $SynchronizeToLCConfig.Load("$xmlAppPath\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
     [System.Xml.XmlDocument]$TrisoftInfoShareClientConfig = new-object System.Xml.XmlDocument
-    $TrisoftInfoShareClientConfig.Load("$xmlPath\Web{0}\Author\ASP\Trisoft.InfoShare.Client.config" -f $suffix)
+    $TrisoftInfoShareClientConfig.Load("$xmlWebPath\Author\ASP\Trisoft.InfoShare.Client.config")
     [System.Xml.XmlDocument]$ConnectionConfig = new-object System.Xml.XmlDocument
-    $ConnectionConfig.Load("$xmlPath\Web{0}\InfoShareWS\connectionconfiguration.xml" -f $suffix)
+    $ConnectionConfig.Load("$xmlWebPath\InfoShareWS\connectionconfiguration.xml")
     
     $result =  @{}
     #get variables and nodes from files
@@ -80,14 +84,14 @@ $scriptBlockReadTargetXML = {
     $result["connectionConfigNode"] = $ConnectionConfig.SelectNodes("connectionconfiguration/infosharewscertificatevalidationmode")[0].InnerText
 
     #Create System.Data.SqlServerCe.dll path
-    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\Web$suffix\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
+    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
     
     #Add SQL Server CE Engine
     $var = [Reflection.Assembly]::LoadFile($sqlCEAssemblyPath)
 
     #Create Connection String
     [System.String] $dbName="IdentityServerConfiguration-2.2.sdf"
-    [System.String] $dbPath="$xmlpath\Web$suffix\InfoShareSTS\App_Data"
+    [System.String] $dbPath="$xmlWebPath\InfoShareSTS\App_Data"
     $infoShareSTSDBPath=[System.IO.Path]::Combine($dbPath,$dbName)
     $connectionString="Data Source=$infoShareSTSDBPath;"
 
@@ -125,7 +129,7 @@ function remoteReadTargetXML() {
     
     $infosharewswebappname = $inputParameters["infosharewswebappname"]
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $suffix, $xmlPath, $absolutePath, $infosharewswebappname, $computerName
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $thumbprint, $ValidationMode, $xmlAppPath, $xmlDataPath, $xmlWebPath, $absolutePath, $infosharewswebappname, $computerName
 
 
     #get variables and nodes from files

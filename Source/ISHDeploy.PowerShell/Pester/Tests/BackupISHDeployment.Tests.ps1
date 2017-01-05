@@ -9,9 +9,9 @@ $moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.
 $backupPath = "\\$computerName\C$\ProgramData\$moduleName\$($testingDeployment.Name)\Backup"
 $computerName = $computerName.split(".")[0]
 $uncPackagePath = "\\$computerName\" + ($backupPath.replace(":", "$"))
-$pathToBackupAppFolder = Join-Path $backupPath ("\App{0}" -f $suffix )
-$pathToBackupDataFolder = Join-Path $backupPath ("\Data{0}" -f $suffix )
-$pathToBackupWebFolder = Join-Path $backupPath ("\Web{0}" -f $suffix )
+$pathToBackupAppFolder = Join-Path $backupPath "\App"
+$pathToBackupDataFolder = Join-Path $backupPath "\Data"
+$pathToBackupWebFolder = Join-Path $backupPath "\Web"
 
 #endregion
 

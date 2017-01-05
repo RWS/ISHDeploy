@@ -344,6 +344,12 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath CUIFConfigFilePath { get; }
 
+
+        /// <summary>
+        /// Gets the path to ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
+        /// </summary>
+        protected ISHFilePath TranslationBuilderConfigFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -401,6 +407,7 @@ namespace ISHDeploy.Business.Operations
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
+            TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
 
             #endregion
         }

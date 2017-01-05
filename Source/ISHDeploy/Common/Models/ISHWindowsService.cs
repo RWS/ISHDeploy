@@ -32,5 +32,15 @@ namespace ISHDeploy.Common.Models
         /// The type of windows service.
         /// </summary>
         public ISHWindowsServiceType Type { get; set; }
+
+        /// <summary>
+        /// The status of windows service.
+        /// </summary>
+        public ISHWindowsServiceStatus Status{ get; set; }
+
+        /// <summary>
+        /// The sequence of windows service.
+        /// </summary>
+        public int Sequence { get; set; }
     }
 }

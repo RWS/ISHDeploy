@@ -115,7 +115,12 @@ namespace ISHDeploy.Data.Managers
                 services.AddRange(
                     ServiceController.GetServices()
                         .Where(x => x.ServiceName.Contains(type.ToString()))
-                        .Select(service => new ISHWindowsService { Name = service.ServiceName, Type = type })
+                        .Select(service => new ISHWindowsService {
+                            Name = service.ServiceName,
+                            Type = type,
+                            Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
+                            Sequence = (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                        })
                         .ToList());
             }
 

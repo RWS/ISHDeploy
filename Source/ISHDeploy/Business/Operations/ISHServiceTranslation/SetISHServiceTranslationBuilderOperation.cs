@@ -16,10 +16,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Enums;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
@@ -53,6 +57,40 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     TranslationBuilderConfigFilePath, 
                     TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
                     ValueToString(parameter.Key, parameter.Value)));
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationBuilderOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="amount">The number of TranslationBuilder services in the system.</param>
+        public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
+            base(logger, ishDeployment)
+        {
+            _invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
+
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+
+            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder).OrderBy(x => x.Sequence);
+
+            if (services.Count() > amount)
+            {
+                for (int i = amount + 1; i < services.Count(); i++)
+                {
+                    // Remove extra services
+                    var service = services.FirstOrDefault(serv => serv.Sequence == i);
+                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+                }
+            }
+            else if (services.Count() < amount)
+            {
+                for (int i = services.Count(); i < amount; i++)
+                {
+                    var service = services.FirstOrDefault(serv => serv.Sequence == i);
+                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service));
+                }
             }
         }
 

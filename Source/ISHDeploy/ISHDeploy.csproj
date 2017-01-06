@@ -40,7 +40,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
-    <StartArguments>-NoExit -Command "&amp; {Import-Module .\$(ModuleName).dll}"</StartArguments>
+    <StartArguments>-NoProfile -NoExit -Command "&amp; {Import-Module .\$(ModuleName).dll}"</StartArguments>
     <StartProgram>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugSkipVersion|AnyCPU'">
@@ -236,8 +236,11 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
+    <Compile Include="Data\Managers\Interfaces\IPowerShellManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
     <Compile Include="Data\Managers\WindowsServiceManager.cs" />
     <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroup.cs" />
@@ -396,6 +399,8 @@
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.ps1" />
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsAuthenticationFeatureEnabled.ps1" />
+    <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
+    <EmbeddedResource Include="Data\Resources\Uninstall -WindowsService.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

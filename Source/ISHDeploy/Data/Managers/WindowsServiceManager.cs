@@ -126,5 +126,23 @@ namespace ISHDeploy.Data.Managers
 
             return services;
         }
+
+        /// <summary>
+        /// Removes specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        public void RemoveWindowsService(string serviceName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Clones specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        public void CloneWindowsService(string serviceName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

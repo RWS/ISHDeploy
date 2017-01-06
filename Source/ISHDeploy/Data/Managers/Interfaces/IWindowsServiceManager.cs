@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.ServiceProcess;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 
@@ -46,5 +45,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// The windows services of deployment of specified type.
         /// </returns>
         IEnumerable<ISHWindowsService> GetServices(params ISHWindowsServiceType[] types);
+
+        /// <summary>
+        /// Removes specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        void RemoveWindowsService(string serviceName);
+
+        /// <summary>
+        /// Clones specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        void CloneWindowsService(string serviceName);
     }
 }

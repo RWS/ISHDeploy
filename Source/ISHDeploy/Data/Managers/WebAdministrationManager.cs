@@ -173,6 +173,7 @@ namespace ISHDeploy.Data.Managers
                     using (var reader = new StreamReader(resourceReader))
                     {
                         ps.AddScript(reader.ReadToEnd());
+                        ps.AddParameter("NoProfile");
                     }
                 }
 

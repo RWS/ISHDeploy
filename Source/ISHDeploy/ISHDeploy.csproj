@@ -78,6 +78,7 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -242,6 +243,7 @@
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Managers\Interfaces\IPowerShellManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
+    <Compile Include="Data\Managers\PowerShellManager.cs" />
     <Compile Include="Data\Managers\WindowsServiceManager.cs" />
     <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroup.cs" />
     <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroups.cs" />
@@ -400,7 +402,7 @@
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsAuthenticationFeatureEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
-    <EmbeddedResource Include="Data\Resources\Uninstall -WindowsService.ps1" />
+    <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

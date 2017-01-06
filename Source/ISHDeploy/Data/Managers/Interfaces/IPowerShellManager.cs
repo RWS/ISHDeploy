@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
@@ -25,6 +27,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Invokes content of ps1 file as powershell script
         /// </summary>
         /// <param name="embeddedResourceName">Name of embedded ps1 resource with powershell script.</param>
-        void InvokePowerShellScript(string embeddedResourceName);
+        /// <param name="parameters">Parameters to be passed to the script. Is <c>null</c> by defult</param>
+        /// Return the result in the case of casting failure
+        /// <returns>An object of specified type that converted from PSObject</returns>
+        object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null);
     }
 }

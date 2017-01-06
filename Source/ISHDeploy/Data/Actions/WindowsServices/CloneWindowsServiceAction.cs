@@ -38,16 +38,37 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly IWindowsServiceManager _serviceManager;
 
         /// <summary>
+        /// The sequence of new service
+        /// </summary>
+        private readonly int _sequence;
+
+        /// <summary>
+        /// The windows service userName
+        /// </summary>
+        private readonly string _userName;
+
+        /// <summary>
+        /// The windows service password
+        /// </summary>
+        private readonly string _password;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The deployment service.</param>
-        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service)
+        /// <param name="sequence">The sequence of new service.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service, int sequence, string userName, string password)
             : base(logger)
         {
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            _sequence = sequence;
+            _userName = userName;
+            _password = password;
         }
 
         /// <summary>
@@ -55,7 +76,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.CloneWindowsService(_service.Name);
+            _serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
         }
     }
 }

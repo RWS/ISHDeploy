@@ -69,6 +69,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
             base(logger, ishDeployment)
         {
+            if (amount > 10)
+            {
+                throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10.Supply an argument that is less than or equal to 10 and then try the command again");
+            }
+
             _invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
@@ -77,19 +82,19 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (services.Count() > amount)
             {
-                for (int i = amount + 1; i < services.Count(); i++)
+                // Remove extra services
+                var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
+                foreach (var service in servicesForDeleting)
                 {
-                    // Remove extra services
-                    var service = services.FirstOrDefault(serv => serv.Sequence == i);
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
             }
             else if (services.Count() < amount)
             {
+                var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
                 for (int i = services.Count(); i < amount; i++)
                 {
-                    var service = services.FirstOrDefault(serv => serv.Sequence == i);
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service));
+                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i+ 1, InputParameters.OSUser, InputParameters.OSPassword));
                 }
             }
         }

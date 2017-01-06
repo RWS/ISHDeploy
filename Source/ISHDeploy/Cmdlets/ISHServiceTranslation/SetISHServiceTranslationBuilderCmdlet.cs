@@ -82,7 +82,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <summary>
         /// <para type="description">The interval of polling of pending job.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The number of TranslationBuilder services in the system", ParameterSetName = "TranslationBuilderCount")]
+        [Parameter(Mandatory = true, HelpMessage = "The number of TranslationBuilder services in the system", ParameterSetName = "TranslationBuilderCount")]
         [ValidateNotNullOrEmpty]
         [ValidateRange(1, 10)]
         public int Count { get; set; }
@@ -136,7 +136,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             }
             else if (ParameterSetName == "TranslationBuilderCount")
             {
-                
+                var operation = new SetISHServiceTranslationBuilderOperation(Logger, ISHDeployment, Count);
+
+                operation.Run();
             }
         }
     }

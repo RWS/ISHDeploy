@@ -78,6 +78,11 @@ namespace ISHDeploy.Common.Models
         public string OSUser { get; }
 
         /// <summary>
+        /// Gets the password of the OS user.
+        /// </summary>
+        public string OSPassword { get; }
+
+        /// <summary>
         /// Gets the name of the CM main url folder.
         /// </summary>
         public string CMWebAppName { get; }
@@ -157,6 +162,7 @@ namespace ISHDeploy.Common.Models
             ConnectString = parameters["connectstring"];
             WebPath = parameters["webpath"];
             OSUser = parameters["osuser"];
+            OSPassword =  parameters["ospassword"];
             CMWebAppName = parameters["infoshareauthorwebappname"];
             WSWebAppName = parameters["infosharewswebappname"];
             STSWebAppName = parameters["infosharestswebappname"];

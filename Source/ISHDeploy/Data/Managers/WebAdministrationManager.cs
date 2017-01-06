@@ -165,7 +165,7 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteDebug("Checking IIS-WindowsAuthentication feature is turned on or not");
 
-            using (var ps = PowerShell.Create())
+            using (var ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
                 // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
                 using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("ISHDeploy.Data.Resources.Check-WindowsAuthenticationFeatureEnabled.ps1"))

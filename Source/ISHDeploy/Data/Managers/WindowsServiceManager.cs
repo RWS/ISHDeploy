@@ -159,7 +159,7 @@ namespace ISHDeploy.Data.Managers
         {
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
 
-            WqlObjectQuery wqlObjectQuery = new WqlObjectQuery(string.Format("SELECT * FROM Win32_Service WHERE Name = '{0}'", service.Name));
+            WqlObjectQuery wqlObjectQuery = new WqlObjectQuery($"SELECT * FROM Win32_Service WHERE Name = '{service.Name}'");
             ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);
             ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
 
@@ -172,12 +172,12 @@ namespace ISHDeploy.Data.Managers
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1", 
                 new Dictionary<string, string>
                 {
-                    { "$name", $"\"{newServiceName}\"" },
-                    { "$displayName", $"\"{newServiceName }\"" },
-                    { "$description", $"\"{newServiceName} ({sequence})\"" },
-                    { "$pathToExecutable", $"\"{pathToExecutable}\"" },
-                    { "$username", $"\"{userName}\"" },
-                    { "$password", $"\"{password}\"" }
+                    { "$name", newServiceName },
+                    { "$displayName", newServiceName },
+                    { "$description", $"{newServiceName} ({sequence})" },
+                    { "$pathToExecutable", pathToExecutable },
+                    { "$username", userName },
+                    { "$password", password }
                 });
         }
     }

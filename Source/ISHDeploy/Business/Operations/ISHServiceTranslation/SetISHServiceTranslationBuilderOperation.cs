@@ -56,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     new SetAttributeValueAction(Logger, 
                     TranslationBuilderConfigFilePath, 
                     TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
-                    ValueToString(parameter.Key, parameter.Value)));
+                    HandleStringBeforeSaving(parameter.Key, parameter.Value)));
             }
         }
 
@@ -78,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder).OrderBy(x => x.Sequence);
+            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder).ToList();
 
             if (services.Count() > amount)
             {
@@ -94,7 +94,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
                 for (int i = services.Count(); i < amount; i++)
                 {
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i+ 1, InputParameters.OSUser, InputParameters.OSPassword));
+                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="type">Type of setting</param>
         /// <param name="value">The value</param>
         /// <returns></returns>
-        private string ValueToString(TranslationBuilderSetting type, object value)
+        private string HandleStringBeforeSaving(TranslationBuilderSetting type, object value)
         {
             if (type == TranslationBuilderSetting.JobPollingInterval || 
                 type == TranslationBuilderSetting.JobProcessingTimeout || 

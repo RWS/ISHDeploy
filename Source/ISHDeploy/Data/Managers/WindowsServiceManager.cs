@@ -103,10 +103,11 @@ namespace ISHDeploy.Data.Managers
         /// Gets all windows services of specified type.
         /// </summary>
         /// <param name="types">Types of deployment service.</param>
+        /// <param name="deploymentSuffix">ISH deployment name.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
-        public IEnumerable<ISHWindowsService> GetServices(params ISHWindowsServiceType[] types)
+        public IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types)
         {
             var services = new List<ISHWindowsService>();
 
@@ -114,7 +115,7 @@ namespace ISHDeploy.Data.Managers
             {
                 services.AddRange(
                     ServiceController.GetServices()
-                        .Where(x => x.ServiceName.Contains(type.ToString()))
+                        .Where(x => x.ServiceName.Contains($"{deploymentName} {type.ToString()}"))
                         .Select(service => new ISHWindowsService {
                             Name = service.ServiceName,
                             Type = type,

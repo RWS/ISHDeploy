@@ -13,37 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using System.Management.Automation;
-using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
-using ISHDeploy.Data.Managers.Interfaces;
+﻿using System.Management.Automation;
+﻿using ISHDeploy.Business.Operations.ISHServiceTranslation;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
-    /// <para type="synopsis">Gets list of windows services for Translation Builder.</para>
-    /// <para type="description">The Get-ISHServiceTranslationBuilder cmdlet gets list of translation builder windows service.</para>
-    /// <para type="link">Set-ISHExternalPreview</para>
+    /// <para type="synopsis">Enables translation organizer windows service.</para>
+    /// <para type="description">The Enable-ISHServiceTranslationOrganizer cmdlet enables translation organizer windows service.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
-    /// <para>This command shows the translation builder windows service.
+    /// <code>PS C:\>Enable-ISHServiceTranslationOrganizer -ISHDeployment $deployment</code>
+    /// <para>This command enables the translation organizer windows service.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Get, "ISHServiceTranslationBuilder")]
-    public sealed class GetISHServiceTranslationBuilderCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsLifecycle.Enable, "ISHServiceTranslationOrganizer")]
+    public sealed class EnableISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var operation = new EnableISHServiceTranslationOrganizerOperation(Logger, ISHDeployment);
 
-            var services = serviceManager.GetServices(ISHDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
-
-            ISHWriteOutput(services);
+            operation.Run();
         }
     }
 }

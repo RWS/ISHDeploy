@@ -24,10 +24,10 @@ using Models = ISHDeploy.Common.Models;
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Enables translation builder windows service.
+    /// Disables translation organizer windows service.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class EnableISHServiceTranslationBuilderOperation : BaseOperationPaths, IOperation
+    public class DisableISHServiceTranslationOrganizerOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -35,23 +35,23 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnableISHServiceTranslationBuilderOperation"/> class.
+        /// Initializes a new instance of the <see cref="DisableISHServiceTranslationOrganizerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        public EnableISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
+        public DisableISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Enabling of translation builder windows service");
+            _invoker = new ActionInvoker(logger, "Disabling of translation organizer windows service");
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
 
             foreach (var service in services)
             {
                 _invoker.AddAction(
-                    new StartWindowsServiceAction(Logger, service));
+                    new StopWindowsServiceAction(Logger, service));
             }
         }
 

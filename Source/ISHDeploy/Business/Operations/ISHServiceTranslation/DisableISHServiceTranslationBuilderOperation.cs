@@ -46,7 +46,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder);
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
 
             foreach (var service in services)
             {

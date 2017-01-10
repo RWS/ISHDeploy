@@ -42,9 +42,10 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Gets all windows services of specified type.
         /// </summary>
         /// <param name="types">Types of deployment service.</param>
+        /// <param name="deploymentName">ISH deployment name.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
-        IEnumerable<ISHWindowsService> GetServices(params ISHWindowsServiceType[] types);
+        IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
     }
 }

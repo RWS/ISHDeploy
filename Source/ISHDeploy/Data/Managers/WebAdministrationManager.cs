@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 ﻿using System;
-﻿using System.IO;
 ﻿using System.Linq;
-﻿using System.Management.Automation;
-﻿using System.Reflection;
+﻿using ISHDeploy.Common;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -43,7 +41,6 @@ namespace ISHDeploy.Data.Managers
         public WebAdministrationManager(ILogger logger)
         {
             _logger = logger;
-
         }
 
         /// <summary>
@@ -161,37 +158,14 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
-            bool isFeatureEnabled = false;
-
             _logger.WriteDebug("Checking IIS-WindowsAuthentication feature is turned on or not");
 
-            using (var ps = PowerShell.Create())
-            {
-                // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
-                using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream("ISHDeploy.Data.Resources.Check-WindowsAuthenticationFeatureEnabled.ps1"))
-                {
-                    using (var reader = new StreamReader(resourceReader))
-                    {
-                        ps.AddScript(reader.ReadToEnd());
-                        ps.AddParameter("NoProfile");
-                    }
-                }
+            var psManager = ObjectFactory.GetInstance<IPowerShellManager>();
 
-                foreach (PSObject result in ps.Invoke())
-                {
-                    foreach (var verbose in ps.Streams.Verbose.ReadAll())
-                    {
-                        _logger.WriteVerbose(verbose.Message);
-                    }
+            var result = psManager.InvokeEmbeddedResourceAsScriptWithResult(
+                "ISHDeploy.Data.Resources.Check-WindowsAuthenticationFeatureEnabled.ps1");
 
-                    foreach (var warning in ps.Streams.Warning.ReadAll())
-                    {
-                        _logger.WriteWarning(warning.Message);
-                    }
-
-                    isFeatureEnabled = result != null && bool.Parse(result.ToString());
-                }
-            }
+            var isFeatureEnabled = bool.Parse(result.ToString());
 
             _logger.WriteVerbose($"IIS-WindowsAuthentication feature is {(isFeatureEnabled ? "turned on" : "turned off")}");
 

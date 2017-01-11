@@ -17,9 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using System.ServiceProcess;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 
@@ -37,12 +39,18 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
+        /// The powershell manager.
+        /// </summary>
+        private readonly IPowerShellManager _psManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public WindowsServiceManager(ILogger logger)
         {
             _logger = logger;
+            _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
         }
 
         /// <summary>
@@ -103,7 +111,7 @@ namespace ISHDeploy.Data.Managers
         /// Gets all windows services of specified type.
         /// </summary>
         /// <param name="types">Types of deployment service.</param>
-        /// <param name="deploymentSuffix">ISH deployment name.</param>
+        /// <param name="deploymentName">ISH deployment name.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
@@ -126,6 +134,52 @@ namespace ISHDeploy.Data.Managers
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Removes specific windows service
+        /// </summary>
+        /// <param name="serviceName">Name of the windows service.</param>
+        public void RemoveWindowsService(string serviceName)
+        {
+            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Uninstall-WindowsService.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", serviceName }
+                });
+        }
+
+        /// <summary>
+        /// Clones specific windows service
+        /// </summary>
+        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="sequence">The sequence of new service.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        public void CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
+        {
+            var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
+
+            WqlObjectQuery wqlObjectQuery = new WqlObjectQuery($"SELECT * FROM Win32_Service WHERE Name = '{service.Name}'");
+            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);
+            ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
+
+            var pathToExecutable = string.Empty;
+            foreach (var managementObject in managementObjectCollection)
+            {
+                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString().Replace("\"", "`\"").Replace(service.Name, newServiceName);
+            }
+
+            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1", 
+                new Dictionary<string, string>
+                {
+                    { "$name", newServiceName },
+                    { "$displayName", newServiceName },
+                    { "$description", $"{newServiceName} ({sequence})" },
+                    { "$pathToExecutable", pathToExecutable },
+                    { "$username", userName },
+                    { "$password", password }
+                });
         }
     }
 }

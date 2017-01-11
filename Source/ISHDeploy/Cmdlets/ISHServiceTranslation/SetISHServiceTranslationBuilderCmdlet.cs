@@ -97,10 +97,11 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var parameters = new Dictionary<TranslationBuilderSetting, object>();
 
             if (ParameterSetName == "TranslationBuilderSettings")
             {
+                var parameters = new Dictionary<TranslationBuilderSetting, object>();
+
                 foreach (var cmdletParameter in MyInvocation.BoundParameters)
                 {
                     switch (cmdletParameter.Key)

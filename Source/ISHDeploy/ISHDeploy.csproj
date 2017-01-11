@@ -91,13 +91,16 @@
   <ItemGroup>
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationOrganizerOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceSequence.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceStatus.cs" />
+    <Compile Include="Common\Enums\TranslationOrganizerSetting.cs" />
     <Compile Include="Common\Enums\TranslationBuilderSetting.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceType.cs" />
     <Compile Include="Common\Enums\RelyingPartyType.cs" />

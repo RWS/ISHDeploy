@@ -30,46 +30,21 @@ namespace ISHDeploy.Business.Operations
         protected class TranslationBuilderConfig
         {
             /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@maxObjectsInOnePushTranslation" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
+            /// The pattern of xpath to attribute
             /// </summary>
-            public const string TranslationBuilderConfigMaxObjectsInOnePushAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@maxObjectsInOnePushTranslation";
-
-            /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@maxTranslationJobItemsCreatedInOneCall" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
-            /// </summary>
-            public const string TranslationBuilderConfigMaxTranslationJobItemsCreatedInOneCallAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@maxTranslationJobItemsCreatedInOneCall";
-
-            /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@completedJobLifeSpan" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
-            /// </summary>
-            public const string TranslationBuilderConfigCompletedJobLifeSpanAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@completedJobLifeSpan";
-
-            /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@jobProcessingTimeout" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
-            /// </summary>
-            public const string TranslationBuilderConfigJobProcessingTimeoutAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@jobProcessingTimeout";
-
-            /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@jobPollingInterval" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
-            /// </summary>
-            public const string TranslationBuilderConfigJobPollingIntervalAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@jobPollingInterval";
-
-            /// <summary>
-            /// The xpath of "configuration/trisoft.infoShare.translationBuilder/settings/@pendingJobPollingInterval" attribute in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
-            /// </summary>
-            public const string TranslationBuilderConfigPendingJobPollingIntervalAttributeXPath = "configuration/trisoft.infoShare.translationBuilder/settings/@pendingJobPollingInterval";
+            public const string TranslationBuilderSettingAttributeXPathPattern = "configuration/trisoft.infoShare.translationBuilder/settings/@{0}";
 
             /// <summary>
             /// Mapping between names of attributes and their xpaths
             /// </summary>
             public static Dictionary<TranslationBuilderSetting, string> AttributeXPaths = new Dictionary<TranslationBuilderSetting, string>
             {
-                {TranslationBuilderSetting.MaxObjectsInOnePushTranslation, TranslationBuilderConfigMaxObjectsInOnePushAttributeXPath },
-                {TranslationBuilderSetting.MaxTranslationJobItemsCreatedInOneCall, TranslationBuilderConfigMaxTranslationJobItemsCreatedInOneCallAttributeXPath },
-                {TranslationBuilderSetting.CompletedJobLifeSpan, TranslationBuilderConfigCompletedJobLifeSpanAttributeXPath },
-                {TranslationBuilderSetting.JobProcessingTimeout, TranslationBuilderConfigJobProcessingTimeoutAttributeXPath },
-                {TranslationBuilderSetting.JobPollingInterval, TranslationBuilderConfigJobPollingIntervalAttributeXPath },
-                {TranslationBuilderSetting.PendingJobPollingInterval, TranslationBuilderConfigPendingJobPollingIntervalAttributeXPath },
+                {TranslationBuilderSetting.maxObjectsInOnePushTranslation, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.maxObjectsInOnePushTranslation) },
+                {TranslationBuilderSetting.maxTranslationJobItemsCreatedInOneCall, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.maxTranslationJobItemsCreatedInOneCall)  },
+                {TranslationBuilderSetting.completedJobLifeSpan, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.completedJobLifeSpan)  },
+                {TranslationBuilderSetting.jobProcessingTimeout, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.jobProcessingTimeout)  },
+                {TranslationBuilderSetting.jobPollingInterval, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.jobPollingInterval)  },
+                {TranslationBuilderSetting.pendingJobPollingInterval, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.pendingJobPollingInterval)  },
             };
         }
     }

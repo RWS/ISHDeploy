@@ -101,23 +101,23 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                     switch (cmdletParameter.Key)
                     {
                         case "MaxObjectsInOnePush":
-                            parameters.Add(TranslationBuilderSetting.MaxObjectsInOnePushTranslation, MaxObjectsInOnePush);
+                            parameters.Add(TranslationBuilderSetting.maxObjectsInOnePushTranslation, MaxObjectsInOnePush);
                             break;
                         case "MaxJobItemsCreatedInOneCall":
-                            parameters.Add(TranslationBuilderSetting.MaxTranslationJobItemsCreatedInOneCall,
+                            parameters.Add(TranslationBuilderSetting.maxTranslationJobItemsCreatedInOneCall,
                                 MaxJobItemsCreatedInOneCall);
                             break;
                         case "CompletedJobLifeSpan":
-                            parameters.Add(TranslationBuilderSetting.CompletedJobLifeSpan, CompletedJobLifeSpan);
+                            parameters.Add(TranslationBuilderSetting.completedJobLifeSpan, CompletedJobLifeSpan);
                             break;
                         case "JobProcessingTimeout":
-                            parameters.Add(TranslationBuilderSetting.JobProcessingTimeout, JobProcessingTimeout);
+                            parameters.Add(TranslationBuilderSetting.jobProcessingTimeout, JobProcessingTimeout);
                             break;
                         case "JobPollingInterval":
-                            parameters.Add(TranslationBuilderSetting.JobPollingInterval, JobPollingInterval);
+                            parameters.Add(TranslationBuilderSetting.jobPollingInterval, JobPollingInterval);
                             break;
                         case "PendingJobPollingInterval":
-                            parameters.Add(TranslationBuilderSetting.PendingJobPollingInterval,
+                            parameters.Add(TranslationBuilderSetting.pendingJobPollingInterval,
                                 PendingJobPollingInterval);
                             break;
                     }

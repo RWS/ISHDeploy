@@ -16,10 +16,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Enums;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
@@ -52,7 +56,46 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     new SetAttributeValueAction(Logger, 
                     TranslationBuilderConfigFilePath, 
                     TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
-                    ValueToString(parameter.Key, parameter.Value)));
+                    HandleStringBeforeSaving(parameter.Key, parameter.Value)));
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationBuilderOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="amount">The number of TranslationBuilder services in the system.</param>
+        public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
+            base(logger, ishDeployment)
+        {
+            if (amount > 10)
+            {
+                throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10.Supply an argument that is less than or equal to 10 and then try the command again");
+            }
+
+            _invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
+
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder).ToList();
+
+            if (services.Count() > amount)
+            {
+                // Remove extra services
+                var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
+                foreach (var service in servicesForDeleting)
+                {
+                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+                }
+            }
+            else if (services.Count() < amount)
+            {
+                var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
+                for (int i = services.Count(); i < amount; i++)
+                {
+                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
+                }
             }
         }
 
@@ -62,7 +105,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="type">Type of setting</param>
         /// <param name="value">The value</param>
         /// <returns></returns>
-        private string ValueToString(TranslationBuilderSetting type, object value)
+        private string HandleStringBeforeSaving(TranslationBuilderSetting type, object value)
         {
             if (type == TranslationBuilderSetting.JobPollingInterval || 
                 type == TranslationBuilderSetting.JobProcessingTimeout || 

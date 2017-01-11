@@ -201,7 +201,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
-        /// <returns></returns>
         void SerializeToFile<T>(string filePath, T data);
     }
 }

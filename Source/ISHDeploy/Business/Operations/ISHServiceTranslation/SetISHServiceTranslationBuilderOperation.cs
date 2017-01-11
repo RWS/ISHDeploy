@@ -64,13 +64,13 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <returns></returns>
         private string ValueToString(TranslationBuilderSetting type, object value)
         {
-            if (type == TranslationBuilderSetting.JobPollingInterval || 
-                type == TranslationBuilderSetting.JobProcessingTimeout || 
-                type == TranslationBuilderSetting.PendingJobPollingInterval)
+            if (type == TranslationBuilderSetting.jobPollingInterval || 
+                type == TranslationBuilderSetting.jobProcessingTimeout || 
+                type == TranslationBuilderSetting.pendingJobPollingInterval)
             {
                 return ((TimeSpan)value).ToString(@"hh\:mm\:ss\.fff");
             }
-            else if (type == TranslationBuilderSetting.CompletedJobLifeSpan)
+            else if (type == TranslationBuilderSetting.completedJobLifeSpan)
             {
                 return ((TimeSpan)value).ToString(@"d\.hh\:mm\:ss\.fff");
             }

@@ -78,7 +78,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ISHWindowsServiceType.TranslationBuilder).ToList();
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder).ToList();
 
             if (services.Count() > amount)
             {

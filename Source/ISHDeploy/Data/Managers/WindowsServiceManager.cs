@@ -111,7 +111,7 @@ namespace ISHDeploy.Data.Managers
         /// Gets all windows services of specified type.
         /// </summary>
         /// <param name="types">Types of deployment service.</param>
-        /// <param name="deploymentSuffix">ISH deployment name.</param>
+        /// <param name="deploymentName">ISH deployment name.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>

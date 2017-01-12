@@ -17,9 +17,10 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// Status of ISH windows services.
-    ///	<para type="description">Enumeration of statuses of ISH windows services such as TranslationBuilder and TranslationOrganizer.</para>
+    /// Numbers in names of ISH windows services.
+    ///	<para type="description">Enumeration of numbers in names of ISH windows services such as TranslationBuilder and TranslationOrganizer.</para>
     /// </summary>
+    #pragma warning disable 1591
     public enum ISHWindowsServiceSequence
     {
         One = 1,

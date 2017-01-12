@@ -87,6 +87,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         public SwitchParameter Language { get; set; }
 
         /// <summary>
+        /// Enumeration of Card Types
         /// <para type="description">ISHType is a list of names for correspond card type.</para>
         /// </summary>
         [Parameter(Mandatory = false, ParameterSetName = "Logical", HelpMessage = "Array of enum/object for correspond in xml CARDTYPE")]
@@ -114,17 +115,17 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             {
                 case "Logical":
                     buttonBarFile = "FolderButtonbar.xml";
-                    cards = GetCardsArray(ISHType, logicalDictionary);
+                    cards = GetCardsArray(ISHType, _logicalDictionary);
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Version":
                     buttonBarFile = "TopDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary); // is the same as in Version
+                    cards = GetCardsArray(ISHType, _versionDictionary); // is the same as in Version
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 case "Language":
                     buttonBarFile = "LanguageDocumentButtonbar.xml";
-                    cards = GetCardsArray(ISHType, versionDictionary);
+                    cards = GetCardsArray(ISHType, _versionDictionary);
                     checkAccess = CheckAccess.IsPresent ? "Y" : "N";
                     break;
                 default:
@@ -136,7 +137,10 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
             setOperation.Run();
         }
 
-        private Dictionary<string, string> logicalDictionary = new Dictionary<string, string>(){
+        /// <summary>
+        /// Logical cards
+        /// </summary>
+        private Dictionary<string, string> _logicalDictionary = new Dictionary<string, string>(){
                         {"ISHIllustration", "VDOCTYPEILLUSTRATION"},
                         {"ISHModule", "VDOCTYPEMAP"},
                         {"ISHMasterDoc", "VDOCTYPEMASTER"},
@@ -145,7 +149,11 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                         {"ISHReference","VDOCTYPEREFERENCE"},
                         {"ISHQuery","VDOCTYPEQUERY"},
                         {"ISHPublication","VDOCTYPEPUBLICATION"}};
-        private Dictionary<string, string> versionDictionary = new Dictionary<string, string>(){
+
+        /// <summary>
+        /// Version cards
+        /// </summary>
+        private Dictionary<string, string> _versionDictionary = new Dictionary<string, string>(){
                         {"ISHModule","CTMAP"},
                         {"ISHMasterDoc","CTMASTER"},
                         {"ISHTemplate","CTTEMPLATE"},
@@ -153,6 +161,12 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                         {"ISHLibrary","CTLIB"},
                         {"ISHPublication","CTPUBLICATION"}};
 
+        /// <summary>
+        /// Get cards by card type
+        /// </summary>
+        /// <param name="ishTypes">Enumeration of Card Types</param>
+        /// <param name="dict">Mapping dictionary with card types</param>
+        /// <returns>Cards as string array</returns>
         private string[] GetCardsArray(CardType[] ishTypes, Dictionary<string, string> dict)
         {
             if (ishTypes == null)
@@ -160,7 +174,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
                 return dict.Values.ToArray();
             }
             List<string> cards = new List<string>();
-            foreach (CardType type in ishTypes)
+            foreach (var type in ishTypes)
             {
                 string value;
                 if (!dict.TryGetValue(type.ToString(), out value))

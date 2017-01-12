@@ -13,22 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// STS issuer authentication types.
-    ///	<para type="description">Enumeration of Card Types.</para>
+    /// Enumeration of Card Types
+    /// <para type="description">Enumeration of Card Type</para>
     /// </summary>
-    #pragma warning disable 1591
+    [Flags]
     public enum CardType
     {
+        /// <summary>
+        /// ISHIllustration card type.
+        /// </summary>
         ISHIllustration,
-        ISHModule, 
-        ISHMasterDoc, 
+        /// <summary>
+        /// ISHModule card type.
+        /// </summary>
+        ISHModule,
+        /// <summary>
+        /// ISHMasterDoc card type.
+        /// </summary>
+        ISHMasterDoc,
+        /// <summary>
+        /// ISHTemplate card type.
+        /// </summary>
         ISHTemplate,
+        /// <summary>
+        /// ISHLibrary card type.
+        /// </summary>
         ISHLibrary,
+        /// <summary>
+        /// ISHReference card type.
+        /// </summary>
         ISHReference,
+        /// <summary>
+        /// ISHQuery card type.
+        /// </summary>
         ISHQuery,
-        ISHPublication,
+        /// <summary>
+        /// ISHPublication card type.
+        /// </summary>
+        ISHPublication
     }
 }

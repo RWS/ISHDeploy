@@ -16,7 +16,7 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// Specify the binding type that is required by the end point of the WS-Trust issuer.
+    /// <para type="description">Specify the binding type that is required by the end point of the WS-Trust issuer.</para>
     /// </summary>
     public enum AuthenticationType
     {
@@ -25,7 +25,7 @@ namespace ISHDeploy.Common.Enums
         /// </summary>
         UsernamePassword,
         /// <summary>
-        /// Windows 
+        /// Windows
         /// </summary>
         Windows
     }

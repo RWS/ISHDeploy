@@ -52,7 +52,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     public sealed class GetISHDeploymentParametersCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
-        /// Switch parameter to get data from original file
+        /// <para type="description">Switch parameter to get data from original file</para>
         /// </summary>
         [Parameter(Position = 0, HelpMessage = "Original flag will return initial parameters.")]
         public SwitchParameter Original
@@ -63,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         private bool _original;
 
         /// <summary>
-        /// Switch parameter to get difference from changed and original file
+        /// <para type="description">Switch parameter to get difference from changed and original file</para>
         /// </summary>
         [Parameter(Position = 0, HelpMessage = "Changed flag will return changed parameters only.")]
         public SwitchParameter Changed
@@ -74,7 +74,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         private bool _changed;
 
         /// <summary>
-        /// Switch parameter to show real passwords in parameters
+        /// <para type="description">Switch parameter to show real passwords in parameters</para>
         /// </summary>
         [Parameter(Position = 0, HelpMessage = "ShowPassword flag will show real passwords.")]
         public SwitchParameter ShowPassword

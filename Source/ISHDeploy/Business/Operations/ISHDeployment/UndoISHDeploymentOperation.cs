@@ -16,11 +16,14 @@
 
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
+using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Common.Interfaces;
+using System.Linq;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -86,6 +89,22 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Disable Windows Authentication for STS web site
             _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
+
+            // Stop and delete excess ISH windows services
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList();
+            foreach (var service in services)
+            {
+                _invoker.AddAction(
+                    new StopWindowsServiceAction(Logger, service));
+            }
+
+            var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
+            foreach (var service in servicesForDeleting)
+            {
+                _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+            }
+
 
             // Set SpecificUser identityType for STS application pool
             _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));

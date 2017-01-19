@@ -95,6 +95,7 @@
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />

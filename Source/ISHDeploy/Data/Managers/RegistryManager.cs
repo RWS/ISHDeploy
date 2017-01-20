@@ -16,7 +16,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
+﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using Microsoft.Win32;
 
@@ -216,6 +216,20 @@ namespace ISHDeploy.Data.Managers
             }
 
             return installToolRegKey?.OpenSubKey(ProjectBaseRegName);
+        }
+
+        /// <summary>
+        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// </summary>
+        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
+        /// <param name="valueName">The name of the name/value pair</param>
+        /// <param name="value">The value to be stored</param>
+        public void SetRegistryValue(string keyName, string valueName, object value)
+        {
+            _logger.WriteDebug("Set registry value", keyName, valueName, value);
+            //var key = Registry.LocalMachine.OpenSubKey(keyName);
+            Registry.SetValue(keyName, valueName, value);
+            _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` has been set to `{value}`");
         }
     }
 }

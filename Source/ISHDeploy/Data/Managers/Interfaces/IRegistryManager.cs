@@ -44,5 +44,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="projectRegKey">The deployment registry key.</param>
         /// <returns>Deployment version.</returns>
         Version GetInstalledProjectVersion(RegistryKey projectRegKey);
+
+        /// <summary>
+        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// </summary>
+        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
+        /// <param name="valueName">The name of the name/value pair.</param>
+        /// <param name="value">The value to be stored.</param>
+        void SetRegistryValue(string keyName, string valueName, object value);
     }
 }

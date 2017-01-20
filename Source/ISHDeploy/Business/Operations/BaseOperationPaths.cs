@@ -350,6 +350,11 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath TranslationBuilderConfigFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
+        /// </summary>
+        protected ISHFilePath TranslationOrganizerConfigFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -408,6 +413,7 @@ namespace ISHDeploy.Business.Operations
             XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
             TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
+            TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
 
             #endregion
         }

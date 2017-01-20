@@ -161,7 +161,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        /// /// <returns>
+        /// <returns>
         /// The name of new service that have been created.
         /// </returns>
         public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)

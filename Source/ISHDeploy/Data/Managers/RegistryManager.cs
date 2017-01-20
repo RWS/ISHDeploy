@@ -236,6 +236,9 @@ namespace ISHDeploy.Data.Managers
         /// Gets names of all values of registry key.
         /// </summary>
         /// <param name="localMachineSubKeyName">The registry path of the sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// The array of names of all values of specified registry key.
+        /// </returns>
         public string[] GetValueNames(string localMachineSubKeyName)
         {
             _logger.WriteDebug("Get names of all values of registry key", localMachineSubKeyName);

@@ -52,5 +52,19 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="valueName">The name of the name/value pair.</param>
         /// <param name="value">The value to be stored.</param>
         void SetRegistryValue(string keyName, string valueName, object value);
+
+        /// <summary>
+        /// Gets names of all values of registry key.
+        /// </summary>
+        /// <param name="localMachineSubKeyName">The registry path of the sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        string[] GetValueNames(string localMachineSubKeyName);
+
+        /// <summary>
+        /// Copies values from one registry key to another.
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        void CopyValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName, string destLocalMachineSubKeyName);
     }
 }

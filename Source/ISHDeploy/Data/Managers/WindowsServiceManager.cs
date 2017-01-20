@@ -161,7 +161,10 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        public void CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
+        /// /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
         {
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
 
@@ -185,6 +188,8 @@ namespace ISHDeploy.Data.Managers
                     { "$username", userName },
                     { "$password", password }
                 });
+
+            return newServiceName;
         }
     }
 }

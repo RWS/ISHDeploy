@@ -5,6 +5,8 @@
 . "$PSScriptRoot\Common.ps1"
 
 #region variables
+$moduleName = Invoke-CommandRemoteOrLocal -ScriptBlock { (Get-Module "ISHDeploy.*").Name } -Session $session
+
 $xmlPath = $webPath.ToString().replace(":", "$")
 $xmlPath = "\\$computerName\$xmlPath"
 $filePath = $appPath.ToString().replace(":", "$")
@@ -36,7 +38,20 @@ $scriptBlockSetISHServiceTranslationBuilder = {
 
 }
 
+$scriptBlockGetISHServiceTranslationBuilder = {
+    param (
+        $ishDeployName
 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy
+
+}
 
 #endregion
 
@@ -158,6 +173,40 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -CompletedJobLifeSpan 00:01:00 -JobProcessingTimeout 00:11:00 -MaxObjectsInOnePush 500 -MaxJobItemsCreatedInOneCall 250 -JobPollingInterval 00:11:10') | Should be "True"     
+        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -JobPollingInterval 00:11:10 -MaxObjectsInOnePush 500 -JobProcessingTimeout 00:11:00 -CompletedJobLifeSpan 00:01:00 -MaxJobItemsCreatedInOneCall 250') | Should be "True"     
     }
+
+    It "Set ISHServiceTranslationBuilder sets amount of services"{
+        #Arrange
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+
+     }
+
+     #For ISH version 12.*
+     if($moduleName -like "*12*"){
+        It "Set ISHServiceTranslationBuilder changes registry on ISH version 12.*"{
+        #Arrange
+        $params = @{Count = 2}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
+        $RegistryTranslationBuilderServicePath = "SYSTEM\\CurrentControlSet\\Services\\Trisoft InfoShare$suffix TranslationBuilder Two"
+        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryTranslationBuilderServicePath);
+        $isCOMAplication = $translationBuilderRegKey.GetValue("IS_COM_APPLICATION")
+        $isCOMAplication | Should be "InfoShareAuthor$suffix"
+        }
+     }
+     else{
+        It "Set ISHServiceTranslationBuilder not changes registry on ISH version 13.*"{
+        #Arrange
+        $params = @{Count = 2}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
+        $RegistryTranslationBuilderServicePath = "SYSTEM\\CurrentControlSet\\Services\\Trisoft InfoShare$suffix TranslationBuilder Two"
+        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryTranslationBuilderServicePath);
+        $regKeyValues= $translationBuilderRegKey.GetValueNames()
+        $regKeyValues -contains "IS_COM_APPLICATION" | Should be false
+        }
+    }
+     UndoDeploymentBackToVanila $testingDeploymentName $true
 }

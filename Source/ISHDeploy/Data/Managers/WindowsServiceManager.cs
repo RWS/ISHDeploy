@@ -24,6 +24,7 @@ using System.ServiceProcess;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -66,7 +67,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Running)
                 {
                     service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running);
+                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
                 }
                 else
@@ -74,9 +75,13 @@ namespace ISHDeploy.Data.Managers
                     _logger.WriteVerbose($"Windows service `{serviceName}` was already started");
                 }
             }
+            catch (System.ServiceProcess.TimeoutException ex)
+            {
+                _logger.WriteError(new ISHWindowsServiceTimeoutException(serviceName, ex));
+            }
             catch (Exception ex)
             {
-                _logger.WriteError(ex.InnerException);
+                _logger.WriteError(ex);
             }
         }
 

@@ -29,10 +29,10 @@ using Models = ISHDeploy.Common.Models;
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Sets translation builder windows service.
+    /// Sets translation organizer windows service.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHServiceTranslationBuilderOperation : BaseOperationPaths, IOperation
+    public class SetISHServiceTranslationOrganizerOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -40,33 +40,33 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationBuilderOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="parameters">The parameters.</param>
-        public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, Dictionary<TranslationBuilderSetting, object> parameters) :
+        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Dictionary<TranslationOrganizerSetting, object> parameters) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
+            _invoker = new ActionInvoker(logger, "Setting of translation organizer windows service");
 
             foreach (var parameter in parameters)
             {
                 _invoker.AddAction(
                     new SetAttributeValueAction(Logger, 
-                    TranslationBuilderConfigFilePath, 
-                    TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
+                    TranslationOrganizerConfigFilePath,
+                    TranslationOrganizerConfig.AttributeXPaths[parameter.Key], 
                     HandleStringBeforeSaving(parameter.Key, parameter.Value)));
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationBuilderOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="amount">The number of TranslationBuilder services in the system.</param>
-        public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
+        /// <param name="amount">The number of TranslationOrganizer services in the system.</param>
+        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
             base(logger, ishDeployment)
         {
             if (amount > 10)
@@ -74,11 +74,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10.Supply an argument that is less than or equal to 10 and then try the command again");
             }
 
-            _invoker = new ActionInvoker(logger, "Setting of amount of translation builder windows services");
+            _invoker = new ActionInvoker(logger, "Setting of amount of translation organizer windows services");
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder).ToList();
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer).ToList();
 
             if (services.Count() > amount)
             {
@@ -105,17 +105,13 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="type">Type of setting</param>
         /// <param name="value">The value</param>
         /// <returns></returns>
-        private string HandleStringBeforeSaving(TranslationBuilderSetting type, object value)
+        private string HandleStringBeforeSaving(TranslationOrganizerSetting type, object value)
         {
-            if (type == TranslationBuilderSetting.jobPollingInterval || 
-                type == TranslationBuilderSetting.jobProcessingTimeout || 
-                type == TranslationBuilderSetting.pendingJobPollingInterval)
+            if (type == TranslationOrganizerSetting.jobPollingInterval || 
+                type == TranslationOrganizerSetting.systemTaskInterval || 
+                type == TranslationOrganizerSetting.pendingJobPollingInterval)
             {
                 return ((TimeSpan)value).ToString(@"hh\:mm\:ss\.fff");
-            }
-            else if (type == TranslationBuilderSetting.completedJobLifeSpan)
-            {
-                return ((TimeSpan)value).ToString(@"d\.hh\:mm\:ss\.fff");
             }
 
             return value.ToString();

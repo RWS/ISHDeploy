@@ -19,27 +19,17 @@ namespace ISHDeploy.Common.Enums
     /// Names of attributes of element "configuration/trisoft.infoShare.translationBuilder/settings" in file ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
     ///	<para type="description">Enumeration of Binding Types.</para>
     /// </summary>
-    public enum TranslationBuilderSetting
+    public enum TranslationOrganizerSetting
     {
         /// <summary>
-        /// The maxObjectsInOnePushTranslation attribute
+        /// The DumpFolder attribute
         /// </summary>
-        maxObjectsInOnePushTranslation,
+        dumpFolder,
 
         /// <summary>
-        /// The maxTranslationJobItemsCreatedInOneCall attribute
+        /// The maxTranslationJobItemsUpdatedInOneCall attribute
         /// </summary>
-        maxTranslationJobItemsCreatedInOneCall,
-
-        /// <summary>
-        /// The completedJobLifeSpan attribute
-        /// </summary>
-        completedJobLifeSpan,
-
-        /// <summary>
-        /// The jobProcessingTimeout attribute
-        /// </summary>
-        jobProcessingTimeout,
+        maxTranslationJobItemsUpdatedInOneCall,
 
         /// <summary>
         /// The jobPollingInterval attribute
@@ -47,8 +37,33 @@ namespace ISHDeploy.Common.Enums
         jobPollingInterval,
 
         /// <summary>
-        /// The PendingJobPollingInterval attribute
+        /// The pendingJobPollingInterval attribute
         /// </summary>
-        pendingJobPollingInterval
+        pendingJobPollingInterval,
+
+        /// <summary>
+        /// The systemTaskInterval attribute
+        /// </summary>
+        systemTaskInterval,
+
+        /// <summary>
+        /// The attemptsBeforeFailOnRetrieval attribute
+        /// </summary>
+        attemptsBeforeFailOnRetrieval,
+
+        /// <summary>
+        /// The updateLeasedByPerNumberOfItems attribute
+        /// </summary>
+        updateLeasedByPerNumberOfItems,
+
+        /// <summary>
+        /// The retriesOnTimeout attribute
+        /// </summary>
+        retriesOnTimeout,
+
+        /// <summary>
+        /// The synchronizeTemplates attribute
+        /// </summary>
+        synchronizeTemplates
     }
 }

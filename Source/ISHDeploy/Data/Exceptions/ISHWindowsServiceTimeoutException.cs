@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Common.Enums
+using System;
+
+namespace ISHDeploy.Data.Exceptions
 {
     /// <summary>
-    /// <para type="description">Specify the binding type that is required by the end point of the WS-Trust issuer.</para>
+    /// The exception that is thrown when ISH windows service doesn't change state .
     /// </summary>
-    public enum AuthenticationType
+    /// <seealso cref="System.Exception" />
+    [Serializable]
+    public class ISHWindowsServiceTimeoutException : Exception
     {
         /// <summary>
-        /// Username Password
+        /// Initializes a new instance of the <see cref="WrongXPathException"/> class.
         /// </summary>
-        UsernamePassword,
-        /// <summary>
-        /// Windows
-        /// </summary>
-        Windows
+        /// <param name="serviceName">The ISH windows service name.</param>
+        /// <param name="innerException">The inner exception.</param>
+        public ISHWindowsServiceTimeoutException(string serviceName, System.ServiceProcess.TimeoutException innerException)
+            : base($"Wasn't able to start service '{serviceName}'.", innerException)
+        { }
     }
 }

@@ -20,6 +20,7 @@ namespace ISHDeploy.Common.Enums
     /// Status of ISH windows services.
     ///	<para type="description">Enumeration of statuses of ISH windows services such as TranslationBuilder and TranslationOrganizer.</para>
     /// </summary>
+    #pragma warning disable 1591
     public enum ISHWindowsServiceStatus
     {
         Stopped = 1,

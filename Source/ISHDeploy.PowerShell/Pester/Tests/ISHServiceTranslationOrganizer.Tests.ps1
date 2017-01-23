@@ -183,7 +183,7 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -RetriesOnTimeout 2 -UpdateLeasedByPerNumberOfItems 20 -AttemptsBeforeFailOnRetrieval 2 -JobPollingInterval 00:11:10 -MaxTranslationJobItemsUpdatedInOneCall 250 -DumpFolder "C:\DubpFolder" -SystemTaskInterval 11:11:00 -PendingJobPollingInterval 00:11:11') | Should be "True"     
+        $history.Contains('Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -AttemptsBeforeFailOnRetrieval 2 -RetriesOnTimeout 2 -UpdateLeasedByPerNumberOfItems 20 -DumpFolder "C:\DubpFolder" -SystemTaskInterval 11:11:00 -JobPollingInterval 00:11:10 -MaxTranslationJobItemsUpdatedInOneCall 250') | Should be "True"     
     }
 
     It "Set ISHServiceTranslationOrganizer sets amount of services"{

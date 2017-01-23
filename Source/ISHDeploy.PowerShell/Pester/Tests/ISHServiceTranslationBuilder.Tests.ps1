@@ -173,7 +173,7 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -JobPollingInterval 00:11:10 -MaxObjectsInOnePush 500 -JobProcessingTimeout 00:11:00 -CompletedJobLifeSpan 00:01:00 -MaxJobItemsCreatedInOneCall 250') | Should be "True"     
+        $history.Contains('Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -PendingJobPollingInterval 00:11:11 -CompletedJobLifeSpan 00:01:00 -JobProcessingTimeout 00:11:00 -MaxObjectsInOnePush 500 -MaxJobItemsCreatedInOneCall 250 -JobPollingInterval 00:11:10') | Should be "True"     
     }
 
     It "Set ISHServiceTranslationBuilder sets amount of services"{
@@ -192,7 +192,8 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $params = @{Count = 2}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
         $RegistryTranslationBuilderServicePath = "SYSTEM\\CurrentControlSet\\Services\\Trisoft InfoShare$suffix TranslationBuilder Two"
-        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryTranslationBuilderServicePath);
+        $localMachineregKey = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$computerName)
+        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = $localMachineregKey.OpenSubKey($RegistryTranslationBuilderServicePath);
         $isCOMAplication = $translationBuilderRegKey.GetValue("IS_COM_APPLICATION")
         $isCOMAplication | Should be "InfoShareAuthor$suffix"
         }
@@ -203,7 +204,8 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $params = @{Count = 2}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
         $RegistryTranslationBuilderServicePath = "SYSTEM\\CurrentControlSet\\Services\\Trisoft InfoShare$suffix TranslationBuilder Two"
-        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryTranslationBuilderServicePath);
+        $localMachineregKey = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$computerName)
+        [Microsoft.Win32.RegistryKey]$translationBuilderRegKey = $localMachineregKey.OpenSubKey($RegistryTranslationBuilderServicePath);
         $regKeyValues= $translationBuilderRegKey.GetValueNames()
         $regKeyValues -contains "IS_COM_APPLICATION" | Should be false
         }

@@ -231,5 +231,39 @@ namespace ISHDeploy.Data.Managers
             Registry.SetValue(keyName, valueName, value);
             _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` has been set to `{value}`");
         }
+
+        /// <summary>
+        /// Gets names of all values of registry key.
+        /// </summary>
+        /// <param name="localMachineSubKeyName">The registry path of the sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// The array of names of all values of specified registry key.
+        /// </returns>
+        public string[] GetValueNames(string localMachineSubKeyName)
+        {
+            _logger.WriteDebug("Get names of all values of registry key", localMachineSubKeyName);
+            var result = Registry.LocalMachine.OpenSubKey(localMachineSubKeyName).GetValueNames();
+            _logger.WriteVerbose($"The names of values for registry key `HKEY_LOCAL_MACHINE\\{localMachineSubKeyName}` has been loaded`");
+            return result;
+        }
+
+        /// <summary>
+        /// Copies values from one registry key to another.
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        public void CopyValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName, string destLocalMachineSubKeyName)
+        {
+            _logger.WriteDebug($"Copies values from `{sourceLocalMachineSubKeyName}` registry key to `{destLocalMachineSubKeyName}`");
+
+            var sourceKey = Registry.LocalMachine.OpenSubKey(sourceLocalMachineSubKeyName);
+            var destKey = Registry.LocalMachine.OpenSubKey(destLocalMachineSubKeyName, true);
+            foreach (var nameOfValue in namesOfValues)
+            {
+                destKey.SetValue(nameOfValue, sourceKey.GetValue(nameOfValue));
+            }
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}``");
+        }
     }
 }

@@ -161,8 +161,12 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        public void CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
         {
+            _logger.WriteDebug("Clone windows service", service.Name);
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
 
             WqlObjectQuery wqlObjectQuery = new WqlObjectQuery($"SELECT * FROM Win32_Service WHERE Name = '{service.Name}'");
@@ -185,6 +189,9 @@ namespace ISHDeploy.Data.Managers
                     { "$username", userName },
                     { "$password", password }
                 });
+
+            _logger.WriteVerbose($"New service `{newServiceName}` has been created");
+            return newServiceName;
         }
     }
 }

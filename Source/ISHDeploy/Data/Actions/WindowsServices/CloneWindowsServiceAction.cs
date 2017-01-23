@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
@@ -36,6 +37,11 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// The windows service manager
         /// </summary>
         private readonly IWindowsServiceManager _serviceManager;
+
+        /// <summary>
+        /// The registry manager
+        /// </summary>
+        private readonly IRegistryManager _registryManager;
 
         /// <summary>
         /// The sequence of new service
@@ -66,6 +72,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
             _sequence = sequence;
             _userName = userName;
             _password = password;
@@ -76,7 +83,9 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
+            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
+            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName");
+            _registryManager.CopyValues(namesOfValues, $@"SYSTEM\CurrentControlSet\Services\{_service.Name}", $@"SYSTEM\CurrentControlSet\Services\{newServiceName}");
         }
     }
 }

@@ -77,9 +77,9 @@
 <pre><code class="lang-powershell">$deployments|Format-Table Name,SoftwareVersion,DatabaseType,AccessHostname
 </code></pre><pre><code class="lang-text">Name                SoftwareVersion DatabaseType    AccessHostName                                
 ----                --------------- ------------    --------------                                
-InfoShare           TBA     sqlserver2014   ish.example.com                               
-InfoShareExtra1     TBA     sqlserver2014   ish.example.com                               
-InfoShareExtra2     TBA     sqlserver2014   ish.example.com
+InfoShare           3725     sqlserver2014   ish.example.com                               
+InfoShareExtra1     3725     sqlserver2014   ish.example.com                               
+InfoShareExtra2     3725     sqlserver2014   ish.example.com
 </code></pre><h3 id="query-the-server-for-specific-deployment">Query the server for specific deployment</h3>
 <p>To query for one specific deployment use the following command when the <code>projectsuffix</code> is empty.</p>
 <pre><code class="lang-powershell">Get-ISHDeployment -Name InfoShare

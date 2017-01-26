@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Implementing light weight Windows Authentication </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Implementing light weight Windows Authentication ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../../index.html">
+                <img src="../../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="implementing-light-weight-windows-authentication">Implementing light weight Windows Authentication</h1>
+              
+<p>This article explains how to integrate with Active Directory the out of the box <strong>Security Token Service</strong> provided in the Vanilla deployment, also referred to as <strong>ISHSTS</strong>.</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>Content Manager is installed on <code>ish.example.com</code> and ISHSTS is installed on <code>ish.example.com/ISHSTS</code>. </p>
+<p>Set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h1 id="enable-windows-authentication">Enable Windows Authentication</h1>
+<p>Then configure <strong>ISHSTS</strong> to provide windows authentication</p>
+<pre><code class="lang-powershell"># Set ISHSTS to window authentication
+Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType &quot;Windows&quot;
+</code></pre><p><code>Set-ISHSTSConfiguration</code> will raise a warning when the connection combines one all of the following conditions:</p>
+<ul>
+<li>That integrated database is a SQL Server</li>
+<li>The connection string used integrated authentication instead of a username/password combination.</li>
+</ul>
+<p>The warning is raised because some additional actions are required on the database to complete this configuration. </p>
+<h1 id="configure-the-sql-server-database">Configure the SQL Server database</h1>
+<p>We need to grant permissions to the server and database for the principal that matches the computer account that hosts ISHSTS.</p>
+<p><code>Save-ISHIntegrationDBSTSSQLServerConfiguration</code> will export a <strong>sql</strong> or <strong>PowerShell</strong> script based on the value provided to the <code>-Type</code> parameter.</p>
+<p>For example</p>
+<pre><code class="lang-powershell"># Save the powershell script to configure the SQL database
+Save-ISHIntegrationDBSTSSQLServerConfiguration -ISHDeployment $deploymentName -Type PS1 -FileName &quot;Invoke-GrantPermissionsOnSQLServer.ps1&quot;
+
+# Save the sql script to run directly on SQL Server
+Save-ISHIntegrationDBSTSSQLServerConfiguration -ISHDeployment $deploymentName -Type SQL -FileName &quot;GrantPermissions.sql&quot;
+</code></pre><p>If you saved a sql script then execute that on the same SQL Server referenced by the connection string. </p>
+<p>The saved PowerShell script embeds the SQL server name and database and uses windows authentication to access the database. 
+To execute it there are two conditions:</p>
+<ul>
+<li>The current user has access to the target database. The script uses windows authentication and for this reason <code>Save-ISHIntegrationDBSTSSQLServerConfiguration</code> generates a warning.</li>
+</ul>
+<blockquote><p>WARNING: Current implementation of .ps1 works only with windows authentication.</p>
+</blockquote>
+<ul>
+<li><a href="https://msdn.microsoft.com/en-us/library/hh245198.aspx">SQLPS</a> PowerShell modules is installed. The module is normally installed along <strong>SQL Server Management Studio</strong>.</li>
+</ul>
+<p>If all conditions are satisfied then executing the script completes the task.</p>
+<pre><code class="lang-powershell">&amp; .\Invoke-GrantPermissionsOnSQLServer.ps1
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

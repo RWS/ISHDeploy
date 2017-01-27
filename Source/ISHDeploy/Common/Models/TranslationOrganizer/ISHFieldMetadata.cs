@@ -19,24 +19,30 @@ using System.Xml.Serialization;
 namespace ISHDeploy.Common.Models.TranslationOrganizer
 {
     /// <summary>
-    /// <para type="description">Represents mapping between trisoftLanguage and worldServerLocaleId.</para>
+    /// <para type="description">Represents structure of ISH metadata for organizer service.</para>
     /// </summary>
     [System.Serializable()]
-    [XmlRoot("add", Namespace = "")]
+    [XmlRoot("ishfield", Namespace = "")]
     [System.ComponentModel.DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
-    public class ISHLanguageToWorldServerLocaleIdMapping
+    public class ISHFieldMetadata
     {
         /// <summary>
-        /// The trisoft language ID
+        /// Name of metadata
         /// </summary>
-        [XmlAttribute("trisoftLanguage")]
-        public string ISHLanguage { get; set; }
+        [XmlAttribute("name")]
+        public string Name { get; set; }
 
         /// <summary>
-        /// The WorldServer language ID
+        /// Level of metadata value
         /// </summary>
-        [XmlAttribute("worldServerLocaleId")]
-        public int WSLocaleID { get; set; }
+        [XmlAttribute("level")]
+        public string Level { get; set; }
+
+        /// <summary>
+        /// Type of value of metadata
+        /// </summary>
+        [XmlAttribute("ishvaluetype")]
+        public string ValueType { get; set; }
     }
 }

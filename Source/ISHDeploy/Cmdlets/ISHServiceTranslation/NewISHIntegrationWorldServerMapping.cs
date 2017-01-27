@@ -26,12 +26,11 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Set-ISHIntegrationWorldServer </para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>New-ISHIntegrationWorldServerMapping -ISHDeployment $deployment -ISHLanguage "en" -WSLocaleID 1145</code>
-    /// <para>This command creates new object for English language where ID of the same language on WorldLocale is 1145.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// <code>PS C:\>New-ISHIntegrationWorldServerMapping -ISHLanguage "en" -WSLocaleID 1145</code>
+    /// <para>This command creates new object for English language where ID of the same language on WorldLocale is 1145.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHIntegrationWorldServerMapping")]
-    public sealed class NewISHIntegrationWorldServerMapping  : BaseHistoryEntryCmdlet
+    public sealed class NewISHIntegrationWorldServerMapping  : BaseCmdlet
     {
         /// <summary>
         /// <para type="description">The trisoft language identifier.</para>

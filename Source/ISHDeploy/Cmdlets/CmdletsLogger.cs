@@ -140,15 +140,7 @@ namespace ISHDeploy.Cmdlets
         /// <param name="message">Debug message.</param>
         public void WriteDebug(string message)
         {
-            try
-            {
-                _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}");
-
-            }
-            catch (Exception ex)
-            {
-                var ee = ex;
-            }
+            _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}");
         }
 
         /// <summary>

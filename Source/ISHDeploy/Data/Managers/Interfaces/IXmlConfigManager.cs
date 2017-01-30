@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Enums;
-using ISHDeploy.Common.Models.UI;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -143,14 +143,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        void InsertOrUpdateUIElement(string filePath, BaseUIElement model);
+        void InsertOrUpdateElement(string filePath, BaseXMLElement model);
 
         /// <summary>
         /// Removes the element of UI.
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        void RemoveUIElement(string filePath, BaseUIElement model);
+        void RemoveElement(string filePath, BaseXMLElement model);
 
         /// <summary>
         /// Moves the UI element.
@@ -166,7 +166,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// or
         /// Unknown operation
         /// </exception>
-        void MoveUIElement(string filePath, BaseUIElement model, MoveDirection direction, string insertAfterXPath = null);
+        void MoveElement(string filePath, BaseXMLElement model, MoveDirection direction, string insertAfterXPath = null);
 
         /// <summary>
         /// Serializes the specified value.

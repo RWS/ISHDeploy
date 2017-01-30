@@ -102,7 +102,7 @@ namespace ISHDeploy.Common.Models.UI
     /// <para type="description">Represents the item depend on button bar type.</para>
     /// </summary>
     [XmlRoot("BUTTON", Namespace = "")]
-    public class ButtonBarItem : BaseUIElement
+    public class ButtonBarItem : BaseXMLElement
     {
         /// <summary>
         /// Y or N to check access.

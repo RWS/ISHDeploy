@@ -15,10 +15,9 @@
  */
 
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
-using ISHDeploy.Common.Models.UI;
+using ISHDeploy.Data.Actions.XmlFile;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHUIElement
@@ -42,13 +41,13 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// <param name="model">The model that represents UI element.</param>
         public RemoveUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
-            BaseUIElement model) :
+            BaseXMLElement model) :
             base(logger, ishDeployment)
         {
             var filePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, model.RelativeFilePath);
             _invoker = new ActionInvoker(logger, $"Remove `{model.XPath}` element in file {filePath.AbsolutePath}");
             
-            _invoker.AddAction(new RemoveUIElementAction(
+            _invoker.AddAction(new RemoveElementAction(
                 logger,
                 filePath,
                 model));

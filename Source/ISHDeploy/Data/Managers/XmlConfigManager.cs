@@ -458,7 +458,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="attributeXpath">XPath the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
-        public void SetAttributeValue(string filePath, string attributeXpath, string value)
+        /// <param name="createAttributeIfNotExist">Create attribute if not exist.</param>
+        public void SetAttributeValue(string filePath, string attributeXpath, string value, bool createAttributeIfNotExist = false)
         {
             _logger.WriteDebug($"Set new value `{value}` for attribute `{attributeXpath}`", filePath);
 
@@ -469,10 +470,35 @@ namespace ISHDeploy.Data.Managers
                 // TODO: Create TryGetElementByXPath action or something similar to use it before run SetAttributeValue to avoid access to nonexistent elements
                 // and change WriteVerbose on "throw new WrongXPathException(filePath, attributeXpath);" 
                 _logger.WriteVerbose($"{filePath} does not contain attribute at '{attributeXpath}'.");
-                return;
+
+                if (createAttributeIfNotExist)
+                {
+                    var attributeXpathParts = attributeXpath.Split('@');
+
+                    var xpathToParrentElementStringBuilder = new StringBuilder();
+
+                    for (int i = 0; i < attributeXpathParts.Length - 1; i++)
+                    {
+                        xpathToParrentElementStringBuilder.Append(i == 0
+                            ? attributeXpathParts[i]
+                            : $"@{attributeXpathParts[i]}");
+                    }
+
+                    var xpathToParrentElement = xpathToParrentElementStringBuilder.ToString();
+                    xpathToParrentElement = xpathToParrentElement.Remove(xpathToParrentElement.Length - 1);
+                    var element = doc.XPathSelectElement(xpathToParrentElement);
+                    element.SetAttributeValue(attributeXpathParts[attributeXpathParts.Length - 1], value);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                attr.SetValue(value); 
             }
 
-            attr.SetValue(value);
             _fileManager.Save(filePath, doc);
             _logger.WriteVerbose($"The value of attribute `{attributeXpath}` has been set to '{value}' in file `{filePath}`");
         }

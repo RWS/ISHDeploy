@@ -52,26 +52,6 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="worldServerConfiguration">The world server configuration.</param>
-        /// <param name="httpTimeout">The HTTP timeout (Used for REST client only).</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, TimeSpan httpTimeout) :
-            base(logger, ishDeployment)
-        {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer (REST)");
-
-            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
-
-            _invoker.AddAction(new SetElementAction(
-                logger,
-                filePath,
-                worldServerConfiguration));
-        }
-
-        /// <summary>
         /// Runs current operation.
         /// </summary>
         public void Run()

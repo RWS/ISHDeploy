@@ -75,27 +75,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int RetriesOnTimeout { get; set; }
 
         /// <summary>
-        /// <para type="description">The type of the API Protocol.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The type of the API Protocol.", ParameterSetName = "REST")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter REST { get; set; }
-
-        /// <summary>
-        /// <para type="description">The HTTP timeout (Used for REST client only).</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The HTTP timeout (Used for REST client only).", ParameterSetName = "REST")]
-        [ValidateNotNullOrEmpty]
-        public TimeSpan Timeout { get; set; }
-
-        /// <summary>
-        /// <para type="description">The type of the API Protocol.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The type of the API Protocol.", ParameterSetName = "SOAP")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter SOAP { get; set; }
-
-        /// <summary>
         /// <para type="description">The mapping between trisoftLanguage and worldServerLocaleId.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The mapping between trisoftLanguage and worldServerLocaleId.")]
@@ -116,8 +95,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 RetriesOnTimeout,
                 Mappings);
 
-            var operation = SOAP.IsPresent ? new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration) 
-                                        : new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration, Timeout);
+            var operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration);
 
             operation.Run();
         }

@@ -29,7 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHIntegrationWorldServer -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -REST -Timeout "00:02:00.000" -Mapping $mapping </code>
+    /// <code>PS C:\>Set-ISHIntegrationWorldServer -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping </code>
     /// <para>This command enables the translation organizer windows service.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// Parameter $credential is a set of security credentials, such as a user name and a password.

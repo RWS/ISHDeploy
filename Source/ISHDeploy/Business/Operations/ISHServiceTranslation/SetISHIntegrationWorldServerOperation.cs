@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using ISHDeploy.Business.Invokers;
 ﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -42,7 +41,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer (SOAP)");
+            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
 
             _invoker.AddAction(new SetElementAction(

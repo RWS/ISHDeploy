@@ -15,6 +15,8 @@
  */
 
 
+using System.Management.Automation;
+using System.Runtime.InteropServices;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets
@@ -38,7 +40,14 @@ namespace ISHDeploy.Cmdlets
                     $"(New-ISHIntegrationWorldServerMapping -ISHLanguage {model.ISHLanguage} -WSLocaleID {model.WSLocaleID})";
             }
 
-            return obj.ToString();
+            if (obj is PSCredential)
+            {
+                var model = obj as PSCredential;
+                return
+                    $"(New-Object System.Management.Automation.PSCredential (\"{model.UserName}\", (ConvertTo-SecureString \"{Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(model.Password))}\" -AsPlainText -Force)))";
+            }
+
+            return $"\"{obj}\"";
         }
     }
 }

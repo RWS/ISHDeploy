@@ -136,14 +136,14 @@ namespace ISHDeploy.Cmdlets
 
             if (boundParameter.Value is IEnumerable)
             {
-                var arrayStringValue = string.Join(", ", ((IEnumerable)boundParameter.Value).Cast<object>().Select(x => $"\"{ModelToHistoryFormater.GetString(x).Replace("\"", "\"\"")}\""));
+                var arrayStringValue = string.Join(", ", ((IEnumerable)boundParameter.Value).Cast<object>().Select(x => $"{ModelToHistoryFormater.GetString(x).Replace("\"", "\"\"")}"));
                 return string.IsNullOrEmpty(arrayStringValue)
                     ? (KeyValuePair<string, object>?)null
                     : new KeyValuePair<string, object>(boundParameter.Key, $"@({arrayStringValue})");
 
             }
 
-            return boundParameter;
+            return new KeyValuePair<string, object>(boundParameter.Key, ModelToHistoryFormater.GetString(boundParameter.Value));
         }
     }
 }

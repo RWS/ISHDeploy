@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationOrganizerOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHFieldMetadataCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMapping.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\SetISHIntegrationWorldServerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Common\Enums\CardType.cs" />
@@ -249,7 +251,9 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
+    <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
@@ -305,9 +309,9 @@
     <Compile Include="Data\Actions\Directory\DirectoryCreateZipPackageAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentParametersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\GetISHDeploymentsAction.cs" />
-    <Compile Include="Data\Actions\ISHUIElement\MoveUIElementAction.cs" />
-    <Compile Include="Data\Actions\ISHUIElement\RemoveUIElementAction.cs" />
-    <Compile Include="Data\Actions\ISHUIElement\SetUIElementAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\MoveElementAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\RemoveElementAction.cs" />
+    <Compile Include="Data\Actions\XmlFile\SetElementAction.cs" />
     <Compile Include="Data\Actions\SingleFileCreationAction.cs" />
     <Compile Include="Data\Actions\StringActions\CreateIndexHTMLAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\WindowsAuthenticationSwitcherAction.cs" />
@@ -395,7 +399,6 @@
     <Compile Include="Common\Models\SQL\RelyingParty.cs" />
     <Compile Include="Common\Models\UI\Input.cs" />
     <Compile Include="Common\Models\UI\MainMenuBarItem.cs" />
-    <Compile Include="Common\Models\UI\BaseUIElement.cs" />
     <Compile Include="Common\Models\UI\ButtonBarItem.cs" />
     <Compile Include="Common\Models\ISHWindowsService.cs" />
     <Compile Include="Common\ObjectFactory.cs" />

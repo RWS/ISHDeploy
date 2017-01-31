@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Common.Interfaces;
+﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
-using Models = ISHDeploy.Common.Models;
 
-namespace ISHDeploy.Business.Operations.ISHUIElement
+namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Remove UI element.
+    /// Sets configuration of WorldServer.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class RemoveUIElementOperation : BaseOperationPaths, IOperation
+    public class SetISHIntegrationWorldServerOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -34,23 +34,21 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveUIElementOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="model">The model that represents UI element.</param>
-        public RemoveUIElementOperation(ILogger logger,
-            Models.ISHDeployment ishDeployment,
-            BaseXMLElement model) :
+        /// <param name="worldServerConfiguration">The world server configuration.</param>
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration) :
             base(logger, ishDeployment)
         {
-            var filePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, model.RelativeFilePath);
-            _invoker = new ActionInvoker(logger, $"Remove `{model.XPath}` element in file {filePath.AbsolutePath}");
-            
-            _invoker.AddAction(new RemoveElementAction(
+            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer (SOAP)");
+            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
+
+            _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                model));
+                worldServerConfiguration));
         }
 
         /// <summary>

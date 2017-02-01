@@ -108,6 +108,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHIntegrationWorldServerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
+    <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
     <Compile Include="Common\Enums\CardType.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceSequence.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceStatus.cs" />
@@ -441,6 +442,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />
   <Import Project="Properties\ModuleManifest.targets" />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' != 'Debug|AnyCPU' ">
+    <PreBuildEvent>
+      powershell.exe -NoProfile -ExecutionPolicy Unrestricted -file "$(SolutionDir)\..\Tools\SDLDevTools\test_headers.ps1"</PreBuildEvent>
+  </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>"$(SolutionDir)\..\Tools\XmlDoc2CmdletDoc\XmlDoc2CmdletDoc.exe" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>

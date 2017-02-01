@@ -422,3 +422,17 @@ $scriptBlockGetParameters = {
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Get-ISHDeploymentParameters -ISHDeployment $ishDeploy @switshes
 }
+
+$scriptBlockNewISHIntegrationWorldServerMapping = {
+    param (
+        $parameters
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    New-ISHIntegrationWorldServerMapping  @parameters
+
+}

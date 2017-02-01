@@ -17,7 +17,6 @@ using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models.UI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,6 +27,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -458,7 +458,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="attributeXpath">XPath the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
-        public void SetAttributeValue(string filePath, string attributeXpath, string value)
+        /// <param name="createAttributeIfNotExist">Create attribute if not exist.</param>
+        public void SetAttributeValue(string filePath, string attributeXpath, string value, bool createAttributeIfNotExist = false)
         {
             _logger.WriteDebug($"Set new value `{value}` for attribute `{attributeXpath}`", filePath);
 
@@ -469,10 +470,35 @@ namespace ISHDeploy.Data.Managers
                 // TODO: Create TryGetElementByXPath action or something similar to use it before run SetAttributeValue to avoid access to nonexistent elements
                 // and change WriteVerbose on "throw new WrongXPathException(filePath, attributeXpath);" 
                 _logger.WriteVerbose($"{filePath} does not contain attribute at '{attributeXpath}'.");
-                return;
+
+                if (createAttributeIfNotExist)
+                {
+                    var attributeXpathParts = attributeXpath.Split('@');
+
+                    var xpathToParrentElementStringBuilder = new StringBuilder();
+
+                    for (int i = 0; i < attributeXpathParts.Length - 1; i++)
+                    {
+                        xpathToParrentElementStringBuilder.Append(i == 0
+                            ? attributeXpathParts[i]
+                            : $"@{attributeXpathParts[i]}");
+                    }
+
+                    var xpathToParrentElement = xpathToParrentElementStringBuilder.ToString();
+                    xpathToParrentElement = xpathToParrentElement.Remove(xpathToParrentElement.Length - 1);
+                    var element = doc.XPathSelectElement(xpathToParrentElement);
+                    element.SetAttributeValue(attributeXpathParts[attributeXpathParts.Length - 1], value);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                attr.SetValue(value); 
             }
 
-            attr.SetValue(value);
             _fileManager.Save(filePath, doc);
             _logger.WriteVerbose($"The value of attribute `{attributeXpath}` has been set to '{value}' in file `{filePath}`");
         }
@@ -568,7 +594,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
+        public void InsertOrUpdateElement(string filePath, BaseXMLElement model)
         {
             _logger.WriteDebug("Insert/Update UI element", filePath);
             var doc = _fileManager.Load(filePath);
@@ -637,7 +663,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void RemoveUIElement(string filePath, BaseUIElement model)
+        public void RemoveElement(string filePath, BaseXMLElement model)
         {
             _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
 
@@ -673,7 +699,7 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, MoveDirection direction, string insertAfterXpath = null)
+        public void MoveElement(string filePath, BaseXMLElement model, MoveDirection direction, string insertAfterXpath = null)
         {
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);

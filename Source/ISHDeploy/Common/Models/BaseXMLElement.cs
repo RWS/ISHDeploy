@@ -16,15 +16,13 @@
 
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using ISHDeploy.Common.Models.UI;
 
-namespace ISHDeploy.Common.Models.UI
+namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Base class to represent UI element</para>
+    /// <para type="description">Base class to represent XML element</para>
     /// </summary>
-    [XmlInclude(typeof(MainMenuBarItem))]
-    public abstract class BaseUIElement
+    public abstract class BaseXMLElement
     {
         /// <summary>
         /// Gets the relative file path.

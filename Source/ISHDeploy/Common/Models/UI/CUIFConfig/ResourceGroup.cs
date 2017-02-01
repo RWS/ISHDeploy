@@ -24,7 +24,7 @@ namespace ISHDeploy.Common.Models.UI.CUIFConfig
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRoot("resourceGroup", Namespace = "")]
-    public class ResourceGroup : BaseUIElement
+    public class ResourceGroup : BaseXMLElement
     {
 
         /// <summary>

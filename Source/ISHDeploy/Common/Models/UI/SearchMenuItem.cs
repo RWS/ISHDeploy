@@ -20,9 +20,9 @@ namespace ISHDeploy.Common.Models.UI
     /// <summary>
     ///	<para type="description">Represents the item of SearchMenuItem (~\Author\ASP\XSL\SearchMenuBar.xml).</para>
     /// </summary>
-    /// <seealso cref="BaseUIElement" />
+    /// <seealso cref="BaseXMLElement" />
     [XmlRoot("menuitem", Namespace = "")]
-    public class SearchMenuItem : BaseUIElement
+    public class SearchMenuItem : BaseXMLElement
     {
         /// <summary>
         /// Gets or sets the label of the menu item.

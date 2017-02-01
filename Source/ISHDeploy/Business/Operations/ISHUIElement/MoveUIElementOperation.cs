@@ -16,10 +16,9 @@
 
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIElement;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
-using ISHDeploy.Common.Models.UI;
+using ISHDeploy.Data.Actions.XmlFile;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHUIElement
@@ -45,7 +44,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// <param name="after">The id of element to move after it.</param>
         public MoveUIElementOperation(ILogger logger,
             Models.ISHDeployment ishDeployment,
-            BaseUIElement model,
+            BaseXMLElement model,
             MoveDirection direction,
             string after) :
             base(logger, ishDeployment)
@@ -53,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
             var filePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, model.RelativeFilePath);
             _invoker = new ActionInvoker(logger, $"Move `{model.XPath}` element in file {filePath.AbsolutePath}");
 
-            _invoker.AddAction(new MoveUIElementAction(
+            _invoker.AddAction(new MoveElementAction(
                 logger,
                 filePath,
                 model,

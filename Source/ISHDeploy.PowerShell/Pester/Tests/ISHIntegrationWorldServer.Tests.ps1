@@ -166,7 +166,7 @@ Describe "Testing ISHIntegrationWorldServer"{
         #Rollback
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
     }
-    <#
+    
     It "Set ISHIntegrationWorldServer writes proper history"{        
        #Act
         $params = @{
@@ -182,8 +182,8 @@ Describe "Testing ISHIntegrationWorldServer"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('') | Should be "True"     
-    } #>
+        $history.Contains('Set-ISHIntegrationWorldServer -ISHDeployment $deploymentName -MaximumJobSize 250 -Name "testName" -Credential (New-Object System.Management.Automation.PSCredential ("testUserName", (ConvertTo-SecureString "testPassword" -AsPlainText -Force))) -RetriesOnTimeout 2 -Uri "testUri" -Mappings @((New-ISHIntegrationWorldServerMapping -ISHLanguage en -WSLocaleID 192))') | Should be "True"     
+    } 
 
     
     

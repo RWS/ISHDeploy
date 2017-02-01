@@ -30,8 +30,9 @@ namespace ISHDeploy.Cmdlets
         /// 
         /// </summary>
         /// <param name="obj">The object that need to be converted</param>
+        /// <param name="needQuotesIfObjectIsNotRecognized">Add quotes if needed</param>
         /// <returns></returns>
-        public static string GetString<T>(T obj)
+        public static string GetString<T>(T obj, bool needQuotesIfObjectIsNotRecognized = false)
         {
             if (obj is ISHLanguageToWorldServerLocaleIdMapping)
             {
@@ -40,14 +41,7 @@ namespace ISHDeploy.Cmdlets
                     $"(New-ISHIntegrationWorldServerMapping -ISHLanguage {model.ISHLanguage} -WSLocaleID {model.WSLocaleID})";
             }
 
-            if (obj is PSCredential)
-            {
-                var model = obj as PSCredential;
-                return
-                    $"(New-Object System.Management.Automation.PSCredential (\"{model.UserName}\", (ConvertTo-SecureString \"{Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(model.Password))}\" -AsPlainText -Force)))";
-            }
-
-            return $"\"{obj}\"";
+            return needQuotesIfObjectIsNotRecognized ? $"\"{obj}\"" : $"{obj}";
         }
     }
 }

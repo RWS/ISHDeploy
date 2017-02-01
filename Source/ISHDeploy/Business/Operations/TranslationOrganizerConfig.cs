@@ -69,6 +69,11 @@ namespace ISHDeploy.Business.Operations
                 {TranslationOrganizerSetting.retriesOnTimeout, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.retriesOnTimeout) },
                 {TranslationOrganizerSetting.synchronizeTemplates, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.synchronizeTemplates) }
             };
+
+            /// <summary>
+            /// The xpath of World Server Node
+            /// </summary>
+            public const string WorldServerNodeXPath = "configuration/trisoft.infoShare.translationOrganizer/worldServer/instances/add";
         }
     }
 }

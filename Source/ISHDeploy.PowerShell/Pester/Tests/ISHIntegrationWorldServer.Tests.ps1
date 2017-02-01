@@ -42,6 +42,20 @@ $scriptBlockSetISHIntegrationWorldServer = {
 
 }
 
+$scriptBlockRemoveISHIntegrationWorldServer = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Remove-ISHIntegrationWorldServer -ISHDeployment $ishDeploy 
+
+}
 
 
 #endregion
@@ -166,6 +180,83 @@ Describe "Testing ISHIntegrationWorldServer"{
         #Rollback
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
     }
+
+	It "Remove ISHIntegrationWorldServer"{       
+        #Act
+
+        $params = @{
+        Name=$Name;
+        Uri=$Uri;
+        Credential=$Credential;
+        MaximumJobSize=$MaxJobSize;
+        RetriesOnTimeout=$RetriesOnTimeout
+        Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        remoteReadTargetXML
+        $NameFromFile | Should be $Name
+        $UriFromFile | Should be $Uri
+        $UserNameFromFile | Should be $testUsername
+        $PasswordFromFile | Should be $testPassword 
+        $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
+        $MaxJobSizeFromFile | Should be $MaxJobSize
+        $TrisoftLanguageFromFile | Should be $TrisoftLanguage 
+        $WorldServerLocaleIDFromFile | Should be $WorldServerLocaleId
+
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName
+		remoteReadTargetXML
+		#Assert
+		$NameFromFile | Should be $null
+        $UriFromFile | Should be $null
+        $UserNameFromFile | Should be $null
+        $PasswordFromFile | Should be $null 
+        $RetriesOnTimeutFromFile | Should be $null 
+        $MaxJobSizeFromFile | Should be $null
+        $TrisoftLanguageFromFile | Should be $null 
+        $WorldServerLocaleIDFromFile | Should be $null
+    }
+
+    It "Remove ISHIntegrationWorldServer when no WS integration"{       
+        #Act
+
+
+		{Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
+	
+    }
+
+    It "Remove ISHIntegrationWorldServer with wrong XML"{
+        #Arrange
+        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
+        $params = @{
+        Name=$Name;
+        Uri=$Uri;
+        Credential=$Credential;
+        MaximumJobSize=$MaxJobSize;
+        RetriesOnTimeout=$RetriesOnTimeout
+        Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+
+        Rename-Item "$filepath\TranslationOrganizer.exe.config"  "_TranslationOrganizer.exe.config"
+        New-Item "$filepath\TranslationOrganizer.exe.config" -type file |Out-Null
+        
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Root element is missing"
+        #Rollback
+        Remove-Item "$filepath\TranslationOrganizer.exe.config"
+        Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
+    }
+
+    It "Remove ISHIntegrationWorldServer with no XML"{
+        #Arrange
+        Rename-Item "$filepath\TranslationOrganizer.exe.config"  "_TranslationOrganizer.exe.config"
+
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Could not find file"
+        #Rollback
+        Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
+    }
     
     It "Set ISHIntegrationWorldServer writes proper history"{        
        #Act
@@ -185,7 +276,5 @@ Describe "Testing ISHIntegrationWorldServer"{
         $history.Contains('Set-ISHIntegrationWorldServer -ISHDeployment $deploymentName -MaximumJobSize 250 -Name "testName" -Credential (New-Object System.Management.Automation.PSCredential ("testUserName", (ConvertTo-SecureString "testPassword" -AsPlainText -Force))) -RetriesOnTimeout 2 -Uri "testUri" -Mappings @((New-ISHIntegrationWorldServerMapping -ISHLanguage en -WSLocaleID 192))') | Should be "True"     
     } 
 
-    
-    
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

@@ -21,9 +21,9 @@ namespace ISHDeploy.Common.Models.UI
     /// <summary>
     ///	<para type="description">Represents the item of EventLogMenuItem.</para>
     /// </summary>
-    /// <seealso cref="BaseUIElement" />
+    /// <seealso cref="BaseXMLElement" />
     [XmlRoot("menuitem", Namespace = "")]
-    public class EventMonitorMenuBarItem : BaseUIElement
+    public class EventMonitorMenuBarItem : BaseXMLElement
     {
         /// <summary>
         /// Gets or sets the label of the menu item.

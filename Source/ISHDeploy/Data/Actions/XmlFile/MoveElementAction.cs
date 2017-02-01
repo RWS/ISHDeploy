@@ -15,17 +15,17 @@
  */
 
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
-using ISHDeploy.Common.Models.UI;
 
-namespace ISHDeploy.Data.Actions.ISHUIElement
+namespace ISHDeploy.Data.Actions.XmlFile
 {
     /// <summary>
-    /// Action that remove specified UI element from Xml file.
+    /// Action that changes order of UI elements.
     /// </summary>
-    public class RemoveUIElementAction : SingleXmlFileAction
+    public class MoveElementAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xml configuration manager.
@@ -35,27 +35,47 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <summary>
         /// The file path to XML file.
         /// </summary>
-        private readonly ISHFilePath _filePath;
+        private readonly string _filePath;
 
         /// <summary>
         /// The model that represents UI element.
         /// </summary>
-        private readonly BaseUIElement _model;
+        private readonly BaseXMLElement _model;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveUIElementAction"/> class.
+        /// The direction to move.
+        /// </summary>
+        private readonly MoveDirection _direction;
+
+        /// <summary>
+        /// The XPath to element to move after it.
+        /// </summary>
+        private readonly string _insertAfterXPath;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MoveElementAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public RemoveUIElementAction(ILogger logger,
+        /// <param name="direction">The direction to move.</param>
+        /// <param name="after">The id of element to move after it.</param>
+        public MoveElementAction(ILogger logger,
             ISHFilePath filePath,
-            BaseUIElement model) :
+            BaseXMLElement model,
+            MoveDirection direction,
+            string after = null) :
             base(logger, filePath)
         {
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
-            _filePath = filePath;
+            _filePath = filePath.AbsolutePath;
             _model = model;
+            _direction = direction;
+
+            if (direction == MoveDirection.After && !string.IsNullOrEmpty(after))
+            {
+                _insertAfterXPath = string.Format(model.XPathFormat, after);
+            }
         }
 
         /// <summary>
@@ -63,9 +83,11 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// </summary>
         public override void Execute()
         {
-            _xmlConfigManager.RemoveUIElement(
-                _filePath.AbsolutePath,
-                _model);
+            _xmlConfigManager.MoveElement(
+                _filePath,
+                _model,
+                _direction,
+                _insertAfterXPath);
         }
     }
 }

@@ -18,14 +18,13 @@ using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
-using ISHDeploy.Common.Models.UI;
 
-namespace ISHDeploy.Data.Actions.ISHUIElement
+namespace ISHDeploy.Data.Actions.XmlFile
 {
     /// <summary>
     /// Action that inserts or updates the element of UI.
     /// </summary>
-    public class SetUIElementAction : SingleXmlFileAction
+    public class SetElementAction : SingleXmlFileAction
     {
         /// <summary>
         /// The xml configuration manager.
@@ -40,17 +39,17 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// <summary>
         /// The model that represents UI element.
         /// </summary>
-        private readonly BaseUIElement _model;
+        private readonly BaseXMLElement _model;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetUIElementAction"/> class.
+        /// Initializes a new instance of the <see cref="SetElementAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public SetUIElementAction(ILogger logger,
+        public SetElementAction(ILogger logger,
             ISHFilePath filePath,
-            BaseUIElement model) :
+            BaseXMLElement model) :
             base(logger, filePath)
         {
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -63,7 +62,7 @@ namespace ISHDeploy.Data.Actions.ISHUIElement
         /// </summary>
         public override void Execute()
         {
-            _xmlConfigManager.InsertOrUpdateUIElement(
+            _xmlConfigManager.InsertOrUpdateElement(
                 _filePath.AbsolutePath,
                 _model);
         }

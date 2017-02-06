@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;

@@ -17,6 +17,7 @@
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
@@ -72,6 +73,20 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         [ValidateNotNullOrEmpty]
         [ValidateRange(1, 30)]
         public int RetriesOnTimeout { get; set; }
+        
+        /// <summary>
+        /// <para type="description">The HTTP timeout (Used for REST client only).</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The HTTP timeout (Used for REST client only).")]
+        [ValidateNotNullOrEmpty]
+        public TimeSpan Timeout { get; set; }
+
+        /// <summary>
+        /// <para type="description">The type of the API Protocol.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The type of the API Protocol.", ParameterSetName = "SOAP")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter SOAP { get; set; }
 
         /// <summary>
         /// <para type="description">The mapping between trisoftLanguage and worldServerLocaleId.</para>
@@ -92,9 +107,19 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)),
                 MaximumJobSize,
                 RetriesOnTimeout,
+                SOAP.IsPresent ? "soap" : "rest",
                 Mappings);
 
-            var operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration);
+            IOperation operation;
+            if (!SOAP.IsPresent && MyInvocation.BoundParameters.ContainsKey("Timeout"))
+            {
+                operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration,
+                    Timeout);
+            }
+            else
+            {
+                operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration);
+            }
 
             operation.Run();
         }

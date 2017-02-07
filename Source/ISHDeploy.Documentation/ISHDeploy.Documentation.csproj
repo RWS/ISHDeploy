@@ -104,6 +104,13 @@
     <None Include="Articles\Module\Work with files and packages.md" />
     <None Include="Articles\Module\Work with one or multiple deployments.md" />
     <None Include="Articles\toc.yml" />
+    <None Include="Articles\Translation\Exporting translation jobs to the file system.md" />
+    <None Include="Articles\Translation\Integrating translation jobs with TMS.md" />
+    <None Include="Articles\Translation\Integrating translation jobs with World Server.md" />
+    <None Include="Articles\Translation\Scaling the services.md" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Enable_ISHServiceTranslation.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Get_ISHServiceTranslation.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Scale Up.Set_ISHServiceTranslation.ps1" />
     <None Include="index.md" />
     <None Include="Tools\Copy-RootItems.ps1" />
     <None Include="Tools\Copy-Changelog.ps1" />

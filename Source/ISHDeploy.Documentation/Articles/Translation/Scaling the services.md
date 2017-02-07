@@ -3,6 +3,13 @@
 A Vanilla deployment is delivered with the **Translation Builder** and **Translation Organizer** in a disabled state. 
 This tutorial explains how to enable, disable and scale the above.
 
+## Set deploymentName variable
+First set deploymentName variable.
+
+```powershell
+$deploymentName="InfoShare"
+```
+
 ## Get state
 
 The module offers two cmdlets that return the state of each
@@ -11,7 +18,7 @@ The module offers two cmdlets that return the state of each
 
 Here is an example:
 
-CopyCodeBlock(_nopublish\Vanilla.Get_ISHServiceTranslation.ps1)
+CopyCodeBlock(_nopublish\Vanilla.Get-ISHServiceTranslation.ps1)
 
 ```text
 Name                                                          Type  Status Sequence
@@ -29,7 +36,7 @@ To enable the Translation Organizer use the `Enable-ISHServiceTranslationOrganiz
 
 For example to enable both execute:
 
-CopyCodeBlock(_nopublish\Vanilla.Enable_ISHServiceTranslation.ps1)
+CopyCodeBlock(_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1)
 
 And then the state becomes:
 
@@ -47,7 +54,7 @@ To disable the Translation Organizer use the `Disable-ISHServiceTranslationOrgan
 
 For example to disable both execute:
 
-CopyCodeBlock(_nopublish\Vanilla.Enable_ISHServiceTranslation.ps1)
+CopyCodeBlock(_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1)
 
 And then the state becomes:
 
@@ -68,7 +75,7 @@ To scale up the Translation Organizer use the `Set-ISHServiceTranslationOrganize
 
 For example to scale the Translation Builder to 2 and the Translation Organizer to 3 and then enable them execute :
 
-CopyCodeBlock(_nopublish\Vanilla.Scale Up.Set_ISHServiceTranslation.ps1)
+CopyCodeBlock(_nopublish\Vanilla.Scale Up.Set-ISHServiceTranslation.ps1)
 
 Then the state looks like this:
 

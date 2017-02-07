@@ -107,10 +107,14 @@
     <None Include="Articles\Translation\Exporting translation jobs to the file system.md" />
     <None Include="Articles\Translation\Integrating translation jobs with TMS.md" />
     <None Include="Articles\Translation\Integrating translation jobs with World Server.md" />
+    <None Include="Articles\Translation\Configuring the services.md" />
     <None Include="Articles\Translation\Scaling the services.md" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Enable_ISHServiceTranslation.ps1" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Get_ISHServiceTranslation.ps1" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Scale Up.Set_ISHServiceTranslation.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationOrganizer.Template.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationOrganizer.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationBuilder.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Get-ISHServiceTranslation.ps1" />
+    <None Include="Articles\Translation\_nopublish\Vanilla.Scale Up.Set-ISHServiceTranslation.ps1" />
     <None Include="index.md" />
     <None Include="Tools\Copy-RootItems.ps1" />
     <None Include="Tools\Copy-Changelog.ps1" />

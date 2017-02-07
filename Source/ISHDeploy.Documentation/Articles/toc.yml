@@ -46,5 +46,7 @@
     href: ../obj/doc/articles/Translation/Integrating translation jobs with TMS.md
   - name: Exporting translation jobs to the file system
     href: ../obj/doc/articles/Translation/Exporting translation jobs to the file system.md
+  - name: Configuring the services
+    href: ../obj/doc/articles/Translation/Configuring the services.md
   - name: Scaling the services
     href: ../obj/doc/articles/Translation/Scaling the services.md

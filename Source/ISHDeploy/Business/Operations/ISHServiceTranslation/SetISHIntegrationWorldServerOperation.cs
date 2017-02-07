@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
 
@@ -33,7 +34,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
@@ -48,6 +49,33 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 logger,
                 filePath,
                 worldServerConfiguration));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="worldServerConfiguration">The world server configuration.</param>
+        /// <param name="httpTimeout">The HTTP timeout (Used for REST client only).</param>
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, TimeSpan httpTimeout) :
+            base(logger, ishDeployment)
+        {
+            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
+
+            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
+
+            _invoker.AddAction(new SetElementAction(
+                logger,
+                filePath,
+                worldServerConfiguration));
+
+            _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    filePath,
+                    $"{worldServerConfiguration.XPath}/@httpTimeout",
+                    httpTimeout.ToString(@"hh\:mm\:ss\.fff"),
+                    true));
         }
 
         /// <summary>

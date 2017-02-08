@@ -103,6 +103,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHFieldMetadataCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSMapping.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMapping.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationWorldServerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHIntegrationWorldServerCmdlet.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
+    <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />

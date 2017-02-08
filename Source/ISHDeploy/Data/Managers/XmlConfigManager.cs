@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -823,27 +825,32 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string Serialize<T>(T value)
         {
-            if (value == null)
+            try
             {
-                return null;
-            }
+                var serializer = new XmlSerializer(value.GetType());
 
-            var serializer = new XmlSerializer(value.GetType());
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-            settings.Indent = false;
-            settings.OmitXmlDeclaration = false;
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            using (StringWriter textWriter = new StringWriter())
-            {
-                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                XmlWriterSettings settings = new XmlWriterSettings();
+                //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+                settings.Indent = false;
+                settings.OmitXmlDeclaration = false;
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                using (StringWriter textWriter = new StringWriter())
                 {
-                    serializer.Serialize(xmlWriter, value, ns);
+                    using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                    {
+                        serializer.Serialize(xmlWriter, value, ns);
+                    }
+                    return textWriter.ToString();
                 }
-                return textWriter.ToString();
+
             }
+            catch (Exception ex)
+            {
+                var df = ex.Message;
+
+            }
+            return null;
         }
 
         /// <summary>

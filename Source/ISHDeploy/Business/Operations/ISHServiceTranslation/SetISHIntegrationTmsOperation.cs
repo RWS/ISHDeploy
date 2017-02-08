@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
 
@@ -38,7 +40,8 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="tmsConfiguration">The TMS configuration.</param>
-        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration) :
+        /// <param name="parameters">The parameters.</param>
+        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, Dictionary<TmsConfigurationSetting, object> parameters) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
@@ -48,6 +51,16 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 logger,
                 filePath,
                 tmsConfiguration));
+
+            foreach (var parameter in parameters)
+            {
+                _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    TranslationOrganizerConfigFilePath,
+                    $"{tmsConfiguration.XPath}/@{parameter.Key}",
+                    parameter.Value.ToString(),
+                    true));
+            }
         }
 
         /// <summary>

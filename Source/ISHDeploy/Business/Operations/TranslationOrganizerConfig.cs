@@ -55,22 +55,6 @@ namespace ISHDeploy.Business.Operations
             public const string TranslationOrganizerSettingsAttributeXPathPattern = "configuration/trisoft.infoShare.translationOrganizer/settings/@{0}";
 
             /// <summary>
-            /// Mapping between names of attributes and their xpaths
-            /// </summary>
-            public static Dictionary<TranslationOrganizerSetting, string> AttributeXPaths = new Dictionary<TranslationOrganizerSetting, string>
-            {
-                {TranslationOrganizerSetting.dumpFolder, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.dumpFolder) },
-                {TranslationOrganizerSetting.maxTranslationJobItemsUpdatedInOneCall, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.maxTranslationJobItemsUpdatedInOneCall) },
-                {TranslationOrganizerSetting.jobPollingInterval, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.jobPollingInterval) },
-                {TranslationOrganizerSetting.pendingJobPollingInterval, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.pendingJobPollingInterval) },
-                {TranslationOrganizerSetting.systemTaskInterval, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.systemTaskInterval) },
-                {TranslationOrganizerSetting.attemptsBeforeFailOnRetrieval, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.attemptsBeforeFailOnRetrieval) },
-                {TranslationOrganizerSetting.updateLeasedByPerNumberOfItems, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.updateLeasedByPerNumberOfItems) },
-                {TranslationOrganizerSetting.retriesOnTimeout, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.retriesOnTimeout) },
-                {TranslationOrganizerSetting.synchronizeTemplates, string.Format(TranslationOrganizerSettingsAttributeXPathPattern, TranslationOrganizerSetting.synchronizeTemplates) }
-            };
-
-            /// <summary>
             /// The xpath of World Server Node
             /// </summary>
             public const string WorldServerNodeXPath = "configuration/trisoft.infoShare.translationOrganizer/worldServer/instances/add";

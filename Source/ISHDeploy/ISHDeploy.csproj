@@ -116,6 +116,7 @@
     <Compile Include="Common\Enums\CardType.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceSequence.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceStatus.cs" />
+    <Compile Include="Common\Enums\TmsConfigurationSetting.cs" />
     <Compile Include="Common\Enums\TranslationOrganizerSetting.cs" />
     <Compile Include="Common\Enums\TranslationBuilderSetting.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceType.cs" />

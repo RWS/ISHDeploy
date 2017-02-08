@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
@@ -156,17 +158,43 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 RetriesOnTimeout,
                 Mappings,
                 Templates,
-                DestinationPortNumber,
-                IsapiFilterLocation,
-                UseCompression,
-                UseSsl,
-                UseDefaultProxyCredentials,
-                ProxyServer,
-                ProxyPort,
                 RequestedMetadata,
                 GroupingMetadata);
 
-            var operation = new SetISHIntegrationTmsOperation(Logger, ISHDeployment, tmsConfiguration);
+            var parameters = new Dictionary<TmsConfigurationSetting, object>();
+            foreach (var cmdletParameter in MyInvocation.BoundParameters)
+            {
+                switch (cmdletParameter.Key)
+                {
+                    case "DestinationPortNumber":
+                        parameters.Add(TmsConfigurationSetting.destinationPortNumber, DestinationPortNumber);
+                        break;
+                    case "IsapiFilterLocation":
+                        parameters.Add(TmsConfigurationSetting.isapiFilterLocation, IsapiFilterLocation);
+                        break;
+                    case "UseCompression":
+                        parameters.Add(TmsConfigurationSetting.useCompression, UseCompression);
+                        break;
+                    case "UseSsl":
+                        parameters.Add(TmsConfigurationSetting.useSsl, UseSsl);
+                        break;
+                    case "UseDefaultProxyCredentials":
+                        parameters.Add(TmsConfigurationSetting.useDefaultProxyCredentials, UseDefaultProxyCredentials);
+                        break;
+                    case "ProxyServer":
+                        parameters.Add(TmsConfigurationSetting.proxyServer, ProxyServer);
+                        break;
+                    case "ProxyPort":
+                        parameters.Add(TmsConfigurationSetting.proxyPort, ProxyPort);
+                        break;
+                }
+            }
+
+            var operation = new SetISHIntegrationTmsOperation(
+                Logger, 
+                ISHDeployment, 
+                tmsConfiguration,
+                parameters);
 
             operation.Run();
         }

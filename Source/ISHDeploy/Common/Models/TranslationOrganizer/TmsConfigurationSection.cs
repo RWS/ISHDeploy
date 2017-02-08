@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Xml.Serialization;
 
 namespace ISHDeploy.Common.Models.TranslationOrganizer
@@ -77,59 +78,31 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         [XmlArrayItem("add", IsNullable = false)]
         public TmsTemplate[] Templates { get; set; }
 
-        ///// <summary>
-        ///// The destination port number
-        ///// </summary>
-        //[XmlAttribute("destinationPortNumber")]
-        //public int? DestinationPortNumber { get; set; }
+        /// <summary>
+        /// The requested metadata
+        /// </summary>
+        [XmlElement("requestedMetadata", Namespace = "")]
+        public ISHFieldMetadata RequestedMetadata { get; set; }
 
-        ///// <summary>
-        ///// The location of Isapi filter
-        ///// </summary>
-        //[XmlAttribute("isapiFilterLocation")]
-        //public string IsapiFilterLocation { get; set; }
+        /// <summary>
+        /// Returns true if the RequestedMetadata has changed; otherwise, returns false.  
+        /// The RequestedMetadata property serializes only if true is returned.
+        /// </summary>
+        /// <returns></returns>
+        public bool RequestedMetadataSpecified => RequestedMetadata != null;
 
-        ///// <summary>
-        ///// Use compression
-        ///// </summary>
-        //[XmlAttribute("useCompression")]
-        //public bool? UseCompression { get; set; }
+        /// <summary>
+        /// The grouping metadata
+        /// </summary>
+        [XmlElement("groupingMetadata", Namespace = "")]
+        public ISHFieldMetadata GroupingMetadata { get; set; }
 
-        ///// <summary>
-        ///// Use SSL
-        ///// </summary>
-        //[XmlAttribute("useSsl")]
-        //public bool? UseSsl { get; set; }
-
-        ///// <summary>
-        ///// Use default proxy credentials
-        ///// </summary>
-        //[XmlAttribute("useDefaultProxyCredentials")]
-        //public bool? UseDefaultProxyCredentials { get; set; }
-
-        ///// <summary>
-        ///// The proxy server
-        ///// </summary>
-        //[XmlAttribute("proxyServer")]
-        //public string ProxyServer { get; set; }
-
-        ///// <summary>
-        ///// The port number of proxy server
-        ///// </summary>
-        //[XmlAttribute("proxyPort")]
-        //public int? ProxyPort { get; set; }
-        
-        ///// <summary>
-        ///// The requested metadata
-        ///// </summary>
-        //[XmlAttribute("requestedMetadata")]
-        //public ISHFieldMetadata RequestedMetadata { get; set; }
-
-        ///// <summary>
-        ///// The grouping metadata
-        ///// </summary>
-        //[XmlAttribute("groupingMetadata")]
-        //public ISHFieldMetadata GroupingMetadata { get; set; }
+        /// <summary>
+        /// Returns true if the GroupingMetadata has changed; otherwise, returns false.  
+        /// The GroupingMetadata property serializes only if true is returned.
+        /// </summary>
+        /// <returns></returns>
+        public bool GroupingMetadataSpecified => GroupingMetadata != null;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="TmsConfigurationSection"/> class from being created.
@@ -149,16 +122,9 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <param name="retriesOnTimeout">The number of retries on timeout</param>
         /// <param name="mappings">The mapping between trisoftLanguage and worldServerLocaleId</param>
         /// <param name="templates">Tms templates</param>
-        /// <param name="destinationPortNumber">The destination port number</param>
-        /// <param name="isapiFilterLocation">The location of Isapi filter</param>
-        /// <param name="useCompression">Use compression</param>
-        /// <param name="useSsl">Use SSL</param>
-        /// <param name="useDefaultProxyCredentials">Use default proxy credentials</param>
-        /// <param name="proxyServer">The proxy server</param>
-        /// <param name="proxyPort">The port number of proxy server</param>
         /// <param name="requestedMetadata">The port number of proxy server</param>
         /// <param name="groupingMetadata">The port number of proxy server</param>
-        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, int? destinationPortNumber = null, string isapiFilterLocation = null, bool? useCompression = null, bool? useSsl = null, bool? useDefaultProxyCredentials = null, string proxyServer = null, int? proxyPort = null, ISHFieldMetadata requestedMetadata = null, ISHFieldMetadata groupingMetadata = null)
+        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata requestedMetadata = null, ISHFieldMetadata groupingMetadata = null)
         {
             Alias = alias;
             Uri = uri;
@@ -168,15 +134,9 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             RetriesOnTimeout = retriesOnTimeout;
             Mappings = mappings;
             Templates = templates;
-            //DestinationPortNumber = destinationPortNumber;
-            //IsapiFilterLocation = isapiFilterLocation;
-            //UseCompression = useCompression;
-            //UseSsl = useSsl;
-            //UseDefaultProxyCredentials = useDefaultProxyCredentials;
-            //ProxyServer = proxyServer;
-            //ProxyPort = proxyPort;
-            //RequestedMetadata = requestedMetadata;
-            //GroupingMetadata = groupingMetadata;
+
+            RequestedMetadata = requestedMetadata;
+            GroupingMetadata = groupingMetadata;
 
             RelativeFilePath = @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config";
             XPathToParentElement = "configuration/trisoft.infoShare.translationOrganizer/tms/instances";

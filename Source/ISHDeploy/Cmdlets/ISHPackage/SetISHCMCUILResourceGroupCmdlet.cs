@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHPackage;
+using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHPackage;
 
 namespace ISHDeploy.Cmdlets.ISHPackage
 {

@@ -25,7 +25,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Common.Models.ISHXmlNodes;
-using ISHDeploy.Common.Models.TranslationOrganizer;
 using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Tests.Data.Managers
@@ -992,18 +991,19 @@ namespace ISHDeploy.Tests.Data.Managers
                 }));
 
             // Act
+            var testXPath = string.Format("/menubar/menuitem[@label='{0}']", testLabel);
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+                testXPath);
 
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+                testXPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(2).WriteVerbose(Arg.Any<string>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain node within the xpath `{testXPath}`"));
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -1041,7 +1041,7 @@ namespace ISHDeploy.Tests.Data.Managers
         public void RemoveNodes_if_nodes_are_not_exists()
         {
             // Arrange
-            string testXPath = "/tabbar/menuitem/userrole";
+            string xpath = "/tabbar/menuitem/userrole";
 
             var doc = XDocument.Parse(_nodesManipulationTestXml);
 
@@ -1055,12 +1055,12 @@ namespace ISHDeploy.Tests.Data.Managers
                 }));
 
             // Act
-            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+            _xmlConfigManager.RemoveNodes(_filePath, xpath);
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose(Arg.Any<string>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find target nodes"));
+            Logger.DidNotReceive().WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain nodes within the xpath `{xpath}`"));
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }
@@ -1571,14 +1571,15 @@ namespace ISHDeploy.Tests.Data.Managers
                                                 <userrole>Administrator</userrole>
                                             </menuitem>
                                         </mainmenubar>");
+            var menu = new MainMenuBarItem("Event Log 5");
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.RemoveElement(_filePath, new MainMenuBarItem("Event Log 5"));
+            _xmlConfigManager.RemoveElement(_filePath, menu);
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain nodes within the xpath `{menu.XPath}`"));
         }
         
         [TestMethod]

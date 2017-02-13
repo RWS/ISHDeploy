@@ -94,7 +94,9 @@
   <ItemGroup>
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationOrganizerOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationWorldServerOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
@@ -102,10 +104,13 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHTmsTemplateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHFieldMetadataCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSMapping.cs" />
-    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMapping.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSMappingCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMappingCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationTMSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationWorldServerCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\SetISHIntegrationTMSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHIntegrationWorldServerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
@@ -113,6 +118,7 @@
     <Compile Include="Common\Enums\CardType.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceSequence.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceStatus.cs" />
+    <Compile Include="Common\Enums\TmsConfigurationSetting.cs" />
     <Compile Include="Common\Enums\TranslationOrganizerSetting.cs" />
     <Compile Include="Common\Enums\TranslationBuilderSetting.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceType.cs" />
@@ -258,6 +264,8 @@
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
+    <Compile Include="Common\Models\TranslationOrganizer\TmsTemplate.cs" />
+    <Compile Include="Common\Models\TranslationOrganizer\TmsConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />

@@ -63,6 +63,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of TMS Node
             /// </summary>
             public const string TmsNodeXPath = "configuration/trisoft.infoShare.translationOrganizer/tms/instances/add";
+
+            /// <summary>
+            /// The xpath of FileSystem Node
+            /// </summary>
+            public const string FileSystemNodeXPath = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add";
         }
     }
 }

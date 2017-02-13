@@ -33,7 +33,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>

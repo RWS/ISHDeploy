@@ -29,25 +29,25 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
     public class TmsConfigurationSection : BaseXMLElement
     {
         /// <summary>
-        /// The alias of WorldServer 
+        /// The alias of TMS 
         /// </summary>
         [XmlAttribute("alias")]
         public string Alias { get; set; }
 
         /// <summary>
-        /// The Uri to WorldServer 
+        /// The Uri to TMS 
         /// </summary>
         [XmlAttribute("uri")]
         public string Uri { get; set; }
 
         /// <summary>
-        /// The userName to get access to WorldServer
+        /// The userName to get access to TMS
         /// </summary>
         [XmlAttribute("userName")]
         public string UserName { get; set; }
 
         /// <summary>
-        /// The password to get access to WorldServer
+        /// The password to get access to TMS
         /// </summary>
         [XmlAttribute("password")]
         public string Password { get; set; }
@@ -65,7 +65,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         public int RetriesOnTimeout { get; set; }
 
         /// <summary>
-        /// The mapping between trisoftLanguage and worldServerLocaleId
+        /// The mapping between trisoftLanguage and TMSLocaleId
         /// </summary>
         [XmlArray("mappings")]
         [XmlArrayItem("add", IsNullable = false)]
@@ -114,13 +114,13 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <summary>
         /// Initializes a new instance of the <see cref="TmsConfigurationSection"/> class.
         /// </summary>
-        /// <param name="alias">The alias of WorldServer</param>
-        /// <param name="uri">The Uri to WorldServer </param>
-        /// <param name="userName">The userName to get access to WorldServer</param>
-        /// <param name="password">The password to get access to WorldServer</param>
+        /// <param name="alias">The alias of TMS</param>
+        /// <param name="uri">The Uri to TMS </param>
+        /// <param name="userName">The userName to get access to TMS</param>
+        /// <param name="password">The password to get access to TMS</param>
         /// <param name="externalJobMaxTotalUncompressedSizeBytes">The max value of total size in bytes of uncompressed external job</param>
         /// <param name="retriesOnTimeout">The number of retries on timeout</param>
-        /// <param name="mappings">The mapping between trisoftLanguage and worldServerLocaleId</param>
+        /// <param name="mappings">The mapping between trisoftLanguage and TmsLanguage</param>
         /// <param name="templates">Tms templates</param>
         /// <param name="requestedMetadata">The port number of proxy server</param>
         /// <param name="groupingMetadata">The port number of proxy server</param>
@@ -142,7 +142,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             XPathToParentElement = "configuration/trisoft.infoShare.translationOrganizer/tms/instances";
             NameOfItem = "add";
 
-            XPathFormat = "configuration/trisoft.infoShare.translationOrganizer/tms/instances/add[@alias='{0}']";
+            XPathFormat = "configuration/trisoft.infoShare.translationOrganizer/tms/instances/add";
             XPath = string.Format(XPathFormat, alias);
         }
     }

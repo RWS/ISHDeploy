@@ -123,7 +123,11 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
                 if (outputWarnings)
                 {
-                    _logger.WriteWarning("Not able to find the target node");
+                    _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain node within the xpath `{xpath}`");
+                }
+                else
+                {
+                    _logger.WriteVerbose($"Not able to remove xml item. The file `{filePath}` doesn't contain node within the xpath `{xpath}`");
                 }
                 return;
             }
@@ -150,11 +154,13 @@ namespace ISHDeploy.Data.Managers
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
-
                 if (outputWarnings)
                 {
-                    _logger.WriteWarning("Not able to find target nodes");
+                    _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{xpath}`");
+                }
+                else
+                {
+                    _logger.WriteVerbose($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{xpath}`");
                 }
 
                 return;
@@ -683,7 +689,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                _logger.WriteWarning("Not able to find the target node");
+                _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{model.XPath}`");
             }
         }
 

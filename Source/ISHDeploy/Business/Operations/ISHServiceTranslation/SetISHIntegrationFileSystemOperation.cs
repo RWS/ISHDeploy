@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -24,10 +22,10 @@ using ISHDeploy.Data.Actions.XmlFile;
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Sets configuration of TMS.
+    /// Sets configuration of FileSystem.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationTmsOperation : BaseOperationPaths, IOperation
+    public class SetISHIntegrationFileSystemOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -35,32 +33,21 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHIntegrationTmsOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHIntegrationFileSystemOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="tmsConfiguration">The TMS configuration.</param>
-        /// <param name="parameters">The parameters.</param>
-        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, Dictionary<TmsConfigurationSetting, object> parameters) :
+        /// <param name="fileSystemConfiguration">The FileSystem configuration.</param>
+        public SetISHIntegrationFileSystemOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
-            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, tmsConfiguration.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
+            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, fileSystemConfiguration.RelativeFilePath);
 
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                tmsConfiguration));
-
-            foreach (var parameter in parameters)
-            {
-                _invoker.AddAction(
-                    new SetAttributeValueAction(Logger,
-                    TranslationOrganizerConfigFilePath,
-                    $"{tmsConfiguration.XPath}/@{parameter.Key}",
-                    parameter.Value.ToString(),
-                    true));
-            }
+                fileSystemConfiguration));
         }
 
         /// <summary>

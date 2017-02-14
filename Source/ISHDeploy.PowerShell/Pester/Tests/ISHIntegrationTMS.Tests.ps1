@@ -27,12 +27,12 @@ $Mapping = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegratio
 $testId = "testId"
 $testName = "testName"
 $templateParameters = @{TemplateID = $testId; TemplateName = $testName }
-$Template = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHTMSTemplate -Session $session -ArgumentList $templateParameters
+$Template = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegrationTMSTemplate -Session $session -ArgumentList $templateParameters
 $fieldName = "testMetadataName"
 $fieldLevel = "testMetadatdLevel"
 $fieldValueType = "testMetadataValueType"
 $metadataParameters = @{Name =$fieldName; Level=$fieldLevel; ValueType=$fieldValueType} 
-$Metadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHTMSTemplate -Session $session -ArgumentList $metadataParameters
+$Metadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $metadataParameters
 $DestinationPortNumber = 445
 $IsapiFilterLocation = "testLocation"
 $UseCompression = $true

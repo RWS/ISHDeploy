@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="synopsis">Sets configuration of TMS.</para>
     /// <para type="description">The Set-ISHIntegrationTMS cmdlet sets configuration of TMS.</para>
     /// <para type="link">New-ISHIntegrationTMSMapping</para>
-    /// <para type="link">New-ISHTMSTemplate</para>
+    /// <para type="link">New-ISHIntegrationTMSTemplate</para>
     /// <para type="link">New-ISHFieldMetadata</para>
     /// </summary>
     /// <example>

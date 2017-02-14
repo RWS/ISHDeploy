@@ -466,7 +466,7 @@ $scriptBlockNewISHFieldMetadata = {
 
 }
 
-$scriptBlockNewISHTMSTemplate = {
+$scriptBlockNewISHIntegrationTMSTemplate = {
     param (
         $parameters
 
@@ -476,6 +476,6 @@ $scriptBlockNewISHTMSTemplate = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    New-ISHTMSTemplate  @parameters
+    New-ISHIntegrationTMSTemplate  @parameters
 
 }

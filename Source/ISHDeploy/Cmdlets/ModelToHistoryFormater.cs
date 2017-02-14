@@ -48,6 +48,13 @@ namespace ISHDeploy.Cmdlets
                     $"(New-ISHIntegrationTMSMapping -TmsLanguage {model.TmsLanguage} -ISHLanguage {model.ISHLanguage})";
             }
 
+            if (obj is TmsTemplate)
+            {
+                var model = obj as TmsTemplate;
+                return
+                    $"(New-ISHIntegrationTMSTemplate -TemplateName {model.TemplateId} -TemplateId {model.TemplateName})";
+            }
+
             return needQuotesIfObjectIsNotRecognized ? $"\"{obj}\"" : $"{obj}";
         }
     }

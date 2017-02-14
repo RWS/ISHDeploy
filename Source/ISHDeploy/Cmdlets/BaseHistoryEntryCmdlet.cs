@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Cmdlets.ISHPackage;
+using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets
 {
@@ -148,6 +149,13 @@ namespace ISHDeploy.Cmdlets
             {
                 var model = boundParameter.Value as PSCredential;
                 var valueAsString = $"(New-Object System.Management.Automation.PSCredential (\"{model.UserName}\", (ConvertTo-SecureString \"{Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(model.Password))}\" -AsPlainText -Force)))";
+                return new KeyValuePair<string, object>(boundParameter.Key, valueAsString);
+            }
+
+            if (boundParameter.Value is ISHFieldMetadata)
+            {
+                var model = boundParameter.Value as ISHFieldMetadata;
+                var valueAsString = $"(New-ISHFieldMetadata -Name {model.Name} -Level {model.Level} -ValueType {model.ValueType})";
                 return new KeyValuePair<string, object>(boundParameter.Key, valueAsString);
             }
 

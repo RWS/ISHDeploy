@@ -27,7 +27,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Set-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>New-ISHFieldMetadata New-ISHFieldMetadata -Name "testName" -Level "testLevel" -ValueType "testValueType"</code>
+    /// <code>PS C:\>New-ISHFieldMetadata -Name "testName" -Level "testLevel" -ValueType "testValueType"</code>
     /// <para>This command creates new object with metadata with name testName, level testLevel and valuetype testValueType.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHFieldMetadata")]

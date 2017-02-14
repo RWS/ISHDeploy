@@ -106,7 +106,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationBuilderCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHTmsTemplateCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSTemplateCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHFieldMetadataCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSMappingCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMappingCmdlet.cs" />

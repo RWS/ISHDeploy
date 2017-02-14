@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Sets configuration of WorldServer.
+    /// Removes FileSystem Instance from Translation Organizer".
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationWorldServerOperation : BaseOperationPaths, IOperation
+    public class RemoveISHIntegrationFileSystemOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -33,21 +32,17 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
+        /// Initializes a new instance of the <see cref="RemoveISHIntegrationFileSystemOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="worldServerConfiguration">The world server configuration.</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration) :
+
+        public RemoveISHIntegrationFileSystemOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
-            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, "Remove FileSystem instance");
 
-            _invoker.AddAction(new SetElementAction(
-                logger,
-                filePath,
-                worldServerConfiguration));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.FileSystemNodeXPath));
         }
 
         /// <summary>

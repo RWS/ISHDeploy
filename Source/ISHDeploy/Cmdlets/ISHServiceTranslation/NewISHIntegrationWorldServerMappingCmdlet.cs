@@ -30,7 +30,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para>This command creates new object for English language where ID of the same language on WorldLocale is 1145.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHIntegrationWorldServerMapping")]
-    public sealed class NewISHIntegrationWorldServerMapping  : BaseCmdlet
+    public sealed class NewISHIntegrationWorldServerMappingCmdlet  : BaseCmdlet
     {
         /// <summary>
         /// <para type="description">The trisoft language identifier.</para>

@@ -23,14 +23,14 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Creates a new mapping pair ISHLanguage to TmsLanguage.</para>
     /// <para type="description">The New-ISHIntegrationTMSMapping cmdlet creates an object with pair of properties, where ISHLanguage is InfoShare language identifier (example: "en") and TmsLanguage is language identifier of TMS (example: "EN-US").</para>
-    /// <para type="link">Set-ISHIntegrationTms </para>
+    /// <para type="link">Set-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>New-ISHIntegrationTMSMapping -ISHLanguage "en" -TmsLanguage "EN-US"</code>
     /// <para>This command creates new object for English language where ID of the same language on TMS is EN-US.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHIntegrationTMSMapping")]
-    public sealed class NewISHIntegrationTMSMapping : BaseCmdlet
+    public sealed class NewISHIntegrationTMSMappingCmdlet : BaseCmdlet
     {
         /// <summary>
         /// <para type="description">The language identifier of TMS.</para>

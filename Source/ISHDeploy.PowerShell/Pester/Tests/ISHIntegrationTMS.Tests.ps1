@@ -28,11 +28,16 @@ $testId = "testId"
 $testName = "testName"
 $templateParameters = @{TemplateID = $testId; TemplateName = $testName }
 $Template = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegrationTMSTemplate -Session $session -ArgumentList $templateParameters
-$fieldName = "testMetadataName"
-$fieldLevel = "testMetadataLevel"
-$fieldValueType = "testMetadataValueType"
-$metadataParameters = @{Name =$fieldName; Level=$fieldLevel; ValueType=$fieldValueType} 
-$Metadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $metadataParameters
+$requestedMetadataFieldName = "testRequestedMetadataName"
+$requestedMetadataFieldLevel = "testRequestedMetadataLevel"
+$requestedMetadataFieldValueType = "testRequestedMetadataValueType"
+$requestedMetadataParameters = @{Name =$requestedMetadataFieldName; Level=$requestedMetadataFieldLevel; ValueType=$requestedMetadataFieldValueType} 
+$requestedMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters
+$groupingMetadataFieldName = "testGroupingMetadataName"
+$groupingMetadataFieldLevel = "testGroupingMetadataLevel"
+$groupingMetadataFieldValueType = "testGroupingMetadataValueType"
+$groupingMetadataParameters = @{Name =$groupingMetadataFieldName; Level=$groupingMetadataFieldLevel; ValueType=$groupingMetadataFieldValueType} 
+$groupingMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $groupingMetadataParameters
 $DestinationPortNumber = 445
 $IsapiFilterLocation = "testLocation"
 $UseCompression = $true
@@ -186,8 +191,8 @@ Describe "Testing ISHIntegrationTMS"{
         UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
         ProxyServer = $ProxyServer;
         ProxyPort = $ProxyPort;
-        RequestedMetadata = $Metadata;
-        GroupingMetadata = $Metadata 
+        RequestedMetadata = $requestedMetadata;
+        GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -215,13 +220,13 @@ Describe "Testing ISHIntegrationTMS"{
         $TemplateIdFromFile | Should be $testId
         $TemplateNameFromFile | Should be $testName
 
-        $RequestedNameFromFile | Should be $fieldName
-        $RequestedLevelFromFile | Should be $fieldLevel
-        $RequestedIshvaluetypeFromFile | Should be $fieldValueType
+        $RequestedNameFromFile | Should be $requestedMetadataFieldName
+        $RequestedLevelFromFile | Should be $requestedMetadataFieldLevel
+        $RequestedIshvaluetypeFromFile | Should be $requestedMetadataFieldValueType
 
-        $GroupingNameFromFile | Should be $fieldName
-        $GroupingLevelFromFile | Should be $fieldLevel
-        $GroupingIshvaluetypeFromFile | Should be $fieldValueType
+        $GroupingNameFromFile | Should be $groupingMetadataFieldName
+        $GroupingLevelFromFile | Should be $groupingMetadataFieldLevel
+        $GroupingIshvaluetypeFromFile | Should be $groupingMetadataFieldValueType
     }
     
  
@@ -243,8 +248,8 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $Metadata;
-            GroupingMetadata = $Metadata 
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
 
@@ -278,8 +283,8 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $Metadata;
-            GroupingMetadata = $Metadata 
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
 
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Throw "Could not find file"
@@ -305,8 +310,8 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $Metadata;
-            GroupingMetadata = $Metadata 
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -351,8 +356,8 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $Metadata;
-            GroupingMetadata = $Metadata 
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
 
@@ -393,8 +398,8 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $Metadata;
-            GroupingMetadata = $Metadata 
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params

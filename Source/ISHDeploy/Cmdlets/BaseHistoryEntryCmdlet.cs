@@ -136,6 +136,11 @@ namespace ISHDeploy.Cmdlets
                 return new KeyValuePair<string, object>(boundParameter.Key, $"\"{stringValue}\"");
             }
 
+            if (boundParameter.Value is bool)
+            {
+                return new KeyValuePair<string, object>(boundParameter.Key, $"${boundParameter.Value}");
+            }
+
             if (boundParameter.Value is IEnumerable)
             {
                 var arrayStringValue = string.Join(", ", ((IEnumerable)boundParameter.Value).Cast<object>().Select(x => ModelToHistoryFormater.GetString(x, true)));

@@ -23,10 +23,11 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Creates a new ISH Metadata Field for TMS in Translation Organizer.</para>
     /// <para type="description">The New-ISHFieldMetadata cmdlet creates an object with pair of properties, where ISHLanguage is InfoShare language identifier (example: "en") and WSLocaleID is language identifier of WorldServer (example: "1145").</para>
-    /// <para type="link">Set-ISHServiceTranslationOrganizer </para>
+    /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Set-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>New-ISHFieldMetadata New-ISHFieldMetadata -Name "testName" -Level "testLevel" -ValueType "testValueType"</code>
+    /// <code>PS C:\>New-ISHFieldMetadata -Name "testName" -Level "testLevel" -ValueType "testValueType"</code>
     /// <para>This command creates new object with metadata with name testName, level testLevel and valuetype testValueType.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHFieldMetadata")]

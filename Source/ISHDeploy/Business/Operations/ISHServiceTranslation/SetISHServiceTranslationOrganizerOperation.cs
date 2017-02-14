@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 _invoker.AddAction(
                     new SetAttributeValueAction(Logger, 
                     TranslationOrganizerConfigFilePath,
-                    TranslationOrganizerConfig.AttributeXPaths[parameter.Key], 
+                    string.Format(TranslationOrganizerConfig.TranslationOrganizerSettingsAttributeXPathPattern, parameter.Key), 
                     HandleStringBeforeSaving(parameter.Key, parameter.Value)));
             }
         }

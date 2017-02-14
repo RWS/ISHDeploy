@@ -41,6 +41,20 @@ namespace ISHDeploy.Cmdlets
                     $"(New-ISHIntegrationWorldServerMapping -ISHLanguage {model.ISHLanguage} -WSLocaleID {model.WSLocaleID})";
             }
 
+            if (obj is ISHLanguageToTmsLanguageMapping)
+            {
+                var model = obj as ISHLanguageToTmsLanguageMapping;
+                return
+                    $"(New-ISHIntegrationTMSMapping -TmsLanguage {model.TmsLanguage} -ISHLanguage {model.ISHLanguage})";
+            }
+
+            if (obj is TmsTemplate)
+            {
+                var model = obj as TmsTemplate;
+                return
+                    $"(New-ISHIntegrationTMSTemplate -TemplateName {model.TemplateId} -TemplateId {model.TemplateName})";
+            }
+
             return needQuotesIfObjectIsNotRecognized ? $"\"{obj}\"" : $"{obj}";
         }
     }

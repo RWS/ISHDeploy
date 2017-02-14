@@ -20,27 +20,26 @@ using ISHDeploy.Business.Operations.ISHServiceTranslation;
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
-	///		<para type="synopsis">World Server Instance from Translation Organizer.</para>
-	///		<para type="description">The Remove-ISHIntegrationWorldServer cmdlet removes World Server Instance from Translation Organizer.</para>
-	///		<para type="link">Set-ISHIntegrationWorldServer</para>
+	///		<para type="synopsis">TMS Instance from Translation Organizer.</para>
+	///		<para type="description">The Remove-ISHIntegrationFileSystem cmdlet removes TMS Instance from Translation Organizer.</para>
+	///		<para type="link">Set-ISHTranslationFileSystemExport</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHIntegrationWorldServer -ISHDeployment $deployment</code>
-	///		<para>Removes World Server Instance from Translation Organizer.
-	/// This command removes World Server Instance from Translation Organizer.
+	///		<code>PS C:\>Remove-ISHIntegrationFileSystem -ISHDeployment $deployment</code>
+	///		<para>Removes TMS Instance from Translation Organizer.
+	/// This command removes TMS Instance from Translation Organizer.
 	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	///		</para>
 	/// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHIntegrationWorldServer")]
-    public sealed class RemoveISHIntegrationWorldServerCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Remove, "ISHIntegrationFileSystem")]
+    public sealed class RemoveISHIntegrationFileSystemCmdlet : BaseHistoryEntryCmdlet
     {
-              
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new RemoveISHIntegrationWorldServerOperation (Logger, ISHDeployment);
+            var operation = new RemoveISHIntegrationFileSystemOperation (Logger, ISHDeployment);
             operation.Run();
         }
     }

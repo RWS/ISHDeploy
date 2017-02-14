@@ -15,17 +15,17 @@
  */
 
 using ISHDeploy.Business.Invokers;
-﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Sets configuration of WorldServer.
+    /// Sets configuration of FileSystem.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationWorldServerOperation : BaseOperationPaths, IOperation
+    public class SetISHIntegrationFileSystemOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -33,21 +33,21 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
+        /// Initializes a new instance of the <see cref="SetISHIntegrationFileSystemOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="worldServerConfiguration">The world server configuration.</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration) :
+        /// <param name="fileSystemConfiguration">The FileSystem configuration.</param>
+        public SetISHIntegrationFileSystemOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
-            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
+            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, fileSystemConfiguration.RelativeFilePath);
 
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                worldServerConfiguration));
+                fileSystemConfiguration));
         }
 
         /// <summary>

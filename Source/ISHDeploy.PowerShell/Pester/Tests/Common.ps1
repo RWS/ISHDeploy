@@ -437,3 +437,45 @@ $scriptBlockNewISHIntegrationWorldServerMapping = {
     New-ISHIntegrationWorldServerMapping  @parameters
 
 }
+
+$scriptBlockNewISHIntegrationTMSMapping = {
+    param (
+        $parameters
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    New-ISHIntegrationTMSMapping  @parameters
+
+}
+
+$scriptBlockNewISHFieldMetadata = {
+    param (
+        $parameters
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    New-ISHFieldMetadata  @parameters
+
+}
+
+$scriptBlockNewISHIntegrationTMSTemplate = {
+    param (
+        $parameters
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    New-ISHIntegrationTMSTemplate  @parameters
+
+}

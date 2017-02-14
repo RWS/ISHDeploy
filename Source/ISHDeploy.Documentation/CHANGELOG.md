@@ -12,7 +12,19 @@
 	1. Cmdlets
 		- `Enable-ISHServiceTranslationBuilder`. **[New]**
 		- `Disable-ISHServiceTranslationBuilder`. **[New]**
+		- `Get-ISHServiceTranslationBuilder`. **[New]**
 		- `Set-ISHServiceTranslationBuilder`. **[New]**
+		- `Get-ISHServiceTranslationOrganizer`. **[New]**
+		- `New-ISHIntegrationWorldServerMapping`. **[New]**
+		- `Set-ISHIntegrationWorldServer`. **[New]**
+		- `Remove-ISHIntegrationWorldServer`. **[New]**
+    1. Documentation
+		- New section **Work with translation services** with tutorials: **[New]**
+		  - **Integrating translation jobs with SDL World Server**. **[New]**
+		  - **Integrating translation jobs with SDL TMS**. **[New]**
+		  - **Exporting translation jobs to the file system**. **[New]**
+		  - **Configuring the services**. **[New]**
+		  - **Scaling the services**. **[New]**
 
 ## stable-1.2
 1. General 

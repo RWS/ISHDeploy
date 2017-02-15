@@ -10,4 +10,4 @@ $hash=@{
 	PendingJobPollingInterval="00:15:00"
 }
 
-Set-ISHServiceTranslationBuilder -ISHDeployment $ishDeployment @hash
+Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName @hash

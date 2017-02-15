@@ -35,4 +35,4 @@ CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationWorldServer.ps1)
 
 ## Remove the integration with SDL WorldServer
 
-Use `Remove-ISHIntegrationWorldServer  -ISHDeployment $ishDeployment`.
+Use `Remove-ISHIntegrationWorldServer  -ISHDeployment $deploymentName`.

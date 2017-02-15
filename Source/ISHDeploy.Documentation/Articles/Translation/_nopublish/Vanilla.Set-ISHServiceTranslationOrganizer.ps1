@@ -12,4 +12,4 @@ $hash=@{
     UpdateLeasedByPerNumberOfItems=100
 }
 
-Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment @hash
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash

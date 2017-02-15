@@ -1,5 +1,5 @@
 ﻿# Get Translation Builder 
-Get-ISHServiceTranslationBuilder -ISHDeployment $ishDeployment
+Get-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
 
 # Get Translation Organizer
-Get-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment
+Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName

@@ -1,3 +1,3 @@
 ﻿# Enable the template synchronization 
 
-Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment -SynchronizeTemplates
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -SynchronizeTemplates $true

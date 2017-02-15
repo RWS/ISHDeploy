@@ -3,7 +3,7 @@
 
 $hash=@{
 	AttemptsBeforeFailOnRetrieval=3
-	dumpFolder=$dumpPath
+	DumpFolder=$dumpPath
 	JobPollingInterval="00:05:00"
     MaxTranslationJobItemsUpdatedInOneCall=100
     PendingJobPollingInterval="00:15:00"
@@ -12,4 +12,4 @@ $hash=@{
     UpdateLeasedByPerNumberOfItems=100
 }
 
-Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment @hash
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash

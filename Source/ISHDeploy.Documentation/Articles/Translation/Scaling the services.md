@@ -54,7 +54,7 @@ To disable the Translation Organizer use the `Disable-ISHServiceTranslationOrgan
 
 For example to disable both execute:
 
-CopyCodeBlock(_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1)
+CopyCodeBlock(_nopublish\Vanilla.Disable-ISHServiceTranslation.ps1)
 
 And then the state becomes:
 

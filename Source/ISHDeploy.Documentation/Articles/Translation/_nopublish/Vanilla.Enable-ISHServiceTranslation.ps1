@@ -1,5 +1,5 @@
 ﻿# Enable Translation Builder 
-Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeployment
+Enable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
 
 # Enable Translation Organizer
-Enable-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment
+Enable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName

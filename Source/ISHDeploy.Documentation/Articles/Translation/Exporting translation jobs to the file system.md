@@ -20,4 +20,4 @@ CopyCodeBlock(_nopublish\Example.Set-ISHTranslationFileSystemExport.ps1)
 
 ## Remove the integration with SDL TMS
 
-Use `Remove-ISHIntegrationFileSystem  -ISHDeployment $ishDeployment`.
+Use `Remove-ISHIntegrationFileSystem  -ISHDeployment $deploymentName`.

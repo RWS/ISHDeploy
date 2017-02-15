@@ -2,4 +2,4 @@
 $exportFolderPath=""
 
 # Set the export
-Set-ISHTranslationFileSystemExport -ISHDeployment -Name FileSystem -ExportFolderPath $exportFolderPath
+Set-ISHTranslationFileSystemExport -ISHDeployment $deploymentName -Name FileSystem -ExportFolderPath $exportFolderPath

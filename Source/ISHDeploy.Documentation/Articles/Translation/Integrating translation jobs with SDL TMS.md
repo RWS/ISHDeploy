@@ -55,4 +55,4 @@ CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationTMS.ps1)
 
 ## Remove the integration with SDL TMS
 
-Use `Remove-ISHIntegrationTMS  -ISHDeployment $ishDeployment`.
+Use `Remove-ISHIntegrationTMS  -ISHDeployment $deploymentName`.

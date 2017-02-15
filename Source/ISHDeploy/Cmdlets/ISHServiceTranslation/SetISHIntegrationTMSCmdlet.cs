@@ -136,13 +136,13 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <para type="description">The requested metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The requested metadata.")]
-        public ISHFieldMetadata RequestedMetadata { get; set; }
+        public ISHFieldMetadata[] RequestedMetadata { get; set; }
 
         /// <summary>
         /// <para type="description">The grouping metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The grouping metadata.")]
-        public ISHFieldMetadata GroupingMetadata { get; set; }
+        public ISHFieldMetadata[] GroupingMetadata { get; set; }
 
         /// <summary>
         /// Executes cmdlet

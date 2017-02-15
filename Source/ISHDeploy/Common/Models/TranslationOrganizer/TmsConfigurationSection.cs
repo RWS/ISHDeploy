@@ -82,7 +82,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// The requested metadata
         /// </summary>
         [XmlElement("requestedMetadata", Namespace = "")]
-        public ISHFieldMetadata RequestedMetadata { get; set; }
+        public ISHMetadata RequestedMetadata { get; set; }
 
         /// <summary>
         /// Returns true if the RequestedMetadata has changed; otherwise, returns false.  
@@ -95,7 +95,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// The grouping metadata
         /// </summary>
         [XmlElement("groupingMetadata", Namespace = "")]
-        public ISHFieldMetadata GroupingMetadata { get; set; }
+        public ISHMetadata GroupingMetadata { get; set; }
 
         /// <summary>
         /// Returns true if the GroupingMetadata has changed; otherwise, returns false.  
@@ -124,7 +124,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <param name="templates">Tms templates</param>
         /// <param name="requestedMetadata">The port number of proxy server</param>
         /// <param name="groupingMetadata">The port number of proxy server</param>
-        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata requestedMetadata = null, ISHFieldMetadata groupingMetadata = null)
+        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata[] requestedMetadata = null, ISHFieldMetadata[] groupingMetadata = null)
         {
             Alias = alias;
             Uri = uri;
@@ -135,8 +135,15 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             Mappings = mappings;
             Templates = templates;
 
-            RequestedMetadata = requestedMetadata;
-            GroupingMetadata = groupingMetadata;
+            if (requestedMetadata != null)
+            {
+                RequestedMetadata = new ISHMetadata {Metadata = requestedMetadata};
+            }
+
+            if (groupingMetadata != null)
+            {
+                GroupingMetadata = new ISHMetadata {Metadata = groupingMetadata};
+            }
 
             RelativeFilePath = @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config";
             XPathToParentElement = "configuration/trisoft.infoShare.translationOrganizer/tms/instances";

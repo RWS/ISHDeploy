@@ -32,7 +32,9 @@ $requestedMetadataFieldName = "testRequestedMetadataName"
 $requestedMetadataFieldLevel = "testRequestedMetadataLevel"
 $requestedMetadataFieldValueType = "testRequestedMetadataValueType"
 $requestedMetadataParameters = @{Name =$requestedMetadataFieldName; Level=$requestedMetadataFieldLevel; ValueType=$requestedMetadataFieldValueType} 
+$requestedMetadataParameters2 =  @{Name ="$requestedMetadataFieldName 2"; Level="$requestedMetadataFieldLevel 2"; ValueType="$requestedMetadataFieldValueType 2"} 
 $requestedMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters
+$requestedMetadata2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters2
 $groupingMetadataFieldName = "testGroupingMetadataName"
 $groupingMetadataFieldLevel = "testGroupingMetadataLevel"
 $groupingMetadataFieldValueType = "testGroupingMetadataValueType"
@@ -379,6 +381,31 @@ Describe "Testing ISHIntegrationTMS"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
+    }
+
+	It "Set ISHIntegrationTMS sets multiple metadata"{
+
+		#Arrange
+         $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            DestinationPortNumber =$DestinationPortNumber;
+            IsapiFilterLocation = $IsapiFilterLocation;
+            UseCompression = $UseCompression;
+            UseSsl =$UseSsl;
+            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
+            ProxyServer = $ProxyServer;
+            ProxyPort = $ProxyPort;
+            RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
+            GroupingMetadata = $groupingMetadata 
+        }
+        #Act/Assert
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Not Throw
     }
     <#
     It "Set ISHIntegrationTMS writes proper history"{        

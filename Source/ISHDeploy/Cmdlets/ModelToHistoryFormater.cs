@@ -36,27 +36,27 @@ namespace ISHDeploy.Cmdlets
             {
                 var model = obj as ISHLanguageToWorldServerLocaleIdMapping;
                 return
-                    $"(New-ISHIntegrationWorldServerMapping -ISHLanguage {model.ISHLanguage} -WSLocaleID {model.WSLocaleID})";
+                    $"(New-ISHIntegrationWorldServerMapping -ISHLanguage \"{model.ISHLanguage}\" -WSLocaleID {model.WSLocaleID})";
             }
 
             if (obj is ISHLanguageToTmsLanguageMapping)
             {
                 var model = obj as ISHLanguageToTmsLanguageMapping;
                 return
-                    $"(New-ISHIntegrationTMSMapping -TmsLanguage {model.TmsLanguage} -ISHLanguage {model.ISHLanguage})";
+                    $"(New-ISHIntegrationTMSMapping -TmsLanguage \"{model.TmsLanguage}\" -ISHLanguage \"{model.ISHLanguage}\")";
             }
 
             if (obj is TmsTemplate)
             {
                 var model = obj as TmsTemplate;
                 return
-                    $"(New-ISHIntegrationTMSTemplate -TemplateName {model.TemplateId} -TemplateId {model.TemplateName})";
+                    $"(New-ISHIntegrationTMSTemplate -TemplateName \"{model.TemplateName}\" -TemplateId \"{model.TemplateId}\")";
             }
 
             if (obj is ISHFieldMetadata)
             {
                 var model = obj as ISHFieldMetadata;
-                return $"(New-ISHFieldMetadata -Name {model.Name} -Level {model.Level} -ValueType {model.ValueType})";
+                return $"(New-ISHFieldMetadata -Name \"{model.Name}\" -Level {model.Level} -ValueType {model.ValueType})";
             }
 
             return needQuotesIfObjectIsNotRecognized ? $"\"{obj}\"" : $"{obj}";

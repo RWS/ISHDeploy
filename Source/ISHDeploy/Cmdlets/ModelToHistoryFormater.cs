@@ -15,8 +15,6 @@
  */
 
 
-using System.Management.Automation;
-using System.Runtime.InteropServices;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets
@@ -53,6 +51,12 @@ namespace ISHDeploy.Cmdlets
                 var model = obj as TmsTemplate;
                 return
                     $"(New-ISHIntegrationTMSTemplate -TemplateName {model.TemplateId} -TemplateId {model.TemplateName})";
+            }
+
+            if (obj is ISHFieldMetadata)
+            {
+                var model = obj as ISHFieldMetadata;
+                return $"(New-ISHFieldMetadata -Name {model.Name} -Level {model.Level} -ValueType {model.ValueType})";
             }
 
             return needQuotesIfObjectIsNotRecognized ? $"\"{obj}\"" : $"{obj}";

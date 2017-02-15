@@ -118,13 +118,13 @@ $scriptBlockReadTargetXML = {
     $result["TemplateId"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").templateId
     $result["TemplateName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").templateName
 
-    $result["RequestedName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata").name
-    $result["RequestedLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata").level
-    $result["RequestedIshvaluetype"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata").ishvaluetype
+    $result["RequestedName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").name
+    $result["RequestedLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").level
+    $result["RequestedIshvaluetype"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").ishvaluetype
 
-    $result["GroupingName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata").name
-    $result["GroupingLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata").level
-    $result["GroupingIshvaluetype"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata").ishvaluetype
+    $result["GroupingName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").name
+    $result["GroupingLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").level
+    $result["GroupingIshvaluetype"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").ishvaluetype
 
     return $result
 }

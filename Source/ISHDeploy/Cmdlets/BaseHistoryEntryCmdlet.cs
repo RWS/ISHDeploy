@@ -157,13 +157,6 @@ namespace ISHDeploy.Cmdlets
                 return new KeyValuePair<string, object>(boundParameter.Key, valueAsString);
             }
 
-            if (boundParameter.Value is ISHFieldMetadata)
-            {
-                var model = boundParameter.Value as ISHFieldMetadata;
-                var valueAsString = $"(New-ISHFieldMetadata -Name {model.Name} -Level {model.Level} -ValueType {model.ValueType})";
-                return new KeyValuePair<string, object>(boundParameter.Key, valueAsString);
-            }
-
             return boundParameter;
         }
     }

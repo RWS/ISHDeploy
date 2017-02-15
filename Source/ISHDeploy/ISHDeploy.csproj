@@ -269,6 +269,7 @@
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />
+    <Compile Include="Common\Models\TranslationOrganizer\ISHMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\TmsTemplate.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\TmsConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />

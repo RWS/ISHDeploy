@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ReleaseYear>2016</ReleaseYear>
+    <ReleaseYear>2017</ReleaseYear>
     <SupportedCMVersion>12.0.3</SupportedCMVersion>
     <SoftwareCMVersion>TBA</SoftwareCMVersion>
     <MinPowerShellVersion>3.0</MinPowerShellVersion>

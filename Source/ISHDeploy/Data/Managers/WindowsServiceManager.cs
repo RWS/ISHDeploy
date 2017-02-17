@@ -147,6 +147,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="serviceName">Name of the windows service.</param>
         public void RemoveWindowsService(string serviceName)
         {
+            StopWindowsService(serviceName);
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Uninstall-WindowsService.ps1",
                 new Dictionary<string, string>
                 {

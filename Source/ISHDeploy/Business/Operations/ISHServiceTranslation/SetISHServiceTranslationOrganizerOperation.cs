@@ -86,6 +86,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
                 foreach (var service in servicesForDeleting)
                 {
+                    _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
             }

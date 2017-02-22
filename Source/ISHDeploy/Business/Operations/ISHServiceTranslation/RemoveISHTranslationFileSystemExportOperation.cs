@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Common.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
     /// <summary>
-    /// Sets configuration of FileSystem.
+    /// Removes FileSystem Instance from Translation Organizer".
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class SetISHIntegrationFileSystemOperation : BaseOperationPaths, IOperation
+    public class RemoveISHTranslationFileSystemExportOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -33,21 +32,17 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHIntegrationFileSystemOperation"/> class.
+        /// Initializes a new instance of the <see cref="RemoveISHTranslationFileSystemExportOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="fileSystemConfiguration">The FileSystem configuration.</param>
-        public SetISHIntegrationFileSystemOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration) :
+
+        public RemoveISHTranslationFileSystemExportOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
-            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, fileSystemConfiguration.RelativeFilePath);
+            _invoker = new ActionInvoker(logger, "Remove FileSystem instance");
 
-            _invoker.AddAction(new SetElementAction(
-                logger,
-                filePath,
-                fileSystemConfiguration));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.FileSystemNodeXPath));
         }
 
         /// <summary>

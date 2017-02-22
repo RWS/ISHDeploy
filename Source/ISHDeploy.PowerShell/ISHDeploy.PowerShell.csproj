@@ -74,7 +74,7 @@
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
-    <None Include="Pester\Tests\ISHIntegrationFileSystemExport.Tests.ps1" />
+    <None Include="Pester\Tests\ISHTranslationFileSystemExport.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationDBSTSSQLServerConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSInternalAuthentication.Tests.ps1" />

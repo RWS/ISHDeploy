@@ -63,7 +63,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 MaximumJobSize,
                 ExportFolderPath);
 
-            var operation = new SetISHIntegrationFileSystemOperation(
+            var operation = new SetISHTranslationFileSystemExportOperation(
                 Logger, 
                 ISHDeployment,
                 configuration);

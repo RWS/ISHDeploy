@@ -53,6 +53,20 @@ $scriptBlockGetISHServiceTranslationOrganizer = {
 
 }
 
+$scriptBlockEnableISHServiceTranslationOrganizer = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Enable-ISHServiceTranslationOrganizer -ISHDeployment $ishDeploy
+
+}
 #endregion
 
 
@@ -195,6 +209,19 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices.Count | Should be 3
 
      }
-
+	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
+        #Arrange
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+		$params2 = @{Count = 1}
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params2
+        #Timeout added because of Windows procedure of stopping and removing services
+        Start-Sleep -Seconds 20
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 1
+     }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

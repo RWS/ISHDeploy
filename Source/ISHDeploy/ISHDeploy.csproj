@@ -94,10 +94,10 @@
   <ItemGroup>
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationOrganizerOperation.cs" />
-    <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationFileSystemOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHTranslationFileSystemExportOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationWorldServerOperation.cs" />
-    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationFileSystemOperation.cs" />
+    <Compile Include="Business\Operations\ISHServiceTranslation\SetISHTranslationFileSystemOperationExport.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />

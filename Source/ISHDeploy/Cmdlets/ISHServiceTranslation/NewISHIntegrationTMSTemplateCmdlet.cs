@@ -22,11 +22,11 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
     /// <para type="synopsis">Creates a new ISH Template Field for TMS in Translation Organizer.</para>
-    /// <para type="description">The New-ISHIntegrationTMSTemplate cmdlet creates an object with pair of properties, where ISHLanguage is InfoShare language identifier (example: "en") and WSLocaleID is language identifier of WorldServer (example: "1145").</para>
+    /// <para type="description">The New-ISHIntegrationTMSTemplate cmdlet creates an object with pair of properties: Template ID and Name. Used for tms translation integration.</para>
     /// <para type="link">Set-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>New-ISHIntegrationTMSTemplate -TemplateName "testName" -TemplateId "testTemplateId"</code>
+    /// <code>PS C:\>New-ISHIntegrationTMSTemplate -Name "testName" -TemplateId "testTemplateId"</code>
     /// <para>This command creates new object with metadata with name testName, level testLevel and valuetype testValueType.</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHIntegrationTMSTemplate")]
@@ -44,7 +44,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The name of TMS template.")]
         [ValidateNotNullOrEmpty]
-        public string TemplateName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -54,7 +54,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             var tmsTemplate = new TmsTemplate
             {
                 TemplateId = TemplateId,
-                TemplateName = TemplateName
+                TemplateName = Name
             };
 
             var result = new List<TmsTemplate> { tmsTemplate };

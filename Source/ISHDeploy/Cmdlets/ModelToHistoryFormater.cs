@@ -50,7 +50,7 @@ namespace ISHDeploy.Cmdlets
             {
                 var model = obj as TmsTemplate;
                 return
-                    $"(New-ISHIntegrationTMSTemplate -TemplateName \"{model.TemplateName}\" -TemplateId \"{model.TemplateId}\")";
+                    $"(New-ISHIntegrationTMSTemplate -Name \"{model.TemplateName}\" -TemplateId \"{model.TemplateId}\")";
             }
 
             if (obj is ISHFieldMetadata)

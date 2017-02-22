@@ -21,25 +21,25 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
 	///		<para type="synopsis">TMS Instance from Translation Organizer.</para>
-	///		<para type="description">The Remove-ISHIntegrationFileSystem cmdlet removes TMS Instance from Translation Organizer.</para>
+	///		<para type="description">The Remove-ISHTranslationFileSystemExport  cmdlet removes TMS Instance from Translation Organizer.</para>
 	///		<para type="link">Set-ISHTranslationFileSystemExport</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHIntegrationFileSystem -ISHDeployment $deployment</code>
+	///		<code>PS C:\>Remove-ISHTranslationFileSystemExport  -ISHDeployment $deployment</code>
 	///		<para>Removes TMS Instance from Translation Organizer.
 	/// This command removes TMS Instance from Translation Organizer.
 	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 	///		</para>
 	/// </example>
-    [Cmdlet(VerbsCommon.Remove, "ISHIntegrationFileSystem")]
-    public sealed class RemoveISHIntegrationFileSystemCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Remove, "ISHTranslationFileSystemExport")]
+    public sealed class RemoveISHTranslationFileSystemExportCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new RemoveISHIntegrationFileSystemOperation (Logger, ISHDeployment);
+            var operation = new RemoveISHTranslationFileSystemExportOperation (Logger, ISHDeployment);
             operation.Run();
         }
     }

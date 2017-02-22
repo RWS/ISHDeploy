@@ -26,7 +26,7 @@ $mappingParameters = @{ISHLanguage = $TrisoftLanguage; TMSLanguage = $TMSLocaleI
 $Mapping = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegrationTMSMapping -Session $session -ArgumentList $mappingParameters
 $testId = "testId"
 $testName = "testName"
-$templateParameters = @{TemplateID = $testId; TemplateName = $testName }
+$templateParameters = @{TemplateID = $testId; Name = $testName }
 $Template = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegrationTMSTemplate -Session $session -ArgumentList $templateParameters
 $requestedMetadataFieldName = "testRequestedMetadataName"
 $requestedMetadataFieldLevel = "testRequestedMetadataLevel"

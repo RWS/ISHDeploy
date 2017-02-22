@@ -33,7 +33,7 @@ $scriptBlockSetISHTranslationFileSystemExport = {
 
 }
 
-$scriptBlockRemoveISHIntegrationFileSystem = {
+$scriptBlockRemoveISHTranslationFileSystemExport  = {
     param (
         $ishDeployName
 
@@ -44,7 +44,7 @@ $scriptBlockRemoveISHIntegrationFileSystem = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Remove-ISHIntegrationFileSystem -ISHDeployment $ishDeploy 
+    Remove-ISHTranslationFileSystemExport -ISHDeployment $ishDeploy 
 
 }
 
@@ -163,7 +163,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $MaxJobSizeFromFile | Should be $MaxJobSize
         $ExportFolderFromFile | Should be $ExportFolder
 
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationFileSystem -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
 		remoteReadTargetXML
 		#Assert
 		$NameFromFile | Should be $null
@@ -175,7 +175,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         #Act
 
 
-		{Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationFileSystem -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
+		{Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
 
     }
 
@@ -193,7 +193,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         New-Item "$filepath\TranslationOrganizer.exe.config" -type file |Out-Null
         
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationFileSystem -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Root element is missing"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Root element is missing"
         #Rollback
         Remove-Item "$filepath\TranslationOrganizer.exe.config"
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
@@ -204,7 +204,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         Rename-Item "$filepath\TranslationOrganizer.exe.config"  "_TranslationOrganizer.exe.config"
 
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHIntegrationFileSystem -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Could not find file"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
     }

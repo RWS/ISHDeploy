@@ -53,6 +53,21 @@ $scriptBlockGetISHServiceTranslationBuilder = {
 
 }
 
+
+$scriptBlockEnableISHServiceTranslationBuilder = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy
+
+}
 #endregion
 
 
@@ -185,6 +200,20 @@ Describe "Testing ISHServiceTranslationBuilder"{
 
      }
 
+	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
+        #Arrange
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+		$params2 = @{Count = 1}
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params2
+        #Timeout added because of Windows procedure of stopping and removing services
+        Start-Sleep -Seconds 20
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 1
+     }
      #For ISH version 12.*
      if($moduleName -like "*12*"){
         It "Set ISHServiceTranslationBuilder changes registry on ISH version 12.*"{

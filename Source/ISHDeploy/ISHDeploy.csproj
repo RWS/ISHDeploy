@@ -110,7 +110,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHFieldMetadataCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationTMSMappingCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\NewISHIntegrationWorldServerMappingCmdlet.cs" />
-    <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationFileSystemCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHTranslationFileSystemExportCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationTMSCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\RemoveISHIntegrationWorldServerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHTranslationFileSystemExportCmdlet.cs" />

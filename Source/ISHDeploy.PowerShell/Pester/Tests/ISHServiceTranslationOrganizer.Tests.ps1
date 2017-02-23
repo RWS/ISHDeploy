@@ -209,7 +209,7 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices.Count | Should be 3
 
      }
-	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
+	 It "Set ISHServiceTranslationOrganizer downscales amount of services"{
         #Arrange
         $params = @{Count = 3}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params

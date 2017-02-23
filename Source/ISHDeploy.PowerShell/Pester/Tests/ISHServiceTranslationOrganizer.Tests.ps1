@@ -209,19 +209,19 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices.Count | Should be 3
 
      }
-	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
+	 It "Set ISHServiceTranslationOrganizer downscales amount of services"{
         #Arrange
         $params = @{Count = 3}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
         $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
         $TranslationServices.Count | Should be 3
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-		$params2 = @{Count = 1}
+		$params2 = @{Count = 2}
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params2
         #Timeout added because of Windows procedure of stopping and removing services
-        Start-Sleep -Seconds 20
+        Start-Sleep -Seconds 60
         $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-        $TranslationServices.Count | Should be 1
+        $TranslationServices.Count | Should be 2
      }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

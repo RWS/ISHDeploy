@@ -36,7 +36,7 @@ try
 	{
 		throw [System.IO.FileNotFoundException] "Manifest file ""$manifestFile"" was not found."
 	}
-
+	$manifestFileVersion = (Test-ModuleManifest -Path $manifestFile).Version
 	Write-Host "Manifest files is found at module location."
 
 	# Copying files in temporary directory. As manifest name should match the name of the folder it`s in.
@@ -62,12 +62,31 @@ try
 
 	# Publishing module to Powershell gallery
 	Write-Host "Publishing Module '$moduleName' to repository '$($repository.Name)'";
+
+	$initialDebugPreference = $DebugPreference
+	$initialVerbosePreference = $VerbosePreference
+	$DebugPreference = "Continue"
+	$VerbosePreference = "Continue"
+
     Publish-Module -Path $tmpModulePath -NuGetApiKey $apiKey -Repository $repository.Name
 
+	$DebugPreference = $initialDebugPreference
+	$VerbosePreference = $initialVerbosePreference
     # The module is now listed on the PowerShell Gallery
-    Find-Module $moduleName
+	$repositoryModuleVersion = (Find-Module -Name $moduleName -Repository $repository.Name).Version
+    Find-Module -Name $moduleName -Repository $repository.Name
+	$compareVersions = Compare-Object -ReferenceObject $manifestFileVersion -DifferenceObject $repositoryModuleVersion
+	if($compareVersions.Count -eq 0) { 
+		Write-Host "Published"
+	}
+	else{
+		Write-Host "Version in manifest file: $manifestFileVersion" 
+		Write-Host "Version in repository: $repositoryModuleVersion" 
+		Write-Host "Publishing failed."
+		throw "Publishing of module failed"
+	}
 
-    Write-Host "Published"
+
 }
 catch
 {

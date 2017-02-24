@@ -61,7 +61,10 @@ namespace ISHDeploy.Cmdlets.Validators
 			errorMessage = null;
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
-
+            //Customization added to allow internal testing for test CDs of 13 version
+            if (deploymentVersion.Revision == 65534) {
+                cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, 0);
+            }
 			Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
 			Version moduleVersion;
 			if (regex.IsMatch(moduleName) &&

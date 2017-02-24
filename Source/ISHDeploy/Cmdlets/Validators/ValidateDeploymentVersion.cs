@@ -61,16 +61,11 @@ namespace ISHDeploy.Cmdlets.Validators
 			errorMessage = null;
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
-
-            //***************************************************************************************
-            // TODO Attention!!!!! Need to be removed before release
-            //***************************************************************************************
             //Workaround until story [TS-11041- ISHDeploy - Start using the -Force parameter] is be implemented
             //Bypassing revision validation for the Development CD's that have a version such as 13.0.*.65534
             if ((deploymentVersion.Major == 13) && (deploymentVersion.Revision == 65534)) {
                 cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, 0);
             }
-            //*************************************************************************************** 
             Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
 			Version moduleVersion;
 			if (regex.IsMatch(moduleName) &&

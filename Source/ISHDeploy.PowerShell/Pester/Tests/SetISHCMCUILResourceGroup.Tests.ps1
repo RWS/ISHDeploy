@@ -13,7 +13,6 @@ $filePath = Join-Path $webPath "Author\ASP"
 
 $configPath = Join-Path $webPath "Author\ASP\UI\Extensions\_config.xml"
 $uncConfigPath = "\\$computerName\" + ($configPath.replace(":", "$"))
-$extentionLoaderPath = Join-Path $webPath "Author\ASP\UI\Helpers\ExtensionsLoader.js"
 
 $customFile = Join-Path $filePath "\Custom"
 $uncCustomFolderPath = "\\$computerName\" + ($filePath.replace(":", "$"))
@@ -108,8 +107,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         #Assert
-        RemotePathCheck $extentionLoaderPath | Should Be "True"
-
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
@@ -120,8 +117,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "", "test.js"
         #Assert
-        RemotePathCheck $extentionLoaderPath | Should Be "True"
-
         $result = readTargetXML -recourceGroupName "Trisoft.Extensions" -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
@@ -152,8 +147,6 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
         #Assert
-        RemotePathCheck $extentionLoaderPath | Should Be "True"
-
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
     }
@@ -169,36 +162,4 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         $result = getCountOfFilesInRecourceGroup -recourceGroupName test
         $result | Should be 3
     }
-
-    #For 12.x only
-
-    if($moduleName -like "*12*"){
-        It "Undo-ISHDeployment deletes extentionLoader file on 12 version"{      
-            #Act
-		    #Arrange
-            New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
-            New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
-            #Assert
-            RemotePathCheck $extentionLoaderPath | Should Be "True"
-
-            UndoDeploymentBackToVanila $testingDeploymentName $true
-		    RemotePathCheck $extentionLoaderPath | Should Be "False"
-        }
-    }
-    else{
-        It "Undo-ISHDeployment does not delete extentionLoader file on 13 version"{      
-            #Act
-		    #Arrange
-            New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
-            New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
-            Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
-            #Assert
-            RemotePathCheck $extentionLoaderPath | Should Be "True"
-
-            UndoDeploymentBackToVanila $testingDeploymentName $true
-		    RemotePathCheck $extentionLoaderPath | Should Be "True"
-        }
-    }
-
 }

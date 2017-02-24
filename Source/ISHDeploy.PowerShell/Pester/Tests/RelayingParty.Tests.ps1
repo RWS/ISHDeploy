@@ -332,9 +332,11 @@ Describe "Testing ISHRelaying party"{
   
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName} | Should not Throw 
     }
-
+	
     It "Set ISHSTSRelyingParty when db not exists"{
+		Start-Sleep -Seconds 20
         Invoke-CommandRemoteOrLocal -ScriptBlock {if (Test-Path $dbPath){ Remove-Item $dbPath }} -Session $session -ArgumentList $dbPath
+		Start-Sleep -Seconds 20
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"} | Should not Throw 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
     }

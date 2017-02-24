@@ -383,15 +383,14 @@ function ArtifactCleaner
 		[Parameter(Mandatory=$true)]
         $fileName
     ) 
-    
-     if(RemotePathCheck "$filePath\_$fileName")
+    if(RemotePathCheck "$filePath\_$fileName")
+    {
+        if (RemotePathCheck "$filePath\$fileName")
         {
-            if (RemotePathCheck "$filePath\$fileName")
-            {
-                RemoteRemoveItem "$filePath\$fileName"
-            }
-            RemoteRenameItem "$filePath\_$fileName" "$fileName"
+            RemoteRemoveItem "$filePath\$fileName"
         }
+        RemoteRenameItem "$filePath\_$fileName" "$fileName"
+    }
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem

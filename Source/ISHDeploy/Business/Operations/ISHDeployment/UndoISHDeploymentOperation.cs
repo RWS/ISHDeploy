@@ -39,11 +39,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         private readonly IActionInvoker _invoker;
 
         /// <summary>
-        /// The file manager
-        /// </summary>
-        private readonly IFileManager _fileManager;
-
-        /// <summary>
         /// Gets or sets a value indicating whether skip recycle or not. For integration test perspective only.
         /// Please, see https://jira.sdl.com/browse/TS-11329
         /// </summary>
@@ -61,11 +56,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             base(logger, ishDeployment)
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
-            _fileManager = ObjectFactory.GetInstance<IFileManager>();
-
-
-            // For version 12.X.X only
-            DeleteExtensionsLoaderFile();
 
             // Remove redundant files from BIN
             _invoker.AddAction(new DirectoryBinReturnToVanila(
@@ -148,19 +138,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Remove Author\ASP\Custom
             _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
-        }
-
-        /// <summary>
-        /// Deletes ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js file if file exists.
-        /// </summary>
-        public void DeleteExtensionsLoaderFile()
-        {
-            if (_fileManager.FileExists(ExtensionsLoaderFilePath.AbsolutePath))
-            {
-                Logger.WriteDebug("Delete file", ExtensionsLoaderFilePath.RelativePath);
-
-                _invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
-            }
         }
 
         /// <summary>

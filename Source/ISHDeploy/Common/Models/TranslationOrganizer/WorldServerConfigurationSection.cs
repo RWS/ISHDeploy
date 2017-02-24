@@ -64,6 +64,12 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         public int RetriesOnTimeout { get; set; }
 
         /// <summary>
+        /// The number of retries on timeout
+        /// </summary>
+        [XmlAttribute("apiProtocol")]
+        public string ApiProtocol { get; set; }
+
+        /// <summary>
         /// The mapping between trisoftLanguage and worldServerLocaleId
         /// </summary>
         [XmlArray("mappings")]
@@ -86,8 +92,9 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <param name="password">The password to get access to WorldServer</param>
         /// <param name="externalJobMaxTotalUncompressedSizeBytes">The max value of total size in bytes of uncompressed external job</param>
         /// <param name="retriesOnTimeout">The number of retries on timeout</param>
+        /// <param name="apiProtocol">The type of the api: SOAP or REST</param>
         /// <param name="mappings">The mapping between trisoftLanguage and worldServerLocaleId</param>
-        public WorldServerConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToWorldServerLocaleIdMapping[] mappings)
+        public WorldServerConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, string apiProtocol, ISHLanguageToWorldServerLocaleIdMapping[] mappings)
         {
             Alias = alias;
             Uri = uri;
@@ -95,6 +102,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             Password = password;
             ExternalJobMaxTotalUncompressedSizeBytes = externalJobMaxTotalUncompressedSizeBytes;
             RetriesOnTimeout = retriesOnTimeout;
+            ApiProtocol = apiProtocol;
             Mappings = mappings;
 
             RelativeFilePath = @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config";

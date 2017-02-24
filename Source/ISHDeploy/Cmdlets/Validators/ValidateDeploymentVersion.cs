@@ -70,7 +70,7 @@ namespace ISHDeploy.Cmdlets.Validators
             if ((deploymentVersion.Major == 13) && (deploymentVersion.Revision == 65534)) {
                 cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, 0);
             }
-            //***************************************************************************************
+            //*************************************************************************************** 
             Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
 			Version moduleVersion;
 			if (regex.IsMatch(moduleName) &&

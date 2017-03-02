@@ -29,15 +29,15 @@ $testName = "testName"
 $templateParameters = @{TemplateID = $testId; Name = $testName }
 $Template = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHIntegrationTMSTemplate -Session $session -ArgumentList $templateParameters
 $requestedMetadataFieldName = "testRequestedMetadataName"
-$requestedMetadataFieldLevel = "testRequestedMetadataLevel"
-$requestedMetadataFieldValueType = "testRequestedMetadataValueType"
+$requestedMetadataFieldLevel = "logical"
+$requestedMetadataFieldValueType = "value"
 $requestedMetadataParameters = @{Name =$requestedMetadataFieldName; Level=$requestedMetadataFieldLevel; ValueType=$requestedMetadataFieldValueType} 
-$requestedMetadataParameters2 =  @{Name ="$requestedMetadataFieldName 2"; Level="$requestedMetadataFieldLevel 2"; ValueType="$requestedMetadataFieldValueType 2"} 
+$requestedMetadataParameters2 =  @{Name ="$requestedMetadataFieldName 2"; Level="lng"; ValueType="id"} 
 $requestedMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters
 $requestedMetadata2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters2
 $groupingMetadataFieldName = "testGroupingMetadataName"
-$groupingMetadataFieldLevel = "testGroupingMetadataLevel"
-$groupingMetadataFieldValueType = "testGroupingMetadataValueType"
+$groupingMetadataFieldLevel = "version"
+$groupingMetadataFieldValueType = "element"
 $groupingMetadataParameters = @{Name =$groupingMetadataFieldName; Level=$groupingMetadataFieldLevel; ValueType=$groupingMetadataFieldValueType} 
 $groupingMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $groupingMetadataParameters
 $DestinationPortNumber = 445

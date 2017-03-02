@@ -13,37 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using System.Xml.Serialization;
-using ISHDeploy.Common.Enums;
-
-namespace ISHDeploy.Common.Models.TranslationOrganizer
+namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Represents structure of ISH metadata field for organizer service.</para>
+    /// <para type="description">Levels of value of ISHMetadata field.</para>
     /// </summary>
-    [System.Serializable()]
-    [XmlRoot("ishfield", Namespace = "")]
-    [System.ComponentModel.DesignerCategory("code")]
-    [XmlType(AnonymousType = true)]
-    public class ISHFieldMetadata
+    public enum ISHFieldMetadataLevel
     {
         /// <summary>
-        /// Name of metadata
+        /// Logical
         /// </summary>
-        [XmlAttribute("name")]
-        public string Name { get; set; }
-
+        logical,
         /// <summary>
-        /// Level of metadata value
+        /// Version
         /// </summary>
-        [XmlAttribute("level")]
-        public ISHFieldMetadataLevel Level { get; set; }
-
+        version,
         /// <summary>
-        /// Type of value of metadata
+        /// Lng
         /// </summary>
-        [XmlAttribute("ishvaluetype")]
-        public ISHFieldMetadataValueType ValueType { get; set; }
+        lng,
+        /// <summary>
+        /// None
+        /// </summary>
+        none
     }
 }

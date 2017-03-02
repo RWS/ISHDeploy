@@ -119,6 +119,8 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
+    <Compile Include="Common\Enums\ISHFieldMetadataLevel.cs" />
+    <Compile Include="Common\Enums\ISHFieldMetadataValueType.cs" />
     <Compile Include="Common\Enums\CardType.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceSequence.cs" />
     <Compile Include="Common\Enums\ISHWindowsServiceStatus.cs" />

@@ -16,19 +16,20 @@
 
 using System.Collections.Generic;
 using System.Management.Automation;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
     /// <para type="synopsis">Creates a new ISH Metadata Field for TMS in Translation Organizer.</para>
-    /// <para type="description">The New-ISHFieldMetadata cmdlet creates an object with pair of properties, where ISHLanguage is InfoShare language identifier (example: "en") and WSLocaleID is language identifier of WorldServer (example: "1145").</para>
+    /// <para type="description">The New-ISHFieldMetadata cmdlet creates an object that represents structure of ISH metadata field for organizer service.</para>
     /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
     /// <para type="link">Set-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>New-ISHFieldMetadata -Name "testName" -Level "testLevel" -ValueType "testValueType"</code>
-    /// <para>This command creates new object with metadata with name testName, level testLevel and valuetype testValueType.</para>
+    /// <code>PS C:\>New-ISHFieldMetadata -Name "testName" -Level "logical" -ValueType "value"</code>
+    /// <para>This command creates new object with metadata with name testName, level "logical" and valuetype "value".</para>
     /// </example>
     [Cmdlet(VerbsCommon.New, "ISHFieldMetadata")]
     public sealed class NewISHFieldMetadataCmdlet  : BaseCmdlet
@@ -45,14 +46,14 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The Level of ISHMetadata field")]
         [ValidateNotNullOrEmpty]
-        public string Level { get; set; }
+        public ISHFieldMetadataLevel Level { get; set; }
 
         /// <summary>
         /// <para type="description">The Type of value of ISHMetadata field.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The Type of value of ISHMetadata field")]
         [ValidateNotNullOrEmpty]
-        public string ValueType { get; set; }
+        public ISHFieldMetadataValueType ValueType { get; set; }
 
         /// <summary>
         /// Executes cmdlet

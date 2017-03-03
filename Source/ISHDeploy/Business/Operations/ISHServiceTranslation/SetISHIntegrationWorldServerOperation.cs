@@ -39,7 +39,8 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="worldServerConfiguration">The world server configuration.</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration) :
+        /// <param name="exceptionMessage">The error message.</param>
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
@@ -48,7 +49,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                worldServerConfiguration));
+                worldServerConfiguration,
+                true,
+                exceptionMessage));
         }
 
         /// <summary>
@@ -58,7 +61,8 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="worldServerConfiguration">The world server configuration.</param>
         /// <param name="httpTimeout">The HTTP timeout (Used for REST client only).</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, TimeSpan httpTimeout) :
+        /// <param name="exceptionMessage">The error message.</param>
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, TimeSpan httpTimeout, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
@@ -68,7 +72,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                worldServerConfiguration));
+                worldServerConfiguration,
+                true,
+                exceptionMessage));
 
             _invoker.AddAction(
                     new SetAttributeValueAction(Logger,

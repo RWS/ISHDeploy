@@ -23,6 +23,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Sets configuration of FileSystem.</para>
     /// <para type="description">The Set-ISHTranslationFileSystemExport cmdlet sets configuration of FileSystem.</para>
+    /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Remove-ISHTranslationFileSystemExport</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHTranslationFileSystemExport -ISHDeployment $deployment -Name "FileSystem1" -ExportFolderPath "c:\ExportFolder" -MaximumJobSize 5242880</code>
@@ -66,7 +68,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             var operation = new SetISHTranslationFileSystemExportOperation(
                 Logger, 
                 ISHDeployment,
-                configuration);
+                configuration,
+                "TranslationOrganizer.exe.config already contains settings for FileSystem. You should remove FileSystem configuration section first. To do this you can use Remove-ISHTranslationFileSystemExport cmdlet.");
 
             operation.Run();
         }

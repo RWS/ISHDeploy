@@ -28,6 +28,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="description">The Set-ISHIntegrationWorldServer cmdlet sets configuration of WorldServer.</para>
     /// <para type="link">New-ISHIntegrationWorldServerMapping</para>
     /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Remove-ISHIntegrationWorldServer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHIntegrationWorldServer -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping </code>
@@ -112,14 +113,24 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Mappings);
 
             IOperation operation;
+            string exceptionMessage =
+                "TranslationOrganizer.exe.config already contains settings for WorldServer. You should remove WorldServer configuration section first. To do this you can use Remove-ISHIntegrationWorldServer cmdlet.";
             if (!SOAP.IsPresent && MyInvocation.BoundParameters.ContainsKey("Timeout"))
             {
-                operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration,
-                    Timeout);
+                operation = new SetISHIntegrationWorldServerOperation(
+                    Logger, 
+                    ISHDeployment, 
+                    worldServerConfiguration,
+                    Timeout,
+                    exceptionMessage);
             }
             else
             {
-                operation = new SetISHIntegrationWorldServerOperation(Logger, ISHDeployment, worldServerConfiguration);
+                operation = new SetISHIntegrationWorldServerOperation(
+                    Logger, 
+                    ISHDeployment, 
+                    worldServerConfiguration,
+                    exceptionMessage);
             }
 
             operation.Run();

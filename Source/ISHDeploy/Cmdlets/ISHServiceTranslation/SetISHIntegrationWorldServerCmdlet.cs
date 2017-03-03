@@ -112,9 +112,10 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 SOAP.IsPresent ? "soap" : "rest",
                 Mappings);
 
-            IOperation operation;
             string exceptionMessage =
                 "TranslationOrganizer.exe.config already contains settings for WorldServer. You should remove WorldServer configuration section first. To do this you can use Remove-ISHIntegrationWorldServer cmdlet.";
+
+            IOperation operation;
             if (!SOAP.IsPresent && MyInvocation.BoundParameters.ContainsKey("Timeout"))
             {
                 operation = new SetISHIntegrationWorldServerOperation(

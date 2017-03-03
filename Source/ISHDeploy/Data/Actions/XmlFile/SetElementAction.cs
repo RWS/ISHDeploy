@@ -42,19 +42,35 @@ namespace ISHDeploy.Data.Actions.XmlFile
         private readonly BaseXMLElement _model;
 
         /// <summary>
+        /// Ban update and generate an exception.
+        /// </summary>
+        private readonly bool _banUpdateAndGenerateException;
+
+        /// <summary>
+        /// The error message.
+        /// </summary>
+        private readonly string _exceptionMessage;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SetElementAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
+        /// <param name="banUpdateAndGenerateException">Ban update and generate an exception. False by default.></param>
+        /// <param name="exceptionMessage">The error message.</param>
         public SetElementAction(ILogger logger,
             ISHFilePath filePath,
-            BaseXMLElement model) :
+            BaseXMLElement model, 
+            bool banUpdateAndGenerateException = false, 
+            string exceptionMessage = "") :
             base(logger, filePath)
         {
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _filePath = filePath;
             _model = model;
+            _banUpdateAndGenerateException = banUpdateAndGenerateException;
+            _exceptionMessage = exceptionMessage;
         }
 
         /// <summary>
@@ -64,7 +80,9 @@ namespace ISHDeploy.Data.Actions.XmlFile
         {
             _xmlConfigManager.InsertOrUpdateElement(
                 _filePath.AbsolutePath,
-                _model);
+                _model,
+                _banUpdateAndGenerateException,
+                _exceptionMessage);
         }
     }
 }

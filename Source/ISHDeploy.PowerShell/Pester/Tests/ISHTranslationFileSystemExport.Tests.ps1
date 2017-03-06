@@ -79,11 +79,9 @@ function remoteReadTargetXML() {
     
     #get variables and nodes from files
 
-
-   $global:NameFromFile = $result["Name"]  
-   $global:MaxJobSizeFromFile = $result["MaxJobSize"]
-   $global:ExportFolderFromFile = $result["ExportFolder"]
-
+    $global:NameFromFile = $result["Name"]  
+    $global:MaxJobSizeFromFile = $result["MaxJobSize"]
+    $global:ExportFolderFromFile = $result["ExportFolder"]
 }
 
 
@@ -97,15 +95,15 @@ Describe "Testing ISHTranslationFileSystemExport"{
         #Act
 
         $params = @{
-        Name=$Name;
-        MaximumJobSize=$MaxJobSize;
-        ExportFolder = $ExportFolder
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder
         }
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
         
         #Assert
-        remoteReadTargetXML
-        
+        remoteReadTargetXML        
 
         $NameFromFile | Should be $Name
         $MaxJobSizeFromFile | Should be $MaxJobSize
@@ -116,11 +114,11 @@ Describe "Testing ISHTranslationFileSystemExport"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         $params = @{
-        Name=$Name;
-        MaximumJobSize=$MaxJobSize;
-        ExportFolder = $ExportFolder
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder
         }
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
+        { Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params } | Should throw "TranslationOrganizer.exe.config already contains settings for FileSystem. You should remove FileSystem configuration section first. To do this you can use Remove-ISHTranslationFileSystemExport cmdlet."
 
         Rename-Item "$filepath\TranslationOrganizer.exe.config"  "_TranslationOrganizer.exe.config"
         New-Item "$filepath\TranslationOrganizer.exe.config" -type file |Out-Null
@@ -138,9 +136,9 @@ Describe "Testing ISHTranslationFileSystemExport"{
 
         #Act/Assert
         $params = @{
-        Name=$Name;
-        MaximumJobSize=$MaxJobSize;
-        ExportFolder = $ExportFolder
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder
         }
 
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Throw "Could not find file"
@@ -150,20 +148,19 @@ Describe "Testing ISHTranslationFileSystemExport"{
 
 	It "Remove ISHTranslationFileSystemExport"{       
         #Act
-
         $params = @{
-        Name=$Name;
-        MaximumJobSize=$MaxJobSize;
-        ExportFolder = $ExportFolder
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder
         }
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
-        
         remoteReadTargetXML
         $NameFromFile | Should be $Name
         $MaxJobSizeFromFile | Should be $MaxJobSize
         $ExportFolderFromFile | Should be $ExportFolder
 
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName
 		remoteReadTargetXML
 		#Assert
 		$NameFromFile | Should be $null
@@ -173,30 +170,20 @@ Describe "Testing ISHTranslationFileSystemExport"{
 
     It "Remove ISHTranslationFileSystemExport removes default"{       
         #Act
-
-
 		{Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
-
     }
 
     It "Remove ISHTranslationFileSystemExport with wrong XML"{
         #Arrange
-        # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
-        $params = @{
-        Name=$Name;
-        MaximumJobSize=$MaxJobSize;
-        ExportFolder = $ExportFolder
-        }
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
-
+        
         Rename-Item "$filepath\TranslationOrganizer.exe.config"  "_TranslationOrganizer.exe.config"
-        New-Item "$filepath\TranslationOrganizer.exe.config" -type file |Out-Null
+        #New-Item "$filepath\TranslationOrganizer.exe.config" -type file |Out-Null
         
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Root element is missing"
+        #{ Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Root element is missing"
         #Rollback
-        Remove-Item "$filepath\TranslationOrganizer.exe.config"
-        Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
+        #Remove-Item "$filepath\TranslationOrganizer.exe.config"
+        #Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
     }
 
     It "Remove ISHTranslationFileSystemExport with no XML"{

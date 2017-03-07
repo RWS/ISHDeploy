@@ -38,7 +38,8 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileSystemConfiguration">The FileSystem configuration.</param>
-        public SetISHTranslationFileSystemExportOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration) :
+        /// <param name="exceptionMessage">The error message.</param>
+        public SetISHTranslationFileSystemExportOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
@@ -47,7 +48,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                fileSystemConfiguration));
+                fileSystemConfiguration,
+                true,
+                exceptionMessage));
         }
 
         /// <summary>

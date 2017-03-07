@@ -16,10 +16,13 @@
 
 using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
@@ -48,21 +51,28 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, tmsConfiguration.RelativeFilePath);
 
-            _invoker.AddAction(new SetElementAction(
-                logger,
-                filePath,
-                tmsConfiguration,
-                true,
-                exceptionMessage));
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
-            foreach (var parameter in parameters)
+            if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, tmsConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.TmsNodeXPath))
             {
-                _invoker.AddAction(
-                    new SetAttributeValueAction(Logger,
-                    TranslationOrganizerConfigFilePath,
-                    $"{tmsConfiguration.XPath}/@{parameter.Key}",
-                    parameter.Value.ToString(),
-                    true));
+                _invoker.AddAction(new SetElementAction(
+                    logger,
+                    filePath,
+                    tmsConfiguration));
+
+                foreach (var parameter in parameters)
+                {
+                    _invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        TranslationOrganizerConfigFilePath,
+                        $"{tmsConfiguration.XPath}/@{parameter.Key}",
+                        parameter.Value.ToString(),
+                        true));
+                }
+            }
+            else
+            {
+                throw new DocumentAlreadyContainsElementException(exceptionMessage);
             }
         }
 

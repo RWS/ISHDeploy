@@ -242,7 +242,7 @@ $scriptBlockRenameItem = {
         [Parameter(Mandatory=$true)]
         $name
     )
-    Rename-Item $path, $name
+    Rename-Item $path $name
 }
 function RemoteRenameItem {
     param (
@@ -251,7 +251,7 @@ function RemoteRenameItem {
         [Parameter(Mandatory=$true)]
         $name
     ) 
-    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path $name
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRenameItem -Session $session -ArgumentList $path, $name
 }
 
 #retries command specified amount of times with 1 second delay between tries. Exits if command has expected response or tried to run specifeied amount of time
@@ -383,13 +383,14 @@ function ArtifactCleaner
 		[Parameter(Mandatory=$true)]
         $fileName
     ) 
+    
     if(RemotePathCheck "$filePath\_$fileName")
     {
         if (RemotePathCheck "$filePath\$fileName")
         {
             RemoteRemoveItem "$filePath\$fileName"
         }
-        RemoteRenameItem "$filePath\_$fileName" "$fileName"
+        RemoteRenameItem "$filePath\_$fileName" $fileName
     }
 }
 

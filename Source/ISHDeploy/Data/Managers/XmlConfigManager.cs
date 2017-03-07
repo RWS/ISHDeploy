@@ -602,7 +602,9 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void InsertOrUpdateElement(string filePath, BaseXMLElement model)
+        /// <param name="banUpdateAndGenerateException">Ban update and generate an exception. False by default.></param>
+        /// <param name="exceptionMessage">The error message.</param>
+        public void InsertOrUpdateElement(string filePath, BaseXMLElement model, bool banUpdateAndGenerateException = false, string exceptionMessage = "")
         {
             _logger.WriteDebug("Insert/Update UI element", filePath);
             var doc = _fileManager.Load(filePath);
@@ -652,6 +654,18 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
+                if (banUpdateAndGenerateException)
+                {
+                    if (!string.IsNullOrWhiteSpace(exceptionMessage))
+                    {
+                        throw new DocumentAlreadyContainsElementException(exceptionMessage);
+                    }
+                    else
+                    {
+                        throw new DocumentAlreadyContainsElementException(filePath, model.XPath);
+                    }
+                }
+
                 _logger.WriteDebug("Update UI element", model.XPath, filePath);
                 found.ReplaceWith(element);
 

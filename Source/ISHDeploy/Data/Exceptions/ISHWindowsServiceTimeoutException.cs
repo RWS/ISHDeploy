@@ -25,7 +25,7 @@ namespace ISHDeploy.Data.Exceptions
     public class ISHWindowsServiceTimeoutException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WrongXPathException"/> class.
+        /// Initializes a new instance of the <see cref="ISHWindowsServiceTimeoutException"/> class.
         /// </summary>
         /// <param name="serviceName">The ISH windows service name.</param>
         /// <param name="innerException">The inner exception.</param>

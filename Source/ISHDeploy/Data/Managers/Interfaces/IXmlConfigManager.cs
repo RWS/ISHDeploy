@@ -144,7 +144,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        void InsertOrUpdateElement(string filePath, BaseXMLElement model);
+        /// <param name="banUpdateAndGenerateException">Ban update and generate an exception. False by default.></param>
+        /// <param name="exceptionMessage">The error message.</param>
+        void InsertOrUpdateElement(string filePath, BaseXMLElement model, bool banUpdateAndGenerateException = false, string exceptionMessage = "");
 
         /// <summary>
         /// Removes the element of UI.

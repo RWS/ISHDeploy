@@ -29,6 +29,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">New-ISHIntegrationTMSMapping</para>
     /// <para type="link">New-ISHIntegrationTMSTemplate</para>
     /// <para type="link">New-ISHFieldMetadata</para>
+    /// <para type="link">Remove-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHIntegrationTMS -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping -Templates $templates</code>
@@ -194,7 +195,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Logger, 
                 ISHDeployment, 
                 tmsConfiguration,
-                parameters);
+                parameters,
+                "TranslationOrganizer.exe.config already contains settings for TMS server. You should remove TMS configuration section first. To do this you can use Remove-ISHIntegrationTMS cmdlet.");
 
             operation.Run();
         }

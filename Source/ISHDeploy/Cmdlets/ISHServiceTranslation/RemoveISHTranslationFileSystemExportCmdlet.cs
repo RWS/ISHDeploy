@@ -25,7 +25,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 	///		<para type="link">Set-ISHTranslationFileSystemExport</para>
 	/// </summary>
 	/// <example>
-	///		<code>PS C:\>Remove-ISHTranslationFileSystemExport  -ISHDeployment $deployment</code>
+	///		<code>PS C:\>Remove-ISHTranslationFileSystemExport -ISHDeployment $deployment</code>
 	///		<para>Removes TMS Instance from Translation Organizer.
 	/// This command removes TMS Instance from Translation Organizer.
 	/// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.

@@ -41,7 +41,8 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="tmsConfiguration">The TMS configuration.</param>
         /// <param name="parameters">The parameters.</param>
-        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, Dictionary<TmsConfigurationSetting, object> parameters) :
+        /// <param name="exceptionMessage">The error message.</param>
+        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, Dictionary<TmsConfigurationSetting, object> parameters, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
@@ -50,7 +51,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker.AddAction(new SetElementAction(
                 logger,
                 filePath,
-                tmsConfiguration));
+                tmsConfiguration,
+                true,
+                exceptionMessage));
 
             foreach (var parameter in parameters)
             {

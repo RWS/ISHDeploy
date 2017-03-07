@@ -900,7 +900,6 @@ namespace ISHDeploy.Data.Managers
             }
         }
 
-
         /// <summary>
         /// Serializes object to special file.
         /// </summary>
@@ -932,6 +931,21 @@ namespace ISHDeploy.Data.Managers
             {
                 return (T)ser.Deserialize(reader);
             }
+        }
+
+        /// <summary>
+        /// Does single node exist
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// True if node exists.
+        /// </returns>
+        public bool DoesSingleNodeExist(string filePath, string xPath)
+        {
+            var doc = _fileManager.Load(filePath);
+            var node = SelectNodes(ref doc, xPath).SingleOrDefault();
+            return node != null;
         }
 
         #region private methods

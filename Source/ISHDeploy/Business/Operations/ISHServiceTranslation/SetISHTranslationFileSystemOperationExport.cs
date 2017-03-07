@@ -15,9 +15,12 @@
  */
 
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Exceptions;
+using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
@@ -45,12 +48,21 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, fileSystemConfiguration.RelativeFilePath);
 
-            _invoker.AddAction(new SetElementAction(
-                logger,
-                filePath,
-                fileSystemConfiguration,
-                true,
-                exceptionMessage));
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+
+            if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, fileSystemConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.FileSystemNodeXPath))
+            {
+                _invoker.AddAction(new SetElementAction(
+                    logger,
+                    filePath,
+                    fileSystemConfiguration,
+                    true,
+                    exceptionMessage));
+            }
+            else
+            {
+                throw new DocumentAlreadyContainsElementException(exceptionMessage);
+            }
         }
 
         /// <summary>

@@ -69,7 +69,7 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             XPathToParentElement = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances";
             NameOfItem = "add";
 
-            XPathFormat = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add";
+            XPathFormat = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add[@alias='{0}']";
             XPath = string.Format(XPathFormat, alias);
         }
     }

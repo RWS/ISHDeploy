@@ -205,5 +205,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
         void SerializeToFile<T>(string filePath, T data);
+
+        /// <summary>
+        /// Does single node exist
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// True if node exists.
+        /// </returns>
+        bool DoesSingleNodeExist(string filePath, string xPath);
     }
 }

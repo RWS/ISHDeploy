@@ -92,48 +92,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public TmsTemplate[] Templates { get; set; }
 
         /// <summary>
-        /// <para type="description">The destination port number.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The destination port number.")]
-        public int DestinationPortNumber { get; set; }
-
-        /// <summary>
-        /// <para type="description">The location of Isapi filter.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The location of Isapi filter.")]
-        public string IsapiFilterLocation { get; set; }
-
-        /// <summary>
-        /// <para type="description">Use compression</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Use compression")]
-        public bool UseCompression { get; set; }
-
-        /// <summary>
-        /// <para type="description">Use SSL.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Use SSL.")]
-        public bool UseSsl { get; set; }
-
-        /// <summary>
-        /// <para type="description">Use default proxy credentials.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Use default proxy credentials.")]
-        public bool UseDefaultProxyCredentials { get; set; }
-
-        /// <summary>
-        /// <para type="description">The proxy server.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The proxy server.")]
-        public string ProxyServer { get; set; }
-
-        /// <summary>
-        /// <para type="description">The port number of proxy server.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The port number of proxy server.")]
-        public int ProxyPort { get; set; }
-
-        /// <summary>
         /// <para type="description">The requested metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The requested metadata.")]
@@ -163,34 +121,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 GroupingMetadata);
 
             var parameters = new Dictionary<TmsConfigurationSetting, object>();
-            foreach (var cmdletParameter in MyInvocation.BoundParameters)
-            {
-                switch (cmdletParameter.Key)
-                {
-                    case "DestinationPortNumber":
-                        parameters.Add(TmsConfigurationSetting.destinationPortNumber, DestinationPortNumber);
-                        break;
-                    case "IsapiFilterLocation":
-                        parameters.Add(TmsConfigurationSetting.isapiFilterLocation, IsapiFilterLocation);
-                        break;
-                    case "UseCompression":
-                        parameters.Add(TmsConfigurationSetting.useCompression, UseCompression);
-                        break;
-                    case "UseSsl":
-                        parameters.Add(TmsConfigurationSetting.useSsl, UseSsl);
-                        break;
-                    case "UseDefaultProxyCredentials":
-                        parameters.Add(TmsConfigurationSetting.useDefaultProxyCredentials, UseDefaultProxyCredentials);
-                        break;
-                    case "ProxyServer":
-                        parameters.Add(TmsConfigurationSetting.proxyServer, ProxyServer);
-                        break;
-                    case "ProxyPort":
-                        parameters.Add(TmsConfigurationSetting.proxyPort, ProxyPort);
-                        break;
-                }
-            }
-
             var operation = new SetISHIntegrationTmsOperation(
                 Logger, 
                 ISHDeployment, 

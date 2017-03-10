@@ -82,7 +82,6 @@ $scriptBlockRemoveISHIntegrationTMS = {
 
 }
 
-
 #endregion
 
 
@@ -167,12 +166,94 @@ function remoteReadTargetXML() {
    $global:GroupingIshvaluetypeFromFile = $result["GroupingIshvaluetype"]
 
 }
+$scriptBlockReadArrays = {
+    param(
 
+        $filePath
+        
+    )
+    #read all files that are touched with commandlet
+    
+    [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
+    $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
+    
+    $result =  @{}
+    #get variables and nodes from files
+
+    $result["MappingsCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").Count
+
+    $result["TemplateCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").Count
+
+    $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").Count
+
+    $result["GroupingMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").Count
+
+    return $result
+}
+function remoteReadReadArrays() {
+
+    #read all files that are touched with commandlet
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadArrays -Session $session -ArgumentList $filePath
+    
+    #get variables and nodes from files
+
+    $global:MappingsCount = $result["MappingsCount"]  
+    $global:TemplateCount = $result["TemplateCount"]  
+    $global:RequestedMetadataCount = $result["RequestedMetadataCount"]
+    $global:GroupingMetadataCount = $result["GroupingMetadataCount"]  
+}
 
 Describe "Testing ISHIntegrationTMS"{
     BeforeEach {
         ArtifactCleaner -filePath $filePath -fileName "TranslationOrganizer.exe.config"
         UndoDeploymentBackToVanila $testingDeploymentName $true
+    }
+
+    It "Set ISHIntegrationTMS with tricky arrays"{       
+        #Act
+        $scriptBlockTrickyArrays = {
+            param (
+                $ishDeployName
+
+            )
+            if($PSSenderInfo) {
+                $DebugPreference=$Using:DebugPreference
+                $VerbosePreference=$Using:VerbosePreference 
+            }
+
+            $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+            $credential = New-Object System.Management.Automation.PSCredential("SomeUserName", (ConvertTo-SecureString "SomePass" -AsPlainText -Force))
+            $mappings = @((New-ISHIntegrationTMSMapping -ISHLanguage en -TmsLanguage "en-GB"), (New-ISHIntegrationTMSMapping -ISHLanguage us -TmsLanguage "en-US"), (New-ISHIntegrationTMSMapping -ISHLanguage ua -TmsLanguage "ua-UA"))
+
+            $templates=@(
+                New-ISHIntegrationTMSTemplate -Name "Template1" -TemplateId "81143C38-0C96-4A8C-9BBB-87C1CF464FE3"
+                New-ISHIntegrationTMSTemplate -Name "Template2" -TemplateId "70407FBC-86FA-4A9D-8E6D-35E1AE85DB73"
+            )
+
+            $requestMetadata=@(
+                New-ISHFieldMetadata -Name FAUTHOR -Level lng -ValueType value
+                New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
+            )
+
+            # Create an array of group metadata
+
+            $groupMetadata=@(
+                New-ISHFieldMetadata -Name FAUTHOR -Level lng -ValueType value
+                New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
+            )
+
+            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestedMetadata $requestMetadata -GroupingMetadata $groupMetadata
+        }
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTrickyArrays -Session $session -ArgumentList $testingDeploymentName
+        
+        #Assert
+        remoteReadReadArrays
+
+        $MappingsCount | Should be 3
+        $TemplateCount | Should be 2
+        $RequestedMetadataCount| Should be 2
+        $GroupingMetadataCount | Should be 2
     }
 
     It "Set ISHIntegrationTMS with all parameters"{       
@@ -232,7 +313,7 @@ Describe "Testing ISHIntegrationTMS"{
     }
     
  
-   It "Set ISHIntegrationTMS with wrong XML"{
+    It "Set ISHIntegrationTMS with wrong XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         $params = @{

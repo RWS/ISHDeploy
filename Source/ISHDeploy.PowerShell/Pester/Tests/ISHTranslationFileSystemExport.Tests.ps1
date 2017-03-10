@@ -14,6 +14,13 @@ $filePath = Join-Path $filePath "TranslationOrganizer\Bin"
 $Name = "testName"
 $MaxJobSize = 250
 $ExportFolder = "c:\testExportFolder"
+$requestedMetadataFieldName = "testRequestedMetadataName"
+$requestedMetadataFieldLevel = "logical"
+$requestedMetadataFieldValueType = "value"
+$requestedMetadataParameters = @{Name =$requestedMetadataFieldName; Level=$requestedMetadataFieldLevel; ValueType=$requestedMetadataFieldValueType} 
+$requestedMetadataParameters2 =  @{Name ="$requestedMetadataFieldName 2"; Level="lng"; ValueType="id"} 
+$requestedMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters
+$requestedMetadata2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $requestedMetadataParameters2
 #endregion
 
 #region Script Blocks
@@ -69,6 +76,10 @@ $scriptBlockReadTargetXML = {
     $result["Name"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add").alias
     $result["MaxJobSize"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add").externalJobMaxTotalUncompressedSizeBytes
     $result["ExportFolder"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add").exportFolder
+    
+    $result["RequestedName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add/requestedMetadata/ishfields/ishfield").name
+    $result["RequestedLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add/requestedMetadata/ishfields/ishfield").level
+    $result["RequestedIshvaluetype"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add/requestedMetadata/ishfields/ishfield").ishvaluetype
 
     return $result
 }
@@ -82,8 +93,36 @@ function remoteReadTargetXML() {
     $global:NameFromFile = $result["Name"]  
     $global:MaxJobSizeFromFile = $result["MaxJobSize"]
     $global:ExportFolderFromFile = $result["ExportFolder"]
-}
 
+    $global:RequestedNameFromFile = $result["RequestedName"]
+    $global:RequestedLevelFromFile = $result["RequestedLevel"]
+    $global:RequestedIshvaluetypeFromFile = $result["RequestedIshvaluetype"]
+}
+function remoteReadReadArrays() {
+    $scriptBlockReadArrays = {
+        param(
+            $filePath
+        )
+        #read all files that are touched with commandlet
+    
+        [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
+        $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
+    
+        $result =  @{}
+        #get variables and nodes from files
+
+        $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add/requestedMetadata/ishfields/ishfield").Count
+
+        return $result
+    }
+
+    #read all files that are touched with commandlet
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadArrays -Session $session -ArgumentList $filePath
+    
+    #get variables and nodes from files
+
+    $global:RequestedMetadataCount = $result["RequestedMetadataCount"]
+}
 
 Describe "Testing ISHTranslationFileSystemExport"{
     BeforeEach {
@@ -97,7 +136,8 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
-            ExportFolder = $ExportFolder
+            ExportFolder = $ExportFolder;
+            RequestedMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -108,6 +148,9 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $NameFromFile | Should be $Name
         $MaxJobSizeFromFile | Should be $MaxJobSize
         $ExportFolderFromFile | Should be $ExportFolder
+        $RequestedNameFromFile | Should be $requestedMetadataFieldName
+        $RequestedLevelFromFile | Should be $requestedMetadataFieldLevel
+        $RequestedIshvaluetypeFromFile | Should be $requestedMetadataFieldValueType
     }
    
    It "Set ISHTranslationFileSystemExport with wrong XML"{
@@ -116,7 +159,8 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
-            ExportFolder = $ExportFolder
+            ExportFolder = $ExportFolder;
+            RequestedMetadata = $requestedMetadata
         }
         { Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params } | Should throw "TranslationOrganizer.exe.config already contains settings for FileSystem. You should remove FileSystem configuration section first. To do this you can use Remove-ISHTranslationFileSystemExport cmdlet."
 
@@ -138,7 +182,8 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
-            ExportFolder = $ExportFolder
+            ExportFolder = $ExportFolder;
+            RequestedMetadata = $requestedMetadata
         }
 
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Throw "Could not find file"
@@ -151,7 +196,8 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
-            ExportFolder = $ExportFolder
+            ExportFolder = $ExportFolder;
+            RequestedMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -194,6 +240,23 @@ Describe "Testing ISHTranslationFileSystemExport"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
         Rename-Item "$filepath\_TranslationOrganizer.exe.config" "TranslationOrganizer.exe.config"
+    }
+    
+	It "Set ISHTranslationFileSystemExport sets multiple metadata"{
+		#Arrange
+        $params = @{
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder;
+            RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
+        }
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Not Throw
+        
+        #Assert
+        remoteReadReadArrays
+        $RequestedMetadataCount| Should be 2
     }
     <#
     It "Set ISHTranslationFileSystemExport writes proper history"{        

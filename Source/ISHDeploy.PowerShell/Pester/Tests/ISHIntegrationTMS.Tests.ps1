@@ -145,31 +145,30 @@ function remoteReadTargetXML() {
    $global:GroupingIshvaluetypeFromFile = $result["GroupingIshvaluetype"]
 
 }
-$scriptBlockReadArrays = {
-    param(
 
-        $filePath
-        
-    )
-    #read all files that are touched with commandlet
-    
-    [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
-    $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
-    
-    $result =  @{}
-    #get variables and nodes from files
-
-    $result["MappingsCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").Count
-
-    $result["TemplateCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").Count
-
-    $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").Count
-
-    $result["GroupingMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").Count
-
-    return $result
-}
 function remoteReadReadArrays() {
+    $scriptBlockReadArrays = {
+        param(
+            $filePath
+        )
+        #read all files that are touched with commandlet
+    
+        [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
+        $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
+    
+        $result =  @{}
+        #get variables and nodes from files
+
+        $result["MappingsCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").Count
+
+        $result["TemplateCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").Count
+
+        $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").Count
+
+        $result["GroupingMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").Count
+
+        return $result
+    }
 
     #read all files that are touched with commandlet
     $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadArrays -Session $session -ArgumentList $filePath
@@ -415,8 +414,12 @@ Describe "Testing ISHIntegrationTMS"{
             RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
             GroupingMetadata = $groupingMetadata 
         }
-        #Act/Assert
+        #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Not Throw
+        
+        #Assert
+        remoteReadReadArrays
+        $RequestedMetadataCount| Should be 2
     }
     <#
     It "Set ISHIntegrationTMS writes proper history"{        

@@ -47,6 +47,12 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         public string ExportFolderPath { get; set; }
 
         /// <summary>
+        /// The requested metadata
+        /// </summary>
+        [XmlElement("requestedMetadata", Namespace = "")]
+        public ISHMetadata RequestedMetadata { get; set; }
+
+        /// <summary>
         /// Prevents a default instance of the <see cref="FileSystemConfigurationSection"/> class from being created.
         /// </summary>
         private FileSystemConfigurationSection()
@@ -59,11 +65,17 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <param name="alias">The alias of WorldServer</param>
         /// <param name="externalJobMaxTotalUncompressedSizeBytes">The max value of total size in bytes of uncompressed external job</param>
         /// <param name="exportFolderPath">The path to export folder</param>
-        public FileSystemConfigurationSection(string alias, int externalJobMaxTotalUncompressedSizeBytes, string exportFolderPath)
+        /// <param name="requestedMetadata">The port number of proxy server</param>
+        public FileSystemConfigurationSection(string alias, int externalJobMaxTotalUncompressedSizeBytes, string exportFolderPath, ISHFieldMetadata[] requestedMetadata = null)
         {
             Alias = alias;
             ExternalJobMaxTotalUncompressedSizeBytes = externalJobMaxTotalUncompressedSizeBytes;
             ExportFolderPath = exportFolderPath;
+
+            if (requestedMetadata != null)
+            {
+                RequestedMetadata = new ISHMetadata { Metadata = requestedMetadata };
+            }
 
             RelativeFilePath = @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config";
             XPathToParentElement = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances";

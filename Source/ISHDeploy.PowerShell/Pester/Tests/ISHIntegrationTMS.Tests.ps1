@@ -40,13 +40,6 @@ $groupingMetadataFieldLevel = "version"
 $groupingMetadataFieldValueType = "element"
 $groupingMetadataParameters = @{Name =$groupingMetadataFieldName; Level=$groupingMetadataFieldLevel; ValueType=$groupingMetadataFieldValueType} 
 $groupingMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $groupingMetadataParameters
-$DestinationPortNumber = 445
-$IsapiFilterLocation = "testLocation"
-$UseCompression = $true
-$UseSsl = $true
-$UseDefaultProxyCredentials = $true
-$ProxyServer = "testserver"
-$ProxyPort = 450
 
 #endregion
 
@@ -105,13 +98,6 @@ $scriptBlockReadTargetXML = {
     $result["Password"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").password
     $result["RetriesOnTimeout"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").retriesOnTimeout 
     $result["MaxJobSize"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").externalJobMaxTotalUncompressedSizeBytes
-    $result["DestinationPortNumber"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").destinationPortNumber
-    $result["IsapiFilterLocation"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").isapiFilterLocation
-    $result["UseCompression"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").useCompression
-    $result["UseSsl"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").useSsl
-    $result["UseDefaultProxyCredentials"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").useDefaultProxyCredentials
-    $result["ProxyServer"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").proxyServer
-    $result["ProxyPort"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").proxyPort
 
     $result["TrisoftLanguage"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").trisoftLanguage
     $result["tmsLocaleId"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").tmsLanguage
@@ -143,13 +129,6 @@ function remoteReadTargetXML() {
    $global:PasswordFromFile = $result["Password"]  
    $global:RetriesOnTimeutFromFile = $result["RetriesOnTimeout"] 
    $global:MaxJobSizeFromFile = $result["MaxJobSize"]
-   $global:DestinationPortNumberFromFile =$result["DestinationPortNumber"] 
-   $global:IsapiFilterLocationFromFile = $result["IsapiFilterLocation"]
-   $global:UseCompressionFromFile = $result["UseCompression"]
-   $global:UseSslFromFile = $result["UseSsl"]
-   $global:UseDefaultProxyCredentialsFromFile = $result["UseDefaultProxyCredentials"]
-   $global:ProxyServerFromFile = $result["ProxyServer"] 
-   $global:ProxyPortFromFile = $result["ProxyPort"]
 
    $global:TrisoftLanguageFromFile = $result["TrisoftLanguage"] 
    $global:TMSLocaleIDFromFile = $result["TMSLocaleId"]
@@ -260,22 +239,15 @@ Describe "Testing ISHIntegrationTMS"{
         #Act
 
         $params = @{
-        Name=$Name;
-        Uri=$Uri;
-        Credential=$Credential;
-        MaximumJobSize=$MaxJobSize;
-        RetriesOnTimeout=$RetriesOnTimeout;
-        Mapping=$Mapping;
-        Templates = $Template;
-        DestinationPortNumber =$DestinationPortNumber;
-        IsapiFilterLocation = $IsapiFilterLocation;
-        UseCompression = $UseCompression;
-        UseSsl =$UseSsl;
-        UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-        ProxyServer = $ProxyServer;
-        ProxyPort = $ProxyPort;
-        RequestedMetadata = $requestedMetadata;
-        GroupingMetadata = $groupingMetadata 
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -289,13 +261,6 @@ Describe "Testing ISHIntegrationTMS"{
         $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize
-        $DestinationPortNumberFromFile | Should be $DestinationPortNumber
-        $IsapiFilterLocationFromFile | Should be $IsapiFilterLocation
-        $UseCompressionFromFile | Should be $UseCompression
-        $UseSslFromFile | Should be $UseSsl
-        $UseDefaultProxyCredentialsFromFile | Should be $UseDefaultProxyCredentials
-        $ProxyServerFromFile | Should be $ProxyServer
-        $ProxyPortFromFile | Should be $ProxyPort
 
         $TrisoftLanguageFromFile | Should be $TrisoftLanguage 
         $TMSLocaleIDFromFile | Should be $TMSLocaleId
@@ -324,13 +289,6 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            DestinationPortNumber =$DestinationPortNumber;
-            IsapiFilterLocation = $IsapiFilterLocation;
-            UseCompression = $UseCompression;
-            UseSsl =$UseSsl;
-            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-            ProxyServer = $ProxyServer;
-            ProxyPort = $ProxyPort;
             RequestedMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
@@ -359,13 +317,6 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            DestinationPortNumber =$DestinationPortNumber;
-            IsapiFilterLocation = $IsapiFilterLocation;
-            UseCompression = $UseCompression;
-            UseSsl =$UseSsl;
-            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-            ProxyServer = $ProxyServer;
-            ProxyPort = $ProxyPort;
             RequestedMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
@@ -386,13 +337,6 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            DestinationPortNumber =$DestinationPortNumber;
-            IsapiFilterLocation = $IsapiFilterLocation;
-            UseCompression = $UseCompression;
-            UseSsl =$UseSsl;
-            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-            ProxyServer = $ProxyServer;
-            ProxyPort = $ProxyPort;
             RequestedMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
@@ -432,13 +376,6 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            DestinationPortNumber =$DestinationPortNumber;
-            IsapiFilterLocation = $IsapiFilterLocation;
-            UseCompression = $UseCompression;
-            UseSsl =$UseSsl;
-            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-            ProxyServer = $ProxyServer;
-            ProxyPort = $ProxyPort;
             RequestedMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
@@ -475,13 +412,6 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            DestinationPortNumber =$DestinationPortNumber;
-            IsapiFilterLocation = $IsapiFilterLocation;
-            UseCompression = $UseCompression;
-            UseSsl =$UseSsl;
-            UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
-            ProxyServer = $ProxyServer;
-            ProxyPort = $ProxyPort;
             RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
             GroupingMetadata = $groupingMetadata 
         }

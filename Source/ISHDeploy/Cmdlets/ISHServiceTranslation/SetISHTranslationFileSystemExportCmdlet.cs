@@ -51,9 +51,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <summary>
         /// <para type="description">The max value of total size in bytes of uncompressed external job.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The max value of total size in bytes of uncompressed external job")]
-        [ValidateNotNullOrEmpty]
-        public int MaximumJobSize { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The max value of total size in bytes of uncompressed external job")]
+        public int MaximumJobSize { get; set; } = 5242880;
 
         /// <summary>
         /// <para type="description">The requested metadata.</para>
@@ -76,6 +75,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Logger, 
                 ISHDeployment,
                 configuration,
+                MyInvocation.BoundParameters.ContainsKey("MaximumJobSize"),
                 "TranslationOrganizer.exe.config already contains settings for FileSystem. You should remove FileSystem configuration section first. To do this you can use Remove-ISHTranslationFileSystemExport cmdlet.");
 
             operation.Run();

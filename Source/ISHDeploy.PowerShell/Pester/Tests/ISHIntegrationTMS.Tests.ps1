@@ -275,7 +275,114 @@ Describe "Testing ISHIntegrationTMS"{
         $GroupingLevelFromFile | Should be $groupingMetadataFieldLevel
         $GroupingIshvaluetypeFromFile | Should be $groupingMetadataFieldValueType
     }
-    
+
+    It "Set ISHIntegrationTMS with default MaximumJobSize"{       
+        #Act
+
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be 5242880
+    }
+
+    It "Set ISHIntegrationTMS with do not update MaximumJobSize if it is not specified"{       
+        #Act
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be $MaxJobSize
+    }
+
+    It "Set ISHIntegrationTMS with default RetriesOnTimeout"{       
+        #Act
+
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $RetriesOnTimeutFromFile | Should be 3 
+    }
+
+    It "Set ISHIntegrationTMS with do not update RetriesOnTimeout if it is not specified"{       
+        #Act
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            Mapping=$Mapping;
+            Templates = $Template;
+            RequestedMetadata = $requestedMetadata;
+            GroupingMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
+    }
  
     It "Set ISHIntegrationTMS with wrong XML"{
         #Arrange

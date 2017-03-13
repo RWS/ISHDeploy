@@ -56,6 +56,12 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int MaximumJobSize { get; set; }
 
         /// <summary>
+        /// <para type="description">The requested metadata.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The requested metadata.")]
+        public ISHFieldMetadata[] RequestMetadata { get; set; }
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -63,7 +69,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             var configuration = new FileSystemConfigurationSection(
                 Name,
                 MaximumJobSize,
-                ExportFolderPath);
+                ExportFolderPath,
+                RequestMetadata);
 
             var operation = new SetISHTranslationFileSystemExportOperation(
                 Logger, 

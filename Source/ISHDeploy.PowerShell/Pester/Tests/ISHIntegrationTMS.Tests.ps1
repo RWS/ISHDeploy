@@ -145,31 +145,30 @@ function remoteReadTargetXML() {
    $global:GroupingIshvaluetypeFromFile = $result["GroupingIshvaluetype"]
 
 }
-$scriptBlockReadArrays = {
-    param(
 
-        $filePath
-        
-    )
-    #read all files that are touched with commandlet
-    
-    [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
-    $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
-    
-    $result =  @{}
-    #get variables and nodes from files
-
-    $result["MappingsCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").Count
-
-    $result["TemplateCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").Count
-
-    $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").Count
-
-    $result["GroupingMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").Count
-
-    return $result
-}
 function remoteReadReadArrays() {
+    $scriptBlockReadArrays = {
+        param(
+            $filePath
+        )
+        #read all files that are touched with commandlet
+    
+        [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
+        $OrganizerConfig.load("$filePath\TranslationOrganizer.exe.config")
+    
+        $result =  @{}
+        #get variables and nodes from files
+
+        $result["MappingsCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/mappings/add").Count
+
+        $result["TemplateCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").Count
+
+        $result["RequestedMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").Count
+
+        $result["GroupingMetadataCount"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/groupingMetadata/ishfields/ishfield").Count
+
+        return $result
+    }
 
     #read all files that are touched with commandlet
     $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadArrays -Session $session -ArgumentList $filePath
@@ -221,7 +220,7 @@ Describe "Testing ISHIntegrationTMS"{
                 New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
             )
 
-            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestedMetadata $requestMetadata -GroupingMetadata $groupMetadata
+            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupingMetadata $groupMetadata
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTrickyArrays -Session $session -ArgumentList $testingDeploymentName
@@ -246,7 +245,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -289,7 +288,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -317,7 +316,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
 
@@ -337,7 +336,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -376,7 +375,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -412,11 +411,15 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
+            RequestMetadata = @($requestedMetadata, $requestedMetadata2);
             GroupingMetadata = $groupingMetadata 
         }
-        #Act/Assert
+        #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Not Throw
+        
+        #Assert
+        remoteReadReadArrays
+        $RequestedMetadataCount| Should be 2
     }
     <#
     It "Set ISHIntegrationTMS writes proper history"{        
@@ -436,7 +439,7 @@ Describe "Testing ISHIntegrationTMS"{
             UseDefaultProxyCredentials = $UseDefaultProxyCredentials;
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         

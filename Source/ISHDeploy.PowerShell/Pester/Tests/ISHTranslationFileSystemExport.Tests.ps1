@@ -137,7 +137,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -202,7 +202,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
         { Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params } | Should throw "TranslationOrganizer.exe.config already contains settings for FileSystem. You should remove FileSystem configuration section first. To do this you can use Remove-ISHTranslationFileSystemExport cmdlet."
 
@@ -225,7 +225,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
 
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Throw "Could not find file"
@@ -239,7 +239,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -290,7 +290,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = @($requestedMetadata, $requestedMetadata2);
+            RequestMetadata = @($requestedMetadata, $requestedMetadata2);
         }
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName

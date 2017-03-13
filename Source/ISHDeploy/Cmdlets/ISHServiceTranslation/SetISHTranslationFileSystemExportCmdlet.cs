@@ -59,7 +59,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <para type="description">The requested metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The requested metadata.")]
-        public ISHFieldMetadata[] RequestedMetadata { get; set; }
+        public ISHFieldMetadata[] RequestMetadata { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -70,7 +70,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Name,
                 MaximumJobSize,
                 ExportFolderPath,
-                RequestedMetadata);
+                RequestMetadata);
 
             var operation = new SetISHTranslationFileSystemExportOperation(
                 Logger, 

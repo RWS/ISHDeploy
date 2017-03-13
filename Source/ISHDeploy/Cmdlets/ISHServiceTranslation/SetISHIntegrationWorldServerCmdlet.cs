@@ -72,7 +72,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The number of retries on timeout.")]
         [ValidateRange(1, 30)]
-        public int RetriesOnTimeout { get; set; }
+        public int RetriesOnTimeout { get; set; } = 3;
         
         /// <summary>
         /// <para type="description">The HTTP timeout (Used for REST client only).</para>

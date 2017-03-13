@@ -159,7 +159,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -177,7 +177,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
             Name=$Name;
             MaximumJobSize=$MaxJobSize;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
@@ -185,7 +185,7 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $params = @{
             Name=$Name;
             ExportFolder = $ExportFolder;
-            RequestedMetadata = $requestedMetadata
+            RequestMetadata = $requestedMetadata
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
         

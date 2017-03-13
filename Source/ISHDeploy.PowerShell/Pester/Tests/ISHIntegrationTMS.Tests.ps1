@@ -286,7 +286,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -307,7 +307,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -319,7 +319,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -340,7 +340,7 @@ Describe "Testing ISHIntegrationTMS"{
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -361,7 +361,7 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
@@ -373,7 +373,7 @@ Describe "Testing ISHIntegrationTMS"{
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
-            RequestedMetadata = $requestedMetadata;
+            RequestMetadata = $requestedMetadata;
             GroupingMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params

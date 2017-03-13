@@ -17,8 +17,10 @@
 using System;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.TranslationOrganizer;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -42,8 +44,10 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="worldServerConfiguration">The world server configuration.</param>
+        /// <param name="isExternalJobMaxTotalUncompressedSizeBytesSpecified">Is ExternalJobMaxTotalUncompressedSizeBytes specified.</param>
+        /// <param name="isRetriesOnTimeoutSpecified">Is RetriesOnTimeout specified.</param>
         /// <param name="exceptionMessage">The error message.</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, string exceptionMessage) :
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
@@ -53,6 +57,31 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.WorldServerNodeXPath))
             {
+                if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath)
+                    && (!isExternalJobMaxTotalUncompressedSizeBytesSpecified
+                        || !isRetriesOnTimeoutSpecified))
+                {
+                    if (!isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                    {
+                        int currentExternalJobMaxTotalUncompressedSizeBytes =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.externalJobMaxTotalUncompressedSizeBytes}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).ExternalJobMaxTotalUncompressedSizeBytes =
+                            currentExternalJobMaxTotalUncompressedSizeBytes;
+                    }
+
+                    if (!isRetriesOnTimeoutSpecified)
+                    {
+                        int currentRetriesOnTimeout =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.retriesOnTimeout}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).RetriesOnTimeout =
+                            currentRetriesOnTimeout;
+                    }
+                }
+
                 _invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,
@@ -70,9 +99,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="worldServerConfiguration">The world server configuration.</param>
+        /// <param name="isExternalJobMaxTotalUncompressedSizeBytesSpecified">Is ExternalJobMaxTotalUncompressedSizeBytes specified.</param>
+        /// <param name="isRetriesOnTimeoutSpecified">Is RetriesOnTimeout specified.</param>
         /// <param name="httpTimeout">The HTTP timeout (Used for REST client only).</param>
         /// <param name="exceptionMessage">The error message.</param>
-        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, TimeSpan httpTimeout, string exceptionMessage) :
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, TimeSpan httpTimeout, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
@@ -82,6 +113,31 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.WorldServerNodeXPath))
             {
+                if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath)
+                    && (!isExternalJobMaxTotalUncompressedSizeBytesSpecified
+                        || !isRetriesOnTimeoutSpecified))
+                {
+                    if (!isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                    {
+                        int currentExternalJobMaxTotalUncompressedSizeBytes =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.externalJobMaxTotalUncompressedSizeBytes}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).ExternalJobMaxTotalUncompressedSizeBytes =
+                            currentExternalJobMaxTotalUncompressedSizeBytes;
+                    }
+
+                    if (!isRetriesOnTimeoutSpecified)
+                    {
+                        int currentRetriesOnTimeout =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.retriesOnTimeout}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).RetriesOnTimeout =
+                            currentRetriesOnTimeout;
+                    }
+                }
+
                 _invoker.AddAction(new SetElementAction(
                    logger,
                    filePath,

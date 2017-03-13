@@ -95,7 +95,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <para type="description">The requested metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The requested metadata.")]
-        public ISHFieldMetadata[] RequestedMetadata { get; set; }
+        public ISHFieldMetadata[] RequestMetadata { get; set; }
 
         /// <summary>
         /// <para type="description">The grouping metadata.</para>
@@ -117,7 +117,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 RetriesOnTimeout,
                 Mappings,
                 Templates,
-                RequestedMetadata,
+                RequestMetadata,
                 GroupingMetadata);
 
             var parameters = new Dictionary<TmsConfigurationSetting, object>();

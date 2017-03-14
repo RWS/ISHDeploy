@@ -99,7 +99,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <para type="description">The grouping metadata.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The grouping metadata.")]
-        public ISHFieldMetadata[] GroupingMetadata { get; set; }
+        public ISHFieldMetadata[] GroupMetadata { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -116,7 +116,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Mappings,
                 Templates,
                 RequestMetadata,
-                GroupingMetadata);
+                GroupMetadata);
 
             var parameters = new Dictionary<TmsConfigurationSetting, object>();
             var operation = new SetISHIntegrationTmsOperation(

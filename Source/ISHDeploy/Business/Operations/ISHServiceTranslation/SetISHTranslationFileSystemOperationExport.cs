@@ -16,8 +16,10 @@
 
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.TranslationOrganizer;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -41,8 +43,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="fileSystemConfiguration">The FileSystem configuration.</param>
+        /// <param name="isExternalJobMaxTotalUncompressedSizeBytesSpecified">Is ExternalJobMaxTotalUncompressedSizeBytes specified.</param>
         /// <param name="exceptionMessage">The error message.</param>
-        public SetISHTranslationFileSystemExportOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration, string exceptionMessage) :
+        public SetISHTranslationFileSystemExportOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
@@ -52,12 +55,25 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, fileSystemConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.FileSystemNodeXPath))
             {
+                if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, fileSystemConfiguration.XPath)
+                    && !isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                {
+                    if (!isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                    {
+                        int currentExternalJobMaxTotalUncompressedSizeBytes =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{fileSystemConfiguration.XPath}/@{FileSystemConfigurationSetting.externalJobMaxTotalUncompressedSizeBytes}"));
+
+                        ((FileSystemConfigurationSection) fileSystemConfiguration)
+                            .ExternalJobMaxTotalUncompressedSizeBytes =
+                            currentExternalJobMaxTotalUncompressedSizeBytes;
+                    }
+                }
+
                 _invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,
-                    fileSystemConfiguration,
-                    true,
-                    exceptionMessage));
+                    fileSystemConfiguration));
             }
             else
             {

@@ -152,8 +152,50 @@ Describe "Testing ISHTranslationFileSystemExport"{
         $RequestedLevelFromFile | Should be $requestedMetadataFieldLevel
         $RequestedIshvaluetypeFromFile | Should be $requestedMetadataFieldValueType
     }
+    
+
+    It "Set ISHTranslationFileSystemExport with default MaximumJobSize"{       
+        #Act
+        $params = @{
+            Name=$Name;
+            ExportFolder = $ExportFolder;
+            RequestMetadata = $requestedMetadata
+        }
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be 5242880
+    }
+
+    It "Set ISHTranslationFileSystemExport with do not update MaximumJobSize if it is not specified"{       
+        #Act
+        
+        $params = @{
+            Name=$Name;
+            MaximumJobSize=$MaxJobSize;
+            ExportFolder = $ExportFolder;
+            RequestMetadata = $requestedMetadata
+        }
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHTranslationFileSystemExport  -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        $params = @{
+            Name=$Name;
+            ExportFolder = $ExportFolder;
+            RequestMetadata = $requestedMetadata
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHTranslationFileSystemExport -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be $MaxJobSize
+    }
    
-   It "Set ISHTranslationFileSystemExport with wrong XML"{
+    It "Set ISHTranslationFileSystemExport with wrong XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         $params = @{

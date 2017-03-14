@@ -20,6 +20,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.TranslationOrganizer;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -43,9 +44,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="tmsConfiguration">The TMS configuration.</param>
+        /// <param name="isExternalJobMaxTotalUncompressedSizeBytesSpecified">Is ExternalJobMaxTotalUncompressedSizeBytes specified.</param>
+        /// <param name="isRetriesOnTimeoutSpecified">Is RetriesOnTimeout specified.</param>
         /// <param name="parameters">The parameters.</param>
         /// <param name="exceptionMessage">The error message.</param>
-        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, Dictionary<TmsConfigurationSetting, object> parameters, string exceptionMessage) :
+        public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, Dictionary<TmsConfigurationSetting, object> parameters, string exceptionMessage) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
@@ -55,6 +58,32 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, tmsConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.TmsNodeXPath))
             {
+                if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, tmsConfiguration.XPath) 
+                    && (!isExternalJobMaxTotalUncompressedSizeBytesSpecified 
+                        || !isRetriesOnTimeoutSpecified))
+                {
+
+                    if (!isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                    {
+                        int currentExternalJobMaxTotalUncompressedSizeBytes =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{tmsConfiguration.XPath}/@{TmsConfigurationSetting.externalJobMaxTotalUncompressedSizeBytes}"));
+
+                        ((TmsConfigurationSection) tmsConfiguration).ExternalJobMaxTotalUncompressedSizeBytes =
+                            currentExternalJobMaxTotalUncompressedSizeBytes;
+                    }
+
+                    if (!isRetriesOnTimeoutSpecified)
+                    {
+                        int currentRetriesOnTimeout =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{tmsConfiguration.XPath}/@{TmsConfigurationSetting.retriesOnTimeout}"));
+
+                        ((TmsConfigurationSection)tmsConfiguration).RetriesOnTimeout =
+                            currentRetriesOnTimeout;
+                    }
+                }
+
                 _invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,

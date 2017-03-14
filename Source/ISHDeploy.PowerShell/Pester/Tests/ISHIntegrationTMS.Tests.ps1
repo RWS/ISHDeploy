@@ -220,7 +220,7 @@ Describe "Testing ISHIntegrationTMS"{
                 New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
             )
 
-            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupingMetadata $groupMetadata
+            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTrickyArrays -Session $session -ArgumentList $testingDeploymentName
@@ -246,7 +246,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -287,7 +287,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -308,7 +308,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -320,7 +320,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -341,7 +341,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -362,7 +362,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -374,7 +374,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -396,7 +396,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
 
@@ -424,7 +424,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
 
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Throw "Could not find file"
@@ -444,7 +444,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -483,7 +483,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
 
@@ -519,7 +519,7 @@ Describe "Testing ISHIntegrationTMS"{
             Mapping=$Mapping;
             Templates = $Template;
             RequestMetadata = @($requestedMetadata, $requestedMetadata2);
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params -ErrorAction Stop }| Should Not Throw
@@ -547,7 +547,7 @@ Describe "Testing ISHIntegrationTMS"{
             ProxyServer = $ProxyServer;
             ProxyPort = $ProxyPort;
             RequestMetadata = $requestedMetadata;
-            GroupingMetadata = $groupingMetadata 
+            GroupMetadata = $groupingMetadata 
         }
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params

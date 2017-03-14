@@ -65,17 +65,15 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// <summary>
         /// <para type="description">The max value of total size in bytes of uncompressed external job.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The max value of total size in bytes of uncompressed external job")]
-        [ValidateNotNullOrEmpty]
-        public int MaximumJobSize { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "The max value of total size in bytes of uncompressed external job")]
+        public int MaximumJobSize { get; set; } = 5242880;
 
         /// <summary>
         /// <para type="description">The number of retries on timeout.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The number of retries on timeout.")]
-        [ValidateNotNullOrEmpty]
+        [Parameter(Mandatory = false, HelpMessage = "The number of retries on timeout.")]
         [ValidateRange(1, 30)]
-        public int RetriesOnTimeout { get; set; }
+        public int RetriesOnTimeout { get; set; } = 3;
 
         /// <summary>
         /// <para type="description">The mapping between ISHLanguage and TmsLanguage.</para>
@@ -125,6 +123,8 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 Logger, 
                 ISHDeployment, 
                 tmsConfiguration,
+                MyInvocation.BoundParameters.ContainsKey("MaximumJobSize"),
+                MyInvocation.BoundParameters.ContainsKey("RetriesOnTimeout"),
                 parameters,
                 "TranslationOrganizer.exe.config already contains settings for TMS server. You should remove TMS configuration section first. To do this you can use Remove-ISHIntegrationTMS cmdlet.");
 

@@ -17,10 +17,19 @@ namespace ISHDeploy.Common.Enums
 {
     /// <summary>
     /// Names of attributes of element "/configuration/trisoft.infoShare.translationOrganizer/tms/instances/add" in file ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-    ///	<para type="description">Enumeration of Binding Types.</para>
     /// </summary>
     public enum TmsConfigurationSetting
     {
+        /// <summary>
+        /// The external job max total uncompressed size
+        /// </summary>
+        externalJobMaxTotalUncompressedSizeBytes,
+
+        /// <summary>
+        /// The number of retries on timeout
+        /// </summary>
+        retriesOnTimeout,
+
         /// <summary>
         /// The destination port number
         /// </summary>

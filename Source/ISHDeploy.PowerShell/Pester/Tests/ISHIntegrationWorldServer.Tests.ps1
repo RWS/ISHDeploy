@@ -116,12 +116,12 @@ Describe "Testing ISHIntegrationWorldServer"{
         #Act
 
         $params = @{
-        Name=$Name;
-        Uri=$Uri;
-        Credential=$Credential;
-        MaximumJobSize=$MaxJobSize;
-        RetriesOnTimeout=$RetriesOnTimeout
-        Mapping=$Mapping
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping
         }
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -138,8 +138,98 @@ Describe "Testing ISHIntegrationWorldServer"{
         $TrisoftLanguageFromFile | Should be $TrisoftLanguage 
         $WorldServerLocaleIDFromFile | Should be $WorldServerLocaleId
     }
+
+    It "Set ISHIntegrationWorldServer with default MaximumJobSize"{       
+        #Act
+
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be 5242880
+    }
+
+    It "Set ISHIntegrationWorldServer with do not update MaximumJobSize if it is not specified"{       
+        #Act
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $MaxJobSizeFromFile | Should be $MaxJobSize
+    }
+
+    It "Set ISHIntegrationWorldServer with default RetriesOnTimeout"{       
+        #Act
+
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $RetriesOnTimeutFromFile | Should be 3 
+    }
+
+    It "Set ISHIntegrationWorldServer with do not update RetriesOnTimeout if it is not specified"{       
+        #Act
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            MaximumJobSize=$MaxJobSize;
+            Mapping=$Mapping
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
+    }
    
-   It "Set ISHIntegrationWorldServer with wrong XML"{
+    It "Set ISHIntegrationWorldServer with wrong XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
         $params = @{

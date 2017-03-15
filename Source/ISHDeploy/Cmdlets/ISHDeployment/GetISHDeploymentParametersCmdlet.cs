@@ -16,6 +16,7 @@
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using System;
+using System.Linq;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -54,36 +55,33 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// <summary>
         /// <para type="description">Switch parameter to get data from original file</para>
         /// </summary>
-        [Parameter(Position = 0, HelpMessage = "Original flag will return initial parameters.")]
-        public SwitchParameter Original
-        {
-            get { return _original; }
-            set { _original = value; }
-        }
-        private bool _original;
+        [Parameter(HelpMessage = "Original flag will return initial parameters.")]
+        public SwitchParameter Original { get; set; }
 
         /// <summary>
         /// <para type="description">Switch parameter to get difference from changed and original file</para>
         /// </summary>
-        [Parameter(Position = 0, HelpMessage = "Changed flag will return changed parameters only.")]
-        public SwitchParameter Changed
-        {
-            get { return _changed; }
-            set { _changed = value; }
-        }
-        private bool _changed;
+        [Parameter(HelpMessage = "Changed flag will return changed parameters only.")]
+        public SwitchParameter Changed { get; set; }
 
         /// <summary>
         /// <para type="description">Switch parameter to show real passwords in parameters</para>
         /// </summary>
-        [Parameter(Position = 0, HelpMessage = "ShowPassword flag will show real passwords.")]
-        public SwitchParameter ShowPassword
-        {
-            get { return _showPassword; }
-            set { _showPassword = value; }
-        }
+        [Parameter(HelpMessage = "ShowPassword flag will show real passwords.")]
+        public SwitchParameter ShowPassword { get; set; }
 
-        private bool _showPassword;
+        /// <summary>
+        /// <para type="description">The name of the parameter to receive</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The name of the parameter to receive.")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// <para type="description">Output only the value</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Output only the value.")]
+        public SwitchParameter ValueOnly { get; set; }
+
         /// <summary>
         /// Executes cmdlet
         /// </summary>
@@ -96,9 +94,32 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
 
             var operation = new GetISHDeploymentParametersOperation(Logger, ISHDeployment, Original, Changed, ShowPassword);
 
-            var parametersContent = operation.Run();
+            var parametersContent = operation.Run().ToList();
 
-            ISHWriteOutput(parametersContent);
+            if (MyInvocation.BoundParameters.ContainsKey("Name"))
+            {
+                var parameter = parametersContent.SingleOrDefault(x => string.Equals(x.Name, Name, StringComparison.CurrentCultureIgnoreCase));
+
+                if (parameter != null)
+                {
+                    if (MyInvocation.BoundParameters.ContainsKey("ValueOnly"))
+                    {
+                        ISHWriteOutput(parameter.Value);
+                    }
+                    else
+                    {
+                        ISHWriteOutput(parameter);
+                    }
+                }
+                else
+                {
+                    throw new Exception($"Parameter with name '{Name}' was not found.");
+                }
+            }
+            else
+            {
+                ISHWriteOutput(parametersContent);
+            }
         }
     }
 }

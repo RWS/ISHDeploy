@@ -34,18 +34,28 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment "InfoShare" -ShowPassword</code>
+    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment -ShowPassword</code>
     /// <para>This command gets the input parameters of "InfoShare" deployment with real passwords.
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment "InfoShare" -Original</code>
+    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment -Original</code>
     /// <para>This command return original values (from the backup folder) of "InfoShare" deployment.
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment "InfoShare" -Changed</code>
+    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment -Changed</code>
     /// <para>This command return only changed parameters of "InfoShare" deployment.
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment -Name "issuercertificatethumbprint"</code>
+    /// <para>This command return the parameter with name "issuercertificatethumbprint".
+    /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Get-ISHDeploymentParameters -ISHDeployment $deployment -Name "issuercertificatethumbprint" -ValueOnly</code>
+    /// <para>This command return the value of parameter with name "issuercertificatethumbprint".
     /// Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
 
@@ -73,13 +83,13 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// <summary>
         /// <para type="description">The name of the parameter to receive</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The name of the parameter to receive.")]
+        [Parameter(Mandatory = true, HelpMessage = "The name of the parameter to receive.", ParameterSetName = "SpecificParameter")]
         public string Name { get; set; }
 
         /// <summary>
         /// <para type="description">Output only the value</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Output only the value.")]
+        [Parameter(Mandatory = false, HelpMessage = "Output only the value.", ParameterSetName = "SpecificParameter")]
         public SwitchParameter ValueOnly { get; set; }
 
         /// <summary>

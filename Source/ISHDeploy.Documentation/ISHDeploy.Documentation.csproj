@@ -115,6 +115,7 @@
     <None Include="Articles\Translation\_nopublish\Example.New-ISHIntegrationWorldServerMapping.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHIntegrationTMS.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHIntegrationWorldServer.ps1" />
+    <None Include="Articles\Translation\_nopublish\Example.Set-ISHTranslationFileSystemExport.RequestMetadata.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHTranslationFileSystemExport.ps1" />
     <None Include="Articles\Translation\_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1" />
     <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationOrganizer.Template.ps1" />

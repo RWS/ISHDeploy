@@ -21,10 +21,10 @@ Here is an example:
 CopyCodeBlock(_nopublish\Vanilla.Get-ISHServiceTranslation.ps1)
 
 ```text
-Name                                                          Type  Status Sequence
-----                                                          ----  ------ --------
-Trisoft InfoShare TranslationBuilder One     TranslationBuilder Stopped        1
-Trisoft InfoShare TranslationOrganizer One TranslationOrganizer Stopped        1
+Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer        1
 ```
 
 This is also the state that the `Undo-ISHDeployment` will return to.
@@ -41,10 +41,10 @@ CopyCodeBlock(_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1)
 And then the state becomes:
 
 ```text
-Name                                                          Type  Status Sequence
-----                                                          ----  ------ --------
-Trisoft InfoShare TranslationBuilder One     TranslationBuilder Running        1
-Trisoft InfoShare TranslationOrganizer One TranslationOrganizer Running        1
+Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Running TranslationOrganizer        1
 ```
 
 ## Disable the translation services
@@ -59,10 +59,10 @@ CopyCodeBlock(_nopublish\Vanilla.Disable-ISHServiceTranslation.ps1)
 And then the state becomes:
 
 ```text
-Name                                                          Type  Status Sequence
-----                                                          ----  ------ --------
-Trisoft InfoShare TranslationBuilder One     TranslationBuilder Stopped        1
-Trisoft InfoShare TranslationOrganizer One TranslationOrganizer Stopped        1
+Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer        1
 ```
 
 An alternative could had been to execute `Undo-ISHDeployment`.
@@ -80,23 +80,23 @@ CopyCodeBlock(_nopublish\Vanilla.Scale Up.Set-ISHServiceTranslation.ps1)
 Then the state looks like this:
 
 ```text
-Name                                                            Type  Status Sequence
-----                                                            ----  ------ --------
-Trisoft InfoShare TranslationBuilder One       TranslationBuilder Running        1
-Trisoft InfoShare TranslationBuilder Two       TranslationBuilder Running        2
-Trisoft InfoShare TranslationOrganizer One   TranslationOrganizer Running        1
-Trisoft InfoShare TranslationOrganizer Two   TranslationOrganizer Running        2
-Trisoft InfoShare TranslationOrganizer Three TranslationOrganizer Running        3
+Name                                             Status                 Type Sequence
+----                                             ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One     Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationBuilder Two     Running   TranslationBuilder        2
+Trisoft InfoShareSQL TranslationOrganizer One   Running TranslationOrganizer        1
+Trisoft InfoShareSQL TranslationOrganizer Two   Running TranslationOrganizer        2
+Trisoft InfoShareSQL TranslationOrganizer Three Running TranslationOrganizer        3
 ```
 
-To scale down the Translation Organizer to 2 execute `Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployment -Count 2` and the state becomes:
+To scale down the Translation Organizer to 2 execute `Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -Count 2` and the state becomes:
 ```text
-Name                                                            Type  Status Sequence
-----                                                            ----  ------ --------
-Trisoft InfoShare TranslationBuilder One       TranslationBuilder Running        1
-Trisoft InfoShare TranslationBuilder Two       TranslationBuilder Running        2
-Trisoft InfoShare TranslationOrganizer One   TranslationOrganizer Running        1
-Trisoft InfoShare TranslationOrganizer Two   TranslationOrganizer Running        2
+Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationBuilder Two   Running   TranslationBuilder        2
+Trisoft InfoShareSQL TranslationOrganizer One Running TranslationOrganizer        1
+Trisoft InfoShareSQL TranslationOrganizer Two Running TranslationOrganizer        2
 ```
 
 Notice that when disabling and enabling, the module will **only** control the state of the services and not the scaling numbers. 

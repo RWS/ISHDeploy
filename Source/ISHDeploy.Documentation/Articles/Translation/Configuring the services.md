@@ -1,6 +1,6 @@
 ﻿# Scaling the services
 
-A Vanilla deployment is delivered with the **Translation Builder** and **Translation Organizer** behaviors preconfigured. 
+A Vanilla deployment is delivered with the **Translation Builder** and **Translation Organizer** behaviors pre-configured. 
 This tutorial explains how to configure the behaviors of each service.
 
 ## Set deploymentName variable

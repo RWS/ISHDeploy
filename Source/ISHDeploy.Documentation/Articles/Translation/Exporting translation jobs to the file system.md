@@ -15,9 +15,12 @@ To configure the export to the file system use the `Set-ISHTranslationFileSystem
 
 CopyCodeBlock(_nopublish\Example.Set-ISHTranslationFileSystemExport.ps1)
 
+If additional metadata is required to be exported then use the `-RequestMetadata` parameter like this:
+
+CopyCodeBlock(_nopublish\Example.Set-ISHTranslationFileSystemExport.RequestMetadata.ps1)
 
 **Note:** Content Manager allows only one export to the file system configured. 
 
 ## Remove the integration with SDL TMS
 
-Use `Remove-ISHIntegrationFileSystem  -ISHDeployment $deploymentName`.
+Use `Remove-ISHTranslationFileSystemExport  -ISHDeployment $deploymentName`.

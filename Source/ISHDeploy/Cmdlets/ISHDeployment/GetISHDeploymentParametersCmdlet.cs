@@ -65,19 +65,22 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// <summary>
         /// <para type="description">Switch parameter to get data from original file</para>
         /// </summary>
-        [Parameter(HelpMessage = "Original flag will return initial parameters.")]
+        [Parameter(Mandatory = false, HelpMessage = "Original flag will return initial parameters.", ParameterSetName = "Default")]
+        [Parameter(Mandatory = false, HelpMessage = "Original flag will return initial parameters.", ParameterSetName = "SpecificParameter")]
         public SwitchParameter Original { get; set; }
 
         /// <summary>
         /// <para type="description">Switch parameter to get difference from changed and original file</para>
         /// </summary>
-        [Parameter(HelpMessage = "Changed flag will return changed parameters only.")]
+        [Parameter(Mandatory = false, HelpMessage = "Changed flag will return changed parameters only.", ParameterSetName = "Default")]
+        [Parameter(Mandatory = false, HelpMessage = "Changed flag will return changed parameters only.", ParameterSetName = "SpecificParameter")]
         public SwitchParameter Changed { get; set; }
 
         /// <summary>
         /// <para type="description">Switch parameter to show real passwords in parameters</para>
         /// </summary>
-        [Parameter(HelpMessage = "ShowPassword flag will show real passwords.")]
+        [Parameter(Mandatory = false, HelpMessage = "ShowPassword flag will show real passwords.", ParameterSetName = "Default")]
+        [Parameter(Mandatory = false, HelpMessage = "ShowPassword flag will show real passwords.", ParameterSetName = "SpecificParameter")]
         public SwitchParameter ShowPassword { get; set; }
 
         /// <summary>

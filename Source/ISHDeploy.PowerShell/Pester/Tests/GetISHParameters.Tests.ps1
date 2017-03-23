@@ -168,5 +168,33 @@ Describe "Testing Get-ISHDeploymentParameters"{
         $count -gt 1 | should be $true
        
     }
+
+	It "Get-ISHDeploymentParameters returns exact parameter"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"; ValueOnly = $true}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
+    }
+
+    It "Get-ISHDeploymentParameters returns name parameters"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"; ValueOnly = $true}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
+    }
 }
 

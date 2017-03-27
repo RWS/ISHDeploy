@@ -196,5 +196,21 @@ Describe "Testing Get-ISHDeploymentParameters"{
         #Assert
         $inputparameters -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
     }
+
+    It "Get-ISHDeploymentParameters returns parameter with ValueOnly false"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters.Count -eq 1 | Should be $true
+        $inputparameters.Name -eq "issuerwsfederationendpointurl" | Should be $true
+        $inputparameters.Value -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
+    }
 }
 

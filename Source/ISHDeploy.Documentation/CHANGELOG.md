@@ -2,17 +2,44 @@
 
 ## stable-1.3
 
+This release is focused on adding cmdlets into the module that help configure and manager the translation services.
+
 1. General 
     1. Cmdlets
         - Fixed `Get-ISHDeployment` to return the actual path for the `WebPath`, `DataPath` and `AppPath`. 
         E.g for `WebPath` the value is `C:\InfoShare\Web` instead of `C:\InfoShare`.  **[Update]**
+        - `Get-ISHDeploymentParameter` new parameters `-Name` and `-ValueOnly` simplify working with one parameter.  **[Update]**
     1. Documentation
-        - Minor corrections on **Work with one or multiple deployments** tutorial.  **[Update]**
+        - Minor corrections and enhancements on **Work with one or multiple deployments** tutorial.  **[Update]**
 1. Integration Translation
 	1. Cmdlets
 		- `Enable-ISHServiceTranslationBuilder`. **[New]**
 		- `Disable-ISHServiceTranslationBuilder`. **[New]**
+		- `Get-ISHServiceTranslationBuilder`. **[New]**
 		- `Set-ISHServiceTranslationBuilder`. **[New]**
+		- `Enable-ISHServiceTranslationOrganizer`. **[New]**
+		- `Disable-ISHServiceTranslationOrganizer`. **[New]**
+		- `Get-ISHServiceTranslationOrganizer`. **[New]**
+		- `Set-ISHServiceTranslationOrganizer`. **[New]**
+        - `New-ISHFieldMetadata`. **[New]**
+		- `New-ISHIntegrationTMSMapping`. **[New]**
+		- `New-ISHIntegrationTMSTemplate`. **[New]**
+		- `Set-ISHIntegrationTMS`. **[New]**
+		- `Remove-ISHIntegrationTMS`. **[New]**
+		- `New-ISHIntegrationWorldServerMapping`. **[New]**
+		- `Set-ISHIntegrationWorldServer`. **[New]**
+		- `Remove-ISHIntegrationWorldServer`. **[New]**
+		- `Set-ISHIntegrationWorldServer`. **[New]**
+		- `Remove-ISHIntegrationWorldServer`. **[New]**
+		- `Set-ISHTranslationFileSystemExport`. **[New]**
+		- `Remove-ISHTranslationFileSystemExport`. **[New]**
+    1. Documentation
+		- New section **Work with translation services** with tutorials: **[New]**
+		  - **Integrating translation jobs with SDL World Server**. **[New]**
+		  - **Integrating translation jobs with SDL TMS**. **[New]**
+		  - **Exporting translation jobs to the file system**. **[New]**
+		  - **Configuring the services**. **[New]**
+		  - **Scaling the services**. **[New]**
 
 ## stable-1.2
 1. General 

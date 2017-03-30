@@ -92,11 +92,19 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             }
             else if (services.Count() < amount)
             {
+
                 var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
-                for (int i = services.Count(); i < amount; i++)
+                bool startService = false;
+                if (service.Status == ISHWindowsServiceStatus.Running)
                 {
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
+                    startService = true;
                 }
+                for (int i = services.Count(); i < amount; i++)
+                { 
+                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword, startService));
+
+                }
+
             }
         }
 

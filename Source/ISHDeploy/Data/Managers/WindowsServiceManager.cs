@@ -162,11 +162,10 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        /// <param name="startService">Shows if service should be started after creation.</param>
         /// <returns>
         /// The name of new service that have been created.
         /// </returns>
-        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, bool startService)
+        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
         {
             _logger.WriteDebug("Clone windows service", service.Name);
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
@@ -189,9 +188,7 @@ namespace ISHDeploy.Data.Managers
                     { "$description", $"{newServiceName} ({sequence})" },
                     { "$pathToExecutable", pathToExecutable },
                     { "$username", userName },
-                    { "$password", password },
-                    { "$startService", startService.ToString()}
-
+                    { "$password", password }
                 });
 
             _logger.WriteVerbose($"New service `{newServiceName}` has been created");

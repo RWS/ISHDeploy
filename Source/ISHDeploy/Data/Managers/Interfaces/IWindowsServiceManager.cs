@@ -60,7 +60,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        /// <param name="startService">Shows is service needs to start after creation</param>
-        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, bool startService);
+        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
     }
 }

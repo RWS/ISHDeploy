@@ -16,6 +16,7 @@
 
 using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -59,10 +60,6 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly string _password;
 
         /// <summary>
-        /// Shows if service should be started after creation
-        /// </summary>
-        private readonly bool _startService;
-        /// <summary>
         /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -70,8 +67,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        /// <param name="startService">Shows is service needs to start after creation</param>
-        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service, int sequence, string userName, string password, bool startService)
+        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service, int sequence, string userName, string password)
             : base(logger)
         {
             _service = service;
@@ -81,7 +77,6 @@ namespace ISHDeploy.Data.Actions.WindowsServices
             _sequence = sequence;
             _userName = userName;
             _password = password;
-            _startService = startService;
         }
 
         /// <summary>
@@ -89,9 +84,15 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password, _startService);
-            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName");
+            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
+
+            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName" && x != "ImagePath");
             _registryManager.CopyValues(namesOfValues, $@"SYSTEM\CurrentControlSet\Services\{_service.Name}", $@"SYSTEM\CurrentControlSet\Services\{newServiceName}");
+
+            if (_service.Status == ISHWindowsServiceStatus.Running)
+            {
+                _serviceManager.StartWindowsService(newServiceName);
+            }
         }
     }
 }

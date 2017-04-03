@@ -68,6 +68,22 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of FileSystem Node
             /// </summary>
             public const string FileSystemNodeXPath = "configuration/trisoft.infoShare.translationOrganizer/fileSystem/instances/add";
+
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWS"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWS";
+
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSDnsIdentity"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSDnsIdentityAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSDnsIdentity";
+
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode";
+
         }
     }
 }

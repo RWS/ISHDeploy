@@ -101,6 +101,44 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="infoShareWS">The URL to WorldServer.</param>
+        /// <param name="infoShareWSDnsIdentity">Dns Endpoint Identity for Wcf Services.</param>
+        /// <param name="infoShareWSServiceCertificateValidationMode">Type of WorldServer authentication.</param>
+        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri infoShareWS, string infoShareWSDnsIdentity = null, string infoShareWSServiceCertificateValidationMode = null) :
+            base(logger, ishDeployment)
+        {
+            _invoker = new ActionInvoker(logger, "Setting of URL to WorldServer");
+
+            _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    TranslationOrganizerConfigFilePath,
+                    TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSAttributeXPath,
+                    infoShareWS.AbsoluteUri));
+
+            if (!string.IsNullOrEmpty(infoShareWSDnsIdentity))
+            {
+                _invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        TranslationOrganizerConfigFilePath,
+                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSDnsIdentityAttributeXPath,
+                        infoShareWSDnsIdentity));
+            }
+
+            if (!string.IsNullOrEmpty(infoShareWSServiceCertificateValidationMode))
+            {
+                _invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        TranslationOrganizerConfigFilePath,
+                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath,
+                        infoShareWSServiceCertificateValidationMode));
+            }
+        }
+
+        /// <summary>
         /// Returns value in appropriate string format
         /// </summary>
         /// <param name="type">Type of setting</param>

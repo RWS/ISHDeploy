@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using System.ServiceModel.Security;
+using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
@@ -121,6 +122,51 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int Count { get; set; }
 
         /// <summary>
+        /// <para type="description">The URL to WorldServer.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerUrl")]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public string ISHWS { get; set; }
+
+        /// <summary>
+        /// <para type="description">Selected validation mode.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "WorldServerUrl")]
+        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public X509CertificateValidationMode ISHWSCertificateValidationMode { get; set; }
+
+        /// <summary>
+        /// <para type="description">Dns Endpoint Identity for Wcf Services.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Dns Endpoint Identity for WorldServer", ParameterSetName = "WorldServerUrl")]
+        [Parameter(Mandatory = false, HelpMessage = "Dns Endpoint Identity for WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public string ISHWSDnsIdentity { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type of WorldServer authentication.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Type of WorldServer issuer authentication", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public BindingType IssuerBindingType { get; set; }
+
+        /// <summary>
+        /// <para type="description">The URL to issuer WorldServer endpoint.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WorldServer endpoint", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public string IssuerEndpoint { get; set; }
+
+        /// <summary>
+        /// <para type="description">The credential to get access to WorldServer.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The credential to get access to WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [ValidateNotNullOrEmpty]
+        public PSCredential Credential { get; set; }
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -179,6 +225,12 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 operation.Run();
             }
             else if (ParameterSetName == "TranslationOrganizerCount")
+            {
+                var operation = new SetISHServiceTranslationOrganizerOperation(Logger, ISHDeployment, Count);
+
+                operation.Run();
+            }
+            else if (ParameterSetName == "WorldServerUrl")
             {
                 var operation = new SetISHServiceTranslationOrganizerOperation(Logger, ISHDeployment, Count);
 

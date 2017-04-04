@@ -16,6 +16,7 @@
 
 using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -84,8 +85,14 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         public override void Execute()
         {
             var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
-            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName");
+
+            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName" && x != "ImagePath");
             _registryManager.CopyValues(namesOfValues, $@"SYSTEM\CurrentControlSet\Services\{_service.Name}", $@"SYSTEM\CurrentControlSet\Services\{newServiceName}");
+
+            if (_service.Status == ISHWindowsServiceStatus.Running)
+            {
+                _serviceManager.StartWindowsService(newServiceName);
+            }
         }
     }
 }

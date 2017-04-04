@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation

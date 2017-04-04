@@ -223,5 +223,20 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
         $TranslationServices.Count | Should be 2
      }
+
+     It "Set ISHServiceTranslationOrganizer saves service state after clonning"{
+        #Arrange
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        #Timeout added because of Windows procedure of stopping and removing services
+        Start-Sleep -Seconds 60
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		foreach($service in $TranslationServices){
+            $service.Status -eq "Running" | Should be $true
+        }
+		
+     }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

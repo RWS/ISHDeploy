@@ -1,6 +1,6 @@
 ﻿param(
     $session = $null,
-    $testingDeploymentName = "InfoShare"
+    $testingDeploymentName = "InfoShareSQL2014"
 )
 
 . "$PSScriptRoot\Common.ps1"
@@ -208,7 +208,6 @@ Describe "Testing Get-ISHDeploymentParameters"{
         
         
         #Assert
-        $inputparameters.Count -eq 1 | Should be $true
         $inputparameters.Name -eq "issuerwsfederationendpointurl" | Should be $true
         $inputparameters.Value -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
     }

@@ -40,7 +40,8 @@ $groupingMetadataFieldLevel = "version"
 $groupingMetadataFieldValueType = "element"
 $groupingMetadataParameters = @{Name =$groupingMetadataFieldName; Level=$groupingMetadataFieldLevel; ValueType=$groupingMetadataFieldValueType} 
 $groupingMetadata = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockNewISHFieldMetadata -Session $session -ArgumentList $groupingMetadataParameters
-
+$testAPIKey = "testApKey"
+$testSecretKey = "testSecretKey"
 #endregion
 
 #region Script Blocks
@@ -104,6 +105,9 @@ $scriptBlockReadTargetXML = {
 
     $result["TemplateId"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").templateId
     $result["TemplateName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/templates/add").templateName
+    $result["ApiKey"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").apiKey
+    $result["Secret"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").secret
+    $result["HttpTimeout"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").httpTimeout
 
     $result["RequestedName"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").name
     $result["RequestedLevel"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add/requestedMetadata/ishfields/ishfield").level
@@ -135,6 +139,10 @@ function remoteReadTargetXML() {
 
    $global:TemplateIdFromFile = $result["TemplateId"]
    $global:TemplateNameFromFile = $result["TemplateName"] 
+   
+   $global:ApiKeyFromFile = $result["ApiKey"]
+   $global:SecretFromFile = $result["Secret"]
+   $global:HttpTimeoutFromFile = $result["HttpTimeout"]
 
    $global:RequestedNameFromFile = $result["RequestedName"]
    $global:RequestedLevelFromFile = $result["RequestedLevel"]
@@ -220,7 +228,7 @@ Describe "Testing ISHIntegrationTMS"{
                 New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
             )
 
-            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3  -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
+            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTrickyArrays -Session $session -ArgumentList $testingDeploymentName
@@ -245,6 +253,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -266,6 +276,9 @@ Describe "Testing ISHIntegrationTMS"{
 
         $TemplateIdFromFile | Should be $testId
         $TemplateNameFromFile | Should be $testName
+        
+        $ApiKeyFromFile | Should be $testAPIKey
+        $SecretFromFile | Should be $testSecretKey
 
         $RequestedNameFromFile | Should be $requestedMetadataFieldName
         $RequestedLevelFromFile | Should be $requestedMetadataFieldLevel
@@ -286,6 +299,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -295,6 +310,30 @@ Describe "Testing ISHIntegrationTMS"{
         remoteReadTargetXML
 
         $MaxJobSizeFromFile | Should be 5242880
+    }
+    
+    It "Set ISHIntegrationTMS with HttpTimeout"{       
+        #Act
+
+        $params = @{
+            Name=$Name;
+            Uri=$Uri;
+            Credential=$Credential;
+            RetriesOnTimeout=$RetriesOnTimeout;
+            Mapping=$Mapping;
+            Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
+            HttpTimeout = "00:03:00.000";
+            RequestMetadata = $requestedMetadata;
+            GroupMetadata = $groupingMetadata 
+        }
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationTMS -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+
+        $HttpTimeoutFromFile | Should be "00:03:00.000"
     }
 
     It "Set ISHIntegrationTMS with do not update MaximumJobSize if it is not specified"{       
@@ -307,6 +346,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -319,6 +360,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -340,6 +383,8 @@ Describe "Testing ISHIntegrationTMS"{
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -361,6 +406,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -373,6 +420,8 @@ Describe "Testing ISHIntegrationTMS"{
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -395,6 +444,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -423,6 +474,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -443,6 +496,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -482,6 +537,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = $requestedMetadata;
             GroupMetadata = $groupingMetadata 
         }
@@ -518,6 +575,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             RequestMetadata = @($requestedMetadata, $requestedMetadata2);
             GroupMetadata = $groupingMetadata 
         }
@@ -539,6 +598,8 @@ Describe "Testing ISHIntegrationTMS"{
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
+            ApiKey = $testAPIKey;
+            SecretKey = $testSecretKey;
             DestinationPortNumber =$DestinationPortNumber;
             IsapiFilterLocation = $IsapiFilterLocation;
             UseCompression = $UseCompression;

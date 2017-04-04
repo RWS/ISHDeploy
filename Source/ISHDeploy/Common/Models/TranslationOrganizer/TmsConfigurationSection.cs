@@ -105,6 +105,18 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         public bool GroupingMetadataSpecified => GroupingMetadata != null;
 
         /// <summary>
+        /// The api key of the configured tms instance.
+        /// </summary>
+        [XmlAttribute("apiKey")]
+        public string ApiKey { get; set; }
+
+        /// <summary>
+        /// The api secret of the configured tms instance.
+        /// </summary>
+        [XmlAttribute("secret")]
+        public string Secret { get; set; }
+        
+        /// <summary>
         /// Prevents a default instance of the <see cref="TmsConfigurationSection"/> class from being created.
         /// </summary>
         private TmsConfigurationSection()
@@ -122,9 +134,11 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// <param name="retriesOnTimeout">The number of retries on timeout</param>
         /// <param name="mappings">The mapping between trisoftLanguage and TmsLanguage</param>
         /// <param name="templates">Tms templates</param>
+        /// <param name="apiKey">The api key of the configured tms instance</param>
+        /// <param name="secret">The api secret of the configured tms instance</param>
         /// <param name="requestedMetadata">The port number of proxy server</param>
         /// <param name="groupingMetadata">The port number of proxy server</param>
-        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata[] requestedMetadata = null, ISHFieldMetadata[] groupingMetadata = null)
+        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, string apiKey, string secret, ISHFieldMetadata[] requestedMetadata = null, ISHFieldMetadata[] groupingMetadata = null)
         {
             Alias = alias;
             Uri = uri;
@@ -134,6 +148,8 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
             RetriesOnTimeout = retriesOnTimeout;
             Mappings = mappings;
             Templates = templates;
+            ApiKey = apiKey;
+            Secret = secret;
 
             if (requestedMetadata != null)
             {

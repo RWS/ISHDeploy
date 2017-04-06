@@ -9,7 +9,7 @@ This release is focused on adding cmdlets into the module that help configure an
         - Fixed `Get-ISHDeployment` to return the actual path for the `WebPath`, `DataPath` and `AppPath`. 
         E.g for `WebPath` the value is `C:\InfoShare\Web` instead of `C:\InfoShare`.  **[Update]**
         - `Get-ISHDeploymentParameter` new parameters `-Name` and `-ValueOnly` simplify working with one parameter.  **[Update]**
-    1. Documentation
+    1. Tutorials
         - Minor corrections and enhancements on **Work with one or multiple deployments** tutorial.  **[Update]**
 1. Integration Translation
 	1. Cmdlets
@@ -33,14 +33,17 @@ This release is focused on adding cmdlets into the module that help configure an
 		- `Remove-ISHIntegrationWorldServer`. **[New]**
 		- `Set-ISHTranslationFileSystemExport`. **[New]**
 		- `Remove-ISHTranslationFileSystemExport`. **[New]**
-    1. Documentation
+    1. Tutorials
 		- New section **Work with translation services** with tutorials: **[New]**
 		  - **Integrating translation jobs with SDL World Server**. **[New]**
 		  - **Integrating translation jobs with SDL TMS**. **[New]**
 		  - **Exporting translation jobs to the file system**. **[New]**
 		  - **Configuring the services**. **[New]**
-		  - **Scaling the services**. **[New]**
-
+		  - **Scaling the services**. **[New]**		  
+1. Working with ISHCM web UI features
+    1. Tutorials
+		- **Configuring ISHCM web UI button bars**. Fixed an bug in the example when using splatting parameters **[Update]**
+		  
 ## stable-1.2
 1. General 
     1. Cmdlets

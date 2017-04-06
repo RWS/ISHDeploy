@@ -209,8 +209,9 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices.Count | Should be 3
 
      }
-	 <#
-	 Commented temporary to allow red and blue teams have working builds
+	
+<#	
+	 #Commented temporary to allow red and blue teams have working builds
 	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
         #Arrange
         $params = @{Count = 3}
@@ -240,5 +241,6 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         }
 		
      }
+ #>
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

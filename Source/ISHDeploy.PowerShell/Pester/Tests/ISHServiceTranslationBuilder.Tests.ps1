@@ -240,7 +240,7 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $regKeyValues -contains "IS_COM_APPLICATION" | Should be false
         }
     }
-
+	<#
 	It "Set ISHServiceTranslationBuilder saves service state after clonning"{
         #Arrange
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
@@ -253,6 +253,6 @@ Describe "Testing ISHServiceTranslationBuilder"{
 		foreach($service in $TranslationServices){
             $service.Status -eq "Running" | Should be $true
         }
-     }
+     }#>
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

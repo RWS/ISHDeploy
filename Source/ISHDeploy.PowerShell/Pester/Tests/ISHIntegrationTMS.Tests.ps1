@@ -14,10 +14,6 @@ $filePath = Join-Path $filePath "TranslationOrganizer\Bin"
 
 $Name = "testName"
 $Uri = "testUri"
-$testUsername = "testUserName"
-$testPassword = "testPassword"
-$secpasswd = ConvertTo-SecureString $testPassword -AsPlainText -Force
-$Credential = New-Object System.Management.Automation.PSCredential ($testUsername, $secpasswd)
 $MaxJobSize = 250
 $RetriesOnTimeout = 2
 $TMSLocaleId = "english"
@@ -95,8 +91,6 @@ $scriptBlockReadTargetXML = {
     #get variables and nodes from files
     $result["Name"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").alias
     $result["Uri"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").uri
-    $result["Username"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").userName
-    $result["Password"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").password
     $result["RetriesOnTimeout"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").retriesOnTimeout 
     $result["MaxJobSize"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/tms/instances/add").externalJobMaxTotalUncompressedSizeBytes
 
@@ -129,8 +123,6 @@ function remoteReadTargetXML() {
 
    $global:NameFromFile = $result["Name"]  
    $global:UriFromFile = $result["Uri"]  
-   $global:UserNameFromFile = $result["Username"]
-   $global:PasswordFromFile = $result["Password"]  
    $global:RetriesOnTimeutFromFile = $result["RetriesOnTimeout"] 
    $global:MaxJobSizeFromFile = $result["MaxJobSize"]
 
@@ -208,7 +200,6 @@ Describe "Testing ISHIntegrationTMS"{
             }
 
             $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-            $credential = New-Object System.Management.Automation.PSCredential("SomeUserName", (ConvertTo-SecureString "SomePass" -AsPlainText -Force))
             $mappings = @((New-ISHIntegrationTMSMapping -ISHLanguage en -TmsLanguage "en-GB"), (New-ISHIntegrationTMSMapping -ISHLanguage us -TmsLanguage "en-US"), (New-ISHIntegrationTMSMapping -ISHLanguage ua -TmsLanguage "ua-UA"))
 
             $templates=@(
@@ -228,7 +219,7 @@ Describe "Testing ISHIntegrationTMS"{
                 New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
             )
 
-            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
+            Set-ISHIntegrationTMS -ISHDeployment $ishDeploy -Name WorldServer -Uri "https:\\tms1.sd.com" -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
         }
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTrickyArrays -Session $session -ArgumentList $testingDeploymentName
@@ -248,7 +239,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -266,8 +256,6 @@ Describe "Testing ISHIntegrationTMS"{
 
         $NameFromFile | Should be $Name
         $UriFromFile | Should be $Uri
-        $UserNameFromFile | Should be $testUsername
-        $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize
 
@@ -295,7 +283,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
@@ -341,7 +328,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -356,7 +342,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;
@@ -379,7 +364,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
@@ -401,7 +385,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -416,7 +399,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             Mapping=$Mapping;
             Templates = $Template;
@@ -439,7 +421,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -469,7 +450,6 @@ Describe "Testing ISHIntegrationTMS"{
          $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -491,7 +471,6 @@ Describe "Testing ISHIntegrationTMS"{
          $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -532,7 +511,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -570,7 +548,6 @@ Describe "Testing ISHIntegrationTMS"{
          $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -593,7 +570,6 @@ Describe "Testing ISHIntegrationTMS"{
        $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             MaximumJobSize=$MaxJobSize;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
@@ -615,7 +591,7 @@ Describe "Testing ISHIntegrationTMS"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
 
         #Assert
-        $history.Contains('Set-ISHIntegrationTMS -ISHDeployment $deploymentName -MaximumJobSize 250 -Name "testName" -Credential (New-Object System.Management.Automation.PSCredential ("testUserName", (ConvertTo-SecureString "testPassword" -AsPlainText -Force))) -RetriesOnTimeout 2 -Uri "testUri" -Mappings @((New-ISHIntegrationTMSMapping -ISHLanguage en -WSLocaleID 192))') | Should be "True"     
+        $history.Contains('Set-ISHIntegrationTMS -ISHDeployment $deploymentName -MaximumJobSize 250 -Name "testName" -RetriesOnTimeout 2 -Uri "testUri" -Mappings @((New-ISHIntegrationTMSMapping -ISHLanguage en -WSLocaleID 192))') | Should be "True"     
     } 
     #>
      UndoDeploymentBackToVanila $testingDeploymentName $true

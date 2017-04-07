@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
@@ -34,10 +33,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Remove-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHIntegrationTMS -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -Credential $credential -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mapping $mapping -Templates $templates</code>
+    /// <code>PS C:\>Set-ISHIntegrationTMS -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mapping $mapping -Templates $templates</code>
     /// <para>This command enables the translation organizer windows service.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
-    /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationTMSMapping cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationTMS")]
@@ -56,13 +54,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         [Parameter(Mandatory = true, HelpMessage = "The Uri to TMS")]
         [ValidateNotNullOrEmpty]
         public string Uri { get; set; }
-
-        /// <summary>
-        /// <para type="description">The credential to get access to TMS.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The credential to get access to TMS")]
-        [ValidateNotNullOrEmpty]
-        public PSCredential Credential { get; set; }
 
         /// <summary>
         /// <para type="description">The max value of total size in bytes of uncompressed external job.</para>
@@ -132,8 +123,6 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             var tmsConfiguration = new TmsConfigurationSection(
                 Name,
                 Uri,
-                Credential.UserName,
-                Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)),
                 MaximumJobSize,
                 RetriesOnTimeout,
                 Mappings,

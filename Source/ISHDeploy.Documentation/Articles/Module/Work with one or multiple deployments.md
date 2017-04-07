@@ -172,6 +172,14 @@ Get-ISHDeploymentParameters -ISHDeployment $deploymentName -ShowPassword
 `Get-ISHDeploymentParameters` will always return the value from the input parameters installation file but `Get-ISHDeployment` will focus on providing output that is more useful when possible.
 For example `webpath` from `Get-ISHDeploymentParameters` is the actual input parameter during installation (e.g. `C:\InfoShare`) where `WebPath` from `Get-ISHDeployment` is derived and points to the exact location of the web applications (e.g. `C:\InfoShare\Web`).
  
+### Get one input parameter of a deployment
+
+`Get-ISHDeploymentParameters` offers an additional parameter set that helps when working with one parameter. 
+When `-Name` is specified then the cmdlet will return one record matching the specified name.
+When `-OnlyValue` is specified then the cmdlet will return only the value instead of the recordset.
+
+For example `Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Name databasetype -OnlyValue` return just `sqlserver2014`.
+
 ## Developing a deployment
 To help engineers write and debug scripts a cmdlet `Undo-ISHDeployment` is provided.
  

@@ -1,6 +1,6 @@
 ﻿param(
     $session = $null,
-    $testingDeploymentName = "InfoShare"
+    $testingDeploymentName = "InfoShareSQL2014"
 )
 
 . "$PSScriptRoot\Common.ps1"
@@ -167,6 +167,49 @@ Describe "Testing Get-ISHDeploymentParameters"{
         $count = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParametersPipeline -Session $session -ArgumentList $testingDeploymentName, $params
         $count -gt 1 | should be $true
        
+    }
+
+	It "Get-ISHDeploymentParameters returns exact parameter"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"; ValueOnly = $true}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
+    }
+
+    It "Get-ISHDeploymentParameters returns name parameters"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"; ValueOnly = $true}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
+    }
+
+    It "Get-ISHDeploymentParameters returns parameter with ValueOnly false"{
+        #Arrange
+        $params = @{Original = $true; Changed = $false; Showpassword  = $false; Name = "issuerwsfederationendpointurl"}
+        
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetWSFederation -Session $session -ArgumentList $testingDeploymentName, "testEndpoint"
+        $inputparameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, $params
+        $originalParameters = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetBackUpedParameters -Session $session -ArgumentList $testingDeploymentName, $backupPath 
+        
+        
+        #Assert
+        $inputparameters.Name -eq "issuerwsfederationendpointurl" | Should be $true
+        $inputparameters.Value -eq $originalParameters["issuerwsfederationendpointurl"] | Should be $true
     }
 }
 

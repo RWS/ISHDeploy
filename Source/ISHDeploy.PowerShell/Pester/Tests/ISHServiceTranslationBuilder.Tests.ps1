@@ -240,5 +240,19 @@ Describe "Testing ISHServiceTranslationBuilder"{
         $regKeyValues -contains "IS_COM_APPLICATION" | Should be false
         }
     }
+	<#
+	It "Set ISHServiceTranslationBuilder saves service state after clonning"{
+        #Arrange
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
+		#Timeout added because of Windows procedure of stopping and removing services
+		Start-Sleep -Seconds 60
+		$TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		foreach($service in $TranslationServices){
+            $service.Status -eq "Running" | Should be $true
+        }
+     }#>
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

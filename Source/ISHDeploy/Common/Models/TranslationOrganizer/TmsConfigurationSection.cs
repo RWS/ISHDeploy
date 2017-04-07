@@ -41,18 +41,6 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         public string Uri { get; set; }
 
         /// <summary>
-        /// The userName to get access to TMS
-        /// </summary>
-        [XmlAttribute("userName")]
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// The password to get access to TMS
-        /// </summary>
-        [XmlAttribute("password")]
-        public string Password { get; set; }
-
-        /// <summary>
         /// The max value of total size in bytes of uncompressed external job
         /// </summary>
         [XmlAttribute("externalJobMaxTotalUncompressedSizeBytes")]
@@ -116,20 +104,16 @@ namespace ISHDeploy.Common.Models.TranslationOrganizer
         /// </summary>
         /// <param name="alias">The alias of TMS</param>
         /// <param name="uri">The Uri to TMS </param>
-        /// <param name="userName">The userName to get access to TMS</param>
-        /// <param name="password">The password to get access to TMS</param>
         /// <param name="externalJobMaxTotalUncompressedSizeBytes">The max value of total size in bytes of uncompressed external job</param>
         /// <param name="retriesOnTimeout">The number of retries on timeout</param>
         /// <param name="mappings">The mapping between trisoftLanguage and TmsLanguage</param>
         /// <param name="templates">Tms templates</param>
         /// <param name="requestedMetadata">The port number of proxy server</param>
         /// <param name="groupingMetadata">The port number of proxy server</param>
-        public TmsConfigurationSection(string alias, string uri, string userName, string password, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata[] requestedMetadata = null, ISHFieldMetadata[] groupingMetadata = null)
+        public TmsConfigurationSection(string alias, string uri, int externalJobMaxTotalUncompressedSizeBytes, int retriesOnTimeout, ISHLanguageToTmsLanguageMapping[] mappings, TmsTemplate[] templates, ISHFieldMetadata[] requestedMetadata = null, ISHFieldMetadata[] groupingMetadata = null)
         {
             Alias = alias;
             Uri = uri;
-            UserName = userName;
-            Password = password;
             ExternalJobMaxTotalUncompressedSizeBytes = externalJobMaxTotalUncompressedSizeBytes;
             RetriesOnTimeout = retriesOnTimeout;
             Mappings = mappings;

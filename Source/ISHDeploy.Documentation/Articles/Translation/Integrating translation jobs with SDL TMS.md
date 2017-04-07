@@ -44,6 +44,7 @@ The integration requires the following information
 
 - The uri for TMS's service.
 - The credentials to access the TMS service.
+- The api and secret key to access the TMS service.
 - The mapping configuration created above.
 - The template configuration created above.
 - The metadata configuration created above that is pushed to TMS.

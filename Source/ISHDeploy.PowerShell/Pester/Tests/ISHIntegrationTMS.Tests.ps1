@@ -305,7 +305,6 @@ Describe "Testing ISHIntegrationTMS"{
         $params = @{
             Name=$Name;
             Uri=$Uri;
-            Credential=$Credential;
             RetriesOnTimeout=$RetriesOnTimeout;
             Mapping=$Mapping;
             Templates = $Template;

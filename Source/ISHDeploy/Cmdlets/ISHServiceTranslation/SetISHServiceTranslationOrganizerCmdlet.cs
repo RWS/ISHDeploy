@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
@@ -42,6 +43,22 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -Count 2</code>
     /// <para>This command changes the amount of instances of services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -ISHWSCertificateValidationMode "ChainTrust"</code>
+    /// <para>This command sets new WorldServer URL.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "WindowsMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/windows"</code>
+    /// <para>This command sets new WorldServer URL, the type of issuer binding, the issuer endpoint.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "UserNameMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/username" -Credential $credential</code>
+    /// <para>This command sets new WorldServer URL, the type of issuer binding, the issuer endpoint and new credential.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHServiceTranslationOrganizer")]
     public sealed class SetISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
@@ -127,7 +144,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerUrl")]
         [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerAuthentication")]
         [ValidateNotNullOrEmpty]
-        public string ISHWS { get; set; }
+        public Uri ISHWS { get; set; }
 
         /// <summary>
         /// <para type="description">Selected validation mode.</para>
@@ -138,10 +155,10 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public X509CertificateValidationMode ISHWSCertificateValidationMode { get; set; }
 
         /// <summary>
-        /// <para type="description">Dns Endpoint Identity for Wcf Services.</para>
+        /// <para type="description">The DNS Endpoint Identity for WorldServer.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Dns Endpoint Identity for WorldServer", ParameterSetName = "WorldServerUrl")]
-        [Parameter(Mandatory = false, HelpMessage = "Dns Endpoint Identity for WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for WorldServer", ParameterSetName = "WorldServerUrl")]
+        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for WorldServer", ParameterSetName = "WorldServerAuthentication")]
         [ValidateNotNullOrEmpty]
         public string ISHWSDnsIdentity { get; set; }
 
@@ -157,7 +174,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WorldServer endpoint", ParameterSetName = "WorldServerAuthentication")]
         [ValidateNotNullOrEmpty]
-        public string IssuerEndpoint { get; set; }
+        public Uri IssuerEndpoint { get; set; }
 
         /// <summary>
         /// <para type="description">The credential to get access to WorldServer.</para>
@@ -232,7 +249,32 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             }
             else if (ParameterSetName == "WorldServerUrl")
             {
-                var operation = new SetISHServiceTranslationOrganizerOperation(Logger, ISHDeployment, Count);
+                var operation = new SetISHServiceTranslationOrganizerOperation(
+                    Logger, 
+                    ISHDeployment, 
+                    ISHWS, 
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSCertificateValidationMode") ? ISHWSCertificateValidationMode.ToString() : null,
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSDnsIdentity") ? ISHWSDnsIdentity : null);
+
+                operation.Run();
+            }
+            else if (ParameterSetName == "WorldServerAuthentication")
+            {
+                if (IssuerBindingType == BindingType.WindowsMixed &&
+                    MyInvocation.BoundParameters.ContainsKey("Credential"))
+                {
+                    WriteWarning("When IssuerBindingType is of the Windows type, then Credentials cannot be specified");
+                }
+
+                var operation = new SetISHServiceTranslationOrganizerOperation(
+                    Logger,
+                    ISHDeployment,
+                    ISHWS,
+                    IssuerBindingType.ToString(),
+                    IssuerEndpoint,
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Credential.UserName : null,
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)) : null);
+
 
                 operation.Run();
             }

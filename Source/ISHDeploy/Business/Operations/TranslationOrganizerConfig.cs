@@ -84,6 +84,25 @@ namespace ISHDeploy.Business.Operations
             /// </summary>
             public const string TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode";
 
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer/@wsTrustBindingType"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustBindingTypeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer/@wsTrustBindingType";
+            
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer/@wsTrustEndpoint"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustEndpointAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/issuer/@wsTrustEndpoint";
+
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@username"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSServiceUsernameAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@username";
+
+            /// <summary>
+            /// The xpath to attribute "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@password"
+            /// </summary>
+            public const string TranslationOrganizerSettingsInfoShareWSServicePasswordAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@password";
         }
     }
 }

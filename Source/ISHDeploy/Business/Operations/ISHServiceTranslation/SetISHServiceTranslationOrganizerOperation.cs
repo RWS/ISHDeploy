@@ -106,19 +106,28 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="infoShareWS">The URL to WorldServer.</param>
-        /// <param name="infoShareWSDnsIdentity">Dns Endpoint Identity for Wcf Services.</param>
-        /// <param name="infoShareWSServiceCertificateValidationMode">Type of WorldServer authentication.</param>
-        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri infoShareWS, string infoShareWSDnsIdentity = null, string infoShareWSServiceCertificateValidationMode = null) :
+        /// <param name="infoShareWSUri">The URI to WorldServer.</param>
+        /// <param name="infoShareWSServiceCertificateValidationMode">The validation mode.</param>
+        /// <param name="infoShareWSDnsIdentity">The DNS Endpoint Identity for WorldServer.</param>
+        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri infoShareWSUri, string infoShareWSServiceCertificateValidationMode = null, string infoShareWSDnsIdentity = null) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of URL to WorldServer");
+            _invoker = new ActionInvoker(logger, "Setting of WorldServer URL");
 
             _invoker.AddAction(
                     new SetAttributeValueAction(Logger,
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSAttributeXPath,
-                    infoShareWS.AbsoluteUri));
+                    infoShareWSUri.AbsoluteUri));
+
+            if (!string.IsNullOrEmpty(infoShareWSServiceCertificateValidationMode))
+            {
+                _invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        TranslationOrganizerConfigFilePath,
+                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath,
+                        infoShareWSServiceCertificateValidationMode));
+            }
 
             if (!string.IsNullOrEmpty(infoShareWSDnsIdentity))
             {
@@ -128,14 +137,59 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSDnsIdentityAttributeXPath,
                         infoShareWSDnsIdentity));
             }
+        }
 
-            if (!string.IsNullOrEmpty(infoShareWSServiceCertificateValidationMode))
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="infoShareWSUri">The URI to WorldServer.</param>
+        /// <param name="wsTrustBindingType">The type of WorldServer authentication.</param>
+        /// <param name="wsTrustEndpoint">The URL to issuer WorldServer endpoint.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri infoShareWSUri, string wsTrustBindingType, Uri wsTrustEndpoint, string userName = null, string password = null) :
+            base(logger, ishDeployment)
+        {
+            _invoker = new ActionInvoker(logger,
+                $"Setting of WorldServer URL, type of issuer binding, issuer endpoint{(string.IsNullOrEmpty(password) ? "." : " and new credential.")}");
+
+            _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    TranslationOrganizerConfigFilePath,
+                    TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSAttributeXPath,
+                    infoShareWSUri.AbsoluteUri));
+
+            _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    TranslationOrganizerConfigFilePath,
+                    TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustBindingTypeAttributeXPath,
+                    wsTrustBindingType));
+
+            _invoker.AddAction(
+                    new SetAttributeValueAction(Logger,
+                    TranslationOrganizerConfigFilePath,
+                    TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustEndpointAttributeXPath,
+                    wsTrustEndpoint.AbsoluteUri));
+
+            if (!string.IsNullOrEmpty(userName))
             {
                 _invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
-                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath,
-                        infoShareWSServiceCertificateValidationMode));
+                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceUsernameAttributeXPath,
+                        userName));
+            }
+
+            if (!string.IsNullOrEmpty(password))
+            {
+                _invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        TranslationOrganizerConfigFilePath,
+                        TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServicePasswordAttributeXPath,
+                        password));
             }
         }
 

@@ -46,17 +46,17 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// </example>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -ISHWSCertificateValidationMode "ChainTrust"</code>
-    /// <para>This command sets new WorldServer URL.
+    /// <para>This command sets new ISHWS URL.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "WindowsMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/windows"</code>
-    /// <para>This command sets new WorldServer URL, the type of issuer binding, the issuer endpoint.
+    /// <para>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "UserNameMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/username" -Credential $credential</code>
-    /// <para>This command sets new WorldServer URL, the type of issuer binding, the issuer endpoint and new credential.
+    /// <para>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint and new credential.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
@@ -139,47 +139,44 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int Count { get; set; }
 
         /// <summary>
-        /// <para type="description">The URL to WorldServer.</para>
+        /// <para type="description">The URL to ISHWS.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerUrl")]
-        [Parameter(Mandatory = true, HelpMessage = "The URL to WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public Uri ISHWS { get; set; }
 
         /// <summary>
         /// <para type="description">Selected validation mode.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "WorldServerUrl")]
-        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public X509CertificateValidationMode ISHWSCertificateValidationMode { get; set; }
 
         /// <summary>
-        /// <para type="description">The DNS Endpoint Identity for WorldServer.</para>
+        /// <para type="description">The DNS Endpoint Identity for ISHWS.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for WorldServer", ParameterSetName = "WorldServerUrl")]
-        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public string ISHWSDnsIdentity { get; set; }
 
         /// <summary>
-        /// <para type="description">Type of WorldServer authentication.</para>
+        /// <para type="description">Type of ISHWS authentication.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Type of WorldServer issuer authentication", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = true, HelpMessage = "Type of ISHWS issuer authentication", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public BindingType IssuerBindingType { get; set; }
 
         /// <summary>
-        /// <para type="description">The URL to issuer WorldServer endpoint.</para>
+        /// <para type="description">The URL to issuer ISHWS endpoint.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer WorldServer endpoint", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer ISHWS endpoint", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public Uri IssuerEndpoint { get; set; }
 
         /// <summary>
-        /// <para type="description">The credential to get access to WorldServer.</para>
+        /// <para type="description">The credential to get access to ISHWS.</para>
         /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The credential to get access to WorldServer", ParameterSetName = "WorldServerAuthentication")]
+        [Parameter(Mandatory = false, HelpMessage = "The credential to get access to ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
         public PSCredential Credential { get; set; }
 
@@ -247,23 +244,12 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 
                 operation.Run();
             }
-            else if (ParameterSetName == "WorldServerUrl")
-            {
-                var operation = new SetISHServiceTranslationOrganizerOperation(
-                    Logger, 
-                    ISHDeployment, 
-                    ISHWS, 
-                    MyInvocation.BoundParameters.ContainsKey("ISHWSCertificateValidationMode") ? ISHWSCertificateValidationMode.ToString() : null,
-                    MyInvocation.BoundParameters.ContainsKey("ISHWSDnsIdentity") ? ISHWSDnsIdentity : null);
-
-                operation.Run();
-            }
-            else if (ParameterSetName == "WorldServerAuthentication")
+            else if (ParameterSetName == "ISHWS")
             {
                 if (IssuerBindingType == BindingType.WindowsMixed &&
                     MyInvocation.BoundParameters.ContainsKey("Credential"))
                 {
-                    WriteWarning("When IssuerBindingType is of the Windows type, then Credentials cannot be specified");
+                    throw new ArgumentException("When IssuerBindingType is of the Windows type, then Credentials cannot be specified");
                 }
 
                 var operation = new SetISHServiceTranslationOrganizerOperation(

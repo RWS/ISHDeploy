@@ -19,6 +19,17 @@ $UpdateLeasedByPerNumberOfItems = 20
 $RetriesOnTimeout = 2
 $JobPollingInterval = "00:11:10.000"
 $PendingJobPollingInterval = "00:11:11.000"
+
+$ISHWS = "http://jira.com/"
+$ISHWSCertificateValidationMode = "ChainTrust" 
+$ISHWSDnsIdentity = "test" 
+$IssuerBindingType = "UserNameMixed" 
+$IssuerEndpoint = "http://test/"
+
+$userName = “GLOBAL\InfoshareServiceUser”
+$userPassword = "!nf0Shar3"
+$secpasswd = ConvertTo-SecureString “$userPassword” -AsPlainText -Force
+$testCreds = New-Object System.Management.Automation.PSCredential ($userName, $secpasswd)
 #endregion
 
 #region Script Blocks
@@ -94,6 +105,16 @@ $scriptBlockReadTargetXML = {
     $result["JobPollingInterval"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/settings").jobPollingInterval
     $result["PendingJobPollingInterval"] = $OrganizerConfig.SelectNodes("configuration/trisoft.infoShare.translationOrganizer/settings").pendingJobPollingInterval
 
+    $result["ISHWS"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/uri").infoShareWS
+    $result["ISHWSCertificateValidationMode"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/uri").infoShareWSServiceCertificateValidationMode
+    $result["ISHWSDnsIdentity"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/uri").infoShareWSDnsIdentity
+    $result["IssuerBindingType"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer").wsTrustBindingType
+    $result["IssuerEndpoint"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/issuer").wsTrustEndpoint
+
+    $result["serviceUsername"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").username
+    $result["servicePassword"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").password
+
+
     return $result
 }
 function remoteReadTargetXML() {
@@ -112,6 +133,14 @@ function remoteReadTargetXML() {
     $global:JobPollingIntervalFromFile = $result["JobPollingInterval"]
     $global:PendingJobPollingIntervalFromFile = $result["PendingJobPollingInterval"]
 
+    $global:ISHWSFromFile = $result["ISHWS"]
+    $global:ISHWSCertificateValidationModeFromFile = $result["ISHWSCertificateValidationMode"] 
+    $global:ISHWSDnsIdentityFromFile = $result["ISHWSDnsIdentity"]
+    $global:IssuerBindingTypeFromFile = $result["IssuerBindingType"]
+    $global:IssuerEndpointFromFile = $result["IssuerEndpoint"]
+
+    $global:serviceUsernameFromFile = $result["serviceUsername"]
+    $global:servicePasswordFromFile = $result["servicePassword"]
 }
 
 
@@ -238,5 +267,85 @@ Describe "Testing ISHServiceTranslationOrganizer"{
   #      }
 		
   #   }
+
+  It "Set ISHServiceTranslationOrganizer changes hosted parameters"{       
+        #Act
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint;Credential = $testCreds}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+        $serviceUsernameFromFile| Should be $userName
+        $servicePasswordFromFile| Should be $userPassword
+    }
+
+    It "Set ISHServiceTranslationOrganizer changes hosted parameters and works with default parameterset"{       
+        #Act
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+
+        $params2 = @{DumpFolder = $DumpFolder;MaxTranslationJobItemsUpdatedInOneCall = $MaxTranslationJobItemsUpdatedInOneCall;SystemTaskInterval = $SystemTaskInterval;AttemptsBeforeFailOnRetrieval = $AttemptsBeforeFailOnRetrieval;UpdateLeasedByPerNumberOfItems = $UpdateLeasedByPerNumberOfItems;RetriesOnTimeout = $RetriesOnTimeout;JobPollingInterval= $JobPollingInterval;PendingJobPollingInterval = $PendingJobPollingInterval}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params2
+        
+        #Assert
+        remoteReadTargetXML
+        $DumpFolderFromFile | Should be $DumpFolder
+        $MaxTranslationJobItemsUpdatedInOneCallFromFile | Should be $MaxTranslationJobItemsUpdatedInOneCall
+        $SystemTaskIntervalFromFile | Should be $SystemTaskInterval
+        $AttemptsBeforeFailOnRetrievalFromFile | Should be $AttemptsBeforeFailOnRetrieval
+        $UpdateLeasedByPerNumberOfItemsFromFile | Should be $UpdateLeasedByPerNumberOfItems
+        $RetriesOnTimeoutFromFile | Should be $RetriesOnTimeout
+        $JobPollingIntervalFromFile | Should be $JobPollingInterval
+        $PendingJobPollingIntervalFromFile | Should be $PendingJobPollingInterval
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+    }
+
+    It "Set ISHServiceTranslationOrganizer doesn't change serviceUser credentials if not provided"{       
+        #Act
+        #Assert
+        remoteReadTargetXML
+        $tempUserName = $serviceUsernameFromFile
+        $tempPassword = $servicePasswordFromFile
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+        $serviceUsernameFromFile| Should be $tempUserName
+        $servicePasswordFromFile| Should be $tempPassword
+    }
+    It "Set ISHServiceTranslationOrganizer doesn't allow to specify serviceUser credentials if BindingType is Windows"{       
+        #Act
+        #Assert
+        remoteReadTargetXML
+        $tempUserName = $serviceUsernameFromFile
+        $tempPassword = $servicePasswordFromFile
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = "WindowsMixed";IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params} | Should Throw "When IssuerBindingType is of the Windows type, then Credentials cannot be specified"
+        
+       
+    }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

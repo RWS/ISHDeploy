@@ -16,7 +16,7 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// STS issuer authentication types.
+    /// Authentication types.
     ///	<para type="description">Enumeration of Binding Types.</para>
     /// </summary>
     public enum BindingType

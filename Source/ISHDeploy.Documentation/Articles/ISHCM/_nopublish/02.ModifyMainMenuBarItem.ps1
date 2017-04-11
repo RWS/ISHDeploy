@@ -3,7 +3,7 @@
     Action="Custom/HTML/custom..V2.html"
     UserRole=@(
 		"Administrator"
-		"User"
+		"Author"
 	)
 }
 Set-ISHUIMainMenuBarItem -ISHDeployment $deploymentName @hash

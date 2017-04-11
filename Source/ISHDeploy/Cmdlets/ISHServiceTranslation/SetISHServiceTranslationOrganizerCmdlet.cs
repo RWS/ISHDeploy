@@ -17,6 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
+using System.ServiceModel.Security;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
 
@@ -41,6 +43,22 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -Count 2</code>
     /// <para>This command changes the amount of instances of services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -ISHWSCertificateValidationMode "ChainTrust"</code>
+    /// <para>This command sets new ISHWS URL.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "WindowsMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/windows"</code>
+    /// <para>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS "http://example.com/InfoShareWS/" -IssuerBindingType "UserNameMixed" -IssuerEndpoint "http://example.com/InfoShareSTS/issue/wstrust/mixed/username" -Credential $credential</code>
+    /// <para>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint and new credential.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHServiceTranslationOrganizer")]
     public sealed class SetISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
@@ -121,6 +139,48 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int Count { get; set; }
 
         /// <summary>
+        /// <para type="description">The URL to ISHWS.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The URL to ISHWS", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public string ISHWS { get; set; }
+
+        /// <summary>
+        /// <para type="description">Selected validation mode.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "Selected validation mode", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public X509CertificateValidationMode ISHWSCertificateValidationMode { get; set; }
+
+        /// <summary>
+        /// <para type="description">The DNS Endpoint Identity for ISHWS.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The DNS Endpoint Identity for ISHWS", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public string ISHWSDnsIdentity { get; set; }
+
+        /// <summary>
+        /// <para type="description">Type of ISHWS authentication.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Type of ISHWS issuer authentication", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public BindingType IssuerBindingType { get; set; }
+
+        /// <summary>
+        /// <para type="description">The URL to issuer ISHWS endpoint.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The URL to issuer ISHWS endpoint", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public string IssuerEndpoint { get; set; }
+
+        /// <summary>
+        /// <para type="description">The credential to get access to ISHWS.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The credential to get access to ISHWS", ParameterSetName = "ISHWS")]
+        [ValidateNotNullOrEmpty]
+        public PSCredential Credential { get; set; }
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -181,6 +241,40 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             else if (ParameterSetName == "TranslationOrganizerCount")
             {
                 var operation = new SetISHServiceTranslationOrganizerOperation(Logger, ISHDeployment, Count);
+
+                operation.Run();
+            }
+            else if (ParameterSetName == "ISHWS")
+            {
+                if (IssuerBindingType == BindingType.WindowsMixed &&
+                    MyInvocation.BoundParameters.ContainsKey("Credential"))
+                {
+                    throw new ArgumentException("When IssuerBindingType is of the Windows type, then Credentials cannot be specified");
+                }
+
+                Uri ishWSUri = null;
+                if (!Uri.TryCreate(ISHWS, UriKind.Absolute, out ishWSUri))
+                {
+                    throw new UriFormatException("The ISHWS parameter has wrong URI format");
+                }
+
+                Uri issuerEndpointUri = null;
+                if (!Uri.TryCreate(IssuerEndpoint, UriKind.Absolute, out issuerEndpointUri))
+                {
+                    throw new UriFormatException("The IssuerEndpoint parameter has wrong URI format");
+                }
+
+                var operation = new SetISHServiceTranslationOrganizerOperation(
+                    Logger,
+                    ISHDeployment,
+                    ishWSUri,
+                    IssuerBindingType.ToString(),
+                    issuerEndpointUri,
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSCertificateValidationMode") ? ISHWSCertificateValidationMode.ToString() : null,
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSDnsIdentity") ? ISHWSDnsIdentity : null,
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Credential.UserName : null,
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)) : null);
+
 
                 operation.Run();
             }

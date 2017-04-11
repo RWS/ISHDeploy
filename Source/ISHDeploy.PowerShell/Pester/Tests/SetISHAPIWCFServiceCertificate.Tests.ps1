@@ -62,7 +62,7 @@ $scriptBlockReadTargetXML = {
     [System.Xml.XmlDocument]$STSConfig = new-object System.Xml.XmlDocument
     $STSConfig.Load("$xmlWebPath\InfoShareSTS\Configuration\infoShareSTS.config")
     [System.Xml.XmlDocument]$FeedSDLLCConfig = new-object System.Xml.XmlDocument
-    $FeedSDLLCConfig.Load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
+    $FeedSDLLCConfig.Load("$xmlAppPath\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$TranslationOrganizerConfig = new-object System.Xml.XmlDocument
     $TranslationOrganizerConfig.Load("$xmlAppPath\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
     [System.Xml.XmlDocument]$SynchronizeToLCConfig = new-object System.Xml.XmlDocument

@@ -54,7 +54,7 @@ $scriptBlockReadTargetXML = {
     [System.Xml.XmlDocument]$connectionConfig = new-object System.Xml.XmlDocument
     $connectionConfig.load("$xmlWebPath\InfoShareWS\connectionconfiguration.xml")
     [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
+    $feedSDLLiveContentConfig.load("$xmlAppPath\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$translationOrganizerConfig = new-object System.Xml.XmlDocument
     $translationOrganizerConfig.load("$xmlAppPath\TranslationOrganizer\Bin\TranslationOrganizer.exe.config")
     [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
@@ -31,7 +33,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Remove-ISHIntegrationTMS</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Set-ISHIntegrationTMS -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping -Templates $templates</code>
+    /// <code>PS C:\>Set-ISHIntegrationTMS -ISHDeployment $deployment -Name "ws1" -Uri "https:\\ws1.sd.com" -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey "someApiKey" -SecretKey "someSecretKey" -Mapping $mapping -Templates $templates</code>
     /// <para>This command enables the translation organizer windows service.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
     /// Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationTMSMapping cmdlet.</para>
@@ -93,6 +95,27 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public ISHFieldMetadata[] GroupMetadata { get; set; }
 
         /// <summary>
+        /// <para type="description">API key that is associated with a user.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "API key that is associated with a user")]
+        [ValidateNotNullOrEmpty]
+        public string ApiKey { get; set; }
+
+        /// <summary>
+        /// <para type="description">Secret - API key encrypted using HMACSHA256 with the password.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Secret - API key encrypted using HMACSHA256 with the password")]
+        [ValidateNotNullOrEmpty]
+        public string SecretKey { get; set; }
+
+        /// <summary>
+        /// <para type="description">The HTTP timeout.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The timeout used when doing the SDL TMS call using REST API. Default value is 00:02:00.000.")]
+        [ValidateNotNullOrEmpty]
+        public TimeSpan HttpTimeout { get; set; }
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
@@ -104,10 +127,18 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                 RetriesOnTimeout,
                 Mappings,
                 Templates,
+                ApiKey,
+                SecretKey,
                 RequestMetadata,
                 GroupMetadata);
 
             var parameters = new Dictionary<TmsConfigurationSetting, object>();
+
+            if (MyInvocation.BoundParameters.ContainsKey("HttpTimeout"))
+            {
+                parameters.Add(TmsConfigurationSetting.httpTimeout, HttpTimeout);
+            }
+            
             var operation = new SetISHIntegrationTmsOperation(
                 Logger, 
                 ISHDeployment, 

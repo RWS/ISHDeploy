@@ -63,6 +63,11 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// The port number of proxy server
         /// </summary>
-        proxyPort
+        proxyPort,
+
+        /// <summary>
+        /// The HTTP timeout (Used for REST client only)
+        /// </summary>
+        httpTimeout
     }
 }

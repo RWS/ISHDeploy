@@ -143,7 +143,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The URL to ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
-        public Uri ISHWS { get; set; }
+        public string ISHWS { get; set; }
 
         /// <summary>
         /// <para type="description">Selected validation mode.</para>
@@ -171,7 +171,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The URL to issuer ISHWS endpoint", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
-        public Uri IssuerEndpoint { get; set; }
+        public string IssuerEndpoint { get; set; }
 
         /// <summary>
         /// <para type="description">The credential to get access to ISHWS.</para>
@@ -252,12 +252,26 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
                     throw new ArgumentException("When IssuerBindingType is of the Windows type, then Credentials cannot be specified");
                 }
 
+                Uri ishWSUri = null;
+                if (!Uri.TryCreate(ISHWS, UriKind.Absolute, out ishWSUri))
+                {
+                    throw new UriFormatException("The ISHWS parameter has wrong URI format");
+                }
+
+                Uri issuerEndpointUri = null;
+                if (!Uri.TryCreate(IssuerEndpoint, UriKind.Absolute, out issuerEndpointUri))
+                {
+                    throw new UriFormatException("The IssuerEndpoint parameter has wrong URI format");
+                }
+
                 var operation = new SetISHServiceTranslationOrganizerOperation(
                     Logger,
                     ISHDeployment,
-                    ISHWS,
+                    ishWSUri,
                     IssuerBindingType.ToString(),
-                    IssuerEndpoint,
+                    issuerEndpointUri,
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSCertificateValidationMode") ? ISHWSCertificateValidationMode.ToString() : null,
+                    MyInvocation.BoundParameters.ContainsKey("ISHWSDnsIdentity") ? ISHWSDnsIdentity : null,
                     IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Credential.UserName : null,
                     IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)) : null);
 

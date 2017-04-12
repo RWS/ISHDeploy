@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         {
             _invoker = new ActionInvoker(logger, "Remove TMS instance");
 
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.TmsNodeXPath));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.TmsNodeXPath));
         }
 
         /// <summary>

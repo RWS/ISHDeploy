@@ -310,11 +310,6 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath TopDocumentButtonBarXmlPath { get; }
 
         /// <summary>
-        /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-        /// </summary>
-        protected ISHFilePath TranslationOrganizerConfigPath { get; }
-
-        /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
         /// </summary>
         protected ISHFilePath TrisoftInfoShareClientConfigPath { get; }
@@ -410,7 +405,6 @@ namespace ISHDeploy.Business.Operations
             LanguageDocumentButtonbarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\LanguageDocumentButtonbar.xml");
             SynchronizeToLiveContentConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
             TopDocumentButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
-            TranslationOrganizerConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             TrisoftInfoShareClientConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Trisoft.InfoShare.Client.config");
             XopusBluelionConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");

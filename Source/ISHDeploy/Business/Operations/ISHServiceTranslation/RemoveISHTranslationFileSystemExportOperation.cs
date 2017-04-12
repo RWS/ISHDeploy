@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         {
             _invoker = new ActionInvoker(logger, "Remove FileSystem instance");
 
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.FileSystemNodeXPath));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.FileSystemNodeXPath));
         }
 
         /// <summary>

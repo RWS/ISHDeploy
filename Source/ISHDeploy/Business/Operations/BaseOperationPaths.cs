@@ -308,12 +308,7 @@ namespace ISHDeploy.Business.Operations
         /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
         /// </summary>
         protected ISHFilePath TopDocumentButtonBarXmlPath { get; }
-
-        /// <summary>
-        /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-        /// </summary>
-        protected ISHFilePath TranslationOrganizerConfigPath { get; }
-
+        
         /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
         /// </summary>

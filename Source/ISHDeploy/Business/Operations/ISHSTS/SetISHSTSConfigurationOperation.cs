@@ -249,8 +249,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
+            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
+            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));

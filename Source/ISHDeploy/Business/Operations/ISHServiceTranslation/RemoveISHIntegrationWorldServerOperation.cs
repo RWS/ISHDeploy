@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         {
             _invoker = new ActionInvoker(logger, "Remove World Server instance");
 
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.WorldServerNodeXPath));
+            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WorldServerNodeXPath));
         }
 
         /// <summary>

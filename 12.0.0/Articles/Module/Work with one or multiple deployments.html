@@ -72,7 +72,7 @@
 </code></pre><ul>
 <li>When the server has no active deployments then <code>$deployments</code> will be empty.</li>
 <li>When the server has one deployment then <code>$deployments</code> will hold a reference to the one deployment, typically known as the default deployment.</li>
-<li>When the server has multiple deployments then you can get a nice report using the <code>Format-Table</code> commandlet.</li>
+<li>When the server has multiple deployments then you can get a nice report using the <code>Format-Table</code> cmdlet.</li>
 </ul>
 <pre><code class="lang-powershell">$deployments|Format-Table Name,SoftwareVersion,DatabaseType,AccessHostname
 </code></pre><pre><code class="lang-text">Name                SoftwareVersion DatabaseType    AccessHostName                                
@@ -86,19 +86,19 @@ InfoShareExtra2     12.0.2417.0     sqlserver2014   ish.example.com
 </code></pre><p>This outputs the following</p>
 <pre><code class="lang-text">SoftwareVersion : 12.0.2929.1
 Name            : InfoShare
-AppPath         : C:\InfoShare
-WebPath         : C:\InfoShare
-DataPath        : C:\InfoShare
+AppPath         : C:\InfoShare\App
+WebPath         : C:\InfoShare\Web
+DataPath        : C:\InfoShare\Data
 DatabaseType    : sqlserver2012
 AccessHostName  : ish.example.com
-WebAppNameCM    : InfoShareAuthor
-WebAppNameWS    : InfoShareWS
-WebAppNameSTS   : InfoShareSTS
+WebAppNameCM    : ishcm
+WebAppNameWS    : ishws
+WebAppNameSTS   : ishsts
 WebSiteName     : Default Web Site
 </code></pre><p>If the <code>projectsuffix</code> was not empty then concatenate it after <code>InfoShare</code>. For example</p>
 <pre><code class="lang-powershell">Get-ISHDeployment -Name InfoShareSQL
 </code></pre><h3 id="using-a-deployment">Using a deployment</h3>
-<p>All commandlets that target a specific deployment are driven from the <code>-ISHDeployment</code> parameter that expects as value a name of deployment or an instance. 
+<p>All cmdlets that target a specific deployment are driven from the <code>-ISHDeployment</code> parameter that expects as value a name of deployment or an instance. 
 To acquire an instance use the <code>Get-ISHDeployment</code>.</p>
 <p>The following two blocks are equal for the default deployment name <code>InfoShare</code>.</p>
 <pre><code class="lang-powershell"># Using the deployment instance
@@ -172,13 +172,13 @@ osuser                                   osuser
 ospassword                               *******
 ...
 databasetype                             sqlserver2014
-apppath                                  C:\InfoShare\12.0.0\ISH
-webpath                                  C:\InfoShare\12.0.0\ISH
-datapath                                 C:\InfoShare\12.0.0\ISH
-workspacepath                            C:\InfoShare\12.0.0\_Workspace
-infoshareauthorwebappname                ishcmsql
-infosharewswebappname                    ishwssql
-infosharestswebappname                   ishstssql
+apppath                                  C:\InfoShare
+webpath                                  C:\InfoShare
+datapath                                 C:\InfoShare
+workspacepath                            C:\InfoShare\_Workspace
+infoshareauthorwebappname                ishcm
+infosharewswebappname                    ishws
+infosharestswebappname                   ishsts
 websitename                              Default Web Site
 ...
 </code></pre><p>To get a quick comparison execute</p>
@@ -189,14 +189,22 @@ To override this behavior use the <code>-ShowPassword</code> parameter.</p>
 <pre><code class="lang-powershell">$deploymentName = &quot;InfoShare&quot;
 # Get current set with clear passwords
 Get-ISHDeploymentParameters -ISHDeployment $deploymentName -ShowPassword
-</code></pre><h2 id="developing-a-deployment">Developing a deployment</h2>
-<p>To help engineers write and debug scripts a commandlet <code>Undo-ISHDeployment</code> is provided.</p>
-<p>All commandlets in this module track and keep a backup of all vanilla files being modified.
+</code></pre><p><strong>Notice</strong> that similar values might be different between the output of <code>Get-ISHDeployment</code> and <code>Get-ISHDeploymentParameters</code>. 
+<code>Get-ISHDeploymentParameters</code> will always return the value from the input parameters installation file but <code>Get-ISHDeployment</code> will focus on providing output that is more useful when possible.
+For example <code>webpath</code> from <code>Get-ISHDeploymentParameters</code> is the actual input parameter during installation (e.g. <code>C:\InfoShare</code>) where <code>WebPath</code> from <code>Get-ISHDeployment</code> is derived and points to the exact location of the web applications (e.g. <code>C:\InfoShare\Web</code>).</p>
+<h3 id="get-one-input-parameter-of-a-deployment">Get one input parameter of a deployment</h3>
+<p><code>Get-ISHDeploymentParameters</code> offers an additional parameter set that helps when working with one parameter. 
+When <code>-Name</code> is specified then the cmdlet will return one record matching the specified name.
+When <code>-OnlyValue</code> is specified then the cmdlet will return only the value instead of the recordset.</p>
+<p>For example <code>Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Name databasetype -OnlyValue</code> return just <code>sqlserver2014</code>.</p>
+<h2 id="developing-a-deployment">Developing a deployment</h2>
+<p>To help engineers write and debug scripts a cmdlet <code>Undo-ISHDeployment</code> is provided.</p>
+<p>All cmdlets in this module track and keep a backup of all vanilla files being modified.
 This allows the module to undo all changes without the requirement to uninstall and then re-install.</p>
 <pre><code class="lang-powershell">Undo-ISHDeployment -ISHDeployment $deploymentName
 </code></pre><h2 id="clear-history-artifacts">Clear history artifacts</h2>
 <p>Because the module&#39;s codebase is not connected with the <code>InstallTool.exe</code> when you uninstall the module&#39;s artifacts will not be removed.
-The <code>Clear-ISHDeploymentHistory</code> takes care of this by removing all artifacts. You must use this commandlet before uninstalling.</p>
+The <code>Clear-ISHDeploymentHistory</code> takes care of this by removing all artifacts. You must use this cmdlet before uninstalling.</p>
 <pre><code class="lang-powershell">Clear-ISHDeploymentHistory -ISHDeployment $deploymentName
 </code></pre>
             </article>

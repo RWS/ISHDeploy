@@ -57,6 +57,67 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="release-notes">Release notes</h1>
               
+<h2 id="stable-13">stable-1.3</h2>
+<p>This release is focused on adding cmdlets into the module that help configure and manager the translation services.</p>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>Fixed <code>Get-ISHDeployment</code> to return the actual path for the <code>WebPath</code>, <code>DataPath</code> and <code>AppPath</code>. 
+E.g for <code>WebPath</code> the value is <code>C:\InfoShare\Web</code> instead of <code>C:\InfoShare</code>.  <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentParameter</code> new parameters <code>-Name</code> and <code>-ValueOnly</code> simplify working with one parameter.  <strong>[Update]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Minor corrections and enhancements on <strong>Work with one or multiple deployments</strong> tutorial.  <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration Translation<ol>
+<li>Cmdlets<ul>
+<li><code>Enable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>New-ISHFieldMetadata</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSMapping</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSTemplate</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationWorldServerMapping</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>New section <strong>Work with translation services</strong> with tutorials: <strong>[New]</strong><ul>
+<li><strong>Integrating translation jobs with SDL World Server</strong>. <strong>[New]</strong></li>
+<li><strong>Integrating translation jobs with SDL TMS</strong>. <strong>[New]</strong></li>
+<li><strong>Exporting translation jobs to the file system</strong>. <strong>[New]</strong></li>
+<li><strong>Configuring the services</strong>. <strong>[New]</strong></li>
+<li><strong>Scaling the services</strong>. <strong>[New]</strong>          </li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Working with ISHCM web UI features<ol>
+<li>Tutorials<ul>
+<li><strong>Configuring ISHCM web UI button bars</strong>. Fixed an bug in the example when using splatting parameters <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
 <h2 id="stable-12">stable-1.2</h2>
 <ol>
 <li>General <ol>

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Configuring ISHCM web UI menu bars </title>
+    <title>Exporting translation jobs to the file system </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Configuring ISHCM web UI menu bars ">
+    <meta name="title" content="Exporting translation jobs to the file system ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -62,96 +62,31 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="configuring-ishcm-web-ui-menu-bars">Configuring ISHCM web UI menu bars</h1>
+              <h1 id="exporting-translation-jobs-to-the-file-system">Exporting translation jobs to the file system</h1>
               
-<p>This article explains how to configure the menu bars in <strong>ISHCM</strong> Web UI for </p>
-<ul>
-<li>Main Menu</li>
-<li>Event Monitor</li>
-<li>Search</li>
-</ul>
-<p>Scripts will use the splatting technique to avoid lengthy lines.</p>
+<p>This tutorial explains how to configure an export to the file system.</p>
 <h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre><h2 id="configure-main-menu">Configure main menu</h2>
-<p>To create a new menu item that targets custom page <code>custom.html</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom&quot;
-    Action=&quot;Custom/HTML/custom.html&quot;
-    UserRole=&quot;Administrator&quot;
-}
-Set-ISHUIMainMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>To change this item to </p>
-<ul>
-<li>target a newer version of the page with name <code>custom.v2.html</code></li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom&quot;
-    Action=&quot;Custom/HTML/custom..V2.html&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
-}
-Set-ISHUIMainMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUIMainMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
-</code></pre><p>The custom files must be present in the Custom folder of ISHCM as explained in tutorial <a href="../Module/Work%20with%20files%20and%20packages.html">Work with files and packages.md</a>.   </p>
-<h2 id="configure-event-monitor">Configure event monitor</h2>
-<p>To create a new menu item <code>CUSTOM</code> for user role <code>Administrator</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Event&quot;
-    Description=&quot;Show all custom events&quot;
-    UserRole=&quot;Administrator&quot;
-    EventTypesFilter=&quot;CUSTOM&quot;
-}
-Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>By default the cmdlet will place the new item before the one with label <code>All Events</code>. To change this item to </p>
-<ul>
-<li>show event types <code>CUSTOM1</code> and <code>CUSTOM2</code></li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Event&quot;
-    Description=&quot;Show all custom events&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
-    EventTypesFilter=@(&quot;CUSTOM1&quot;,&quot;CUSTOM2&quot;)
-}
-Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
-</code></pre><h2 id="configure-search-menu">Configure search menu</h2>
-<p>To create a new menu item <code>Custom Search</code> for user role <code>Administrator</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Search&quot;
-    Type=&quot;Default&quot;
-    UserRole=&quot;Administrator&quot;
-    SearchXML=&quot;CustomDefaultSearch&quot;
-}
-Set-ISHUISearchMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>By default the cmdlet will place the new item before the one with label <code>Locate</code>. To change this item to </p>
-<ul>
-<li>change the search type to publication</li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Search&quot;
-    Type=&quot;Publication&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
-    SearchXML=&quot;CustomPublicationSearch&quot;
-}
-Set-ISHUISearchMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUISearchMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
-</code></pre>
+</code></pre><h2 id="configure-the-export-to-the-file-system">Configure the export to the file system</h2>
+<p>To configure the export to the file system use the <code>Set-ISHTranslationFileSystemExport</code> cmdlet. </p>
+<pre><code class="lang-powershell"># The export path on the file system
+$exportFolderPath=&quot;&quot;
+
+# Set the export
+Set-ISHTranslationFileSystemExport -ISHDeployment $deploymentName -Name FileSystem -ExportFolderPath $exportFolderPath
+</code></pre><p>If additional metadata is required to be exported then use the <code>-RequestMetadata</code> parameter like this:</p>
+<pre><code class="lang-powershell">$requestMetadata=@(
+    New-ISHFieldMetadata -Name FAUTHOR -Level lng -ValueType value
+    New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
+)
+
+# Set the export
+Set-ISHTranslationFileSystemExport -ISHDeployment $deploymentName -Name FileSystem -ExportFolderPath $exportFolderPath -RequestMetadata $requestMetadata
+</code></pre><p><strong>Note:</strong> Content Manager allows only one export to the file system configured. </p>
+<h2 id="remove-the-integration-with-sdl-tms">Remove the integration with SDL TMS</h2>
+<p>Use <code>Remove-ISHTranslationFileSystemExport  -ISHDeployment $deploymentName</code>.</p>
+
             </article>
           </div>
           

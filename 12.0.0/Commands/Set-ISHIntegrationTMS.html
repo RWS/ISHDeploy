@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Set-ISHSTSConfiguration </title>
+    <title>Set-ISHIntegrationTMS </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Set-ISHSTSConfiguration ">
+    <meta name="title" content="Set-ISHIntegrationTMS ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,28 +62,92 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="set-ishstsconfiguration">Set-ISHSTSConfiguration</h1>
+              <h1 id="set-ishintegrationtms">Set-ISHIntegrationTMS</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Sets STS token signing certificate and/or type of authentication.</p>
+<p>Sets configuration of TMS.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Set-ISHSTSConfiguration [-TokenSigningCertificateThumbprint &lt;String&gt;]
- [-AuthenticationType &lt;AuthenticationType&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+<pre><code>Set-ISHIntegrationTMS -Name &lt;String&gt; -Uri &lt;String&gt; [-MaximumJobSize &lt;Int32&gt;] [-RetriesOnTimeout &lt;Int32&gt;]
+ -Mappings &lt;ISHLanguageToTmsLanguageMapping[]&gt; -Templates &lt;TmsTemplate[]&gt;
+ [-RequestMetadata &lt;ISHFieldMetadata[]&gt;] [-GroupMetadata &lt;ISHFieldMetadata[]&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>The Set-ISHIntegrationSTSCertificate cmdlet sets STS token signing certificate and/or type of authentication.</p>
+<p>The Set-ISHIntegrationTMS cmdlet sets configuration of TMS.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHSTSConfiguration -ISHDeployment $deployment -TokenSigningCertificateThumbprint &quot;t1&quot;
-</code></pre><p>This command sets STS token signing certificate.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHSTSConfiguration -ISHDeployment $deployment -AuthenticationType &quot;Windows&quot;
-</code></pre><p>This command sets Windows Authentication type for STS.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<pre><code>PS C:\&gt;Set-ISHIntegrationTMS -ISHDeployment $deployment -Name &quot;ws1&quot; -Uri &quot;https:\\ws1.sd.com&quot; -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping -Templates $templates
+</code></pre><p>This command enables the translation organizer windows service.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationTMSMapping cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-tokensigningcertificatethumbprint">-TokenSigningCertificateThumbprint</h3>
-<p>Token signing certificate Thumbprint.</p>
+<h3 id="-name">-Name</h3>
+<p>The name (alias) of TMS.</p>
 <pre><code class="lang-yaml">Type: String
+Parameter Sets: (All)
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-uri">-Uri</h3>
+<p>The Uri to TMS.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: (All)
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-maximumjobsize">-MaximumJobSize</h3>
+<p>The max value of total size in bytes of uncompressed external job.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 5242880
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-retriesontimeout">-RetriesOnTimeout</h3>
+<p>The number of retries on timeout.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 3
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-mappings">-Mappings</h3>
+<p>The mapping between ISHLanguage and TmsLanguage.</p>
+<pre><code class="lang-yaml">Type: ISHLanguageToTmsLanguageMapping[]
+Parameter Sets: (All)
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-templates">-Templates</h3>
+<p>The TMS templates.</p>
+<pre><code class="lang-yaml">Type: TmsTemplate[]
+Parameter Sets: (All)
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-requestmetadata">-RequestMetadata</h3>
+<p>The requested metadata.</p>
+<pre><code class="lang-yaml">Type: ISHFieldMetadata[]
 Parameter Sets: (All)
 Aliases: 
 
@@ -92,17 +156,15 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre><h3 id="-authenticationtype">-AuthenticationType</h3>
-<p>Selected authentication type.</p>
-<p>Possible values: UsernamePassword, Windows</p>
-<pre><code class="lang-yaml">Type: AuthenticationType
+</code></pre><h3 id="-groupmetadata">-GroupMetadata</h3>
+<p>The grouping metadata.</p>
+<pre><code class="lang-yaml">Type: ISHFieldMetadata[]
 Parameter Sets: (All)
 Aliases: 
-Accepted values: UsernamePassword, Windows
 
 Required: False
 Position: Named
-Default value: UsernamePassword
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -120,11 +182,10 @@ Accept wildcard characters: False
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="Get-ISHSTSRelyingParty.html">Get-ISHSTSRelyingParty</a></p>
-<p><a href="Remove-ISHIntegrationSTSCertificate.html">Remove-ISHIntegrationSTSCertificate</a></p>
-<p><a href="Reset-ISHSTS.html">Reset-ISHSTS</a></p>
-<p><a href="Set-ISHIntegrationSTSCertificate.html">Set-ISHIntegrationSTSCertificate</a></p>
-<p><a href="Set-ISHSTSRelyingParty.html">Set-ISHSTSRelyingParty</a></p>
+<p><a href="New-ISHIntegrationTMSMapping.html">New-ISHIntegrationTMSMapping</a></p>
+<p><a href="New-ISHIntegrationTMSTemplate.html">New-ISHIntegrationTMSTemplate</a></p>
+<p><a href="New-ISHFieldMetadata.html">New-ISHFieldMetadata</a></p>
+<p><a href="Remove-ISHIntegrationTMS.html">Remove-ISHIntegrationTMS</a></p>
 
             </article>
           </div>

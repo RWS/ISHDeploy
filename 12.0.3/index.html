@@ -57,7 +57,7 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="introduction">Introduction</h1>
               
-<p><strong>ISHDeploy.12.0.3</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/xml/">Knowledge Center 2016</a> <strong>Content Manager 12.0.3</strong> service. 
+<p><strong>ISHDeploy.12.0.3</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/xml/">Knowledge Center 2017</a> <strong>Content Manager 12.0.3</strong> service. 
 With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: </p>
 <ul>
 <li>Query all available deployments.</li>
@@ -115,69 +115,62 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-12">stable-1.2</h2>
+<h2 id="stable-13">stable-1.3</h2>
+<p>This release is focused on adding cmdlets into the module that help configure and manager the translation services.</p>
 <ol>
 <li>General <ol>
 <li>Cmdlets<ul>
-<li>For all cmdlets the &#39;-ISHDeployment&#39; parameter is now optional and calculated when omitted with the following reasoning:  <strong>[Update]</strong><ul>
-<li>When there is only one available deployment detected then this one will be used.</li>
-<li>Where there are more than one available deployments detected then the cmdlet will throw an error.</li>
+<li>Fixed <code>Get-ISHDeployment</code> to return the actual path for the <code>WebPath</code>, <code>DataPath</code> and <code>AppPath</code>. 
+E.g for <code>WebPath</code> the value is <code>C:\InfoShare\Web</code> instead of <code>C:\InfoShare</code>.  <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentParameter</code> new parameters <code>-Name</code> and <code>-ValueOnly</code> simplify working with one parameter.  <strong>[Update]</strong></li>
 </ul>
 </li>
-<li>Improved cmdlet behavior when administrator privileges are required.</li>
-<li>History file is enhanced with script info meta language. </li>
+<li>Tutorials<ul>
+<li>Minor corrections and enhancements on <strong>Work with one or multiple deployments</strong> tutorial.  <strong>[Update]</strong></li>
 </ul>
 </li>
-<li>Documentation<ul>
-<li>Renamed items in the top bar to <strong>Tutorials</strong> and <strong>Cmdlet Documentation</strong>. <strong>[Update]</strong></li>
-<li>New items in the top bar for access to topics such as <strong>Getting started</strong> and <strong>Release notes</strong>. <strong>[Update]</strong></li>
-<li>New icon in top bar. <strong>[Update]</strong></li>
-<li>New tutorial on how to work with one deployment. <strong>[Update]</strong></li>
-<li>Renamed and extended tutorial <strong>Work with files</strong> to <strong>Work with files and packages</strong>. <strong>[Update]</strong></li>
-<li><strong>Getting Started</strong> has new information about required elevated administrator privileges. <strong>[Update]</strong></li>
+</ol>
+</li>
+<li>Integration Translation<ol>
+<li>Cmdlets<ul>
+<li><code>Enable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>New-ISHFieldMetadata</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSMapping</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSTemplate</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationWorldServerMapping</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>New section <strong>Work with translation services</strong> with tutorials: <strong>[New]</strong><ul>
+<li><strong>Integrating translation jobs with SDL World Server</strong>. <strong>[New]</strong></li>
+<li><strong>Integrating translation jobs with SDL TMS</strong>. <strong>[New]</strong></li>
+<li><strong>Exporting translation jobs to the file system</strong>. <strong>[New]</strong></li>
+<li><strong>Configuring the services</strong>. <strong>[New]</strong></li>
+<li><strong>Scaling the services</strong>. <strong>[New]</strong>          </li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
 </li>
 <li>Working with ISHCM web UI features<ol>
-<li>Cmdlets<ul>
-<li><code>Set-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
-<li><code>Remove-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
-<li><code>Move-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
-<li><code>Move-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Remove-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Set-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Move-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Remove-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
-<li><code>Copy-ISHCMFile</code>. <strong>[New]</strong></li>
-<li><code>Expand-ISHCMPackage</code>. <strong>[New]</strong></li>
-<li><code>Set-ISHCMCUILResourceGroup</code>. <strong>[New]</strong></li>
-<li><code>Backup-ISHDeployment</code>. <strong>[New]</strong></li>
-<li>Renamed cmdlets for event monitor:  <strong>[Update]</strong><ul>
-<li>From <code>Set-ISHUIEventMonitorTab</code> to <code>Set-ISHUIEventMonitorMenuBarItem</code>.</li>
-<li>From <code>Move-ISHUIEventMonitorTab</code> to <code>Move-ISHUIEventMonitorMenuBarItem</code>.</li>
-<li>From <code>Remove-ISHUIEventMonitorTab</code> to <code>Remove-ISHUIEventMonitorMenuBarItem</code>.</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Documentation<ul>
-<li>Reorganize former &quot;Configuring features using the module&quot; tutorial into three more specialized. <strong>[Update]</strong><ul>
-<li>Toggling Web Components. <strong>[Update]</strong></li>
-<li>Configuring ISHCM web UI menu bars. <strong>[Update]</strong></li>
-<li>Configuring ISHCM web UI button bars. <strong>[New]</strong></li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>Integration STS<ol>
-<li>Documentation<ul>
-<li>Fixed invalid parameter reference in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
-<li>Added remarks for the importance of execution order in PowerShell examples in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
+<li>Tutorials<ul>
+<li><strong>Configuring ISHCM web UI button bars</strong>. Fixed an bug in the example when using splatting parameters <strong>[Update]</strong></li>
 </ul>
 </li>
 </ol>

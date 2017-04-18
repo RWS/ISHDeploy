@@ -5,17 +5,17 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Work with one deployment </title>
+    <title>Remove-ISHTranslationFileSystemExport </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Work with one deployment ">
+    <meta name="title" content="Remove-ISHTranslationFileSystemExport ">
     <meta name="generator" content="docfx 2.4.0.0">
     
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
   </head>
   <body data-spy="scroll" data-target="#affix">
@@ -30,8 +30,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="../../index.html">
-                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              <a class="navbar-brand" href="../index.html">
+                <img src="../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -62,50 +62,38 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="work-with-one-deployment">Work with one deployment</h1>
+              <h1 id="remove-ishtranslationfilesystemexport">Remove-ISHTranslationFileSystemExport</h1>
               
-<p>This article explains a possible simpler interaction with the module&#39;s cmdlets when there is only one Content Manager deployment.</p>
-<h2 id="cmdlets-without-ishdeployment-parameter">Cmdlets without ISHDeployment parameter.</h2>
-<p>All cmdlets with the exception of <code>Get-ISHDeployment</code> offer the <code>-ISHDeployment</code> parameter to help them target a deployment. 
-When there is only one deployment available then it is possible to omit the <code>-ISHDeployment</code> and the module will automatically use the one.</p>
-<p>For example lets assume that <code>Get-ISHDeployment</code> outputs one deployment</p>
-<pre><code class="lang-powershell">Get-ISHDeployment|Format-Table Name
-</code></pre><pre><code class="lang-text">Name                SoftwareVersion DatabaseType    AccessHostName                                
-----                --------------- ------------    --------------                                
-InfoShare           TBA     sqlserver2014   ish.example.com
-</code></pre><p>In this case the following two invocation of <code>Get-ISHDeploymentHistory</code> are both equal</p>
-<ul>
-<li><code>Get-ISHDeploymentHistory -ISHDeployment &quot;InfoShare&quot;</code></li>
-<li><code>Get-ISHDeploymentHistory</code></li>
-</ul>
-<p>Although the system automatically figures out this one deployment named <code>InfoShare</code>, the history file will contain records with explicit value for the <code>-ISHDeployment</code> parameter.</p>
-<p>For example either of the following lines will generate the same entry in the history</p>
-<ul>
-<li><code>Enable-ISHUIContentEditor -ISHDeployment &quot;InfoShare&quot;</code></li>
-<li><code>Enable-ISHUIContentEditor</code></li>
-</ul>
-<p>And the history will be</p>
-<pre><code class="lang-powershell">&lt;#ISHDeployScriptInfo
+<h2 id="synopsis">SYNOPSIS</h2>
+<p>TMS Instance from Translation Organizer.</p>
+<h2 id="syntax">SYNTAX</h2>
+<pre><code>Remove-ISHTranslationFileSystemExport [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h2 id="description">DESCRIPTION</h2>
+<p>The Remove-ISHTranslationFileSystemExport cmdlet removes TMS Instance from Translation Organizer.</p>
+<h2 id="examples">EXAMPLES</h2>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
+<pre><code>PS C:\&gt;Remove-ISHTranslationFileSystemExport -ISHDeployment $deployment
+</code></pre><p>Removes TMS Instance from Translation Organizer.
+This command removes TMS Instance from Translation Organizer.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h2 id="parameters">PARAMETERS</h2>
+<h3 id="-ishdeployment">-ISHDeployment</h3>
+<p>Specifies the name or instance of the Content Manager deployment.</p>
+<pre><code class="lang-yaml">Type: ISHDeployment
+Parameter Sets: (All)
+Aliases: 
 
-.VERSION 1.0
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h2 id="inputs">INPUTS</h2>
+<h2 id="outputs">OUTPUTS</h2>
+<h2 id="notes">NOTES</h2>
+<h2 id="related-links">RELATED LINKS</h2>
+<p><a href="Set-ISHTranslationFileSystemExport.html">Set-ISHTranslationFileSystemExport</a></p>
 
-.MODULE ISHDeploy.12.0.3
-
-.CREATEDBYMODULEVERSION 1.2
-
-.UPDATEDBYMODULEVERSION 1.2
-
-#&gt;
-
-param(
-    [Parameter(Mandatory=$false)]
-    [switch]$IncludeCustomFile=$false
-)
-
-# 20160314
-$deploymentName = &quot;InfoShare&quot;
-Enable-ISHUIContentEditor -ISHDeployment $deploymentName
-</code></pre>
             </article>
           </div>
           
@@ -139,9 +127,9 @@ Enable-ISHUIContentEditor -ISHDeployment $deploymentName
       </footer>
     </div>
     
-    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../../styles/docfx.js"></script>
-    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
   </body>
 </html>

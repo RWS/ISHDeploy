@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Integrating translation jobs with SDL TMS </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Integrating translation jobs with SDL TMS ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="integrating-translation-jobs-with-sdl-tms">Integrating translation jobs with SDL TMS</h1>
+              
+<p>This tutorial explains how to configure an integration with <a href="http://www.sdl.com/solution/language/translation-management/tms/">SDL TMS</a>.</p>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="create-mappings-between-sdl-tms-languages-and-content-manager-languages">Create mappings between SDL TMS languages and Content Manager languages</h2>
+<p>As <strong>SDL TMS</strong> and <strong>SDL Knowledge Center Content Manager</strong> use different identifiers for the languages, we need to create a mapping.</p>
+<p>Use the <code>New-ISHIntegrationTMSMapping</code> cmdlet to create one mapping. 
+Add multiple mappings into an array to describe all the necessary mappings. </p>
+<p>For example:</p>
+<pre><code class="lang-powershell"># Create an array of mappings
+
+$mappings=@(
+    New-ISHIntegrationTMSMapping -ISHLanguage af -TMSLanguage AF
+    New-ISHIntegrationTMSMapping -ISHLanguage sq -TMSLanguage SQ
+    New-ISHIntegrationTMSMapping -ISHLanguage am -TMSLanguage AM
+    New-ISHIntegrationTMSMapping -ISHLanguage ar -TMSLanguage AR-SA  
+    New-ISHIntegrationTMSMapping -ISHLanguage hy -TMSLanguage HY
+    New-ISHIntegrationTMSMapping -ISHLanguage as -TMSLanguage AS
+    New-ISHIntegrationTMSMapping -ISHLanguage az -TMSLanguage AZ-XE  
+    New-ISHIntegrationTMSMapping -ISHLanguage eu -TMSLanguage EU
+    New-ISHIntegrationTMSMapping -ISHLanguage bn -TMSLanguage BN
+    New-ISHIntegrationTMSMapping -ISHLanguage bs -TMSLanguage BS
+    New-ISHIntegrationTMSMapping -ISHLanguage bg -TMSLanguage BG
+    New-ISHIntegrationTMSMapping -ISHLanguage ca -TMSLanguage CA
+    New-ISHIntegrationTMSMapping -ISHLanguage zh -TMSLanguage ZH-HK  
+    New-ISHIntegrationTMSMapping -ISHLanguage hr -TMSLanguage HR
+    New-ISHIntegrationTMSMapping -ISHLanguage cs -TMSLanguage CS
+    New-ISHIntegrationTMSMapping -ISHLanguage da -TMSLanguage DA
+    New-ISHIntegrationTMSMapping -ISHLanguage nl -TMSLanguage NL
+    New-ISHIntegrationTMSMapping -ISHLanguage en -TMSLanguage EN-US  
+    New-ISHIntegrationTMSMapping -ISHLanguage et -TMSLanguage ET
+    New-ISHIntegrationTMSMapping -ISHLanguage fa -TMSLanguage FA
+    New-ISHIntegrationTMSMapping -ISHLanguage fi -TMSLanguage FI
+    New-ISHIntegrationTMSMapping -ISHLanguage fr -TMSLanguage FR
+    New-ISHIntegrationTMSMapping -ISHLanguage gl -TMSLanguage GL
+    New-ISHIntegrationTMSMapping -ISHLanguage de -TMSLanguage DE
+    New-ISHIntegrationTMSMapping -ISHLanguage el -TMSLanguage EL
+    New-ISHIntegrationTMSMapping -ISHLanguage gu -TMSLanguage GU
+    New-ISHIntegrationTMSMapping -ISHLanguage ha -TMSLanguage HA
+    New-ISHIntegrationTMSMapping -ISHLanguage he -TMSLanguage HE
+    New-ISHIntegrationTMSMapping -ISHLanguage hi -TMSLanguage HI
+    New-ISHIntegrationTMSMapping -ISHLanguage hu -TMSLanguage HU
+    New-ISHIntegrationTMSMapping -ISHLanguage is -TMSLanguage IS
+    New-ISHIntegrationTMSMapping -ISHLanguage ig -TMSLanguage IG
+    New-ISHIntegrationTMSMapping -ISHLanguage id -TMSLanguage IN
+    New-ISHIntegrationTMSMapping -ISHLanguage it -TMSLanguage IT
+    New-ISHIntegrationTMSMapping -ISHLanguage ja -TMSLanguage JA
+    New-ISHIntegrationTMSMapping -ISHLanguage kn -TMSLanguage KN
+    New-ISHIntegrationTMSMapping -ISHLanguage ka -TMSLanguage KA
+    New-ISHIntegrationTMSMapping -ISHLanguage kk -TMSLanguage KK
+    New-ISHIntegrationTMSMapping -ISHLanguage km -TMSLanguage KM
+    New-ISHIntegrationTMSMapping -ISHLanguage ky -TMSLanguage KY
+    New-ISHIntegrationTMSMapping -ISHLanguage ko -TMSLanguage KO
+    New-ISHIntegrationTMSMapping -ISHLanguage lv -TMSLanguage LV
+    New-ISHIntegrationTMSMapping -ISHLanguage lt -TMSLanguage LT
+    New-ISHIntegrationTMSMapping -ISHLanguage mk -TMSLanguage MK
+    New-ISHIntegrationTMSMapping -ISHLanguage ms -TMSLanguage MS-MY  
+    New-ISHIntegrationTMSMapping -ISHLanguage ml -TMSLanguage ML
+    New-ISHIntegrationTMSMapping -ISHLanguage mr -TMSLanguage MR
+    New-ISHIntegrationTMSMapping -ISHLanguage mn -TMSLanguage MN-XC  
+    New-ISHIntegrationTMSMapping -ISHLanguage my -TMSLanguage MY
+    New-ISHIntegrationTMSMapping -ISHLanguage no -TMSLanguage NO-NO  
+    New-ISHIntegrationTMSMapping -ISHLanguage or -TMSLanguage OR
+    New-ISHIntegrationTMSMapping -ISHLanguage ps -TMSLanguage PS
+    New-ISHIntegrationTMSMapping -ISHLanguage pl -TMSLanguage PL
+    New-ISHIntegrationTMSMapping -ISHLanguage pt -TMSLanguage PT
+    New-ISHIntegrationTMSMapping -ISHLanguage pa -TMSLanguage PA
+    New-ISHIntegrationTMSMapping -ISHLanguage ro -TMSLanguage RO
+    New-ISHIntegrationTMSMapping -ISHLanguage ru -TMSLanguage RU
+    New-ISHIntegrationTMSMapping -ISHLanguage sr -TMSLanguage SR
+    New-ISHIntegrationTMSMapping -ISHLanguage st -TMSLanguage ST
+    New-ISHIntegrationTMSMapping -ISHLanguage si -TMSLanguage SI
+    New-ISHIntegrationTMSMapping -ISHLanguage sk -TMSLanguage SK
+    New-ISHIntegrationTMSMapping -ISHLanguage sl -TMSLanguage SL
+    New-ISHIntegrationTMSMapping -ISHLanguage es -TMSLanguage ES
+    New-ISHIntegrationTMSMapping -ISHLanguage sw -TMSLanguage SW
+    New-ISHIntegrationTMSMapping -ISHLanguage sv -TMSLanguage SV
+    New-ISHIntegrationTMSMapping -ISHLanguage tl -TMSLanguage TL
+    New-ISHIntegrationTMSMapping -ISHLanguage tg -TMSLanguage TG
+    New-ISHIntegrationTMSMapping -ISHLanguage ta -TMSLanguage TA
+    New-ISHIntegrationTMSMapping -ISHLanguage te -TMSLanguage TE
+    New-ISHIntegrationTMSMapping -ISHLanguage th -TMSLanguage TH
+    New-ISHIntegrationTMSMapping -ISHLanguage tr -TMSLanguage TR
+    New-ISHIntegrationTMSMapping -ISHLanguage tk -TMSLanguage TK
+    New-ISHIntegrationTMSMapping -ISHLanguage uk -TMSLanguage UK
+    New-ISHIntegrationTMSMapping -ISHLanguage ur -TMSLanguage UR
+    New-ISHIntegrationTMSMapping -ISHLanguage uz -TMSLanguage UZ-XL  
+    New-ISHIntegrationTMSMapping -ISHLanguage vi -TMSLanguage VI
+    New-ISHIntegrationTMSMapping -ISHLanguage xh -TMSLanguage XH
+    New-ISHIntegrationTMSMapping -ISHLanguage yo -TMSLanguage YO
+    New-ISHIntegrationTMSMapping -ISHLanguage zu -TMSLanguage ZU
+)
+</code></pre><h2 id="create-templates">Create templates</h2>
+<p>Use the <code>New-ISHIntegrationTMSTemplate</code> cmdlet to create one template. 
+Add multiple templates into an array to describe all the necessary mappings. </p>
+<p>For example:</p>
+<pre><code class="lang-powershell"># Create an array of templates
+
+$templates=@(
+    New-ISHIntegrationTMSTemplate -Name &quot;Template1&quot; -TemplateId &quot;81143C38-0C96-4A8C-9BBB-87C1CF464FE3&quot;
+    New-ISHIntegrationTMSTemplate -Name &quot;Template2&quot; -TemplateId &quot;70407FBC-86FA-4A9D-8E6D-35E1AE85DB73&quot;
+)
+</code></pre><h2 id="create-request-and-group-metadata">Create request and group metadata</h2>
+<p>Use the <code>New-ISHFieldMetadata</code> cmdlet to create one metadata field representation. 
+Add multiple fields into an array to describe all the necessary fields. </p>
+<p>For example:</p>
+<pre><code class="lang-powershell"># Create an array of requested metadata
+
+$requestMetadata=@(
+    New-ISHFieldMetadata -Name FAUTHOR -Level lng -ValueType value
+    New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
+)
+
+# Create an array of group metadata
+
+$groupMetadata=@(
+    New-ISHFieldMetadata -Name FAUTHOR -Level lng -ValueType value
+    New-ISHFieldMetadata -Name DOC-LANGUAGE -Level lng -ValueType value
+)
+</code></pre><h2 id="configure-the-integration-with-sdl-tms">Configure the integration with SDL TMS</h2>
+<p>To configure the integration with SDL TMS use the <code>Set-ISHIntegrationTMS</code> cmdlet. 
+The integration requires the following information</p>
+<ul>
+<li>The uri for TMS&#39;s service.</li>
+<li>The mapping configuration created above.</li>
+<li>The template configuration created above.</li>
+<li>The metadata configuration created above that is pushed to TMS.</li>
+<li>The metadata configuration created above that is to group items in TMS.</li>
+</ul>
+<pre><code class="lang-powershell"># Uri and credentials for SDL TMS
+$uri=&quot;http://tms.example.com/&quot;
+
+# Set the integration with required parameters
+Set-ISHIntegrationTMS -ISHDeployment $deploymentName -Name TMS -Uri $uri -Mappings $mappings -Templates $templates
+
+# Set the integration with extra parameters
+Set-ISHIntegrationTMS -ISHDeployment $deploymentName -Name TMS -Uri $uri -Mappings $mappings -Templates $templates -RequestMetadata $requestMetadata -GroupMetadata $groupMetadata
+</code></pre><p><strong>Note:</strong> Content Manager allows only one connector for SDL TMS configured. </p>
+<h2 id="remove-the-integration-with-sdl-tms">Remove the integration with SDL TMS</h2>
+<p>Use <code>Remove-ISHIntegrationTMS  -ISHDeployment $deploymentName</code>.</p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

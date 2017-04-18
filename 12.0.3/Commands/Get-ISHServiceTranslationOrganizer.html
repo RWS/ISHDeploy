@@ -5,16 +5,16 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>ISHDeploy.Documentation </title>
+    <title>Get-ISHServiceTranslationOrganizer </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="ISHDeploy.Documentation ">
+    <meta name="title" content="Get-ISHServiceTranslationOrganizer ">
     <meta name="generator" content="docfx 2.4.0.0">
     
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="styles/docfx.vendor.css">
-    <link rel="stylesheet" href="styles/docfx.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <meta property="docfx:navrel" content="toc.html">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
     
   </head>
@@ -30,8 +30,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="index.html">
-                <img src="sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              <a class="navbar-brand" href="../index.html">
+                <img src="../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -52,15 +52,48 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        <div class="article row grid">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="ishdeploydocumentation">ISHDeploy.Documentation</h1>
+              <h1 id="get-ishservicetranslationorganizer">Get-ISHServiceTranslationOrganizer</h1>
               
-<h2 id="host-server">Host Server</h2>
-<p>DocPortal is hosted at <a href="http://kiev-green-bld.global.sdl.corp:8081/ISHDeploy.12.0.2/">ISHDeploy.12.0.2</a></p>
-<h2 id="dependencies">Dependencies</h2>
-<p>Documentation generation is using <a href="https://blogs.msdn.microsoft.com/powershell/2016/02/05/platyps-write-external-help-files-in-markdown/">platyPS, version 0.3.1.213</a>, which can be taken from <a href="https://www.powershellgallery.com/">PowerShellGallery</a></p>
+<h2 id="synopsis">SYNOPSIS</h2>
+<p>Gets list of windows services for Translation Builder.</p>
+<h2 id="syntax">SYNTAX</h2>
+<pre><code>Get-ISHServiceTranslationOrganizer [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h2 id="description">DESCRIPTION</h2>
+<p>The Get-ISHServiceTranslationOrganizer cmdlet gets list of translation builder windows service.</p>
+<h2 id="examples">EXAMPLES</h2>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
+<pre><code>PS C:\&gt;Get-ISHServiceTranslationOrganizer -ISHDeployment $deployment
+</code></pre><p>This command shows the translation builder windows service.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h2 id="parameters">PARAMETERS</h2>
+<h3 id="-ishdeployment">-ISHDeployment</h3>
+<p>Specifies the name or instance of the Content Manager deployment.</p>
+<pre><code class="lang-yaml">Type: ISHDeployment
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h2 id="inputs">INPUTS</h2>
+<h2 id="outputs">OUTPUTS</h2>
+<h2 id="notes">NOTES</h2>
+<h2 id="related-links">RELATED LINKS</h2>
+<p><a href="Set-ISHServiceTranslationOrganizer.html">Set-ISHServiceTranslationOrganizer</a></p>
+<p><a href="Enable-ISHServiceTranslationOrganizer.html">Enable-ISHServiceTranslationOrganizer</a></p>
+<p><a href="Disable-ISHServiceTranslationOrganizer.html">Disable-ISHServiceTranslationOrganizer</a></p>
 
             </article>
           </div>
@@ -95,9 +128,9 @@
       </footer>
     </div>
     
-    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="styles/docfx.js"></script>
-    <script type="text/javascript" src="styles/main.js"></script>
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
   </body>
 </html>

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Configuring ISHCM web UI menu bars </title>
+    <title>Scaling the services </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Configuring ISHCM web UI menu bars ">
+    <meta name="title" content="Scaling the services ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -62,95 +62,69 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="configuring-ishcm-web-ui-menu-bars">Configuring ISHCM web UI menu bars</h1>
+              <h1 id="scaling-the-services">Scaling the services</h1>
               
-<p>This article explains how to configure the menu bars in <strong>ISHCM</strong> Web UI for </p>
-<ul>
-<li>Main Menu</li>
-<li>Event Monitor</li>
-<li>Search</li>
-</ul>
-<p>Scripts will use the splatting technique to avoid lengthy lines.</p>
+<p>A Vanilla deployment is delivered with the <strong>Translation Builder</strong> and <strong>Translation Organizer</strong> behaviors pre-configured. 
+This tutorial explains how to configure the behaviors of each service.</p>
 <h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
 <p>First set deploymentName variable.</p>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
-</code></pre><h2 id="configure-main-menu">Configure main menu</h2>
-<p>To create a new menu item that targets custom page <code>custom.html</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom&quot;
-    Action=&quot;Custom/HTML/custom.html&quot;
-    UserRole=&quot;Administrator&quot;
+</code></pre><h2 id="configure-the-translation-buidler">Configure the Translation Buidler</h2>
+<p>To configure the behavior of the Translation Builder use the <code>Set-ISHServiceTranslationBuilder</code> cmdlet.
+For example:</p>
+<pre><code class="lang-powershell"># Set the Translation Builder configuration
+# All parameters are optional
+
+$hash=@{
+    MaxObjectsInOnePush=1000
+    MaxJobItemsCreatedInOneCall=10000
+    CompletedJobLifeSpan=&quot;90.00:00:00&quot;
+    JobProcessingTimeout=&quot;01:00:00&quot;
+    JobPollingInterval=&quot;00:05:00&quot;
+    PendingJobPollingInterval=&quot;00:15:00&quot;
 }
-Set-ISHUIMainMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>To change this item to </p>
-<ul>
-<li>target a newer version of the page with name <code>custom.v2.html</code></li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom&quot;
-    Action=&quot;Custom/HTML/custom..V2.html&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
+
+Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName @hash
+</code></pre><p>Notice that all parameters are optional.</p>
+<h2 id="configure-the-translation-organizer">Configure the Translation Organizer</h2>
+<p>To configure the behavior of the Translation Organizer use the <code>Set-ISHServiceTranslationOrganizer</code> cmdlet.
+For example:</p>
+<pre><code class="lang-powershell"># Set the Translation Organizer configuration
+# All parameters are optional
+
+$hash=@{
+    AttemptsBeforeFailOnRetrieval=3
+    DumpFolder=$dumpPath
+    JobPollingInterval=&quot;00:05:00&quot;
+    MaxTranslationJobItemsUpdatedInOneCall=100
+    PendingJobPollingInterval=&quot;00:15:00&quot;
+    RetriesOnTimeout=3
+    SystemTaskInterval=&quot;00:10:00&quot;
+    UpdateLeasedByPerNumberOfItems=100
 }
-Set-ISHUIMainMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUIMainMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
-</code></pre><p>The custom files must be present in the Custom folder of ISHCM as explained in tutorial <a href="../Module/Work%20with%20files%20and%20packages.html">Work with files and packages.md</a>.   </p>
-<h2 id="configure-event-monitor">Configure event monitor</h2>
-<p>To create a new menu item <code>CUSTOM</code> for user role <code>Administrator</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Event&quot;
-    Description=&quot;Show all custom events&quot;
-    UserRole=&quot;Administrator&quot;
-    EventTypesFilter=&quot;CUSTOM&quot;
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash
+</code></pre><p>Notice that all parameters are optional.</p>
+<p>To enable template synchronization execute:</p>
+<pre><code class="lang-powershell"># Enable the template synchronization 
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -SynchronizeTemplates $true
+</code></pre><h2 id="configure-translation-organizer-to-target-any-content-manager-deployment">Configure Translation Organizer to target any Content Manager deployment</h2>
+<p>Translation Organizer uses the SOAP API (ISHWS) of Content Manager to pull and push the translation jobs. Out of the box, it is configured to target the default ISHWS but <code>Set-ISHServiceTranslationOrganizer</code> can be used to change the default target. An example of such a case, is when when Translation Organizer executes on premise and Content Manager is hosted.</p>
+<p>The following example configures a Translation Organizer against a deployment on <code>ish.example.com</code>. By default the authentication paradigm is username/password based and requires credentials.</p>
+<pre><code class="lang-powershell"># Set the Translation Organizer configuration
+
+#Acquire credential that authorize with target
+$credential=Get-Credential
+
+$hash=@{
+    ISHWS=&quot;https://ish.example.com/ISHWS/&quot;
+    IssuerEndpoint=&quot;https://ish.example.com/ISHSTS/issue/wstrust/mixed/username&quot;
+    IssuerBindingType=&quot;UsernameMixed&quot;
+    Credential=$credential
 }
-Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>By default the cmdlet will place the new item before the one with label <code>All Events</code>. To change this item to </p>
-<ul>
-<li>show event types <code>CUSTOM1</code> and <code>CUSTOM2</code></li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Event&quot;
-    Description=&quot;Show all custom events&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
-    EventTypesFilter=@(&quot;CUSTOM1&quot;,&quot;CUSTOM2&quot;)
-}
-Set-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUIEventMonitorMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
-</code></pre><h2 id="configure-search-menu">Configure search menu</h2>
-<p>To create a new menu item <code>Custom Search</code> for user role <code>Administrator</code>:</p>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Search&quot;
-    Type=&quot;Default&quot;
-    UserRole=&quot;Administrator&quot;
-    SearchXML=&quot;CustomDefaultSearch&quot;
-}
-Set-ISHUISearchMenuBarItem -ISHDeployment $deploymentName @hash
-</code></pre><p>By default the cmdlet will place the new item before the one with label <code>Locate</code>. To change this item to </p>
-<ul>
-<li>change the search type to publication</li>
-<li>add the user role <code>Author</code></li>
-<li>place it first</li>
-</ul>
-<pre><code class="lang-powershell">$hash=@{
-    Label=&quot;Custom Search&quot;
-    Type=&quot;Publication&quot;
-    UserRole=@(
-        &quot;Administrator&quot;
-        &quot;Author&quot;
-    )
-    SearchXML=&quot;CustomPublicationSearch&quot;
-}
-Set-ISHUISearchMenuBarItem -ISHDeployment $deploymentName @hash
-Move-ISHUISearchMenuBarItem -ISHDeployment $deploymentName -Label $hash[&quot;Label&quot;] -First
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash
 </code></pre>
             </article>
           </div>

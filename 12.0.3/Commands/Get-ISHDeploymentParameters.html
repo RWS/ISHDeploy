@@ -67,7 +67,11 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Acquire the input parameters of a specific deployment.</p>
 <h2 id="syntax">SYNTAX</h2>
+<h3 id="default">Default</h3>
 <pre><code>Get-ISHDeploymentParameters [-Original] [-Changed] [-ShowPassword] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="specificparameter">SpecificParameter</h3>
+<pre><code>Get-ISHDeploymentParameters [-Original] [-Changed] [-ShowPassword] -Name &lt;String&gt; [-ValueOnly]
+ [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Get-ISHDeploymentParameters cmdlet gets parameters for Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -76,48 +80,78 @@
 </code></pre><p>This command gets the input parameters of Content Manager deployment with hidden passwords.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
-<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -ShowPassword
+<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment -ShowPassword
 </code></pre><p>This command gets the input parameters of &quot;InfoShare&quot; deployment with real passwords.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
-<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -Original
+<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment -Original
 </code></pre><p>This command return original values (from the backup folder) of &quot;InfoShare&quot; deployment.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
-<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment &quot;InfoShare&quot; -Changed
+<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment -Changed
 </code></pre><p>This command return only changed parameters of &quot;InfoShare&quot; deployment.
+Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
+<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment -Name &quot;issuercertificatethumbprint&quot;
+</code></pre><p>This command return the parameter with name &quot;issuercertificatethumbprint&quot;.
+Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
+<pre><code>PS C:\&gt;Get-ISHDeploymentParameters -ISHDeployment $deployment -Name &quot;issuercertificatethumbprint&quot; -ValueOnly
+</code></pre><p>This command return the value of parameter with name &quot;issuercertificatethumbprint&quot;.
 Parameter $deployment is an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-original">-Original</h3>
-<p>Original flag will return initial parameters.</p>
+<p>Switch parameter to get data from original file</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
 
 Required: False
-Position: 0
+Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-changed">-Changed</h3>
-<p>Changed flag will return changed parameters only.</p>
+<p>Switch parameter to get difference from changed and original file</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
 
 Required: False
-Position: 0
+Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-showpassword">-ShowPassword</h3>
-<p>ShowPassword flag will show real passwords.</p>
+<p>Switch parameter to show real passwords in parameters</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: 
 
 Required: False
-Position: 0
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-name">-Name</h3>
+<p>The name of the parameter to receive</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: SpecificParameter
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-valueonly">-ValueOnly</h3>
+<p>Output only the value</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: SpecificParameter
+Aliases: 
+
+Required: False
+Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False

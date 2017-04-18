@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+
+using ISHDeploy.Common;
+using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Actions.File
 {

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Enums;
+
+using System;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -120,7 +123,11 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteVerbose($"The file `{filePath}` does not contain node within the xpath `{xpath}`");
                 if (outputWarnings)
                 {
-                    _logger.WriteWarning("Not able to find the target node");
+                    _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain node within the xpath `{xpath}`");
+                }
+                else
+                {
+                    _logger.WriteVerbose($"Not able to remove xml item. The file `{filePath}` doesn't contain node within the xpath `{xpath}`");
                 }
                 return;
             }
@@ -147,11 +154,13 @@ namespace ISHDeploy.Data.Managers
             var nodes = SelectNodes(ref doc, xpath).ToArray();
             if (nodes.Length == 0)
             {
-                _logger.WriteVerbose($"The file `{filePath}` does not contain nodes within the xpath `{xpath}`");
-
                 if (outputWarnings)
                 {
-                    _logger.WriteWarning("Not able to find target nodes");
+                    _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{xpath}`");
+                }
+                else
+                {
+                    _logger.WriteVerbose($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{xpath}`");
                 }
 
                 return;
@@ -457,7 +466,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="filePath">Path to the file that is modified</param>
         /// <param name="attributeXpath">XPath the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
-        public void SetAttributeValue(string filePath, string attributeXpath, string value)
+        /// <param name="createAttributeIfNotExist">Create attribute if not exist.</param>
+        public void SetAttributeValue(string filePath, string attributeXpath, string value, bool createAttributeIfNotExist = false)
         {
             _logger.WriteDebug($"Set new value `{value}` for attribute `{attributeXpath}`", filePath);
 
@@ -468,10 +478,35 @@ namespace ISHDeploy.Data.Managers
                 // TODO: Create TryGetElementByXPath action or something similar to use it before run SetAttributeValue to avoid access to nonexistent elements
                 // and change WriteVerbose on "throw new WrongXPathException(filePath, attributeXpath);" 
                 _logger.WriteVerbose($"{filePath} does not contain attribute at '{attributeXpath}'.");
-                return;
+
+                if (createAttributeIfNotExist)
+                {
+                    var attributeXpathParts = attributeXpath.Split('@');
+
+                    var xpathToParrentElementStringBuilder = new StringBuilder();
+
+                    for (int i = 0; i < attributeXpathParts.Length - 1; i++)
+                    {
+                        xpathToParrentElementStringBuilder.Append(i == 0
+                            ? attributeXpathParts[i]
+                            : $"@{attributeXpathParts[i]}");
+                    }
+
+                    var xpathToParrentElement = xpathToParrentElementStringBuilder.ToString();
+                    xpathToParrentElement = xpathToParrentElement.Remove(xpathToParrentElement.Length - 1);
+                    var element = doc.XPathSelectElement(xpathToParrentElement);
+                    element.SetAttributeValue(attributeXpathParts[attributeXpathParts.Length - 1], value);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                attr.SetValue(value); 
             }
 
-            attr.SetValue(value);
             _fileManager.Save(filePath, doc);
             _logger.WriteVerbose($"The value of attribute `{attributeXpath}` has been set to '{value}' in file `{filePath}`");
         }
@@ -567,7 +602,9 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void InsertOrUpdateUIElement(string filePath, BaseUIElement model)
+        /// <param name="banUpdateAndGenerateException">Ban update and generate an exception. False by default.></param>
+        /// <param name="exceptionMessage">The error message.</param>
+        public void InsertOrUpdateElement(string filePath, BaseXMLElement model, bool banUpdateAndGenerateException = false, string exceptionMessage = "")
         {
             _logger.WriteDebug("Insert/Update UI element", filePath);
             var doc = _fileManager.Load(filePath);
@@ -617,6 +654,18 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
+                if (banUpdateAndGenerateException)
+                {
+                    if (!string.IsNullOrWhiteSpace(exceptionMessage))
+                    {
+                        throw new DocumentAlreadyContainsElementException(exceptionMessage);
+                    }
+                    else
+                    {
+                        throw new DocumentAlreadyContainsElementException(filePath, model.XPath);
+                    }
+                }
+
                 _logger.WriteDebug("Update UI element", model.XPath, filePath);
                 found.ReplaceWith(element);
 
@@ -636,7 +685,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        public void RemoveUIElement(string filePath, BaseUIElement model)
+        public void RemoveElement(string filePath, BaseXMLElement model)
         {
             _logger.WriteDebug($"Remove UI element {model.NameOfItem}", filePath);
 
@@ -654,7 +703,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                _logger.WriteWarning("Not able to find the target node");
+                _logger.WriteWarning($"Not able to remove xml item. The file `{filePath}` doesn't contain nodes within the xpath `{model.XPath}`");
             }
         }
 
@@ -672,7 +721,7 @@ namespace ISHDeploy.Data.Managers
         /// or
         /// Unknown operation
         /// </exception>
-        public void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXpath = null)
+        public void MoveElement(string filePath, BaseXMLElement model, MoveDirection direction, string insertAfterXpath = null)
         {
             string verboseMessage = "";
             _logger.WriteDebug($"Move UI element {model.NameOfItem}", filePath);
@@ -680,7 +729,7 @@ namespace ISHDeploy.Data.Managers
             bool doSave = true;
 
 
-            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == UIElementMoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
+            _logger.WriteDebug($"Move UI element `{model.XPath}` {(direction == MoveDirection.After ? $"{direction} {insertAfterXpath}" : $"to {direction} position")}", filePath);
 
             var found = SelectSingleNode(ref doc, model.XPath);
 
@@ -688,11 +737,11 @@ namespace ISHDeploy.Data.Managers
             {
                 switch (direction)
                 {
-                    case UIElementMoveDirection.First:
+                    case MoveDirection.First:
                         doc.Element(model.XPathToParentElement).AddFirst(found);
                         verboseMessage = "The UI element has been moved to the first position";
                         break;
-                    case UIElementMoveDirection.Last:
+                    case MoveDirection.Last:
                         var lastElement = doc.Element(model.XPathToParentElement).Elements(model.NameOfItem).LastOrDefault();
                         if (lastElement != null)
                         {
@@ -704,7 +753,7 @@ namespace ISHDeploy.Data.Managers
                         }
                         verboseMessage = "The UI element has been moved to the last position";
                         break;
-                    case UIElementMoveDirection.After:
+                    case MoveDirection.After:
                         var afterElement = SelectSingleNode(ref doc, insertAfterXpath); ;
                         if (afterElement == null)
                         {
@@ -796,27 +845,32 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string Serialize<T>(T value)
         {
-            if (value == null)
+            try
             {
-                return null;
-            }
+                var serializer = new XmlSerializer(value.GetType());
 
-            var serializer = new XmlSerializer(value.GetType());
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-            settings.Indent = false;
-            settings.OmitXmlDeclaration = false;
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            using (StringWriter textWriter = new StringWriter())
-            {
-                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                XmlWriterSettings settings = new XmlWriterSettings();
+                //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+                settings.Indent = false;
+                settings.OmitXmlDeclaration = false;
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                using (StringWriter textWriter = new StringWriter())
                 {
-                    serializer.Serialize(xmlWriter, value, ns);
+                    using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
+                    {
+                        serializer.Serialize(xmlWriter, value, ns);
+                    }
+                    return textWriter.ToString();
                 }
-                return textWriter.ToString();
+
             }
+            catch (Exception ex)
+            {
+                var df = ex.Message;
+
+            }
+            return null;
         }
 
         /// <summary>
@@ -845,7 +899,6 @@ namespace ISHDeploy.Data.Managers
                 }
             }
         }
-
 
         /// <summary>
         /// Serializes object to special file.
@@ -878,6 +931,21 @@ namespace ISHDeploy.Data.Managers
             {
                 return (T)ser.Deserialize(reader);
             }
+        }
+
+        /// <summary>
+        /// Does single node exist
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// True if node exists.
+        /// </returns>
+        public bool DoesSingleNodeExist(string filePath, string xPath)
+        {
+            var doc = _fileManager.Load(filePath);
+            var node = SelectNodes(ref doc, xPath).SingleOrDefault();
+            return node != null;
         }
 
         #region private methods

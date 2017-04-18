@@ -16,8 +16,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
@@ -216,6 +216,54 @@ namespace ISHDeploy.Data.Managers
             }
 
             return installToolRegKey?.OpenSubKey(ProjectBaseRegName);
+        }
+
+        /// <summary>
+        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// </summary>
+        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
+        /// <param name="valueName">The name of the name/value pair</param>
+        /// <param name="value">The value to be stored</param>
+        public void SetRegistryValue(string keyName, string valueName, object value)
+        {
+            _logger.WriteDebug("Set registry value", keyName, valueName, value);
+            //var key = Registry.LocalMachine.OpenSubKey(keyName);
+            Registry.SetValue(keyName, valueName, value);
+            _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` has been set to `{value}`");
+        }
+
+        /// <summary>
+        /// Gets names of all values of registry key.
+        /// </summary>
+        /// <param name="localMachineSubKeyName">The registry path of the sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// The array of names of all values of specified registry key.
+        /// </returns>
+        public string[] GetValueNames(string localMachineSubKeyName)
+        {
+            _logger.WriteDebug("Get names of all values of registry key", localMachineSubKeyName);
+            var result = Registry.LocalMachine.OpenSubKey(localMachineSubKeyName).GetValueNames();
+            _logger.WriteVerbose($"The names of values for registry key `HKEY_LOCAL_MACHINE\\{localMachineSubKeyName}` has been loaded`");
+            return result;
+        }
+
+        /// <summary>
+        /// Copies values from one registry key to another.
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        public void CopyValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName, string destLocalMachineSubKeyName)
+        {
+            _logger.WriteDebug($"Copies values from `{sourceLocalMachineSubKeyName}` registry key to `{destLocalMachineSubKeyName}`");
+
+            var sourceKey = Registry.LocalMachine.OpenSubKey(sourceLocalMachineSubKeyName);
+            var destKey = Registry.LocalMachine.OpenSubKey(destLocalMachineSubKeyName, true);
+            foreach (var nameOfValue in namesOfValues)
+            {
+                destKey.SetValue(nameOfValue, sourceKey.GetValue(nameOfValue));
+            }
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}``");
         }
     }
 }

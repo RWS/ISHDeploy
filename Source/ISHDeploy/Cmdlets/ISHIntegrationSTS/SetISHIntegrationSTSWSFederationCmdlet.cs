@@ -15,7 +15,6 @@
  */
 ﻿using System;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations;
 ﻿using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
@@ -38,7 +37,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSFederation")]
-    [AdministratorRights]
     public class SetISHIntegrationSTSWSFederationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
@@ -52,7 +50,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            IOperation operation = new SetISHIntegrationSTSWSFederationOperation(Logger, ISHDeployment, Endpoint);
+            var operation = new SetISHIntegrationSTSWSFederationOperation(Logger, ISHDeployment, Endpoint);
 
             operation.Run();
         }

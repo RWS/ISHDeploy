@@ -16,6 +16,7 @@
 ﻿using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
+﻿using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
@@ -38,7 +39,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
     /// </para>
     /// </example>
     [Cmdlet(VerbsData.Save, "ISHIntegrationDBSTSSQLServerConfiguration")]
-    [AdministratorRights]
     public class SaveISHIntegrationDBSTSSQLServerConfigurationCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

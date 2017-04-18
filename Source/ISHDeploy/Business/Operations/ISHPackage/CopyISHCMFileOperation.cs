@@ -18,12 +18,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using System.IO;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.Directory;
 using ISHDeploy.Data.Actions.File;
+using Models = ISHDeploy.Common.Models;
+using ISHDeploy.Common;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {

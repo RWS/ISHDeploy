@@ -15,9 +15,9 @@
  */
 using System.Collections.Generic;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Business.Enums;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -95,14 +95,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="searchPattern">Comment pattern that is inside commented node</param>
         /// <param name="decodeInnerXml">True if content of the comment should be decoded; otherwise False.</param>
         void UncommentNodesByInnerPattern(string filePath, string searchPattern, bool decodeInnerXml = false);
-        
+
         /// <summary>
-		/// Set attribute value by attribute xPath
+        /// Set attribute value by attribute xPath
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>
-		/// <param name="attributeXpath">XPath the attribute that will be modified</param>
+        /// <param name="attributeXpath">XPath the attribute that will be modified</param>
         /// <param name="value">Attribute new value</param>
-		void SetAttributeValue(string filePath, string attributeXpath, string value);
+        /// <param name="createAttributeIfNotExist">Create attribute if not exist.</param>
+        void SetAttributeValue(string filePath, string attributeXpath, string value, bool createAttributeIfNotExist = false);
 
 		/// <summary>
 		/// Set attribute value
@@ -143,14 +144,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        void InsertOrUpdateUIElement(string filePath, BaseUIElement model);
+        /// <param name="banUpdateAndGenerateException">Ban update and generate an exception. False by default.></param>
+        /// <param name="exceptionMessage">The error message.</param>
+        void InsertOrUpdateElement(string filePath, BaseXMLElement model, bool banUpdateAndGenerateException = false, string exceptionMessage = "");
 
         /// <summary>
         /// Removes the element of UI.
         /// </summary>
         /// <param name="filePath">The file path to XML file.</param>
         /// <param name="model">The model that represents UI element.</param>
-        void RemoveUIElement(string filePath, BaseUIElement model);
+        void RemoveElement(string filePath, BaseXMLElement model);
 
         /// <summary>
         /// Moves the UI element.
@@ -166,7 +169,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// or
         /// Unknown operation
         /// </exception>
-        void MoveUIElement(string filePath, BaseUIElement model, UIElementMoveDirection direction, string insertAfterXPath = null);
+        void MoveElement(string filePath, BaseXMLElement model, MoveDirection direction, string insertAfterXPath = null);
 
         /// <summary>
         /// Serializes the specified value.
@@ -201,7 +204,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="filePath">The path to file.</param>
         /// <param name="data">Object to serialize.</param>
-        /// <returns></returns>
         void SerializeToFile<T>(string filePath, T data);
+
+        /// <summary>
+        /// Does single node exist
+        /// </summary>
+        /// <param name="filePath">The file path to XML file.</param>
+        /// <param name="xPath">The xPath of node to be evaluated.</param>
+        /// <returns>
+        /// True if node exists.
+        /// </returns>
+        bool DoesSingleNodeExist(string filePath, string xPath);
     }
 }

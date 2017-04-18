@@ -22,9 +22,8 @@ $scriptBlockGetDeployment = {
 $testingDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
 $testCertificate = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCreateCertificate -Session $session
 
-$suffix = GetProjectSuffix($testingDeployment.Name)
-$absolutePath = $testingDeployment.WebPath
-$dbPath = ("\\$computerName\{0}\Web{1}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $testingDeployment.Webpath, $suffix).replace(":", "$")
+$absolutePath = $webPath
+$dbPath = ("\\$computerName\{0}\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf" -f $webPath).replace(":", "$")
 $computerName = $computerName.split(".")[0]
 
 
@@ -114,8 +113,6 @@ $scriptBlockSetRelayingParty = {
 
 $scriptBlockQuerry = {
     param (
-        
-        $suffix,
         $dbPath,
         $absolutePath,
         $command
@@ -125,7 +122,7 @@ $scriptBlockQuerry = {
         $VerbosePreference=$Using:VerbosePreference 
     }
      #Create System.Data.SqlServerCe.dll path
-    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\Web$suffix\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
+    $sqlCEAssemblyPath=[System.IO.Path]::Combine("$absolutePath\InfoShareSTS\bin","System.Data.SqlServerCe.dll")
     
     #Add SQL Server CE Engine
     $var = [Reflection.Assembly]::LoadFile($sqlCEAssemblyPath)
@@ -181,7 +178,7 @@ function remoteQuerryDatabase() {
     param(
         [string]$command
     )
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $suffix, $dbPath, $absolutePath, $command
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockQuerry -Session $session -ArgumentList $dbPath, $absolutePath, $command
     return $result
 }
 
@@ -335,9 +332,11 @@ Describe "Testing ISHRelaying party"{
   
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRelayingParty -Session $session -ArgumentList $testingDeploymentName} | Should not Throw 
     }
-
+	
     It "Set ISHSTSRelyingParty when db not exists"{
+		Start-Sleep -Seconds 20
         Invoke-CommandRemoteOrLocal -ScriptBlock {if (Test-Path $dbPath){ Remove-Item $dbPath }} -Session $session -ArgumentList $dbPath
+		Start-Sleep -Seconds 20
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetRelayingParty -Session $session -ArgumentList $testingDeploymentName, "testName", "https://testRealm.sdl.com", $false, $false, "testcert"} | Should not Throw 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestDBPath -Session $session -ArgumentList $dbPath | Should be "True"
     }

@@ -17,6 +17,7 @@ using System.Management.Automation;
 using System;
 using System.Linq;
 using ISHDeploy.Business.Operations.ISHDeployment;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Cmdlets
 {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Operations.ISHUIElement;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
+using ISHDeploy.Common;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
 {
@@ -34,7 +35,6 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHUISearchMenuBarItem")]
-    [AdministratorRights]
     public sealed class SetISHUISearchMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
@@ -88,8 +88,7 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
 
 
             // Generate warning if file does not exist
-            string projectSuffix = ObjectFactory.GetInstance<IDataAggregateHelper>().GetInputParameters(ISHDeployment.Name).ProjectSuffix;
-            string fullFileName =  $@"{ISHDeployment.WebPath}\Web{projectSuffix}\Author\ASP\XSL\{SearchXML}.xml";
+            string fullFileName = $@"{ISHDeployment.WebPath}\Author\ASP\XSL\{SearchXML}.xml";
             if (!ObjectFactory.GetInstance<IFileManager>().FileExists(fullFileName))
             {
                 Logger.WriteWarning($"File {SearchXML}.xml does not exist");

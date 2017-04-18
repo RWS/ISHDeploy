@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,8 @@
  */
 
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Business.Operations.ISHSTS;
+using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHSTS
 {
@@ -47,8 +48,7 @@ namespace ISHDeploy.Cmdlets.ISHSTS
     /// As prefixes can be configured for custom handling, it is not possible to change it when updating existing data for relying party.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHSTSRelyingParty")]
-    [AdministratorRights]
-    public class SetISHSTSRelyingPartyCmdlet : BaseISHDeploymentCmdlet
+    public class SetISHSTSRelyingPartyCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">Relying party name.</para>
@@ -84,21 +84,21 @@ namespace ISHDeploy.Cmdlets.ISHSTS
         [ValidateNotNullOrEmpty]
         public string EncryptingCertificate { get; set; }
 
-        private SetISHSTSRelyingPartyOperation.RelyingPartyType RelyingPartyType
+        private RelyingPartyType RelyingPartyType
         {
             get
             {
                 if (LC)
                 {
-                    return SetISHSTSRelyingPartyOperation.RelyingPartyType.LC;
+                    return RelyingPartyType.LC;
                 }
 
                 if (BL)
                 {
-                    return SetISHSTSRelyingPartyOperation.RelyingPartyType.BL;
+                    return RelyingPartyType.BL;
                 }
 
-                return SetISHSTSRelyingPartyOperation.RelyingPartyType.None;
+                return RelyingPartyType.None;
             }
         }
 

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHUIElement;
 
@@ -33,7 +32,6 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Remove, "ISHUIButtonBarItem")]
-    [AdministratorRights]
     public sealed class RemoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

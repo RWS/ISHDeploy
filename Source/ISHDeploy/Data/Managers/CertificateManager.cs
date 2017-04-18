@@ -17,8 +17,9 @@
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
+﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Data.Managers
 {

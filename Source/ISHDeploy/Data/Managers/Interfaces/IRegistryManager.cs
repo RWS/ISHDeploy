@@ -44,5 +44,30 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="projectRegKey">The deployment registry key.</param>
         /// <returns>Deployment version.</returns>
         Version GetInstalledProjectVersion(RegistryKey projectRegKey);
+
+        /// <summary>
+        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// </summary>
+        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
+        /// <param name="valueName">The name of the name/value pair.</param>
+        /// <param name="value">The value to be stored.</param>
+        void SetRegistryValue(string keyName, string valueName, object value);
+
+        /// <summary>
+        /// Gets names of all values of registry key.
+        /// </summary>
+        /// <param name="localMachineSubKeyName">The registry path of the sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// The array of names of all values of specified registry key.
+        /// </returns>
+        string[] GetValueNames(string localMachineSubKeyName);
+
+        /// <summary>
+        /// Copies values from one registry key to another.
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        void CopyValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName, string destLocalMachineSubKeyName);
     }
 }

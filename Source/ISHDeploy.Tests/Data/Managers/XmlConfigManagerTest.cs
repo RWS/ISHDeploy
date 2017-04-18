@@ -18,14 +18,14 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Models.ISHXmlNodes;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.ISHXmlNodes;
+using ISHDeploy.Common.Models.UI;
 
 namespace ISHDeploy.Tests.Data.Managers
 {
@@ -991,18 +991,19 @@ namespace ISHDeploy.Tests.Data.Managers
                 }));
 
             // Act
+            var testXPath = string.Format("/menubar/menuitem[@label='{0}']", testLabel);
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+                testXPath);
 
             _xmlConfigManager.RemoveSingleNode(
                 _filePath,
-                string.Format("/menubar/menuitem[@label='{0}']", testLabel));
+                testXPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
             Logger.Received(2).WriteVerbose(Arg.Any<string>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain node within the xpath `{testXPath}`"));
 
             Assert.AreEqual(labels.Length, 2, "Node was not removed.");
             Assert.IsFalse(labels.Contains(testLabel), "Wrong node was removed.");
@@ -1040,7 +1041,7 @@ namespace ISHDeploy.Tests.Data.Managers
         public void RemoveNodes_if_nodes_are_not_exists()
         {
             // Arrange
-            string testXPath = "/tabbar/menuitem/userrole";
+            string xpath = "/tabbar/menuitem/userrole";
 
             var doc = XDocument.Parse(_nodesManipulationTestXml);
 
@@ -1054,12 +1055,12 @@ namespace ISHDeploy.Tests.Data.Managers
                 }));
 
             // Act
-            _xmlConfigManager.RemoveNodes(_filePath, testXPath);
+            _xmlConfigManager.RemoveNodes(_filePath, xpath);
 
             // Assert
             FileManager.DidNotReceive().Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteVerbose(Arg.Any<string>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find target nodes"));
+            Logger.DidNotReceive().WriteVerbose(Arg.Any<string>());
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain nodes within the xpath `{xpath}`"));
 
             Assert.IsNull(elements, "Wrong node was removed.");
         }
@@ -1182,11 +1183,11 @@ namespace ISHDeploy.Tests.Data.Managers
         }
         #endregion
 
-        #region InsertOrUpdateUIElement
+        #region InsertOrUpdateXMLElement
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void InsertOrUpdateUIElement_simple_adding()
+        public void InsertOrUpdateXMLElement_simple_adding()
         {
             // Arrange
             var item = new MainMenuBarItem("Test Menu Item", new[] {"Administrator"}, "TestAction.asp");
@@ -1204,7 +1205,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
 
             // Act
-            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+            _xmlConfigManager.InsertOrUpdateElement(_filePath, item);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1213,7 +1214,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void InsertOrUpdateUIElement_update()
+        public void InsertOrUpdateXMLElement_update()
         {
             // Arrange
             var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
@@ -1231,10 +1232,10 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
 
             // Act
-            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+            _xmlConfigManager.InsertOrUpdateElement(_filePath, item);
 
             item.UserRoles = new[] {"Reader", "Writer"};
-            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+            _xmlConfigManager.InsertOrUpdateElement(_filePath, item);
 
             // Assert
             Assert.IsNotNull(result, "Node has not been added");
@@ -1243,7 +1244,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void InsertOrUpdateUIElement_insert_first_element()
+        public void InsertOrUpdateXMLElement_insert_first_element()
         {
             // Arrange
             var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
@@ -1257,7 +1258,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
 
             // Act
-            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+            _xmlConfigManager.InsertOrUpdateElement(_filePath, item);
 
             // Assert
             Assert.IsNotNull(result, "Node has not been added");
@@ -1266,7 +1267,7 @@ namespace ISHDeploy.Tests.Data.Managers
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(XmlException))]
-        public void InsertOrUpdateUIElement_insert_wrong_xml()
+        public void InsertOrUpdateXMLElement_insert_wrong_xml()
         {
             // Arrange
             var item = new MainMenuBarItem("Test Menu Item", new[] { "Administrator" }, "TestAction.asp");
@@ -1280,7 +1281,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, resultNodeXPath)));
 
             // Act
-            _xmlConfigManager.InsertOrUpdateUIElement(_filePath, item);
+            _xmlConfigManager.InsertOrUpdateElement(_filePath, item);
 
             // Assert
             Assert.Fail("Exception is expected");
@@ -1288,11 +1289,11 @@ namespace ISHDeploy.Tests.Data.Managers
 
         #endregion
 
-        #region MoveUIElement
+        #region MoveXMLElement
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_to_the_last_position()
+        public void MoveXMLElement_simple_move_to_the_last_position()
         {
             // Arrange
             string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
@@ -1321,7 +1322,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 1"), MoveDirection.Last);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1334,7 +1335,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_to_the_first_position()
+        public void MoveXMLElement_simple_move_to_the_first_position()
         {
             // Arrange
             string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
@@ -1363,7 +1364,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.First);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 3"), MoveDirection.First);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1376,7 +1377,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_after()
+        public void MoveXMLElement_simple_move_after()
         {
             // Arrange
             string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
@@ -1408,7 +1409,7 @@ namespace ISHDeploy.Tests.Data.Managers
             }));
 
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 3"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 3"), MoveDirection.After, new MainMenuBarItem("Event Log 1").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1421,7 +1422,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_after_itself()
+        public void MoveXMLElement_simple_move_after_itself()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -1439,7 +1440,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 2"), UIElementMoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 2"), MoveDirection.After, new MainMenuBarItem("Event Log 2").XPath);
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1447,7 +1448,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_after_not_exist()
+        public void MoveXMLElement_simple_move_after_not_exist()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -1466,7 +1467,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Load(_filePath).Returns(doc);
             // Act
             var menuItem = new MainMenuBarItem("Event Log 2");
-            _xmlConfigManager.MoveUIElement(_filePath, menuItem, UIElementMoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
+            _xmlConfigManager.MoveElement(_filePath, menuItem, MoveDirection.After, string.Format(menuItem.XPathFormat, "Event Log 5"));
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1475,7 +1476,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void MoveUIElement_simple_move_not_exist_item()
+        public void MoveXMLElement_simple_move_not_exist_item()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -1493,7 +1494,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 5"), MoveDirection.Last);
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1503,14 +1504,14 @@ namespace ISHDeploy.Tests.Data.Managers
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(XmlException))]
-        public void MoveUIElement_simple_move_wrong_xml()
+        public void MoveXMLElement_simple_move_wrong_xml()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>");
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.MoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"), UIElementMoveDirection.Last);
+            _xmlConfigManager.MoveElement(_filePath, new MainMenuBarItem("Event Log 5"), MoveDirection.Last);
 
             // Assert
             Assert.Fail("Exception is expected");
@@ -1519,11 +1520,11 @@ namespace ISHDeploy.Tests.Data.Managers
         #endregion
 
 
-        #region RemoveUIElement
+        #region RemoveXMLElement
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void RemoveUIElement_simple_remove()
+        public void RemoveXMLElement_simple_remove()
         {
             // Arrange
             string result1NodeXPath = "mainmenubar/menuitem[@label='Event Log 1']";
@@ -1546,7 +1547,7 @@ namespace ISHDeploy.Tests.Data.Managers
             FileManager.Save(_filePath, Arg.Do<XDocument>(document => result = GetXElementByXPath(document, result1NodeXPath)));
 
             // Act
-            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 1"));
+            _xmlConfigManager.RemoveElement(_filePath, new MainMenuBarItem("Event Log 1"));
 
             // Assert
             FileManager.Received(1).Save(Arg.Any<string>(), Arg.Any<XDocument>());
@@ -1555,7 +1556,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         [TestMethod]
         [TestCategory("Data handling")]
-        public void RemoveUIElement_not_exist()
+        public void RemoveXMLElement_not_exist()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>
@@ -1570,27 +1571,28 @@ namespace ISHDeploy.Tests.Data.Managers
                                                 <userrole>Administrator</userrole>
                                             </menuitem>
                                         </mainmenubar>");
+            var menu = new MainMenuBarItem("Event Log 5");
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"));
+            _xmlConfigManager.RemoveElement(_filePath, menu);
 
             // Assert
             FileManager.Received(0).Save(Arg.Any<string>(), Arg.Any<XDocument>());
-            Logger.Received(1).WriteWarning(Arg.Is("Not able to find the target node"));
+            Logger.Received(1).WriteWarning(Arg.Is($"Not able to remove xml item. The file `{_filePath}` doesn't contain nodes within the xpath `{menu.XPath}`"));
         }
         
         [TestMethod]
         [TestCategory("Data handling")]
         [ExpectedException(typeof(XmlException))]
-        public void RemoveUIElement_simple_move_wrong_xml()
+        public void RemoveXMLElement_simple_move_wrong_xml()
         {
             // Arrange
             var doc = XDocument.Parse(@"<?xml version='1.0' encoding='UTF-8'?>");
 
             FileManager.Load(_filePath).Returns(doc);
             // Act
-            _xmlConfigManager.RemoveUIElement(_filePath, new MainMenuBarItem("Event Log 5"));
+            _xmlConfigManager.RemoveElement(_filePath, new MainMenuBarItem("Event Log 5"));
 
             // Assert
             Assert.Fail("Exception is expected");
@@ -1598,7 +1600,7 @@ namespace ISHDeploy.Tests.Data.Managers
 
         #endregion
 
-        #region RemoveUIElement
+        #region RemoveXMLElement
 
         [TestMethod]
         [TestCategory("Data handling")]

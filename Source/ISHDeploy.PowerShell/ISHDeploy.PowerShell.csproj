@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -73,12 +74,17 @@
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
+    <None Include="Pester\Tests\ISHTranslationFileSystemExport.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationDBSTSSQLServerConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSInternalAuthentication.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSWSTrust.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSConfigurationPackage.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationTMS.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationWorldServer.Tests.ps1" />
     <None Include="Pester\Tests\ISHQualityAssistant.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceTranslationBuilder.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceTranslationOrganizer.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIButtonBarItem.Tests.ps1" />
     <None Include="Pester\Tests\ISHUISearchMenuBarItem.Tests.ps1" />
     <None Include="Pester\Tests\ISHUIMainMenuBarItem.Tests.ps1" />

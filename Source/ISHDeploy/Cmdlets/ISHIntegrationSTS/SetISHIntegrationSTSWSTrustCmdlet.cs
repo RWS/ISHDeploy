@@ -15,7 +15,7 @@
  */
 ﻿using System;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Enums;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Business.Operations.ISHIntegrationSTS;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
@@ -45,7 +45,6 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationSTS
     ///     </para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationSTSWSTrust")]
-    [AdministratorRights]
     public class SetISHIntegrationSTSWSTrustCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>

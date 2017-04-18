@@ -38,3 +38,15 @@
       href: ../obj/doc/articles/IntegrationSTS/Integration/Implementing issuer certificate rollover.md
     - name: Implementing service certificate replacement with 3rd party STS
       href: ../obj/doc/articles/IntegrationSTS/Integration/Implementing service certificate replacement.md
+- name: Work with translation services
+  items:
+  - name: Integrating translation jobs with SDL World Server
+    href: ../obj/doc/articles/Translation/Integrating translation jobs with SDL World Server.md
+  - name: Integrating translation jobs with SDL TMS
+    href: ../obj/doc/articles/Translation/Integrating translation jobs with SDL TMS.md
+  - name: Exporting translation jobs to the file system
+    href: ../obj/doc/articles/Translation/Exporting translation jobs to the file system.md
+  - name: Configuring the services
+    href: ../obj/doc/articles/Translation/Configuring the services.md
+  - name: Scaling the services
+    href: ../obj/doc/articles/Translation/Scaling the services.md

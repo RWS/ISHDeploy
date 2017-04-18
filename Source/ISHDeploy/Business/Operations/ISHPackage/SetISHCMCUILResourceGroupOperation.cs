@@ -19,11 +19,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Data.Actions.ISHUIElement;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
-using ISHDeploy.Models.UI.CUIFConfig;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.UI.CUIFConfig;
+using ISHDeploy.Data.Actions.XmlFile;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHPackage
 {
@@ -85,7 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                         });
                     }
 
-                    _invoker.AddAction(new SetUIElementAction(Logger,
+                    _invoker.AddAction(new SetElementAction(Logger,
                                     new ISHFilePath(WebFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
                 }
                 else

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Business.Enums;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Business.Operations.ISHUIElement;
-using ISHDeploy.Models.UI;
+using ISHDeploy.Common.Models.UI;
 using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIElement
@@ -33,7 +33,6 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Move, "ISHUIButtonBarItem")]
-    [AdministratorRights]
     public sealed class MoveISHUIButtonBarItemCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
@@ -95,14 +94,14 @@ namespace ISHDeploy.Cmdlets.ISHUIElement
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            UIElementMoveDirection direction = UIElementMoveDirection.Last;
+            MoveDirection direction = MoveDirection.Last;
 
             if (ParameterSetName.Contains("Last"))
-                direction = UIElementMoveDirection.Last;
+                direction = MoveDirection.Last;
             if (ParameterSetName.Contains("First"))
-                direction = UIElementMoveDirection.First;
+                direction = MoveDirection.First;
             if (ParameterSetName.Contains("After"))
-                direction = UIElementMoveDirection.After;
+                direction = MoveDirection.After;
             if (!(ParameterSetName.Contains("Last") || ParameterSetName.Contains("First") || ParameterSetName.Contains("After")))
                 throw new System.ArgumentException($"Operation type in {nameof(MoveISHUIButtonBarItemCmdlet)} should be defined.");
 

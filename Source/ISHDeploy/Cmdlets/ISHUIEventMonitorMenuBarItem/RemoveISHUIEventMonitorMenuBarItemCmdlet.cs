@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
+using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
+using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 {
@@ -32,7 +32,6 @@ namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem
 	///		</para>
 	/// </example>
 	[Cmdlet(VerbsCommon.Remove, "ISHUIEventMonitorMenuBarItem")]
-    [AdministratorRights]
     public class RemoveISHUIEventMonitorMenuBarItemCmdlet : BaseHistoryEntryCmdlet
     {
 		/// <summary>

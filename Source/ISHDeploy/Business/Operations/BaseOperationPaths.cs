@@ -17,9 +17,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations
 {
@@ -308,11 +310,6 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath TopDocumentButtonBarXmlPath { get; }
 
         /// <summary>
-        /// The path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-        /// </summary>
-        protected ISHFilePath TranslationOrganizerConfigPath { get; }
-
-        /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
         /// </summary>
         protected ISHFilePath TrisoftInfoShareClientConfigPath { get; }
@@ -346,6 +343,16 @@ namespace ISHDeploy.Business.Operations
         /// Gets the path to ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js
         /// </summary>
         protected ISHFilePath ExtensionsLoaderFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
+        /// </summary>
+        protected ISHFilePath TranslationBuilderConfigFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
+        /// </summary>
+        protected ISHFilePath TranslationOrganizerConfigFilePath { get; }
 
         #endregion
 
@@ -398,13 +405,14 @@ namespace ISHDeploy.Business.Operations
             LanguageDocumentButtonbarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\LanguageDocumentButtonbar.xml");
             SynchronizeToLiveContentConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config");
             TopDocumentButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\TopDocumentButtonbar.xml");
-            TranslationOrganizerConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             TrisoftInfoShareClientConfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Trisoft.InfoShare.Client.config");
             XopusBluelionConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\bluelion-config.xml");
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
             ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
+            TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
+            TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
 
             #endregion
         }

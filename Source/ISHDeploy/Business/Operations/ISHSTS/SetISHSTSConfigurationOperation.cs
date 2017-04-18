@@ -15,14 +15,17 @@
  */
 
 using System;
-using ISHDeploy.Business.Enums;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Interfaces;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Managers.Interfaces;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -44,7 +47,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, AuthenticationTypes authenticationType) :
+        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, AuthenticationType authenticationType) :
             base(logger, ishDeployment)
         {
             CheckPermissions();
@@ -52,7 +55,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
 
             AddActionsToStopSTSApplicationPool();
-            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
@@ -70,14 +72,13 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
 
             AddActionsToStopSTSApplicationPool();
-            EnsureSTSDataBaseFileExists();
             AddActionsToSetTokenSigningCertificate(thumbprint);
 
             string authenticationType = string.Empty;
             (new GetValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath,
                     result => authenticationType = result)).Execute();
 
-            if (authenticationType == AuthenticationTypes.Windows.ToString())
+            if (authenticationType == AuthenticationType.Windows.ToString())
             {
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 AddActionsToSetCertificateFilePermission(applicationPoolUser, GetNormalizedThumbprint(thumbprint));
@@ -91,7 +92,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, AuthenticationTypes authenticationType) :
+        public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, AuthenticationType authenticationType) :
             base(logger, ishDeployment)
         {
             CheckPermissions();
@@ -99,7 +100,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker = new ActionInvoker(logger, "Setting of STS authentication type");
 
             AddActionsToStopSTSApplicationPool();
-            EnsureSTSDataBaseFileExists();
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
             AddActionsToStartSTSApplicationPool();
         }
@@ -129,21 +129,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         }
 
         /// <summary>
-        /// Ensure STS DataBase file exists.
-        /// </summary>
-        private void EnsureSTSDataBaseFileExists()
-        {
-            bool isDataBaseFileExist = false;
-            (new FileExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
-            if (!isDataBaseFileExist)
-            {
-                _invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
-                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(Logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
-                _invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSDataBasePath));
-            }
-        }
-
-        /// <summary>
         /// Adds actions for setting STS token signing certificate.
         /// </summary>
         /// <param name="thumbprint">The Token signing certificate Thumbprint.</param>
@@ -157,11 +142,16 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            bool isDataBaseFileExist = fileManager.FileExists(InfoShareSTSDataBasePath.AbsolutePath);
 
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
+            if (isDataBaseFileExist)
+            {
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                    InfoShareSTSDataBaseConnectionString,
+                    string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
                         subjectThumbprint)));
+            }
         }
 
         /// <summary>
@@ -169,13 +159,13 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="authenticationType">The authentication type.</param>
-        private void AddActionsToSetAuthenticationType(Models.ISHDeployment ishDeployment, AuthenticationTypes authenticationType)
+        private void AddActionsToSetAuthenticationType(Models.ISHDeployment ishDeployment, AuthenticationType authenticationType)
         {
             string currentEndpoint = string.Empty;
             (new GetValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath,
                 result => currentEndpoint = result)).Execute();
 
-            if (authenticationType == AuthenticationTypes.Windows)
+            if (authenticationType == AuthenticationType.Windows)
             {
                 // Enable Windows Authentication for STS web site
                 _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));
@@ -259,8 +249,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             _invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigPath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
+            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
+            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));

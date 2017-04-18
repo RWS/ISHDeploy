@@ -1,5 +1,49 @@
 # Release notes
 
+## stable-1.3
+
+This release is focused on adding cmdlets into the module that help configure and manager the translation services.
+
+1. General 
+    1. Cmdlets
+        - Fixed `Get-ISHDeployment` to return the actual path for the `WebPath`, `DataPath` and `AppPath`. 
+        E.g for `WebPath` the value is `C:\InfoShare\Web` instead of `C:\InfoShare`.  **[Update]**
+        - `Get-ISHDeploymentParameter` new parameters `-Name` and `-ValueOnly` simplify working with one parameter.  **[Update]**
+    1. Tutorials
+        - Minor corrections and enhancements on **Work with one or multiple deployments** tutorial.  **[Update]**
+1. Integration Translation
+	1. Cmdlets
+		- `Enable-ISHServiceTranslationBuilder`. **[New]**
+		- `Disable-ISHServiceTranslationBuilder`. **[New]**
+		- `Get-ISHServiceTranslationBuilder`. **[New]**
+		- `Set-ISHServiceTranslationBuilder`. **[New]**
+		- `Enable-ISHServiceTranslationOrganizer`. **[New]**
+		- `Disable-ISHServiceTranslationOrganizer`. **[New]**
+		- `Get-ISHServiceTranslationOrganizer`. **[New]**
+		- `Set-ISHServiceTranslationOrganizer`. **[New]**
+        - `New-ISHFieldMetadata`. **[New]**
+		- `New-ISHIntegrationTMSMapping`. **[New]**
+		- `New-ISHIntegrationTMSTemplate`. **[New]**
+		- `Set-ISHIntegrationTMS`. **[New]**
+		- `Remove-ISHIntegrationTMS`. **[New]**
+		- `New-ISHIntegrationWorldServerMapping`. **[New]**
+		- `Set-ISHIntegrationWorldServer`. **[New]**
+		- `Remove-ISHIntegrationWorldServer`. **[New]**
+		- `Set-ISHIntegrationWorldServer`. **[New]**
+		- `Remove-ISHIntegrationWorldServer`. **[New]**
+		- `Set-ISHTranslationFileSystemExport`. **[New]**
+		- `Remove-ISHTranslationFileSystemExport`. **[New]**
+    1. Tutorials
+		- New section **Work with translation services** with tutorials: **[New]**
+		  - **Integrating translation jobs with SDL World Server**. **[New]**
+		  - **Integrating translation jobs with SDL TMS**. **[New]**
+		  - **Exporting translation jobs to the file system**. **[New]**
+		  - **Configuring the services**. **[New]**
+		  - **Scaling the services**. **[New]**		  
+1. Working with ISHCM web UI features
+    1. Tutorials
+		- **Configuring ISHCM web UI button bars**. Fixed an bug in the example when using splatting parameters **[Update]**
+		  
 ## stable-1.2
 1. General 
     1. Cmdlets
@@ -8,7 +52,7 @@
 			- Where there are more than one available deployments detected then the cmdlet will throw an error.
         - Improved cmdlet behavior when administrator privileges are required.
         - History file is enhanced with script info meta language. 
-    2. Documentation
+    1. Documentation
 		- Renamed items in the top bar to **Tutorials** and **Cmdlet Documentation**. **[Update]**
 		- New items in the top bar for access to topics such as **Getting started** and **Release notes**. **[Update]**
 		- New icon in top bar. **[Update]**
@@ -35,7 +79,7 @@
 			- From `Set-ISHUIEventMonitorTab` to `Set-ISHUIEventMonitorMenuBarItem`.
 			- From `Move-ISHUIEventMonitorTab` to `Move-ISHUIEventMonitorMenuBarItem`.
 			- From `Remove-ISHUIEventMonitorTab` to `Remove-ISHUIEventMonitorMenuBarItem`.
-    2. Documentation
+    1. Documentation
 		- Reorganize former "Configuring features using the module" tutorial into three more specialized. **[Update]**
 			- Toggling Web Components. **[Update]**
 			- Configuring ISHCM web UI menu bars. **[Update]**

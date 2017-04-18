@@ -18,12 +18,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models.SQL;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.SQL;
+using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
 {
@@ -34,34 +36,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
     /// <seealso cref="IOperation" />
     public class SetISHSTSRelyingPartyOperation : BaseOperationPaths
     {
-        /// <summary>
-        /// Operation type enum
-        ///	<para type="description">Enumeration of Relying parties Types.</para>
-        /// </summary>
-        public enum RelyingPartyType
-        {
-            /// <summary>
-            /// Flag to identify that none prefixes should be set
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Flag to identify Info Share
-            /// Used in only seeded configurations
-            /// </summary>
-            ISH,
-
-            /// <summary>
-            /// Flag to identify Live Content
-            /// </summary>
-            LC,
-
-            /// <summary>
-            /// Flag to identify Blue Lion
-            /// </summary>
-            BL
-        }
-
         /// <summary>
         /// The actions invoker
         /// </summary>

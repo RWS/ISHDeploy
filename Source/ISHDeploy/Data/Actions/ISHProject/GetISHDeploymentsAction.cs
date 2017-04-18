@@ -15,11 +15,13 @@
  */
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using ISHDeploy.Data.Managers.Interfaces;
+﻿using System.IO;
+﻿using System.Linq;
+﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Data.Exceptions;
-using ISHDeploy.Interfaces;
-using ISHDeploy.Models;
+using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Actions.ISHProject
 {
@@ -90,9 +92,9 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 var ishProject = new ISHDeployment
                 {
                     Name = $"InfoShare{parameters.ProjectSuffix}",
-                    AppPath = parameters.AppPath,
-                    WebPath = parameters.WebPath,
-                    DataPath = parameters.DataPath,
+                    AppPath = Path.Combine(parameters.AppPath, $"App{parameters.ProjectSuffix}"),
+                    WebPath = Path.Combine(parameters.WebPath, $"Web{parameters.ProjectSuffix}"),
+                    DataPath = Path.Combine(parameters.DataPath, $"Data{parameters.ProjectSuffix}"),
                     DatabaseType = parameters.DatabaseType,
                     AccessHostName = parameters.AccessHostName,
                     WebAppNameCM = parameters.WebAppNameCM,

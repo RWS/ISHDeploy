@@ -42,7 +42,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// <summary>
         /// The registry manager
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The sequence of new service
@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _sequence = sequence;
             _userName = userName;
             _password = password;

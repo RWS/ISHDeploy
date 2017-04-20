@@ -78,6 +78,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -92,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\EnableISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHTranslationFileSystemExportOperation.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\ISHCredentials\SetISHOSUserCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
@@ -172,6 +175,9 @@
     <Compile Include="Business\Operations\InboxButtonBarXml.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Business\Operations\IncParamAsp.cs">
+      <DependentUpon>BaseOperationPaths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Business\Operations\InfoShareAuthorWebConfig.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
@@ -201,6 +207,9 @@
     <Compile Include="Business\Operations\ISHUIElement\RemoveUIElementOperation.cs" />
     <Compile Include="Business\Operations\ISHUIElement\SetUIElementOperation.cs" />
     <Compile Include="Business\Operations\LanguageDocumentButtonbarXml.cs">
+      <DependentUpon>BaseOperationPaths.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Business\Operations\SDLISHADFSv3RPInstallPS.cs">
       <DependentUpon>BaseOperationPaths.cs</DependentUpon>
     </Compile>
     <Compile Include="Business\Operations\SynchronizeToLiveContentConfig.cs">
@@ -280,6 +289,7 @@
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
+    <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />

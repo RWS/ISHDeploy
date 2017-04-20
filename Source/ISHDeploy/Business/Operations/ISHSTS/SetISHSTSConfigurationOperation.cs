@@ -112,9 +112,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             var windowsId = System.Security.Principal.WindowsIdentity.GetCurrent();
             var windowsPrincipal = new System.Security.Principal.WindowsPrincipal(windowsId);
-            var adminRole = System.Security.Principal.WindowsBuiltInRole.Administrator;
 
-            if (!windowsPrincipal.IsInRole(adminRole))
+            if (!windowsPrincipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator))
             {
                 throw new Exception("Administrator role not found. Please start new process with elevated rights.");
             }

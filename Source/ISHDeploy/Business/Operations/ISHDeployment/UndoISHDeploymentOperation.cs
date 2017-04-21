@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
@@ -24,6 +25,7 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -90,13 +92,31 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Disable Windows Authentication for STS web site
             _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
+            // Restore InputParameters.xml
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            Models.InputParameters inputParameters;
+            bool isInputParameterBackupFileExist = false;
+            (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
+            if (isInputParameterBackupFileExist)
+            {
+                var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.VanillaPath);
+                inputParameters = new Models.InputParameters(InputParametersFilePath.VanillaPath, dictionary);
+                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
+                    true));
+            }
+            else
+            {
+                var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);
+                inputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
+            }
+
             // Stop and delete excess ISH windows services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList();
             foreach (var service in services)
             {
-                _invoker.AddAction(
-                    new StopWindowsServiceAction(Logger, service));
+                _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, inputParameters.OSUser, inputParameters.OSPassword));
             }
 
             var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
@@ -107,7 +127,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 
             // Set SpecificUser identityType for STS application pool
-            _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger, 
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.IdentityType,
+                ProcessModelIdentityType.SpecificUser));
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
@@ -121,14 +145,45 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Removing licenses
             _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
 
-            // Restore InputParameters.xml
-            bool isInputParameterBackupFileExist = false;
-            (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
-            if (isInputParameterBackupFileExist)
-            {
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
-                    true));
-            }
+
+            // WS
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.UserName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.Password,
+                inputParameters.OSPassword));
+
+            // STS
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.UserName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.Password,
+                inputParameters.OSPassword));
+
+            // CM
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.UserName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.Password,
+                inputParameters.OSPassword));
 
             if (!SkipRecycle)
             {

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -24,10 +22,10 @@ using ISHDeploy.Common.Models;
 namespace ISHDeploy.Data.Actions.WindowsServices
 {
     /// <summary>
-    /// Clones an windows service.
+    /// Sets windows service credentials.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class CloneWindowsServiceAction : BaseAction
+    public class SetWindowsServiceCredentialsAction : BaseAction
     {
         /// <summary>
         /// The deployment service.
@@ -40,16 +38,6 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly IWindowsServiceManager _serviceManager;
 
         /// <summary>
-        /// The registry manager
-        /// </summary>
-        private readonly IRegistryManager _registryManager;
-
-        /// <summary>
-        /// The sequence of new service
-        /// </summary>
-        private readonly int _sequence;
-
-        /// <summary>
         /// The windows service userName
         /// </summary>
         private readonly string _userName;
@@ -60,21 +48,18 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly string _password;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CloneWindowsServiceAction"/> class.
+        /// Initializes a new instance of the <see cref="SetWindowsServiceCredentialsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The deployment service.</param>
-        /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service, int sequence, string userName, string password)
+        public SetWindowsServiceCredentialsAction(ILogger logger, ISHWindowsService service, string userName, string password)
             : base(logger)
         {
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
-            _sequence = sequence;
             _userName = userName;
             _password = password;
         }
@@ -84,15 +69,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
-
-            var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName" && x != "ImagePath");
-            _registryManager.CopyValues(namesOfValues, $@"SYSTEM\CurrentControlSet\Services\{_service.Name}", $@"SYSTEM\CurrentControlSet\Services\{newServiceName}");
-
-            if (_service.Status == ISHWindowsServiceStatus.Running)
-            {
-                _serviceManager.StartWindowsService(newServiceName);
-            }
+            _serviceManager.SetWindowsServiceCredentials(_service, _userName, _password);
         }
     }
 }

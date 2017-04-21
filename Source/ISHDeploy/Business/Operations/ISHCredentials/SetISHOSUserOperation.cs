@@ -66,6 +66,52 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 throw new Exception($"Administrator role not found for {userName}");
             }
 
+            // Stop Application pools
+            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+
+            // WS
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.UserName,
+                userName));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.Password,
+                password));
+
+            // STS
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.UserName,
+                userName));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.Password,
+                password));
+
+            // CM
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.UserName,
+                userName));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.Password,
+                password));
+
+
+
             _invoker.AddAction(
                     new TextReplaceAction(Logger,
                     SDLISHADFSv3RPInstallPSFilePath,
@@ -82,10 +128,10 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSPasswordXPath, password));
 
-            // Recycle Application pools
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+            // Start Application pools
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
 
             // Recycle ISH windows services that are running
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
@@ -95,16 +141,25 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                     ISHWindowsServiceType.TranslationOrganizer)
                 .Where(x => x.Status == ISHWindowsServiceStatus.Running).ToList();
 
+            // Stop services that are running
             foreach (var service in services)
             {
-                _invoker.AddAction(
-                    new StopWindowsServiceAction(Logger, service));
+                _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
             }
 
+            // Set new credentials for all services
+            foreach (var service in serviceManager.GetServices(
+                    ishDeployment.Name,
+                    ISHWindowsServiceType.TranslationBuilder,
+                    ISHWindowsServiceType.TranslationOrganizer))
+            {
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, userName, password));
+            }
+
+            // Run services that should be run
             foreach (var service in services)
             {
-                _invoker.AddAction(
-                    new StartWindowsServiceAction(Logger, service));
+                _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
             }
         }
 

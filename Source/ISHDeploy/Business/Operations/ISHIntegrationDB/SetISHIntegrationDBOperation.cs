@@ -46,8 +46,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             _invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
             // change registry
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, ishDeployment.WebAppNameCM));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, ishDeployment.WebAppNameCM));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
 
             // change inputparameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));

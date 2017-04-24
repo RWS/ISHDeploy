@@ -93,7 +93,8 @@ namespace ISHDeploy.Data.Managers
             RelativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? "SOFTWARE\\Wow6432Node\\Trisoft" : "SOFTWARE\\Trisoft";
             _pathsToRegistryValues = new Dictionary<RegistryValueName, string[]>
             {
-                { RegistryValueName.DbConnectionString, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "Connect" } }
+                { RegistryValueName.DbConnectionString, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "Connect" } },
+                { RegistryValueName.DatabaseType, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "ComponentName" } }
             };
             _relativeInstallToolTrisoftRegPath = $"{RelativeTrisoftRegPath}\\InstallTool";
 

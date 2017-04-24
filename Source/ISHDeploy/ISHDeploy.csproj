@@ -123,6 +123,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
+    <Compile Include="Common\Enums\DatabaseType.cs" />
     <Compile Include="Common\Enums\RegistryValueName.cs" />
     <Compile Include="Common\Enums\ISHFieldMetadataLevel.cs" />
     <Compile Include="Common\Enums\ISHFieldMetadataValueType.cs" />

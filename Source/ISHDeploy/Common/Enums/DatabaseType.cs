@@ -16,18 +16,25 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Specify the name of registry values.</para>
+    /// <para type="description">Enumeration listing the supported database types.</para>
     /// </summary>
-    public enum RegistryValueName
+    public enum DatabaseType
     {
         /// <summary>
-        /// Db connection string
+        /// Used to initialize the enum
         /// </summary>
-        DbConnectionString,
-
+        None,
         /// <summary>
-        /// Database type
+        /// Oracle RDBMS, including 9.2.0.2, 9.2.0.4, 9.2.0.6, 10.1.0.4, 10.2.0.2
         /// </summary>
-        DatabaseType
+        Oracle,
+        /// <summary>
+        /// Microsoft SqlServer 2012
+        /// </summary>
+        SQLServer2012,
+        /// <summary>
+        /// Microsoft SqlServer 2014
+        /// </summary>
+        SQLServer2014
     }
 }

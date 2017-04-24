@@ -39,16 +39,19 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="connectionString">Connection string to check.</param>
-        public SetISHIntegrationDBOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string connectionString)
+        /// <param name="databaseType">The type of Database.</param>
+        public SetISHIntegrationDBOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string connectionString, DatabaseType databaseType)
              :base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
             // change registry
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, ishDeployment.WebAppNameCM));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, ishDeployment.WebAppNameCM));
 
             // change inputparameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, connectionString));
 
             // restart services
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));

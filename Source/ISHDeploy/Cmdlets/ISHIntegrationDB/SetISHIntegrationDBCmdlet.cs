@@ -15,6 +15,7 @@
  */
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
 using System.Management.Automation;
+using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
@@ -22,7 +23,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
     /// <para type="synopsis">Change connection string to database for certain environment.</para>
     /// <para type="description">This cmdlet change connection string to database for certain environment.</para>
     /// </summary>
-    /// <seealso cref="ISHDeploy.Cmdlets.BaseHistoryEntryCmdlet" />
+    /// <seealso cref="BaseHistoryEntryCmdlet" />
     /// <example>
     ///   <code>PS C:\&gt;Set-ISHIntegrationDB -ISHDeployment $deployment -ConnectionString ""</code>
     /// </example>
@@ -32,16 +33,32 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// <summary>
         /// <para type="description">Connection string.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Connection string.")]
+        [Parameter(Mandatory = true, HelpMessage = "Connection string.", ParameterSetName = "ConnectionString")]
         public string ConnectionString { get; set; }
+
+        /// <summary>
+        /// <para type="description">The type of database.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionString")]
+        [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionStringBuilder")]
+        public DatabaseType DatabaseType { get; set; }
+
+        /// <summary>
+        /// <para type="description">Set connection string as a string parameter.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "When -Raw is switched on then connection string will be set as a string parameter.", ParameterSetName = "ConnectionString")]
+        public SwitchParameter Raw { get; set; }
 
         /// <summary>
         /// Executes cmdlet.
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new SetISHIntegrationDBOperation(Logger, ISHDeployment, ConnectionString);
-            operation.Run();
+            if (ParameterSetName == "ConnectionString")
+            {
+                var operation = new SetISHIntegrationDBOperation(Logger, ISHDeployment, ConnectionString, DatabaseType);
+                operation.Run();
+            }
         }
     }
 }

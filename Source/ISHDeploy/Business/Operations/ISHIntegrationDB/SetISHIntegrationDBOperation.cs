@@ -48,10 +48,12 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             // change registry
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
 
             // change inputparameters.xml
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, connectionString));
+            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, databaseType.ToString()));
 
             // restart services
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));

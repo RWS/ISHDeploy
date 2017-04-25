@@ -194,5 +194,27 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"New service `{newServiceName}` has been created");
             return newServiceName;
         }
+
+        /// <summary>
+        /// Set windows service credentials
+        /// </summary>
+        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+
+        public void SetWindowsServiceCredentials(ISHWindowsService service, string userName, string password)
+        {
+            _logger.WriteDebug("Set windows service credentials", service.Name);
+
+            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-WindowsServiceCredentials.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", service.Name },
+                    { "$username", userName },
+                    { "$password", password }
+                });
+
+            _logger.WriteVerbose($"Credentials for the service `{service.Name}` has been chenged");
+        }
     }
 }

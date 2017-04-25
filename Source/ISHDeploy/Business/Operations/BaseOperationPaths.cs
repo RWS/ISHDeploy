@@ -350,6 +350,16 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath TranslationOrganizerConfigFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to ~\App\Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1
+        /// </summary>
+        protected ISHFilePath SDLISHADFSv3RPInstallPSFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\IncParam.asp
+        /// </summary>
+        protected ISHFilePath IncParamAspFilePath { get; }
+
         #endregion
 
         /// <summary>

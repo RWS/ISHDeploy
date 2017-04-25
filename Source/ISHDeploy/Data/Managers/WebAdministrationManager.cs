@@ -16,6 +16,7 @@
 ﻿using System;
 ﻿using System.Linq;
 ﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -236,28 +237,36 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// Sets application pool property
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        public void SetApplicationPoolIdentityType(string applicationPoolName)
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <param name="value">The name of user.</param>
+        public void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value)
         {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            using (var manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug("Set ApplicationPoolIdentity identity type", applicationPoolName);
-
                 var config = manager.GetApplicationHostConfiguration();
-
-
                 ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
 
                 ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
 
-                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
-                if (stsPoolElement != null)
+                var poolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (poolElement != null)
                 {
-                    var processModelElement =
-                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                    processModelElement.SetAttributeValue("identityType", "ApplicationPoolIdentity");
+                    var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    switch (propertyName)
+                    {
+                        case ApplicationPoolProperty.UserName:
+                            processModelElement.SetAttributeValue("userName", value);
+                            break;
+                        case ApplicationPoolProperty.Password:
+                            processModelElement.SetAttributeValue("password", value);
+                            break;
+                        case ApplicationPoolProperty.IdentityType:
+                            processModelElement.SetAttributeValue("identityType", value);
+                            break;
+                    }
                 }
                 else
                 {
@@ -265,41 +274,6 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 manager.CommitChanges();
-                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName} has been changed");
-            }
-        }
-
-        /// <summary>
-        /// Sets identity type of specific application pool as Custom account
-        /// </summary>
-        /// <param name="applicationPoolName">Name of the application pool.</param>
-        public void SetSpecificUserIdentityType(string applicationPoolName)
-        {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
-            {
-                _logger.WriteDebug("Set application pool SpecificUser identity type", applicationPoolName);
-
-                var config = manager.GetApplicationHostConfiguration();
-
-
-                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
-
-                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
-
-                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
-                if (stsPoolElement != null)
-                {
-                    var processModelElement =
-                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                    processModelElement.SetAttributeValue("identityType", "SpecificUser");
-                }
-                else
-                {
-                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
-                }
-
-                manager.CommitChanges();
-                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName}` has been changed");
             }
         }
     }

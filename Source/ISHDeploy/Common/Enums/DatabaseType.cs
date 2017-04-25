@@ -27,14 +27,14 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// Oracle RDBMS, including 9.2.0.2, 9.2.0.4, 9.2.0.6, 10.1.0.4, 10.2.0.2
         /// </summary>
-        Oracle,
+        oracle,
         /// <summary>
         /// Microsoft SqlServer 2012
         /// </summary>
-        SQLServer2012,
+        sqlserver2012,
         /// <summary>
         /// Microsoft SqlServer 2014
         /// </summary>
-        SQLServer2014
+        sqlserver2014
     }
 }

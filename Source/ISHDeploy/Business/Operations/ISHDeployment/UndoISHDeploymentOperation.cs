@@ -25,6 +25,7 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using ISHDeploy.Data.Actions.Registry;
 using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
 
@@ -94,21 +95,27 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Restore InputParameters.xml
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
-            Models.InputParameters inputParameters;
+            Models.InputParameters vanillaInputParameters;
             bool isInputParameterBackupFileExist = false;
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
             if (isInputParameterBackupFileExist)
             {
                 var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.VanillaPath);
-                inputParameters = new Models.InputParameters(InputParametersFilePath.VanillaPath, dictionary);
+                vanillaInputParameters = new Models.InputParameters(InputParametersFilePath.VanillaPath, dictionary);
                 _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
             else
             {
                 var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);
-                inputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
+                vanillaInputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
             }
+
+            // change registry
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
 
             // Stop and delete excess ISH windows services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
@@ -116,7 +123,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, inputParameters.OSUser, inputParameters.OSPassword));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
             }
 
             var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
@@ -151,39 +158,39 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.UserName,
-                inputParameters.OSUser));
+                vanillaInputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.Password,
-                inputParameters.OSPassword));
+                vanillaInputParameters.OSPassword));
 
             // STS
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.UserName,
-                inputParameters.OSUser));
+                vanillaInputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.Password,
-                inputParameters.OSPassword));
+                vanillaInputParameters.OSPassword));
 
             // CM
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.UserName,
-                inputParameters.OSUser));
+                vanillaInputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.Password,
-                inputParameters.OSPassword));
+                vanillaInputParameters.OSPassword));
 
             if (!SkipRecycle)
             {

@@ -286,6 +286,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
+    <Compile Include="Common\Models\IntegrationDbConnectionString.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />

@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using System.Management.Automation;
-using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
-using ISHDeploy.Common.Models;
-using ISHDeploy.Data.Managers.Interfaces;
+using ISHDeploy.Business.Operations.ISHIntegrationDB;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
@@ -39,12 +35,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
-
-            var connectionString = (string)trisoftRegistryManager.GetRegistryValue(RegistryValueName.DbConnectionString, ISHDeployment.WebAppNameCM);
-            var databaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(RegistryValueName.DatabaseType, ISHDeployment.WebAppNameCM).ToString());
-
-            ISHWriteOutput(new IntegrationDbConnectionString(connectionString, databaseType));
+            ISHWriteOutput(new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run());
         }
     }
 }

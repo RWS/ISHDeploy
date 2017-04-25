@@ -15,6 +15,7 @@
  */
 
 using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHIntegrationDB;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -50,9 +51,8 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
             }
             else
             {
-                var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
-                var value = trisoftRegistryManager.GetRegistryValue(RegistryValueName.DbConnectionString, ISHDeployment.WebAppNameCM);
-                ISHWriteOutput(databaseManager.TestConnection(value.ToString()));
+                var integrationDbConnectionString = new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run();
+                ISHWriteOutput(databaseManager.TestConnection(integrationDbConnectionString.RawConnectionString));
             }
         }
     }

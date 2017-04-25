@@ -110,14 +110,14 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 ApplicationPoolProperty.Password,
                 password));
 
-
-
+            // ~\App\Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1
             _invoker.AddAction(
                     new TextReplaceAction(Logger,
                     SDLISHADFSv3RPInstallPSFilePath,
                     string.Format(SDLISHADFSv3RPInstallPS.OSUserVariableLinePattern, InputParameters.OSUser),
                     string.Format(SDLISHADFSv3RPInstallPS.OSUserVariableLinePattern, userName)));
 
+            // ~\Web\Author\ASP\IncParam.asp
             _invoker.AddAction(
                     new TextReplaceAction(Logger,
                     IncParamAspFilePath,
@@ -133,15 +133,14 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
             _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
 
-            // Recycle ISH windows services that are running
+            // Stop services that are running
+            // TODO: Add support of all other services and components
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var services = serviceManager.GetServices(
                     ishDeployment.Name, 
                     ISHWindowsServiceType.TranslationBuilder, 
                     ISHWindowsServiceType.TranslationOrganizer)
                 .Where(x => x.Status == ISHWindowsServiceStatus.Running).ToList();
-
-            // Stop services that are running
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));

@@ -110,7 +110,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 inputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
             }
 
-            // Stop and delete excess ISH windows services
+            // Stop and rolling back changes for ISH windows services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList();
             foreach (var service in services)
@@ -119,6 +119,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, inputParameters.OSUser, inputParameters.OSPassword));
             }
 
+            // Delete extra ISH windows services
             var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
             foreach (var service in servicesForDeleting)
             {
@@ -145,6 +146,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Removing licenses
             _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
 
+            #region Rolling back OSUser credentials for AppPools
 
             // WS
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
@@ -184,6 +186,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.Password,
                 inputParameters.OSPassword));
+
+            #endregion
 
             if (!SkipRecycle)
             {

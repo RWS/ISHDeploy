@@ -49,6 +49,16 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// The PendingJobPollingInterval attribute
         /// </summary>
-        pendingJobPollingInterval
+        pendingJobPollingInterval,
+
+        /// <summary>
+        /// The userName attribute
+        /// </summary>
+        userName,
+
+        /// <summary>
+        /// The password attribute
+        /// </summary>
+        password
     }
 }

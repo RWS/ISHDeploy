@@ -37,7 +37,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// The registry manager.
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The XML configuration manager.
@@ -56,7 +56,7 @@ namespace ISHDeploy.Data.Managers
         public DataAggregateHelper(ILogger logger)
         {
             _logger = logger;
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }

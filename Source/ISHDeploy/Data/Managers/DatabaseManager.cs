@@ -16,6 +16,7 @@
 
 using System;
 using System.Data.OleDb;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 
@@ -48,20 +49,33 @@ namespace ISHDeploy.Data.Managers
         /// <returns>True if the connection is available</returns>
         public bool TestConnection(string connectionString)
         {
-            try
+            _logger.WriteDebug("Try to check database connection", connectionString);
+
+            if (connectionString.ToLower().Contains(DatabaseType.sqlserver2012.ToString()) ||
+                connectionString.ToLower().Contains(DatabaseType.sqlserver2014.ToString()))
             {
-                _logger.WriteDebug("Try to check database connection");
-                using (var conn = new OleDbConnection(connectionString))
+                try
                 {
-                    conn.Open(); // throws if invalid
+                    using (var conn = new OleDbConnection(connectionString))
+                    {
+                        conn.Open();
+                    }
                     _logger.WriteVerbose("Database connection successfully opened");
+                    return true;
                 }
-                return true;
+                catch (Exception)
+                {
+                    _logger.WriteVerbose("Invalid database connection");
+                    return false;
+                }
             }
-            catch (Exception)
+            else if (connectionString.ToLower().Contains(DatabaseType.oracle.ToString()))
             {
-                _logger.WriteVerbose("Invalid database connection");
-                return false;
+                throw new Exception("Connection check doesn't support Oracle database");
+            }
+            else
+            {
+                throw new Exception("Connection check doesn't support such connection string");
             }
         }
     }

@@ -66,7 +66,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         /// Set windows service credentials
         /// </summary>
-        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="service">The windows service to be updated with new credentials.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
 

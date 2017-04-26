@@ -58,5 +58,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="propertyName">The name of ApplicationPool property.</param>
         /// <param name="value">The name of user.</param>
         void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value);
+
+        /// <summary>
+        /// Sets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <param name="value">The value.</param>
+        void SetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName, object value);
     }
 }

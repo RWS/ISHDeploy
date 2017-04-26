@@ -25,6 +25,7 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using ISHDeploy.Data.Actions.COMPlus;
 using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
 
@@ -119,19 +120,15 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, inputParameters.OSUser, inputParameters.OSPassword));
             }
 
+            // Rolling back credentials for COM+ component
+            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", inputParameters.OSUser, inputParameters.OSPassword));
+
             var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
             foreach (var service in servicesForDeleting)
             {
                 _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
             }
 
-
-            // Set SpecificUser identityType for STS application pool
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger, 
-                InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.IdentityType,
-                ProcessModelIdentityType.SpecificUser));
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
@@ -150,39 +147,99 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 inputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
+                inputParameters.OSPassword));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
                 inputParameters.OSPassword));
 
             // STS
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 inputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
+                inputParameters.OSPassword));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
                 inputParameters.OSPassword));
 
             // CM
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 inputParameters.OSUser));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
+                inputParameters.OSPassword));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                inputParameters.OSUser));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
                 inputParameters.OSPassword));
 
             if (!SkipRecycle)

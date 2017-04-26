@@ -50,6 +50,7 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
             ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
             ObjectFactory.SetInstance<IWindowsServiceManager>(new WindowsServiceManager(Logger));
+            ObjectFactory.SetInstance<ICOMPlusComponentManager>(new COMPlusComponentManager(Logger));
         }
 
         /// <summary>

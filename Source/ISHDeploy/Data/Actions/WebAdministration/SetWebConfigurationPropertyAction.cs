@@ -22,15 +22,20 @@ using ISHDeploy.Common.Interfaces;
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Sets identity type of application pool
+    /// Sets web configuration property
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetApplicationPoolPropertyAction : BaseAction
+    public class SetWebConfigurationPropertyAction : BaseAction
     {
         /// <summary>
         /// The Application Pool name.
         /// </summary>
-        private readonly string _appPoolName;
+        private readonly string _webSiteName;
+
+        /// <summary>
+        /// The xPath to get configuration node.
+        /// </summary>
+        private readonly string _configurationXPath;
 
         /// <summary>
         /// The Application Pool property value.
@@ -38,9 +43,9 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         private readonly object _value;
 
         /// <summary>
-        /// The Application Pool property name.
+        /// The web configuration property name.
         /// </summary>
-        private readonly ApplicationPoolProperty _propertyName;
+        private readonly WebConfigurationProperty _propertyName;
 
         /// <summary>
         /// The web Administration manager
@@ -48,16 +53,18 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         private readonly IWebAdministrationManager _webAdminManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetApplicationPoolPropertyAction"/> class.
+        /// Initializes a new instance of the <see cref="SetWebConfigurationPropertyAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="appPoolName">Name of the application pool.</param>
-        /// <param name="propertyName">The name of ApplicationPool property.</param>
-        /// <param name="value">The name of user.</param>
-        public SetApplicationPoolPropertyAction(ILogger logger, string appPoolName, ApplicationPoolProperty propertyName, object value)
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <param name="value">The value.</param>
+        public SetWebConfigurationPropertyAction(ILogger logger, string webSiteName, string configurationXPath, WebConfigurationProperty propertyName, object value)
             : base(logger)
         {
-            _appPoolName = appPoolName;
+            _webSiteName = webSiteName;
+            _configurationXPath = configurationXPath;
             _propertyName = propertyName;
             _value = value;
 
@@ -69,7 +76,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public override void Execute()
         {
-            _webAdminManager.SetApplicationPoolProperty(_appPoolName, _propertyName, _value);
+            _webAdminManager.SetWebConfigurationProperty(_webSiteName, _configurationXPath, _propertyName, _value);
         }
     }
 }

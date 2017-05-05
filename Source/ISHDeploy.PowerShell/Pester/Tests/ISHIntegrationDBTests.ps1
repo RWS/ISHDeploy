@@ -54,9 +54,12 @@ $scriptBlockTestISHIntegrationDB = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    
-    Test-ISHIntegrationDB -ISHDeployment $ishDeploy -ConnectionString $string
-
+    if($string) {
+        Test-ISHIntegrationDB -ISHDeployment $ishDeployName -ConnectionString $string
+    }
+    else {
+        Test-ISHIntegrationDB -ISHDeployment $ishDeployName
+    }
 }
 #endregion
 
@@ -164,6 +167,23 @@ Describe "Testing ISHIntegrationDB"{
     It "Test ISHIntegrationDBn works for SQL"{       
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
+    }
+
+    It "Test ISHIntegrationDBn throws error when ConnectionString is empty or NULL"{     
+    
+        $scriptBlock = {
+            param (
+                $ishDeployName
+            )
+            if($PSSenderInfo) {
+                $DebugPreference=$Using:DebugPreference
+                $VerbosePreference=$Using:VerbosePreference 
+            }
+
+            Test-ISHIntegrationDB -ISHDeployment $ishDeployName -ConnectionString ""
+        }  
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlock -Session $session -ArgumentList $testingDeploymentName} | Should Throw
     }
 
     It "Set ISHIntegrationDB writes history"{       

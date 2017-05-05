@@ -51,8 +51,12 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Try to check database connection", connectionString);
 
-            if (connectionString.ToLower().Contains(DatabaseType.sqlserver2012.ToString()) ||
-                connectionString.ToLower().Contains(DatabaseType.sqlserver2014.ToString()))
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("Connection string is not valid");
+            }
+
+            if (connectionString.ToLower().Contains("sql"))
             {
                 try
                 {
@@ -69,7 +73,7 @@ namespace ISHDeploy.Data.Managers
                     return false;
                 }
             }
-            else if (connectionString.ToLower().Contains(DatabaseType.oracle.ToString()))
+            else if (connectionString.ToLower().Contains("oracle"))
             {
                 throw new Exception("Connection check doesn't support Oracle database");
             }

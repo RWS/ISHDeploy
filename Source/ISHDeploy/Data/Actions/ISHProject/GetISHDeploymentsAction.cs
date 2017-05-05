@@ -39,7 +39,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// The registry manager.
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The Content Manager deployment name.
@@ -56,7 +56,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             : base(logger, returnResult)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _projectName = projectName;
         }
 
@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             if (!installProjectsRegKeys.Any())
             {
-                if (_projectName != null)
+                if (!string.IsNullOrEmpty(_projectName))
                 {
                     throw new DeploymentNotFoundException($"Deployment with name {_projectName} is not found on the system");
                 }

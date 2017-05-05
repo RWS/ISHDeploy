@@ -94,6 +94,25 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Replace text that matches the <paramref name="searchPattern"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">The pattern that is searched for</param>
+        /// <param name="newValue">The new value</param>
+        public void TextReplace(string filePath, string searchPattern, string newValue)
+        {
+            _logger.WriteDebug($"Replace text matched to `{searchPattern}`", filePath);
+
+            var text = _fileManager.ReadAllText(filePath);
+
+            text = text.Replace(searchPattern, newValue);
+
+            _fileManager.WriteAllText(filePath, text);
+
+            _logger.WriteVerbose($"Text matched to `{searchPattern}` in file `{filePath}` have been replaced");
+        }
+
+        /// <summary>
         /// Uncomments block of text file between two <paramref name="searchPattern"/> comments
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>

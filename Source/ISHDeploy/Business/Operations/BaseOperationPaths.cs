@@ -354,6 +354,16 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath TranslationOrganizerConfigFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to ~\App\Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1
+        /// </summary>
+        protected ISHFilePath SDLISHADFSv3RPInstallPSFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\IncParam.asp
+        /// </summary>
+        protected ISHFilePath IncParamAspFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -413,7 +423,8 @@ namespace ISHDeploy.Business.Operations
             ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
             TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
-
+            SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
+            IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
             #endregion
         }
 

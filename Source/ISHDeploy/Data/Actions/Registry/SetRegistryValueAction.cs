@@ -15,6 +15,7 @@
  */
 
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 
@@ -26,14 +27,9 @@ namespace ISHDeploy.Data.Actions.Registry
     public class SetRegistryValueAction : BaseAction
     {
         /// <summary>
-        /// The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".
-        /// </summary>
-        private readonly string _keyName;
-
-        /// <summary>
         /// The name of the name/value pair.
         /// </summary>
-        private readonly string _valueName;
+        private readonly RegistryValueName _registryValueName;
 
         /// <summary>
         /// The value to be stored.
@@ -41,25 +37,30 @@ namespace ISHDeploy.Data.Actions.Registry
         private readonly object _value;
 
         /// <summary>
+        /// Additional parameters.
+        /// </summary>
+        private readonly object[] _parameters;
+
+        /// <summary>
         /// The registry manager
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetRegistryValueAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
-        /// <param name="valueName">The name of the name/value pair.</param>
+        /// <param name="registryValueName">The name of the name/value pair</param>
         /// <param name="value">The value to be stored.</param>
-        public SetRegistryValueAction(ILogger logger, string keyName, string valueName, object value) 
+        /// <param name="parameters">Additional parameters</param>
+        public SetRegistryValueAction(ILogger logger, RegistryValueName registryValueName, object value, params object[] parameters) 
 			: base(logger)
         {
-            _keyName = keyName;
-            _valueName = valueName;
+            _registryValueName = registryValueName;
             _value = value;
+            _parameters = parameters;
 
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
         }
 
 		/// <summary>
@@ -67,7 +68,7 @@ namespace ISHDeploy.Data.Actions.Registry
 		/// </summary>
 		public override void Execute()
 		{
-            _registryManager.SetRegistryValue(_keyName, _valueName, _value);
+            _registryManager.SetRegistryValue(_registryValueName, _value, _parameters);
 		}
 	}
 }

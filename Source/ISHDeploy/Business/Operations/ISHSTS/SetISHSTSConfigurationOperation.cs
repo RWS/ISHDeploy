@@ -25,6 +25,7 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Managers.Interfaces;
+using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHSTS
@@ -112,9 +113,8 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             var windowsId = System.Security.Principal.WindowsIdentity.GetCurrent();
             var windowsPrincipal = new System.Security.Principal.WindowsPrincipal(windowsId);
-            var adminRole = System.Security.Principal.WindowsBuiltInRole.Administrator;
 
-            if (!windowsPrincipal.IsInRole(adminRole))
+            if (!windowsPrincipal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator))
             {
                 throw new Exception("Administrator role not found. Please start new process with elevated rights.");
             }
@@ -194,7 +194,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 }
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
-                _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.ApplicationPoolIdentity));
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger, 
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.IdentityType, 
+                    ProcessModelIdentityType.ApplicationPoolIdentity));
 
                 _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
             }
@@ -213,7 +217,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 }
 
                 // Set SpecificUser identityType for STS application pool
-                _invoker.AddAction(new SetIdentityTypeAction(Logger, InputParameters.STSAppPoolName, SetIdentityTypeAction.IdentityTypes.SpecificUserIdentity));
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger, 
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.IdentityType, 
+                    ProcessModelIdentityType.SpecificUser));
                 _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
             }
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));

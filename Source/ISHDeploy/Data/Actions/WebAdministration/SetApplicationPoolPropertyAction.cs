@@ -15,6 +15,7 @@
  */
 
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 
@@ -24,32 +25,22 @@ namespace ISHDeploy.Data.Actions.WebAdministration
     /// Sets identity type of application pool
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetIdentityTypeAction : BaseAction
+    public class SetApplicationPoolPropertyAction : BaseAction
     {
-        /// <summary>
-        /// The types of identity
-        /// </summary>
-        public enum IdentityTypes
-        {
-            /// <summary>
-            /// The application pool identity
-            /// </summary>
-            ApplicationPoolIdentity,
-            /// <summary>
-            /// The specific user identity
-            /// </summary>
-            SpecificUserIdentity
-        }
-
         /// <summary>
         /// The Application Pool name.
         /// </summary>
         private readonly string _appPoolName;
 
         /// <summary>
-        /// The Application Pool name.
+        /// The Application Pool property value.
         /// </summary>
-        private readonly IdentityTypes _identityType;
+        private readonly object _value;
+
+        /// <summary>
+        /// The Application Pool property name.
+        /// </summary>
+        private readonly ApplicationPoolProperty _propertyName;
 
         /// <summary>
         /// The web Administration manager
@@ -61,12 +52,14 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>
-        /// <param name="identityType">The type of identity.</param>
-        public SetIdentityTypeAction(ILogger logger, string appPoolName, IdentityTypes identityType)
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <param name="value">The name of user.</param>
+        public SetApplicationPoolPropertyAction(ILogger logger, string appPoolName, ApplicationPoolProperty propertyName, object value)
             : base(logger)
         {
             _appPoolName = appPoolName;
-            _identityType = identityType;
+            _propertyName = propertyName;
+            _value = value;
 
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
@@ -76,15 +69,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public override void Execute()
         {
-            if (_identityType == IdentityTypes.ApplicationPoolIdentity)
-            {
-                _webAdminManager.SetApplicationPoolIdentityType(_appPoolName);
-            }
-
-            if (_identityType == IdentityTypes.SpecificUserIdentity)
-            {
-                _webAdminManager.SetSpecificUserIdentityType(_appPoolName);
-            }
+            _webAdminManager.SetApplicationPoolProperty(_appPoolName, _propertyName, _value);
         }
     }
 }

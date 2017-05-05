@@ -29,6 +29,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void CommentBlock(string filePath, string searchPattern);
 
         /// <summary>
+        /// Replace text that matches the <paramref name="searchPattern"/>
+        /// </summary>
+        /// <param name="filePath">Path to the file that is modified</param>
+        /// <param name="searchPattern">The pattern that is searched for</param>
+        /// <param name="newValue">The new value</param>
+        void TextReplace(string filePath, string searchPattern, string newValue);
+
+        /// <summary>
         /// Uncomments block of text file between two <paramref name="searchPattern"/> comments
         /// </summary>
         /// <param name="filePath">Path to the file that is modified</param>

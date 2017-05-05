@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -51,15 +52,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void DisableWindowsAuthentication(string webSiteName);
 
         /// <summary>
-        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// Sets application pool property
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        void SetApplicationPoolIdentityType(string applicationPoolName);
-
-        /// <summary>
-        /// Sets identity type of specific application pool as Custom account
-        /// </summary>
-        /// <param name="applicationPoolName">Name of the application pool.</param>
-        void SetSpecificUserIdentityType(string applicationPoolName);
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <param name="value">The name of user.</param>
+        void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value);
     }
 }

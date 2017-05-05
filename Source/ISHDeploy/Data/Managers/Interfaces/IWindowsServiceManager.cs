@@ -61,5 +61,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
         string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
+
+
+        /// <summary>
+        /// Set windows service credentials
+        /// </summary>
+        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+
+        void SetWindowsServiceCredentials(ISHWindowsService service, string userName, string password);
     }
 }

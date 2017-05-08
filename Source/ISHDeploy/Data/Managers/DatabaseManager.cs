@@ -73,10 +73,6 @@ namespace ISHDeploy.Data.Managers
                     return false;
                 }
             }
-            else if (connectionString.ToLower().Contains("oracle"))
-            {
-                throw new Exception("Connection check doesn't support Oracle database");
-            }
             else
             {
                 throw new Exception("Connection check doesn't support such connection string");

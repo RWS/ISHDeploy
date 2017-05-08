@@ -81,7 +81,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// The path to of "SOFTWARE\Trisoft\InstallTool"
         /// </summary>
-        private readonly Dictionary<RegistryValueName, string[]> _pathsToRegistryValues;
+        public Dictionary<RegistryValueName, string[]> PathsToRegistryValues { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrisoftRegistryManager"/> class.
@@ -91,7 +91,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             RelativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? "SOFTWARE\\Wow6432Node\\Trisoft" : "SOFTWARE\\Trisoft";
-            _pathsToRegistryValues = new Dictionary<RegistryValueName, string[]>
+            PathsToRegistryValues = new Dictionary<RegistryValueName, string[]>
             {
                 { RegistryValueName.DbConnectionString, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "Connect" } },
                 { RegistryValueName.DatabaseType, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "ComponentName" } }
@@ -219,8 +219,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="parameters">Additional parameters</param>
         public void SetRegistryValue(RegistryValueName registryValueName, object value, params object[] parameters)
         {
-            var keyName = string.Format(_pathsToRegistryValues[registryValueName][0], parameters);
-            var valueName = _pathsToRegistryValues[registryValueName][1];
+            var keyName = string.Format(PathsToRegistryValues[registryValueName][0], parameters);
+            var valueName = PathsToRegistryValues[registryValueName][1];
             _logger.WriteDebug("Set registry value", keyName, valueName, value);
             Registry.SetValue(keyName, valueName, value);
             _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` has been set to `{value}`");
@@ -233,8 +233,8 @@ namespace ISHDeploy.Data.Managers
         /// <param name="parameters">Additional parameters</param>
         public object GetRegistryValue(RegistryValueName registryValueName, params object[] parameters)
         {
-            var keyName = string.Format(_pathsToRegistryValues[registryValueName][0], parameters);
-            var valueName = _pathsToRegistryValues[registryValueName][1];
+            var keyName = string.Format(PathsToRegistryValues[registryValueName][0], parameters);
+            var valueName = PathsToRegistryValues[registryValueName][1];
             _logger.WriteDebug("Get registry value", keyName, valueName);
             var value = Registry.GetValue(keyName, valueName, null);
             _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` is `{value}`");

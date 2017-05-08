@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
 using ISHDeploy.Common;
@@ -45,14 +46,19 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         public override void ExecuteCmdlet()
         {
             var databaseManager = ObjectFactory.GetInstance<IDatabaseManager>();
-            if (MyInvocation.BoundParameters.ContainsKey("ConnectionString"))
+            string connectionString = ConnectionString;
+            if (!MyInvocation.BoundParameters.ContainsKey("ConnectionString"))
             {
-                ISHWriteOutput(databaseManager.TestConnection(ConnectionString));
+                connectionString = new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run().RawConnectionString;
+            }
+
+            if (connectionString.ToLower().Contains("oracle"))
+            {
+                WriteWarning("Connection check doesn't support Oracle database");
             }
             else
             {
-                var integrationDbConnectionString = new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run();
-                ISHWriteOutput(databaseManager.TestConnection(integrationDbConnectionString.RawConnectionString));
+                ISHWriteOutput(new TestISHIntegrationDBOperation(Logger, ISHDeployment, connectionString).Run());
             }
         }
     }

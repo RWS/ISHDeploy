@@ -40,6 +40,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// <summary>
         /// <para type="description">The type of database.</para>
         /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionString")]
         [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionStringBuilder")]
         public DatabaseType DatabaseType { get; set; }
 

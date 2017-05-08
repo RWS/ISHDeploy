@@ -29,6 +29,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
     public class TestISHIntegrationDBOperation : BaseOperationPaths, IOperation<bool>
     {
         /// <summary>
+        /// The connection string to database
+        /// </summary>
+        private readonly string _connectionString;
+        /// <summary>
         /// Initializes a new instance of the <see cref="GetISHIntegrationDBOperation" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -37,7 +41,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         public TestISHIntegrationDBOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string connectionString)
             : base(logger, ishDeployment)
         {
-            
+            _connectionString = connectionString;
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                 Logger.WriteWarning($"The value `{valueName}` for `{keyPathToInfoShareAuthor}` is not the same as for `{keyNameInfoShareBuilders}`");
             }
 
-            isConnectionStringValid = isConnectionStringValid && databaseManager.TestConnection(infoShareAuthorConnectionString);
+            isConnectionStringValid = isConnectionStringValid && databaseManager.TestConnection(_connectionString);
             return isConnectionStringValid;
         }
     }

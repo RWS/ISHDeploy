@@ -159,9 +159,12 @@ Describe "Testing ISHIntegrationDB"{
 
     }
 
-    It "Test ISHIntegrationDBn throws error on Oracle"{       
+    It "Test ISHIntegrationDBn output Warning on Oracle"{       
         #Act
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $testConnectionStringOracle} | Should Throw
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $testConnectionStringOracle -WarningVariable Warning
+        
+        #Assert
+        $Warning | Should Match "Connection check doesn't support Oracle database" 
     }
 
     It "Test ISHIntegrationDBn works for SQL"{       

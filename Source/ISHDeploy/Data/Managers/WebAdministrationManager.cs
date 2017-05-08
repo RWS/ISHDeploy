@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 ﻿using System;
-﻿using System.Collections.Generic;
 ﻿using System.Linq;
+﻿using System.Security.Cryptography;
 ﻿using ISHDeploy.Common;
 ﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Exceptions;
@@ -37,9 +37,14 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// The powershell manager.
+        /// The size of salt in bytes (keeping in range of the recommended size of 128-192 bits) 
         /// </summary>
-        private readonly IPowerShellManager _psManager;
+        private const int SaltByteLength = 24;
+
+        /// <summary>
+        /// The size of the outputted hash of the password
+        /// </summary>
+        private const int DerivedKeyLength = 24;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebAdministrationManager"/> class.
@@ -48,7 +53,6 @@ namespace ISHDeploy.Data.Managers
         public WebAdministrationManager(ILogger logger)
         {
             _logger = logger;
-            _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
         }
 
         /// <summary>
@@ -276,14 +280,45 @@ namespace ISHDeploy.Data.Managers
                 var config = manager.GetApplicationHostConfiguration();
                 var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
 
-                var windowsAuthenticationSection = config.GetSection(
+                var section = config.GetSection(
                     configurationXPath,
                     locationPath);
-                windowsAuthenticationSection[propertyName.ToString()] = value;
 
+                switch (propertyName)
+                {
+                    case WebConfigurationProperty.password:
+                        byte[] hashValue;
+                        byte[] salt = Convert.FromBase64String(GenerateRandomSalt());
+                        using (var pbkdf2 = new Rfc2898DeriveBytes(value.ToString(), salt))
+                        {
+                            hashValue = pbkdf2.GetBytes(DerivedKeyLength);
+                        }
+
+                        section[propertyName.ToString()] = Convert.ToBase64String(hashValue);
+                        break;
+                    default:
+                        section[propertyName.ToString()] = value;
+                        break;
+                }
+
+                
                 manager.CommitChanges();
 
                 _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been chenged");
+            }
+        }
+
+        /// <summary>
+        /// Generate the random salt
+        /// </summary>
+        /// <returns>String with the salt</returns>
+        private string GenerateRandomSalt()
+        {
+            using (var csprng = new RNGCryptoServiceProvider())
+            {
+                var salt = new byte[SaltByteLength];
+                csprng.GetBytes(salt);
+                return Convert.ToBase64String(salt);
             }
         }
     }

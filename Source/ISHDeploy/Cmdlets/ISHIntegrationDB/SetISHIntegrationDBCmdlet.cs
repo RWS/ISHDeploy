@@ -34,6 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// <para type="description">Connection string.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Connection string.", ParameterSetName = "ConnectionString")]
+        [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionStringBuilder")]
         public string ConnectionString { get; set; }
 
         /// <summary>

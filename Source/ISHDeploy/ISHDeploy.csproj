@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
+    <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\DisableISHServiceTranslationOrganizerOperation.cs" />

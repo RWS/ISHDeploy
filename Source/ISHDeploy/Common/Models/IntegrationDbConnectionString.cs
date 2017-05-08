@@ -15,7 +15,7 @@ namespace ISHDeploy.Common.Models
         /// <summary>
         /// Gets the type of database.
         /// </summary>
-        public DatabaseType DatabaseServer { get; }
+        public DatabaseType Engine { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputParameters"/> class.
@@ -25,7 +25,7 @@ namespace ISHDeploy.Common.Models
         public IntegrationDbConnectionString(string connectionString, DatabaseType databaseType)
         {
             RawConnectionString = connectionString;
-            DatabaseServer = databaseType;
+            Engine = databaseType;
         }
     }
 }

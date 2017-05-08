@@ -26,6 +26,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
     public interface ITrisoftRegistryManager
     {
         /// <summary>
+        /// The path to of "SOFTWARE\Trisoft\InstallTool"
+        /// </summary>
+        Dictionary<RegistryValueName, string[]> PathsToRegistryValues { get; }
+
+        /// <summary>
         /// The path to of "SOFTWARE\Trisoft"
         /// </summary>
         string RelativeTrisoftRegPath { get; }

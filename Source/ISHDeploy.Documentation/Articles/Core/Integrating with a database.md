@@ -41,7 +41,7 @@ CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationDB.SQL.Raw.ps1)
 
 ### Oracle
 
-In this example we want to connect with a serrice e.g. `ISHDatabase` hosted on an Oracle Server e.g `OracleServer`.
+In this example we want to connect with a service e.g. `ISHDatabase` hosted on an Oracle Server e.g `OracleServer`.
 
 CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationDB.Oracle.Raw.ps1)
 

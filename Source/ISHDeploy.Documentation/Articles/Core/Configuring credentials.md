@@ -10,6 +10,8 @@ This tutorial explains how to configure credentials for a deployment. The creden
 
 **Notice** that the module will assume the given credentials are valid for their respected scope and only configure the deployment to use them. 
 
+**Tip** to update the password per target type, use the following cmdlet while keeping the username the same.
+
 ## Set deploymentName variable
 First set deploymentName variable.
 
@@ -35,3 +37,15 @@ CopyCodeBlock(_nopublish\Example.Set-ISHOSUser.Local.ps1)
 In this example we use the `domainuser` already present in the `DOMAIN` active directory.
 
 CopyCodeBlock(_nopublish\Example.Set-ISHOSUser.Domain.ps1)
+
+## Setting the ServiceUser
+
+`Set-ISHServiceUser` sets the credentials of the deployment's *ServiceUser*. The referenced user must be valid in Content Manager's user repository.
+
+CopyCodeBlock(_nopublish\Example.Set-ISHServiceUser.ps1)
+
+## Setting the Actor
+
+`Set-ISHActor` sets the credentials of the deployment's *Actor*. The referenced user must be valid on the configured Security Token Service (STS). In case the STS is ISHSTS, then the referenced user must be valid in Content Manager's user repository.
+
+CopyCodeBlock(_nopublish\Example.Set-ISHActor.ps1)

@@ -60,12 +60,14 @@
   <ItemGroup>
     <None Include="Articles\Core\Configuring credentials.md" />
     <None Include="Articles\Core\Integrating with a database.md" />
+    <None Include="Articles\Core\_nopublish\Example.Set-ISHActor.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHIntegrationDB.Oracle.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHIntegrationDB.Oracle.Raw.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHIntegrationDB.SQL.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHIntegrationDB.SQL.Raw.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHOSUser.Domain.ps1" />
     <None Include="Articles\Core\_nopublish\Example.Set-ISHOSUser.Local.ps1" />
+    <None Include="Articles\Core\_nopublish\Example.Set-ISHServiceUser.ps1" />
     <None Include="Articles\ISHCM\_nopublish\03.CreateButtonBarItem - Full.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateButtonBarItem.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateSearchMenuBarItem.ps1" />

@@ -14,51 +14,40 @@
  * limitations under the License.
  */
 
-using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHIntegrationDB;
-using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
-using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
     /// <summary>
     /// <para type="synopsis">Test connection string to database.</para>
-    /// <para type="description">This cmdlet check connection to database with connection string and returns True if connection is Ok, or False if connection is invalid</para>
+    /// <para type="description">This cmdlet check connection to database for certain environment and returns True if connection is Ok, or False if connection is invalid</para>
+    /// <para type="description">This cmdlet doesn't support check of connection if type of database of environment is Oracle.</para>
     /// </summary>
-    /// <seealso cref="BaseCmdlet" />
+    /// <seealso cref="BaseHistoryEntryCmdlet" />
     /// <example>
-    ///   <code>PS C:\&gt;Test-ISHIntegrationDB -ConnectionString "Provider=SQLOLEDB.1;Password=...;Persist Security Info=True;User ID=...;Initial Catalog=...;Data Source=...\SQL2012SP2"</code>
+    ///   <code>PS C:\&gt;Test-ISHIntegrationDB -ISHDeployment $deployment</code>
+    /// <para>This cmdlet tests connection to database for certain environment and returns True if connection is Ok, or False if connection is invalid. This command doesn't support check of connection to Oracle database.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsDiagnostic.Test, "ISHIntegrationDB")]
     public class TestISHIntegrationDBCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
-        /// <para type="description">Connection string.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "Connection string.")]
-        public string ConnectionString { get; set; }
-
-        /// <summary>
         /// Executes cmdlet.
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var databaseManager = ObjectFactory.GetInstance<IDatabaseManager>();
-            string connectionString = ConnectionString;
-            if (!MyInvocation.BoundParameters.ContainsKey("ConnectionString"))
-            {
-                connectionString = new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run().RawConnectionString;
-            }
+            var connectionString = new GetISHIntegrationDBOperation(Logger, ISHDeployment).Run();
 
-            if (connectionString.ToLower().Contains("oracle"))
+            if (connectionString.Engine == DatabaseType.oracle)
             {
                 WriteWarning("Connection check doesn't support Oracle database");
             }
             else
             {
-                ISHWriteOutput(new TestISHIntegrationDBOperation(Logger, ISHDeployment, connectionString).Run());
+                ISHWriteOutput(new TestISHIntegrationDBOperation(Logger, ISHDeployment, connectionString.RawConnectionString).Run());
             }
         }
     }

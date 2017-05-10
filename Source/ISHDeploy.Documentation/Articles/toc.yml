@@ -6,6 +6,10 @@
     href: ../obj/doc/articles/Module/Work with one deployment.md
 - name: Work with files and packages
   href: ../obj/doc/articles/Module/Work with files and packages.md
+- name: Work with core deployment configuration
+  items:
+  - name: Integrating with a database
+    href: ../obj/doc/articles/Core/Integrating with a database.md
 - name: Working with ISHCM web UI features
   items:
   - name: Toggling Web Components

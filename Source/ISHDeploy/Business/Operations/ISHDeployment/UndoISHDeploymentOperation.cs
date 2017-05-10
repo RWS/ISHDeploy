@@ -122,11 +122,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Stop and delete excess ISH windows services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList();
+            var services = serviceManager.GetServicesNames(ishDeployment.Name, InputParameters.ProjectSuffix).ToList();
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
             }
 
             // Check if this operation has implications for several Deployments
@@ -139,7 +139,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Rolling back credentials for COM+ component
             _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
 
-            var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
+            var servicesForDeleting = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList().Where(serv => serv.Sequence > 1);
             foreach (var service in servicesForDeleting)
             {
                 _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));

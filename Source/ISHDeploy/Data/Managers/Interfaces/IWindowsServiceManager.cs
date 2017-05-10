@@ -48,23 +48,25 @@ namespace ISHDeploy.Data.Managers.Interfaces
         IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
 
         /// <summary>
+        /// Gets all names of windows services of deployment.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="projectSuffix">The project suffix.</param>
+        /// <returns>
+        /// The windows services of deployment.
+        /// </returns>
+        IEnumerable<string> GetServicesNames(string deploymentName, string projectSuffix);
+
+        /// <summary>
         /// Gets all names of windows services of deployment with specified status.
         /// </summary>
         /// <param name="deploymentName">ISH deployment name.</param>
         /// <param name="status">ISH deployment name.</param>
+        /// <param name="projectSuffix">The project suffix.</param>
         /// <returns>
         /// The windows services of deployment with specified status.
         /// </returns>
-        IEnumerable<string> GetServicesNamesWithStatus(string deploymentName, ISHWindowsServiceStatus status);
-
-        /// <summary>
-        /// Gets all names of windows services of deployment.
-        /// </summary>
-        /// <param name="deploymentName">ISH deployment name.</param>
-        /// <returns>
-        /// The windows services of deployment.
-        /// </returns>
-        IEnumerable<string> GetServicesNames(string deploymentName);
+        IEnumerable<string> GetServicesNamesWithStatus(string deploymentName, ISHWindowsServiceStatus status, string projectSuffix);
 
         /// <summary>
         /// Removes specific windows service

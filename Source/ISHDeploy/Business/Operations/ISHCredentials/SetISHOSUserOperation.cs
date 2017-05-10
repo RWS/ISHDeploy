@@ -228,7 +228,8 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var runningServiceNames = serviceManager.GetServicesNamesWithStatus(
                     ishDeployment.Name, 
-                    ISHWindowsServiceStatus.Running).ToList();
+                    ISHWindowsServiceStatus.Running,
+                    InputParameters.ProjectSuffix).ToList();
 
             // Stop services that are running
             foreach (var service in runningServiceNames)
@@ -238,7 +239,8 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             // Set new credentials for all services
             foreach (var serviceName in serviceManager.GetServicesNames(
-                    ishDeployment.Name))
+                    ishDeployment.Name,
+                    InputParameters.ProjectSuffix))
             {
                 _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, serviceName, userName, password));
             }

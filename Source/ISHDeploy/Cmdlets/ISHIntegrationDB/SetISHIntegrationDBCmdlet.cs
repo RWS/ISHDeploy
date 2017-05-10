@@ -20,12 +20,14 @@ using ISHDeploy.Common.Enums;
 namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
     /// <summary>
-    /// <para type="synopsis">Change connection string to database for certain environment.</para>
+    /// <para type="synopsis">Change connection string and type of database for certain environment.</para>
     /// <para type="description">This cmdlet change connection string to database for certain environment.</para>
     /// </summary>
     /// <seealso cref="BaseHistoryEntryCmdlet" />
     /// <example>
-    ///   <code>PS C:\&gt;Set-ISHIntegrationDB -ISHDeployment $deployment -ConnectionString ""</code>
+    ///   <code>PS C:\&gt;Set-ISHIntegrationDB -ISHDeployment $deployment -ConnectionString "" -Engine "sqlserver2012"</code>
+    /// <para>This command sets connection string and type of database for certain environment.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationDB")]
     public class SetISHIntegrationDBCmdlet : BaseHistoryEntryCmdlet
@@ -34,6 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// <para type="description">Connection string.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Connection string.", ParameterSetName = "ConnectionString")]
+        [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionStringBuilder")]
         public string ConnectionString { get; set; }
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionString")]
         [Parameter(Mandatory = true, HelpMessage = "The type of database.", ParameterSetName = "ConnectionStringBuilder")]
-        public DatabaseType DatabaseType { get; set; }
+        public DatabaseType Engine { get; set; }
 
         /// <summary>
         /// <para type="description">Set connection string as a string parameter.</para>
@@ -56,7 +59,7 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
         {
             if (ParameterSetName == "ConnectionString")
             {
-                var operation = new SetISHIntegrationDBOperation(Logger, ISHDeployment, ConnectionString, DatabaseType);
+                var operation = new SetISHIntegrationDBOperation(Logger, ISHDeployment, ConnectionString, Engine);
                 operation.Run();
             }
         }

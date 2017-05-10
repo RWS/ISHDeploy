@@ -21,11 +21,13 @@ namespace ISHDeploy.Cmdlets.ISHIntegrationDB
 {
     /// <summary>
     /// <para type="synopsis">Return connection string to database for certain environment.</para>
-    /// <para type="description">This cmdlet returns connection string to database for certain environment.</para>
+    /// <para type="description">This cmdlet returns connection string and type of database for certain environment.</para>
     /// </summary>
-    /// <seealso cref="BaseHistoryEntryCmdlet" />
+    /// <seealso cref="BaseISHDeploymentCmdlet" />
     /// <example>
     ///   <code>PS C:\&gt;Get-ISHIntegrationDB -ISHDeployment $deployment</code>
+    /// <para>This cmdlet returns connection string and type of database for certain environment.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHIntegrationDB")]
     public class GetISHIntegrationDbCmdlet : BaseISHDeploymentCmdlet

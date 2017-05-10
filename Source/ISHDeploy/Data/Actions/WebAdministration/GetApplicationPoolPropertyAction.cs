@@ -14,29 +14,24 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
     /// <summary>
-    /// Sets property of application pool
+    /// Gets property of application pool
     /// </summary>
-    /// <seealso cref="SingleFileCreationAction" />
-    public class SetApplicationPoolPropertyAction : BaseAction, IRestorableAction
+    /// <seealso cref="BaseActionWithResult{TResult}" />
+    public class GetApplicationPoolPropertyAction : BaseActionWithResult<string>
     {
         /// <summary>
         /// The Application Pool name.
         /// </summary>
         private readonly string _appPoolName;
-
-        /// <summary>
-        /// The Application Pool property value.
-        /// </summary>
-        private readonly object _value;
 
         /// <summary>
         /// The Application Pool property name.
@@ -49,49 +44,28 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         private readonly IWebAdministrationManager _webAdminManager;
 
         /// <summary>
-        /// The Application Pool property previous value.
-        /// </summary>
-        private object _backedUpValue;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetApplicationPoolPropertyAction"/> class.
+        /// Initializes a new instance of the <see cref="GetApplicationPoolPropertyAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="appPoolName">Name of the application pool.</param>
         /// <param name="propertyName">The name of ApplicationPool property.</param>
-        /// <param name="value">The name of user.</param>
-        public SetApplicationPoolPropertyAction(ILogger logger, string appPoolName, ApplicationPoolProperty propertyName, object value)
-            : base(logger)
+        /// <param name="returnResult">The delegate that returns value.</param>
+        public GetApplicationPoolPropertyAction(ILogger logger, string appPoolName, ApplicationPoolProperty propertyName, Action<string> returnResult)
+            : base(logger, returnResult)
         {
             _appPoolName = appPoolName;
             _propertyName = propertyName;
-            _value = value;
 
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
 
         /// <summary>
-        ///	Gets current value before change.
+        /// Executes current action and returns result.
         /// </summary>
-        public void Backup()
+        /// <returns>The ApplicationPool property.</returns>
+        protected override string ExecuteWithResult()
         {
-            _backedUpValue = _webAdminManager.GetApplicationPoolProperty(_appPoolName, _propertyName);
-        }
-
-        /// <summary>
-        /// Executes current action.
-        /// </summary>
-        public override void Execute()
-        {
-            _webAdminManager.SetApplicationPoolProperty(_appPoolName, _propertyName, _value);
-        }
-
-        /// <summary>
-        ///	Reverts a value to initial state.
-        /// </summary>
-        public void Rollback()
-        {
-            _webAdminManager.SetApplicationPoolProperty(_appPoolName, _propertyName, _backedUpValue);
+            return _webAdminManager.GetApplicationPoolProperty(_appPoolName, _propertyName);
         }
     }
 }

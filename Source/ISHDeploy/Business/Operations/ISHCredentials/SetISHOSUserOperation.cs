@@ -15,13 +15,16 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
+using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.TextFile;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
@@ -55,25 +58,32 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         {
             _invoker = new ActionInvoker(logger, "Setting of new OS credential.");
 
-            var context = new PrincipalContext(ContextType.Domain);
-            var principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName);
+            var contextDomain = new PrincipalContext(ContextType.Domain);
+            var principalDomain = UserPrincipal.FindByIdentity(contextDomain, IdentityType.SamAccountName, userName);
+            var contextMachine = new PrincipalContext(ContextType.Machine);
+            var principalMachine = UserPrincipal.FindByIdentity(contextMachine, IdentityType.SamAccountName, userName);
 
-            if (principal == null)
+            if (principalDomain == null && principalMachine == null)
             {
                 throw new Exception($"The {userName} user not found");
             }
 
-            if (principal.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
+            if (principalDomain != null)
             {
-                throw new Exception($"Administrator role not found for {userName}");
+                if (principalDomain.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
+                {
+                    throw new Exception($"Administrator role not found for domain user `{userName}`");
+                }
+            }
+            else if (principalMachine.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
+            {
+                throw new Exception($"Administrator role not found for local user `{userName}`");
             }
 
             // Stop Application pools
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
-
-            // TODO: add passwords encryption
 
             // WS
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
@@ -216,32 +226,35 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             // Recycle ISH windows services that are running
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(
+            var runningServiceNames = serviceManager.GetServicesNamesWithStatus(
                     ishDeployment.Name, 
-                    ISHWindowsServiceType.TranslationBuilder, 
-                    ISHWindowsServiceType.TranslationOrganizer)
-                .Where(x => x.Status == ISHWindowsServiceStatus.Running).ToList();
+                    ISHWindowsServiceStatus.Running).ToList();
 
             // Stop services that are running
-            foreach (var service in services)
+            foreach (var service in runningServiceNames)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
             }
 
             // Set new credentials for all services
-            foreach (var service in serviceManager.GetServices(
-                    ishDeployment.Name,
-                    ISHWindowsServiceType.TranslationBuilder,
-                    ISHWindowsServiceType.TranslationOrganizer))
+            foreach (var serviceName in serviceManager.GetServicesNames(
+                    ishDeployment.Name))
             {
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, userName, password));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, serviceName, userName, password));
             }
 
             // Run services that should be run
-            foreach (var service in services)
+            foreach (var service in runningServiceNames)
             {
                 _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
             }
+
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                "The setting of credentials for COM+ components has implications across all deployments."));
 
             // Set new credentials for COM+ component
             _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, password));

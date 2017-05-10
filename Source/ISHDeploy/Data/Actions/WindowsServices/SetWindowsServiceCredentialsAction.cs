@@ -28,9 +28,9 @@ namespace ISHDeploy.Data.Actions.WindowsServices
     public class SetWindowsServiceCredentialsAction : BaseAction
     {
         /// <summary>
-        /// The deployment service.
+        /// The name of deployment service.
         /// </summary>
-        private readonly ISHWindowsService _service;
+        private readonly string _serviceName;
 
         /// <summary>
         /// The windows service manager
@@ -51,13 +51,13 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// Initializes a new instance of the <see cref="SetWindowsServiceCredentialsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="service">The deployment service.</param>
+        /// <param name="serviceName">The name of deployment service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        public SetWindowsServiceCredentialsAction(ILogger logger, ISHWindowsService service, string userName, string password)
+        public SetWindowsServiceCredentialsAction(ILogger logger, string serviceName, string userName, string password)
             : base(logger)
         {
-            _service = service;
+            _serviceName = serviceName;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             _userName = userName;
@@ -69,7 +69,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.SetWindowsServiceCredentials(_service, _userName, _password);
+            _serviceManager.SetWindowsServiceCredentials(_serviceName, _userName, _password);
         }
     }
 }

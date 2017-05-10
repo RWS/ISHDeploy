@@ -48,6 +48,25 @@ namespace ISHDeploy.Data.Managers.Interfaces
         IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
 
         /// <summary>
+        /// Gets all names of windows services of deployment with specified status.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="status">ISH deployment name.</param>
+        /// <returns>
+        /// The windows services of deployment with specified status.
+        /// </returns>
+        IEnumerable<string> GetServicesNamesWithStatus(string deploymentName, ISHWindowsServiceStatus status);
+
+        /// <summary>
+        /// Gets all names of windows services of deployment.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The windows services of deployment.
+        /// </returns>
+        IEnumerable<string> GetServicesNames(string deploymentName);
+
+        /// <summary>
         /// Removes specific windows service
         /// </summary>
         /// <param name="serviceName">Name of the windows service.</param>
@@ -62,14 +81,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="password">The password.</param>
         string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
 
-
         /// <summary>
         /// Set windows service credentials
         /// </summary>
-        /// <param name="service">The windows service to be updated with new credentials.</param>
+        /// <param name="serviceName">The name of windows service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
 
-        void SetWindowsServiceCredentials(ISHWindowsService service, string userName, string password);
+        void SetWindowsServiceCredentials(string serviceName, string userName, string password);
     }
 }

@@ -63,7 +63,8 @@ namespace ISHDeploy.Data.Managers
                     { "$name", comPlusComponentName },
                     { "$username", userName },
                     { "$password", password }
-                });
+                },
+                "Setting of COM+ component credentials");
 
             _logger.WriteVerbose($"Credentials for the COM+ component `{comPlusComponentName}` has been chenged");
         }

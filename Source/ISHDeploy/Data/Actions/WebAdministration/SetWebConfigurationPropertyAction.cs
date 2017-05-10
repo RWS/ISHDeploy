@@ -18,6 +18,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
@@ -25,7 +26,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
     /// Sets web configuration property
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetWebConfigurationPropertyAction : BaseAction
+    public class SetWebConfigurationPropertyAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The Application Pool name.
@@ -53,6 +54,11 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         private readonly IWebAdministrationManager _webAdminManager;
 
         /// <summary>
+        /// The Application Pool property previous value.
+        /// </summary>
+        private object _backedUpValue;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SetWebConfigurationPropertyAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -71,12 +77,29 @@ namespace ISHDeploy.Data.Actions.WebAdministration
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
 
+
+        /// <summary>
+        ///	Gets current value before change.
+        /// </summary>
+        public void Backup()
+        {
+            _backedUpValue = _webAdminManager.GetWebConfigurationProperty(_webSiteName, _configurationXPath, _propertyName);
+        }
+
         /// <summary>
         /// Executes current action.
         /// </summary>
         public override void Execute()
         {
             _webAdminManager.SetWebConfigurationProperty(_webSiteName, _configurationXPath, _propertyName, _value);
+        }
+
+        /// <summary>
+        ///	Reverts a value to initial state.
+        /// </summary>
+        public void Rollback()
+        {
+            _webAdminManager.SetWebConfigurationProperty(_webSiteName, _configurationXPath, _propertyName, _backedUpValue);
         }
     }
 }

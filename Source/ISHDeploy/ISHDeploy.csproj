@@ -302,6 +302,7 @@
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\GetApplicationPoolPropertyAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />

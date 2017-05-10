@@ -15,7 +15,6 @@
  */
 ﻿using System;
 ﻿using System.Linq;
-﻿using System.Security.Cryptography;
 ﻿using ISHDeploy.Common;
 ﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Exceptions;
@@ -263,6 +262,36 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets application pool property value
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public string GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName)
+        {
+            using (var manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                var config = manager.GetApplicationHostConfiguration();
+                ConfigurationSection applicationPoolsSection =
+                    config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var poolElement =
+                    applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (poolElement == null)
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                return processModelElement.GetAttributeValue(propertyName.ToString()).ToString();
+            }
+        }
+
+        /// <summary>
         /// Sets web configuration property.
         /// </summary>
         /// <param name="webSiteName">Name of the web site.</param>
@@ -283,25 +312,9 @@ namespace ISHDeploy.Data.Managers
                 var section = config.GetSection(
                     configurationXPath,
                     locationPath);
+               
+                section[propertyName.ToString()] = value;
 
-                switch (propertyName)
-                {
-                    case WebConfigurationProperty.password:
-                        byte[] hashValue;
-                        byte[] salt = Convert.FromBase64String(GenerateRandomSalt());
-                        using (var pbkdf2 = new Rfc2898DeriveBytes(value.ToString(), salt))
-                        {
-                            hashValue = pbkdf2.GetBytes(DerivedKeyLength);
-                        }
-
-                        section[propertyName.ToString()] = Convert.ToBase64String(hashValue);
-                        break;
-                    default:
-                        section[propertyName.ToString()] = value;
-                        break;
-                }
-
-                
                 manager.CommitChanges();
 
                 _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been chenged");
@@ -309,17 +322,34 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Generate the random salt
+        /// Gets web configuration property.
         /// </summary>
-        /// <returns>String with the salt</returns>
-        private string GenerateRandomSalt()
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public object GetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName)
         {
-            using (var csprng = new RNGCryptoServiceProvider())
+            _logger.WriteDebug("Get WebConfiguration property for site", webSiteName, propertyName);
+            object value;
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                var salt = new byte[SaltByteLength];
-                csprng.GetBytes(salt);
-                return Convert.ToBase64String(salt);
+                _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var section = config.GetSection(
+                    configurationXPath,
+                    locationPath);
+
+
+                value = section[propertyName.ToString()];
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been gotten");
             }
+            return value;
         }
     }
 }

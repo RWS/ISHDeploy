@@ -34,7 +34,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// <summary>
         /// The COM+ component manager
         /// </summary>
-        private readonly ICOMPlusComponentManager _serviceManager;
+        private readonly ICOMPlusComponentManager _comPlusComponentManager;
 
         /// <summary>
         /// The windows service userName
@@ -58,7 +58,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         {
             _comPlusComponentName = comPlusComponentName;
 
-            _serviceManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
             _userName = userName;
             _password = password;
         }
@@ -68,7 +68,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _userName, _password);
+            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _userName, _password);
         }
     }
 }

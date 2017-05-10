@@ -25,7 +25,9 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
+using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.Registry;
 using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
@@ -124,8 +126,15 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
             }
+
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                "The rolling back of credentials for COM+ components has implications across all deployments."));
 
             // Rolling back credentials for COM+ component
             _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
@@ -135,7 +144,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             {
                 _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
             }
-
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));

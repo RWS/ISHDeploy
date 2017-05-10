@@ -115,8 +115,8 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Gets all windows services of specified type.
         /// </summary>
-        /// <param name="types">Types of deployment service.</param>
         /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
@@ -139,6 +139,38 @@ namespace ISHDeploy.Data.Managers
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Gets all names of windows services of deployment.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The windows services of deployment.
+        /// </returns>
+        public IEnumerable<string> GetServicesNames(string deploymentName)
+        {
+            return ServiceController.GetServices()
+                        .Where(x => x.ServiceName.StartsWith("Trisoft InfoShare"))
+                        .Select(service => service.ServiceName)
+                        .ToList();
+        }
+
+        /// <summary>
+        /// Gets all names of windows services of deployment with specified status.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="status">ISH deployment name.</param>
+        /// <returns>
+        /// The windows services of deployment with specified status.
+        /// </returns>
+        public IEnumerable<string> GetServicesNamesWithStatus(string deploymentName, ISHWindowsServiceStatus status)
+        {
+            return ServiceController.GetServices()
+                        .Where(x => x.ServiceName.StartsWith("Trisoft InfoShare") 
+                            && x.Status == (ServiceControllerStatus)Enum.Parse(typeof(ServiceControllerStatus), status.ToString()))
+                        .Select(service => service.ServiceName)
+                        .ToList();
         }
 
         /// <summary>
@@ -198,23 +230,24 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Set windows service credentials
         /// </summary>
-        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="serviceName">The name of windows service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
 
-        public void SetWindowsServiceCredentials(ISHWindowsService service, string userName, string password)
+        public void SetWindowsServiceCredentials(string serviceName, string userName, string password)
         {
-            _logger.WriteDebug("Set windows service credentials", service.Name);
+            _logger.WriteDebug("Set windows service credentials", serviceName);
 
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-WindowsServiceCredentials.ps1",
                 new Dictionary<string, string>
                 {
-                    { "$name", service.Name },
+                    { "$name", serviceName },
                     { "$username", userName },
                     { "$password", password }
-                });
+                },
+                "Setting windows service credentials");
 
-            _logger.WriteVerbose($"Credentials for the service `{service.Name}` has been chenged");
+            _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
         }
     }
 }

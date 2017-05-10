@@ -21,10 +21,6 @@ namespace ISHDeploy.Common.Enums
     public enum DatabaseType
     {
         /// <summary>
-        /// Used to initialize the enum
-        /// </summary>
-        None,
-        /// <summary>
         /// Oracle RDBMS, including 9.2.0.2, 9.2.0.4, 9.2.0.6, 10.1.0.4, 10.2.0.2
         /// </summary>
         oracle,

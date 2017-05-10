@@ -118,7 +118,7 @@ Describe "Testing ISHIntegrationDB"{
     It "Set ISHIntegrationDB with raw connection string"{       
         #Act
 
-        $params = @{ConnectionString = $testConnectionString;DatabaseType = $testDBType; Raw=$true}
+        $params = @{ConnectionString = $testConnectionString;Engine = $testDBType; Raw=$true}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $params
         
         #Assert
@@ -146,7 +146,7 @@ Describe "Testing ISHIntegrationDB"{
         #Act
         #Act
 
-        $params = @{ConnectionString = $testConnectionStringOracle;DatabaseType = "oracle"; Raw=$true}
+        $params = @{ConnectionString = $testConnectionStringOracle;Engine = "oracle"; Raw=$true}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $params
         
         #Assert
@@ -159,40 +159,15 @@ Describe "Testing ISHIntegrationDB"{
 
     }
 
-    It "Test ISHIntegrationDBn output Warning on Oracle"{       
-        #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $testConnectionStringOracle -WarningVariable Warning
-        
-        #Assert
-        $Warning | Should Match "Connection check doesn't support Oracle database" 
-    }
-
     It "Test ISHIntegrationDBn works for SQL"{       
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockTestISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName} | Should not Throw
     }
 
-    It "Test ISHIntegrationDBn throws error when ConnectionString is empty or NULL"{     
-    
-        $scriptBlock = {
-            param (
-                $ishDeployName
-            )
-            if($PSSenderInfo) {
-                $DebugPreference=$Using:DebugPreference
-                $VerbosePreference=$Using:VerbosePreference 
-            }
-
-            Test-ISHIntegrationDB -ISHDeployment $ishDeployName -ConnectionString ""
-        }  
-        #Act
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlock -Session $session -ArgumentList $testingDeploymentName} | Should Throw
-    }
-
     It "Set ISHIntegrationDB writes history"{       
         #Act
 
-        $params = @{ConnectionString = $testConnectionString;DatabaseType = $testDBType; Raw=$true}
+        $params = @{ConnectionString = $testConnectionString;Engine = $testDBType; Raw=$true}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $params
         
         #Assert

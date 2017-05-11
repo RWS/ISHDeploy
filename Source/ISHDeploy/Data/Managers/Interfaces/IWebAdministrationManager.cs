@@ -67,7 +67,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <returns>
         /// The value by property name.
         /// </returns>
-        string GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName);
+        object GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName);
 
         /// <summary>
         /// Sets web configuration property.

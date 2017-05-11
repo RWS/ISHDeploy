@@ -269,7 +269,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>
         /// The value by property name.
         /// </returns>
-        public string GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName)
+        public object GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName)
         {
             using (var manager = ServerManager.OpenRemote(Environment.MachineName))
             {
@@ -287,7 +287,13 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                return processModelElement.GetAttributeValue(propertyName.ToString()).ToString();
+                switch (propertyName)
+                {
+                    case ApplicationPoolProperty.identityType:
+                        return  (ProcessModelIdentityType)processModelElement.GetAttributeValue(propertyName.ToString());
+                    default:
+                        return processModelElement.GetAttributeValue(propertyName.ToString());
+                }
             }
         }
 

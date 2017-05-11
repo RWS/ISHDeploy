@@ -15,15 +15,26 @@
  */
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Win32;
+﻿using ISHDeploy.Common.Enums;
+﻿using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
     /// Manager that do all kinds of operations with registry.
     /// </summary>
-    public interface IRegistryManager
+    public interface ITrisoftRegistryManager
     {
+        /// <summary>
+        /// The path to of "SOFTWARE\Trisoft\InstallTool"
+        /// </summary>
+        Dictionary<RegistryValueName, string[]> PathsToRegistryValues { get; }
+
+        /// <summary>
+        /// The path to of "SOFTWARE\Trisoft"
+        /// </summary>
+        string RelativeTrisoftRegPath { get; }
+
         /// <summary>
         /// Gets the installed deployments keys.
         /// </summary>
@@ -48,10 +59,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
         /// </summary>
-        /// <param name="keyName">The full registry path of the key, beginning with a valid registry root, such as "HKEY_CURRENT_USER".</param>
-        /// <param name="valueName">The name of the name/value pair.</param>
-        /// <param name="value">The value to be stored.</param>
-        void SetRegistryValue(string keyName, string valueName, object value);
+        /// <param name="registryValueName">The name of the name/value pair</param>
+        /// <param name="value">The value to be stored</param>
+        /// <param name="parameters">Additional parameters</param>
+        void SetRegistryValue(RegistryValueName registryValueName, object value, params object[] parameters);
+
+        /// <summary>
+        ///  Gets the specified value on the specified registry key.
+        /// </summary>
+        /// <param name="registryValueName">The name of the name/value pair</param>
+        /// <param name="parameters">Additional parameters</param>
+        object GetRegistryValue(RegistryValueName registryValueName, params object[] parameters);
 
         /// <summary>
         /// Gets names of all values of registry key.

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
+using System.Text;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 
@@ -50,9 +51,10 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="embeddedResourceName">Name of embedded ps1 resource with powershell script.</param>
         /// <param name="parameters">Parameters to be passed to the script. Is <c>null</c> by defult</param>
+        /// <param name="actionDescription">Description of action to add this information if powershell script running is failed.</param>
         /// Return the result in the case of casting failure
         /// <returns>An object of specified type that converted from PSObject</returns>
-        public object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null)
+        public object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null, string actionDescription = null)
         {
             var result = new List<object>();
             using (var ps = PowerShell.Create())
@@ -75,20 +77,39 @@ namespace ISHDeploy.Data.Managers
                         ps.AddParameter("NoProfile");
                     }
                 }
+                
+                // Add results
+                result.AddRange(ps.Invoke());
 
-                foreach (PSObject psResult in ps.Invoke())
+                // Add Verboses, Warnings and Exceptions
+                foreach (var verbose in ps.Streams.Verbose.ReadAll())
                 {
-                    foreach (var verbose in ps.Streams.Verbose.ReadAll())
-                    {
-                        _logger.WriteVerbose(verbose.Message);
-                    }
+                    _logger.WriteVerbose(verbose.Message);
+                }
 
-                    foreach (var warning in ps.Streams.Warning.ReadAll())
-                    {
-                        _logger.WriteWarning(warning.Message);
-                    }
+                foreach (var warning in ps.Streams.Warning.ReadAll())
+                {
+                    _logger.WriteWarning(warning.Message);
+                }
 
-                    result.Add(psResult);
+                bool isFailed = false;
+                var exceptions = new StringBuilder();
+                foreach (var error in ps.Streams.Error.ReadAll())
+                {
+                    isFailed = true;
+                    exceptions.AppendLine(error.Exception.Message);
+                }
+
+                if (isFailed)
+                {
+                    if (string.IsNullOrEmpty(actionDescription))
+                    {
+                        throw new Exception(exceptions.ToString());
+                    }
+                    else
+                    {
+                        throw new Exception($"{actionDescription} is failed. {exceptions}");
+                    }
                 }
             }
 

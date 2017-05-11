@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Common.Enums
+
+namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
-    /// <para type="description">Specify the name of application pool property.</para>
+    /// Manager that do all kinds of operations with database.
     /// </summary>
-    public enum ApplicationPoolProperty
+    public interface IDatabaseManager
     {
         /// <summary>
-        /// Username
+        /// Test connection to database.
         /// </summary>
-        userName,
-        /// <summary>
-        /// Password
-        /// </summary>
-        password,
-        /// <summary>
-        /// Identity type
-        /// </summary>
-        identityType,
-        /// <summary>
-        /// LoadUserProfile
-        /// </summary>
-        loadUserProfile
+        /// <param name="connectionString">The connection string to database.</param>
+        /// <returns>True if the connection is available</returns>
+        bool TestConnection(string connectionString);
     }
 }

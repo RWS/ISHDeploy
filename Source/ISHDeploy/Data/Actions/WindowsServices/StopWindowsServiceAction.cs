@@ -28,9 +28,9 @@ namespace ISHDeploy.Data.Actions.WindowsServices
     public class StopWindowsServiceAction : BaseAction
     {
         /// <summary>
-        /// The deployment service.
+        /// The name of deployment service.
         /// </summary>
-        private readonly ISHWindowsService _service;
+        private readonly string _serviceName;
 
         /// <summary>
         /// The windows service manager
@@ -45,7 +45,20 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         public StopWindowsServiceAction(ILogger logger, ISHWindowsService service)
             : base(logger)
         {
-            _service = service;
+            _serviceName = service.Name;
+
+            _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="serviceName">The name of deployment service.</param>
+        public StopWindowsServiceAction(ILogger logger, string serviceName)
+            : base(logger)
+        {
+            _serviceName = serviceName;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
         }
@@ -55,7 +68,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.StopWindowsService(_service.Name);
+            _serviceManager.StopWindowsService(_serviceName);
         }
     }
 }

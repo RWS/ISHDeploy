@@ -16,25 +16,21 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Specify the name of application pool property.</para>
+    /// <para type="description">Enumeration listing the supported database types.</para>
     /// </summary>
-    public enum ApplicationPoolProperty
+    public enum DatabaseType
     {
         /// <summary>
-        /// Username
+        /// Oracle RDBMS, including 9.2.0.2, 9.2.0.4, 9.2.0.6, 10.1.0.4, 10.2.0.2
         /// </summary>
-        userName,
+        oracle,
         /// <summary>
-        /// Password
+        /// Microsoft SqlServer 2012
         /// </summary>
-        password,
+        sqlserver2012,
         /// <summary>
-        /// Identity type
+        /// Microsoft SqlServer 2014
         /// </summary>
-        identityType,
-        /// <summary>
-        /// LoadUserProfile
-        /// </summary>
-        loadUserProfile
+        sqlserver2014
     }
 }

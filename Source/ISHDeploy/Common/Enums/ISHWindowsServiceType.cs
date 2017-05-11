@@ -25,6 +25,9 @@ namespace ISHDeploy.Common.Enums
 #pragma warning disable 1591
     public enum ISHWindowsServiceType
     {
+        BackgroundTask,
+        Crawler,
+        SolrLucene,
         TranslationBuilder,
         TranslationOrganizer
     }

@@ -418,7 +418,8 @@ namespace ISHDeploy.Business.Operations
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
             TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
-
+            SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
+            IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
             #endregion
         }
 

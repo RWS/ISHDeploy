@@ -17,6 +17,7 @@
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Data.Actions.COMPlus
 {
@@ -24,7 +25,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
     /// Sets credentials for COM+ component.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetCOMPlusCredentialsAction : BaseAction
+    public class SetCOMPlusCredentialsAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The name of COM+ component.
@@ -42,9 +43,19 @@ namespace ISHDeploy.Data.Actions.COMPlus
         private readonly string _userName;
 
         /// <summary>
+        /// The windows service previous UserName
+        /// </summary>
+        private readonly string _previousUserName;
+
+        /// <summary>
         /// The windows service password
         /// </summary>
         private readonly string _password;
+
+        /// <summary>
+        /// The windows service previous password
+        /// </summary>
+        private readonly string _previousPassword;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetCOMPlusCredentialsAction"/> class.
@@ -52,15 +63,26 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// <param name="logger">The logger.</param>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <param name="userName">The user name.</param>
+        /// <param name="previousUserName">The previous user name.</param>
         /// <param name="password">The password.</param>
-        public SetCOMPlusCredentialsAction(ILogger logger, string comPlusComponentName, string userName, string password)
+        /// <param name="previousPassword">The previous password.</param>
+        public SetCOMPlusCredentialsAction(ILogger logger, string comPlusComponentName, string userName, string previousUserName, string password, string previousPassword)
             : base(logger)
         {
             _comPlusComponentName = comPlusComponentName;
 
             _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
             _userName = userName;
+            _previousUserName = previousUserName;
             _password = password;
+            _previousPassword = previousPassword;
+        }
+
+        /// <summary>
+        ///	Gets current value before change.
+        /// </summary>
+        public void Backup()
+        {
         }
 
         /// <summary>
@@ -69,6 +91,14 @@ namespace ISHDeploy.Data.Actions.COMPlus
         public override void Execute()
         {
             _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _userName, _password);
+        }
+
+        /// <summary>
+        ///	Reverts a value to initial state.
+        /// </summary>
+        public void Rollback()
+        {
+            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _previousUserName, _previousPassword);
         }
     }
 }

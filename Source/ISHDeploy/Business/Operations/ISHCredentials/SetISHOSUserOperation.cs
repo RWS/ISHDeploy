@@ -80,6 +80,22 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 throw new Exception($"Administrator role not found for local user `{userName}`");
             }
 
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+
+            // Get current UserName and Password before change
+            string previousUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
+            string previousPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
+            
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                "The setting of credentials for COM+ components has implications across all deployments."));
+
+            // Set new credentials for COM+ component
+            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, previousUserName, password, previousPassword));
+
             // Stop Application pools
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
@@ -226,10 +242,14 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             // Recycle ISH windows services that are running
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var runningServiceNames = serviceManager.GetServicesNamesWithStatus(
-                    ishDeployment.Name, 
-                    ISHWindowsServiceStatus.Running,
-                    InputParameters.ProjectSuffix).ToList();
+            var runningServiceNames = serviceManager.GetServices(
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer).
+                Where(service => service.Status == ISHWindowsServiceStatus.Running).ToList();
 
             // Stop services that are running
             foreach (var service in runningServiceNames)
@@ -238,11 +258,15 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             }
 
             // Set new credentials for all services
-            foreach (var serviceName in serviceManager.GetServicesNames(
-                    ishDeployment.Name,
-                    InputParameters.ProjectSuffix))
+            foreach (var service in serviceManager.GetServices(
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer))
             {
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, serviceName, userName, password));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, previousUserName, password, previousPassword));
             }
 
             // Run services that should be run
@@ -250,16 +274,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             {
                 _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
             }
-
-            // Check if this operation has implications for several Deployments
-            IEnumerable<Models.ISHDeployment> ishDeployments = null;
-            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-
-            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                "The setting of credentials for COM+ components has implications across all deployments."));
-
-            // Set new credentials for COM+ component
-            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, password));
         }
 
         /// <summary>

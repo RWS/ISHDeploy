@@ -142,40 +142,6 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Gets all names of windows services of deployment.
-        /// </summary>
-        /// <param name="deploymentName">ISH deployment name.</param>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <returns>
-        /// The windows services of deployment.
-        /// </returns>
-        public IEnumerable<string> GetServicesNames(string deploymentName, string projectSuffix)
-        {
-            return ServiceController.GetServices()
-                        .Where(x => x.ServiceName.StartsWith($"Trisoft InfoShare{projectSuffix}"))
-                        .Select(service => service.ServiceName)
-                        .ToList();
-        }
-
-        /// <summary>
-        /// Gets all names of windows services of deployment with specified status.
-        /// </summary>
-        /// <param name="deploymentName">ISH deployment name.</param>
-        /// <param name="status">ISH deployment name.</param>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <returns>
-        /// The windows services of deployment with specified status.
-        /// </returns>
-        public IEnumerable<string> GetServicesNamesWithStatus(string deploymentName, ISHWindowsServiceStatus status, string projectSuffix)
-        {
-            return ServiceController.GetServices()
-                        .Where(x => x.ServiceName.StartsWith($"Trisoft InfoShare{projectSuffix}") 
-                            && x.Status == (ServiceControllerStatus)Enum.Parse(typeof(ServiceControllerStatus), status.ToString()))
-                        .Select(service => service.ServiceName)
-                        .ToList();
-        }
-
-        /// <summary>
         /// Removes specific windows service
         /// </summary>
         /// <param name="serviceName">Name of the windows service.</param>

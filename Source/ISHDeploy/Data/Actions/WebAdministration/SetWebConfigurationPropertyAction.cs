@@ -77,7 +77,6 @@ namespace ISHDeploy.Data.Actions.WebAdministration
             _webAdminManager = ObjectFactory.GetInstance<IWebAdministrationManager>();
         }
 
-
         /// <summary>
         ///	Gets current value before change.
         /// </summary>

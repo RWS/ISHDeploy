@@ -126,14 +126,18 @@ namespace ISHDeploy.Data.Managers
 
             foreach (var type in types)
             {
+                string serviceNameAlias = $"{deploymentName} {type.ToString()}";
                 services.AddRange(
                     ServiceController.GetServices()
-                        .Where(x => x.ServiceName.Contains($"{deploymentName} {type.ToString()}"))
+                        .Where(x => x.ServiceName.Contains(serviceNameAlias))
                         .Select(service => new ISHWindowsService {
                             Name = service.ServiceName,
                             Type = type,
                             Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
-                            Sequence = (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                            Sequence =
+                                service.ServiceName.EndsWith(serviceNameAlias) ?
+                                1 :
+                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
                         })
                         .ToList());
             }

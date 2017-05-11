@@ -7,8 +7,8 @@
 #region variables
 #$licenseKey=Get-TestDataValue "xopusLicenseKey"
 #$domain=Get-TestDataValue "xopusLicenseDomain"
-$userName = “GLOBAL\infoshareserviceuser”
-$userPassword = "!nf0shar3"
+$userName = Get-TestDataValue “testDomainUserName”
+$userPassword = Get-TestDataValue "testDomainUserPassword"
 $secpasswd = ConvertTo-SecureString “$userPassword” -AsPlainText -Force
 $testCreds = New-Object System.Management.Automation.PSCredential ($userName, $secpasswd)
 #endregion
@@ -93,26 +93,57 @@ function remoteGetUsers() {
 
 Describe "Testing ISHOSUser"{
     BeforeEach {
-       # ArtifactCleaner -filePath $filePath -fileName "TranslationOrganizer.exe.config"
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
-    It "Set ISHOSUser"{       
+    It "Set ISHOSUser set's user correctly"{       
         #Act
-
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
-
         $users = remoteGetUsers
         foreach ($key in $users.Keys){
-                Write-Host "Value:"$users[$key] "Key: $key  " 
                 $tempstring = "Value:"+$users[$key]+ " Key: $key  "
                 $shoudBeString = "Value:"+$userName+ " Key: $key  "
                 $tempstring | Should be $shoudBeString
-        }
+        }      
+    }
+    It "Set ISHOSUser Raises warning for COM+"{       
+        #Act
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds -WarningVariable Warning
         #Assert
-        
+        $message = "The setting of credentials for COM+ components has implications across all deployments."
+         Compare-Object $Warning $message | should be $null
     }
 
-    
+    It "Set ISHOSUser writes inputparameters"{       
+        #Act
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
+        $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
+        $result["osuser"] | Should be $userName
+    }
+
+    It "Set ISHOSUser writes history"{       
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
+        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
+        $history.Contains('Set-ISHOSUser') | Should be "True"
+        $history.Contains("-Credential (New-Object System.Management.Automation.PSCredential") | Should be "True"
+    }
+
+    It "Undo ISHDeployment returns all users"{       
+        #Act
+        $initialUsers =  remoteGetUsers
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
+        $users = remoteGetUsers
+        foreach ($key in $users.Keys){
+                $tempstring = "Value:"+$users[$key]+ " Key: $key  "
+                $shoudBeString = "Value:"+$userName+ " Key: $key  "
+                $tempstring | Should be $shoudBeString
+        }      
+        UndoDeploymentBackToVanila $testingDeploymentName $true
+        $users = remoteGetUsers
+        Compare-Object $initialUsers $users | Should be $null
+    }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

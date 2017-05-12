@@ -68,9 +68,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
-
-            // For version 12.X.X only
+           // For version 12.X.X only
             DeleteExtensionsLoaderFile();
 
             // Remove redundant files from BIN
@@ -97,7 +97,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
             // Restore InputParameters.xml
-            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             Models.InputParameters vanillaInputParameters;
             bool isInputParameterBackupFileExist = false;
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
@@ -113,6 +112,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);
                 vanillaInputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
             }
+
+            // Get current UserName and Password before change
+            string currentOSUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
+            string currentOSPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
+
+            var doRollbackOfOSUserAndOSPassword = currentOSUserName != vanillaInputParameters.OSUser ||
+                                                  currentOSPassword != vanillaInputParameters.OSPassword;
 
             // change registry
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
@@ -132,18 +138,28 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword, vanillaInputParameters.OSPassword));
+                if (doRollbackOfOSUserAndOSPassword)
+                {
+                    _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name,
+                        vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
+                        vanillaInputParameters.OSPassword));
+                }
             }
 
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+            
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                    "The rolling back of credentials for COM+ components has implications across all deployments."));
 
-            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                "The rolling back of credentials for COM+ components has implications across all deployments."));
-
-            // Rolling back credentials for COM+ component
-            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword, vanillaInputParameters.OSPassword));
+                // Rolling back credentials for COM+ component
+                _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
+                    vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
+                    vanillaInputParameters.OSPassword));
+            }
 
             // Delete extra ISH windows services
             var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
@@ -167,103 +183,112 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             #region Rolling back OSUser credentials for AppPools
 
             // WS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.userName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.WSAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.password,
-                vanillaInputParameters.OSPassword));
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.WSAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.userName,
-                vanillaInputParameters.OSUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.password,
-                vanillaInputParameters.OSPassword));
 
             // STS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.userName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.password,
-                vanillaInputParameters.OSPassword));
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.userName,
-                vanillaInputParameters.OSUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.password,
-                vanillaInputParameters.OSPassword));
 
             // CM
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.userName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.CMAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.password,
-                vanillaInputParameters.OSPassword));
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.CMAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.userName,
-                vanillaInputParameters.OSUser));
-
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
-                Logger,
-                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
-                "system.webServer/security/authentication/anonymousAuthentication",
-                WebConfigurationProperty.password,
-                vanillaInputParameters.OSPassword));
 
             #endregion
 

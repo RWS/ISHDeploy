@@ -1,5 +1,18 @@
 # Release notes
 
+## stable-1.4
+
+This release is focused on adding cmdlet that help configure core aspects of a deployment.
+
+1. Integration Translation
+	1. Cmdlets
+		- `Get-ISHIntegrationDB`. **[New]**
+		- `Set-ISHIntegrationDB`. **[New]**
+		- `Test-ISHIntegrationDB`. **[New]**
+    1. Tutorials
+		- New section **Work with core deployment configuration** in tutorials: **[New]**
+		  - **Integrating translation jobs with SDL World Server**. **[New]**
+
 ## stable-1.3
 
 This release is focused on adding cmdlets into the module that help configure and manager the translation services.

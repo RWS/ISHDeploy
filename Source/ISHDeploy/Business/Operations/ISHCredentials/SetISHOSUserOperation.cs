@@ -61,8 +61,8 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
             // Get current UserName and Password before change
-            string previousUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
-            string previousPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
+            string currentOSUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
+            string currentOSPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
             
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
@@ -72,7 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 "The setting of credentials for COM+ components has implications across all deployments."));
 
             // Set new credentials for COM+ component
-            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, previousUserName, password, previousPassword));
+            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, currentOSUserName, password, currentOSPassword));
 
             // Stop Application pools
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
@@ -246,7 +246,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 ISHWindowsServiceType.TranslationBuilder,
                 ISHWindowsServiceType.TranslationOrganizer))
             {
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, previousUserName, password, previousPassword));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, currentOSUserName, password, currentOSPassword));
             }
 
             // Run services that should be run

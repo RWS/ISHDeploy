@@ -25,6 +25,9 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using ISHDeploy.Data.Actions.Asserts;
+using ISHDeploy.Data.Actions.COMPlus;
+using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.Registry;
 using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
@@ -65,9 +68,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		{
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
-
-            // For version 12.X.X only
+           // For version 12.X.X only
             DeleteExtensionsLoaderFile();
 
             // Remove redundant files from BIN
@@ -94,7 +97,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
             // Restore InputParameters.xml
-            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             Models.InputParameters vanillaInputParameters;
             bool isInputParameterBackupFileExist = false;
             (new FileExistsAction(logger, InputParametersFilePath.VanillaPath, returnResult => isInputParameterBackupFileExist = returnResult)).Execute();
@@ -111,6 +113,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 vanillaInputParameters = new Models.InputParameters(InputParametersFilePath.AbsolutePath, dictionary);
             }
 
+            // Get current UserName and Password before change
+            string currentOSUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
+            string currentOSPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
+
+            var doRollbackOfOSUserAndOSPassword = currentOSUserName != vanillaInputParameters.OSUser ||
+                                                  currentOSPassword != vanillaInputParameters.OSPassword;
+
             // change registry
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
@@ -119,26 +128,44 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Stop and delete excess ISH windows services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList();
+            var services = serviceManager.GetServices(
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer).ToList();
             foreach (var service in services)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
+                if (doRollbackOfOSUserAndOSPassword)
+                {
+                    _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name,
+                        vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
+                        vanillaInputParameters.OSPassword));
+                }
             }
 
-            var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+            
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                    "The rolling back of credentials for COM+ components has implications across all deployments."));
+
+                // Rolling back credentials for COM+ component
+                _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
+                    vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
+                    vanillaInputParameters.OSPassword));
+            }
+
+            var servicesForDeleting = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList().Where(serv => serv.Sequence > 1);
             foreach (var service in servicesForDeleting)
             {
                 _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
             }
-
-
-            // Set SpecificUser identityType for STS application pool
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger, 
-                InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.IdentityType,
-                ProcessModelIdentityType.SpecificUser));
 
             // Rolling back changes for Web folder
             _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
@@ -154,43 +181,112 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 
             // WS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.UserName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.WSAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.WSAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.Password,
-                vanillaInputParameters.OSPassword));
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
 
             // STS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.UserName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.STSAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.Password,
-                vanillaInputParameters.OSPassword));
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
 
             // CM
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
-                Logger,
-                InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.UserName,
-                vanillaInputParameters.OSUser));
+            if (doRollbackOfOSUserAndOSPassword)
+            {
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.CMAppPoolName,
+                    ApplicationPoolProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                    Logger,
+                    InputParameters.CMAppPoolName,
+                    ApplicationPoolProperty.password,
+                    vanillaInputParameters.OSPassword));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.userName,
+                    vanillaInputParameters.OSUser));
+
+                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                    Logger,
+                    $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                    "system.webServer/security/authentication/anonymousAuthentication",
+                    WebConfigurationProperty.password,
+                    vanillaInputParameters.OSPassword));
+            }
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.Password,
-                vanillaInputParameters.OSPassword));
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
 
             if (!SkipRecycle)
             {

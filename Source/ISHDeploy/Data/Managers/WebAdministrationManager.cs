@@ -36,6 +36,16 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
+        /// The size of salt in bytes (keeping in range of the recommended size of 128-192 bits) 
+        /// </summary>
+        private const int SaltByteLength = 24;
+
+        /// <summary>
+        /// The size of the outputted hash of the password
+        /// </summary>
+        private const int DerivedKeyLength = 24;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WebAdministrationManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -111,16 +121,12 @@ namespace ISHDeploy.Data.Managers
                         throw new WindowsAuthenticationModuleIsNotInstalledException(
                             "WindowsAuthentication module has not been installed");
                     }
-
-                    var windowsAuthenticationSection = config.GetSection(
-                        "system.webServer/security/authentication/windowsAuthentication",
-                        locationPath);
-                    windowsAuthenticationSection["enabled"] = true;
-
-                    manager.CommitChanges();
-
-                    _logger.WriteVerbose("WindowsAuthentication has been enabled");
                 }
+                SetWebConfigurationProperty(webSiteName,
+                        "system.webServer/security/authentication/windowsAuthentication",
+                        WebConfigurationProperty.enabled, true);
+
+                _logger.WriteVerbose("WindowsAuthentication has been enabled");
             }
             else
             {
@@ -135,22 +141,11 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void DisableWindowsAuthentication(string webSiteName)
         {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
-            {
-                _logger.WriteDebug("Disable WindowsAuthentication for site", webSiteName);
+            _logger.WriteDebug("Disable WindowsAuthentication for site", webSiteName);
+            SetWebConfigurationProperty(webSiteName, "system.webServer/security/authentication/windowsAuthentication",
+                WebConfigurationProperty.enabled, false);
 
-                var config = manager.GetApplicationHostConfiguration();
-                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
-
-                var windowsAuthenticationSection = config.GetSection(
-                    "system.webServer/security/authentication/windowsAuthentication",
-                    locationPath);
-                windowsAuthenticationSection["enabled"] = false;
-
-                manager.CommitChanges();
-
-                _logger.WriteVerbose("WindowsAuthentication has been disabled");
-            }
+            _logger.WriteVerbose("WindowsAuthentication has been disabled");
         }
 
         /// <summary>
@@ -241,7 +236,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
         /// <param name="propertyName">The name of ApplicationPool property.</param>
-        /// <param name="value">The name of user.</param>
+        /// <param name="value">The value.</param>
         public void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value)
         {
             using (var manager = ServerManager.OpenRemote(Environment.MachineName))
@@ -255,18 +250,7 @@ namespace ISHDeploy.Data.Managers
                 if (poolElement != null)
                 {
                     var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                    switch (propertyName)
-                    {
-                        case ApplicationPoolProperty.UserName:
-                            processModelElement.SetAttributeValue("userName", value);
-                            break;
-                        case ApplicationPoolProperty.Password:
-                            processModelElement.SetAttributeValue("password", value);
-                            break;
-                        case ApplicationPoolProperty.IdentityType:
-                            processModelElement.SetAttributeValue("identityType", value);
-                            break;
-                    }
+                    processModelElement.SetAttributeValue(propertyName.ToString(), value);
                 }
                 else
                 {
@@ -275,6 +259,103 @@ namespace ISHDeploy.Data.Managers
 
                 manager.CommitChanges();
             }
+        }
+
+        /// <summary>
+        /// Gets application pool property value
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public object GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName)
+        {
+            using (var manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                var config = manager.GetApplicationHostConfiguration();
+                ConfigurationSection applicationPoolsSection =
+                    config.GetSection("system.applicationHost/applicationPools");
+
+                ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
+
+                var poolElement =
+                    applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (poolElement == null)
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                switch (propertyName)
+                {
+                    case ApplicationPoolProperty.identityType:
+                        return  (ProcessModelIdentityType)processModelElement.GetAttributeValue(propertyName.ToString());
+                    default:
+                        return processModelElement.GetAttributeValue(propertyName.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <param name="value">The value.</param>
+        public void SetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName, object value)
+        {
+            _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var section = config.GetSection(
+                    configurationXPath,
+                    locationPath);
+               
+                section[propertyName.ToString()] = value;
+
+                manager.CommitChanges();
+
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been chenged");
+            }
+        }
+
+        /// <summary>
+        /// Gets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public object GetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName)
+        {
+            _logger.WriteDebug("Get WebConfiguration property for site", webSiteName, propertyName);
+            object value;
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var section = config.GetSection(
+                    configurationXPath,
+                    locationPath);
+
+
+                value = section[propertyName.ToString()];
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been gotten");
+            }
+            return value;
         }
     }
 }

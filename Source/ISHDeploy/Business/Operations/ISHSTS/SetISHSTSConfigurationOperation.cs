@@ -197,7 +197,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 _invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger, 
                     InputParameters.STSAppPoolName,
-                    ApplicationPoolProperty.IdentityType, 
+                    ApplicationPoolProperty.identityType, 
                     ProcessModelIdentityType.ApplicationPoolIdentity));
 
                 _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
@@ -220,7 +220,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 _invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger, 
                     InputParameters.STSAppPoolName,
-                    ApplicationPoolProperty.IdentityType, 
+                    ApplicationPoolProperty.identityType, 
                     ProcessModelIdentityType.SpecificUser));
                 _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
             }

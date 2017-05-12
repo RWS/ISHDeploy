@@ -18,25 +18,24 @@ using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Interfaces.Actions;
-using ISHDeploy.Common.Models;
 
-namespace ISHDeploy.Data.Actions.WindowsServices
+namespace ISHDeploy.Data.Actions.COMPlus
 {
     /// <summary>
-    /// Sets windows service credentials.
+    /// Sets credentials for COM+ component.
     /// </summary>
     /// <seealso cref="SingleFileCreationAction" />
-    public class SetWindowsServiceCredentialsAction : BaseAction, IRestorableAction
+    public class SetCOMPlusCredentialsAction : BaseAction, IRestorableAction
     {
         /// <summary>
-        /// The name of deployment service.
+        /// The name of COM+ component.
         /// </summary>
-        private readonly string _serviceName;
+        private readonly string _comPlusComponentName;
 
         /// <summary>
-        /// The windows service manager
+        /// The COM+ component manager
         /// </summary>
-        private readonly IWindowsServiceManager _serviceManager;
+        private readonly ICOMPlusComponentManager _comPlusComponentManager;
 
         /// <summary>
         /// The windows service userName
@@ -59,20 +58,20 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly string _previousPassword;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetWindowsServiceCredentialsAction"/> class.
+        /// Initializes a new instance of the <see cref="SetCOMPlusCredentialsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="serviceName">The name of deployment service.</param>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="previousUserName">The previous user name.</param>
         /// <param name="password">The password.</param>
         /// <param name="previousPassword">The previous password.</param>
-        public SetWindowsServiceCredentialsAction(ILogger logger, string serviceName, string userName, string previousUserName, string password, string previousPassword)
+        public SetCOMPlusCredentialsAction(ILogger logger, string comPlusComponentName, string userName, string previousUserName, string password, string previousPassword)
             : base(logger)
         {
-            _serviceName = serviceName;
+            _comPlusComponentName = comPlusComponentName;
 
-            _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
             _userName = userName;
             _previousUserName = previousUserName;
             _password = password;
@@ -91,7 +90,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            _serviceManager.SetWindowsServiceCredentials(_serviceName, _userName, _password);
+            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _userName, _password);
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public void Rollback()
         {
-            _serviceManager.SetWindowsServiceCredentials(_serviceName, _previousUserName, _previousPassword);
+            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _previousUserName, _previousPassword);
         }
     }
 }

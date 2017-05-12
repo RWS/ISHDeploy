@@ -16,25 +16,18 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Specify the name of application pool property.</para>
+    /// <para type="description">Specify the name of registry values.</para>
     /// </summary>
-    public enum ApplicationPoolProperty
+    public enum RegistryValueName
     {
         /// <summary>
-        /// Username
+        /// Db connection string
         /// </summary>
-        userName,
+        DbConnectionString,
+
         /// <summary>
-        /// Password
+        /// Database type
         /// </summary>
-        password,
-        /// <summary>
-        /// Identity type
-        /// </summary>
-        identityType,
-        /// <summary>
-        /// LoadUserProfile
-        /// </summary>
-        loadUserProfile
+        DatabaseType
     }
 }

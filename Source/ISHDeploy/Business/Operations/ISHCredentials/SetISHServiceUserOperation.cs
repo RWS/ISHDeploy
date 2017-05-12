@@ -21,8 +21,6 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.TextFile;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Managers.Interfaces;

@@ -16,9 +16,9 @@
 namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Specify the name of application pool property.</para>
+    /// <para type="description">Specify the name of web configuration property.</para>
     /// </summary>
-    public enum ApplicationPoolProperty
+    public enum WebConfigurationProperty
     {
         /// <summary>
         /// Username
@@ -29,12 +29,8 @@ namespace ISHDeploy.Common.Enums
         /// </summary>
         password,
         /// <summary>
-        /// Identity type
+        /// Enabled
         /// </summary>
-        identityType,
-        /// <summary>
-        /// LoadUserProfile
-        /// </summary>
-        loadUserProfile
+        enabled
     }
 }

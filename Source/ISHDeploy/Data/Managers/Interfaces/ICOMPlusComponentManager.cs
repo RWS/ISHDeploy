@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Common.Enums
+
+namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
-    /// <para type="description">Specify the name of application pool property.</para>
+    /// Implements COM+ component management.
     /// </summary>
-    public enum ApplicationPoolProperty
+    public interface ICOMPlusComponentManager
     {
+
         /// <summary>
-        /// Username
+        /// Set COM+ component credentials
         /// </summary>
-        userName,
-        /// <summary>
-        /// Password
-        /// </summary>
-        password,
-        /// <summary>
-        /// Identity type
-        /// </summary>
-        identityType,
-        /// <summary>
-        /// LoadUserProfile
-        /// </summary>
-        loadUserProfile
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+
+        void SetCOMPlusComponentCredentials(string comPlusComponentName, string userName, string password);
     }
 }

@@ -15,17 +15,22 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.Asserts;
+using ISHDeploy.Data.Actions.COMPlus;
+using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.TextFile;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Managers.Interfaces;
+using Microsoft.Web.Administration;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHCredentials
@@ -53,18 +58,21 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         {
             _invoker = new ActionInvoker(logger, "Setting of new OS credential.");
 
-            var context = new PrincipalContext(ContextType.Domain);
-            var principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName);
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
-            if (principal == null)
-            {
-                throw new Exception($"The {userName} user not found");
-            }
+            // Get current UserName and Password before change
+            string currentOSUserName = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSUserXPath);
+            string currentOSPassword = xmlConfigManager.GetValue(InputParametersFilePath.AbsolutePath, InputParametersXml.OSPasswordXPath);
+            
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-            if (principal.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
-            {
-                throw new Exception($"Administrator role not found for {userName}");
-            }
+            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                "The setting of credentials for COM+ components has implications across all deployments."));
+
+            // Set new credentials for COM+ component
+            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, currentOSUserName, password, currentOSPassword));
 
             // Stop Application pools
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
@@ -75,41 +83,118 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 userName));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
+                password));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.WSAppPoolName,
+                ApplicationPoolProperty.loadUserProfile,
+                true));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                userName));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
                 password));
 
             // STS
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 userName));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
+                password));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.STSAppPoolName,
+                ApplicationPoolProperty.loadUserProfile,
+                true));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                userName));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
                 password));
 
             // CM
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.UserName,
+                ApplicationPoolProperty.userName,
                 userName));
 
             _invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
-                ApplicationPoolProperty.Password,
+                ApplicationPoolProperty.password,
                 password));
 
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.identityType,
+                ProcessModelIdentityType.SpecificUser));
+
+            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Logger,
+                InputParameters.CMAppPoolName,
+                ApplicationPoolProperty.loadUserProfile,
+                true));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.userName,
+                userName));
+
+            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Logger,
+                $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
+                "system.webServer/security/authentication/anonymousAuthentication",
+                WebConfigurationProperty.password,
+                password));
 
 
             _invoker.AddAction(
@@ -135,29 +220,35 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             // Recycle ISH windows services that are running
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(
-                    ishDeployment.Name, 
-                    ISHWindowsServiceType.TranslationBuilder, 
-                    ISHWindowsServiceType.TranslationOrganizer)
-                .Where(x => x.Status == ISHWindowsServiceStatus.Running).ToList();
+            var runningServiceNames = serviceManager.GetServices(
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer).
+                Where(service => service.Status == ISHWindowsServiceStatus.Running).ToList();
 
             // Stop services that are running
-            foreach (var service in services)
+            foreach (var service in runningServiceNames)
             {
                 _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
             }
 
             // Set new credentials for all services
             foreach (var service in serviceManager.GetServices(
-                    ishDeployment.Name,
-                    ISHWindowsServiceType.TranslationBuilder,
-                    ISHWindowsServiceType.TranslationOrganizer))
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer))
             {
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service, userName, password));
+                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, currentOSUserName, password, currentOSPassword));
             }
 
             // Run services that should be run
-            foreach (var service in services)
+            foreach (var service in runningServiceNames)
             {
                 _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
             }

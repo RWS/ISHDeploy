@@ -5,8 +5,6 @@
 . "$PSScriptRoot\Common.ps1"
 
 #region variables
-#$userName = “GLOBAL\infoshareserviceuser”
-#$userPassword = "!nfoshar3"
 $userName = Get-TestDataValue “testDomainUserName”
 $userPassword = Get-TestDataValue "testDomainUserPassword"
 

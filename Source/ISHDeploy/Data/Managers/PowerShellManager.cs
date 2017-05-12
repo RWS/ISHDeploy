@@ -108,7 +108,8 @@ namespace ISHDeploy.Data.Managers
                     }
                     else
                     {
-                        throw new Exception($"{actionDescription} is failed. {exceptions}");
+                        _logger.WriteDebug($"{actionDescription} is failed.");
+                        throw new Exception($"{exceptions}");
                     }
                 }
             }

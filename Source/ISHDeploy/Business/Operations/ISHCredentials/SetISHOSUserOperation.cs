@@ -58,28 +58,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         {
             _invoker = new ActionInvoker(logger, "Setting of new OS credential.");
 
-            var contextDomain = new PrincipalContext(ContextType.Domain);
-            var principalDomain = UserPrincipal.FindByIdentity(contextDomain, IdentityType.SamAccountName, userName);
-            var contextMachine = new PrincipalContext(ContextType.Machine);
-            var principalMachine = UserPrincipal.FindByIdentity(contextMachine, IdentityType.SamAccountName, userName);
-
-            if (principalDomain == null && principalMachine == null)
-            {
-                throw new Exception($"The {userName} user not found");
-            }
-
-            if (principalDomain != null)
-            {
-                if (principalDomain.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
-                {
-                    throw new Exception($"Administrator role not found for domain user `{userName}`");
-                }
-            }
-            else if (principalMachine.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
-            {
-                throw new Exception($"Administrator role not found for local user `{userName}`");
-            }
-
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
             // Get current UserName and Password before change

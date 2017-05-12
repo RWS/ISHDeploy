@@ -5,10 +5,9 @@
 . "$PSScriptRoot\Common.ps1"
 
 #region variables
-#$licenseKey=Get-TestDataValue "xopusLicenseKey"
-#$domain=Get-TestDataValue "xopusLicenseDomain"
 $userName = Get-TestDataValue “testDomainUserName”
 $userPassword = Get-TestDataValue "testDomainUserPassword"
+
 $secpasswd = ConvertTo-SecureString “$userPassword” -AsPlainText -Force
 $testCreds = New-Object System.Management.Automation.PSCredential ($userName, $secpasswd)
 #endregion

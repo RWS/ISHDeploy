@@ -128,6 +128,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
+    <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
     <Compile Include="Common\Enums\DatabaseType.cs" />
     <Compile Include="Common\Enums\RegistryValueName.cs" />
@@ -297,9 +298,11 @@
     <Compile Include="Common\Models\TranslationOrganizer\TmsConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
+    <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
+    <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
@@ -309,9 +312,11 @@
     <Compile Include="Data\Exceptions\ISHWindowsServiceTimeoutException.cs" />
     <Compile Include="Data\Managers\Interfaces\IPowerShellManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IDatabaseManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\ICOMPlusComponentManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
     <Compile Include="Data\Managers\PowerShellManager.cs" />
     <Compile Include="Data\Managers\DatabaseManager.cs" />
+    <Compile Include="Data\Managers\COMPlusComponentManager.cs" />
     <Compile Include="Data\Managers\WindowsServiceManager.cs" />
     <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroup.cs" />
     <Compile Include="Common\Models\UI\CUIFConfig\ResourceGroups.cs" />
@@ -471,6 +476,7 @@
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
+    <EmbeddedResource Include="Data\Resources\Set-COMPlusComponentCredentials.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

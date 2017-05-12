@@ -115,8 +115,8 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Gets all windows services of specified type.
         /// </summary>
-        /// <param name="types">Types of deployment service.</param>
         /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
@@ -126,14 +126,18 @@ namespace ISHDeploy.Data.Managers
 
             foreach (var type in types)
             {
+                string serviceNameAlias = $"{deploymentName} {type.ToString()}";
                 services.AddRange(
                     ServiceController.GetServices()
-                        .Where(x => x.ServiceName.Contains($"{deploymentName} {type.ToString()}"))
+                        .Where(x => x.ServiceName.Contains(serviceNameAlias))
                         .Select(service => new ISHWindowsService {
                             Name = service.ServiceName,
                             Type = type,
                             Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
-                            Sequence = (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                            Sequence =
+                                service.ServiceName.EndsWith(serviceNameAlias) ?
+                                1 :
+                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
                         })
                         .ToList());
             }
@@ -198,23 +202,24 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Set windows service credentials
         /// </summary>
-        /// <param name="service">The windows service to be cloned.</param>
+        /// <param name="serviceName">The name of windows service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
 
-        public void SetWindowsServiceCredentials(ISHWindowsService service, string userName, string password)
+        public void SetWindowsServiceCredentials(string serviceName, string userName, string password)
         {
-            _logger.WriteDebug("Set windows service credentials", service.Name);
+            _logger.WriteDebug("Set windows service credentials", serviceName);
 
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-WindowsServiceCredentials.ps1",
                 new Dictionary<string, string>
                 {
-                    { "$name", service.Name },
+                    { "$name", serviceName },
                     { "$username", userName },
                     { "$password", password }
-                });
+                },
+                "Setting windows service credentials");
 
-            _logger.WriteVerbose($"Credentials for the service `{service.Name}` has been chenged");
+            _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
         }
     }
 }

@@ -21,13 +21,13 @@ using ISHDeploy.Business.Operations.ISHCredentials;
 namespace ISHDeploy.Cmdlets.ISHCredentials
 {
     /// <summary>
-    /// <para type="synopsis">Sets OS user credentials.</para>
-    /// <para type="description">The Set-ISHServiceUser cmdlet sets new security credentials of OS user.</para>
+    /// <para type="synopsis">Sets Service user credentials.</para>
+    /// <para type="description">The Set-ISHServiceUser cmdlet sets new security credentials of Service user.</para>
     /// <para type="link">Enable-ISHExternalPreview</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceUser -ISHDeployment $deployment -Credential $credential</code>
-    /// <para>This command sets new OS user credentials.
+    /// <para>This command sets new Service user credentials.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
@@ -35,9 +35,9 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
     public sealed class SetISHServiceUserCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
-        /// <para type="description">The credential of OS user.</para>
+        /// <para type="description">The credential of Service user.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The credential of OS user")]
+        [Parameter(Mandatory = true, HelpMessage = "The credential of Service user")]
         [ValidateNotNullOrEmpty]
         public PSCredential Credential { get; set; }
 

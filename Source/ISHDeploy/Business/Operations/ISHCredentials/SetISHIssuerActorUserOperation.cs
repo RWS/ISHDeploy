@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-using System;
-using System.DirectoryServices.AccountManagement;
-using System.Linq;
 using ISHDeploy.Business.Invokers;
-using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Actions.XmlFile;
-using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHCredentials
@@ -52,19 +45,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             _invoker = new ActionInvoker(logger, "Setting of new IssuerActor credential.");
 
             // TODO: Validate user
-
-            //var context = new PrincipalContext(ContextType.Domain);
-            //var principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName);
-
-            //if (principal == null)
-            //{
-            //    throw new Exception($"The {userName} user not found");
-            //}
-
-            //if (principal.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
-            //{
-            //    throw new Exception($"Administrator role not found for {userName}");
-            //}
 
             // ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, userName));

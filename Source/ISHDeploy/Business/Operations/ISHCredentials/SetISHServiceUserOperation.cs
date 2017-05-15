@@ -51,19 +51,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         {
             _invoker = new ActionInvoker(logger, "Setting of new ServiceUser credential.");
 
-            var context = new PrincipalContext(ContextType.Domain);
-            var principal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName);
-
-            if (principal == null)
-            {
-                throw new Exception($"The {userName} user not found");
-            }
-
-            if (principal.GetAuthorizationGroups().All(x => x.Name != "Administrators"))
-            {
-                throw new Exception($"Administrator role not found for {userName}");
-            }
-
             // FeedSDLLiveContentConfig
             _invoker.AddAction(new SetAttributeValueAction(logger, 
                 FeedSDLLiveContentConfigPath, 

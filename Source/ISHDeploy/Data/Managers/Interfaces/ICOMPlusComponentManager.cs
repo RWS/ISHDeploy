@@ -21,7 +21,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
     /// </summary>
     public interface ICOMPlusComponentManager
     {
-
         /// <summary>
         /// Set COM+ component credentials
         /// </summary>
@@ -30,5 +29,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="password">The password.</param>
 
         void SetCOMPlusComponentCredentials(string comPlusComponentName, string userName, string password);
+
+        /// <summary>
+        /// Check COM+ component is enabled or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <returns>State of COM+ component</returns>
+        bool CheckCOMPlusComponentEnabled(string comPlusComponentName);
     }
 }

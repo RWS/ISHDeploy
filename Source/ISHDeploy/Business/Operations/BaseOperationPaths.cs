@@ -15,9 +15,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -39,6 +41,11 @@ namespace ISHDeploy.Business.Operations
         /// Input parameters
         /// </summary>
         protected InputParameters InputParameters { get; }
+
+        /// <summary>
+        /// Vanilla states of InfoShare component
+        /// </summary>
+        protected IEnumerable<ISHComponent> VanillaISHComponentStates { get; }
 
         #region Paths
 
@@ -377,6 +384,8 @@ namespace ISHDeploy.Business.Operations
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
+
+            //VanillaISHComponentStates = new ISHComponentsCollection();
 
             #region Paths
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);

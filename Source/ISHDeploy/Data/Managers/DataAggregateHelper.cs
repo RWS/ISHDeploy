@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
@@ -50,6 +53,22 @@ namespace ISHDeploy.Data.Managers
         private readonly IFileManager _fileManager;
 
         /// <summary>
+        /// The web administration manager.
+        /// </summary>
+        private readonly IWebAdministrationManager _webAdministrationManage;
+
+        /// <summary>
+        /// The COM+ component manager.
+        /// </summary>
+        private readonly ICOMPlusComponentManager _comPlusComponentManager;
+
+        /// <summary>
+        /// The windows service manager.
+        /// </summary>
+        private readonly IWindowsServiceManager _windowsServiceManager;
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TemplateManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -59,6 +78,9 @@ namespace ISHDeploy.Data.Managers
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            _webAdministrationManage = ObjectFactory.GetInstance<IWebAdministrationManager>();
+            _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            _windowsServiceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
         }
 
         /// <summary>
@@ -92,6 +114,57 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"Input parameters for `{deploymentName}` deployment has been got");
 
             return inputParameters;
+        }
+
+        /// <summary>
+        /// Returns all components of deployment
+        /// </summary>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>List of components for specified deployment</returns>
+        public IEnumerable<ISHComponent> GetComponents(string deploymentName)
+        {
+            _logger.WriteDebug("Get components and their states", deploymentName);
+            var components = new ISHComponentsCollection();
+
+            var inputParameters = GetInputParameters(deploymentName);
+
+            foreach (var component in components)
+            {
+                switch (component.Name)
+                {
+                    case ISHComponentName.CM:
+                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName));
+                        break;
+                    case ISHComponentName.WS:
+                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName));
+                        break;
+                    case ISHComponentName.STS:
+                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName));
+                        break;
+                    case ISHComponentName.COMPlus:
+                        component.SetIsEnabled(_comPlusComponentManager.CheckCOMPlusComponentEnabled("Trisoft-InfoShare-Author"));
+                        break;
+                    case ISHComponentName.TranslationOrganizer:
+                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationOrganizer));
+                        break;
+                    case ISHComponentName.TranslationBuilder:
+                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationBuilder));
+                        break;
+                    case ISHComponentName.Crawler:
+                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.Crawler));
+                        break;
+                    case ISHComponentName.BackgroundTask:
+                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.BackgroundTask));
+                        break;
+                    case ISHComponentName.SolrLucene:
+                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.SolrLucene));
+                        break;
+                }
+                
+            }
+
+
+            return components;
         }
     }
 }

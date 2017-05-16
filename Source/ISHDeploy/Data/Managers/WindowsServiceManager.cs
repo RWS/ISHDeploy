@@ -126,7 +126,7 @@ namespace ISHDeploy.Data.Managers
 
             foreach (var type in types)
             {
-                string serviceNameAlias = $"{deploymentName} {type.ToString()}";
+                string serviceNameAlias = $"{deploymentName} {type}";
                 services.AddRange(
                     ServiceController.GetServices()
                         .Where(x => x.ServiceName.Contains(serviceNameAlias))
@@ -143,6 +143,49 @@ namespace ISHDeploy.Data.Managers
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Check windows service is Started or not
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="type">Type of deployment service.</param>
+        /// <returns>
+        /// True if the state of windows service is Manual or Auto.
+        /// </returns>
+        public bool IsWindowsServiceStarted(string deploymentName, ISHWindowsServiceType type)
+        {
+            string serviceNameAlias = $"{deploymentName} {type}";
+            _logger.WriteDebug("Get windows service state", serviceNameAlias);
+
+            var isEnabled = false;
+
+            string filter = $"SELECT * FROM Win32_Service WHERE Name like '%{serviceNameAlias}%'";
+
+            ManagementObjectSearcher query = new ManagementObjectSearcher(filter);
+
+            try
+            {
+                ManagementObjectCollection services = query.Get();
+
+                if (services.Count == 0)
+                {
+                    throw new Exception($"Windows service that matches to `{serviceNameAlias}` does not exists.");
+                }
+
+                foreach (ManagementObject service in services)
+                {
+                    isEnabled = service.GetPropertyValue("StartMode").ToString() != "Disabled";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            _logger.WriteVerbose($"Windows service `{serviceNameAlias}` is {ServiceControllerStatus.Running}");
+
+            return isEnabled;
         }
 
         /// <summary>

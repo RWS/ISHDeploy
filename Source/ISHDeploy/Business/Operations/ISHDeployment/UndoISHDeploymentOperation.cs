@@ -152,7 +152,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     vanillaInputParameters.OSPassword));
             }
 
-            var servicesForDeleting = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder, ISHWindowsServiceType.TranslationOrganizer).ToList().Where(serv => serv.Sequence > 1);
+            // Delete extra ISH windows services
+            var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
             foreach (var service in servicesForDeleting)
             {
                 _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
@@ -170,6 +171,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Removing licenses
             _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
 
+            #region Rolling back OSUser credentials for AppPools
 
             // WS
             if (doRollbackOfOSUserAndOSPassword)
@@ -278,6 +280,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
+
+            #endregion
 
             if (!SkipRecycle)
             {

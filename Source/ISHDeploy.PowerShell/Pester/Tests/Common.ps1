@@ -85,6 +85,7 @@ $scriptBlockGetInputParameters = {
 	$result["servicecertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue")[0].InnerText
 	$result["servicecertificatesubjectname"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatesubjectname']/currentvalue")[0].InnerText
 	$result["issuerwstrustendpointurl_normalized"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustendpointurl_normalized']/currentvalue")[0].InnerText
+	$result["serviceusername"] = $inputParameters.SelectNodes("inputconfig/param[@name='serviceusername']/currentvalue")[0].InnerText
 
     return $result
     

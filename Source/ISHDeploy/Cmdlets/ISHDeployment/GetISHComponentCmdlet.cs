@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 
@@ -36,11 +37,9 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var operation = new GetISHComponentOperation(Logger, ISHDeployment);
 
-            var components = dataAggregateHelper.GetComponents(ISHDeployment.Name);
-
-            ISHWriteOutput(components);
+            ISHWriteOutput(operation.Run());
         }
     }
 }

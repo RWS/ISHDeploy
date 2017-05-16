@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -35,7 +34,21 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Returns all components of deployment
         /// </summary>
         /// <param name="deploymentName">The Content Manager deployment name.</param>
-        /// <returns>List of components for specified deployment</returns>
-        IEnumerable<ISHComponent> GetComponents(string deploymentName);
+        /// <returns>The collection of components for specified deployment</returns>
+        ISHComponentsCollection GetComponents(string deploymentName);
+
+        /// <summary>
+        /// Save all components of deployment
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="collection">The collection of components for specified deployment</param>
+        void SaveComponents(string filePath, ISHComponentsCollection collection);
+
+        /// <summary>
+        /// Returns all components of deployment which were saved in a file 
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <returns>The collection of components readed from file</returns>
+        ISHComponentsCollection ReadComponentsFromFile(string filePath);
     }
 }

@@ -120,8 +120,8 @@ namespace ISHDeploy.Data.Managers
         /// Returns all components of deployment
         /// </summary>
         /// <param name="deploymentName">The Content Manager deployment name.</param>
-        /// <returns>List of components for specified deployment</returns>
-        public IEnumerable<ISHComponent> GetComponents(string deploymentName)
+        /// <returns>The collection of components for specified deployment</returns>
+        public ISHComponentsCollection GetComponents(string deploymentName)
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
             var components = new ISHComponentsCollection();
@@ -133,38 +133,56 @@ namespace ISHDeploy.Data.Managers
                 switch (component.Name)
                 {
                     case ISHComponentName.CM:
-                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName));
+                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName);
                         break;
                     case ISHComponentName.WS:
-                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName));
+                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName);
                         break;
                     case ISHComponentName.STS:
-                        component.SetIsEnabled(_webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName));
+                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName);
                         break;
                     case ISHComponentName.COMPlus:
-                        component.SetIsEnabled(_comPlusComponentManager.CheckCOMPlusComponentEnabled("Trisoft-InfoShare-Author"));
+                        component.IsEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
                         break;
                     case ISHComponentName.TranslationOrganizer:
-                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationOrganizer));
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationOrganizer);
                         break;
                     case ISHComponentName.TranslationBuilder:
-                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationBuilder));
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationBuilder);
                         break;
                     case ISHComponentName.Crawler:
-                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.Crawler));
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.Crawler);
                         break;
                     case ISHComponentName.BackgroundTask:
-                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.BackgroundTask));
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.BackgroundTask);
                         break;
                     case ISHComponentName.SolrLucene:
-                        component.SetIsEnabled(_windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.SolrLucene));
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.SolrLucene);
                         break;
                 }
-                
             }
 
-
             return components;
+        }
+
+        /// <summary>
+        /// Save all components of deployment
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="collection">The collection of components for specified deployment</param>
+        public void SaveComponents(string filePath, ISHComponentsCollection collection)
+        {
+            _xmlConfigManager.SerializeToFile(filePath, collection.ToList());
+        }
+
+        /// <summary>
+        /// Returns all components of deployment which were saved in a file 
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <returns>The collection of components readed from file</returns>
+        public ISHComponentsCollection ReadComponentsFromFile(string filePath)
+        {
+            return new ISHComponentsCollection(_xmlConfigManager.Deserialize<List<ISHComponent>>(filePath));
         }
     }
 }

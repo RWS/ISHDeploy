@@ -158,32 +158,18 @@ namespace ISHDeploy.Data.Managers
             string serviceNameAlias = $"{deploymentName} {type}";
             _logger.WriteDebug("Get windows service state", serviceNameAlias);
 
-            var isEnabled = false;
 
-            string filter = $"SELECT * FROM Win32_Service WHERE Name like '%{serviceNameAlias}%'";
+            var service = ServiceController.GetServices()
+                       .FirstOrDefault(x => x.ServiceName.Contains(serviceNameAlias));
 
-            ManagementObjectSearcher query = new ManagementObjectSearcher(filter);
-
-            try
+            if (service == null)
             {
-                ManagementObjectCollection services = query.Get();
-
-                if (services.Count == 0)
-                {
-                    throw new Exception($"Windows service that matches to `{serviceNameAlias}` does not exists.");
-                }
-
-                foreach (ManagementObject service in services)
-                {
-                    isEnabled = service.GetPropertyValue("StartMode").ToString() != "Disabled";
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                throw new Exception($"Windows service that matches to `{serviceNameAlias}` does not exists.");
             }
 
-            _logger.WriteVerbose($"Windows service `{serviceNameAlias}` is {ServiceControllerStatus.Running}");
+            var isEnabled = service.Status == ServiceControllerStatus.Running;
+
+            _logger.WriteVerbose($"Windows service `{serviceNameAlias}` is {service.Status}");
 
             return isEnabled;
         }

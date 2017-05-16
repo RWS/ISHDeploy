@@ -15,11 +15,9 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -45,7 +43,12 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// Vanilla states of InfoShare component
         /// </summary>
-        protected IEnumerable<ISHComponent> VanillaISHComponentStates { get; }
+        protected ISHComponentsCollection VanillaISHComponentStates { get; }
+
+        /// <summary>
+        /// Current states of InfoShare component
+        /// </summary>
+        protected ISHComponentsCollection CurrentISHComponentStates { get; }
 
         #region Paths
 
@@ -234,6 +237,11 @@ namespace ISHDeploy.Business.Operations
         protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
 
         /// <summary>
+        /// The path to file with current states of all InfoShare components.
+        /// </summary>
+        protected string CurrentISHComponentStatesFilePath { get; }
+
+        /// <summary>
         /// The path to Web back up folder
         /// </summary>
         protected string BackupWebFolderPath { get; }
@@ -383,9 +391,8 @@ namespace ISHDeploy.Business.Operations
             Logger = logger;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
-
-            //VanillaISHComponentStates = new ISHComponentsCollection();
 
             #region Paths
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
@@ -398,6 +405,7 @@ namespace ISHDeploy.Business.Operations
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
             ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            CurrentISHComponentStatesFilePath = Path.Combine(BackupFolderPath, "current.ISHComponent.states.xml");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
@@ -435,6 +443,20 @@ namespace ISHDeploy.Business.Operations
             SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
             IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
             #endregion
+
+            VanillaISHComponentStates = new ISHComponentsCollection();
+
+            if (!fileManager.FileExists(CurrentISHComponentStatesFilePath))
+            {
+                fileManager.EnsureDirectoryExists(BackupFolderPath);
+                CurrentISHComponentStates = dataAggregateHelper.GetComponents(ishDeployment.Name);
+
+                dataAggregateHelper.SaveComponents(CurrentISHComponentStatesFilePath, CurrentISHComponentStates);
+            }
+            else
+            {
+                CurrentISHComponentStates = dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath);
+            }
         }
 
         /// <summary>

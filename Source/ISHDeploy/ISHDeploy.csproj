@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\GetISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
@@ -292,7 +293,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\IntegrationDbConnectionString.cs" />
-    <Compile Include="Common\Models\ISHComponentState.cs" />
+    <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />
@@ -301,6 +302,7 @@
     <Compile Include="Common\Models\TranslationOrganizer\TmsConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
+    <Compile Include="Common\Models\ISHComponentsCollection.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />

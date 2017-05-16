@@ -45,6 +45,8 @@ namespace ISHDeploy.Business.Operations
                 {TranslationBuilderSetting.jobProcessingTimeout, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.jobProcessingTimeout)  },
                 {TranslationBuilderSetting.jobPollingInterval, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.jobPollingInterval)  },
                 {TranslationBuilderSetting.pendingJobPollingInterval, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.pendingJobPollingInterval)  },
+                {TranslationBuilderSetting.userName, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.userName)  },
+                {TranslationBuilderSetting.password, string.Format(TranslationBuilderSettingAttributeXPathPattern, TranslationBuilderSetting.password)  }
             };
         }
     }

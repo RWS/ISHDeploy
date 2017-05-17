@@ -115,6 +115,16 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "inputconfig/param[@name='databasetype']/currentvalue" element in inputparameters.xml file
             /// </summary>
             public const string DatabaseTypeXPath = "inputconfig/param[@name='databasetype']/currentvalue";
+
+            /// <summary>
+            /// The xpath of "inputconfig/param[@name='serviceusername']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string ServiceUserNameXPath = "inputconfig/param[@name='serviceusername']/currentvalue";
+
+            /// <summary>
+            /// The xpath of "inputconfig/param[@name='ospassword']/currentvalue" element in inputparameters.xml file
+            /// </summary>
+            public const string ServicePasswordXPath = "inputconfig/param[@name='ospassword']/currentvalue";
         }
     }
 }

@@ -254,5 +254,6 @@ Describe "Testing ISHServiceTranslationBuilder"{
             $service.Status -eq "Running" | Should be $true
         }
      }#>
+     Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

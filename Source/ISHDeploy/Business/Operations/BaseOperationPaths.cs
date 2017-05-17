@@ -225,7 +225,7 @@ namespace ISHDeploy.Business.Operations
         /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
         /// </summary>
         protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
-
+        
         /// <summary>
         /// The path to Web back up folder
         /// </summary>
@@ -360,6 +360,11 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath IncParamAspFilePath { get; }
 
+        /// <summary>
+        /// The path to file with current states of all InfoShare components.
+        /// </summary>
+        protected ISHFilePath CurrentISHComponentStatesFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -372,6 +377,7 @@ namespace ISHDeploy.Business.Operations
             Logger = logger;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths
@@ -420,6 +426,7 @@ namespace ISHDeploy.Business.Operations
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
             IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
+            CurrentISHComponentStatesFilePath = new ISHFilePath(BackupFolderPath, BackupFolderPath, @"current.ISHComponent.states.xml");
             #endregion
         }
 

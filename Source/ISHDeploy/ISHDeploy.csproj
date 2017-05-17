@@ -108,6 +108,7 @@
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\ISHComponent\EnableSHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\DisableISHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHOSUserCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHComponentCmdlet.cs" />

@@ -19,7 +19,8 @@
 ﻿using ISHDeploy.Data.Actions.WindowsServices;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 ﻿using ISHDeploy.Common.Interfaces;
-using Models = ISHDeploy.Common.Models;
+﻿using ISHDeploy.Data.Actions.ISHProject;
+﻿using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 {
@@ -53,6 +54,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                 _invoker.AddAction(
                     new StartWindowsServiceAction(Logger, service));
             }
+
+            _invoker.AddAction(
+                new SaveISHComponentsAction(Logger, CurrentISHComponentStatesFilePath, ISHComponentName.TranslationBuilder, true));
         }
 
         /// <summary>

@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using ISHDeploy.Common;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -41,7 +44,17 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <returns>Collection with parameters for Content Manager deployments.</returns>
         public ISHComponentsCollection Run()
         {
-            return CurrentISHComponentStates;
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+            if (!fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
+            {
+                return new ISHComponentsCollection();
+            }
+            else
+            {
+                return dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+            }
         }
     }
 }

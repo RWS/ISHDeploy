@@ -28,7 +28,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
     /// Gets parameters for given deployment on current system.
     /// </summary>
     /// <seealso cref="SingleFileAction" />
-    public class SaveISHComponentsAction : SingleFileAction
+    public class SaveISHComponentAction : SingleFileAction
     {
         /// <summary>
         /// The data aggregate helper
@@ -36,37 +36,28 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private IDataAggregateHelper _dataAggregateHelper;
 
         /// <summary>
-        /// The collection of InfoShare components
+        /// The InfoShare component name
         /// </summary>
-        private ISHComponentsCollection _componentsCollection;
+        private readonly ISHComponentName _componentName;
 
         /// <summary>
-        /// Initializes new instance of the <see cref="SaveISHComponentsAction"/>
+        /// The status of Component. True if Enabled
         /// </summary>
-        /// <param name="logger">Instance of the <see cref="ILogger"/></param>
-        /// <param name="filePath">Path to file that will be modified</param>
-        /// <param name="componentsCollection">The collection of InfoShare components</param>
-        public SaveISHComponentsAction(ILogger logger, ISHFilePath filePath, ISHComponentsCollection componentsCollection)
-            : base(logger, filePath)
-        {
-            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            _componentsCollection = componentsCollection;
-        }
+        private readonly bool _isComponentEnabled;
 
         /// <summary>
-        /// Initializes new instance of the <see cref="SaveISHComponentsAction"/>
+        /// Initializes new instance of the <see cref="SaveISHComponentAction"/>
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         /// <param name="filePath">Path to file that will be modified</param>
         /// <param name="componentName">The InfoShare component name</param>
         /// <param name="isEnabled">The status of Component. True if Enabled</param>
-        public SaveISHComponentsAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled)
+        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled)
             : base(logger, filePath)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-
-            _componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
-            _componentsCollection[componentName].IsEnabled = isEnabled;
+            _componentName = componentName;
+            _isComponentEnabled = isEnabled;
         }
 
         /// <summary>
@@ -88,7 +79,9 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public override void Execute()
         {
-            _dataAggregateHelper.SaveComponents(FilePath, _componentsCollection);
+            var componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
+            componentsCollection[_componentName].IsEnabled = _isComponentEnabled;
+            _dataAggregateHelper.SaveComponents(FilePath, componentsCollection);
         }
     }
 }

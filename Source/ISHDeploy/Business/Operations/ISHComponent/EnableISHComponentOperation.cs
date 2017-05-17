@@ -83,7 +83,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     default:
                         throw new ArgumentException($"Unsupported component type: {component}");
                 }
-                _invoker.AddAction(new SaveISHComponentsAction(Logger, CurrentISHComponentStatesFilePath, component, true));
+                _invoker.AddAction(new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, component, true));
             }
         }
 

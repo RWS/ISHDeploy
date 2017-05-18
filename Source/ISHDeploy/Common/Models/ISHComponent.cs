@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2014 All Rights Reserved by the SDL Group.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-namespace ISHDeploy.Data.Managers.Interfaces
+using System.Xml.Serialization;
+using ISHDeploy.Common.Enums;
+
+namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// Implements COM+ component management.
+    /// <para type="description">Represents the state of deployment's component.</para>
     /// </summary>
-    public interface ICOMPlusComponentManager
+    [XmlRoot("ISHComponent", Namespace = "")]
+    public class ISHComponent
     {
         /// <summary>
-        /// Set COM+ component credentials
+        /// The name of InfoShare component.
         /// </summary>
-        /// <param name="comPlusComponentName">The name of COM+ component.</param>
-        /// <param name="userName">The user name.</param>
-        /// <param name="password">The password.</param>
-
-        void SetCOMPlusComponentCredentials(string comPlusComponentName, string userName, string password);
+        [XmlAttribute("Name")]
+        public ISHComponentName Name { get; set; }
 
         /// <summary>
-        /// Check COM+ component is enabled or not
+        /// The state of InfoShare component.
         /// </summary>
-        /// <param name="comPlusComponentName">The name of COM+ component.</param>
-        /// <returns>State of COM+ component</returns>
-        bool CheckCOMPlusComponentEnabled(string comPlusComponentName);
+        [XmlAttribute("IsEnabled")]
+        public bool IsEnabled { get; set; }
     }
 }

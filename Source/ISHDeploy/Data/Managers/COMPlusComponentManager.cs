@@ -68,5 +68,27 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"Credentials for the COM+ component `{comPlusComponentName}` has been chenged");
         }
+
+        /// <summary>
+        /// Check COM+ component is enabled or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <returns>State of COM+ component</returns>
+        public bool CheckCOMPlusComponentEnabled(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Check COM+ component is enabled or not", comPlusComponentName);
+            var result = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Check-COMPlusComponentEnabled.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", comPlusComponentName },
+                },
+                "Checking of COM+ component is enabled or not");
+
+            var isEnabled = bool.Parse(result.ToString());
+
+            _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` is {(isEnabled ? "Enabled" : "Disabled")}");
+
+            return isEnabled;
+        }
     }
 }

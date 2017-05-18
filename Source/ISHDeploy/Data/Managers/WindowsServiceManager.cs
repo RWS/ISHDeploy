@@ -77,11 +77,7 @@ namespace ISHDeploy.Data.Managers
             }
             catch (System.ServiceProcess.TimeoutException ex)
             {
-                _logger.WriteError(new ISHWindowsServiceTimeoutException(serviceName, ex));
-            }
-            catch (Exception ex)
-            {
-                _logger.WriteError(ex);
+                throw new ISHWindowsServiceTimeoutException(serviceName, ex);
             }
         }
 
@@ -98,7 +94,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Stopped)
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
                 }
                 else

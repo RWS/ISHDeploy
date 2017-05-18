@@ -56,7 +56,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
             }
 
             _invoker.AddAction(
-                new SaveISHComponentsAction(Logger, CurrentISHComponentStatesFilePath, ISHComponentName.TranslationOrganizer, false));
+                new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, ISHComponentName.TranslationOrganizer, false));
         }
 
         /// <summary>

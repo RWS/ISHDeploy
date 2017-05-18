@@ -307,7 +307,7 @@
     <Compile Include="Common\Models\ISHComponentsCollection.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
-    <Compile Include="Data\Actions\ISHProject\SaveISHComponentsAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />

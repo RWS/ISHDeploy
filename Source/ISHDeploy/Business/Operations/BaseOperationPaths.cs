@@ -377,7 +377,6 @@ namespace ISHDeploy.Business.Operations
             Logger = logger;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths
@@ -426,7 +425,7 @@ namespace ISHDeploy.Business.Operations
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
             IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
-            CurrentISHComponentStatesFilePath = new ISHFilePath(BackupFolderPath, BackupFolderPath, @"current.ISHComponent.states.xml");
+            CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.xml");
             #endregion
         }
 

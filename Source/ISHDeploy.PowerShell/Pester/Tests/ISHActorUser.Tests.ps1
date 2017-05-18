@@ -50,7 +50,6 @@ $scriptBlockReadTargetXML = {
     $result["ClientConfigPassword"] = $TrisoftInfoShareClientConfig.SelectNodes("configuration/trisoft.infoshare.client.settings/datasources/datasource/actor/credentials").password
 
     $result["infoShareSTSUsername"] = $STSConfig.SelectNodes("infoShareSTS/initialize").actorUsername
-    $result["infoShareSTSPassword"] = $STSConfig.SelectNodes("infoShareSTS/initialize").actorPassword
 
     return $result
 }
@@ -67,7 +66,7 @@ $scriptBlockSetISHActorUser = {
     }
 
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHActorUser -ISHDeployment $ishDeploy -Credential $credentials
+    Set-ISHActor -ISHDeployment $ishDeploy -Credential $credentials
 
 }
 #endregion
@@ -75,12 +74,12 @@ $scriptBlockSetISHActorUser = {
 function readTargetXML() {
 
     #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $organizerFilePath, $builderFilePath, $xmlAppPath, $xmlDataPath, $xmlWebPath
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $organizerFilePath, $builderFilePath, $xmlAppPath, $xmlDataPath, $xmlPath
     $global:ClientConfigUsername = $result["ClientConfigUsername"]
     $global:ClientConfigPassword = $result["ClientConfigPassword"]
 
     $global:infoShareSTSUsername = $result["infoShareSTSUsername"]
-    $global:infoShareSTSPassword = $result["infoShareSTSPassword"]
+    
 
     return $result
 }
@@ -103,7 +102,7 @@ Describe "Testing ISHActorUser"{
         $ClientConfigPassword | Should be $userPassword
 
         $infoShareSTSUsername | Should be $userName
-        $infoShareSTSPassword | Should be $userPassword
+        
 
     }
     

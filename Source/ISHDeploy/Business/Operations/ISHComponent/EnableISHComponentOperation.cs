@@ -88,8 +88,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         IEnumerable<Models.ISHDeployment> ishDeployments = null;
                         new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-                        _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                            "The disabling of COM+ components has implications across all deployments."));
 
                         var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
                         var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
@@ -97,6 +95,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         {
                             if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
                             {
+                                _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                                    $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+
                                 _invoker.AddAction(
                                     new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                             }

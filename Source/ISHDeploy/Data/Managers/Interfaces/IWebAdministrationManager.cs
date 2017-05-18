@@ -88,5 +88,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// The value by property name.
         /// </returns>
         object GetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName);
+
+        /// <summary>
+        /// Check application pool is Started or not
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <returns>
+        /// True if the state of application pool is Started.
+        /// </returns>
+        bool IsApplicationPoolStarted(string applicationPoolName);
     }
 }

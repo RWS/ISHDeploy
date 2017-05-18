@@ -77,11 +77,7 @@ namespace ISHDeploy.Data.Managers
             }
             catch (System.ServiceProcess.TimeoutException ex)
             {
-                _logger.WriteError(new ISHWindowsServiceTimeoutException(serviceName, ex));
-            }
-            catch (Exception ex)
-            {
-                _logger.WriteError(ex);
+                throw new ISHWindowsServiceTimeoutException(serviceName, ex);
             }
         }
 

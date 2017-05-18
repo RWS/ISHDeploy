@@ -151,7 +151,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Determines whether IIS-WindowsAuthentication feature enabled or not.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>State of WindowsAuthenticationFeature</returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
             _logger.WriteDebug("Checking IIS-WindowsAuthentication feature is turned on or not");
@@ -356,6 +356,41 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been gotten");
             }
             return value;
+        }
+
+        /// <summary>
+        /// Check application pool is Started or not
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <returns>
+        /// True if the state of application pool is Started.
+        /// </returns>
+        public bool IsApplicationPoolStarted(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                ApplicationPool appPool = manager.ApplicationPools.FirstOrDefault(ap => ap.Name == applicationPoolName);
+
+                if (appPool != null)
+                {
+                    _logger.WriteDebug("Get application pool state", applicationPoolName);
+                    // Wait while application pool operation is completed
+                    if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
+                    {
+                        WaitOperationCompleted(appPool);
+                    }
+
+                    var isStarted = appPool.State == ObjectState.Started;
+
+                    _logger.WriteVerbose($"Application pool `{applicationPoolName}` is {ObjectState.Started}");
+
+                    return isStarted;
+                }
+                else
+                {
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+            }
         }
     }
 }

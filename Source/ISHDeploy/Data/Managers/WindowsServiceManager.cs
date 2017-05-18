@@ -98,7 +98,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Stopped)
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
                 }
                 else

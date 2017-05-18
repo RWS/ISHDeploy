@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -28,5 +29,26 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="deploymentName">The Content Manager deployment name.</param>
         /// <returns>InputParameters containing all parameters from InputParameters.xml file for specified deployment</returns>
         InputParameters GetInputParameters(string deploymentName);
+
+        /// <summary>
+        /// Returns all components of deployment
+        /// </summary>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>The collection of components for specified deployment</returns>
+        ISHComponentsCollection GetComponents(string deploymentName);
+
+        /// <summary>
+        /// Save all components of deployment
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="collection">The collection of components for specified deployment</param>
+        void SaveComponents(string filePath, ISHComponentsCollection collection);
+
+        /// <summary>
+        /// Returns all components of deployment which were saved in a file 
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <returns>The collection of components readed from file</returns>
+        ISHComponentsCollection ReadComponentsFromFile(string filePath);
     }
 }

@@ -96,6 +96,7 @@
     <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHServiceUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\GetISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Cmdlets\ISHCredentials\SetISHActorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHServiceUserCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHOSUserCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\GetISHComponentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\TestISHIntegrationDBCmdlet.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
+    <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
     <Compile Include="Common\Enums\DatabaseType.cs" />
@@ -294,6 +297,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\IntegrationDbConnectionString.cs" />
+    <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />
@@ -302,8 +306,10 @@
     <Compile Include="Common\Models\TranslationOrganizer\TmsConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
+    <Compile Include="Common\Models\ISHComponentsCollection.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
@@ -481,6 +487,8 @@
     <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-COMPlusComponentCredentials.ps1" />
+    <EmbeddedResource Include="Data\Resources\Check-COMPlusComponentEnabled.ps1" />
+    <EmbeddedResource Include="Data\Resources\Check-WindowsServiceEnabled.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

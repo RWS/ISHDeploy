@@ -111,14 +111,15 @@ Describe "Testing ISHActorUser"{
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHActorUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
         $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
-        $result["serviceusername"] | Should be $userName
+        $result["actorusername"] | Should be $userName
+        $result["actoruserpassword"] | Should be $userPassword
     }
     
     It "Set ISHActorUser writes history"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHActorUser -Session $session -ArgumentList $testingDeploymentName, $testCreds
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
-        $history.Contains('Set-ISHActorUser') | Should be "True"
+        $history.Contains('Set-ISHActor') | Should be "True"
         $history.Contains("-Credential (New-Object System.Management.Automation.PSCredential") | Should be "True"
     }
 

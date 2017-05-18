@@ -15,8 +15,11 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Data.Managers
@@ -89,6 +92,73 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` is {(isEnabled ? "Enabled" : "Disabled")}");
 
             return isEnabled;
+        }
+
+        /// <summary>
+        /// Enable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        public void EnableCOMPlusComponents(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Enable COM+ component");
+            var result = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Enable-COMPlusComponent.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", comPlusComponentName },
+                },
+                $"Enabling of COM+ component `{comPlusComponentName}`");
+
+            var count = int.Parse(result.ToString());
+
+            if (count == 1)
+            {
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been enabled");
+            }
+        }
+
+        /// <summary>
+        /// Disable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        public void DisableCOMPlusComponents(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Disable COM+ component");
+            var result = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Disable-COMPlusComponent.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", comPlusComponentName },
+                },
+                $"Disabling of COM+ component `{comPlusComponentName}`");
+
+            var count = int.Parse(result.ToString());
+
+            if (count == 1)
+            {
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been disabled");
+            }
+        }
+
+        /// <summary>
+        /// Gets all COM+ components.
+        /// </summary>
+        /// <returns>
+        /// The list of COM+ components.
+        /// </returns>
+        public IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents()
+        {
+            _logger.WriteDebug("Get COM+ components");
+            var results = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Get-COMPlusComponents.ps1");
+
+            var components = (from result in (List<object>) results select new ISHCOMPlusComponent {Name = result.ToString()}).ToList();
+
+            foreach (var component in components)
+            {
+                component.Status = CheckCOMPlusComponentEnabled(component.Name)
+                    ? ISHCOMPlusComponentStatus.Enabled
+                    : ISHCOMPlusComponentStatus.Disabled;
+            }
+
+            return components;
         }
     }
 }

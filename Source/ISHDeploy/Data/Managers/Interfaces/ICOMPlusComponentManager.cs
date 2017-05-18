@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using ISHDeploy.Common.Models;
+
 namespace ISHDeploy.Data.Managers.Interfaces
 {
     /// <summary>
@@ -36,5 +39,25 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <returns>State of COM+ component</returns>
         bool CheckCOMPlusComponentEnabled(string comPlusComponentName);
+
+        /// <summary>
+        /// Enable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void EnableCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Disable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void DisableCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Gets all COM+ components.
+        /// </summary>
+        /// <returns>
+        /// The list of COM+ components.
+        /// </returns>
+        IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents();
     }
 }

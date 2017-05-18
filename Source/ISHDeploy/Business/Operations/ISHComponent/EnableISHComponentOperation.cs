@@ -16,10 +16,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.Asserts;
+using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
@@ -78,6 +81,25 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         {
                             _invoker.AddAction(
                                 new StartWindowsServiceAction(Logger, service));
+                        }
+                        break;
+                    case ISHComponentName.COMPlus:
+                        // Check if this operation has implications for several Deployments
+                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
+                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+                        _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                            "The disabling of COM+ components has implications across all deployments."));
+
+                        var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+                        var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+                        foreach (var comPlusComponent in comPlusComponents)
+                        {
+                            if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
+                            {
+                                _invoker.AddAction(
+                                    new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                            }
                         }
                         break;
                     default:

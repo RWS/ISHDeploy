@@ -899,7 +899,10 @@ namespace ISHDeploy.Data.Managers
         public void SerializeToFile<T>(string filePath, T data)
         {
             var dataAsXmlString = Serialize(data);
-            _fileManager.Save(filePath, XDocument.Parse(dataAsXmlString));
+            var document = XDocument.Parse(dataAsXmlString);
+            document.Declaration = new XDeclaration("1.0", "utf-8", null);
+
+            _fileManager.Save(filePath, document);
         }
 
         /// <summary>

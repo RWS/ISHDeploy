@@ -16,6 +16,7 @@
 
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.XmlFile;
 using Models = ISHDeploy.Common.Models;
 
@@ -44,8 +45,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         {
             _invoker = new ActionInvoker(logger, "Setting of new IssuerActor credential.");
 
-            // TODO: Validate user
-
             // ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, userName));
             _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, password));
@@ -57,8 +56,11 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // ~\Web\InfoShareSTS\Configuration\infoShareSTS.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.ActorUsernameAttributeXPath, userName));
 
-
-
+            // Update UserName in Delegation table of STS database
+            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                InfoShareSTSDataBaseConnectionString,
+                string.Format(InfoShareSTSDataBase.UpdateIssuerActorUserNameInDelegationSQLCommandFormat,
+                    userName)));
         }
 
         /// <summary>

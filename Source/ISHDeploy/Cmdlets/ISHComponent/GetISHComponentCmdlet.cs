@@ -37,7 +37,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent
         {
             var operation = new GetISHComponentOperation(Logger, ISHDeployment);
 
-            ISHWriteOutput(operation.Run());
+            ISHWriteOutput(operation.Run().Components);
         }
     }
 }

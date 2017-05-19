@@ -72,6 +72,7 @@
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
+    <None Include="Pester\Tests\ISHComponent.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationDBTests.ps1" />

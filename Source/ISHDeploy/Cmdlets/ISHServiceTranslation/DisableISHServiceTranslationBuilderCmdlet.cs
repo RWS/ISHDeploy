@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 ﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHServiceTranslation;
+﻿using ISHDeploy.Business.Operations.ISHComponent;
+﻿using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
@@ -35,7 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHServiceTranslationBuilderOperation(Logger, ISHDeployment);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.TranslationBuilder);
 
             operation.Run();
         }

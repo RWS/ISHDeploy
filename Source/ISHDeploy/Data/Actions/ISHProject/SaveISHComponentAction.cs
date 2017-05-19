@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
@@ -46,7 +47,13 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private readonly bool _isComponentEnabled;
 
         /// <summary>
-        /// Initializes new instance of the <see cref="SaveISHComponentAction"/>
+        /// The BackgroundTask role
+        /// </summary>
+        private readonly ISHBackgroundTaskRole _role;
+
+        /// <summary>
+        /// Initializes new instance of the <see cref="SaveISHComponentAction"/> to save a new status of any component but not the status of BackgroundTask component. 
+        /// For BackgroundTask component please use another constructor
         /// </summary>
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         /// <param name="filePath">Path to file that will be modified</param>
@@ -55,9 +62,30 @@ namespace ISHDeploy.Data.Actions.ISHProject
         public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled)
             : base(logger, filePath)
         {
+            if (componentName == ISHComponentName.BackgroundTask)
+            {
+                throw new ArgumentException($"For {componentName} component you should use another constructor");
+            }
+
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _componentName = componentName;
             _isComponentEnabled = isEnabled;
+        }
+
+        /// <summary>
+        /// Initializes new instance of the <see cref="SaveISHComponentAction"/> to save BackgroundTask component status
+        /// </summary>
+        /// <param name="logger">Instance of the <see cref="ILogger"/></param>
+        /// <param name="filePath">Path to file that will be modified</param>
+        /// <param name="role">The BackgroundTask role</param>
+        /// <param name="isEnabled">The status of BackgroundTask component. True if Enabled</param>
+        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHBackgroundTaskRole role, bool isEnabled)
+            : base(logger, filePath)
+        {
+            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            _componentName = ISHComponentName.BackgroundTask;
+            _isComponentEnabled = isEnabled;
+            _role = role;
         }
 
         /// <summary>
@@ -80,7 +108,15 @@ namespace ISHDeploy.Data.Actions.ISHProject
         public override void Execute()
         {
             var componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
-            componentsCollection[_componentName].IsEnabled = _isComponentEnabled;
+
+            if (_componentName == ISHComponentName.BackgroundTask)
+            {
+                componentsCollection[_componentName, _role].IsEnabled = _isComponentEnabled;
+            }
+            else
+            {
+                componentsCollection[_componentName].IsEnabled = _isComponentEnabled;
+            }
             _dataAggregateHelper.SaveComponents(FilePath, componentsCollection);
         }
     }

@@ -20,8 +20,11 @@
 namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Disables IIS application pools.</para>
-    /// <para type="description">The Disable-ISHIISAppPool cmdlet disables IIS application pools.</para>
+    /// <para type="synopsis">Disables IIS application pools of specified deployment.</para>
+    /// <para type="description">The Disable-ISHIISAppPool cmdlet disables IIS application pools of specified deployment.</para>
+    /// <para type="link">Disable-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Disable-ISHIISAppPool -ISHDeployment $deployment</code>

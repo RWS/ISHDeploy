@@ -22,6 +22,9 @@ namespace ISHDeploy.Cmdlets.ISHComponent
     /// <summary>
     /// <para type="synopsis">Enables COM+ components.</para>
     /// <para type="description">The Enable-ISHCOMPlus cmdlet enables COM+ components.</para>
+    /// <para type="link">Enable-ISHIISAppPool</para>
+    /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Enable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Enable-ISHCOMPlus -ISHDeployment $deployment</code>

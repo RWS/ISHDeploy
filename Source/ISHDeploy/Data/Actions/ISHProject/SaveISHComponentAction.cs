@@ -98,7 +98,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             if (!fileManager.FileExists(FilePath))
             {
                 fileManager.EnsureDirectoryExists(Path.GetDirectoryName(FilePath));
-                _dataAggregateHelper.SaveComponents(FilePath, new ISHComponentsCollection());
+                _dataAggregateHelper.SaveComponents(FilePath, new ISHComponentsCollection(true));
             }
         }
 

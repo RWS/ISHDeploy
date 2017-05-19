@@ -17,26 +17,26 @@
 ﻿using ISHDeploy.Business.Operations.ISHComponent;
 ﻿using ISHDeploy.Common.Enums;
 
-namespace ISHDeploy.Cmdlets.ISHServiceTranslation
+namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Enables translation builder windows service.</para>
-    /// <para type="description">The Enable-ISHServiceTranslationBuilder cmdlet enables translation builder windows service.</para>
+    /// <para type="synopsis">Enables IIS application pools.</para>
+    /// <para type="description">The Enable-ISHIISAppPool cmdlet enables IIS application pools.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Enable-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
-    /// <para>This command enables the translation builder windows service.
+    /// <code>PS C:\>Enable-ISHIISAppPool -ISHDeployment $deployment</code>
+    /// <para>This command enables all IIS application pools of specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Enable, "ISHServiceTranslationBuilder")]
-    public sealed class EnableISHServiceTranslationBuilderCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsLifecycle.Enable, "ISHIISAppPool")]
+    public sealed class EnableISHIISAppPoolCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.TranslationBuilder);
+            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.CM, ISHComponentName.WS, ISHComponentName.STS);
 
             operation.Run();
         }

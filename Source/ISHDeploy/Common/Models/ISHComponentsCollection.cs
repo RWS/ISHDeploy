@@ -18,11 +18,28 @@ namespace ISHDeploy.Common.Models
         /// <summary>
         /// Get component by name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of component</param>
         /// <returns>ISHComponent by ISHComponentName</returns>
         public ISHComponent this[ISHComponentName name]
         {
-            get { return _components.SingleOrDefault(x => x.Name == name); }
+            get
+            {
+                return _components.SingleOrDefault(x => x.Name == name);
+            }
+        }
+
+        /// <summary>
+        /// Get component by name
+        /// </summary>
+        /// <param name="name">The name of component</param>
+        /// <param name="role">The component's role</param>
+        /// <returns>ISHComponent by ISHComponentName</returns>
+        public ISHComponent this[ISHComponentName name, ISHBackgroundTaskRole role]
+        {
+            get
+            {
+                return _components.SingleOrDefault(x => x.Name == name && x.Role != null && x.Role == role.ToString());
+            }
         }
 
         /// <summary>
@@ -30,16 +47,20 @@ namespace ISHDeploy.Common.Models
         /// </summary>
         public ISHComponentsCollection()
         {
-            _components = (from ISHComponentName name in Enum.GetValues(typeof (ISHComponentName))
-                select new ISHComponent
+            _components = new List<ISHComponent>();
+            foreach (ISHComponentName name in Enum.GetValues(typeof(ISHComponentName)))
+            {
+                _components.Add(new ISHComponent
                 {
                     Name = name,
                     IsEnabled = (
                         name == ISHComponentName.CM ||
                         name == ISHComponentName.WS ||
                         name == ISHComponentName.STS ||
-                        name == ISHComponentName.COMPlus)
-                }).ToList();
+                        name == ISHComponentName.COMPlus),
+                    Role = name == ISHComponentName.BackgroundTask ? "Default" : null 
+                });
+            }
         }
 
         /// <summary>

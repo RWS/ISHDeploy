@@ -139,6 +139,7 @@
     <Compile Include="Common\Enums\ISHBackgroundTaskRole.cs" />
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
+    <Compile Include="Common\Enums\ISHDeploymentStatus.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
     <Compile Include="Common\Enums\DatabaseType.cs" />

@@ -144,6 +144,28 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets the status of deployment.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        /// <returns>Status of deployments</returns>
+        public ISHDeploymentStatus GetISHDeploymentStatus(string projectSuffix)
+        {
+            _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
+
+            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
+            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
+            var status = projectRegKey.GetValue("ISHDeploymentStatus");
+            if (status != null)
+            {
+                return (ISHDeploymentStatus)status;
+            }
+            else
+            {
+                return ISHDeploymentStatus.Running;
+            }
+        }
+
+        /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

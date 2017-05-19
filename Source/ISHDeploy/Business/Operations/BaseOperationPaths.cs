@@ -426,7 +426,9 @@ namespace ISHDeploy.Business.Operations
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
             IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
-            CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.xml");
+            // To avoid possible problems in the future (if ISHComponent model change) decided to add the version to the file name,
+            // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
+            CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.v1.xml");
             #endregion
         }
 

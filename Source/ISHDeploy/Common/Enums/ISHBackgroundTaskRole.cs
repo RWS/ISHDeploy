@@ -13,34 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using System.Xml.Serialization;
-using ISHDeploy.Common.Enums;
-
-namespace ISHDeploy.Common.Models
+namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// <para type="description">Represents the state of deployment's component.</para>
+    /// <para type="description">Specify the role of BackgroundTask.</para>
     /// </summary>
-    [XmlRoot("ISHComponent", Namespace = "")]
-    public class ISHComponent
+    public enum ISHBackgroundTaskRole
     {
         /// <summary>
-        /// The name of InfoShare component.
+        /// Default
         /// </summary>
-        [XmlAttribute("Name")]
-        public ISHComponentName Name { get; set; }
-
-        /// <summary>
-        /// The state of InfoShare component.
-        /// </summary>
-        [XmlAttribute("IsEnabled")]
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
-        /// The role of BackgroundTask.
-        /// </summary>
-        [XmlElement("Role")]
-        public string Role { get; set; }
+        Default
     }
 }

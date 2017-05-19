@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Common.Models
@@ -8,46 +9,83 @@ namespace ISHDeploy.Common.Models
     /// <summary>
     /// <para type="description">Represents collection of components.</para>
     /// </summary>
-    public class ISHComponentsCollection : IEnumerable<ISHComponent>
+    [XmlRoot("ISHComponents", Namespace = "")]
+    public class ISHComponentsCollection
     {
         /// <summary>
         /// List of components
         /// </summary>
-        private readonly List<ISHComponent> _components;
+        [XmlElement("ISHComponent", Namespace = "")]
+        public List<ISHComponent> Components { get; set; }
 
         /// <summary>
         /// Get component by name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of component</param>
         /// <returns>ISHComponent by ISHComponentName</returns>
         public ISHComponent this[ISHComponentName name]
         {
-            get { return _components.SingleOrDefault(x => x.Name == name); }
+            get
+            {
+                return Components.SingleOrDefault(x => x.Name == name);
+            }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ISHComponentsCollection"/> class in vanilla state.
+        /// Get component by name
         /// </summary>
-        public ISHComponentsCollection()
+        /// <param name="name">The name of component</param>
+        /// <param name="role">The component's role</param>
+        /// <returns>ISHComponent by ISHComponentName</returns>
+        public ISHComponent this[ISHComponentName name, ISHBackgroundTaskRole role]
         {
-            _components = (from ISHComponentName name in Enum.GetValues(typeof (ISHComponentName))
-                select new ISHComponent
-                {
-                    Name = name,
-                    IsEnabled = (
-                        name == ISHComponentName.CM ||
-                        name == ISHComponentName.WS ||
-                        name == ISHComponentName.STS ||
-                        name == ISHComponentName.COMPlus)
-                }).ToList();
+            get
+            {
+                return Components.SingleOrDefault(x => x.Name == name && x.Role != null && x.Role == role.ToString());
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ISHComponentsCollection"/> class.
         /// </summary>
+        public ISHComponentsCollection()
+        {
+            Components = new List<ISHComponent>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ISHComponentsCollection"/> class. If isVanilla = True init vanilla state of components.
+        /// </summary>
+        /// <param name="isVanilla">Init vanilla state</param>
+        public ISHComponentsCollection(bool isVanilla)
+        {
+            Components = new List<ISHComponent>();
+            if (isVanilla)
+            {
+                Components = new List<ISHComponent>();
+                foreach (ISHComponentName name in Enum.GetValues(typeof(ISHComponentName)))
+                {
+                    Components.Add(new ISHComponent
+                    {
+                        Name = name,
+                        IsEnabled = (
+                            name == ISHComponentName.CM ||
+                            name == ISHComponentName.WS ||
+                            name == ISHComponentName.STS ||
+                            name == ISHComponentName.COMPlus),
+                        Role = name == ISHComponentName.BackgroundTask ? "Default" : null
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ISHComponentsCollection"/> class.
+        /// </summary>
+        /// <param name="components">The initial capacity</param>
         public ISHComponentsCollection(IEnumerable<ISHComponent> components)
         {
-            _components = new List<ISHComponent>(components);
+            Components = new List<ISHComponent>(components);
         }
 
         /// <summary>
@@ -56,16 +94,7 @@ namespace ISHDeploy.Common.Models
         /// <returns>Enumerator for collection</returns>
         public IEnumerator<ISHComponent> GetEnumerator()
         {
-            return _components.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Get enumerator for collection
-        /// </summary>
-        /// <returns>Enumerator for collection</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
+            return Components.GetEnumerator();
         }
     }
 }

@@ -124,7 +124,7 @@ namespace ISHDeploy.Data.Managers
         public ISHComponentsCollection GetComponents(string deploymentName)
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
-            var components = new ISHComponentsCollection();
+            var components = new ISHComponentsCollection(true);
 
             var inputParameters = GetInputParameters(deploymentName);
 
@@ -172,7 +172,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="collection">The collection of components for specified deployment</param>
         public void SaveComponents(string filePath, ISHComponentsCollection collection)
         {
-            _xmlConfigManager.SerializeToFile(filePath, collection.ToList());
+            _xmlConfigManager.SerializeToFile(filePath, collection);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The collection of components readed from file</returns>
         public ISHComponentsCollection ReadComponentsFromFile(string filePath)
         {
-            return new ISHComponentsCollection(_xmlConfigManager.Deserialize<List<ISHComponent>>(filePath));
+            return _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
         }
     }
 }

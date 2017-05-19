@@ -908,11 +908,24 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public void SerializeToFile<T>(string filePath, T data)
         {
+            Exception exception = null;
             using (var outputFile = File.Create(filePath))
             {
-                var serializer = new XmlSerializer(typeof(T));
-                serializer.Serialize(outputFile, data);
+                try
+                {
+                    var serializer = new XmlSerializer(typeof(T));
+                    serializer.Serialize(outputFile, data);
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             }
+
+            if (exception == null) return;
+
+            _fileManager.Delete(filePath);
+            throw exception;
         }
 
         /// <summary>

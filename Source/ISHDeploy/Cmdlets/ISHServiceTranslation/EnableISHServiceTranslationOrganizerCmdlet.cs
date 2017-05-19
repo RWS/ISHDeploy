@@ -36,7 +36,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.TranslationOrganizer);
+            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.TranslationOrganizer);
 
             operation.Run();
         }

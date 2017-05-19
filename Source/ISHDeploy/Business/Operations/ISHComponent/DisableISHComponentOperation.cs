@@ -57,9 +57,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             IEnumerable<Models.ISHWindowsService> services;
 
-            var componentsAollection =
+            var componentsCollection =
                 dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
-            foreach (var component in componentsAollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
+            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
             {
                 switch (component.Name)
                 {

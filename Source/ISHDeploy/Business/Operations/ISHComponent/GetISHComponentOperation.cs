@@ -49,7 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (!fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
             {
-                return new ISHComponentsCollection();
+                return new ISHComponentsCollection(true);
             }
             else
             {

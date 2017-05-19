@@ -24,6 +24,8 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
     /// <summary>
     /// <para type="synopsis">Stops and disables all active components of specific Content Manager deployment.</para>
     /// <para type="description">The Stop-ISHDeployment cmdlet stops and disables all active components of specific Content Manager deployment, such as InfoShare Windows Services, COM+ components and IIS application pools.</para>
+    /// <para type="link">Start-ISHDeployment</para>
+    /// <para type="link">Restart-ISHDeployment</para>
     /// <para type="link">Disable-ISHCOMPlus</para>
     /// <para type="link">Disable-ISHIISAppPool</para>
     /// <para type="link">Disable-ISHServiceTranslationBuilder</para>

@@ -116,6 +116,7 @@
     <Compile Include="Cmdlets\ISHComponent\DisableISHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHOSUserCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHComponentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\RestartISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\StartISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHDeployment\StopISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />

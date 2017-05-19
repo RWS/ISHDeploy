@@ -22,31 +22,33 @@ using System.Management.Automation;
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
     /// <summary>
-    /// <para type="synopsis">Starts and enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
-    /// <para type="description">The Start-ISHDeployment cmdlet starts and enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
+    /// <para type="synopsis">Restarts components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
+    /// <para type="description">The Restart-ISHDeployment cmdlet restarts components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
+    /// <para type="link">Start-ISHDeployment</para>
     /// <para type="link">Stop-ISHDeployment</para>
-    /// <para type="link">Restart-ISHDeployment</para>
     /// <para type="link">Enable-ISHCOMPlus</para>
     /// <para type="link">Enable-ISHIISAppPool</para>
     /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
     /// <para type="link">Enable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Start-ISHDeployment -ISHDeployment $deployment</code>
-    /// <para>This command enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.
+    /// <code>PS C:\>Restart-ISHDeployment -ISHDeployment $deployment</code>
+    /// <para>This command restarts components of specific Content Manager deployment that marked as "Enabled" in tracking file.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Start, "ISHDeployment")]
-    public class StartISHDeploymentCmdlet : BaseISHDeploymentAdminRightsCmdlet
+    [Cmdlet(VerbsLifecycle.Restart, "ISHDeployment")]
+    public class RestartISHDeploymentCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
         /// Executes revert changes cmdLet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, false, (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+            var stopOperation = new DisableISHComponentOperation(Logger, ISHDeployment, false, (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+            stopOperation.Run();
 
-            operation.Run();
+            var startOperation = new EnableISHComponentOperation(Logger, ISHDeployment, false, (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+            startOperation.Run();
         }
     }
 }

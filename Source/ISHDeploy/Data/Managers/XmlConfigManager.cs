@@ -845,32 +845,22 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string Serialize<T>(T value)
         {
-            try
-            {
-                var serializer = new XmlSerializer(value.GetType());
+            var serializer = new XmlSerializer(value.GetType());
 
-                XmlWriterSettings settings = new XmlWriterSettings();
-                //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-                settings.Indent = false;
-                settings.OmitXmlDeclaration = false;
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                using (StringWriter textWriter = new StringWriter())
+            XmlWriterSettings settings = new XmlWriterSettings();
+            //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
                 {
-                    using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
-                    {
-                        serializer.Serialize(xmlWriter, value, ns);
-                    }
-                    return textWriter.ToString();
+                    serializer.Serialize(xmlWriter, value, ns);
                 }
-
+                return textWriter.ToString();
             }
-            catch (Exception ex)
-            {
-                var df = ex.Message;
-
-            }
-            return null;
         }
 
         /// <summary>
@@ -908,24 +898,8 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public void SerializeToFile<T>(string filePath, T data)
         {
-            Exception exception = null;
-            using (var outputFile = File.Create(filePath))
-            {
-                try
-                {
-                    var serializer = new XmlSerializer(typeof(T));
-                    serializer.Serialize(outputFile, data);
-                }
-                catch (Exception ex)
-                {
-                    exception = ex;
-                }
-            }
-
-            if (exception == null) return;
-
-            _fileManager.Delete(filePath);
-            throw exception;
+            var dataAsXmlString = Serialize(data);
+            _fileManager.Save(filePath, XDocument.Parse(dataAsXmlString));
         }
 
         /// <summary>

@@ -31,44 +31,7 @@ $webAppSTSName =  $testingDeployment.WebAppNameSTS
 #region Script Blocks
 
 # Function reads target files and their content, searches for specified nodes in xml
-$scriptBlockReadTargetXML = {
-    param(
-        $organizerFilePath,
-        $builderFilePath,
-        $xmlAppPath,
-        $xmlDataPath,
-        $xmlWebPath
-        
-    )
-    #read all files that are touched with commandlet
-    
-    [System.Xml.XmlDocument]$OrganizerConfig = new-object System.Xml.XmlDocument
-    $OrganizerConfig.load("$organizerFilePath\TranslationOrganizer.exe.config")
-    [System.Xml.XmlDocument]$builderConfig = new-object System.Xml.XmlDocument
-    $builderConfig.load("$builderFilePath\TranslationBuilder.exe.config")
 
-    [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
-    [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument
-    $synchronizeToLiveContentConfig.load("$xmlAppPath\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
-    
-
-
-    $result =  @{}
-    #get variables and nodes from files
-    $result["feedSDLLiveContentConfigUsername"] = $feedSDLLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").username
-    $result["feedSDLLiveContentConfigPassword"] = $feedSDLLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").password
-
-    $result["synchronizeToLiveContentUsername"] = $synchronizeToLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").username
-    $result["synchronizeToLiveContentPassword"] = $synchronizeToLiveContentConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").password
-
-    $result["organizerUsername"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").username
-    $result["organizerPassword"] = $OrganizerConfig.SelectNodes("configuration/trisoft.utilities.serviceReferences/serviceUser/user").password
-
-    $result["builderUsername"] = $builderConfig.SelectNodes("configuration/trisoft.infoShare.translationBuilder/settings").userName
-    $result["builderPassword"] = $builderConfig.SelectNodes("configuration/trisoft.infoShare.translationBuilder/settings").password
-    return $result
-}
 
 $scriptBlockSetISHServiceUser = {
     param (
@@ -162,27 +125,9 @@ $scriptBlockGetAppPoolState = {
 
 #endregion
 
-function readTargetXML() {
-
-    #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockReadTargetXML -Session $session -ArgumentList $organizerFilePath, $builderFilePath, $xmlAppPath, $xmlDataPath, $xmlWebPath
-    $global:feedSDLLiveContentConfigUsername = $result["feedSDLLiveContentConfigUsername"]
-    $global:feedSDLLiveContentConfigPassword = $result["feedSDLLiveContentConfigPassword"]
-
-    $global:synchronizeToLiveContentUsername = $result["synchronizeToLiveContentUsername"]
-    $global:synchronizeToLiveContentPassword = $result["synchronizeToLiveContentPassword"]
-
-    $global:organizerUsername = $result["organizerUsername"]
-    $global:organizerPassword = $result["organizerPassword"]
-
-    $global:builderUsername = $result["builderUsername"]
-    $global:builderPassword = $result["builderPassword"]
-    return $result
-
-}
 
 
-Describe "Testing ISHServiceUser"{
+Describe "Testing ISHIISAppPool"{
     BeforeEach {
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
@@ -222,7 +167,7 @@ Describe "Testing ISHServiceUser"{
         $pools.Count | Should be 3
     }
     
-    It "Set ISHServiceUser writes history"{       
+    It "Set ISHIISAppPool writes history"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName, $testCreds
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName

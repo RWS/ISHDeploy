@@ -47,17 +47,21 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Names of components to be Disabled.</param>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, params ISHComponentName[] components) :
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] components) :
             base(logger, ishDeployment)
         {
             _invoker = new ActionInvoker(logger, "Enabling of components");
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             IEnumerable<Models.ISHWindowsService> services;
 
-            foreach (var component in components)
+            var componentsAollection =
+                dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+            foreach (var component in componentsAollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
             {
-                switch (component)
+                switch (component.Name)
                 {
                     case ISHComponentName.CM :
                         _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
@@ -104,9 +108,31 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     default:
-                        throw new ArgumentException($"Unsupported component type: {component}");
+                        Logger.WriteWarning($"Unsupported component type: {component}");
+                        break;
                 }
-                _invoker.AddAction(new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, component, false));
+
+                if (changeStateOfComponentsInTrackingFile)
+                {
+                    if (component.Name == ISHComponentName.BackgroundTask)
+                    {
+                        _invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                (ISHBackgroundTaskRole) Enum.Parse(typeof (ISHBackgroundTaskRole), component.Role),
+                                false));
+                    }
+                    else
+                    {
+                        _invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                component.Name,
+                                false));
+                    }
+                }
             }
         }
 

@@ -8,7 +8,7 @@ This tutorial explains how to configure credentials for a deployment. The creden
 | ServiceUser | Content Manager (ISH) | This is a Content Manager user that is used from the deployment for certain batch operations | 
 | Actor | Security Token Service (STS) | This is a user that is used to drive authentication with identity delegation |
 
-**Notice** that the module will assume the given credentials are valid for their respected scope and only configure the deployment to use them. 
+**Notice** that the module will assume the given credentials are valid for their respected scope and only configure the deployment to use them.
 
 **Tip** to update the password per target type, use the following cmdlet while keeping the username the same.
 
@@ -21,14 +21,12 @@ $deploymentName="InfoShare"
 
 ## Setting the OSUser
 
-`Set-ISHOSUser` sets the credentials for all deployment's processes. **Notice** that the credential's username could be of the following formats:
+`Set-ISHOSUser` sets the credentials for all deployment's processes.
 
-| Username | Local or Domain | Allowed |
-| -------- | --------------- | ------- |
-| `DOMAIN\username` | Domain | Allowed |
-| `COMPUTERNAME\username` | Local | Allowed |
-| `username` | Local | Not allowed |
-| `.\username` | Local | Not allowed |
+**Notice** that the credential's username should follow one of the following formats:
+
+- `DOMAIN\domainusername` for domain users.
+- `COMPUTERNAME\localusername` for local users.
 
 In this example we use the `localuser` that is already present in the operating system's registry.
 

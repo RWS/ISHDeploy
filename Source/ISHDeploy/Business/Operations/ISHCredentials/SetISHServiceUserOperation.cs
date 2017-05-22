@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using System;
-using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
@@ -75,7 +73,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // InputParameters
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceUserNameXPath, userName));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServicePasswordXPath, password));
-
 
             // Stop TranslationBuilder and TranslationOrganizer services
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();

@@ -78,9 +78,29 @@ namespace ISHDeploy.Common.Models
         public string OSUser { get; }
 
         /// <summary>
-        /// Gets the password of the OS user.
+        /// Gets the password of the OS user password.
         /// </summary>
         public string OSPassword { get; }
+
+        /// <summary>
+        /// Gets the name of the IssuerActor user.
+        /// </summary>
+        public string IssuerActorUserName { get; }
+
+        /// <summary>
+        /// Gets the password of the IssuerActor password.
+        /// </summary>
+        public string IssuerActorPassword { get; }
+
+        /// <summary>
+        /// Gets the name of the Service user.
+        /// </summary>
+        public string ServiceUserName { get; }
+
+        /// <summary>
+        /// Gets the password of the Service user password.
+        /// </summary>
+        public string ServicePassword { get; }
 
         /// <summary>
         /// Gets the name of the CM main url folder.
@@ -163,6 +183,10 @@ namespace ISHDeploy.Common.Models
             WebPath = parameters["webpath"];
             OSUser = parameters["osuser"];
             OSPassword =  parameters["ospassword"];
+            IssuerActorUserName = parameters["issueractorusername"];
+            IssuerActorPassword = parameters["issueractorpassword"];
+            ServiceUserName = parameters["serviceusername"];
+            ServicePassword = parameters["servicepassword"];
             CMWebAppName = parameters["infoshareauthorwebappname"];
             WSWebAppName = parameters["infosharewswebappname"];
             STSWebAppName = parameters["infosharestswebappname"];

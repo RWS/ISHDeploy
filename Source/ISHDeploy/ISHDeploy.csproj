@@ -93,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHServiceUserOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\DisableISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\EnableISHComponentOperation.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\ISHCredentials\SetISHActorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\DisableISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\EnableISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHServiceUserCmdlet.cs" />

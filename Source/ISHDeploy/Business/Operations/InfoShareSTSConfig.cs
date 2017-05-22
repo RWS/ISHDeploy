@@ -35,6 +35,11 @@ namespace ISHDeploy.Business.Operations
             /// The xpath of "infoShareSTS/initialize/@authenticationType" element in ~\Web\InfoShareSTS\Configuration\infoShareSTS.config file
             /// </summary>
             public const string AuthenticationTypeAttributeXPath = "infoShareSTS/initialize/@authenticationType";
+
+            /// <summary>
+            /// The xpath of "infoShareSTS/initialize/@actorUsername" element in ~\Web\InfoShareSTS\Configuration\infoShareSTS.config file
+            /// </summary>
+            public const string ActorUsernameAttributeXPath = "infoShareSTS/initialize/@actorUsername";
         }
     }
 }

@@ -10,6 +10,8 @@
   items:
   - name: Integrating with a database
     href: ../obj/doc/articles/Core/Integrating with a database.md
+  - name: Configuring credentials
+    href: ../obj/doc/articles/Core/Configuring credentials.md
 - name: Working with ISHCM web UI features
   items:
   - name: Toggling Web Components

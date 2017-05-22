@@ -9,9 +9,14 @@ This release is focused on adding cmdlet that help configure core aspects of a d
 		- `Get-ISHIntegrationDB`. **[New]**
 		- `Set-ISHIntegrationDB`. **[New]**
 		- `Test-ISHIntegrationDB`. **[New]**
+		- `Set-ISHOSUser`. **[New]**
+		- `Set-ISHOSUser`. **[New]**
+		- `Set-ISHServiceUser`. **[New]**
+		- `Set-ISHActor`. **[New]**
     1. Tutorials
 		- New section **Work with core deployment configuration** in tutorials: **[New]**
 		  - **Integrating translation jobs with SDL World Server**. **[New]**
+		  - **Configuring credentials**. **[New]**
 
 ## stable-1.3
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
@@ -22,10 +23,10 @@ using ISHDeploy.Common.Interfaces.Actions;
 namespace ISHDeploy.Data.Actions.COMPlus
 {
     /// <summary>
-    /// Sets credentials for COM+ component.
+    /// Enable COM+ component.
     /// </summary>
     /// <seealso cref="IRestorableAction" />
-    public class SetCOMPlusCredentialsAction : BaseAction, IRestorableAction
+    public class EnableCOMPlusComponentAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The name of COM+ component.
@@ -37,45 +38,22 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         private readonly ICOMPlusComponentManager _comPlusComponentManager;
 
-        /// <summary>
-        /// The windows service userName
-        /// </summary>
-        private readonly string _userName;
 
         /// <summary>
-        /// The windows service previous UserName
+        /// The COM+ component manager
         /// </summary>
-        private readonly string _previousUserName;
-
-        /// <summary>
-        /// The windows service password
-        /// </summary>
-        private readonly string _password;
-
-        /// <summary>
-        /// The windows service previous password
-        /// </summary>
-        private readonly string _previousPassword;
+        private bool _comPlusComponentWasEnabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetCOMPlusCredentialsAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
-        /// <param name="userName">The user name.</param>
-        /// <param name="previousUserName">The previous user name.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="previousPassword">The previous password.</param>
-        public SetCOMPlusCredentialsAction(ILogger logger, string comPlusComponentName, string userName, string previousUserName, string password, string previousPassword)
+        public EnableCOMPlusComponentAction(ILogger logger, string comPlusComponentName)
             : base(logger)
         {
-            _comPlusComponentName = comPlusComponentName;
-
             _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
-            _userName = userName;
-            _previousUserName = previousUserName;
-            _password = password;
-            _previousPassword = previousPassword;
+            _comPlusComponentName = comPlusComponentName;
         }
 
         /// <summary>
@@ -83,6 +61,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Backup()
         {
+            _comPlusComponentWasEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName);
         }
 
         /// <summary>
@@ -90,7 +69,12 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public override void Execute()
         {
-            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _userName, _password);
+            _comPlusComponentManager.EnableCOMPlusComponents(_comPlusComponentName);
+
+            if (!_comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName))
+            {
+                throw new Exception($"COM+ component `{_comPlusComponentName}` has not been enabled");
+            }
         }
 
         /// <summary>
@@ -98,7 +82,14 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Rollback()
         {
-            _comPlusComponentManager.SetCOMPlusComponentCredentials(_comPlusComponentName, _previousUserName, _previousPassword);
+            if (_comPlusComponentWasEnabled)
+            {
+                _comPlusComponentManager.EnableCOMPlusComponents(_comPlusComponentName);
+            }
+            else
+            {
+                _comPlusComponentManager.DisableCOMPlusComponents(_comPlusComponentName);
+            }
         }
     }
 }

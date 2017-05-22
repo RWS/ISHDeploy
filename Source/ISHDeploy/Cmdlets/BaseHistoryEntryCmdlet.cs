@@ -22,7 +22,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ISHDeploy.Business.Operations.ISHDeployment;
 using ISHDeploy.Cmdlets.ISHPackage;
-using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets
 {

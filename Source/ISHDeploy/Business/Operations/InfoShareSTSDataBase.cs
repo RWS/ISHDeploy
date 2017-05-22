@@ -37,12 +37,17 @@ namespace ISHDeploy.Business.Operations
             public const string UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat =
                 "UPDATE KeyMaterialConfiguration SET SigningCertificateName = '{0}' Where  SymmetricSigningKey in (SELECT TOP 1 SymmetricSigningKey FROM KeyMaterialConfiguration)";
 
-
             /// <summary>
             /// The certificate update command in RelyingParties table
             /// </summary>
             public const string UpdateCertificateInRelyingPartiesSQLCommandFormat =
                 "UPDATE RelyingParties SET EncryptingCertificate='{0}' WHERE Realm IN ({1})";
+
+            /// <summary>
+            /// The UserName update command in Delegation table
+            /// </summary>
+            public const string UpdateIssuerActorUserNameInDelegationSQLCommandFormat =
+                "UPDATE Delegation SET UserName='{0}'";
 
             /// <summary>
             /// The select RelyingParties query

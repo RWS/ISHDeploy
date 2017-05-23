@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
+
+using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHComponent;
 
 namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Enables IIS application pools.</para>
-    /// <para type="description">The Enable-ISHIISAppPool cmdlet enables IIS application pools for Content Manager deployment.</para>
+    /// <para type="synopsis">Gets list of IIS application pools.</para>
+    /// <para type="description">The Get-ISHIISAppPool cmdlet gets list of IIS application pools for Content Manager deployment.</para>
+    /// <para type="link">Enable-ISHIISAppPool</para>
     /// <para type="link">Disable-ISHIISAppPool</para>
-    /// <para type="link">Get-ISHIISAppPool</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Enable-ISHIISAppPool -ISHDeployment $deployment</code>
-    /// <para>This command enables all IIS application pools of specified deployment.
+    /// <code>PS C:\>Get-ISHIISAppPool -ISHDeployment $deployment</code>
+    /// <para>This command shows list of IIS application pools of specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Enable, "ISHIISAppPool")]
-    public sealed class EnableISHIISAppPoolCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Get, "ISHIISAppPool")]
+    public sealed class GetISHIISAppPoolCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.CM, ISHComponentName.WS, ISHComponentName.STS);
+            var operation = new GetISHIISAppPoolOperation(Logger, ISHDeployment);
 
-            operation.Run();
+            ISHWriteOutput(operation.Run());
         }
     }
 }

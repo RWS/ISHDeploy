@@ -13,34 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
+
+using System.Management.Automation;
+using ISHDeploy.Common;
+using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Enables IIS application pools.</para>
-    /// <para type="description">The Enable-ISHIISAppPool cmdlet enables IIS application pools for Content Manager deployment.</para>
-    /// <para type="link">Disable-ISHIISAppPool</para>
-    /// <para type="link">Get-ISHIISAppPool</para>
+    /// <para type="synopsis">Gets list of COM+ components.</para>
+    /// <para type="description">The Get-ISHCOMPlus cmdlet gets list of COM+ components.</para>
+    /// <para type="link">Enable-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHCOMPlus</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Enable-ISHIISAppPool -ISHDeployment $deployment</code>
-    /// <para>This command enables all IIS application pools of specified deployment.
+    /// <code>PS C:\>Get-ISHCOMPlus -ISHDeployment $deployment</code>
+    /// <para>This command shows list of COM+ components.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Enable, "ISHIISAppPool")]
-    public sealed class EnableISHIISAppPoolCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsCommon.Get, "ISHCOMPlus")]
+    public sealed class GetISHCOMPlusCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.CM, ISHComponentName.WS, ISHComponentName.STS);
+            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
 
-            operation.Run();
+            ISHWriteOutput(comPlusComponents);
         }
     }
 }

@@ -93,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHServiceUserOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\DisableISHComponentOperation.cs" />
@@ -110,6 +111,8 @@
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\ISHComponent\GetISHIISAppPoolCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHComponent\GetISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHActorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\DisableISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\EnableISHCOMPlusCmdlet.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
     <Compile Include="Common\Enums\ISHBackgroundTaskRole.cs" />
+    <Compile Include="Common\Enums\ISHIISAppPoolComponentStatus.cs" />
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
@@ -301,6 +305,7 @@
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\IntegrationDbConnectionString.cs" />
+    <Compile Include="Common\Models\ISHIISAppPoolComponent.cs" />
     <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\ISHCOMPlusComponent.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />

@@ -24,7 +24,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Gets list of windows services for Translation Builder.</para>
     /// <para type="description">The Get-ISHServiceTranslationBuilder cmdlet gets list of translation builder windows service.</para>
-    /// <para type="link">Set-ISHExternalPreview</para>
+    /// <para type="link">Set-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>

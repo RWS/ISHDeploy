@@ -22,6 +22,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Enables translation organizer windows service.</para>
     /// <para type="description">The Enable-ISHServiceTranslationOrganizer cmdlet enables translation organizer windows service.</para>
+    /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Get-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Enable-ISHServiceTranslationOrganizer -ISHDeployment $deployment</code>

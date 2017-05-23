@@ -23,7 +23,8 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
     /// <summary>
     /// <para type="synopsis">Sets Actor user credentials.</para>
     /// <para type="description">The Set-ISHActor cmdlet sets new security credentials of Actor user.</para>
-    /// <para type="link">Enable-ISHExternalPreview</para>
+    /// <para type="link">Set-ISHOSUser</para>
+    /// <para type="link">Set-ISHServiceUser</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHActor -ISHDeployment $deployment -Credential $credential</code>

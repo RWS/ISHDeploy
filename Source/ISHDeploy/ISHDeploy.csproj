@@ -99,6 +99,8 @@
     <Compile Include="Business\Operations\ISHComponent\EnableISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\GetISHComponentOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\StopISHDeploymentOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\StartISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
@@ -320,6 +322,7 @@
     <Compile Include="Data\Actions\COMPlus\EnableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />

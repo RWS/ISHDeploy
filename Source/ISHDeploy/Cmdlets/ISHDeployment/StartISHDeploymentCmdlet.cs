@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
+using ISHDeploy.Business.Operations.ISHDeployment;
 
 namespace ISHDeploy.Cmdlets.ISHDeployment
 {
@@ -44,7 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHDeployment
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, false, (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+            var operation = new StartISHDeploymentOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

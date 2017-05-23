@@ -50,6 +50,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         ISHDeploymentStatus GetISHDeploymentStatus(string projectSuffix);
 
         /// <summary>
+        /// Saves the status of deployment.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        /// <param name="status">The status of deployment.</param>
+        void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status);
+
+        /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

@@ -18,7 +18,6 @@ using System.Collections.Generic;
 ﻿using System.IO;
 ﻿using System.Linq;
 ﻿using ISHDeploy.Common;
-﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Data.Exceptions;
 using ISHDeploy.Common.Interfaces;

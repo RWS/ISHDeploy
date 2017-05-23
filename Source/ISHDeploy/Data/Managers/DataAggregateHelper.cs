@@ -181,6 +181,10 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The collection of components readed from file</returns>
         public ISHComponentsCollection ReadComponentsFromFile(string filePath)
         {
+            if (!_fileManager.FileExists(filePath))
+            {
+                return new ISHComponentsCollection(true);
+            }
             return _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
         }
     }

@@ -20,14 +20,17 @@
 namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Disables IIS application pools.</para>
-    /// <para type="description">The Disable-ISHCOMPlus cmdlet disables IIS application pools.</para>
+    /// <para type="synopsis">Disables COM+ components.</para>
+    /// <para type="description">The Disable-ISHCOMPlus cmdlet disables COM+ components.</para>
     /// <para type="link">Get-ISHCOMPlus</para>
     /// <para type="link">Disable-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHIISAppPool</para>
+    /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Disable-ISHCOMPlus -ISHDeployment $deployment</code>
-    /// <para>This command disables all IIS application pools of specified deployment.
+    /// <para>This command disables all COM+ components of deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Disable, "ISHCOMPlus")]
@@ -38,7 +41,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.COMPlus);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.COMPlus);
 
             operation.Run();
         }

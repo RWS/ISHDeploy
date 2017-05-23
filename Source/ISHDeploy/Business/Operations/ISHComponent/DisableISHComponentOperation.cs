@@ -40,46 +40,50 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        protected IActionInvoker Invoker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Names of components to be Disabled.</param>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, params ISHComponentName[] components) :
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] components) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Enabling of components");
+            Invoker = new ActionInvoker(logger, "Disabling of components");
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             IEnumerable<Models.ISHWindowsService> services;
 
-            foreach (var component in components)
+            var componentsCollection =
+                dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
             {
-                switch (component)
+                switch (component.Name)
                 {
                     case ISHComponentName.CM :
-                        _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
                         break;
                     case ISHComponentName.WS:
-                        _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
+                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
                         break;
                     case ISHComponentName.STS:
-                        _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
                         break;
                     case ISHComponentName.TranslationBuilder:
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
                         foreach (var service in services)
                         {
-                            _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                         }
                         break;
                     case ISHComponentName.TranslationOrganizer:
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
                         foreach (var service in services)
                         {
-                            _invoker.AddAction(
+                            Invoker.AddAction(
                                 new StopWindowsServiceAction(Logger, service));
                         }
                         break;
@@ -94,18 +98,40 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         {
                             if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Enabled)
                             {
-                                _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                                     $"The disabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
 
-                                _invoker.AddAction(
+                                Invoker.AddAction(
                                     new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                             }
                         }
                         break;
                     default:
-                        throw new ArgumentException($"Unsupported component type: {component}");
+                        Logger.WriteWarning($"Unsupported component type: {component}");
+                        break;
                 }
-                _invoker.AddAction(new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, component, false));
+
+                if (changeStateOfComponentsInTrackingFile)
+                {
+                    if (component.Name == ISHComponentName.BackgroundTask)
+                    {
+                        Invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                (ISHBackgroundTaskRole) Enum.Parse(typeof (ISHBackgroundTaskRole), component.Role),
+                                false));
+                    }
+                    else
+                    {
+                        Invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                component.Name,
+                                false));
+                    }
+                }
             }
         }
 
@@ -114,7 +140,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

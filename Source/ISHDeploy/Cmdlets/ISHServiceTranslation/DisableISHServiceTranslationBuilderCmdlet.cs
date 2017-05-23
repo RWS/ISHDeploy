@@ -25,6 +25,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <para type="link">Set-ISHServiceTranslationBuilder</para>
     /// <para type="link">Get-ISHServiceTranslationBuilder</para>
     /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHIISAppPool</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Disable-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
@@ -39,7 +42,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.TranslationBuilder);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.TranslationBuilder);
 
             operation.Run();
         }

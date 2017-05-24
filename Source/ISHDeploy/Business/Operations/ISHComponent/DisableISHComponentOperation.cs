@@ -108,7 +108,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     default:
-                        Logger.WriteWarning($"Unsupported component type: {component}");
+                        Logger.WriteDebug($"Unsupported component type: {component.Name}");
                         break;
                 }
 

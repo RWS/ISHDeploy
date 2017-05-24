@@ -44,7 +44,7 @@ $scriptBlockReadTargetXML = {
     $builderConfig.load("$builderFilePath\TranslationBuilder.exe.config")
 
     [System.Xml.XmlDocument]$feedSDLLiveContentConfig = new-object System.Xml.XmlDocument
-    $feedSDLLiveContentConfig.load("$xmlAppPath\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
+    $feedSDLLiveContentConfig.load("$xmlDataPath\PublishingService\Tools\FeedSDLLiveContent.ps1.config")
     [System.Xml.XmlDocument]$synchronizeToLiveContentConfig = new-object System.Xml.XmlDocument
     $synchronizeToLiveContentConfig.load("$xmlAppPath\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config")
     

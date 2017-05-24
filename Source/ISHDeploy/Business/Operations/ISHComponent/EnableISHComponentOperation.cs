@@ -108,7 +108,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     default:
-                        throw new ArgumentException($"Unsupported component type: {component}");
+                        Logger.WriteDebug($"Unsupported component type: {component.Name}");
+                        break;
                 }
 
                 if (changeStateOfComponentsInTrackingFile)

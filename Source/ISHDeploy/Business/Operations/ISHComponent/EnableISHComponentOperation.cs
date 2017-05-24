@@ -59,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var componentsCollection =
                dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
-            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
+            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && !x.IsEnabled))
             {
                 switch (component.Name)
                 {
@@ -120,7 +120,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 Logger,
                                 CurrentISHComponentStatesFilePath,
                                 (ISHBackgroundTaskRole)Enum.Parse(typeof(ISHBackgroundTaskRole), component.Role),
-                                false));
+                                true));
                     }
                     else
                     {
@@ -129,7 +129,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 Logger,
                                 CurrentISHComponentStatesFilePath,
                                 component.Name,
-                                false));
+                                true));
                     }
                 }
             }

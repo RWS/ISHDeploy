@@ -119,7 +119,7 @@ Describe "Testing ISHCOMPlus"{
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
-
+        
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
          #Assert
@@ -140,6 +140,5 @@ Describe "Testing ISHCOMPlus"{
         $history.Contains('Enable-ISHCOMPlus') | Should be "True"
 
     }
-    #>
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+    UndoDeploymentBackToVanila $testingDeploymentName $true
 }

@@ -22,6 +22,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// <summary>
     /// <para type="synopsis">Enables translation organizer windows service.</para>
     /// <para type="description">The Enable-ISHServiceTranslationOrganizer cmdlet enables translation organizer windows service.</para>
+    /// <para type="link">Enable-ISHCOMPlus</para>
+    /// <para type="link">Enable-ISHIISAppPool</para>
+    /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Enable-ISHServiceTranslationOrganizer -ISHDeployment $deployment</code>
@@ -36,7 +39,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.TranslationOrganizer);
+            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.TranslationOrganizer);
 
             operation.Run();
         }

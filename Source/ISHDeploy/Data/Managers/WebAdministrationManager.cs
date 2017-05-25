@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.Collections.Generic;
 ﻿using System.Linq;
 ﻿using ISHDeploy.Common;
 ﻿using ISHDeploy.Common.Enums;
@@ -21,6 +22,7 @@
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
+﻿using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -391,6 +393,37 @@ namespace ISHDeploy.Data.Managers
                     throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets all IIS application pool components.
+        /// </summary>
+        /// <returns>
+        /// The list of IIS application pool components.
+        /// </returns>
+        public IEnumerable<ISHIISAppPoolComponent> GetAppPoolComponents(params string[] applicationPoolNames)
+        {
+            if (applicationPoolNames == null || !applicationPoolNames.Any())
+            {
+                throw new ArgumentException("The parameter `applicationPoolNames` does not contain any values");
+            }
+
+            _logger.WriteDebug("Get IIS application pool components");
+
+            var components = new List<ISHIISAppPoolComponent>();
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                components.AddRange(
+                    manager.ApplicationPools.Where(ap => applicationPoolNames.Contains(ap.Name))
+                    .Select(appPool => 
+                        new ISHIISAppPoolComponent
+                        {
+                            Name = appPool.Name,
+                            Status = (ISHIISAppPoolComponentStatus) Enum.Parse(typeof (ISHIISAppPoolComponentStatus), appPool.State.ToString())
+                        }));
+            }
+
+            return components;
         }
     }
 }

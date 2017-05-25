@@ -34,7 +34,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHServiceTranslationOrganizer")]
-    public sealed class GetISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
+    public sealed class GetISHServiceTranslationOrganizerCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet

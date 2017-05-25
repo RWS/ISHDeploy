@@ -22,6 +22,8 @@ namespace ISHDeploy.Cmdlets.ISHComponent
     /// <summary>
     /// <para type="synopsis">Disables COM+ components.</para>
     /// <para type="description">The Disable-ISHCOMPlus cmdlet disables COM+ components.</para>
+    /// <para type="link">Get-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHCOMPlus</para>
     /// <para type="link">Disable-ISHIISAppPool</para>
     /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
     /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>

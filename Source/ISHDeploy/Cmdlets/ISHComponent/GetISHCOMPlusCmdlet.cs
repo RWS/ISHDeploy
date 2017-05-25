@@ -16,36 +16,33 @@
 
 using System.Management.Automation;
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 
-namespace ISHDeploy.Cmdlets.ISHServiceTranslation
+namespace ISHDeploy.Cmdlets.ISHComponent
 {
     /// <summary>
-    /// <para type="synopsis">Gets list of windows services for Translation Builder.</para>
-    /// <para type="description">The Get-ISHServiceTranslationBuilder cmdlet gets list of translation builder windows service.</para>
-    /// <para type="link">Set-ISHServiceTranslationBuilder</para>
-    /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
-    /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
+    /// <para type="synopsis">Gets list of COM+ components.</para>
+    /// <para type="description">The Get-ISHCOMPlus cmdlet gets list of COM+ components.</para>
+    /// <para type="link">Enable-ISHCOMPlus</para>
+    /// <para type="link">Disable-ISHCOMPlus</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
-    /// <para>This command shows the translation builder windows service.
+    /// <code>PS C:\>Get-ISHCOMPlus -ISHDeployment $deployment</code>
+    /// <para>This command shows list of COM+ components.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Get, "ISHServiceTranslationBuilder")]
-    public sealed class GetISHServiceTranslationBuilderCmdlet : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsCommon.Get, "ISHCOMPlus")]
+    public sealed class GetISHCOMPlusCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
 
-            var services = serviceManager.GetServices(ISHDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
-
-            ISHWriteOutput(services);
+            ISHWriteOutput(comPlusComponents);
         }
     }
 }

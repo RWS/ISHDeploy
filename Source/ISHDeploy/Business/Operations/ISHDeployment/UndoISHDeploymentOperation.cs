@@ -149,7 +149,22 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-            
+
+            // Stop COM+ components
+            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+            if (!SkipRecycle)
+            {
+                foreach (var comPlusComponent in comPlusComponents)
+                {
+                    _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+
+                    _invoker.AddAction(
+                            new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                }
+            }
+
             if (doRollbackOfOSUserAndOSPassword)
             {
                 _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
@@ -303,6 +318,16 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
                 _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
                 _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
+                
+                // Enable COM+ components
+                foreach (var comPlusComponent in comPlusComponents)
+                {
+                    _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+
+                    _invoker.AddAction(
+                            new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                }
             }
 
 			// Removing Backup folder

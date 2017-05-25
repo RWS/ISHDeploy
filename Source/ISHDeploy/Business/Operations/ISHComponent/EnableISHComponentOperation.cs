@@ -92,7 +92,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         IEnumerable<Models.ISHDeployment> ishDeployments = null;
                         new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-
                         var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
                         var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
                         foreach (var comPlusComponent in comPlusComponents)

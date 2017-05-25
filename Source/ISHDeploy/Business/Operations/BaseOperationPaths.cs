@@ -197,7 +197,7 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath EventMonitorMenuBarXmlPath { get; }
 
         /// <summary>
-        /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
+        /// The path to ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
         protected ISHFilePath FeedSDLLiveContentConfigPath { get; }
 

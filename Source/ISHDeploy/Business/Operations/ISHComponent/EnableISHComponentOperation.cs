@@ -58,7 +58,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             IEnumerable<Models.ISHWindowsService> services;
 
             var componentsCollection =
-               dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+               dataAggregateHelper.GetComponents(ishDeployment.Name);
             foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && !x.IsEnabled))
             {
                 switch (component.Name)

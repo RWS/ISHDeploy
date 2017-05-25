@@ -59,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var componentsCollection =
                 dataAggregateHelper.GetComponents(ishDeployment.Name);
-            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name) && x.IsEnabled))
+            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name)))
             {
                 switch (component.Name)
                 {

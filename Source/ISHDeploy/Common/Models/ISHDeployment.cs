@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Common.Models
 {
@@ -76,5 +77,10 @@ namespace ISHDeploy.Common.Models
         /// Gets the web site name.
         /// </summary>
         public string WebSiteName { get; set; }
+
+        /// <summary>
+        /// Gets the status of Deployment.
+        /// </summary>
+        public ISHDeploymentStatus Status { get; set; }
     }
 }

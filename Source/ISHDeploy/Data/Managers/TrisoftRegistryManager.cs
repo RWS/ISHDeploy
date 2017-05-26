@@ -144,6 +144,42 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets the status of deployment.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        /// <returns>Status of deployments</returns>
+        public ISHDeploymentStatus GetISHDeploymentStatus(string projectSuffix)
+        {
+            _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
+
+            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
+            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
+            var status = projectRegKey.GetValue("ISHDeploymentStatus");
+            if (status != null)
+            {
+                return (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
+            }
+            else
+            {
+                return ISHDeploymentStatus.Running;
+            }
+        }
+
+        /// <summary>
+        /// Saves the status of deployment.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        /// <param name="status">The status of deployment.</param>
+        public void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status)
+        {
+            _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
+
+            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
+            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
+            Registry.SetValue(projectRegKey.Name, "ISHDeploymentStatus", status);
+        }
+
+        /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

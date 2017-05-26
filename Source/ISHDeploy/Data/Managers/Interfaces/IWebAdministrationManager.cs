@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -97,5 +99,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// True if the state of application pool is Started.
         /// </returns>
         bool IsApplicationPoolStarted(string applicationPoolName);
+
+        /// <summary>
+        /// Gets all IIS application pool components.
+        /// </summary>
+        /// <returns>
+        /// The list of IIS application pool components.
+        /// </returns>
+        IEnumerable<ISHIISAppPoolComponent> GetAppPoolComponents(params string[] applicationPoolNames);
     }
 }

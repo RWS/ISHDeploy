@@ -23,7 +23,8 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
     /// <summary>
     /// <para type="synopsis">Sets OS user credentials.</para>
     /// <para type="description">The Set-ISHOSUser cmdlet sets new security credentials of OS user.</para>
-    /// <para type="link">Enable-ISHExternalPreview</para>
+    /// <para type="link">Set-ISHServiceUser</para>
+    /// <para type="link">Set-ISHActor</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHOSUser -ISHDeployment $deployment -Credential $credential</code>

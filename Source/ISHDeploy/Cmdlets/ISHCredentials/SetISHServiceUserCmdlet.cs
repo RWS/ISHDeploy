@@ -22,8 +22,13 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
 {
     /// <summary>
     /// <para type="synopsis">Sets Service user credentials.</para>
-    /// <para type="description">The Set-ISHServiceUser cmdlet sets new security credentials of Service user.</para>
-    /// <para type="link">Enable-ISHExternalPreview</para>
+    /// <para type="description">The Set-ISHServiceUser cmdlet sets new security credentials of Service user. Changes will take effect after the restart of services. Please, see refer cmdlets below</para>
+    /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Enable-ISHServiceTranslationOrganizer</para>
+    /// <para type="link">Set-ISHOSUser</para>
+    /// <para type="link">Set-ISHActor</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceUser -ISHDeployment $deployment -Credential $credential</code>

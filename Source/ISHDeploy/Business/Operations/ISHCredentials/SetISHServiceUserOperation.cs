@@ -74,17 +74,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceUserNameXPath, userName));
             _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServicePasswordXPath, password));
 
-            // Stop TranslationBuilder and TranslationOrganizer services
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(
-                    ishDeployment.Name,
-                    ISHWindowsServiceType.TranslationBuilder,
-                    ISHWindowsServiceType.TranslationOrganizer).ToList();
-            foreach (var service in services)
-            {
-                _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-            }
-
             // Set new ServiceUser credentials for TranslationBuilderConfig service
             _invoker.AddAction(new SetAttributeValueAction(logger,
                 TranslationBuilderConfigFilePath,
@@ -106,12 +95,6 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServicePasswordAttributeXPath,
                     password));
-
-            // Run TranslationBuilder and TranslationOrganizer services
-            foreach (var service in services)
-            {
-                _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-            }
         }
 
         /// <summary>

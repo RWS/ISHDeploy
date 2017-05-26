@@ -70,7 +70,7 @@ namespace ISHDeploy.Data.Managers
                         {
                             foreach (var param in parameters)
                             {
-                                script = script.Replace(param.Key, param.Value);
+                                script = script.Replace(param.Key, param.Value.Replace("\"", "`\""));
                             }
                         }
                         ps.AddScript(script);

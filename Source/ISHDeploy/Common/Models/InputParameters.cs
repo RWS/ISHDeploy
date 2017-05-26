@@ -15,7 +15,7 @@ namespace ISHDeploy.Common.Models
         /// <summary>
         /// Trisoft Application Pool Prefix
         /// </summary>
-        private const string TrisoftAppPoolPrefix = "TrisoftAppPool";
+        public const string TrisoftAppPoolPrefix = "TrisoftAppPool";
 
         /// <summary>
         /// The path to inputparameters.xml

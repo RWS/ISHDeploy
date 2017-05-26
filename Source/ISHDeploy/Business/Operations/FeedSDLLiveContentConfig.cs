@@ -47,12 +47,12 @@ namespace ISHDeploy.Business.Operations
             public const string InfoShareWSServiceCertificateValidationModeAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/uri/@infoShareWSServiceCertificateValidationMode";
 
             /// <summary>
-            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@username" element in ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config file
+            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@username" element in ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config file
             /// </summary>
             public const string ServiceUserUserNameAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@username";
 
             /// <summary>
-            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@password" element in ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config file
+            /// The xpath of "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@password" element in ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config file
             /// </summary>
             public const string ServiceUserPasswordAttributeXPath = "configuration/trisoft.utilities.serviceReferences/serviceUser/user/@password";
         }

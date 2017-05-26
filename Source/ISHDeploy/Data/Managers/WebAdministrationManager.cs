@@ -224,7 +224,7 @@ namespace ISHDeploy.Data.Managers
                 System.Threading.Thread.Sleep(100);
                 i++;
 
-                if (i > 100)
+                if (i > 1000)
                 {
                     throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }

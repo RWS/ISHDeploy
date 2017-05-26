@@ -99,6 +99,8 @@
     <Compile Include="Business\Operations\ISHComponent\EnableISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHOSUserOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\GetISHComponentOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\StopISHDeploymentOperation.cs" />
+    <Compile Include="Business\Operations\ISHDeployment\StartISHDeploymentOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
@@ -118,6 +120,9 @@
     <Compile Include="Cmdlets\ISHComponent\DisableISHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHOSUserCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHComponentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\RestartISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\StartISHDeploymentCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHDeployment\StopISHDeploymentCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\TestISHIntegrationDBCmdlet.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="Common\Enums\ISHBackgroundTaskRole.cs" />
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
+    <Compile Include="Common\Enums\ISHDeploymentStatus.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
     <Compile Include="Common\Enums\DatabaseType.cs" />
@@ -316,6 +322,7 @@
     <Compile Include="Data\Actions\COMPlus\EnableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />

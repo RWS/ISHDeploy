@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
 
-namespace ISHDeploy.Cmdlets.ISHServiceTranslation
+using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHDeployment;
+
+namespace ISHDeploy.Cmdlets.ISHDeployment
 {
     /// <summary>
-    /// <para type="synopsis">Disables translation organizer windows service.</para>
-    /// <para type="description">The Disable-ISHServiceTranslationOrganizer cmdlet disables translation organizer windows service.</para>
+    /// <para type="synopsis">Stops and disables all active components of specific Content Manager deployment.</para>
+    /// <para type="description">The Stop-ISHDeployment cmdlet stops and disables all active components of specific Content Manager deployment, such as InfoShare Windows Services, COM+ components and IIS application pools.</para>
+    /// <para type="link">Start-ISHDeployment</para>
+    /// <para type="link">Restart-ISHDeployment</para>
     /// <para type="link">Disable-ISHCOMPlus</para>
     /// <para type="link">Disable-ISHIISAppPool</para>
     /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
+    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Disable-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
-    /// <para>This command disables the translation organizer windows service.
+    /// <code>PS C:\>Stop-ISHDeployment -ISHDeployment $deployment</code>
+    /// <para>This command disables all active components of specific Content Manager deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Disable, "ISHServiceTranslationOrganizer")]
-    public sealed class DisableISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsLifecycle.Stop, "ISHDeployment")]
+    public class StopISHDeploymentCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
-        /// Executes cmdlet
+        /// Executes revert changes cmdLet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.TranslationOrganizer);
+            var operation = new StopISHDeploymentOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

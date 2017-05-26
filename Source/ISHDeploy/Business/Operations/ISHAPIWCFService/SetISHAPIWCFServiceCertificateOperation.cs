@@ -21,6 +21,8 @@ using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
 using System.ServiceModel.Security;
+using ISHDeploy.Common;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHAPIWCFService
@@ -53,19 +55,21 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             var serviceCertificateSubjectName = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(logger, thumbprint, result => serviceCertificateSubjectName = result)).Execute();
 
-            // Ensure DataBase file exists
-            _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            bool isDataBaseFileExist = fileManager.FileExists(InfoShareSTSDataBasePath.AbsolutePath);
 
-            // Update STS database
-            var encryptedThumbprint = string.Empty;
-            (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
+            // Update STS database if STS database file exists
+            if (isDataBaseFileExist)
+            {
+                var encryptedThumbprint = string.Empty;
+                (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
-                InfoShareSTSDataBaseConnectionString,
-                string.Format(InfoShareSTSDataBase.UpdateCertificateInRelyingPartiesSQLCommandFormat,
-                        encryptedThumbprint,
-                        string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                    InfoShareSTSDataBaseConnectionString,
+                    string.Format(InfoShareSTSDataBase.UpdateCertificateInRelyingPartiesSQLCommandFormat,
+                            encryptedThumbprint,
+                            string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
+            }
 
             // Stop STS Application pool before updating RelyingParties 
             _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));

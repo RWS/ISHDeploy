@@ -13,33 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
 
-namespace ISHDeploy.Cmdlets.ISHComponent
+using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHDeployment;
+
+namespace ISHDeploy.Cmdlets.ISHDeployment
 {
     /// <summary>
-    /// <para type="synopsis">Enables IIS application pools of specified deployment.</para>
-    /// <para type="description">The Enable-ISHIISAppPool cmdlet enables IIS application pools of specified deployment.</para>
+    /// <para type="synopsis">Starts and enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
+    /// <para type="description">The Start-ISHDeployment cmdlet starts and enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.</para>
+    /// <para type="link">Stop-ISHDeployment</para>
+    /// <para type="link">Restart-ISHDeployment</para>
     /// <para type="link">Enable-ISHCOMPlus</para>
+    /// <para type="link">Enable-ISHIISAppPool</para>
     /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
     /// <para type="link">Enable-ISHServiceTranslationOrganizer</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Enable-ISHIISAppPool -ISHDeployment $deployment</code>
-    /// <para>This command enables all IIS application pools of specified deployment.
+    /// <code>PS C:\>Start-ISHDeployment -ISHDeployment $deployment</code>
+    /// <para>This command enables components of specific Content Manager deployment that marked as "Enabled" in tracking file.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Enable, "ISHIISAppPool")]
-    public sealed class EnableISHIISAppPoolCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsLifecycle.Start, "ISHDeployment")]
+    public class StartISHDeploymentCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
-        /// Executes cmdlet
+        /// Executes revert changes cmdLet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.CM, ISHComponentName.WS, ISHComponentName.STS);
+            var operation = new StartISHDeploymentOperation(Logger, ISHDeployment);
 
             operation.Run();
         }

@@ -88,7 +88,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             foreach (var projectRegKey in installProjectsRegKeys)
             {
                 var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
-                var parameters = _dataAggregateHelper.GetInputParameters(projectRegKey.Name.Split(new[]{'\\'}).Last());
+                var parameters = _dataAggregateHelper.GetInputParameters(projectRegKey.Name.Split('\\').Last());
                 var ishProject = new ISHDeployment
                 {
                     Name = $"InfoShare{parameters.ProjectSuffix}",
@@ -103,6 +103,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
                     WebSiteName = parameters.WebSiteName,
                     SoftwareVersion = version
                 };
+
+                ishProject.Status = _registryManager.GetISHDeploymentStatus(ishProject.Name);
 
                 result.Add(ishProject);
             }

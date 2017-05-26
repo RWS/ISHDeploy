@@ -381,7 +381,6 @@ namespace ISHDeploy.Business.Operations
             Logger = logger;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths

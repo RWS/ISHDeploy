@@ -111,7 +111,7 @@ Describe "Testing ISHOSUser"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, $testCreds -WarningVariable Warning
         #Assert
         $message = "The setting of credentials for COM+ components has implications across all deployments."
-         Compare-Object $Warning $message | should be $null
+        Compare-Object $Warning $message | should be $null
     }
 
     It "Set ISHOSUser writes inputparameters"{       
@@ -143,6 +143,11 @@ Describe "Testing ISHOSUser"{
         UndoDeploymentBackToVanila $testingDeploymentName $true
         $users = remoteGetUsers
         Compare-Object $initialUsers $users | Should be $null
+    }
+    
+    It "Set ISHOSUser raises error for COM+"{       
+        #Act
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, (New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "TestPassword`"" -AsPlainText -Force))) -ErrorAction Stop }| Should Throw "The identity or password set on the application is not valid"
     }
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

@@ -206,7 +206,7 @@ namespace ISHDeploy.Data.Managers
             var pathToExecutable = string.Empty;
             foreach (var managementObject in managementObjectCollection)
             {
-                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString().Replace("\"", "`\"").Replace(service.Name, newServiceName);
+                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString().Replace(service.Name, newServiceName);
             }
 
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1", 

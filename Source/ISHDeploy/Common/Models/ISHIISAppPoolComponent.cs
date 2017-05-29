@@ -26,7 +26,12 @@ namespace ISHDeploy.Common.Models
         /// <summary>
         /// The name of IIS application pool component.
         /// </summary>
-        public string Name { get; set; }
+        public string ApplicationPoolName { get; set; }
+
+        /// <summary>
+        /// The name of web site.
+        /// </summary>
+        public string WebApplicationName { get; set; }
 
         /// <summary>
         /// The status of IIS application pool component.

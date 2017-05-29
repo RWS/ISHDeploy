@@ -419,12 +419,36 @@ namespace ISHDeploy.Data.Managers
                         new ISHIISAppPoolComponent
                         {
                             ApplicationPoolName = appPool.Name,
-                            WebApplicationName = manager.Sites[0].Applications.FirstOrDefault(x => x.ApplicationPoolName == appPool.Name).Path.Remove(0, 1),
+                            WebApplicationName = GetWebSiteByApplicationPoolName(manager, appPool.Name),
                             Status = (ISHIISAppPoolComponentStatus) Enum.Parse(typeof (ISHIISAppPoolComponentStatus), appPool.State.ToString())
                         }));
             }
 
             return components;
+        }
+
+        /// <summary>
+        /// Returns name of WebSite for specified Application Pool or an empty string if such pool does not exist
+        /// </summary>
+        /// <param name="manager">The server manager</param>
+        /// <param name="applicationPoolName">The name of IIS application pool</param>
+        /// <returns>The name of WebSite for specified Application Pool or an empty string if such pool does not exist</returns>
+        private string GetWebSiteByApplicationPoolName(ServerManager manager, string applicationPoolName)
+        {
+            var apps = new List<Application>();
+            manager.Sites.ToList().ForEach(site =>
+            {
+                apps.AddRange(site.Applications);
+            });
+            
+            var app = apps.FirstOrDefault(x => x.ApplicationPoolName == applicationPoolName);
+
+            if (app != null)
+            {
+                return app.Path.Remove(0, 1);
+            }
+              
+            return string.Empty;
         }
     }
 }

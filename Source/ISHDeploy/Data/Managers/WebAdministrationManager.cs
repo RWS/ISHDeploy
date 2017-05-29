@@ -418,7 +418,8 @@ namespace ISHDeploy.Data.Managers
                     .Select(appPool => 
                         new ISHIISAppPoolComponent
                         {
-                            Name = appPool.Name,
+                            ApplicationPoolName = appPool.Name,
+                            WebApplicationName = manager.Sites[0].Applications.FirstOrDefault(x => x.ApplicationPoolName == appPool.Name).Path.Remove(0, 1),
                             Status = (ISHIISAppPoolComponentStatus) Enum.Parse(typeof (ISHIISAppPoolComponentStatus), appPool.State.ToString())
                         }));
             }

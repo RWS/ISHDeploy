@@ -19,22 +19,22 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 
-namespace ISHDeploy.Cmdlets.ISHServerFastIndex
+namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
 {
     /// <summary>
     /// <para type="synopsis">Gets list of windows services for SolrLucene.</para>
-    /// <para type="description">The Get-ISHServerFastIndex cmdlet gets list of SolrLucene windows services.</para>
-    /// <para type="link">Set-ISHServerFastIndex</para>
-    /// <para type="link">Enable-ISHServerFastIndex</para>
-    /// <para type="link">Disable-ISHServerFastIndex</para>
+    /// <para type="description">The Get-ISHServiceFullTextIndex cmdlet gets list of SolrLucene windows services.</para>
+    /// <para type="link">Set-ISHServiceFullTextIndex</para>
+    /// <para type="link">Enable-ISHServiceFullTextIndex</para>
+    /// <para type="link">Disable-ISHServiceFullTextIndex</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHServerFastIndex -ISHDeployment $deployment</code>
+    /// <code>PS C:\>Get-ISHServiceFullTextIndex -ISHDeployment $deployment</code>
     /// <para>This command shows the SolrLucene windows services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Get, "ISHServerFastIndex")]
-    public sealed class GetISHServerFastIndexCmdlet : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsCommon.Get, "ISHServiceFullTextIndex")]
+    public sealed class GetISHServiceFullTextIndexCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet

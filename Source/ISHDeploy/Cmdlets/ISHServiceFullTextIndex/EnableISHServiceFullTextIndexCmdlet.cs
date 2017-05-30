@@ -17,22 +17,22 @@
 ﻿using ISHDeploy.Business.Operations.ISHComponent;
 ﻿using ISHDeploy.Common.Enums;
 
-namespace ISHDeploy.Cmdlets.ISHServerFastIndex
+namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
 {
     /// <summary>
     /// <para type="synopsis">Enables SolrLucene windows service.</para>
-    /// <para type="description">The Enable-ISHServerFastIndex cmdlet enables SolrLucene windows service.</para>
-    /// <para type="link">Disable-ISHServerFastIndex</para>
-    /// <para type="link">Set-ISHServerFastIndex</para>
-    /// <para type="link">Get-ISHServerFastIndex</para>
+    /// <para type="description">The Enable-ISHServiceFullTextIndex cmdlet enables SolrLucene windows service.</para>
+    /// <para type="link">Disable-ISHServiceFullTextIndex</para>
+    /// <para type="link">Set-ISHServiceFullTextIndex</para>
+    /// <para type="link">Get-ISHServiceFullTextIndex</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Enable-ISHServerFastIndex -ISHDeployment $deployment</code>
+    /// <code>PS C:\>Enable-ISHServiceFullTextIndex -ISHDeployment $deployment</code>
     /// <para>This command enables the SolrLucene windows service.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Enable, "ISHServerFastIndex")]
-    public sealed class EnableISHServerFastIndexCmdlet : BaseHistoryEntryCmdlet
+    [Cmdlet(VerbsLifecycle.Enable, "ISHServiceFullTextIndex")]
+    public sealed class EnableISHServiceFullTextIndexCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// Executes cmdlet

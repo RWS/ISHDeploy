@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Scaling the services </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Scaling the services ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="scaling-the-services">Scaling the services</h1>
+              
+<p>A Vanilla deployment is delivered with the <strong>Translation Builder</strong> and <strong>Translation Organizer</strong> behaviors pre-configured. 
+This tutorial explains how to configure the behaviors of each service.</p>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="configure-the-translation-buidler">Configure the Translation Buidler</h2>
+<p>To configure the behavior of the Translation Builder use the <code>Set-ISHServiceTranslationBuilder</code> cmdlet.
+For example:</p>
+<pre><code class="lang-powershell"># Set the Translation Builder configuration
+# All parameters are optional
+
+$hash=@{
+    MaxObjectsInOnePush=1000
+    MaxJobItemsCreatedInOneCall=10000
+    CompletedJobLifeSpan=&quot;90.00:00:00&quot;
+    JobProcessingTimeout=&quot;01:00:00&quot;
+    JobPollingInterval=&quot;00:05:00&quot;
+    PendingJobPollingInterval=&quot;00:15:00&quot;
+}
+
+Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName @hash
+</code></pre><p>Notice that all parameters are optional.</p>
+<h2 id="configure-the-translation-organizer">Configure the Translation Organizer</h2>
+<p>To configure the behavior of the Translation Organizer use the <code>Set-ISHServiceTranslationOrganizer</code> cmdlet.
+For example:</p>
+<pre><code class="lang-powershell"># Set the Translation Organizer configuration
+# All parameters are optional
+
+$hash=@{
+    AttemptsBeforeFailOnRetrieval=3
+    DumpFolder=$dumpPath
+    JobPollingInterval=&quot;00:05:00&quot;
+    MaxTranslationJobItemsUpdatedInOneCall=100
+    PendingJobPollingInterval=&quot;00:15:00&quot;
+    RetriesOnTimeout=3
+    SystemTaskInterval=&quot;00:10:00&quot;
+    UpdateLeasedByPerNumberOfItems=100
+}
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash
+</code></pre><p>Notice that all parameters are optional.</p>
+<p>To enable template synchronization execute:</p>
+<pre><code class="lang-powershell"># Enable the template synchronization 
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -SynchronizeTemplates $true
+</code></pre><h2 id="configure-translation-organizer-to-target-any-content-manager-deployment">Configure Translation Organizer to target any Content Manager deployment</h2>
+<p>Translation Organizer uses the SOAP API (ISHWS) of Content Manager to pull and push the translation jobs. Out of the box, it is configured to target the default ISHWS but <code>Set-ISHServiceTranslationOrganizer</code> can be used to change the default target. An example of such a case, is when when Translation Organizer executes on premise and Content Manager is hosted.</p>
+<p>The following example configures a Translation Organizer against a deployment on <code>ish.example.com</code>. By default the authentication paradigm is username/password based and requires credentials.</p>
+<pre><code class="lang-powershell"># Set the Translation Organizer configuration
+
+#Acquire credential that authorize with target
+$credential=Get-Credential
+
+$hash=@{
+    ISHWS=&quot;https://ish.example.com/ISHWS/&quot;
+    IssuerEndpoint=&quot;https://ish.example.com/ISHSTS/issue/wstrust/mixed/username&quot;
+    IssuerBindingType=&quot;UsernameMixed&quot;
+    Credential=$credential
+}
+
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName @hash
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

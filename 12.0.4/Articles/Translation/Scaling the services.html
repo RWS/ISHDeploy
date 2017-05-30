@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Scaling the services </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Scaling the services ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="scaling-the-services">Scaling the services</h1>
+              
+<p>A Vanilla deployment is delivered with the <strong>Translation Builder</strong> and <strong>Translation Organizer</strong> in a disabled state. 
+This tutorial explains how to enable, disable and scale the above.</p>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="get-state">Get state</h2>
+<p>The module offers two cmdlets that return the state of each</p>
+<ul>
+<li><code>Get-ISHServiceTranslationBuilder</code></li>
+<li><code>Get-ISHServiceTranslationOrganizer</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell"># Get Translation Builder 
+Get-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+
+# Get Translation Organizer
+Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer        1
+</code></pre><p>This is also the state that the <code>Undo-ISHDeployment</code> will return to.</p>
+<h2 id="enable-the-translation-services">Enable the translation services</h2>
+<p>To enable the Translation Builder use the <code>Enable-ISHServiceTranslationBuilder</code>. 
+To enable the Translation Organizer use the <code>Enable-ISHServiceTranslationOrganizer</code>. </p>
+<p>For example to enable both execute:</p>
+<pre><code class="lang-powershell"># Enable Translation Builder 
+Enable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+
+# Enable Translation Organizer
+Enable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><p>And then the state becomes:</p>
+<pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Running TranslationOrganizer        1
+</code></pre><h2 id="disable-the-translation-services">Disable the translation services</h2>
+<p>To disable the Translation Builder use the <code>Disable-ISHServiceTranslationBuilder</code>. 
+To disable the Translation Organizer use the <code>Disable-ISHServiceTranslationOrganizer</code>. </p>
+<p>For example to disable both execute:</p>
+<pre><code class="lang-powershell"># Disable Translation Builder 
+Disable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+
+# Disable Translation Organizer
+Disable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><p>And then the state becomes:</p>
+<pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer        1
+</code></pre><p>An alternative could had been to execute <code>Undo-ISHDeployment</code>.</p>
+<h2 id="scaling-the-translation-services">Scaling the translation services</h2>
+<p>The number of services defines the throughput of Translation Builder and Translation Organizer. 
+To scale up the Translation Builder use the <code>Set-ISHServiceTranslationBuilder</code> while specifying the count. 
+To scale up the Translation Organizer use the <code>Set-ISHServiceTranslationOrganizer</code> while specifying the count. </p>
+<p>For example to scale the Translation Builder to 2 and the Translation Organizer to 3 and then enable them execute :</p>
+<pre><code class="lang-powershell"># Scale up Translation Builder 
+Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -Count 2
+
+# Scale up Translation Organizer
+Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -Count 3
+</code></pre><p>Then the state looks like this:</p>
+<pre><code class="lang-text">Name                                             Status                 Type Sequence
+----                                             ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One     Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationBuilder Two     Running   TranslationBuilder        2
+Trisoft InfoShareSQL TranslationOrganizer One   Running TranslationOrganizer        1
+Trisoft InfoShareSQL TranslationOrganizer Two   Running TranslationOrganizer        2
+Trisoft InfoShareSQL TranslationOrganizer Three Running TranslationOrganizer        3
+</code></pre><p>To scale down the Translation Organizer to 2 execute <code>Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -Count 2</code> and the state becomes:</p>
+<pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationBuilder One   Running   TranslationBuilder        1
+Trisoft InfoShareSQL TranslationBuilder Two   Running   TranslationBuilder        2
+Trisoft InfoShareSQL TranslationOrganizer One Running TranslationOrganizer        1
+Trisoft InfoShareSQL TranslationOrganizer Two Running TranslationOrganizer        2
+</code></pre><p>Notice that when disabling and enabling, the module will <strong>only</strong> control the state of the services and not the scaling numbers. 
+This is major difference with <code>Undo-ISHDeployment</code> that will first scale down each service to one and then disable.</p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

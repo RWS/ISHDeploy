@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Integrating with ADFS </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Integrating with ADFS ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../../index.html">
+                <img src="../../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="integrating-with-adfs">Integrating with ADFS</h1>
+              
+<p><strong>ADFS</strong> is an implementation of a <strong>Security Token Service</strong>. The basic integration principals are explained in <a href="Integrating%20with%20Security%20Token%20Service.html">Integrating with Security Token Service</a>.
+This article explains how to use the module&#39;s cmdlets to integrate with <strong>ADFS</strong>. </p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>The following values assume an ADFS at <code>adfs.example.com</code></p>
+<pre><code class="lang-powershell">#Issuer name
+$issuerName=&quot;Example ADFS (20160101)&quot;
+#WS Federation endpoint
+$wsFederationUri=&quot;https://adfs.example.com/adfs/ls/&quot;
+#WS Trust endpoint
+$wsTrustUri=&quot;https://adfs.example.com/adfs/services/trust/13/windowsmixed&quot;
+#WS Trust metadata exchange endpoint
+$wsTrustMexUri=&quot;https://adfs.example.com/adfs/services/trust/mex&quot;
+#The authentication type
+$bindingType=&quot;WindowsMixed&quot;
+#Token signing thumbprint
+$tokenSigningCertificateThumbprint=&quot;2509fb22f7671aea2d0a28ae80516f390de0ca21&quot;
+</code></pre><h1 id="implementing-the-integration-on-content-manager">Implementing the integration on Content Manager</h1>
+<p>There are two kind of integrations:</p>
+<ol>
+<li>Only the clients not in the server zone use the <strong>STS</strong> at <code>adfs.example.com</code> to authenticate. All clients within the server zone continue using the internal <strong>ISHSTS</strong>.</li>
+<li>All clients in the user and server zone use the <strong>STS</strong> at <code>adfs.example.com</code> to authenticate. Since the authentication type is <strong>Windows</strong>, we don&#39;t need to define the <strong>Actor</strong> credentials.</li>
+</ol>
+<h2 id="user-zone-integration">User zone integration</h2>
+<h3 id="set-deploymentname-variable">Set deploymentName variable</h3>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><p>Then</p>
+<pre><code class="lang-powershell"># Set WS Federation integration
+Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
+# Set WS Trust integration
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+</code></pre><h2 id="all-zone-integration">All zone integration</h2>
+<h3 id="set-deploymentname-variable-1">Set deploymentName variable</h3>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><p>This is an example for a windows authentication</p>
+<pre><code class="lang-powershell"># Set WS Federation integration
+Set-ISHIntegrationSTSWSFederation -ISHDeployment $deploymentName -Endpoint $wsFederationUri
+# Set WS Trust integration
+Set-ISHIntegrationSTSWSTrust -ISHDeployment $deploymentName -Endpoint $wsTrustUri -MexEndpoint $wsTrustMexUri -BindingType $bindingType -IncludeInternalClients
+# Set Token signing certificate
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $issuerName -Thumbprint $tokenSigningCertificateThumbprint
+</code></pre><h1 id="implement-the-integration-on-adfs">Implement the integration on ADFS</h1>
+<p>The <code>Save-ISHIntegrationSTSConfigurationPackage</code> cmdlet supports a parameter <code>-ADFS</code> that generates an extra script that can configure the ADFS server remotely.</p>
+<pre><code class="lang-powershell">$filename=&quot;$(Get-Date -Format &quot;yyyyMMdd&quot;).ADFSIntegrationISH.zip&quot;
+Save-ISHIntegrationSTSConfigurationPackage -ISHDeployment $deploymentName -FileName $filename -ADFS
+</code></pre><p>Inside the zip file you will find two files</p>
+<ul>
+<li><code>CM Security Token Service Requirements.md</code> that is a markdown file with the specific deployment information.</li>
+<li><code>Invoke-ADFSIntegrationISH.ps1</code> that can <strong>set</strong> or <strong>remove</strong> the necessary relying party entries on a target ADFS.</li>
+<li><code>ishws.cer</code> that is the public key of the <strong>ISHWS</strong> service certificate. This is processes by the script.</li>
+</ul>
+<p>If <strong>ADFS01</strong> is the computer name for the ADFS server then to set the relying parties execute this</p>
+<pre><code class="lang-powershell">&amp; .\Invoke-ADFSIntegrationISH.ps1 -Computer ADFS01 -Action Set
+</code></pre><p>To remove the relying parties execute this</p>
+<pre><code class="lang-powershell">&amp; .\Invoke-ADFSIntegrationISH.ps1 -Computer ADFS01 -Action Remove
+</code></pre><h1 id="updating-the-encryption-certificate-on-adfs">Updating the encryption certificate on ADFS</h1>
+<p>When invoking <code>Invoke-ADFSIntegrationISH.ps1</code> with <code>-Action Set</code>, it will first search for existing relying parties. When found it will update them with the encryption certificate.</p>
+<p>To keep the relying parties updated, then</p>
+<ol>
+<li>Use <code>Save-ISHIntegrationSTSConfigurationPackage</code> to get the latest integration script</li>
+<li>Execute <code>Invoke-ADFSIntegrationISH.ps1</code> with <code>-Action Set</code></li>
+</ol>
+<h1 id="enable-authentication-with-content-manager-internal-users">Enable authentication with Content Manager internal users.</h1>
+<p>While the deployment is integrated with an ADFS, it could be requested that the system allows access for internal users without modifying the integration. 
+An internal user is one that has username and password in the Content Manager database and the credential will be validated by ISHSTS.</p>
+<pre><code class="lang-powershell"># Just Content Manager (ISH)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+</code></pre><p>If the deployment is integrated with Content Delivery then provide the necessary values like this:</p>
+<pre><code class="lang-powershell"># When the deployment is integrated with a Content Delivery (LC)
+Enable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deployment -LCHost &quot;lc.example.com&quot; -LCWebAppName &quot;ContentDelivery&quot;
+</code></pre><p><code>Enable-ISHIntegrationSTSInternalAuthentication</code> will enable a special url at <code>https://ish.example.com/ISHWS/Internal/</code>. 
+Provide this url to any user that wishes to login with internal users.</p>
+<p>To disable this mode use <code>Disable-ISHIntegrationSTSInternalAuthentication</code>.</p>
+<pre><code class="lang-powershell">Disable-ISHIntegrationSTSInternalAuthentication -ISHDeployment $deploymentName
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

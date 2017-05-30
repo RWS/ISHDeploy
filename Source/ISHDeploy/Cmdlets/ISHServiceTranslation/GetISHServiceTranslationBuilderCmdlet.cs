@@ -23,14 +23,14 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
 {
     /// <summary>
     /// <para type="synopsis">Gets list of windows services for Translation Builder.</para>
-    /// <para type="description">The Get-ISHServiceTranslationBuilder cmdlet gets list of translation builder windows service.</para>
+    /// <para type="description">The Get-ISHServiceTranslationBuilder cmdlet gets list of translation builder windows services.</para>
     /// <para type="link">Set-ISHServiceTranslationBuilder</para>
     /// <para type="link">Enable-ISHServiceTranslationBuilder</para>
     /// <para type="link">Disable-ISHServiceTranslationBuilder</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHServiceTranslationBuilder -ISHDeployment $deployment</code>
-    /// <para>This command shows the translation builder windows service.
+    /// <para>This command shows the translation builder windows services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHServiceTranslationBuilder")]

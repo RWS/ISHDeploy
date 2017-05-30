@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHServiceTranslation;
+using ISHDeploy.Business.Operations.ISHComponent;
+using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceTranslation
@@ -85,7 +86,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public TimeSpan PendingJobPollingInterval { get; set; }
 
         /// <summary>
-        /// <para type="description">The interval of polling of pending job.</para>
+        /// <para type="description">The number of TranslationBuilder services in the system.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The number of TranslationBuilder services in the system", ParameterSetName = "TranslationBuilderCount")]
         [ValidateNotNullOrEmpty]
@@ -142,7 +143,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             }
             else if (ParameterSetName == "TranslationBuilderCount")
             {
-                var operation = new SetISHServiceTranslationBuilderOperation(Logger, ISHDeployment, Count);
+                var operation = new SetISHServiceAmountOperation(Logger, ISHDeployment, Count, ISHWindowsServiceType.TranslationBuilder);
 
                 operation.Run();
             }

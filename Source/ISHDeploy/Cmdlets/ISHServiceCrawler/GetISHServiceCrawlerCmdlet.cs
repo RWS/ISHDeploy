@@ -19,22 +19,22 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 
-namespace ISHDeploy.Cmdlets.ISHServiceTranslation
+namespace ISHDeploy.Cmdlets.ISHServiceCrawler
 {
     /// <summary>
-    /// <para type="synopsis">Gets list of windows services for Translation Builder.</para>
-    /// <para type="description">The Get-ISHServiceTranslationOrganizer cmdlet gets list of translation builder windows services.</para>
-    /// <para type="link">Set-ISHServiceTranslationOrganizer</para>
-    /// <para type="link">Enable-ISHServiceTranslationOrganizer</para>
-    /// <para type="link">Disable-ISHServiceTranslationOrganizer</para>
+    /// <para type="synopsis">Gets list of windows services for Crawler.</para>
+    /// <para type="description">The Get-ISHServiceCrawler cmdlet gets list of Crawler windows services.</para>
+    /// <para type="link">Set-ISHServiceCrawler</para>
+    /// <para type="link">Enable-ISHServiceCrawler</para>
+    /// <para type="link">Disable-ISHServiceCrawler</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Get-ISHServiceTranslationOrganizer -ISHDeployment $deployment</code>
-    /// <para>This command shows the translation builder windows services.
+    /// <code>PS C:\>Get-ISHServiceCrawler -ISHDeployment $deployment</code>
+    /// <para>This command shows the Crawler windows services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsCommon.Get, "ISHServiceTranslationOrganizer")]
-    public sealed class GetISHServiceTranslationOrganizerCmdlet : BaseISHDeploymentCmdlet
+    [Cmdlet(VerbsCommon.Get, "ISHServiceCrawler")]
+    public sealed class GetISHServiceCrawlerCmdlet : BaseISHDeploymentCmdlet
     {
         /// <summary>
         /// Executes cmdlet
@@ -43,7 +43,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         {
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ISHDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
+            var services = serviceManager.GetServices(ISHDeployment.Name, ISHWindowsServiceType.Crawler);
 
             ISHWriteOutput(services);
         }

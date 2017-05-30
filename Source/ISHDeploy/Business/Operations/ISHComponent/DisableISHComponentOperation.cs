@@ -113,6 +113,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                         }
                         break;
+                    case ISHComponentName.SolrLucene:
+                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
+                        foreach (var service in services)
+                        {
+                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                        }
+                        break;
                     default:
                         Logger.WriteDebug($"Unsupported component type: {component.Name}");
                         break;

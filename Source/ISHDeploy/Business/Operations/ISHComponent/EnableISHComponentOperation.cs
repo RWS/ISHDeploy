@@ -106,6 +106,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             }
                         }
                         break;
+                    case ISHComponentName.Crawler:
+                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+                        foreach (var service in services)
+                        {
+                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                        }
+                        break;
                     default:
                         Logger.WriteDebug($"Unsupported component type: {component.Name}");
                         break;

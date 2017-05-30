@@ -48,20 +48,7 @@ $scriptBlockEnableISHServiceTranslationBuilder = {
     Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy
     }
 
-$scriptBlockGetISHComponent = {
-    param (
-        $ishDeployName
 
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHComponent -ISHDeployment $ishDeploy
-
-}
 #endregion
 
 

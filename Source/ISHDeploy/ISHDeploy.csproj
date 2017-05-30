@@ -129,6 +129,9 @@
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\TestISHIntegrationDBCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceCrawler\DisableISHServiceCrawlerCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceCrawler\EnableISHServiceCrawlerCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceCrawler\GetISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />

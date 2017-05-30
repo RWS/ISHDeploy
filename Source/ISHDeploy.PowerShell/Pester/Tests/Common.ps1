@@ -481,3 +481,18 @@ $scriptBlockNewISHIntegrationTMSTemplate = {
     New-ISHIntegrationTMSTemplate  @parameters
 
 }
+
+$scriptBlockGetISHComponent = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHComponent -ISHDeployment $ishDeploy
+
+}

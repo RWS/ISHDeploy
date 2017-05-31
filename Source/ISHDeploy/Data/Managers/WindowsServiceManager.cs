@@ -246,5 +246,37 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
         }
+
+        /// <summary>
+        /// Gets properties of windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Properties of windows service.
+        /// </returns>
+        public PropertyCollection GetWindowsServiceProperties(string serviceName)
+        {
+            _logger.WriteDebug("Get properties of windows service", serviceName);
+
+            WqlObjectQuery wqlObjectQuery =
+                new WqlObjectQuery($"SELECT * FROM Win32_Service WHERE Name = '{serviceName}'");
+            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);
+            ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
+
+            var result = new PropertyCollection();
+            foreach (var managementObject in managementObjectCollection)
+            {
+                foreach (var prop in managementObject.Properties)
+                {
+                    if (prop.Value != null)
+                    {
+                        result.Properties.Add(new Property { Name = prop.Name, Value = prop.Value.ToString() });
+                    }
+                }
+            }
+
+            _logger.WriteVerbose($"Properties for service `{serviceName}` has been got");
+            return result;
+        }
     }
 }

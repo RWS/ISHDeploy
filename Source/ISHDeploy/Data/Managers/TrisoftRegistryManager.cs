@@ -19,7 +19,8 @@ using System.Linq;
 ﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-using Microsoft.Win32;
+﻿using ISHDeploy.Common.Models;
+﻿using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -308,7 +309,30 @@ namespace ISHDeploy.Data.Managers
             {
                 destKey.SetValue(nameOfValue, sourceKey.GetValue(nameOfValue));
             }
-            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}``");
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}`");
+        }
+
+        /// <summary>
+        /// Gets properties from one registry key
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// Properties from one registry key.
+        /// </returns>
+        public PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName)
+        {
+            _logger.WriteDebug($"Gets values from `{sourceLocalMachineSubKeyName}` registry key");
+
+            var result = new PropertyCollection();
+            var sourceKey = Registry.LocalMachine.OpenSubKey(sourceLocalMachineSubKeyName);
+            foreach (var nameOfValue in namesOfValues)
+            {
+                var value = sourceKey.GetValue(nameOfValue);
+                result.Properties.Add(new Property { Name = nameOfValue, Value = value.ToString()});
+            }
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been got");
+            return result;
         }
     }
 }

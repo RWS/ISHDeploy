@@ -80,5 +80,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// True if the state of windows service is Manual or Auto.
         /// </returns>
         bool IsWindowsServiceStarted(string deploymentName, ISHWindowsServiceType type);
+
+        /// <summary>
+        /// Gets properties of windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Properties of windows service.
+        /// </returns>
+        PropertyCollection GetWindowsServiceProperties(string serviceName);
     }
 }

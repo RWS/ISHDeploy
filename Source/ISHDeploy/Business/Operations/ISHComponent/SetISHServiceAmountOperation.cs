@@ -54,6 +54,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             _invoker = new ActionInvoker(logger, $"Setting of amount of {ishWindowsServiceType} windows services");
 
+            // Make sure Vanilla backup of all windows services exists
+            _invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
             var services = serviceManager.GetServices(ishDeployment.Name, ishWindowsServiceType).ToList();

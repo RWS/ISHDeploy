@@ -322,6 +322,10 @@
     <Compile Include="Common\Models\ISHIISAppPoolComponent.cs" />
     <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\ISHCOMPlusComponent.cs" />
+    <Compile Include="Common\Models\Property.cs" />
+    <Compile Include="Common\Models\ISHWindowsServicePropertyCollection.cs" />
+    <Compile Include="Common\Models\ISHWindowsServiceBackupCollection.cs" />
+    <Compile Include="Common\Models\ISHWindowsServiceBackup.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />
@@ -343,6 +347,7 @@
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\WindowsServiceVanillaBackUpAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Exceptions\DocumentAlreadyContainsElementException.cs" />

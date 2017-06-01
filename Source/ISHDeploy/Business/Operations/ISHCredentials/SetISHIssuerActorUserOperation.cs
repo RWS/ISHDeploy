@@ -15,9 +15,12 @@
  */
 
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHCredentials
@@ -56,11 +59,17 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // ~\Web\InfoShareSTS\Configuration\infoShareSTS.config
             _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.ActorUsernameAttributeXPath, userName));
 
-            // Update UserName in Delegation table of STS database
-            _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            bool isDataBaseFileExist = fileManager.FileExists(InfoShareSTSDataBasePath.AbsolutePath);
+
+            // Update UserName in Delegation table of STS database if STS database file exists
+            if (isDataBaseFileExist)
+            {
+                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBaseConnectionString,
                 string.Format(InfoShareSTSDataBase.UpdateIssuerActorUserNameInDelegationSQLCommandFormat,
                     userName)));
+            }
         }
 
         /// <summary>

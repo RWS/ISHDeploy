@@ -17,7 +17,6 @@
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Managers.Interfaces;

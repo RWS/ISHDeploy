@@ -46,19 +46,9 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly IFileManager _fileManager;
 
         /// <summary>
-        /// The windows service manager
+        /// The data aggregate helper
         /// </summary>
-        private readonly IWindowsServiceManager _serviceManager;
-
-        /// <summary>
-        /// The registry manager
-        /// </summary>
-        private readonly ITrisoftRegistryManager _registryManager;
-
-        /// <summary>
-        /// The registry manager
-        /// </summary>
-        private readonly IXmlConfigManager _xmlConfigManager;
+        private readonly IDataAggregateHelper _dataAggregateHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceVanillaBackUpAction"/> class.
@@ -70,9 +60,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
 			: base(logger)
         {
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
-            _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
-            _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _backupFilePath = backupFilePath;
             _deploymentName = deploymentName;
         }
@@ -86,21 +74,12 @@ namespace ISHDeploy.Data.Actions.WindowsServices
             {
                 Logger.WriteDebug($"Create back up of all windows services of `{_deploymentName}`");
 
-                var services = _serviceManager.GetServices(_deploymentName, (ISHWindowsServiceType[])Enum.GetValues(typeof (ISHWindowsServiceType)));
-                var backup = new ISHWindowsServiceBackupCollection();
-                foreach (var service in services)
-                {
-                    var registryPath = $@"SYSTEM\CurrentControlSet\Services\{service.Name}";
-                    var namesOfValues = _registryManager.GetValueNames(registryPath);
-                    backup.Services.Add(new ISHWindowsServiceBackup
-                    {
-                        Name = service.Name,
-                        WindowsServiceManagerProperties = _serviceManager.GetWindowsServiceProperties(service.Name),
-                        RegistryManagerProperties = _registryManager.GetValues(namesOfValues, registryPath)
-                    });
-                }
+                var backup = _dataAggregateHelper.GetISHWindowsServiceBackupCollection(_deploymentName);
+                
                 _fileManager.EnsureDirectoryExists(Path.GetDirectoryName(_backupFilePath));
-                _xmlConfigManager.SerializeToFile(_backupFilePath, backup);
+                _fileManager.SaveObjectToFile(_backupFilePath, backup);
+
+                Logger.WriteVerbose($"The back up of all windows services of `{_deploymentName}` has been created");
             }
         }
 	}

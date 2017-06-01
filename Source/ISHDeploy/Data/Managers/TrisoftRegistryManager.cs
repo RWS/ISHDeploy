@@ -329,10 +329,24 @@ namespace ISHDeploy.Data.Managers
             foreach (var nameOfValue in namesOfValues)
             {
                 var value = sourceKey.GetValue(nameOfValue);
-                result.Properties.Add(new Property { Name = nameOfValue, Value = value.ToString()});
+                result.Properties.Add(new Property { Name = nameOfValue, Value = value});
             }
             _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been got");
             return result;
+        }
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="value">The value.</param>
+        public void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value)
+        {
+            _logger.WriteDebug($"Sets value to `{destLocalMachineSubKeyName}` registry key");
+
+            var destKey = Registry.LocalMachine.OpenSubKey(destLocalMachineSubKeyName, true);
+            destKey.SetValue(nameOfValue, value);
         }
     }
 }

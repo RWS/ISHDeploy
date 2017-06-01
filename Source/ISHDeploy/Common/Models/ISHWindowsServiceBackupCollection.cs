@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -22,6 +23,7 @@ namespace ISHDeploy.Common.Models
     /// <summary>
     /// <para type="description">Represents collection of services with backup properties.</para>
     /// </summary>
+    [Serializable]
     [XmlRoot("ISHWindowsServices", Namespace = "")]
     public class ISHWindowsServiceBackupCollection
     {

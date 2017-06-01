@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
     /// <para type="description">Represents collection of properties.</para>
     /// </summary>
-    [XmlRoot("Properties", Namespace = "")]
+    [Serializable]
     public class PropertyCollection
     {
         /// <summary>
         /// List of properties
         /// </summary>
-        [XmlElement("Property", Namespace = "")]
         public List<Property> Properties { get; set; }
 
         /// <summary>

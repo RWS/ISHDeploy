@@ -112,5 +112,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Properties from one registry key.
         /// </returns>
         PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName);
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="value">The value.</param>
+        void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value);
     }
 }

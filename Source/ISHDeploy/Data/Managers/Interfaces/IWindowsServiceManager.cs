@@ -63,6 +63,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
 
         /// <summary>
+        /// Creates windows service
+        /// </summary>
+        /// <param name="service">The windows service to be created.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        void InstallWindowsService(ISHWindowsServiceBackup service, string userName, string password);
+
+        /// <summary>
         /// Set windows service credentials
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>

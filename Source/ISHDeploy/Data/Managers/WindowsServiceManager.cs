@@ -225,6 +225,33 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Creates windows service
+        /// </summary>
+        /// <param name="service">The windows service to be created.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        public void InstallWindowsService(ISHWindowsServiceBackup service, string userName, string password)
+        {
+            _logger.WriteDebug("Create windows service", service.Name);
+
+            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", service.Name },
+                    { "$displayName", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "DisplayName").Value.ToString() },
+                    { "$description", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "Description").Value.ToString() },
+                    { "$pathToExecutable", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "PathName").Value.ToString() },
+                    { "$username", userName },
+                    { "$password", password }
+                });
+
+            _logger.WriteVerbose($"New service `{service.Name}` has been created");
+        }
+
+        /// <summary>
         /// Set windows service credentials
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>
@@ -270,7 +297,7 @@ namespace ISHDeploy.Data.Managers
                 {
                     if (prop.Value != null)
                     {
-                        result.Properties.Add(new Property { Name = prop.Name, Value = prop.Value.ToString() });
+                        result.Properties.Add(new Property { Name = prop.Name, Value = prop.Value });
                     }
                 }
             }

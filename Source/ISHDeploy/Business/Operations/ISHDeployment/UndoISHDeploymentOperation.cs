@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
@@ -126,25 +127,31 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
             _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
 
-            // Stop and delete excess ISH windows services
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(
-                ishDeployment.Name,
-                ISHWindowsServiceType.BackgroundTask,
-                ISHWindowsServiceType.Crawler,
-                ISHWindowsServiceType.SolrLucene,
-                ISHWindowsServiceType.TranslationBuilder,
-                ISHWindowsServiceType.TranslationOrganizer).ToList();
-            foreach (var service in services)
-            {
-                _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                if (doRollbackOfOSUserAndOSPassword)
-                {
-                    _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name,
-                        vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
-                        vanillaInputParameters.OSPassword));
+
+            if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
+		    {
+		        // Recreate ISH windows services
+		        var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+		        var services = serviceManager.GetServices(
+		            ishDeployment.Name,
+		            (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType))).ToList();
+		        foreach (var service in services)
+		        {
+		            _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+		            _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+		        }
+
+		        var backedUpWindowsServices =
+		            _fileManager.ReadObjectFromFile<Models.ISHWindowsServiceBackupCollection>(
+		                VanillaPropertiesOfWindowsServicesFilePath);
+
+		        foreach (var service in backedUpWindowsServices.Services)
+		        {
+                    _invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
+                        vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
-            }
+		    }
+
 
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
@@ -174,13 +181,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
                     vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
                     vanillaInputParameters.OSPassword));
-            }
-
-            // Delete extra ISH windows services
-            var servicesForDeleting = services.Where(serv => serv.Sequence > 1);
-            foreach (var service in servicesForDeleting)
-            {
-                _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
             }
 
             // Rolling back changes for Web folder

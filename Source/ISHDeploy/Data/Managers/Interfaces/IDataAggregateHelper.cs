@@ -50,5 +50,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The path to file.</param>
         /// <returns>The collection of components readed from file</returns>
         ISHComponentsCollection ReadComponentsFromFile(string filePath);
+
+        /// <summary>
+        /// Returns all windows services with all properties needed for their recreation
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>The collection of windows services with all properties needed for their recreation</returns>
+        ISHWindowsServiceBackupCollection GetISHWindowsServiceBackupCollection(string deploymentName);
     }
 }

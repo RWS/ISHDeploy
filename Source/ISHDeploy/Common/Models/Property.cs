@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-using System.Xml.Serialization;
+using System;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
     /// <para type="description">Represents the Property.</para>
     /// </summary>
-    [XmlRoot("Property", Namespace = "")]
+    [Serializable]
     public class Property
     {
         /// <summary>
         /// The name of property.
         /// </summary>
-        [XmlAttribute("Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// The value.
         /// </summary>
-        [XmlAttribute("Value")]
-        public string Value { get; set; }
+        public object Value { get; set; }
     }
 }

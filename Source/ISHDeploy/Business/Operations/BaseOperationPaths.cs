@@ -399,7 +399,7 @@ namespace ISHDeploy.Business.Operations
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
             VanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
-            VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.xml");
+            VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.dat");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");

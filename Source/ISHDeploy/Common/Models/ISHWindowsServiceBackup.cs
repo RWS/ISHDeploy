@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-using System.Xml.Serialization;
+using System;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
     /// <para type="description">Represents the backup of windows service.</para>
     /// </summary>
-    [XmlRoot("ISHWindowsServiceBackup", Namespace = "")]
+    [Serializable]
     public class ISHWindowsServiceBackup
     {
         /// <summary>
         /// The name of windows service.
         /// </summary>
-        [XmlAttribute("Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// The properties from WindowsServiceManager.
         /// </summary>
-        [XmlElement("WindowsServiceManagerProperties")]
         public PropertyCollection WindowsServiceManagerProperties { get; set; }
 
         /// <summary>
         /// The properties from RegistryManager.
         /// </summary>
-        [XmlElement("RegistryManagerProperties")]
         public PropertyCollection RegistryManagerProperties { get; set; }
     }
 }

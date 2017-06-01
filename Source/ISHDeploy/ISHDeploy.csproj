@@ -344,6 +344,7 @@
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\InstallWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />

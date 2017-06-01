@@ -18,6 +18,7 @@ using ISHDeploy.Common.Interfaces;
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -656,6 +657,34 @@ namespace ISHDeploy.Data.Managers
             }
 
             return files;
+        }
+
+        /// <summary>
+        /// Save an object like a file
+        /// </summary>
+        /// <param name="filePath">The path to file</param>
+        /// <param name="data">The object</param>
+        public void SaveObjectToFile<T>(string filePath, T data)
+        {
+            var serializer = new BinaryFormatter();
+            using (var stream = File.OpenWrite(filePath))
+            {
+                serializer.Serialize(stream, data);
+            }
+        }
+
+        /// <summary>
+        /// Read an object from file
+        /// </summary>
+        /// <param name="filePath">The path to file</param>
+        /// <returns>Deserialized object of type T</returns>
+        public T ReadObjectFromFile<T>(string filePath)
+        {
+            var serializer = new BinaryFormatter();
+            using (var stream = File.OpenRead(filePath))
+            {
+                return (T)serializer.Deserialize(stream);
+            }
         }
     }
 }

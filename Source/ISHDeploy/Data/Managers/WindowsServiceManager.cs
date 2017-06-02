@@ -133,7 +133,8 @@ namespace ISHDeploy.Data.Managers
                             Sequence =
                                 service.ServiceName.EndsWith(serviceNameAlias) ?
                                 1 :
-                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
+                            Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
                         })
                         .ToList());
             }
@@ -191,10 +192,11 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
+        /// <param name="role">The role of BackgroundTask service.</param>
         /// <returns>
         /// The name of new service that have been created.
         /// </returns>
-        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
+        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, string role)
         {
             _logger.WriteDebug("Clone windows service", service.Name);
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
@@ -206,7 +208,36 @@ namespace ISHDeploy.Data.Managers
             var pathToExecutable = string.Empty;
             foreach (var managementObject in managementObjectCollection)
             {
-                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString().Replace(service.Name, newServiceName);
+                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString();
+
+                if (service.Type == ISHWindowsServiceType.BackgroundTask)
+                {
+                    if (string.IsNullOrEmpty(role))
+                    {
+                        throw new ArgumentException("Role cann't be null or empty string");
+                    }
+
+                    if (!newServiceName.ToLower().Contains(role.ToLower()) && !string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        newServiceName = newServiceName.Replace(service.Type.ToString(),
+                            $"{service.Type} {role}");
+                    }
+
+                    if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        newServiceName = newServiceName.Replace($"{service.Type} {service.Role}", service.Type.ToString());
+                    }
+
+                    pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);
+
+                    var roleFromPathToExecutable = pathToExecutable.Split(' ').Last();
+                    if (!string.Equals(role, roleFromPathToExecutable, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        pathToExecutable = pathToExecutable.Replace(roleFromPathToExecutable, role);
+                    }
+                }
+
+                pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);
             }
 
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1", 

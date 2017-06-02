@@ -36,22 +36,26 @@ namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
         /// <summary>
         /// <para type="description">The number of BackgroundTask services in the system.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The number of BackgroundTask services in the system", ParameterSetName = "BackgroundTaskCount")]
+        [Parameter(Mandatory = true, HelpMessage = "The number of BackgroundTask services in the system")]
         [ValidateNotNullOrEmpty]
-        [ValidateRange(1, 10)]
+        [ValidateRange(0, 10)]
         public int Count { get; set; }
+
+        /// <summary>
+        /// <para type="description">The role of BackgroundTask services.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The BackgroundTask role")]
+        [ValidateNotNullOrEmpty]
+        public string Role { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (ParameterSetName == "BackgroundTaskCount")
-            {
-                var operation = new SetISHServiceAmountOperation(Logger, ISHDeployment, Count, ISHWindowsServiceType.BackgroundTask);
+            var operation = new SetISHServiceBackgroundTaskAmountOperation(Logger, ISHDeployment, Count, Role);
 
-                operation.Run();
-            }
+            operation.Run();
         }
     }
 }

@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
+    <Compile Include="Business\Operations\ISHComponent\SetISHServiceBackgroundTaskAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHServiceUserOperation.cs" />

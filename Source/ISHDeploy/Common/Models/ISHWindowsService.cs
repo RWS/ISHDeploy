@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Common.Models
@@ -42,5 +43,10 @@ namespace ISHDeploy.Common.Models
         /// The sequence of windows service.
         /// </summary>
         public int Sequence { get; set; }
+
+        /// <summary>
+        /// The role of BackgroundTask service.
+        /// </summary>
+        public string Role { get; set; }
     }
 }

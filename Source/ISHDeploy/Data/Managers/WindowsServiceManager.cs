@@ -67,7 +67,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Running)
                 {
                     service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(20));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
                 }
                 else

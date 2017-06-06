@@ -134,6 +134,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                         }
                         break;
+                    case ISHComponentName.BackgroundTask:
+                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask);
+                        foreach (var service in services)
+                        {
+                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                        }
+                        break;
                     default:
                         Logger.WriteDebug($"Unsupported component type: {component.Name}");
                         break;

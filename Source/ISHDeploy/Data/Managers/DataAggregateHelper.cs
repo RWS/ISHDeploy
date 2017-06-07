@@ -125,9 +125,21 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
             var components = new ISHComponentsCollection(true);
+            var backgroundTaskServices = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.BackgroundTask);
+            foreach (var backgroundTaskService in backgroundTaskServices)
+            {
+                if (!components.Components.Any(x => string.Equals(x.Role, backgroundTaskService.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    components.Components.Add(new ISHComponent { Name = ISHComponentName.BackgroundTask, Role = backgroundTaskService.Role });
+                }
+            }
+            components.Components.RemoveAll(
+                x => x.Name == ISHComponentName.BackgroundTask &&
+                    !backgroundTaskServices.Any(
+                        bt => string.Equals(bt.Role, x.Role, StringComparison.CurrentCultureIgnoreCase)));
 
             var inputParameters = GetInputParameters(deploymentName);
-
+            var serviceName = string.Empty;
             foreach (var component in components)
             {
                 switch (component.Name)
@@ -145,19 +157,24 @@ namespace ISHDeploy.Data.Managers
                         component.IsEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
                         break;
                     case ISHComponentName.TranslationOrganizer:
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationOrganizer);
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationOrganizer).First().Name;
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.TranslationBuilder:
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.TranslationBuilder);
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationBuilder).First().Name;
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.Crawler:
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.Crawler);
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.Crawler).First().Name;
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.BackgroundTask:
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.BackgroundTask);
+                        serviceName = backgroundTaskServices.First(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)).Name;
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.SolrLucene:
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(deploymentName, ISHWindowsServiceType.SolrLucene);
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.SolrLucene).Single().Name;
+                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                 }
             }

@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
@@ -64,13 +65,15 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             _invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var currentComponentsState = dataAggregateHelper.GetComponents(ishDeployment.Name);
 
             if (string.IsNullOrEmpty(role))
             {
                 role = DefaultRoleName;
             }
 
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask).Where(x => Equals(x.Role.ToLower(), role.ToLower()));
+            List<Models.ISHWindowsService> services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask).Where(x => Equals(x.Role.ToLower(), role.ToLower())).ToList();
             if (services.Count() > amount)
             {
                 // Remove extra services
@@ -106,7 +109,16 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         _invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, InputParameters.OSUser, InputParameters.OSPassword));
 
                         service = new Models.ISHWindowsService { Name = backedUpWindowsService.Name, Sequence = 1, Status = ISHWindowsServiceStatus.Stopped, Role = role, Type = ISHWindowsServiceType.BackgroundTask };
-                        templateServiceHasBeenCreated = true;
+
+                        // Keep the template service in case if we need to create services with the role "Default"
+                        if (!string.Equals(service.Role, DefaultRoleName, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            templateServiceHasBeenCreated = true;
+                        }
+                        else
+                        {
+                            services = new List<Models.ISHWindowsService> { service };
+                        }
                     }
                 }
 
@@ -119,7 +131,16 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 {
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
-                _invoker.AddAction(new AddISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath, role));
+
+                if (
+                    !currentComponentsState.Components.Any(
+                        x =>
+                            x.Name == ISHComponentName.BackgroundTask &&
+                            string.Equals(x.Role, role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    _invoker.AddAction(new AddISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath,
+                        role));
+                }
             }
         }
 

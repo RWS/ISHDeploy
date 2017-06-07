@@ -35,11 +35,18 @@ namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
     public sealed class DisableISHServiceBackgroundTaskBuilderCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
+        /// <para type="description">The role of BackgroundTask services.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The BackgroundTask role")]
+        [ValidateNotNullOrEmpty]
+        public string Role { get; set; } = "Default";
+
+        /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.BackgroundTask);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, Role);
 
             operation.Run();
         }

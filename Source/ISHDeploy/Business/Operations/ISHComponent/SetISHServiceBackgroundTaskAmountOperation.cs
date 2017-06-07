@@ -68,7 +68,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var currentComponentsState = dataAggregateHelper.GetComponents(ishDeployment.Name);
 
-            if (string.IsNullOrEmpty(role))
+            if (string.IsNullOrEmpty(role) || string.Equals(role, DefaultRoleName, StringComparison.CurrentCultureIgnoreCase))
             {
                 role = DefaultRoleName;
             }

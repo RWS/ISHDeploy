@@ -80,6 +80,11 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
+
+                if (amount == 0)
+                {
+                    _invoker.AddAction(new RemoveISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath, role));
+                }
             }
             else if (services.Count() < amount)
             {
@@ -114,7 +119,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 {
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
-                _invoker.AddAction(new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, role, false));
+                _invoker.AddAction(new AddISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath, role));
             }
         }
 

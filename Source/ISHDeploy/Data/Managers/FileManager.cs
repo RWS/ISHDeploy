@@ -436,7 +436,7 @@ namespace ISHDeploy.Data.Managers
 
             if (FileExists(destinationArchiveFilePath))
             {
-                _logger.WriteWarning($"Package file '{destinationArchiveFilePath}' is overwritten.");
+                _logger.WriteWarning($"Package file `{destinationArchiveFilePath}` is overwritten.");
                 Delete(destinationArchiveFilePath);
             }
 

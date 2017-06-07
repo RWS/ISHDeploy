@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.IO;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
@@ -26,10 +25,10 @@ namespace ISHDeploy.Data.Actions.ISHProject
 {
 
     /// <summary>
-    /// Saves an component of given deployment on current system.
+    /// Adds the BackgroundTask component of given Role.
     /// </summary>
     /// <seealso cref="SingleFileAction" />
-    public class SaveISHComponentAction : SingleFileAction
+    public class AddISHBackgroundTaskComponentAction : SingleFileAction
     {
         /// <summary>
         /// The data aggregate helper
@@ -37,40 +36,9 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private IDataAggregateHelper _dataAggregateHelper;
 
         /// <summary>
-        /// The InfoShare component name
-        /// </summary>
-        private readonly ISHComponentName _componentName;
-
-        /// <summary>
-        /// The status of Component. True if Enabled
-        /// </summary>
-        private readonly bool _isComponentEnabled;
-
-        /// <summary>
         /// The BackgroundTask role
         /// </summary>
         private readonly string _role;
-
-        /// <summary>
-        /// Initializes new instance of the <see cref="SaveISHComponentAction"/> to save a new status of any component but not the status of BackgroundTask component. 
-        /// For BackgroundTask component please use another constructor
-        /// </summary>
-        /// <param name="logger">Instance of the <see cref="ILogger"/></param>
-        /// <param name="filePath">Path to file that will be modified</param>
-        /// <param name="componentName">The InfoShare component name</param>
-        /// <param name="isEnabled">The status of Component. True if Enabled</param>
-        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled)
-            : base(logger, filePath)
-        {
-            if (componentName == ISHComponentName.BackgroundTask)
-            {
-                throw new ArgumentException($"For {componentName} component you should use another constructor");
-            }
-
-            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            _componentName = componentName;
-            _isComponentEnabled = isEnabled;
-        }
 
         /// <summary>
         /// Initializes new instance of the <see cref="SaveISHComponentAction"/> to save BackgroundTask component status
@@ -78,13 +46,10 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="logger">Instance of the <see cref="ILogger"/></param>
         /// <param name="filePath">Path to file that will be modified</param>
         /// <param name="role">The BackgroundTask role</param>
-        /// <param name="isEnabled">The status of BackgroundTask component. True if Enabled</param>
-        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, string role, bool isEnabled)
+        public AddISHBackgroundTaskComponentAction(ILogger logger, ISHFilePath filePath, string role)
             : base(logger, filePath)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            _componentName = ISHComponentName.BackgroundTask;
-            _isComponentEnabled = isEnabled;
             _role = role;
         }
 
@@ -109,22 +74,15 @@ namespace ISHDeploy.Data.Actions.ISHProject
         {
             var componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
 
-            if (_componentName == ISHComponentName.BackgroundTask)
+            var component = componentsCollection[ISHComponentName.BackgroundTask, _role];
+            if (component == null)
             {
-                var component = componentsCollection[_componentName, _role];
-                if (component == null)
-                {
-                    component = new ISHComponent { Name = _componentName, Role = _role, IsEnabled = _isComponentEnabled };
-                    componentsCollection.Components.Add(component);
-                }
-                else
-                {
-                    component.IsEnabled = _isComponentEnabled;
-                }
+                component = new ISHComponent { Name = ISHComponentName.BackgroundTask, Role = _role, IsEnabled = false };
+                componentsCollection.Components.Add(component);
             }
             else
             {
-                componentsCollection[_componentName].IsEnabled = _isComponentEnabled;
+                Logger.WriteWarning($"The BackgroundTask component with Role `{component.Role} already exists`");
             }
             _dataAggregateHelper.SaveComponents(FilePath, componentsCollection);
         }

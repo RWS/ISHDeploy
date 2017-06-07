@@ -15,13 +15,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Configuration;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
@@ -115,6 +114,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 {
                     _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
+                _invoker.AddAction(new SaveISHComponentAction(Logger, CurrentISHComponentStatesFilePath, role, false));
             }
         }
 

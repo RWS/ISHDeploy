@@ -49,7 +49,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// The BackgroundTask role
         /// </summary>
-        private readonly ISHBackgroundTaskRole _role;
+        private readonly string _role;
 
         /// <summary>
         /// Initializes new instance of the <see cref="SaveISHComponentAction"/> to save a new status of any component but not the status of BackgroundTask component. 
@@ -79,7 +79,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="filePath">Path to file that will be modified</param>
         /// <param name="role">The BackgroundTask role</param>
         /// <param name="isEnabled">The status of BackgroundTask component. True if Enabled</param>
-        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHBackgroundTaskRole role, bool isEnabled)
+        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, string role, bool isEnabled)
             : base(logger, filePath)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
@@ -111,7 +111,16 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             if (_componentName == ISHComponentName.BackgroundTask)
             {
-                componentsCollection[_componentName, _role].IsEnabled = _isComponentEnabled;
+                var component = componentsCollection[_componentName, _role];
+                if (component == null)
+                {
+                    component = new ISHComponent { Name = _componentName, Role = _role, IsEnabled = _isComponentEnabled };
+                    componentsCollection.Components.Add(component);
+                }
+                else
+                {
+                    component.IsEnabled = _isComponentEnabled;
+                }
             }
             else
             {

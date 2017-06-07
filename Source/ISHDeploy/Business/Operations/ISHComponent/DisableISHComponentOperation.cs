@@ -154,7 +154,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             new SaveISHComponentAction(
                                 Logger,
                                 CurrentISHComponentStatesFilePath,
-                                (ISHBackgroundTaskRole) Enum.Parse(typeof (ISHBackgroundTaskRole), component.Role),
+                                component.Role,
                                 false));
                     }
                     else

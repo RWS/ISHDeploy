@@ -45,6 +45,11 @@ namespace ISHDeploy.Data.Managers
         private readonly IPowerShellManager _psManager;
 
         /// <summary>
+        /// The TimeOut of waiting of WindowsService status.
+        /// </summary>
+        private const int TimeOutInSeconds = 90;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -67,7 +72,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Running)
                 {
                     service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(TimeOutInSeconds));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
                 }
                 else
@@ -94,7 +99,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Stopped)
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(TimeOutInSeconds));
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
                 }
                 else

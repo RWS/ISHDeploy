@@ -62,8 +62,13 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private const string VersionRegValue = "Version";
 
+        /// <summary>
+        /// The ISHDeploymentStatus registry value name
+        /// </summary>
+        private const string ISHDeploymentStatusRegValue = "ISHDeploymentStatus";
+
         #endregion
-        
+
         /// <summary>
         /// The logger.
         /// </summary>
@@ -155,7 +160,10 @@ namespace ISHDeploy.Data.Managers
 
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            var status = projectRegKey.GetValue("ISHDeploymentStatus");
+
+            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+
+            var status = historyItem?.GetValue(ISHDeploymentStatusRegValue);
             if (status != null)
             {
                 return (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
@@ -177,7 +185,8 @@ namespace ISHDeploy.Data.Managers
 
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            Registry.SetValue(projectRegKey.Name, "ISHDeploymentStatus", status);
+            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+            Registry.SetValue(historyItem.Name, ISHDeploymentStatusRegValue, status);
         }
 
         /// <summary>

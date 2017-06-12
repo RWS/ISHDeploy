@@ -59,7 +59,21 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var componentsCollection =
                dataAggregateHelper.GetComponents(ishDeployment.Name);
-            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name)))
+
+            // Reorder Components Collection (make sure the lucene service start first and then the crawler)
+            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>(); ;
+            if (components.Contains(ISHComponentName.Crawler))
+            {
+                orderedComponentsCollection.Add(componentsCollection.Components.FirstOrDefault(x => x.Name == ISHComponentName.SolrLucene));
+
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.SolrLucene));
+            }
+            else
+            {
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name)));
+            }
+
+            foreach (var component in orderedComponentsCollection)
             {
                 switch (component.Name)
                 {
@@ -108,6 +122,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         break;
                     case ISHComponentName.Crawler:
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+                        foreach (var service in services)
+                        {
+                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                        }
+                        break;
+                    case ISHComponentName.SolrLucene:
+                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
                         foreach (var service in services)
                         {
                             Invoker.AddAction(new StartWindowsServiceAction(Logger, service));

@@ -59,7 +59,21 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var componentsCollection =
                 dataAggregateHelper.GetComponents(ishDeployment.Name);
-            foreach (var component in componentsCollection.Components.Where(x => components.Contains(x.Name)))
+
+            // Reorder Components Collection (make sure the crawler service stops first and then the lucene)
+            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>(); ;
+            if (components.Contains(ISHComponentName.SolrLucene))
+            {
+                orderedComponentsCollection.Add(componentsCollection.Components.FirstOrDefault(x => x.Name == ISHComponentName.Crawler));
+
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.Crawler));
+            }
+            else
+            {
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name)));
+            }
+
+            foreach (var component in orderedComponentsCollection)
             {
                 switch (component.Name)
                 {

@@ -145,28 +145,25 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Check windows service is Started or not
         /// </summary>
-        /// <param name="deploymentName">ISH deployment name.</param>
-        /// <param name="type">Type of deployment service.</param>
+        /// <param name="serviceName">The name of windows service.</param>
         /// <returns>
         /// True if the state of windows service is Manual or Auto.
         /// </returns>
-        public bool IsWindowsServiceStarted(string deploymentName, ISHWindowsServiceType type)
+        public bool IsWindowsServiceStarted(string serviceName)
         {
-            string serviceNameAlias = $"{deploymentName} {type}";
-            _logger.WriteDebug("Get windows service state", serviceNameAlias);
-
+            _logger.WriteDebug("Get windows service state", serviceName);
 
             var service = ServiceController.GetServices()
-                       .FirstOrDefault(x => x.ServiceName.Contains(serviceNameAlias));
+                       .FirstOrDefault(x => string.Equals(x.ServiceName, serviceName, StringComparison.CurrentCultureIgnoreCase));
 
             if (service == null)
             {
-                throw new Exception($"Windows service that matches to `{serviceNameAlias}` does not exists.");
+                throw new Exception($"Windows service that matches to `{serviceName}` does not exists.");
             }
 
             var isEnabled = service.Status == ServiceControllerStatus.Running;
 
-            _logger.WriteVerbose($"Windows service `{serviceNameAlias}` is {service.Status}");
+            _logger.WriteVerbose($"Windows service `{serviceName}` is {service.Status}");
 
             return isEnabled;
         }

@@ -94,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
+    <Compile Include="Business\Operations\ISHComponent\SetISHServiceBackgroundTaskAmountOperation.cs" />
+    <Compile Include="Business\Operations\ISHComponent\SetISHServiceAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHServiceUserOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\DisableISHComponentOperation.cs" />
@@ -129,9 +131,11 @@
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\TestISHIntegrationDBCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceBackgroundTask\GetISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\DisableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\EnableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\GetISHServiceFullTextIndexCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceBackgroundTask\SetISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\DisableISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\EnableISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\GetISHServiceCrawlerCmdlet.cs" />
@@ -152,7 +156,6 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
-    <Compile Include="Common\Enums\ISHBackgroundTaskRole.cs" />
     <Compile Include="Common\Enums\ISHIISAppPoolComponentStatus.cs" />
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
@@ -320,6 +323,10 @@
     <Compile Include="Common\Models\ISHIISAppPoolComponent.cs" />
     <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\ISHCOMPlusComponent.cs" />
+    <Compile Include="Common\Models\Property.cs" />
+    <Compile Include="Common\Models\ISHWindowsServicePropertyCollection.cs" />
+    <Compile Include="Common\Models\ISHWindowsServiceBackupCollection.cs" />
+    <Compile Include="Common\Models\ISHWindowsServiceBackup.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />
@@ -333,14 +340,18 @@
     <Compile Include="Data\Actions\COMPlus\EnableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\RemoveISHBackgroundTaskComponentAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\AddISHBackgroundTaskComponentAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\InstallWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\WindowsServiceVanillaBackUpAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Exceptions\DocumentAlreadyContainsElementException.cs" />

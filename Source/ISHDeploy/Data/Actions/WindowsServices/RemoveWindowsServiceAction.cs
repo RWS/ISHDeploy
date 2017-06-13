@@ -38,7 +38,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly IWindowsServiceManager _serviceManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
+        /// Initializes a new instance of the <see cref="RemoveWindowsServiceAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The deployment service.</param>

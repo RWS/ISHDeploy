@@ -69,19 +69,19 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
             #region Ensure the list of vanilla files has been saved as file
 
-            if (_toBinary && !_fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            if (_toBinary && !_fileManager.FileExists(VanillaFilesOfWebAuthorAspBinFolderFilePath))
             {
                 _fileManager.EnsureDirectoryExists(BackupFolderPath);
 
                 var fullFileList = _fileManager.GetFileSystemEntries(
                     AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-                xmlConfigManager.SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+                xmlConfigManager.SerializeToFile(VanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
             }
 
             #endregion
 
-            string[] listOfIgnoreFilesInBinFolder = _toBinary ? xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath) : null;
+            string[] listOfIgnoreFilesInBinFolder = _toBinary ? xmlConfigManager.Deserialize<string[]>(VanillaFilesOfWebAuthorAspBinFolderFilePath) : null;
 
             var inputParameters =
                 xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);

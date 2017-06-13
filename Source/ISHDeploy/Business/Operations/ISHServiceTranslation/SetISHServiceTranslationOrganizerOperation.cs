@@ -65,47 +65,6 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="amount">The number of TranslationOrganizer services in the system.</param>
-        public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, int amount) :
-            base(logger, ishDeployment)
-        {
-            if (amount > 10)
-            {
-                throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10.Supply an argument that is less than or equal to 10 and then try the command again");
-            }
-
-            _invoker = new ActionInvoker(logger, "Setting of amount of translation organizer windows services");
-
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer).ToList();
-
-            if (services.Count() > amount)
-            {
-                // Remove extra services
-                var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
-                foreach (var service in servicesForDeleting)
-                {
-                    _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
-                }
-            }
-            else if (services.Count() < amount)
-            {
-
-                var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
-                for (int i = services.Count(); i < amount; i++)
-                { 
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="infoShareWSUri">The URI to ISHWS.</param>
         /// <param name="wsTrustBindingType">The type of ISHWS authentication.</param>
         /// <param name="wsTrustEndpoint">The URL to issuer ISHWS endpoint.</param>

@@ -224,8 +224,13 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
         /// </summary>
-        protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
-        
+        protected string VanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
+
+        /// <summary>
+        /// The path to file with list of vanilla properties of all windows services of deployment.
+        /// </summary>
+        protected string VanillaPropertiesOfWindowsServicesFilePath { get; }
+
         /// <summary>
         /// The path to Web back up folder
         /// </summary>
@@ -389,7 +394,8 @@ namespace ISHDeploy.Business.Operations
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
-            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            VanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.dat");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");

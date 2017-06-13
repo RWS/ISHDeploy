@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
@@ -186,6 +187,30 @@ namespace ISHDeploy.Data.Managers
                 return new ISHComponentsCollection(true);
             }
             return _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
+        }
+
+        /// <summary>
+        /// Returns all windows services with all properties needed for their recreation
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>The collection of windows services with all properties needed for their recreation</returns>
+        public ISHWindowsServiceBackupCollection GetISHWindowsServiceBackupCollection(string deploymentName)
+        {
+            var services = _windowsServiceManager.GetServices(deploymentName, (ISHWindowsServiceType[])Enum.GetValues(typeof(ISHWindowsServiceType)));
+            var backup = new ISHWindowsServiceBackupCollection();
+            foreach (var service in services)
+            {
+                var registryPath = $@"SYSTEM\CurrentControlSet\Services\{service.Name}";
+                var namesOfValues = _registryManager.GetValueNames(registryPath);
+                backup.Services.Add(new ISHWindowsServiceBackup
+                {
+                    Name = service.Name,
+                    WindowsServiceManagerProperties = _windowsServiceManager.GetWindowsServiceProperties(service.Name),
+                    RegistryManagerProperties = _registryManager.GetValues(namesOfValues, registryPath)
+                });
+            }
+
+            return backup;
         }
     }
 }

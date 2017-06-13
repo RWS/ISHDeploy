@@ -160,7 +160,8 @@ namespace ISHDeploy.Data.Managers
                             Sequence =
                                 service.ServiceName.EndsWith(serviceNameAlias) ?
                                 1 :
-                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
+                            Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
                         })
                         .ToList());
             }
@@ -218,10 +219,11 @@ namespace ISHDeploy.Data.Managers
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
+        /// <param name="role">The role of BackgroundTask service.</param>
         /// <returns>
         /// The name of new service that have been created.
         /// </returns>
-        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password)
+        public string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, string role)
         {
             _logger.WriteDebug("Clone windows service", service.Name);
             var newServiceName = service.Name.Replace(((ISHWindowsServiceSequence)service.Sequence).ToString(), ((ISHWindowsServiceSequence)sequence).ToString());
@@ -233,7 +235,36 @@ namespace ISHDeploy.Data.Managers
             var pathToExecutable = string.Empty;
             foreach (var managementObject in managementObjectCollection)
             {
-                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString().Replace(service.Name, newServiceName);
+                pathToExecutable = managementObject.GetPropertyValue("PathName").ToString();
+
+                if (service.Type == ISHWindowsServiceType.BackgroundTask)
+                {
+                    if (string.IsNullOrEmpty(role))
+                    {
+                        throw new ArgumentException("Role cann't be null or empty string");
+                    }
+
+                    if (!newServiceName.ToLower().Contains(role.ToLower()) && !string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        newServiceName = newServiceName.Replace(service.Type.ToString(),
+                            $"{service.Type} {role}");
+                    }
+
+                    if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        newServiceName = newServiceName.Replace($"{service.Type} {service.Role}", service.Type.ToString());
+                    }
+
+                    pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);
+
+                    var roleFromPathToExecutable = pathToExecutable.Split(' ').Last();
+                    if (!string.Equals(role, roleFromPathToExecutable, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        pathToExecutable = pathToExecutable.Replace(roleFromPathToExecutable, role);
+                    }
+                }
+
+                pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);
             }
 
             _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1", 
@@ -249,6 +280,33 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"New service `{newServiceName}` has been created");
             return newServiceName;
+        }
+
+        /// <summary>
+        /// Creates windows service
+        /// </summary>
+        /// <param name="service">The windows service to be created.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        public void InstallWindowsService(ISHWindowsServiceBackup service, string userName, string password)
+        {
+            _logger.WriteDebug("Create windows service", service.Name);
+
+            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Install-WindowsService.ps1",
+                new Dictionary<string, string>
+                {
+                    { "$name", service.Name },
+                    { "$displayName", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "DisplayName").Value.ToString() },
+                    { "$description", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "Description").Value.ToString() },
+                    { "$pathToExecutable", service.WindowsServiceManagerProperties.Properties.Single(x => x.Name == "PathName").Value.ToString() },
+                    { "$username", userName },
+                    { "$password", password }
+                });
+
+            _logger.WriteVerbose($"New service `{service.Name}` has been created");
         }
 
         /// <summary>
@@ -272,6 +330,38 @@ namespace ISHDeploy.Data.Managers
                 "Setting windows service credentials");
 
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
+        }
+
+        /// <summary>
+        /// Gets properties of windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Properties of windows service.
+        /// </returns>
+        public PropertyCollection GetWindowsServiceProperties(string serviceName)
+        {
+            _logger.WriteDebug("Get properties of windows service", serviceName);
+
+            WqlObjectQuery wqlObjectQuery =
+                new WqlObjectQuery($"SELECT * FROM Win32_Service WHERE Name = '{serviceName}'");
+            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(wqlObjectQuery);
+            ManagementObjectCollection managementObjectCollection = managementObjectSearcher.Get();
+
+            var result = new PropertyCollection();
+            foreach (var managementObject in managementObjectCollection)
+            {
+                foreach (var prop in managementObject.Properties)
+                {
+                    if (prop.Value != null)
+                    {
+                        result.Properties.Add(new Property { Name = prop.Name, Value = prop.Value });
+                    }
+                }
+            }
+
+            _logger.WriteVerbose($"Properties for service `{serviceName}` has been got");
+            return result;
         }
     }
 }

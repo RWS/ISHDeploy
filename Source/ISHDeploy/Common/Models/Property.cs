@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Common.Enums
+
+using System;
+
+namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Specify the role of BackgroundTask.</para>
+    /// <para type="description">Represents the Property.</para>
     /// </summary>
-    public enum ISHBackgroundTaskRole
+    [Serializable]
+    public class Property
     {
         /// <summary>
-        /// Default
+        /// The name of property.
         /// </summary>
-        Default
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The value.
+        /// </summary>
+        public object Value { get; set; }
     }
 }

@@ -15,38 +15,27 @@
  */
 
 using System;
-using ISHDeploy.Common.Enums;
+using System.Collections.Generic;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Represents the installed windows services that deployment is used.</para>
+    /// <para type="description">Represents collection of properties.</para>
     /// </summary>
-    public class ISHWindowsService
+    [Serializable]
+    public class PropertyCollection
     {
         /// <summary>
-        /// The name of windows service.
+        /// List of properties
         /// </summary>
-        public string Name { get; set; }
+        public List<Property> Properties { get; set; }
 
         /// <summary>
-        /// The status of windows service.
+        /// Initializes a new instance of the <see cref="PropertyCollection"/> class.
         /// </summary>
-        public ISHWindowsServiceStatus Status{ get; set; }
-
-        /// <summary>
-        /// The type of windows service.
-        /// </summary>
-        public ISHWindowsServiceType Type { get; set; }
-
-        /// <summary>
-        /// The sequence of windows service.
-        /// </summary>
-        public int Sequence { get; set; }
-
-        /// <summary>
-        /// The role of BackgroundTask service.
-        /// </summary>
-        public string Role { get; set; }
+        public PropertyCollection()
+        {
+            Properties = new List<Property>();
+        }
     }
 }

@@ -60,7 +60,19 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
+        /// <param name="role">The role of BackgroundTask service.</param>
+        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, string role);
+
+        /// <summary>
+        /// Creates windows service
+        /// </summary>
+        /// <param name="service">The windows service to be created.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        void InstallWindowsService(ISHWindowsServiceBackup service, string userName, string password);
 
         /// <summary>
         /// Set windows service credentials
@@ -80,5 +92,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// True if the state of windows service is Manual or Auto.
         /// </returns>
         bool IsWindowsServiceStarted(string deploymentName, ISHWindowsServiceType type);
+
+        /// <summary>
+        /// Gets properties of windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Properties of windows service.
+        /// </returns>
+        PropertyCollection GetWindowsServiceProperties(string serviceName);
     }
 }

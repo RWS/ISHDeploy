@@ -16,6 +16,7 @@
 ﻿using System;
 using System.Collections.Generic;
 ﻿using ISHDeploy.Common.Enums;
+﻿using ISHDeploy.Common.Models;
 ﻿using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -101,5 +102,23 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
         /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
         void CopyValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName, string destLocalMachineSubKeyName);
+
+        /// <summary>
+        /// Gets properties from one registry key
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// Properties from one registry key.
+        /// </returns>
+        PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName);
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="value">The value.</param>
+        void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value);
     }
 }

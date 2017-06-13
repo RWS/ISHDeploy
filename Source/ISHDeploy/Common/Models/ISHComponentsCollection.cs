@@ -37,11 +37,11 @@ namespace ISHDeploy.Common.Models
         /// <param name="name">The name of component</param>
         /// <param name="role">The component's role</param>
         /// <returns>ISHComponent by ISHComponentName</returns>
-        public ISHComponent this[ISHComponentName name, ISHBackgroundTaskRole role]
+        public ISHComponent this[ISHComponentName name, string role]
         {
             get
             {
-                return Components.SingleOrDefault(x => x.Name == name && x.Role != null && x.Role == role.ToString());
+                return Components.SingleOrDefault(x => x.Name == name && x.Role != null && string.Equals(x.Role, role, StringComparison.CurrentCultureIgnoreCase));
             }
         }
 

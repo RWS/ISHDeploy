@@ -236,5 +236,19 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="searchOption">Search option.</param>
         /// <returns>A string array containing list of required file entries.</returns>
         string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+
+        /// <summary>
+        /// Save an object like a file
+        /// </summary>
+        /// <param name="filePath">The path to file</param>
+        /// <param name="data">The object</param>
+        void SaveObjectToFile<T>(string filePath, T data);
+
+        /// <summary>
+        /// Read an object from file
+        /// </summary>
+        /// <param name="filePath">The path to file</param>
+        /// <returns>Deserialized object of type T</returns>
+        T ReadObjectFromFile<T>(string filePath);
     }
 }

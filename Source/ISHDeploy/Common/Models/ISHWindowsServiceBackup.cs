@@ -15,14 +15,14 @@
  */
 
 using System;
-using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Represents the installed windows services that deployment is used.</para>
+    /// <para type="description">Represents the backup of windows service.</para>
     /// </summary>
-    public class ISHWindowsService
+    [Serializable]
+    public class ISHWindowsServiceBackup
     {
         /// <summary>
         /// The name of windows service.
@@ -30,23 +30,13 @@ namespace ISHDeploy.Common.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The status of windows service.
+        /// The properties from WindowsServiceManager.
         /// </summary>
-        public ISHWindowsServiceStatus Status{ get; set; }
+        public PropertyCollection WindowsServiceManagerProperties { get; set; }
 
         /// <summary>
-        /// The type of windows service.
+        /// The properties from RegistryManager.
         /// </summary>
-        public ISHWindowsServiceType Type { get; set; }
-
-        /// <summary>
-        /// The sequence of windows service.
-        /// </summary>
-        public int Sequence { get; set; }
-
-        /// <summary>
-        /// The role of BackgroundTask service.
-        /// </summary>
-        public string Role { get; set; }
+        public PropertyCollection RegistryManagerProperties { get; set; }
     }
 }

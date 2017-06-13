@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 using System.ServiceModel.Security;
+using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Business.Operations.ISHServiceTranslation;
 using ISHDeploy.Common.Enums;
 
@@ -131,7 +132,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
         public int RetriesOnTimeout { get; set; }
 
         /// <summary>
-        /// <para type="description">The interval of polling of pending job.</para>
+        /// <para type="description">The number of TranslationOrganizer services in the system.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The number of TranslationOrganizer services in the system", ParameterSetName = "TranslationOrganizerCount")]
         [ValidateNotNullOrEmpty]
@@ -240,7 +241,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceTranslation
             }
             else if (ParameterSetName == "TranslationOrganizerCount")
             {
-                var operation = new SetISHServiceTranslationOrganizerOperation(Logger, ISHDeployment, Count);
+                var operation = new SetISHServiceAmountOperation(Logger, ISHDeployment, Count, ISHWindowsServiceType.TranslationOrganizer);
 
                 operation.Run();
             }

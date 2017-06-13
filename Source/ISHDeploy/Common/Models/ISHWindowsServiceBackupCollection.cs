@@ -15,38 +15,30 @@
  */
 
 using System;
-using ISHDeploy.Common.Enums;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Represents the installed windows services that deployment is used.</para>
+    /// <para type="description">Represents collection of services with backup properties.</para>
     /// </summary>
-    public class ISHWindowsService
+    [Serializable]
+    [XmlRoot("ISHWindowsServices", Namespace = "")]
+    public class ISHWindowsServiceBackupCollection
     {
         /// <summary>
-        /// The name of windows service.
+        /// List of services
         /// </summary>
-        public string Name { get; set; }
+        [XmlElement("ISHWindowsServiceBackup", Namespace = "")]
+        public List<ISHWindowsServiceBackup> Services { get; set; }
 
         /// <summary>
-        /// The status of windows service.
+        /// Initializes a new instance of the <see cref="ISHWindowsServiceBackupCollection"/> class.
         /// </summary>
-        public ISHWindowsServiceStatus Status{ get; set; }
-
-        /// <summary>
-        /// The type of windows service.
-        /// </summary>
-        public ISHWindowsServiceType Type { get; set; }
-
-        /// <summary>
-        /// The sequence of windows service.
-        /// </summary>
-        public int Sequence { get; set; }
-
-        /// <summary>
-        /// The role of BackgroundTask service.
-        /// </summary>
-        public string Role { get; set; }
+        public ISHWindowsServiceBackupCollection()
+        {
+            Services = new List<ISHWindowsServiceBackup>();
+        }
     }
 }

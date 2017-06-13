@@ -19,7 +19,8 @@ using System.Linq;
 ﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-using Microsoft.Win32;
+﻿using ISHDeploy.Common.Models;
+﻿using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -61,8 +62,13 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private const string VersionRegValue = "Version";
 
+        /// <summary>
+        /// The ISHDeploymentStatus registry value name
+        /// </summary>
+        private const string ISHDeploymentStatusRegValue = "ISHDeploymentStatus";
+
         #endregion
-        
+
         /// <summary>
         /// The logger.
         /// </summary>
@@ -154,7 +160,10 @@ namespace ISHDeploy.Data.Managers
 
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            var status = projectRegKey.GetValue("ISHDeploymentStatus");
+
+            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+
+            var status = historyItem?.GetValue(ISHDeploymentStatusRegValue);
             if (status != null)
             {
                 return (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
@@ -176,7 +185,8 @@ namespace ISHDeploy.Data.Managers
 
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            Registry.SetValue(projectRegKey.Name, "ISHDeploymentStatus", status);
+            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+            Registry.SetValue(historyItem.Name, ISHDeploymentStatusRegValue, status);
         }
 
         /// <summary>
@@ -308,7 +318,44 @@ namespace ISHDeploy.Data.Managers
             {
                 destKey.SetValue(nameOfValue, sourceKey.GetValue(nameOfValue));
             }
-            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}``");
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been copied to `{destLocalMachineSubKeyName}`");
+        }
+
+        /// <summary>
+        /// Gets properties from one registry key
+        /// </summary>
+        /// <param name="namesOfValues">The list of names of values that need to be copied.</param>
+        /// <param name="sourceLocalMachineSubKeyName">The registry path to source sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <returns>
+        /// Properties from one registry key.
+        /// </returns>
+        public PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName)
+        {
+            _logger.WriteDebug($"Gets values from `{sourceLocalMachineSubKeyName}` registry key");
+
+            var result = new PropertyCollection();
+            var sourceKey = Registry.LocalMachine.OpenSubKey(sourceLocalMachineSubKeyName);
+            foreach (var nameOfValue in namesOfValues)
+            {
+                var value = sourceKey.GetValue(nameOfValue);
+                result.Properties.Add(new Property { Name = nameOfValue, Value = value});
+            }
+            _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been got");
+            return result;
+        }
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
+        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="value">The value.</param>
+        public void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value)
+        {
+            _logger.WriteDebug($"Sets value to `{destLocalMachineSubKeyName}` registry key");
+
+            var destKey = Registry.LocalMachine.OpenSubKey(destLocalMachineSubKeyName, true);
+            destKey.SetValue(nameOfValue, value);
         }
     }
 }

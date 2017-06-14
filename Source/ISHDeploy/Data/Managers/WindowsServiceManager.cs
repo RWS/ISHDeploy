@@ -317,14 +317,12 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Set windows service credentials", serviceName);
 
-            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-WindowsServiceCredentials.ps1",
-                new Dictionary<string, string>
-                {
-                    { "$name", serviceName },
-                    { "$username", userName },
-                    { "$password", password }
-                },
-                "Setting windows service credentials");
+            string fullServiceName = $"Win32_Service.Name='{serviceName}'";
+
+            ManagementObject mo = new ManagementObject(fullServiceName);
+            
+            mo.InvokeMethod("Change", new object[]
+              { null, null, null, null, null, null, userName, password, null, null, null });
 
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
         }

@@ -70,6 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
            // For version 12.X.X only
             DeleteExtensionsLoaderFile();
@@ -131,7 +132,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
 		    {
 		        // Recreate ISH windows services
-		        var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 		        var services = serviceManager.GetServices(
 		            ishDeployment.Name,
 		            (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType))).ToList();
@@ -151,6 +151,21 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
 		    }
+            else if (doRollbackOfOSUserAndOSPassword)
+            {
+                var services = serviceManager.GetServices(
+                     ishDeployment.Name,
+                     (ISHWindowsServiceType[])Enum.GetValues(typeof(ISHWindowsServiceType))).ToList();
+
+                foreach (var service in services)
+                {
+                    _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, 
+                        vanillaInputParameters.OSUser,
+                        vanillaInputParameters.OSUser,
+                        vanillaInputParameters.OSPassword,
+                        vanillaInputParameters.OSPassword));
+                }
+            }
 
 
             // Check if this operation has implications for several Deployments

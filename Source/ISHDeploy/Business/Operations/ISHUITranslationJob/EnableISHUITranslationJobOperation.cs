@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// <summary>
         /// The actions invoker.
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableISHUITranslationJobOperation"/> class.
@@ -40,11 +40,11 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         public EnableISHUITranslationJobOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Enabling of InfoShare translation job");
+            Invoker = new ActionInvoker(logger, "Enabling of InfoShare translation job");
             
-            _invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
-            _invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TranslationJobAttribute, true));
-            _invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
+            Invoker.AddAction(new UncommentNodesByPrecedingPatternAction(logger, EventMonitorMenuBarXmlPath, EventMonitorMenuBarXml.EventMonitorTranslationJobs));
+            Invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, TopDocumentButtonBarXmlPath, TopDocumentButtonBarXml.TranslationJobAttribute, true));
+            Invoker.AddAction(new UncommentBlockAction(logger, AuthorASPTreeHtmPath, AuthorASPTreeHtm.TranslationJobHack));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHUITranslationJob
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

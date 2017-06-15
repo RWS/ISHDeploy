@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The file manager
@@ -67,7 +67,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public UndoISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
 		{
-            _invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
+            Invoker = new ActionInvoker(logger, "Reverting of changes to Vanilla state");
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
@@ -75,27 +75,27 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             DeleteExtensionsLoaderFile();
 
             // Remove redundant files from BIN
-            _invoker.AddAction(new DirectoryBinReturnToVanila(
+            Invoker.AddAction(new DirectoryBinReturnToVanila(
                 logger, 
                 BackupFolderPath, 
                 "vanilla.web.author.asp.bin.xml",
                 $@"{WebFolderPath}\Author\ASP\bin"));
 
             // Disable internal STS login (remove directory) 
-            _invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
+            Invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
 
             if (!SkipRecycle)
             {
                 // Stop Application pools before undo
-                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-                _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
+                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
                 // Cleaning up STS App_Data folder
-                _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
+                Invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
             }
 
             // Disable Windows Authentication for STS web site
-            _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
+            Invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
             // Restore InputParameters.xml
             Models.InputParameters vanillaInputParameters;
@@ -105,7 +105,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             {
                 var dictionary = xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.VanillaPath);
                 vanillaInputParameters = new Models.InputParameters(InputParametersFilePath.VanillaPath, dictionary);
-                _invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
+                Invoker.AddAction(new FileCopyAction(logger, InputParametersFilePath.VanillaPath, InputParametersFilePath.AbsolutePath,
                     true));
             }
             else
@@ -122,10 +122,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
             // change registry
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
 
 
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
@@ -137,8 +137,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		            (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType))).ToList();
 		        foreach (var service in services)
 		        {
-		            _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-		            _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+		            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+		            Invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
 		        }
 
 		        var backedUpWindowsServices =
@@ -147,7 +147,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 		        foreach (var service in backedUpWindowsServices.Services)
 		        {
-                    _invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
+                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
 		    }
@@ -164,62 +164,62 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             {
                 foreach (var comPlusComponent in comPlusComponents)
                 {
-                    _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                    Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                         $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
 
-                    _invoker.AddAction(
+                    Invoker.AddAction(
                             new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                 }
             }
 
             if (doRollbackOfOSUserAndOSPassword)
             {
-                _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                     "The rolling back of credentials for COM+ components has implications across all deployments."));
 
                 // Rolling back credentials for COM+ component
-                _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
+                Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
                     vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
                     vanillaInputParameters.OSPassword));
             }
 
             // Rolling back changes for Web folder
-            _invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
+            Invoker.AddAction(new FileCopyDirectoryAction(logger, BackupWebFolderPath, WebFolderPath));
 
 			// Rolling back changes for Data folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
+			Invoker.AddAction(new FileCopyDirectoryAction(logger, BackupDataFolderPath, DataFolderPath));
             
 			// Rolling back changes for App folder
-			_invoker.AddAction(new FileCopyDirectoryAction(logger, BackupAppFolderPath, AppFolderPath));
+			Invoker.AddAction(new FileCopyDirectoryAction(logger, BackupAppFolderPath, AppFolderPath));
 
             // Removing licenses
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
+            Invoker.AddAction(new FileCleanDirectoryAction(logger, LicenceFolderPath.AbsolutePath));
 
             #region Rolling back OSUser credentials for AppPools
 
             // WS
             if (doRollbackOfOSUserAndOSPassword)
             {
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.WSAppPoolName,
                     ApplicationPoolProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.WSAppPoolName,
                     ApplicationPoolProperty.password,
                     vanillaInputParameters.OSPassword));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
                     WebConfigurationProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
@@ -227,7 +227,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     vanillaInputParameters.OSPassword));
             }
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.identityType,
@@ -236,26 +236,26 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // STS
             if (doRollbackOfOSUserAndOSPassword)
             {
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.STSAppPoolName,
                     ApplicationPoolProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.STSAppPoolName,
                     ApplicationPoolProperty.password,
                     vanillaInputParameters.OSPassword));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
                     WebConfigurationProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
@@ -263,7 +263,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     vanillaInputParameters.OSPassword));
             }
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.identityType,
@@ -272,26 +272,26 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // CM
             if (doRollbackOfOSUserAndOSPassword)
             {
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.CMAppPoolName,
                     ApplicationPoolProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger,
                     InputParameters.CMAppPoolName,
                     ApplicationPoolProperty.password,
                     vanillaInputParameters.OSPassword));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
                     WebConfigurationProperty.userName,
                     vanillaInputParameters.OSUser));
 
-                _invoker.AddAction(new SetWebConfigurationPropertyAction(
+                Invoker.AddAction(new SetWebConfigurationPropertyAction(
                     Logger,
                     $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
                     "system.webServer/security/authentication/anonymousAuthentication",
@@ -299,7 +299,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     vanillaInputParameters.OSPassword));
             }
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.identityType,
@@ -310,31 +310,31 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             if (!SkipRecycle)
             {
                 // Recycling Application pools after undo
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
 
                 // Waiting until files becomes unlocked
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
                 
                 // Enable COM+ components
                 foreach (var comPlusComponent in comPlusComponents)
                 {
-                    _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                    Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                         $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
 
-                    _invoker.AddAction(
+                    Invoker.AddAction(
                             new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                 }
             }
 
 			// Removing Backup folder
-			_invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
+			Invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
 
             // Remove Author\ASP\Custom
-            _invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
+            Invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             {
                 Logger.WriteDebug("Delete file", ExtensionsLoaderFilePath.RelativePath);
 
-                _invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
+                Invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
             }
         }
 
@@ -355,7 +355,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
 	}
 }

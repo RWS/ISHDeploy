@@ -37,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The name of default role
@@ -59,10 +59,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10. Supply an argument that is less than or equal to 10 and then try the command again");
             }
 
-            _invoker = new ActionInvoker(logger, $"Setting of amount of {ISHWindowsServiceType.BackgroundTask} windows services");
+            Invoker = new ActionInvoker(logger, $"Setting of amount of {ISHWindowsServiceType.BackgroundTask} windows services");
 
             // Make sure Vanilla backup of all windows services exists
-            _invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
@@ -80,13 +80,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
                 foreach (var service in servicesForDeleting)
                 {
-                    _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                    Invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
 
                 if (amount == 0)
                 {
-                    _invoker.AddAction(new RemoveISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath, role));
+                    Invoker.AddAction(new RemoveISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath, role));
                 }
             }
             else if (services.Count() < amount)
@@ -106,7 +106,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         var backedUpWindowsService = fileManager.ReadObjectFromFile<Models.ISHWindowsServiceBackupCollection>(
                                 VanillaPropertiesOfWindowsServicesFilePath).Services.FirstOrDefault(x => x.Name.Contains(ISHWindowsServiceType.BackgroundTask.ToString()));
 
-                        _invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, InputParameters.OSUser, InputParameters.OSPassword));
+                        Invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, InputParameters.OSUser, InputParameters.OSPassword));
 
                         service = new Models.ISHWindowsService { Name = backedUpWindowsService.Name, Sequence = 1, Status = ISHWindowsServiceStatus.Stopped, Role = role, Type = ISHWindowsServiceType.BackgroundTask };
 
@@ -124,12 +124,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
                 for (int i = services.Count(); i < amount; i++)
                 {
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword, role));
+                    Invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword, role));
                 }
 
                 if (templateServiceHasBeenCreated)
                 {
-                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+                    Invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
 
                 if (
@@ -138,7 +138,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             x.Name == ISHComponentName.BackgroundTask &&
                             string.Equals(x.Role, role, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    _invoker.AddAction(new AddISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath,
+                    Invoker.AddAction(new AddISHBackgroundTaskComponentAction(Logger, CurrentISHComponentStatesFilePath,
                         role));
                 }
             }
@@ -149,7 +149,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -47,10 +47,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         public EnableISHIntegrationSTSInternalAuthenticationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string lCHost, string lCWebAppName) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Enable internal STS access.");
+            Invoker = new ActionInvoker(logger, "Enable internal STS access.");
 
             // first we need to delete directory
-            _invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
+            Invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
 
             // Files content generation 
             var indexContent = string.Empty;
@@ -63,8 +63,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
                 result => indexContent = result)).Execute();
 
             // Create index.html and copy connectionconfiguration.xml files
-            _invoker.AddAction(new FileCreateAction(Logger, Path.Combine(InternalSTSFilelPath.AbsolutePath, InternalSTSLogin.IndexName), indexContent));
-            _invoker.AddAction(new FileCopyToDirectoryAction(logger, InternalSTSSourceConnectionConfigurationFile, InternalSTSFilelPath.AbsolutePath, true));
+            Invoker.AddAction(new FileCreateAction(Logger, Path.Combine(InternalSTSFilelPath.AbsolutePath, InternalSTSLogin.IndexName), indexContent));
+            Invoker.AddAction(new FileCopyToDirectoryAction(logger, InternalSTSSourceConnectionConfigurationFile, InternalSTSFilelPath.AbsolutePath, true));
 
             // Get authenticationType attribute value from Web\InfoShareSTS\Configuration\infoShareSTS.config 
             string authenticationToChange, urlToChange, authenticationType = string.Empty;
@@ -83,8 +83,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
             }
 
             // Change new created connectionconfiguration.xml
-            _invoker.AddAction(new SetElementValueAction(Logger, InternalSTSNewConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
-            _invoker.AddAction(new SetElementValueAction(Logger, InternalSTSNewConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, urlToChange));
+            Invoker.AddAction(new SetElementValueAction(Logger, InternalSTSNewConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, authenticationToChange));
+            Invoker.AddAction(new SetElementValueAction(Logger, InternalSTSNewConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, urlToChange));
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

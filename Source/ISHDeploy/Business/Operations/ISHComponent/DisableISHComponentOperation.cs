@@ -134,6 +134,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
                         }
                         break;
+                    case ISHComponentName.BackgroundTask:
+                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask);
+                        foreach (var service in services)
+                        {
+                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                        }
+                        break;
                     default:
                         Logger.WriteDebug($"Unsupported component type: {component.Name}");
                         break;
@@ -160,6 +167,49 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 false));
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, string backgroundTaskRole) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+            var componentsCollection =
+                dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask);
+                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+            }
+
+            if (changeStateOfComponentsInTrackingFile)
+            {
+                Invoker.AddAction(
+                    new SaveISHComponentAction(
+                        Logger,
+                        CurrentISHComponentStatesFilePath,
+                        component.Role,
+                        false));
             }
         }
 

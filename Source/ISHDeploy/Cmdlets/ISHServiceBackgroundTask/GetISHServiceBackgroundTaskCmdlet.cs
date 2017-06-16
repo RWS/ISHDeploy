@@ -24,15 +24,20 @@ using ISHDeploy.Data.Managers.Interfaces;
 namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
 {
     /// <summary>
-    /// <para type="synopsis">Gets list of windows services for Crawler.</para>
-    /// <para type="description">The Get-ISHServiceBackgroundTask cmdlet gets list of Crawler windows services.</para>
+    /// <para type="synopsis">Gets list of windows services for BackgroundTask.</para>
+    /// <para type="description">The Get-ISHServiceBackgroundTask cmdlet gets list of BackgroundTask windows services.</para>
     /// <para type="link">Set-ISHServiceBackgroundTask</para>
     /// <para type="link">Enable-ISHServiceBackgroundTask</para>
     /// <para type="link">Disable-ISHServiceBackgroundTask</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Get-ISHServiceBackgroundTask -ISHDeployment $deployment</code>
-    /// <para>This command shows the Crawler windows services.
+    /// <para>This command shows the BackgroundTask windows services.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Get-ISHServiceBackgroundTask -ISHDeployment $deployment -Role "PublishOnly"</code>
+    /// <para>This command shows the BackgroundTask windows services with role "PublishOnly".
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHServiceBackgroundTask")]

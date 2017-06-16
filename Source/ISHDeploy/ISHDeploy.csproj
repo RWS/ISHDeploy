@@ -131,6 +131,8 @@
     <Compile Include="Cmdlets\ISHIntegrationDB\GetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\SetISHIntegrationDBCmdlet.cs" />
     <Compile Include="Cmdlets\ISHIntegrationDB\TestISHIntegrationDBCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceBackgroundTask\DisableISHServiceBackgroundTaskCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceBackgroundTask\EnableISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\GetISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\DisableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\EnableISHServiceFullTextIndexCmdlet.cs" />
@@ -522,7 +524,6 @@
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
-    <EmbeddedResource Include="Data\Resources\Set-COMPlusComponentCredentials.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-COMPlusComponentEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsServiceEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Enable-COMPlusComponent.ps1" />
@@ -537,7 +538,17 @@
     </None>
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="COMAdmin">
+      <Guid>{F618C513-DFB8-11D1-A2CF-00805FC79235}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="Properties\AssemblyInfo.targets" />
   <Import Project="Properties\ModuleManifest.targets" />

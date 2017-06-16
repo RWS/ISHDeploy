@@ -524,7 +524,6 @@
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
-    <EmbeddedResource Include="Data\Resources\Set-COMPlusComponentCredentials.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-COMPlusComponentEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsServiceEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Enable-COMPlusComponent.ps1" />
@@ -539,7 +538,17 @@
     </None>
     <EmbeddedResource Include="Data\Resources\Templates\CM Security Token Service Requirements.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="COMAdmin">
+      <Guid>{F618C513-DFB8-11D1-A2CF-00805FC79235}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Resources\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js" />
   </ItemGroup>

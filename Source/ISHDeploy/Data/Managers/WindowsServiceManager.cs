@@ -67,7 +67,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Running)
                 {
                     service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(20));
+                    WaitForStatus(service, ServiceControllerStatus.Running);
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
                 }
                 else
@@ -94,7 +94,7 @@ namespace ISHDeploy.Data.Managers
                 if (service.Status != ServiceControllerStatus.Stopped)
                 {
                     service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
+                    WaitForStatus(service, ServiceControllerStatus.Stopped);
                     _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
                 }
                 else
@@ -105,6 +105,33 @@ namespace ISHDeploy.Data.Managers
             catch (Exception ex)
             {
                 _logger.WriteError(ex.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Waiting of windows service status
+        /// </summary>
+        /// <param name="service">The windows service controller</param>
+        /// <param name="status">The service status</param>
+        private void WaitForStatus(ServiceController service, ServiceControllerStatus status)
+        {
+            int numberOfTries = 0;
+            while (service.Status != status && numberOfTries < 6)
+            {
+                try
+                {
+                    service.WaitForStatus(status, TimeSpan.FromMinutes(5));
+                }
+                catch (Exception)
+                {
+                    _logger.WriteVerbose($"The service `{service.DisplayName}` does not change the status for too long");
+                    numberOfTries++;
+
+                    if (service.Status != status && numberOfTries >= 6)
+                    {
+                        throw;
+                    }
+                }
             }
         }
 
@@ -290,14 +317,12 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Set windows service credentials", serviceName);
 
-            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-WindowsServiceCredentials.ps1",
-                new Dictionary<string, string>
-                {
-                    { "$name", serviceName },
-                    { "$username", userName },
-                    { "$password", password }
-                },
-                "Setting windows service credentials");
+            string fullServiceName = $"Win32_Service.Name='{serviceName}'";
+
+            ManagementObject mo = new ManagementObject(fullServiceName);
+            
+            mo.InvokeMethod("Change", new object[]
+              { null, null, null, null, null, null, userName, password, null, null, null });
 
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
         }

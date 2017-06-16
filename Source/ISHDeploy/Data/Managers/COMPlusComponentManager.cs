@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using COMAdmin;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
@@ -60,14 +62,21 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Set COM+ component credentials", comPlusComponentName);
 
-            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Set-COMPlusComponentCredentials.ps1",
-                new Dictionary<string, string>
+            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
+
+            var applications = comAdminCatalog.GetCollection("Applications");
+            applications.Populate();
+            foreach (ICatalogObject applicationInstance in applications)
+            {
+                if (string.Equals(applicationInstance.Name, comPlusComponentName,
+                    StringComparison.CurrentCultureIgnoreCase))
                 {
-                    { "$name", comPlusComponentName },
-                    { "$username", userName },
-                    { "$password", password }
-                },
-                "Setting of COM+ component credentials");
+                    applicationInstance.set_Value("Identity", userName);
+                    applicationInstance.set_Value("Password", password);
+                }
+                
+            }
+            applications.SaveChanges();
 
             _logger.WriteVerbose($"Credentials for the COM+ component `{comPlusComponentName}` has been chenged");
         }

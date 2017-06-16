@@ -53,22 +53,6 @@ $scriptBlockGetISHServiceBackgroundTask = {
 
 }
 
-
-$scriptBlockEnableISHServiceBackgroundTask = {
-    param (
-        $ishDeployName
-
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Enable-ISHServiceBackgroundTask -ISHDeployment $ishDeploy
-
-}
-
 $scriptBlockEnableISHServiceBackgroundTask = {
     param (
         $ishDeployName,
@@ -80,9 +64,11 @@ $scriptBlockEnableISHServiceBackgroundTask = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Enable-ISHServiceBackgroundTask -ISHDeployment $ishDeploy @parameters
+    if($parameters -eq $null) {
+        $parameters = @{}
+    }
 
+    Enable-ISHServiceBackgroundTask -ISHDeployment $ishDeploy @parameters
 }
 
 $scriptBlockDisableISHServiceBackgroundTask = {

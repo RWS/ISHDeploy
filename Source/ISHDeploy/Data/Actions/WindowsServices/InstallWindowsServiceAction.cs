@@ -78,7 +78,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
 
             foreach (var prop in _service.RegistryManagerProperties.Properties)
             {
-                _registryManager.SetValue($@"SYSTEM\CurrentControlSet\Services\{_service.Name}", prop.Name, prop.Value);
+                _registryManager.SetValue($@"HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{_service.Name}", prop.Name, prop.Value);
             }
         }
     }

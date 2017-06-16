@@ -52,32 +52,26 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         {
             var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             var databaseManager = ObjectFactory.GetInstance<IDatabaseManager>();
-            var nameOfInfoShareAuthorRegistryElement = $"InfoShareAuthor{InputParameters.ProjectSuffix}";
-            var nameOfInfoShareBuildersRegistryElement = $"InfoShareBuilders{InputParameters.ProjectSuffix}";
 
-            var keyPathToInfoShareAuthor = string.Format(trisoftRegistryManager.PathsToRegistryValues[RegistryValueName.DbConnectionString][0], nameOfInfoShareAuthorRegistryElement);
-            var keyNameInfoShareBuilders = string.Format(trisoftRegistryManager.PathsToRegistryValues[RegistryValueName.DbConnectionString][0], nameOfInfoShareBuildersRegistryElement);
 
             // Get ConnectionString and DatabaseType for InfoShareAuthor and InfoShareBuilders
-            var infoShareAuthorConnectionString = trisoftRegistryManager.GetRegistryValue(RegistryValueName.DbConnectionString, nameOfInfoShareAuthorRegistryElement).ToString().ToLower();
-            var infoShareAuthorDatabaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(RegistryValueName.DatabaseType, nameOfInfoShareAuthorRegistryElement).ToString());
+            var infoShareAuthorConnectionString = trisoftRegistryManager.GetRegistryValue(InfoShareAuthorRegistryElement, RegistryValueName.Connect.ToString()).ToString().ToLower();
+            var infoShareAuthorDatabaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(InfoShareAuthorRegistryElement, RegistryValueName.ComponentName.ToString()).ToString());
 
-            var infoShareBuildersConnectionString = trisoftRegistryManager.GetRegistryValue(RegistryValueName.DbConnectionString, nameOfInfoShareBuildersRegistryElement).ToString().ToLower();
-            var infoShareBuildersDatabaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(RegistryValueName.DatabaseType, nameOfInfoShareBuildersRegistryElement).ToString());
+            var infoShareBuildersConnectionString = trisoftRegistryManager.GetRegistryValue(InfoShareBuildersRegistryElement, RegistryValueName.Connect.ToString()).ToString().ToLower();
+            var infoShareBuildersDatabaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(InfoShareBuildersRegistryElement, RegistryValueName.ComponentName.ToString()).ToString());
 
             // Compare values
             bool isConnectionStringValid = infoShareAuthorConnectionString == infoShareBuildersConnectionString;
             if (!isConnectionStringValid)
             {
-                var valueName = trisoftRegistryManager.PathsToRegistryValues[RegistryValueName.DbConnectionString][1];
-                Logger.WriteWarning($"The value `{valueName}` for `{keyPathToInfoShareAuthor}` is not the same as for `{keyNameInfoShareBuilders}`");
+                Logger.WriteWarning($"The value `{RegistryValueName.Connect}` for `{InfoShareAuthorRegistryElement}` is not the same as for `{InfoShareBuildersRegistryElement}`");
             }
 
             isConnectionStringValid = isConnectionStringValid && infoShareAuthorDatabaseType == infoShareBuildersDatabaseType;
             if (!isConnectionStringValid)
             {
-                var valueName = trisoftRegistryManager.PathsToRegistryValues[RegistryValueName.DatabaseType][1];
-                Logger.WriteWarning($"The value `{valueName}` for `{keyPathToInfoShareAuthor}` is not the same as for `{keyNameInfoShareBuilders}`");
+                Logger.WriteWarning($"The value `{RegistryValueName.ComponentName}` for `{InfoShareAuthorRegistryElement}` is not the same as for `{InfoShareBuildersRegistryElement}`");
             }
 
             isConnectionStringValid = isConnectionStringValid && databaseManager.TestConnection(_connectionString);

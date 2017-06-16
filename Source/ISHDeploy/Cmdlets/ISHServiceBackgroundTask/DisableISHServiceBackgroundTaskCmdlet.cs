@@ -15,7 +15,6 @@
  */
 ﻿using System.Management.Automation;
 ﻿using ISHDeploy.Business.Operations.ISHComponent;
-﻿using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
 {

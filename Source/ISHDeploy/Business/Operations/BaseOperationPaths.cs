@@ -374,6 +374,16 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath CurrentISHComponentStatesFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Trisoft\\Tridk\\TridkApp\\InfoShareAuthor..." element of registry.
+        /// </summary>
+        protected string InfoShareAuthorRegistryElement { get; }
+
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Trisoft\\Tridk\\TridkApp\\InfoShareBuilders..." element of registry.
+        /// </summary>
+        protected string InfoShareBuildersRegistryElement { get; }
+
         #endregion
 
         /// <summary>
@@ -439,6 +449,13 @@ namespace ISHDeploy.Business.Operations
             // To avoid possible problems in the future (if ISHComponent model change) decided to add the version to the file name,
             // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
             CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.v1.xml");
+
+            var relativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\Trisoft" : @"SOFTWARE\Trisoft";
+            InfoShareAuthorRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{relativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
+            InfoShareAuthorRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{relativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
+
             #endregion
         }
 

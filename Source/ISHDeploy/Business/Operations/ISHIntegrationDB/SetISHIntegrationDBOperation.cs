@@ -46,10 +46,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             Invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
             // change registry
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.Connect, connectionString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.ComponentName, databaseType));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.Connect, connectionString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.ComponentName, databaseType));
 
             // change inputparameters.xml
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));

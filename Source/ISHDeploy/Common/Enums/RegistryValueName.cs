@@ -23,11 +23,16 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// Db connection string
         /// </summary>
-        DbConnectionString,
+        Connect,
 
         /// <summary>
         /// Database type
         /// </summary>
-        DatabaseType
+        ComponentName,
+
+        /// <summary>
+        /// SolrLuceneBaseUrl
+        /// </summary>
+        SolrLuceneBaseUrl
     }
 }

@@ -27,11 +27,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
     public interface ITrisoftRegistryManager
     {
         /// <summary>
-        /// The path to of "SOFTWARE\Trisoft\InstallTool"
-        /// </summary>
-        Dictionary<RegistryValueName, string[]> PathsToRegistryValues { get; }
-
-        /// <summary>
         /// The path to of "SOFTWARE\Trisoft"
         /// </summary>
         string RelativeTrisoftRegPath { get; }
@@ -72,19 +67,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
         Version GetInstalledProjectVersion(RegistryKey projectRegKey);
 
         /// <summary>
-        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// Gets the specified value on the specified registry key.
         /// </summary>
-        /// <param name="registryValueName">The name of the name/value pair</param>
-        /// <param name="value">The value to be stored</param>
-        /// <param name="parameters">Additional parameters</param>
-        void SetRegistryValue(RegistryValueName registryValueName, object value, params object[] parameters);
-
-        /// <summary>
-        ///  Gets the specified value on the specified registry key.
-        /// </summary>
-        /// <param name="registryValueName">The name of the name/value pair</param>
-        /// <param name="parameters">Additional parameters</param>
-        object GetRegistryValue(RegistryValueName registryValueName, params object[] parameters);
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
+        object GetRegistryValue(string keyName, string valueName);
 
         /// <summary>
         /// Gets names of all values of registry key.
@@ -116,9 +103,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         /// Sets value in registry key
         /// </summary>
-        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
-        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
         /// <param name="value">The value.</param>
-        void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value);
+        void SetValue(string keyName, string valueName, object value);
     }
 }

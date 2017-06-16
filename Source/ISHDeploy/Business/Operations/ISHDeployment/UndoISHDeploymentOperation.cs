@@ -123,10 +123,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
             // change registry
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
 
 
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))

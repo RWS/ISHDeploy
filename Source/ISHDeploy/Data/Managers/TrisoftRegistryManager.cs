@@ -84,10 +84,6 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private readonly string _relativeInstallToolTrisoftRegPath;
 
-        /// <summary>
-        /// The path to of "SOFTWARE\Trisoft\InstallTool"
-        /// </summary>
-        public Dictionary<RegistryValueName, string[]> PathsToRegistryValues { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrisoftRegistryManager"/> class.
@@ -97,13 +93,8 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             RelativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? "SOFTWARE\\Wow6432Node\\Trisoft" : "SOFTWARE\\Trisoft";
-            PathsToRegistryValues = new Dictionary<RegistryValueName, string[]>
-            {
-                { RegistryValueName.DbConnectionString, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "Connect" } },
-                { RegistryValueName.DatabaseType, new []{ $"HKEY_LOCAL_MACHINE\\{RelativeTrisoftRegPath}\\Tridk\\TridkApp\\{{0}}", "ComponentName" } }
-            };
+            
             _relativeInstallToolTrisoftRegPath = $"{RelativeTrisoftRegPath}\\InstallTool";
-
         }
 
         /// <summary>
@@ -258,29 +249,12 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        ///  Sets the specified name/value pair on the specified registry key. If the specified key does not exist, it is created.
+        /// Gets the specified value on the specified registry key.
         /// </summary>
-        /// <param name="registryValueName">The name of the name/value pair</param>
-        /// <param name="value">The value to be stored</param>
-        /// <param name="parameters">Additional parameters</param>
-        public void SetRegistryValue(RegistryValueName registryValueName, object value, params object[] parameters)
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
+        public object GetRegistryValue(string keyName, string valueName)
         {
-            var keyName = string.Format(PathsToRegistryValues[registryValueName][0], parameters);
-            var valueName = PathsToRegistryValues[registryValueName][1];
-            _logger.WriteDebug("Set registry value", keyName, valueName, value);
-            Registry.SetValue(keyName, valueName, value);
-            _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` has been set to `{value}`");
-        }
-
-        /// <summary>
-        ///  Gets the specified value on the specified registry key.
-        /// </summary>
-        /// <param name="registryValueName">The name of the name/value pair</param>
-        /// <param name="parameters">Additional parameters</param>
-        public object GetRegistryValue(RegistryValueName registryValueName, params object[] parameters)
-        {
-            var keyName = string.Format(PathsToRegistryValues[registryValueName][0], parameters);
-            var valueName = PathsToRegistryValues[registryValueName][1];
             _logger.WriteDebug("Get registry value", keyName, valueName);
             var value = Registry.GetValue(keyName, valueName, null);
             _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` is `{value}`");
@@ -347,15 +321,14 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Sets value in registry key
         /// </summary>
-        /// <param name="destLocalMachineSubKeyName">The registry path to destination sub key under LocalMachine (HKEY_LOCAL_MACHINE).</param>
-        /// <param name="nameOfValue">The The name of value.</param>
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
         /// <param name="value">The value.</param>
-        public void SetValue(string destLocalMachineSubKeyName, string nameOfValue, object value)
+        public void SetValue(string keyName, string valueName, object value)
         {
-            _logger.WriteDebug($"Sets value to `{destLocalMachineSubKeyName}` registry key");
+            _logger.WriteDebug($"Sets value to `{keyName}` registry key");
 
-            var destKey = Registry.LocalMachine.OpenSubKey(destLocalMachineSubKeyName, true);
-            destKey.SetValue(nameOfValue, value);
+            Registry.SetValue(keyName, valueName, value);
         }
     }
 }

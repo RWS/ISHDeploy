@@ -27,19 +27,19 @@ namespace ISHDeploy.Data.Actions.Registry
     public class SetRegistryValueAction : BaseAction
     {
         /// <summary>
-        /// The name of the name/value pair.
+        /// The registry key name.
         /// </summary>
-        private readonly RegistryValueName _registryValueName;
+        private readonly string _keyName;
+
+        /// <summary>
+        /// The name of registry value.
+        /// </summary>
+        private readonly string _valueName;
 
         /// <summary>
         /// The value to be stored.
         /// </summary>
         private readonly object _value;
-
-        /// <summary>
-        /// Additional parameters.
-        /// </summary>
-        private readonly object[] _parameters;
 
         /// <summary>
         /// The registry manager
@@ -50,25 +50,25 @@ namespace ISHDeploy.Data.Actions.Registry
         /// Initializes a new instance of the <see cref="SetRegistryValueAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="registryValueName">The name of the name/value pair</param>
-        /// <param name="value">The value to be stored.</param>
-        /// <param name="parameters">Additional parameters</param>
-        public SetRegistryValueAction(ILogger logger, RegistryValueName registryValueName, object value, params object[] parameters) 
-			: base(logger)
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of registry value.</param>
+        /// <param name="value">The value.</param>
+        public SetRegistryValueAction(ILogger logger, string keyName, RegistryValueName valueName, object value)
+            : base(logger)
         {
-            _registryValueName = registryValueName;
+            _keyName = keyName;
+            _valueName = valueName.ToString();
             _value = value;
-            _parameters = parameters;
 
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
         }
 
-		/// <summary>
-		/// Executes the action.
-		/// </summary>
-		public override void Execute()
+        /// <summary>
+        /// Executes the action.
+        /// </summary>
+        public override void Execute()
 		{
-            _registryManager.SetRegistryValue(_registryValueName, _value, _parameters);
-		}
+            _registryManager.SetValue(_keyName, _valueName, _value);
+        }
 	}
 }

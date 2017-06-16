@@ -106,7 +106,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, TimeSpan httpTimeout, string exceptionMessage) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
+            Invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
 
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -138,14 +138,14 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     }
                 }
 
-                _invoker.AddAction(new SetElementAction(
+                Invoker.AddAction(new SetElementAction(
                    logger,
                    filePath,
                    worldServerConfiguration,
                    true,
                    exceptionMessage));
 
-                _invoker.AddAction(
+                Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         filePath,
                         $"{worldServerConfiguration.XPath}/@httpTimeout",

@@ -155,7 +155,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
                 foreach (var service in services)
                 {
-                    _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, 
+                    Invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, 
                         vanillaInputParameters.OSUser,
                         vanillaInputParameters.OSUser,
                         vanillaInputParameters.OSPassword,

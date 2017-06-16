@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, string exceptionMessage) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
+            Invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
 
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -82,7 +82,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     }
                 }
 
-                _invoker.AddAction(new SetElementAction(
+                Invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,
                     worldServerConfiguration));
@@ -163,7 +163,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

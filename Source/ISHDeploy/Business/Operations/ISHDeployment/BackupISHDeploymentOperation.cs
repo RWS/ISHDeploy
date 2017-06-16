@@ -31,7 +31,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackupISHDeploymentOperation"/> class.
@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public BackupISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string parameterSetName, string[] path) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Backup files.");
+            Invoker = new ActionInvoker(logger, "Backup files.");
             string sourceFolderPath, destinationFolderPath;
 
             switch (parameterSetName)
@@ -66,7 +66,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             foreach (var template in path)
             {
-                _invoker.AddAction(new BackupAction(logger, sourceFolderPath, destinationFolderPath, template));
+                Invoker.AddAction(new BackupAction(logger, sourceFolderPath, destinationFolderPath, template));
             }
         }
 
@@ -75,7 +75,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

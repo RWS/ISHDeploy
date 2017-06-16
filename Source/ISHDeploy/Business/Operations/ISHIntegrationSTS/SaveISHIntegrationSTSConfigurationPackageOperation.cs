@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// <summary>
         /// The actions invoker.
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaveISHIntegrationSTSConfigurationPackageOperation" /> class.
@@ -47,14 +47,14 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         public SaveISHIntegrationSTSConfigurationPackageOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, bool packAdfsInvokeScript = false) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
+            Invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             var packageFilePath = Path.Combine(PackagesFolderPath, fileName);
             var version = new Version(  ishDeployment.SoftwareVersion.Major,
                                         ishDeployment.SoftwareVersion.Minor,
                                         ishDeployment.SoftwareVersion.Revision);
             var temporaryFolder = Path.Combine(Path.GetTempPath(), $"ISHDeploy{version}");
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
+            Invoker.AddAction(new DirectoryEnsureExistsAction(logger, temporaryFolder));
             var temporaryCertificateFilePath = Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ISHWSCertificateFileName);
 
             var stsConfigParams = new Dictionary<string, string>
@@ -67,17 +67,17 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
                     };
 
 
-            _invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
-            _invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
+            Invoker.AddAction(new SaveThumbprintAsCertificateAction(logger, temporaryCertificateFilePath, InfoShareWSWebConfigPath.AbsolutePath, InfoShareWSWebConfig.CertificateThumbprintXPath));
+            Invoker.AddAction(new FileReadAllTextAction(logger, temporaryCertificateFilePath, result => stsConfigParams["$ishwscontent"] = result));
 
-            _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
+            Invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                 TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName,
                 Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.CMSecurityTokenServiceTemplateFileName),
                 stsConfigParams));
 
             if (packAdfsInvokeScript)
             {
-                _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
+                Invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     TemporarySTSConfigurationFileNames.ADFSInvokeTemplate,
                     Path.Combine(temporaryFolder, TemporarySTSConfigurationFileNames.ADFSInvokeTemplate),
                     new Dictionary<string, string>
@@ -90,8 +90,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
                     }));
             }
 
-            _invoker.AddAction(new DirectoryCreateZipPackageAction(logger, temporaryFolder, packageFilePath));
-            _invoker.AddAction(new DirectoryRemoveAction(logger, temporaryFolder));
+            Invoker.AddAction(new DirectoryCreateZipPackageAction(logger, temporaryFolder, packageFilePath));
+            Invoker.AddAction(new DirectoryRemoveAction(logger, temporaryFolder));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisableISHUIQualityAssistantOperation"/> class.
@@ -39,10 +39,10 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         public DisableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Disabling of InfoShare Enrich integration for Content Editor");
+            Invoker = new ActionInvoker(logger, "Disabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
-			_invoker.AddAction(new CommentNodeByXPathAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
+			Invoker.AddAction(new CommentNodeByXPathAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfigXPath));
+			Invoker.AddAction(new CommentNodeByXPathAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegrationXPath));
 		}
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

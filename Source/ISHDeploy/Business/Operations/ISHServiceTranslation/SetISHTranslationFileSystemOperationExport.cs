@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHTranslationFileSystemExportOperation"/> class.
@@ -48,7 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHTranslationFileSystemExportOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement fileSystemConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, string exceptionMessage) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
+            Invoker = new ActionInvoker(logger, "Setting configuration of FileSystem");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, fileSystemConfiguration.RelativeFilePath);
 
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -70,7 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     }
                 }
 
-                _invoker.AddAction(new SetElementAction(
+                Invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,
                     fileSystemConfiguration));
@@ -86,7 +86,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

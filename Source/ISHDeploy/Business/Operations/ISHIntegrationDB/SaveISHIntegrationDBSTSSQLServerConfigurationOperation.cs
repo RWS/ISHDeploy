@@ -37,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <summary>
         /// The actions invoker.
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaveISHIntegrationDBSTSSQLServerConfigurationOperation" /> class.
@@ -49,7 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         public SaveISHIntegrationDBSTSSQLServerConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, OutputType type) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Saving STS integration configuration");
+            Invoker = new ActionInvoker(logger, "Saving STS integration configuration");
 
             string templateFile;
 
@@ -64,13 +64,13 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
                     break;
             }
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
+            Invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
 
             string principal = NetUtil.GetMachineNetBiosDomain() + "\\" + Environment.MachineName + "$";
 
             using (OleDbConnection builder = new OleDbConnection(InputParameters.ConnectString))
             {
-                _invoker.AddAction(new FileGenerateFromTemplateAction(logger,
+                Invoker.AddAction(new FileGenerateFromTemplateAction(logger,
                     templateFile,
                     Path.Combine(PackagesFolderPath, fileName),
                     new Dictionary<string, string>
@@ -87,7 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

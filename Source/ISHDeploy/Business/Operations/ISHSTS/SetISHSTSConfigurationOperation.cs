@@ -39,7 +39,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -53,7 +53,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             CheckPermissions();
 
-            _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
+            Invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
 
             AddActionsToStopSTSApplicationPool();
             AddActionsToSetTokenSigningCertificate(thumbprint);
@@ -70,7 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public SetISHSTSConfigurationOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
+            Invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
 
             AddActionsToStopSTSApplicationPool();
             AddActionsToSetTokenSigningCertificate(thumbprint);
@@ -98,7 +98,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             CheckPermissions();
 
-            _invoker = new ActionInvoker(logger, "Setting of STS authentication type");
+            Invoker = new ActionInvoker(logger, "Setting of STS authentication type");
 
             AddActionsToStopSTSApplicationPool();
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
@@ -125,7 +125,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         private void AddActionsToStopSTSApplicationPool()
         {
-            _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
+            Invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
         }
 
         /// <summary>
@@ -139,15 +139,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             var subjectThumbprint = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
 
-            _invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
+            Invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             bool isDataBaseFileExist = fileManager.FileExists(InfoShareSTSDataBasePath.AbsolutePath);
 
             if (isDataBaseFileExist)
             {
-                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                Invoker.AddAction(new SqlCompactExecuteAction(Logger,
                     InfoShareSTSDataBaseConnectionString,
                     string.Format(InfoShareSTSDataBase.UpdateCertificateInKeyMaterialConfigurationSQLCommandFormat,
                         subjectThumbprint)));
@@ -168,7 +168,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             if (authenticationType == AuthenticationType.Windows)
             {
                 // Enable Windows Authentication for STS web site
-                _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));
+                Invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, true));
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/windows" endpoint and binding type to WindowsMixed type
@@ -182,30 +182,30 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 // Assign user permissions
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 AddActionsToSetCertificateFilePermission(applicationPoolUser, InputParameters.ServiceCertificateThumbprint);
-                _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                Invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.AppPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 if (ishDeployment.AppPath != ishDeployment.DataPath)
                 {
-                    _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.DataPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                    Invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.DataPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
 
                 }
                 if (ishDeployment.DataPath != ishDeployment.WebPath)
                 {
-                    _invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.WebPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+                    Invoker.AddAction(new FileSystemRightsAssignAction(Logger, ishDeployment.WebPath, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
                 }
 
                 // Set ApplicationPoolIdentity identityType for STS application pool
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger, 
                     InputParameters.STSAppPoolName,
                     ApplicationPoolProperty.identityType, 
                     ProcessModelIdentityType.ApplicationPoolIdentity));
 
-                _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
+                Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "true"));
             }
             else
             {
                 // Disable Windows Authentication for STS web site
-                _invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
+                Invoker.AddAction(new WindowsAuthenticationSwitcherAction(Logger, InputParameters.STSWebAppName, false));
 
                 // If current endpoint is STS endpoint (deployment uses STS as server of authorization)
                 // then change the reference to the "issue/wstrust/mixed/username" endpoint and binding type to UserNameMixed type
@@ -217,15 +217,15 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 }
 
                 // Set SpecificUser identityType for STS application pool
-                _invoker.AddAction(new SetApplicationPoolPropertyAction(
+                Invoker.AddAction(new SetApplicationPoolPropertyAction(
                     Logger, 
                     InputParameters.STSAppPoolName,
                     ApplicationPoolProperty.identityType, 
                     ProcessModelIdentityType.SpecificUser));
-                _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
+                Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.InfoshareSTSWindowsAuthenticationEnabledXPath, "false"));
             }
-            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath, authenticationType.ToString()));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.AuthenticationTypeAttributeXPath, authenticationType.ToString()));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.AuthenticationTypeXPath, authenticationType.ToString()));
         }
 
         private void AddActionsToSetCertificateFilePermission(string applicationPoolUser, string certificateThumbprint)
@@ -233,7 +233,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             string pathToCertificate = string.Empty;
             (new GetPathToCertificateByThumbprintAction(Logger, certificateThumbprint, s => pathToCertificate = s)).Execute();
 
-            _invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
+            Invoker.AddAction(new FileSystemRightsAssignAction(Logger, pathToCertificate, applicationPoolUser, FileSystemRightsAssignAction.FileSystemAccessRights.FullControl));
         }
 
         /// <summary>
@@ -245,29 +245,29 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             string bindingTypeAsString = bindingType.ToString();
             // Change ~\Web\InfoShareWS\connectionconfiguration.xml
-            _invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, bindingTypeAsString));
-            _invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, endpoint));
+            Invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustBindingTypeXPath, bindingTypeAsString));
+            Invoker.AddAction(new SetElementValueAction(Logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.WSTrustEndpointUrlXPath, endpoint));
 
             // Change ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
-            _invoker.AddAction(new SetElementValueAction(Logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustBindingTypeXPath, bindingTypeAsString));
-            _invoker.AddAction(new SetElementValueAction(Logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustEndpointUrlXPath, endpoint));
+            Invoker.AddAction(new SetElementValueAction(Logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustBindingTypeXPath, bindingTypeAsString));
+            Invoker.AddAction(new SetElementValueAction(Logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustEndpointUrlXPath, endpoint));
 
-            // Change ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
+            // Change ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
+            Invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlXPath, FeedSDLLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\TranslationOrganizer\Bin\TranslationOrganizer.exe.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.WSTrustEndpointUrlXPath, TranslationOrganizerConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // Change ~\App\Utilities\SynchronizeToLiveContent\SynchronizeToLiveContent.ps1.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
-            _invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustBindingTypeAttributeName, bindingTypeAsString));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlXPath, SynchronizeToLiveContentConfig.WSTrustEndpointUrlAttributeName, endpoint));
 
             // InputParameters.xml
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.Replace(InputParameters.BaseHostName, InputParameters.LocalServiceHostName)));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrlXPath, endpoint));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustEndpointUrl_NormalizedXPath, endpoint.Replace(InputParameters.BaseHostName, InputParameters.LocalServiceHostName)));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerWSTrustBindingTypeXPath, bindingType.ToString()));
         }
 
         /// <summary>
@@ -276,10 +276,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         private void AddActionsToStartSTSApplicationPool()
         {
             // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
 
             // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSWebConfigPath));
+            Invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSWebConfigPath));
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

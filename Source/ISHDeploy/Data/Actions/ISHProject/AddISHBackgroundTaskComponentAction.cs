@@ -82,7 +82,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             }
             else
             {
-                Logger.WriteWarning($"The BackgroundTask component with Role `{component.Role} already exists`");
+                Logger.WriteWarning($"The BackgroundTask component with Role `{component.Role}` already exists");
             }
             _dataAggregateHelper.SaveComponents(FilePath, componentsCollection);
         }

@@ -16,7 +16,6 @@
 
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHComponent;
-using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
 {
@@ -28,6 +27,11 @@ namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
     /// <example>
     /// <code>PS C:\>Set-ISHServiceBackgroundTask -ISHDeployment $deployment -Count 2</code>
     /// <para>This command changes the amount of instances of services.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceBackgroundTask -ISHDeployment $deployment -Count 2 -Role "PublishOnly"</code>
+    /// <para>This command changes the amount of instances of services with role "PublishOnly".
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHServiceBackgroundTask")]

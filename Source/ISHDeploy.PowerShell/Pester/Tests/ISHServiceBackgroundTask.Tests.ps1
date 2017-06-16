@@ -68,7 +68,7 @@ $scriptBlockEnableISHServiceBackgroundTask = {
         $parameters = @{}
     }
 
-    Enable-ISHServiceBackgroundTask -ISHDeployment $ishDeploy @parameters
+    Enable-ISHServiceBackgroundTask -ISHDeployment $ishDeployName @parameters
 }
 
 $scriptBlockDisableISHServiceBackgroundTask = {
@@ -238,13 +238,6 @@ Describe "Testing ISHServiceBackgroundTask"{
         $history.Contains('Enable-ISHServiceBackgroundTask -ISHDeployment') | Should be "True"
     }
 
-    It "Enable-ISHServiceBackgroundTask writes history"{       
-        #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
-        $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
-        $history.Contains('Enable-ISHServiceBackgroundTask -ISHDeployment') | Should be "True"
-    }
-
     It "Enable ISHServiceBackgroundTask enables only selscted role"{
         #Arrange
         $params = @{Count = 3}
@@ -253,7 +246,6 @@ Describe "Testing ISHServiceBackgroundTask"{
         $Services.Count | Should be 3
 
      }
-     #$params = @{MaxObjectsInOnePush = $MaxObjectsInOnePush;
 
      Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true

@@ -48,6 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         {
             IOperation operation;
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            ishDeployment.Status = ISHDeploymentStatus.Stopped;
             if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
             {
                 var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();

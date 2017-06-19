@@ -75,75 +75,85 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             foreach (var component in orderedComponentsCollection)
             {
-                switch (component.Name)
+                if (ishDeployment.Status == ISHDeploymentStatus.Running)
                 {
-                    case ISHComponentName.CM :
-                        Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
-                        break;
-                    case ISHComponentName.WS:
-                        Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-                        break;
-                    case ISHComponentName.STS:
-                        Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-                        break;
-                    case ISHComponentName.TranslationBuilder:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.TranslationOrganizer:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(
-                                new StartWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.COMPlus:
-                        // Check if this operation has implications for several Deployments
-                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-
-                        var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
-                        var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
-                        foreach (var comPlusComponent in comPlusComponents)
-                        {
-                            if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
+                    switch (component.Name)
+                    {
+                        case ISHComponentName.CM:
+                            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName,
+                                true));
+                            break;
+                        case ISHComponentName.WS:
+                            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName,
+                                true));
+                            break;
+                        case ISHComponentName.STS:
+                            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName,
+                                true));
+                            break;
+                        case ISHComponentName.TranslationBuilder:
+                            services = serviceManager.GetServices(ishDeployment.Name,
+                                ISHWindowsServiceType.TranslationBuilder);
+                            foreach (var service in services)
                             {
-                                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                                    $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
-
-                                Invoker.AddAction(
-                                    new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
                             }
-                        }
-                        break;
-                    case ISHComponentName.Crawler:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.SolrLucene:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.BackgroundTask:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    default:
-                        Logger.WriteDebug($"Unsupported component type: {component.Name}");
-                        break;
+                            break;
+                        case ISHComponentName.TranslationOrganizer:
+                            services = serviceManager.GetServices(ishDeployment.Name,
+                                ISHWindowsServiceType.TranslationOrganizer);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(
+                                    new StartWindowsServiceAction(Logger, service));
+                            }
+                            break;
+                        case ISHComponentName.COMPlus:
+                            // Check if this operation has implications for several Deployments
+                            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute
+                                ();
+
+                            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+                            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+                            foreach (var comPlusComponent in comPlusComponents)
+                            {
+                                if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
+                                {
+                                    Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+
+                                    Invoker.AddAction(
+                                        new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                                }
+                            }
+                            break;
+                        case ISHComponentName.Crawler:
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                            }
+                            break;
+                        case ISHComponentName.SolrLucene:
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                            }
+                            break;
+                        case ISHComponentName.BackgroundTask:
+                            services = serviceManager.GetServices(ishDeployment.Name,
+                                ISHWindowsServiceType.BackgroundTask);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                            }
+                            break;
+                        default:
+                            Logger.WriteDebug($"Unsupported component type: {component.Name}");
+                            break;
+                    }
                 }
 
                 if (changeStateOfComponentsInTrackingFile)

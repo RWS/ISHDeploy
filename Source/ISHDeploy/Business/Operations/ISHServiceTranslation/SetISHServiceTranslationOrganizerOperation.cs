@@ -37,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHServiceTranslationOrganizerOperation"/> class.
@@ -48,11 +48,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Dictionary<TranslationOrganizerSetting, object> parameters) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of translation organizer windows service");
+            Invoker = new ActionInvoker(logger, "Setting of translation organizer windows service");
 
             foreach (var parameter in parameters)
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                     new SetAttributeValueAction(Logger, 
                     TranslationOrganizerConfigFilePath,
                     string.Format(TranslationOrganizerConfig.TranslationOrganizerSettingsAttributeXPathPattern, parameter.Key), 
@@ -75,22 +75,22 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHServiceTranslationOrganizerOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri infoShareWSUri, string wsTrustBindingType, Uri wsTrustEndpoint, string infoShareWSServiceCertificateValidationMode = null, string infoShareWSDnsIdentity = null, string userName = null, string password = null) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger,
+            Invoker = new ActionInvoker(logger,
                 $"Setting of ISHWS URL, type of issuer binding, issuer endpoint{(string.IsNullOrEmpty(password) ? "." : " and new credential.")}");
 
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new SetAttributeValueAction(Logger,
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSAttributeXPath,
                     infoShareWSUri.AbsoluteUri));
 
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new SetAttributeValueAction(Logger,
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustBindingTypeAttributeXPath,
                     wsTrustBindingType));
 
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new SetAttributeValueAction(Logger,
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceIssuerWSTrustEndpointAttributeXPath,
@@ -98,7 +98,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (!string.IsNullOrEmpty(infoShareWSServiceCertificateValidationMode))
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceCertificateValidationModeAttributeXPath,
@@ -107,7 +107,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (!string.IsNullOrEmpty(infoShareWSDnsIdentity))
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSDnsIdentityAttributeXPath,
@@ -116,7 +116,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (!string.IsNullOrEmpty(userName))
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceUsernameAttributeXPath,
@@ -125,7 +125,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
 
             if (!string.IsNullOrEmpty(password))
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServicePasswordAttributeXPath,
@@ -156,7 +156,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

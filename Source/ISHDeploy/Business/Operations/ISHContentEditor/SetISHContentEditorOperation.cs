@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHContentEditorOperation"/> class.
@@ -42,9 +42,9 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         public SetISHContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment, string fileName, string fileContent) : 
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of new license for Content Editor");
+            Invoker = new ActionInvoker(logger, "Setting of new license for Content Editor");
 
-            _invoker.AddAction(new FileCreateAction(logger, Path.Combine(LicenceFolderPath.AbsolutePath, fileName), fileContent));
+            Invoker.AddAction(new FileCreateAction(logger, Path.Combine(LicenceFolderPath.AbsolutePath, fileName), fileContent));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

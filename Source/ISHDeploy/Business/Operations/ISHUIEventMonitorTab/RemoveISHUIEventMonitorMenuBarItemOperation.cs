@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorMenuBarItemOperation"/> class.
@@ -40,16 +40,16 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         public RemoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");
+            Invoker = new ActionInvoker(logger, "Remove of Event Monitor Tab");
 
 			string itemXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string itemCommentXPath = itemXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
 
 			// First we should remove comment as it is dependent to its sibling node
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath, false));
+			Invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemCommentXPath, false));
 
 			// Then we removing item itself
-			_invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemXPath));
+			Invoker.AddAction(new RemoveSingleNodeAction(logger, EventMonitorMenuBarXmlPath, itemXPath));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

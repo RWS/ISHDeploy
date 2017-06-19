@@ -61,6 +61,21 @@ namespace ISHDeploy.Business.Invokers
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ActionInvoker"/> class.
+        /// </summary>
+        /// <param name="logger">Instance of the <see cref="T:ISHDeploy.Interfaces.ILogger"/></param>
+        /// <param name="activityDescription">Description of the general activity to be done</param>
+        /// <param name="actions">The list of actions</param>
+        /// <param name="showProgress">Defines if progress should be shown. By default is false</param>
+        public ActionInvoker(ILogger logger, string activityDescription, IEnumerable<IAction> actions, bool showProgress = false)
+        {
+            _logger = logger;
+            _showProgress = showProgress;
+            _activityDescription = activityDescription;
+            _actions = new List<IAction>(actions);
+        }
+
+        /// <summary>
         /// Adds action to the sequence.
         /// </summary>
         /// <param name="action">New action in the sequence.</param>
@@ -126,6 +141,15 @@ namespace ISHDeploy.Business.Invokers
 					(x as IDisposable)?.Dispose();
 				});
 	        }
+        }
+
+        /// <summary>
+        /// Gets list of actions
+        /// </summary>
+        /// <returns>List of actions</returns>
+        public IEnumerable<IAction> GetActions()
+        {
+            return _actions;
         }
     }
 }

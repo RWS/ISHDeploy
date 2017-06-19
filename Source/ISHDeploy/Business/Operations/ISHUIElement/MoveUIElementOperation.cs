@@ -32,7 +32,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveUIElementOperation"/> class.
@@ -50,9 +50,9 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
             base(logger, ishDeployment)
         {
             var filePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, model.RelativeFilePath);
-            _invoker = new ActionInvoker(logger, $"Move `{model.XPath}` element in file {filePath.AbsolutePath}");
+            Invoker = new ActionInvoker(logger, $"Move `{model.XPath}` element in file {filePath.AbsolutePath}");
 
-            _invoker.AddAction(new MoveElementAction(
+            Invoker.AddAction(new MoveElementAction(
                 logger,
                 filePath,
                 model,
@@ -65,7 +65,7 @@ namespace ISHDeploy.Business.Operations.ISHUIElement
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveISHIntegrationTMSOperation"/> class.
@@ -40,9 +40,9 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public RemoveISHIntegrationTMSOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Remove TMS instance");
+            Invoker = new ActionInvoker(logger, "Remove TMS instance");
 
-            _invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.TmsNodeXPath));
+            Invoker.AddAction(new RemoveSingleNodeAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.TmsNodeXPath));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

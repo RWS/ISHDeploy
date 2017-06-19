@@ -39,7 +39,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHSTSRelyingPartyOperation" /> class.
@@ -53,16 +53,16 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public SetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string realm, RelyingPartyType relyingPartyType, string encryptingCertificate) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting the relying parties");
+            Invoker = new ActionInvoker(logger, "Setting the relying parties");
 
             // Ensure DataBase file exists
             bool isDataBaseFileExist = false;
             (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
             if (!isDataBaseFileExist)
             {
-                _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-                _invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
-                _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
+                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                Invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
             }
 
             string relyingPartyTypePrefix;
@@ -71,7 +71,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             if (!string.IsNullOrEmpty(relyingPartyTypePrefix))
             {
                 int resultRowsCount = 0;
-                _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
+                Invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
                     InfoShareSTSDataBaseConnectionString,
                     $"{InfoShareSTSDataBase.GetRelyingPartySQLCommandFormat} WHERE Realm ='{realm}' AND Name NOT LIKE '{relyingPartyTypePrefix}:%'",
                     result =>
@@ -79,12 +79,12 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                         resultRowsCount = result.Count();
                     }));
 
-                _invoker.AddAction(new AssertAction(logger,
+                Invoker.AddAction(new AssertAction(logger,
                     () => (resultRowsCount != 0),
                     $"Relying party prerfix can not be changed to '{relyingPartyTypePrefix}'."));
             }
 
-            _invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
+            Invoker.AddAction(new SqlCompactInsertUpdateAction(logger,
                         InfoShareSTSDataBaseConnectionString,
                         InfoShareSTSDataBase.RelyingPartiesTableName,
                         "Realm",
@@ -103,7 +103,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

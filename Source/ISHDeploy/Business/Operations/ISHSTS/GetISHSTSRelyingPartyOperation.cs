@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The list of configured Relying Parties found.
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public GetISHSTSRelyingPartyOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool ISH, bool LC, bool BL):
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting the relying parties");
+            Invoker = new ActionInvoker(logger, "Getting the relying parties");
 
             // Ensure DataBase file exists
             bool isDataBaseFileExist = false;
@@ -90,7 +90,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                     sqlQuery += " WHERE " + String.Join(" OR ", conditions.Select(x => $"Name LIKE '{x}%'"));
                 }
 
-                _invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
+                Invoker.AddAction(new SqlCompactSelectAction<RelyingParty>(logger,
                         InfoShareSTSDataBaseConnectionString,
                         sqlQuery,
                         result =>
@@ -105,7 +105,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// </summary>
         public IEnumerable<RelyingParty> Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _resultRows;
         }

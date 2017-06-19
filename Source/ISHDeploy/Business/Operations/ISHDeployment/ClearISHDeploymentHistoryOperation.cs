@@ -28,7 +28,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClearISHDeploymentHistoryOperation"/> class.
@@ -38,10 +38,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public ClearISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Customization history clean up");
+            Invoker = new ActionInvoker(logger, "Customization history clean up");
 
-            _invoker.AddAction(new FileDeleteAction(logger, HistoryFilePath));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, BackupFolderPath));
+            Invoker.AddAction(new FileDeleteAction(logger, HistoryFilePath));
+            Invoker.AddAction(new FileCleanDirectoryAction(logger, BackupFolderPath));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

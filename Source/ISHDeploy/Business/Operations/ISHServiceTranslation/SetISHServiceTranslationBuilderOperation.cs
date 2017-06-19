@@ -37,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHServiceTranslationBuilderOperation"/> class.
@@ -48,11 +48,11 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHServiceTranslationBuilderOperation(ILogger logger, Models.ISHDeployment ishDeployment, Dictionary<TranslationBuilderSetting, object> parameters) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
+            Invoker = new ActionInvoker(logger, "Setting of translation builder windows service");
 
             foreach (var parameter in parameters)
             {
-                _invoker.AddAction(
+                Invoker.AddAction(
                     new SetAttributeValueAction(Logger, 
                     TranslationBuilderConfigFilePath, 
                     TranslationBuilderConfig.AttributeXPaths[parameter.Key], 
@@ -87,7 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

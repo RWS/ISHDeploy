@@ -42,7 +42,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHOSUserOperation"/> class.
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         public SetISHOSUserOperation(ILogger logger, Models.ISHDeployment ishDeployment, string userName, string password) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of new OS credential.");
+            Invoker = new ActionInvoker(logger, "Setting of new OS credential.");
 
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
 
@@ -66,50 +66,50 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-            _invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+            Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                 "The setting of credentials for COM+ components has implications across all deployments."));
 
             // Set new credentials for COM+ component
-            _invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, currentOSUserName, password, currentOSPassword));
+            Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, currentOSUserName, password, currentOSPassword));
 
             // Stop Application pools
-            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
+            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
 
             // WS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.password,
                 password));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.WSAppPoolName,
                 ApplicationPoolProperty.loadUserProfile,
                 true));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
                 WebConfigurationProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.WSWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
@@ -117,38 +117,38 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 password));
 
             // STS
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.password,
                 password));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.STSAppPoolName,
                 ApplicationPoolProperty.loadUserProfile,
                 true));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
                 WebConfigurationProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.STSWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
@@ -156,38 +156,38 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 password));
 
             // CM
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.password,
                 password));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.identityType,
                 ProcessModelIdentityType.SpecificUser));
 
-            _invoker.AddAction(new SetApplicationPoolPropertyAction(
+            Invoker.AddAction(new SetApplicationPoolPropertyAction(
                 Logger,
                 InputParameters.CMAppPoolName,
                 ApplicationPoolProperty.loadUserProfile,
                 true));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
                 WebConfigurationProperty.userName,
                 userName));
 
-            _invoker.AddAction(new SetWebConfigurationPropertyAction(
+            Invoker.AddAction(new SetWebConfigurationPropertyAction(
                 Logger,
                 $"{InputParameters.WebSiteName}/{InputParameters.CMWebAppName}",
                 "system.webServer/security/authentication/anonymousAuthentication",
@@ -195,27 +195,27 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 password));
 
             // ~\App\Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new TextReplaceAction(Logger,
                     SDLISHADFSv3RPInstallPSFilePath,
                     string.Format(SDLISHADFSv3RPInstallPS.OSUserVariableLinePattern, InputParameters.OSUser),
                     string.Format(SDLISHADFSv3RPInstallPS.OSUserVariableLinePattern, userName)));
 
             // ~\Web\Author\ASP\IncParam.asp
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new TextReplaceAction(Logger,
                     IncParamAspFilePath,
                     string.Format(IncParamAsp.OSUserVariableLinePattern, InputParameters.OSUser),
                     string.Format(IncParamAsp.OSUserVariableLinePattern, userName)));
 
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSUserXPath, userName));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSUserXPath, userName));
 
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSPasswordXPath, password));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSPasswordXPath, password));
 
             // Start Application pools
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
 
             // Stop services that are running
             // TODO: Add support of all other services and components
@@ -232,7 +232,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // Stop services that are running
             foreach (var service in runningServiceNames)
             {
-                _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
             }
 
             // Set new credentials for all services
@@ -244,13 +244,13 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 ISHWindowsServiceType.TranslationBuilder,
                 ISHWindowsServiceType.TranslationOrganizer))
             {
-                _invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, currentOSUserName, password, currentOSPassword));
+                Invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, currentOSUserName, password, currentOSPassword));
             }
 
             // Run services that should be run
             foreach (var service in runningServiceNames)
             {
-                _invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
             }
         }
 
@@ -259,7 +259,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

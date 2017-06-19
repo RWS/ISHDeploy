@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The history file content
@@ -44,9 +44,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public GetISHDeploymentHistoryOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting the history file content");
+            Invoker = new ActionInvoker(logger, "Getting the history file content");
 
-            _invoker.AddAction(new FileReadAllTextAction(logger, HistoryFilePath, result => _historyContent = result));
+            Invoker.AddAction(new FileReadAllTextAction(logger, HistoryFilePath, result => _historyContent = result));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <returns>List of installed Content Manager deployments.</returns>
         public string Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _historyContent;
         }

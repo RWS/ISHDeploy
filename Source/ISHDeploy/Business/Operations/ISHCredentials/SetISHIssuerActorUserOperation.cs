@@ -33,7 +33,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHIssuerActorUserOperation"/> class.
@@ -45,18 +45,18 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         public SetISHIssuerActorUserOperation(ILogger logger, Models.ISHDeployment ishDeployment, string userName, string password) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of new IssuerActor credential.");
+            Invoker = new ActionInvoker(logger, "Setting of new IssuerActor credential.");
 
             // ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
-            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, userName));
-            _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, password));
+            Invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorUserNameXPath, userName));
+            Invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.WSTrustActorPasswordXPath, password));
 
             // InputParameters
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerActorUserNameXPath, userName));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerActorPasswordXPath, password));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerActorUserNameXPath, userName));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.IssuerActorPasswordXPath, password));
 
             // ~\Web\InfoShareSTS\Configuration\infoShareSTS.config
-            _invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.ActorUsernameAttributeXPath, userName));
+            Invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.ActorUsernameAttributeXPath, userName));
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             bool isDataBaseFileExist = fileManager.FileExists(InfoShareSTSDataBasePath.AbsolutePath);
@@ -64,7 +64,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // Update UserName in Delegation table of STS database if STS database file exists
             if (isDataBaseFileExist)
             {
-                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                Invoker.AddAction(new SqlCompactExecuteAction(Logger,
                 InfoShareSTSDataBaseConnectionString,
                 string.Format(InfoShareSTSDataBase.UpdateIssuerActorUserNameInDelegationSQLCommandFormat,
                     userName)));
@@ -76,7 +76,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The list of installed Content Manager deployments found on the current system.
@@ -44,8 +44,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <param name="projectName">The deployment name.</param>
         public GetISHDeploymentsOperation(ILogger logger, string projectName)
         {
-            _invoker = new ActionInvoker(logger, "Get a list of installed Content Manager deployments");
-            _invoker.AddAction(new GetISHDeploymentsAction(logger, projectName, result => _ishProjects = result));
+            Invoker = new ActionInvoker(logger, "Get a list of installed Content Manager deployments");
+            Invoker.AddAction(new GetISHDeploymentsAction(logger, projectName, result => _ishProjects = result));
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <returns>List of installed Content Manager deployments.</returns>
         public IEnumerable<Models.ISHDeployment> Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _ishProjects;
         }

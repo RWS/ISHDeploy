@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿
+
+using ISHDeploy.Business.Invokers;
+
 namespace ISHDeploy.Common.Interfaces
 {
     /// <summary>
@@ -21,6 +23,11 @@ namespace ISHDeploy.Common.Interfaces
     /// </summary>
     public interface IOperation
     {
+        /// <summary>
+        /// The actions invoker
+        /// </summary>
+        IActionInvoker Invoker { get; }
+
         /// <summary>
         /// Runs current operation.
         /// </summary>

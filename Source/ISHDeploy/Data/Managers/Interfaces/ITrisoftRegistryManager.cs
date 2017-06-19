@@ -71,7 +71,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="keyName">The registry key name.</param>
         /// <param name="valueName">The name of value.</param>
-        object GetRegistryValue(string keyName, string valueName);
+        object GetRegistryValue(string keyName, RegistryValueName valueName);
 
         /// <summary>
         /// Gets names of all values of registry key.
@@ -99,6 +99,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Properties from one registry key.
         /// </returns>
         PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName);
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
+        /// <param name="value">The value.</param>
+        void SetValue(string keyName, RegistryValueName valueName, object value);
 
         /// <summary>
         /// Sets value in registry key

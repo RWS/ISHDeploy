@@ -80,12 +80,6 @@ namespace ISHDeploy.Data.Managers
         public string RelativeTrisoftRegPath { get; }
 
         /// <summary>
-        /// The path to of "SOFTWARE\Trisoft\InstallTool"
-        /// </summary>
-        private readonly string _relativeInstallToolTrisoftRegPath;
-
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TrisoftRegistryManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -93,8 +87,6 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             RelativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? "SOFTWARE\\Wow6432Node\\Trisoft" : "SOFTWARE\\Trisoft";
-            
-            _relativeInstallToolTrisoftRegPath = $"{RelativeTrisoftRegPath}\\InstallTool";
         }
 
         /// <summary>
@@ -107,7 +99,7 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteDebug("Retrieve registry keys", (string.IsNullOrEmpty(projectName) ? "for all installed projects" : projectName));
 
             var installedProjectsKeys = new List<RegistryKey>();
-            var installToolRegKey = Registry.LocalMachine.OpenSubKey(_relativeInstallToolTrisoftRegPath);
+            var installToolRegKey = Registry.LocalMachine.OpenSubKey($@"{RelativeTrisoftRegPath}\InstallTool");
 
             var projectBaseRegKey = installToolRegKey?.OpenSubKey(ProjectBaseRegName);
 
@@ -253,10 +245,10 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="keyName">The registry key name.</param>
         /// <param name="valueName">The name of value.</param>
-        public object GetRegistryValue(string keyName, string valueName)
+        public object GetRegistryValue(string keyName, RegistryValueName valueName)
         {
             _logger.WriteDebug("Get registry value", keyName, valueName);
-            var value = Registry.GetValue(keyName, valueName, null);
+            var value = Registry.GetValue(keyName, valueName.ToString(), null);
             _logger.WriteVerbose($"The registry value `{keyName}\\{valueName}` is `{value}`");
             return value;
         }
@@ -316,6 +308,17 @@ namespace ISHDeploy.Data.Managers
             }
             _logger.WriteVerbose($"The values from `{sourceLocalMachineSubKeyName}` registry has been got");
             return result;
+        }
+
+        /// <summary>
+        /// Sets value in registry key
+        /// </summary>
+        /// <param name="keyName">The registry key name.</param>
+        /// <param name="valueName">The name of value.</param>
+        /// <param name="value">The value.</param>
+        public void SetValue(string keyName, RegistryValueName valueName, object value)
+        {
+            SetValue(keyName, valueName.ToString(), value);
         }
 
         /// <summary>

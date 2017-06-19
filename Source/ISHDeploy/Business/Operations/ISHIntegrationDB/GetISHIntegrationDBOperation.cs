@@ -48,8 +48,8 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         {
             var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
 
-            var connectionString = (string)trisoftRegistryManager.GetRegistryValue(InfoShareAuthorRegistryElement, RegistryValueName.Connect.ToString());
-            var databaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(InfoShareAuthorRegistryElement, RegistryValueName.ComponentName.ToString()).ToString());
+            var connectionString = (string)trisoftRegistryManager.GetRegistryValue(RegInfoShareAuthorRegistryElement, RegistryValueName.Connect);
+            var databaseType = (DatabaseType)Enum.Parse(typeof(DatabaseType), trisoftRegistryManager.GetRegistryValue(RegInfoShareAuthorRegistryElement, RegistryValueName.ComponentName).ToString());
 
             return new IntegrationDbConnectionString(connectionString, databaseType);
         }

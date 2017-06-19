@@ -375,14 +375,19 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath CurrentISHComponentStatesFilePath { get; }
 
         /// <summary>
-        /// Gets the path to the "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Trisoft\\Tridk\\TridkApp\\InfoShareAuthor..." element of registry.
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\Tridk\TridkApp\InfoShareAuthor..." element of registry.
         /// </summary>
-        protected string InfoShareAuthorRegistryElement { get; }
+        protected string RegInfoShareAuthorRegistryElement { get; }
 
         /// <summary>
-        /// Gets the path to the "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Trisoft\\Tridk\\TridkApp\\InfoShareBuilders..." element of registry.
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\\Tridk\TridkApp\InfoShareBuilders..." element of registry.
         /// </summary>
-        protected string InfoShareBuildersRegistryElement { get; }
+        protected string RegInfoShareBuildersRegistryElement { get; }
+
+        /// <summary>
+        /// Gets the pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}".
+        /// </summary>
+        protected string RegWindowsServicesRegistryPathPattern { get; }
 
         #endregion
 
@@ -450,11 +455,13 @@ namespace ISHDeploy.Business.Operations
             // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
             CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.v1.xml");
 
-            var relativeTrisoftRegPath = Environment.Is64BitOperatingSystem ? @"SOFTWARE\Wow6432Node\Trisoft" : @"SOFTWARE\Trisoft";
-            InfoShareAuthorRegistryElement =
-                $@"HKEY_LOCAL_MACHINE\{relativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
-            InfoShareAuthorRegistryElement =
-                $@"HKEY_LOCAL_MACHINE\{relativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
+            var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            RegInfoShareAuthorRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
+            RegInfoShareBuildersRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
+
+            RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
 
             #endregion
         }

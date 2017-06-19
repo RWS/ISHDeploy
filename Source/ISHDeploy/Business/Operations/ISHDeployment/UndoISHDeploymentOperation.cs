@@ -123,10 +123,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
             // change registry
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.Connect, vanillaInputParameters.ConnectString));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.ComponentName, vanillaInputParameters.DatabaseType));
 
 
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
@@ -147,7 +147,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 		        foreach (var service in backedUpWindowsServices.Services)
 		        {
-                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
+                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service, RegWindowsServicesRegistryPathPattern,
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
 		    }

@@ -34,7 +34,7 @@ namespace ISHDeploy.Data.Actions.Registry
         /// <summary>
         /// The name of registry value.
         /// </summary>
-        private readonly string _valueName;
+        private readonly RegistryValueName _valueName;
 
         /// <summary>
         /// The value to be stored.
@@ -57,7 +57,7 @@ namespace ISHDeploy.Data.Actions.Registry
             : base(logger)
         {
             _keyName = keyName;
-            _valueName = valueName.ToString();
+            _valueName = valueName;
             _value = value;
 
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();

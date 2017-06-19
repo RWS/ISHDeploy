@@ -15,13 +15,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -41,11 +38,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         public IActionInvoker Invoker { get; }
 
         /// <summary>
-        /// The name of default role
-        /// </summary>
-        private const string DefaultRoleName = "Default";
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SetISHServiceFullTextIndexOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -60,10 +52,16 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             // Make sure Vanilla backup of all windows services exists
             Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareAuthorRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
-            Invoker.AddAction(new SetRegistryValueAction(logger, InfoShareBuildersRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
 
-            // TODO: Remove dependency
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+
+            foreach (var service in services)
+            {
+                Invoker.AddAction(new SetRegistryValueAction(logger, string.Format(RegWindowsServicesRegistryPathPattern, service.Name), RegistryValueName.DependOnService, string.Empty));
+            }
         }
 
         /// <summary>

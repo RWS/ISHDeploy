@@ -33,6 +33,11 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// SolrLuceneBaseUrl
         /// </summary>
-        SolrLuceneBaseUrl
+        SolrLuceneBaseUrl,
+
+        /// <summary>
+        /// DependOnService
+        /// </summary>
+        DependOnService
     }
 }

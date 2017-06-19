@@ -309,6 +309,32 @@ Describe "Testing Start and Stop ISH Deployment"{
         $pools.Count | Should be 0  
 
     }
+	It "Enabling components on stopeed deployment should not start components"{
+         #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        GetComObjectState
+        $AuthorApplication | Should be False  
+        $ISOApplication | Should be False 
+        $UtilitiesApplication | Should be False 
+        $TriDKApplication | Should be False 
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0      
+		$checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped"
+		#Assert
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+		GetComObjectState
+        $AuthorApplication | Should be False  
+        $ISOApplication | Should be False 
+        $UtilitiesApplication | Should be False 
+        $TriDKApplication | Should be False
+    }
+
     #>
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

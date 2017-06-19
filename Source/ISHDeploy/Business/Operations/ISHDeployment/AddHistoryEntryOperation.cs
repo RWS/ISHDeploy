@@ -31,7 +31,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddHistoryEntryOperation"/> class.
@@ -43,8 +43,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public AddHistoryEntryOperation(ILogger logger, Models.ISHDeployment ishDeployment, string text, Version version) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Adding of entry to the history file about cmdlets usage");
-            _invoker.AddAction(new FileAddHistoryEntryAction(logger, HistoryFilePath, text, ishDeployment.Name, version));
+            Invoker = new ActionInvoker(logger, "Adding of entry to the history file about cmdlets usage");
+            Invoker.AddAction(new FileAddHistoryEntryAction(logger, HistoryFilePath, text, ishDeployment.Name, version));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

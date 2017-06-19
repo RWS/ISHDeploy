@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHIntegrationTmsOperation"/> class.
@@ -51,7 +51,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         public SetISHIntegrationTmsOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement tmsConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, Dictionary<TmsConfigurationSetting, object> parameters, string exceptionMessage) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting configuration of TMS");
+            Invoker = new ActionInvoker(logger, "Setting configuration of TMS");
             var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, tmsConfiguration.RelativeFilePath);
 
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -84,14 +84,14 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
                     }
                 }
 
-                _invoker.AddAction(new SetElementAction(
+                Invoker.AddAction(new SetElementAction(
                     logger,
                     filePath,
                     tmsConfiguration));
 
                 foreach (var parameter in parameters)
                 {
-                    _invoker.AddAction(
+                    Invoker.AddAction(
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         $"{tmsConfiguration.XPath}/@{parameter.Key}",
@@ -110,7 +110,7 @@ namespace ISHDeploy.Business.Operations.ISHServiceTranslation
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

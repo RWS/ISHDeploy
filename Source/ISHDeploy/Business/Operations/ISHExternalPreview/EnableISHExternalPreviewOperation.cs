@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableISHExternalPreviewOperation"/> class.
@@ -40,9 +40,9 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         public EnableISHExternalPreviewOperation(ILogger logger, Models.ISHDeployment ishDeployment, string externalId) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
+            Invoker = new ActionInvoker(logger, "Enabling of InfoShare external preview");
             
-            _invoker.AddAction(
+            Invoker.AddAction(
                 new UncommentNodesByInnerPatternAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
                         InfoShareAuthorWebConfig.TrisoftInfoshareWebExternalPreviewModuleSearchPattern
                     }));
 
-            _invoker.AddAction(
+            Invoker.AddAction(
                 new SetAttributeValueAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
@@ -65,7 +65,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

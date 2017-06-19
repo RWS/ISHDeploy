@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHServiceUserOperation"/> class.
@@ -47,50 +47,50 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         public SetISHServiceUserOperation(ILogger logger, Models.ISHDeployment ishDeployment, string userName, string password) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of new ServiceUser credential.");
+            Invoker = new ActionInvoker(logger, "Setting of new ServiceUser credential.");
 
             // FeedSDLLiveContentConfig
-            _invoker.AddAction(new SetAttributeValueAction(logger, 
+            Invoker.AddAction(new SetAttributeValueAction(logger, 
                 FeedSDLLiveContentConfigPath, 
                 FeedSDLLiveContentConfig.ServiceUserUserNameAttributeXPath, 
                 userName));
-            _invoker.AddAction(new SetAttributeValueAction(logger, 
+            Invoker.AddAction(new SetAttributeValueAction(logger, 
                 FeedSDLLiveContentConfigPath, 
                 FeedSDLLiveContentConfig.ServiceUserPasswordAttributeXPath, 
                 password));
 
             // SynchronizeToLiveContentConfig
-            _invoker.AddAction(new SetAttributeValueAction(logger,
+            Invoker.AddAction(new SetAttributeValueAction(logger,
                 SynchronizeToLiveContentConfigPath,
                 SynchronizeToLiveContentConfig.ServiceUserUserNameAttributeXPath,
                 userName));
-            _invoker.AddAction(new SetAttributeValueAction(logger,
+            Invoker.AddAction(new SetAttributeValueAction(logger,
                 SynchronizeToLiveContentConfigPath,
                 SynchronizeToLiveContentConfig.ServiceUserPasswordAttributeXPath,
                 password));
 
 
             // InputParameters
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceUserNameXPath, userName));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServicePasswordXPath, password));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceUserNameXPath, userName));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServicePasswordXPath, password));
 
             // Set new ServiceUser credentials for TranslationBuilderConfig service
-            _invoker.AddAction(new SetAttributeValueAction(logger,
+            Invoker.AddAction(new SetAttributeValueAction(logger,
                 TranslationBuilderConfigFilePath,
                 TranslationBuilderConfig.AttributeXPaths[TranslationBuilderSetting.userName],
                 userName));
-            _invoker.AddAction(new SetAttributeValueAction(logger,
+            Invoker.AddAction(new SetAttributeValueAction(logger,
                 TranslationBuilderConfigFilePath,
                 TranslationBuilderConfig.AttributeXPaths[TranslationBuilderSetting.password],
                 password));
 
             // Set new ServiceUser credentials for TranslationOrganizerConfig service
-            _invoker.AddAction(new SetAttributeValueAction(Logger,
+            Invoker.AddAction(new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServiceUsernameAttributeXPath,
                         userName));
 
-            _invoker.AddAction(
+            Invoker.AddAction(
                     new SetAttributeValueAction(Logger,
                     TranslationOrganizerConfigFilePath,
                     TranslationOrganizerConfig.TranslationOrganizerSettingsInfoShareWSServicePasswordAttributeXPath,
@@ -102,7 +102,7 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

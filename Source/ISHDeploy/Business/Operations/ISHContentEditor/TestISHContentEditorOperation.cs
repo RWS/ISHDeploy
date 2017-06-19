@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The operation result.
@@ -45,8 +45,8 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         public TestISHContentEditorOperation(ILogger logger, Models.ISHDeployment ishDeployment, string domain) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Testing of license for specific host name");
-            _invoker.AddAction(new LicenseTestAction(logger, LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
+            Invoker = new ActionInvoker(logger, "Testing of license for specific host name");
+            Invoker.AddAction(new LicenseTestAction(logger, LicenceFolderPath, domain, isValid => { _isLicenceValid = isValid; }));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHContentEditor
         /// <returns>List of installed Content Manager deployments.</returns>
         public bool Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _isLicenceValid;
         }

@@ -36,7 +36,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -48,7 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         public SetISHAPIWCFServiceCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string thumbprint, X509CertificateValidationMode? validationMode) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
+            Invoker = new ActionInvoker(logger, "Setting of Thumbprint and issuers values to configuration");
 
             thumbprint = GetNormalizedThumbprint(thumbprint);
 
@@ -64,7 +64,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
                 var encryptedThumbprint = string.Empty;
                 (new GetEncryptedRawDataByThumbprintAction(Logger, thumbprint, result => encryptedThumbprint = result)).Execute();
 
-                _invoker.AddAction(new SqlCompactExecuteAction(Logger,
+                Invoker.AddAction(new SqlCompactExecuteAction(Logger,
                     InfoShareSTSDataBaseConnectionString,
                     string.Format(InfoShareSTSDataBase.UpdateCertificateInRelyingPartiesSQLCommandFormat,
                             encryptedThumbprint,
@@ -72,30 +72,30 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
             }
 
             // Stop STS Application pool before updating RelyingParties 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
 
             // thumbprint
-            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
-            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateThumbprintXPath, thumbprint));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
+            Invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
+            Invoker.AddAction(new SetAttributeValueAction(logger, InfoShareWSWebConfigPath, InfoShareWSWebConfig.CertificateThumbprintXPath, thumbprint));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateThumbprintXPath, thumbprint));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateSubjectNameXPath, serviceCertificateSubjectName));
 
             if (validationMode != null)
             {
                 // validationMode
-                _invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-                _invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-                _invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
-                _invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-                _invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
-                _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetAttributeValueAction(logger, FeedSDLLiveContentConfigPath, FeedSDLLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetAttributeValueAction(logger, TranslationOrganizerConfigFilePath, TranslationOrganizerConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetAttributeValueAction(logger, SynchronizeToLiveContentConfigPath, SynchronizeToLiveContentConfig.InfoShareWSServiceCertificateValidationModeAttributeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetElementValueAction(logger, TrisoftInfoShareClientConfigPath, TrisoftInfoShareClientConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetElementValueAction(logger, InfoShareWSConnectionConfigPath, InfoShareWSConnectionConfig.InfoShareWSServiceCertificateValidationModeXPath, validationMode.ToString()));
+                Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
             }
 
             // Recycling Application pool for STS
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
 
             // Waiting until files becomes unlocked
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+            Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
             Logger.WriteWarning("This cmdlet modified the cookie encryption. All existing browser and client sessions must be recreated.");
         }
     }

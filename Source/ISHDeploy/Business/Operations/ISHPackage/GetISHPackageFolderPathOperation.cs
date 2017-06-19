@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Return path in UNC format
@@ -48,9 +48,9 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             _isUncFormat = isUncFormat;
 
-            _invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
+            Invoker = new ActionInvoker(logger, "Getting the path to the packages folder");
 
-            _invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
+            Invoker.AddAction(new DirectoryEnsureExistsAction(logger, PackagesFolderPath));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public string Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _isUncFormat ? PackagesFolderUNCPath : PackagesFolderPath; ;
         }

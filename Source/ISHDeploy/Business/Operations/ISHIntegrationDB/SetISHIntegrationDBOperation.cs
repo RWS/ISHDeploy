@@ -31,7 +31,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <summary>
         /// The actions invoker.
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHIntegrationDBOperation" /> class.
@@ -43,22 +43,22 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         public SetISHIntegrationDBOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string connectionString, DatabaseType databaseType)
              :base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
+            Invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
             // change registry
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-            _invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, connectionString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
+            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, databaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
 
             // change inputparameters.xml
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
-            _invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, databaseType.ToString()));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
+            Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, databaseType.ToString()));
 
             // restart services
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

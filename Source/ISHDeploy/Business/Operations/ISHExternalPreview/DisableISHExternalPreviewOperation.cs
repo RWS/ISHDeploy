@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisableISHExternalPreviewOperation"/> class.
@@ -39,15 +39,15 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         public DisableISHExternalPreviewOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
+            Invoker = new ActionInvoker(logger, "Disabling of InfoShare external preview");
 
-            _invoker.AddAction(new SetAttributeValueAction(
+            Invoker.AddAction(new SetAttributeValueAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
                     InfoShareAuthorWebConfig.ExternalPreviewModuleAttributeXPath,
                     "THE_FISHEXTERNALID_TO_USE"));
 
-            _invoker.AddAction(new CommentNodeByXPathAction(
+            Invoker.AddAction(new CommentNodeByXPathAction(
                     logger,
                     InfoShareAuthorWebConfigPath,
                     new [] {
@@ -62,7 +62,7 @@ namespace ISHDeploy.Business.Operations.ISHExternalPreview
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

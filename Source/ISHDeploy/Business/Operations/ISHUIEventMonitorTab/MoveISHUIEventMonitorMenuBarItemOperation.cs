@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveISHUIEventMonitorMenuBarItemOperation" /> class.
@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         public MoveISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, string label, MoveDirection direction, string targetLabel = null) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
+            Invoker = new ActionInvoker(logger, "Moving of Event Monitor Tab");
 
 			string nodeXPath = string.Format(EventMonitorMenuBarXml.EventMonitorTab, label);
 			string nodeCommentXPath = nodeXPath + EventMonitorMenuBarXml.EventMonitorPreccedingCommentXPath;
@@ -56,10 +56,10 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 			switch (direction)
 	        {
 				case MoveDirection.After:
-					_invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
+					Invoker.AddAction(new MoveAfterNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 				case MoveDirection.Before:
-					_invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
+					Invoker.AddAction(new MoveBeforeNodeAction(logger, EventMonitorMenuBarXmlPath, nodesToMoveXPath, targetNodeXPath));
 					break;
 			}
 		}
@@ -69,7 +69,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

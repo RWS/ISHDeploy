@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
-		private readonly IActionInvoker _invoker;
+		public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHUIEventMonitorMenuBarItemOperation" /> class.
@@ -41,9 +41,9 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
         public SetISHUIEventMonitorMenuBarItemOperation(ILogger logger, Models.ISHDeployment ishDeployment, EventLogMenuItem menuItem) :
             base(logger, ishDeployment)
 		{
-			_invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
+			Invoker = new ActionInvoker(logger, "Setting of Event Monitor Tab");
 
-			_invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
+			Invoker.AddAction(new SetNodeAction(logger, EventMonitorMenuBarXmlPath, string.Format(EventMonitorMenuBarXml.EventMonitorTab, menuItem.Label), menuItem));
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace ISHDeploy.Business.Operations.ISHUIEventMonitorTab
 		/// </summary>
 		public void Run()
 		{
-			_invoker.Invoke();
+			Invoker.Invoke();
 		}
 	}
 }

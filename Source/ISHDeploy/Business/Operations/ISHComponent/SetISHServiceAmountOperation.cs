@@ -35,7 +35,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHServiceAmountOperation"/> class.
@@ -52,10 +52,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 throw new Exception($"The {amount} argument is greater than the maximum allowed range of 10. Supply an argument that is less than or equal to 10 and then try the command again");
             }
 
-            _invoker = new ActionInvoker(logger, $"Setting of amount of {ishWindowsServiceType} windows services");
+            Invoker = new ActionInvoker(logger, $"Setting of amount of {ishWindowsServiceType} windows services");
 
             // Make sure Vanilla backup of all windows services exists
-            _invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
@@ -67,8 +67,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 var servicesForDeleting = services.Where(serv => serv.Sequence > amount);
                 foreach (var service in servicesForDeleting)
                 {
-                    _invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                    _invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                    Invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
                 }
             }
             else if (services.Count() < amount)
@@ -76,7 +76,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 var service = services.FirstOrDefault(serv => serv.Sequence == services.Count());
                 for (int i = services.Count(); i < amount; i++)
                 {
-                    _invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
+                    Invoker.AddAction(new CloneWindowsServiceAction(Logger, service, i + 1, InputParameters.OSUser, InputParameters.OSPassword));
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

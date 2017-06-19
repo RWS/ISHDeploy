@@ -40,7 +40,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <summary>
         /// The actions invoker
         /// </summary>
-        protected IActionInvoker Invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.

@@ -38,7 +38,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The file manager
@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         public SetISHCMCUILResourceGroupOperation(ILogger logger, Models.ISHDeployment ishDeployment, string name, string[] relativePaths) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, $"Setting resource group in {CUIFConfigFilePath.RelativePath}");
+            Invoker = new ActionInvoker(logger, $"Setting resource group in {CUIFConfigFilePath.RelativePath}");
 
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
@@ -87,7 +87,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                         });
                     }
 
-                    _invoker.AddAction(new SetElementAction(Logger,
+                    Invoker.AddAction(new SetElementAction(Logger,
                                     new ISHFilePath(WebFolderPath, BackupWebFolderPath, resourceGroup.RelativeFilePath), resourceGroup));
                 }
                 else
@@ -122,7 +122,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

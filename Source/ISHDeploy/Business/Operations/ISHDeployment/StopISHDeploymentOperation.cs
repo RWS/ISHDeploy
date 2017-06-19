@@ -15,10 +15,14 @@
  */
 
 using System;
+using System.Linq;
+using ISHDeploy.Business.Invokers;
 using ISHDeploy.Business.Operations.ISHComponent;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.ISHProject;
+using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -27,17 +31,48 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
     /// Starts deployment.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class StopISHDeploymentOperation : DisableISHComponentOperation
+    public class StopISHDeploymentOperation : BaseOperationPaths, IOperation
     {
+        /// <summary>
+        /// The actions invoker
+        /// </summary>
+        public IActionInvoker Invoker { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableISHComponentOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         public StopISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
-            base(logger, ishDeployment, false, (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)))
+            base(logger, ishDeployment)
         {
+            IOperation operation;
+            var fileManager = ObjectFactory.GetInstance<IFileManager>();
+            if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
+            {
+                var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+                var componentsCollection = dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+                operation = new DisableISHComponentOperation(logger, ishDeployment, false,
+                    componentsCollection.Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray());
+            }
+            else
+            {
+                operation = new DisableISHComponentOperation(logger, ishDeployment, false,
+                    (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+            }
+
+            Invoker = new ActionInvoker(Logger, "Stopping of enabled components", operation.Invoker.GetActions());
+
             Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Stopped));
+        }
+
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            Invoker.Invoke();
         }
     }
 }

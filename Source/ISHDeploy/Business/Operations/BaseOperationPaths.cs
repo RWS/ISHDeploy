@@ -232,6 +232,11 @@ namespace ISHDeploy.Business.Operations
         protected string VanillaPropertiesOfWindowsServicesFilePath { get; }
 
         /// <summary>
+        /// The path to file with list of vanilla registry values of deployment.
+        /// </summary>
+        protected string VanillaRegistryValuesFilePath { get; }
+
+        /// <summary>
         /// The path to Web back up folder
         /// </summary>
         protected string BackupWebFolderPath { get; }
@@ -415,6 +420,7 @@ namespace ISHDeploy.Business.Operations
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
             VanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
             VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.dat");
+            VanillaRegistryValuesFilePath = Path.Combine(BackupFolderPath, "vanilla.registry.values.dat");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");

@@ -16,6 +16,7 @@
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
@@ -46,10 +47,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             Invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
             // change registry
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.Connect, connectionString));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.ComponentName, databaseType));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.Connect, connectionString));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.ComponentName, databaseType));
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.Connect, Value = connectionString }, VanillaRegistryValuesFilePath));
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.ComponentName, Value = databaseType }, VanillaRegistryValuesFilePath));
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.Connect, Value = connectionString }, VanillaRegistryValuesFilePath));
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.ComponentName, Value = databaseType }, VanillaRegistryValuesFilePath));
 
             // change inputparameters.xml
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));

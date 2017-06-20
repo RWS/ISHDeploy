@@ -31,7 +31,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Get, "ISHIISAppPool")]
-    public sealed class GetISHIISAppPoolCmdlet : BaseISHDeploymentCmdlet
+    public sealed class GetISHIISAppPoolCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
         /// Executes cmdlet

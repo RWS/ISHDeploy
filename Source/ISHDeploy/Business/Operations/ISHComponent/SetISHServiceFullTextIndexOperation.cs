@@ -20,6 +20,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;
+using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -79,7 +80,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             base(logger, ishDeployment)
         {
 
-            if (portRegistryValueName != RegistryValueName.SolrLuceneServicePort ||
+            if (portRegistryValueName != RegistryValueName.SolrLuceneServicePort &&
                 portRegistryValueName != RegistryValueName.SolrLuceneStopPort)
             {
                 throw new AggregateException($"Operation does not support such RegistryValueName value: {portRegistryValueName}");
@@ -113,6 +114,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             }
 
             // Open port
+            Invoker.AddAction(new OpenPortAction(logger, port));
 
             // Remove dependencies between Crawler and SolrLucene
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();

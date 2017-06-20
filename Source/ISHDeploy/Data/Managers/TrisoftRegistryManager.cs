@@ -19,7 +19,7 @@ using System.Linq;
 ﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-﻿using ISHDeploy.Common.Models;
+﻿using ISHDeploy.Common.Models.Backup;
 ﻿using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers

@@ -19,6 +19,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -52,15 +53,18 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             // Make sure Vanilla backup of all windows services exists
             Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareAuthorRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegInfoShareBuildersRegistryElement, RegistryValueName.SolrLuceneBaseUrl, uri));
+            // Change RegistryValue and do vanilla backup, if vanilla value has not been saved yet
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
 
             foreach (var service in services)
             {
-                Invoker.AddAction(new SetRegistryValueAction(logger, string.Format(RegWindowsServicesRegistryPathPattern, service.Name), RegistryValueName.DependOnService, string.Empty));
+                // Change RegistryValue for Crawler services.
+                // There is no need to backup the vanilla value of the registry, since the service will be completely re-created in case of Undo
+                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
             }
         }
 

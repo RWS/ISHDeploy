@@ -21,6 +21,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -103,7 +104,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     if (service == null)
                     {
                         var fileManager = ObjectFactory.GetInstance<IFileManager>();
-                        var backedUpWindowsService = fileManager.ReadObjectFromFile<Models.ISHWindowsServiceBackupCollection>(
+                        var backedUpWindowsService = fileManager.ReadObjectFromFile<ISHWindowsServiceBackupCollection>(
                                 VanillaPropertiesOfWindowsServicesFilePath).Services.FirstOrDefault(x => x.Name.Contains(ISHWindowsServiceType.BackgroundTask.ToString()));
 
                         Invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, RegWindowsServicesRegistryPathPattern, InputParameters.OSUser, InputParameters.OSPassword));

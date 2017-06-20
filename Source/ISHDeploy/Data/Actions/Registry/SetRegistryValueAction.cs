@@ -18,6 +18,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Actions.Registry
 {
@@ -27,19 +28,14 @@ namespace ISHDeploy.Data.Actions.Registry
     public class SetRegistryValueAction : BaseAction
     {
         /// <summary>
-        /// The registry key name.
-        /// </summary>
-        private readonly string _keyName;
-
-        /// <summary>
-        /// The name of registry value.
-        /// </summary>
-        private readonly RegistryValueName _valueName;
-
-        /// <summary>
         /// The value to be stored.
         /// </summary>
-        private readonly object _value;
+        private readonly RegistryValue _registryValue;
+
+        /// <summary>
+        /// The registry key name.
+        /// </summary>
+        private readonly string _vanillaRegistryValuesFilePath;
 
         /// <summary>
         /// The registry manager
@@ -47,28 +43,47 @@ namespace ISHDeploy.Data.Actions.Registry
         private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
+        /// The registry manager
+        /// </summary>
+        private readonly IFileManager _fileManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SetRegistryValueAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="keyName">The registry key name.</param>
-        /// <param name="valueName">The name of registry value.</param>
-        /// <param name="value">The value.</param>
-        public SetRegistryValueAction(ILogger logger, string keyName, RegistryValueName valueName, object value)
+        /// <param name="registryValue">The registry value.</param>
+        /// <param name="vanillaRegistryValuesFilePath">The value.</param>
+        public SetRegistryValueAction(ILogger logger, RegistryValue registryValue, string vanillaRegistryValuesFilePath = "")
             : base(logger)
         {
-            _keyName = keyName;
-            _valueName = valueName;
-            _value = value;
+            _registryValue = registryValue;
+            _vanillaRegistryValuesFilePath = vanillaRegistryValuesFilePath;
 
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            _fileManager = ObjectFactory.GetInstance<IFileManager>();
         }
 
         /// <summary>
         /// Executes the action.
         /// </summary>
         public override void Execute()
-		{
-            _registryManager.SetValue(_keyName, _valueName, _value);
+        {
+            if (!string.IsNullOrEmpty(_vanillaRegistryValuesFilePath))
+            {
+                var registryValuesCollection = _fileManager.FileExists(_vanillaRegistryValuesFilePath) ?
+                    _fileManager.ReadObjectFromFile<RegistryValueCollection>(_vanillaRegistryValuesFilePath) : 
+                    new RegistryValueCollection();
+
+                var vanillaValue = registryValuesCollection[_registryValue.Key, _registryValue.ValueName];
+                if (vanillaValue == null)
+                {
+                    var currentValue = _registryManager.GetRegistryValue(_registryValue.Key, _registryValue.ValueName);
+                    registryValuesCollection.Values.Add(new RegistryValue { Key = _registryValue.Key, ValueName = _registryValue.ValueName, Value = currentValue });
+                    _fileManager.SaveObjectToFile(_vanillaRegistryValuesFilePath, registryValuesCollection);
+                }
+            }
+
+            _registryManager.SetValue(_registryValue.Key, _registryValue.ValueName, _registryValue.Value);
         }
 	}
 }

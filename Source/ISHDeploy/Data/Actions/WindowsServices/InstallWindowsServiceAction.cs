@@ -18,6 +18,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Actions.WindowsServices
 {

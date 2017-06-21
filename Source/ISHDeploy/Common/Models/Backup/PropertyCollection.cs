@@ -15,28 +15,27 @@
  */
 
 using System;
+using System.Collections.Generic;
 
-namespace ISHDeploy.Common.Models
+namespace ISHDeploy.Common.Models.Backup
 {
     /// <summary>
-    /// <para type="description">Represents the backup of windows service.</para>
+    /// <para type="description">Represents collection of properties.</para>
     /// </summary>
     [Serializable]
-    public class ISHWindowsServiceBackup
+    public class PropertyCollection
     {
         /// <summary>
-        /// The name of windows service.
+        /// List of properties
         /// </summary>
-        public string Name { get; set; }
+        public List<Property> Properties { get; set; }
 
         /// <summary>
-        /// The properties from WindowsServiceManager.
+        /// Initializes a new instance of the <see cref="PropertyCollection"/> class.
         /// </summary>
-        public PropertyCollection WindowsServiceManagerProperties { get; set; }
-
-        /// <summary>
-        /// The properties from RegistryManager.
-        /// </summary>
-        public PropertyCollection RegistryManagerProperties { get; set; }
+        public PropertyCollection()
+        {
+            Properties = new List<Property>();
+        }
     }
 }

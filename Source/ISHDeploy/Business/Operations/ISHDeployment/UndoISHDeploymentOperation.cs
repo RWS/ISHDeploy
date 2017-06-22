@@ -26,6 +26,7 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using System.Linq;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.ISHProject;
@@ -118,16 +119,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var doRollbackOfOSUserAndOSPassword = currentOSUserName != vanillaInputParameters.OSUser ||
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
-            // change registry
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareAuthor{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DbConnectionString, vanillaInputParameters.ConnectString, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-            Invoker.AddAction(new SetRegistryValueAction(logger, RegistryValueName.DatabaseType, vanillaInputParameters.DatabaseType, $"InfoShareBuilders{InputParameters.ProjectSuffix}"));
-
-
+            // Rollback of WindowsServices 
+            // If VanillaPropertiesOfWindowsServicesFilePath exists recreate ISH windows services
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
 		    {
-		        // Recreate ISH windows services
 		        var services = serviceManager.GetServices(
 		            ishDeployment.Name,
 		            (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType))).ToList();
@@ -138,15 +133,16 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 		        }
 
 		        var backedUpWindowsServices =
-		            _fileManager.ReadObjectFromFile<Models.ISHWindowsServiceBackupCollection>(
+		            _fileManager.ReadObjectFromFile<ISHWindowsServiceBackupCollection>(
 		                VanillaPropertiesOfWindowsServicesFilePath);
 
 		        foreach (var service in backedUpWindowsServices.Services)
 		        {
-                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
+                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service, RegWindowsServicesRegistryPathPattern,
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
 		    }
+            // or do rollback of OSUser credentials if it is needed 
             else if (doRollbackOfOSUserAndOSPassword)
             {
                 var services = serviceManager.GetServices(
@@ -163,6 +159,17 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 }
             }
 
+            // Rollback registry values
+            if (_fileManager.FileExists(VanillaRegistryValuesFilePath))
+            {
+                var registryValueCollection =
+                    _fileManager.ReadObjectFromFile<RegistryValueCollection>(VanillaRegistryValuesFilePath);
+
+                foreach (var registryValue in registryValueCollection.Values)
+                {
+                    Invoker.AddAction(new SetRegistryValueAction(logger, registryValue));
+                }
+            }
 
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;

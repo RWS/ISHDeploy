@@ -15,6 +15,7 @@
  */
 
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {

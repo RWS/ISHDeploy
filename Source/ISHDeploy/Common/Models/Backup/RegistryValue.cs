@@ -15,27 +15,29 @@
  */
 
 using System;
-using System.Collections.Generic;
+using ISHDeploy.Common.Enums;
 
-namespace ISHDeploy.Common.Models
+namespace ISHDeploy.Common.Models.Backup
 {
     /// <summary>
-    /// <para type="description">Represents collection of properties.</para>
+    /// <para type="description">Represents the registry value.</para>
     /// </summary>
     [Serializable]
-    public class PropertyCollection
+    public class RegistryValue
     {
         /// <summary>
-        /// List of properties
+        /// The registry key.
         /// </summary>
-        public List<Property> Properties { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyCollection"/> class.
+        /// The registry value name.
         /// </summary>
-        public PropertyCollection()
-        {
-            Properties = new List<Property>();
-        }
+        public RegistryValueName ValueName { get; set; }
+
+        /// <summary>
+        /// The value.
+        /// </summary>
+        public object Value { get; set; }
     }
 }

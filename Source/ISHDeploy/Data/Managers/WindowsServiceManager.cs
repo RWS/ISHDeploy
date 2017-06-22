@@ -24,6 +24,7 @@ using System.ServiceProcess;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers

@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
+    <Compile Include="Business\Operations\ISHComponent\SetISHServiceFullTextIndexOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceBackgroundTaskAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHCredentials\SetISHIssuerActorUserOperation.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Cmdlets\ISHServiceCrawler\DisableISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\EnableISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\GetISHServiceCrawlerCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceFullTextIndex\SetISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\DisableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\EnableISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\GetISHServiceTranslationOrganizerCmdlet.cs" />
@@ -320,15 +322,17 @@
     <Compile Include="Cmdlets\ISHUIElement\MoveISHUIMainMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUISearchMenuBarItemCmdlet.cs" />
     <Compile Include="Cmdlets\ISHUIElement\RemoveISHUIMainMenuBarItemCmdlet.cs" />
+    <Compile Include="Common\Models\Backup\RegistryValueCollection.cs" />
+    <Compile Include="Common\Models\Backup\RegistryValue.cs" />
     <Compile Include="Common\Models\BaseXMLElement.cs" />
     <Compile Include="Common\Models\IntegrationDbConnectionString.cs" />
     <Compile Include="Common\Models\ISHIISAppPoolComponent.cs" />
     <Compile Include="Common\Models\ISHComponent.cs" />
     <Compile Include="Common\Models\ISHCOMPlusComponent.cs" />
-    <Compile Include="Common\Models\Property.cs" />
-    <Compile Include="Common\Models\ISHWindowsServicePropertyCollection.cs" />
-    <Compile Include="Common\Models\ISHWindowsServiceBackupCollection.cs" />
-    <Compile Include="Common\Models\ISHWindowsServiceBackup.cs" />
+    <Compile Include="Common\Models\Backup\Property.cs" />
+    <Compile Include="Common\Models\Backup\PropertyCollection.cs" />
+    <Compile Include="Common\Models\Backup\ISHWindowsServiceBackupCollection.cs" />
+    <Compile Include="Common\Models\Backup\ISHWindowsServiceBackup.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />

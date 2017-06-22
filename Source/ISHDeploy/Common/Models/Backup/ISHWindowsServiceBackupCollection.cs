@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace ISHDeploy.Common.Enums
+
+using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
+namespace ISHDeploy.Common.Models.Backup
 {
     /// <summary>
-    /// <para type="description">Specify the name of registry values.</para>
+    /// <para type="description">Represents collection of services with backup properties.</para>
     /// </summary>
-    public enum RegistryValueName
+    [Serializable]
+    [XmlRoot("ISHWindowsServices", Namespace = "")]
+    public class ISHWindowsServiceBackupCollection
     {
         /// <summary>
-        /// Db connection string
+        /// List of services
         /// </summary>
-        Connect,
+        [XmlElement("ISHWindowsServiceBackup", Namespace = "")]
+        public List<ISHWindowsServiceBackup> Services { get; set; }
 
         /// <summary>
-        /// Database type
+        /// Initializes a new instance of the <see cref="ISHWindowsServiceBackupCollection"/> class.
         /// </summary>
-        ComponentName,
-
-        /// <summary>
-        /// SolrLuceneBaseUrl
-        /// </summary>
-        SolrLuceneBaseUrl,
-
-        /// <summary>
-        /// DependOnService
-        /// </summary>
-        DependOnService
+        public ISHWindowsServiceBackupCollection()
+        {
+            Services = new List<ISHWindowsServiceBackup>();
+        }
     }
 }

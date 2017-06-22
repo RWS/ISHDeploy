@@ -16,7 +16,7 @@
 
 using System;
 
-namespace ISHDeploy.Common.Models
+namespace ISHDeploy.Common.Models.Backup
 {
     /// <summary>
     /// <para type="description">Represents the Property.</para>

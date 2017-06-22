@@ -20,6 +20,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;
+using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -57,6 +58,65 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
             Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
 
+            // Remove dependencies between Crawler and SolrLucene
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+
+            foreach (var service in services)
+            {
+                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHServiceFullTextIndexOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="port">The target lucene port.</param>
+        /// <param name="portRegistryValueName">The name of port value in registry.</param>
+        /// <param name="solrLuceneStopKey">The StopKey.</param>
+        public SetISHServiceFullTextIndexOperation(ILogger logger, Models.ISHDeployment ishDeployment, int port, RegistryValueName portRegistryValueName, string solrLuceneStopKey = "") :
+            base(logger, ishDeployment)
+        {
+
+            if (portRegistryValueName != RegistryValueName.SolrLuceneServicePort &&
+                portRegistryValueName != RegistryValueName.SolrLuceneStopPort)
+            {
+                throw new AggregateException($"Operation does not support such RegistryValueName value: {portRegistryValueName}");
+            }
+
+            Invoker = new ActionInvoker(logger, $"Setting of target lucene {portRegistryValueName} port of {ISHWindowsServiceType.SolrLucene} windows services");
+
+            // Make sure Vanilla backup of all windows services exists
+            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+            // Change RegistryValue and do vanilla backup, if vanilla value has not been saved yet
+            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = portRegistryValueName, Value = port }, VanillaRegistryValuesFilePath));
+
+            if (portRegistryValueName == RegistryValueName.SolrLuceneServicePort)
+            {
+                var registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+                var currentLuceneUri =
+                    new Uri(
+                        registryManager.GetRegistryValue(RegInfoShareBuildersRegistryElement,
+                            RegistryValueName.SolrLuceneBaseUrl).ToString());
+
+                var newUriAsString = currentLuceneUri.ToString().Replace(currentLuceneUri.Port.ToString(), port.ToString());
+                var newUri = new Uri(newUriAsString);
+
+                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
+                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
+            }
+            else
+            {
+                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneStopKey, Value = solrLuceneStopKey }, VanillaRegistryValuesFilePath));
+            }
+
+            // Open port
+            Invoker.AddAction(new OpenPortAction(logger, port));
+
+            // Remove dependencies between Crawler and SolrLucene
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
 

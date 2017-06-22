@@ -23,6 +23,7 @@ using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Managers.Interfaces;
+using NetFwTypeLib;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -168,6 +169,34 @@ namespace ISHDeploy.Data.Managers
             }
 
             return components;
+        }
+
+        /// <summary>
+        /// Opens port
+        /// </summary>
+        /// <param name="port">The number of port.</param>
+        public void GloballyOpenPort(int port)
+        {
+            _logger.WriteDebug("Open port", port);
+
+            INetFwMgr icfMgr = (INetFwMgr)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwMgr"));
+
+            INetFwOpenPort portClass = (INetFwOpenPort)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWOpenPort"));
+
+            // Get the current profile
+            INetFwProfile profile = icfMgr.LocalPolicy.CurrentProfile;
+
+            // Set the port properties
+            portClass.Scope = NET_FW_SCOPE_.NET_FW_SCOPE_ALL;
+            portClass.Enabled = true;
+            portClass.Protocol = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP;
+            portClass.Name = "ISHDeploy port opening";
+            portClass.Port = port;
+
+            // Add the port to the ICF Permissions List
+            profile.GloballyOpenPorts.Add(portClass);
+
+            _logger.WriteVerbose($"The port `{port}` has been opened");
         }
     }
 }

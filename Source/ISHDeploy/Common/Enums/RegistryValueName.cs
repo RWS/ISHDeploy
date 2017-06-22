@@ -38,6 +38,21 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// DependOnService
         /// </summary>
-        DependOnService
+        DependOnService,
+
+        /// <summary>
+        /// SolrLuceneServicePort
+        /// </summary>
+        SolrLuceneServicePort,
+
+        /// <summary>
+        /// SolrLuceneStopPort
+        /// </summary>
+        SolrLuceneStopPort,
+
+        /// <summary>
+        /// SolrLuceneStopKey
+        /// </summary>
+        SolrLuceneStopKey
     }
 }

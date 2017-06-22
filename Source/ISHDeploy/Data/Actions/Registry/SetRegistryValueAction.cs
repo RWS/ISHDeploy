@@ -15,7 +15,6 @@
  */
 
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;

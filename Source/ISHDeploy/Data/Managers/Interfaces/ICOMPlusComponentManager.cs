@@ -59,5 +59,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// The list of COM+ components.
         /// </returns>
         IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents();
+
+        /// <summary>
+        /// Opens port
+        /// </summary>
+        /// <param name="port">The number of port.</param>
+        void GloballyOpenPort(int port);
     }
 }

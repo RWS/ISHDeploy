@@ -22,7 +22,9 @@ namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
     /// <summary>
     /// <para type="synopsis">Sets BackgroundTask windows service.</para>
     /// <para type="description">The Set-ISHServiceBackgroundTask cmdlet sets BackgroundTask windows service.</para>
-    /// <para type="link">Enable-ISHExternalPreview</para>
+    /// <para type="link">Enable-ISHServiceBackgroundTask</para>
+    /// <para type="link">Disable-ISHServiceBackgroundTask</para>
+    /// <para type="link">Get-ISHServiceBackgroundTask</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceBackgroundTask -ISHDeployment $deployment -Count 2</code>

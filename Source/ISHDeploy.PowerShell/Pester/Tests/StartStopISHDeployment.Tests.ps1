@@ -128,6 +128,18 @@ $scriptBlockGetCOMState = {
     return $result
 }
 
+
+$scriptBlockDisableISHIISAppPool = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Disable-ISHIISAppPool -ISHDeployment $ishDeploy
+}
 function GetComObjectState() {
 
     #read all files that are touched with commandlet
@@ -279,6 +291,50 @@ Describe "Testing Start and Stop ISH Deployment"{
         $pools.Count | Should be 3
 
     }
+
+	It "Start ISHDeployment should not start disabled components"{
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        #Assert
+        GetComObjectState
+        $AuthorApplication | Should be False  
+        $ISOApplication | Should be False 
+        $UtilitiesApplication | Should be False 
+        $TriDKApplication | Should be False 
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0  
+
+    }
+	It "Enabling components on stopeed deployment should not start components"{
+         #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        GetComObjectState
+        $AuthorApplication | Should be False  
+        $ISOApplication | Should be False 
+        $UtilitiesApplication | Should be False 
+        $TriDKApplication | Should be False 
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0      
+		$checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped"
+		#Assert
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+		GetComObjectState
+        $AuthorApplication | Should be False  
+        $ISOApplication | Should be False 
+        $UtilitiesApplication | Should be False 
+        $TriDKApplication | Should be False
+    }
+
     #>
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

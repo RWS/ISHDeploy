@@ -232,6 +232,11 @@ namespace ISHDeploy.Business.Operations
         protected string VanillaPropertiesOfWindowsServicesFilePath { get; }
 
         /// <summary>
+        /// The path to file with list of vanilla registry values of deployment.
+        /// </summary>
+        protected string VanillaRegistryValuesFilePath { get; }
+
+        /// <summary>
         /// The path to Web back up folder
         /// </summary>
         protected string BackupWebFolderPath { get; }
@@ -374,6 +379,21 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath CurrentISHComponentStatesFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\Tridk\TridkApp\InfoShareAuthor..." element of registry.
+        /// </summary>
+        protected string RegInfoShareAuthorRegistryElement { get; }
+
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\\Tridk\TridkApp\InfoShareBuilders..." element of registry.
+        /// </summary>
+        protected string RegInfoShareBuildersRegistryElement { get; }
+
+        /// <summary>
+        /// Gets the pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}".
+        /// </summary>
+        protected string RegWindowsServicesRegistryPathPattern { get; }
+
         #endregion
 
         /// <summary>
@@ -400,6 +420,7 @@ namespace ISHDeploy.Business.Operations
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
             VanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
             VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.dat");
+            VanillaRegistryValuesFilePath = Path.Combine(BackupFolderPath, "vanilla.registry.values.dat");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
@@ -439,6 +460,15 @@ namespace ISHDeploy.Business.Operations
             // To avoid possible problems in the future (if ISHComponent model change) decided to add the version to the file name,
             // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
             CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.v1.xml");
+
+            var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            RegInfoShareAuthorRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
+            RegInfoShareBuildersRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
+
+            RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
+
             #endregion
         }
 

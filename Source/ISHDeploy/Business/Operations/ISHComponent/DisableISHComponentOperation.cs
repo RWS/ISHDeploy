@@ -118,6 +118,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 Invoker.AddAction(
                                     new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                             }
+                            else
+                            {
+                                Invoker.AddAction(new WriteVerboseAction(Logger, () => (true), $"COM+ component `{comPlusComponent.Name}` was already disabled"));
+                            }
                         }
                         break;
                     case ISHComponentName.Crawler:

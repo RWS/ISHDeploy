@@ -342,6 +342,7 @@
     <Compile Include="Common\Models\TranslationOrganizer\WorldServerConfigurationSection.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToWorldServerLocaleIdMapping.cs" />
     <Compile Include="Common\Models\ISHComponentsCollection.cs" />
+    <Compile Include="Data\Actions\Asserts\WriteVerboseAction.cs" />
     <Compile Include="Data\Actions\COMPlus\DisableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\EnableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\OpenPortAction.cs" />

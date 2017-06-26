@@ -126,6 +126,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                     Invoker.AddAction(
                                         new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                                 }
+                                else
+                                {
+                                    Invoker.AddAction(new WriteVerboseAction(Logger, () => (true), $"COM+ component `{comPlusComponent.Name}` was already enabled"));
+                                }
                             }
                             break;
                         case ISHComponentName.Crawler:

@@ -32,5 +32,10 @@ namespace ISHDeploy.Common.Models
         /// The status of COM+ component.
         /// </summary>
         public ISHCOMPlusComponentStatus Status { get; set; }
+
+        /// <summary>
+        /// The activation type of COM+ component.
+        /// </summary>
+        public ISHCOMPlusActivationType ActivationType { get; set; }
     }
 }

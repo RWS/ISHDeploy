@@ -61,7 +61,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Backup()
         {
-            _comPlusComponentWasEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName);
+            _comPlusComponentWasEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName, false);
         }
 
         /// <summary>

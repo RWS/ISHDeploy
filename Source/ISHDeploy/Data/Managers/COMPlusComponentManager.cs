@@ -72,8 +72,8 @@ namespace ISHDeploy.Data.Managers
                 if (string.Equals(applicationInstance.Name, comPlusComponentName,
                     StringComparison.CurrentCultureIgnoreCase))
                 {
-                    applicationInstance.set_Value("Identity", userName);
-                    applicationInstance.set_Value("Password", password);
+                    applicationInstance.Value["Identity"] = userName;
+                    applicationInstance.Value["Password"] = password;
                 }
                 
             }
@@ -83,23 +83,49 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets Com+ component by name
+        /// </summary>
+        /// <param name="comPlusComponentName"></param>
+        /// <returns>Com+ component as <see cref="ICatalogObject" /></returns>
+        private ICatalogObject GetComPlusComponentByName(string comPlusComponentName)
+        {
+            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
+
+            var applications = comAdminCatalog.GetCollection("Applications");
+            applications.Populate();
+            foreach (ICatalogObject applicationInstance in applications)
+            {
+                if (string.Equals(applicationInstance.Name, comPlusComponentName,
+                    StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return  applicationInstance;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Check COM+ component is enabled or not
         /// </summary>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
         /// <returns>State of COM+ component</returns>
-        public bool CheckCOMPlusComponentEnabled(string comPlusComponentName)
+        public bool CheckCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true)
         {
-            _logger.WriteDebug("Check COM+ component is enabled or not", comPlusComponentName);
-            var result = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Check-COMPlusComponentEnabled.ps1",
-                new Dictionary<string, string>
-                {
-                    { "$name", comPlusComponentName },
-                },
-                "Checking of COM+ component is enabled or not");
+            if (doOutput)
+            {
+                _logger.WriteDebug("Check COM+ component is enabled or not", comPlusComponentName);
+            }
 
-            var isEnabled = bool.Parse(result.ToString());
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+            var isEnabled = (bool)applicationInstance.Value["IsEnabled"];
 
-            _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` is {(isEnabled ? "Enabled" : "Disabled")}");
+            if (doOutput)
+            {
+                _logger.WriteVerbose(
+                    $"COM+ component `{comPlusComponentName}` is {(isEnabled ? "Enabled" : "Disabled")}");
+            }
 
             return isEnabled;
         }
@@ -112,20 +138,28 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Enable COM+ component");
 
-            if (CheckCOMPlusComponentEnabled(comPlusComponentName))
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+            var isEnabled = (bool)applicationInstance.Value["IsEnabled"];
+            
+            if (isEnabled)
             {
                 _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` was already enabled");
             }
             else
             {
-                var result = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Enable-COMPlusComponent.ps1",
-                    new Dictionary<string, string>
-                    {
-                        { "$name", comPlusComponentName },
-                    },
-                    $"Enabling of COM+ component `{comPlusComponentName}`");
+                var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
 
-                var count = int.Parse(result.ToString());
+                var applications = comAdminCatalog.GetCollection("Applications");
+                applications.Populate();
+                foreach (ICatalogObject application in applications)
+                {
+                    if (string.Equals(application.Name, comPlusComponentName,
+                        StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        application.Value["IsEnabled"] = true;
+                    }
+                }
+                var count = int.Parse(applications.SaveChanges().ToString());
 
                 if (count == 1)
                 {
@@ -141,18 +175,26 @@ namespace ISHDeploy.Data.Managers
         public void DisableCOMPlusComponents(string comPlusComponentName)
         {
             _logger.WriteDebug("Disable COM+ component");
-            if (CheckCOMPlusComponentEnabled(comPlusComponentName))
-            {
-                var result =
-                    _psManager.InvokeEmbeddedResourceAsScriptWithResult(
-                        "ISHDeploy.Data.Resources.Disable-COMPlusComponent.ps1",
-                        new Dictionary<string, string>
-                        {
-                            {"$name", comPlusComponentName},
-                        },
-                        $"Disabling of COM+ component `{comPlusComponentName}`");
 
-                var count = int.Parse(result.ToString());
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+            var isEnabled = (bool)applicationInstance.Value["IsEnabled"];
+
+            if (isEnabled)
+            {
+                var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
+
+                var applications = comAdminCatalog.GetCollection("Applications");
+                applications.Populate();
+                foreach (ICatalogObject application in applications)
+                {
+                    if (string.Equals(application.Name, comPlusComponentName,
+                        StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        application.Value["IsEnabled"] = false;
+                    }
+                }
+
+                var count = int.Parse(applications.SaveChanges().ToString());
 
                 if (count == 1)
                 {
@@ -174,15 +216,28 @@ namespace ISHDeploy.Data.Managers
         public IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents()
         {
             _logger.WriteDebug("Get COM+ components");
-            var results = _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Get-COMPlusComponents.ps1");
 
-            var components = (from result in (List<object>) results select new ISHCOMPlusComponent {Name = result.ToString()}).ToList();
+            var components = new List<ISHCOMPlusComponent>();
 
-            foreach (var component in components)
+            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
+
+            var applications = comAdminCatalog.GetCollection("Applications");
+            applications.Populate();
+            foreach (ICatalogObject applicationInstance in applications)
             {
-                component.Status = CheckCOMPlusComponentEnabled(component.Name)
-                    ? ISHCOMPlusComponentStatus.Enabled
-                    : ISHCOMPlusComponentStatus.Disabled;
+                string componentName = applicationInstance.Name;
+                if (componentName.StartsWith("Trisoft"))
+                {
+                    components.Add(
+                        new ISHCOMPlusComponent
+                        {
+                            Name = applicationInstance.Name,
+                            Status = ((bool) applicationInstance.Value["IsEnabled"])
+                                ? ISHCOMPlusComponentStatus.Enabled
+                                : ISHCOMPlusComponentStatus.Disabled,
+                            ActivationType = (ISHCOMPlusActivationType) applicationInstance.Value["Activation"]
+                        });
+                }
             }
 
             return components;

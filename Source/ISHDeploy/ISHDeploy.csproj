@@ -160,6 +160,7 @@
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationOrganizerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceTranslation\SetISHServiceTranslationBuilderCmdlet.cs" />
     <Compile Include="Cmdlets\ModelToHistoryFormater.cs" />
+    <Compile Include="Common\Enums\ISHCOMPlusActivationType.cs" />
     <Compile Include="Common\Enums\ISHIISAppPoolComponentStatus.cs" />
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
@@ -530,11 +531,7 @@
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
-    <EmbeddedResource Include="Data\Resources\Check-COMPlusComponentEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsServiceEnabled.ps1" />
-    <EmbeddedResource Include="Data\Resources\Enable-COMPlusComponent.ps1" />
-    <EmbeddedResource Include="Data\Resources\Disable-COMPlusComponent.ps1" />
-    <EmbeddedResource Include="Data\Resources\Get-COMPlusComponents.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

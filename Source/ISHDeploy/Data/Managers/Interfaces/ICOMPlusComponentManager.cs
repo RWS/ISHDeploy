@@ -37,8 +37,9 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Check COM+ component is enabled or not
         /// </summary>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
         /// <returns>State of COM+ component</returns>
-        bool CheckCOMPlusComponentEnabled(string comPlusComponentName);
+        bool CheckCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true);
 
         /// <summary>
         /// Enable COM+ components

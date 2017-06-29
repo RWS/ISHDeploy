@@ -136,6 +136,7 @@
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\DisableISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\EnableISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\GetISHServiceBackgroundTaskCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHMaintenance\Invoke-ISHMaintenanceCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceCrawler\SetISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\DisableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\EnableISHServiceFullTextIndexCmdlet.cs" />

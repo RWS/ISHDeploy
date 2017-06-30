@@ -109,6 +109,7 @@
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
+    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceRegisterThisCrawlerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHTranslationFileSystemExportOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationWorldServerOperation.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="Data\Actions\ISHProject\AddISHBackgroundTaskComponentAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
+    <Compile Include="Data\Actions\Process\StartProcessAction.cs" />
     <Compile Include="Data\Actions\Registry\SetRegistryValueAction.cs" />
     <Compile Include="Data\Actions\TextFile\TextReplaceAction.cs" />
     <Compile Include="Data\Actions\WebAdministration\SetWebConfigurationPropertyAction.cs" />
@@ -368,10 +370,12 @@
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Exceptions\DocumentAlreadyContainsElementException.cs" />
     <Compile Include="Data\Exceptions\ISHWindowsServiceTimeoutException.cs" />
+    <Compile Include="Data\Managers\Interfaces\IProcessManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IPowerShellManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IDatabaseManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICOMPlusComponentManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
+    <Compile Include="Data\Managers\ProcessManager.cs" />
     <Compile Include="Data\Managers\PowerShellManager.cs" />
     <Compile Include="Data\Managers\DatabaseManager.cs" />
     <Compile Include="Data\Managers\COMPlusComponentManager.cs" />

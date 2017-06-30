@@ -394,6 +394,11 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected string RegWindowsServicesRegistryPathPattern { get; }
 
+        /// <summary>
+        /// The path to ~\App\Crawler\Bin\crawler.exe
+        /// </summary>
+        protected string CrawlerExeFilePath { get; }
+
         #endregion
 
         /// <summary>
@@ -468,6 +473,8 @@ namespace ISHDeploy.Business.Operations
                 $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
 
             RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
+
+            CrawlerExeFilePath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}", @"Crawler\Bin\crawler.exe");
 
             #endregion
         }

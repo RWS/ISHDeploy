@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-using System;
 using System.Management.Automation;
-using ISHDeploy.Business.Operations.ISHComponent;
-using ISHDeploy.Common.Enums;
+using ISHDeploy.Business.Operations.ISHMaintenance;
+using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHMaintenance
 {
     /// <summary>
-    /// <para type="synopsis">Invokes settings of Crawler services.</para>
-    /// <para type="description">The Invoke-ISHMaintenance cmdlet sets settings of Crawler services.</para>
-    /// <para type="link">Enable-ISHMaintenance</para>
-    /// <para type="link">Disable-ISHMaintenance</para>
-    /// <para type="link">Get-ISHMaintenance</para>
+    /// <para type="synopsis">Maintenance Crawler or FullTextIndex services.</para>
+    /// <para type="description">The Invoke-ISHMaintenance cmdlet maintenances Crawler or FullTextIndex services.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Count 2</code>
-    /// <para>This command changes the amount of instances of Crawler services.
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -Register -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <para>This command registers the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Invoke, "ISHMaintenance")]
@@ -62,16 +58,15 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            if (!MyInvocation.BoundParameters.ContainsKey("Count") &&
-                !MyInvocation.BoundParameters.ContainsKey("Hostname") &&
-                !MyInvocation.BoundParameters.ContainsKey("Catalog"))
+            IOperation operation = null;
+            switch (ParameterSetName)
             {
-                throw new ArgumentException("Invoke-ISHMaintenance cmdlet has no parameters to set");
+                case "Register":
+                    operation = new InvokeISHMaintenanceRegisterThisCrawlerOperation(Logger, ISHDeployment, CrawlerTridkApp);
+                    break;
             }
 
-
-           
-
+            operation.Run();
 
         }
     }

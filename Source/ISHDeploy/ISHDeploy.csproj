@@ -109,7 +109,7 @@
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
-    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceRegisterThisCrawlerOperation.cs" />
+    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceRegisterCrawlerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHTranslationFileSystemExportOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationWorldServerOperation.cs" />
@@ -169,6 +169,7 @@
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
     <Compile Include="Common\Enums\ISHDeploymentStatus.cs" />
+    <Compile Include="Common\Enums\RegisterCrawlerOperationType.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
     <Compile Include="Common\Enums\DatabaseType.cs" />

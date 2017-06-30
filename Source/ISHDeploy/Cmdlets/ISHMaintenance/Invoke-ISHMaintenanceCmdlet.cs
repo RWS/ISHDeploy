@@ -16,6 +16,7 @@
 
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHMaintenance;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHMaintenance
@@ -36,6 +37,7 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
         /// <para type="description">Maintenance the Crawler service.  Registering the Crawler for 'TrisoftInfoShareIndex' on 'UADEVVMASKYMENK'.</para>
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "Maintenance the Crawler service", ParameterSetName = "Register")]
+        [Parameter(Mandatory = true, HelpMessage = "Maintenance the Crawler service", ParameterSetName = "Unregister")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter Crawler { get; set; }
 
@@ -47,9 +49,17 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
         public SwitchParameter Register { get; set; }
 
         /// <summary>
+        /// <para type="description">Register the Crawler.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Register the Crawler", ParameterSetName = "Unregister")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter UnRegisterAll { get; set; }
+
+        /// <summary>
         /// <para type="description">The TridkApp key to registrate the Crawler for it.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to registrate the Crawler for it", ParameterSetName = "Register")]
+        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to registrate the Crawler for it", ParameterSetName = "Unregister")]
         [ValidateNotNullOrEmpty]
         public string CrawlerTridkApp { get; set; } = "InfoShareBuilders";
 
@@ -62,7 +72,10 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
             switch (ParameterSetName)
             {
                 case "Register":
-                    operation = new InvokeISHMaintenanceRegisterThisCrawlerOperation(Logger, ISHDeployment, CrawlerTridkApp);
+                    operation = new InvokeISHMaintenanceRegisterCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.register, CrawlerTridkApp);
+                    break;
+                case "Unregister":
+                    operation = new InvokeISHMaintenanceRegisterCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.unregister, CrawlerTridkApp);
                     break;
             }
 

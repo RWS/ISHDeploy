@@ -667,6 +667,8 @@ namespace ISHDeploy.Data.Managers
         public void SaveObjectToFile<T>(string filePath, T data)
         {
             var serializer = new BinaryFormatter();
+            string destinationFolderPath = Path.GetDirectoryName(filePath);
+            EnsureDirectoryExists(destinationFolderPath);
             using (var stream = File.OpenWrite(filePath))
             {
                 serializer.Serialize(stream, data);

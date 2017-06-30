@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
+    <Compile Include="Business\Operations\ISHComponent\SetISHBuildersRegistryValueOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceFullTextIndexOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceBackgroundTaskAmountOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHServiceAmountOperation.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\DisableISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\EnableISHServiceBackgroundTaskCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceBackgroundTask\GetISHServiceBackgroundTaskCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHServiceCrawler\SetISHServiceCrawlerCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\DisableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\EnableISHServiceFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHServiceFullTextIndex\GetISHServiceFullTextIndexCmdlet.cs" />

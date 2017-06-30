@@ -31,6 +31,16 @@ namespace ISHDeploy.Common.Enums
         ComponentName,
 
         /// <summary>
+        /// CrawlerCatalogHostName
+        /// </summary>
+        CrawlerCatalogHostName,
+
+        /// <summary>
+        /// CrawlerCatalogName
+        /// </summary>
+        CrawlerCatalogName,
+
+        /// <summary>
         /// SolrLuceneBaseUrl
         /// </summary>
         SolrLuceneBaseUrl,

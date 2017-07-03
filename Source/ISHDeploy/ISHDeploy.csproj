@@ -109,7 +109,8 @@
     <Compile Include="Business\Operations\ISHIntegrationDB\TestISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\GetISHIntegrationDBOperation.cs" />
     <Compile Include="Business\Operations\ISHIntegrationDB\SetISHIntegrationDBOperation.cs" />
-    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceRegisterCrawlerOperation.cs" />
+    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceCleanUpSolrLuceneOperation.cs" />
+    <Compile Include="Business\Operations\ISHMaintenance\InvokeISHMaintenanceCrawlerOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHTranslationFileSystemExportOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationTmsOperation.cs" />
     <Compile Include="Business\Operations\ISHServiceTranslation\RemoveISHIntegrationWorldServerOperation.cs" />

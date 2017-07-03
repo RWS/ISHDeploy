@@ -22,10 +22,10 @@ using ISHDeploy.Data.Actions.Process;
 namespace ISHDeploy.Business.Operations.ISHMaintenance
 {
     /// <summary>
-    /// Invokes operation of Crawler registration.
+    /// Invokes operation of Crawler registration/unregister or reindex.
     /// </summary>
     /// <seealso cref="IOperation" />
-    public class InvokeISHMaintenanceRegisterCrawlerOperation : BaseOperationPaths, IOperation
+    public class InvokeISHMaintenanceCrawlerOperation : BaseOperationPaths, IOperation
     {
         /// <summary>
         /// The actions invoker
@@ -33,13 +33,34 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
         public IActionInvoker Invoker { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvokeISHMaintenanceRegisterCrawlerOperation"/> class.
+        /// Initializes a new instance of the <see cref="InvokeISHMaintenanceCrawlerOperation"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="operationType">The operation type (register or unregister).</param>
         /// <param name="crawlerTridkApp">The TridkApp value to registrate the Crawler for it.</param>
-        public InvokeISHMaintenanceRegisterCrawlerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, RegisterCrawlerOperationType operationType, string crawlerTridkApp) :
+        public InvokeISHMaintenanceCrawlerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, RegisterCrawlerOperationType operationType, string crawlerTridkApp) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"{operationType}ing the Crawler for '{crawlerTridkApp}'");
+
+            if (string.IsNullOrEmpty(crawlerTridkApp))
+            {
+                crawlerTridkApp = "InfoShareBuilders";
+            }
+
+            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{operationType} \"{crawlerTridkApp}\""));
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvokeISHMaintenanceCrawlerOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="crawlerTridkApp">The TridkApp value to registrate the Crawler for it.</param>
+        /// <param name="reindexCardType">The reindex card type.</param>
+        public InvokeISHMaintenanceCrawlerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string crawlerTridkApp, string reindexCardType) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Registering the Crawler for '{crawlerTridkApp}'");
@@ -49,7 +70,12 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
                 crawlerTridkApp = "InfoShareBuilders";
             }
 
-            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{operationType} \"{crawlerTridkApp}\""));
+            if (string.IsNullOrEmpty(reindexCardType))
+            {
+                reindexCardType = "ISHAll";
+            }
+            
+            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{RegisterCrawlerOperationType.reindex} \"{crawlerTridkApp}\" {reindexCardType}"));
         }
 
         /// <summary>

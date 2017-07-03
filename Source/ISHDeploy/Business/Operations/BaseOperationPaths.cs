@@ -399,6 +399,36 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected string CrawlerExeFilePath { get; }
 
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\
+        /// </summary>
+        protected string SolrLuceneCatalogFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\AllVersions\
+        /// </summary>
+        protected string SolrLuceneCatalogAllVersionsFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\LatestVersion\
+        /// </summary>
+        protected string SolrLuceneCatalogLatestVersionFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\AllVersions\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheAllVersionsFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\LatestVersion\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\ISHReusableObject\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath { get; }
+
         #endregion
 
         /// <summary>
@@ -474,7 +504,14 @@ namespace ISHDeploy.Business.Operations
 
             RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
 
-            CrawlerExeFilePath = Path.Combine(InputParameters.AppPath, $"App{InputParameters.ProjectSuffix}", @"Crawler\Bin\crawler.exe");
+            CrawlerExeFilePath = Path.Combine(AppFolderPath, @"Crawler\Bin\crawler.exe");
+
+            SolrLuceneCatalogFolderPath = Path.Combine(DataFolderPath, @"TrisoftSolrLucene\SolrLuceneCatalog");
+            SolrLuceneCatalogAllVersionsFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"AllVersions");
+            SolrLuceneCatalogLatestVersionFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"LatestVersion");
+            SolrLuceneCatalogCrawlerFileCacheAllVersionsFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\AllVersions");
+            SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\LatestVersion");
+            SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\ISHReusableObject");
 
             #endregion
         }

@@ -16,8 +16,8 @@
 ﻿namespace ISHDeploy.Common.Enums
 {
     /// <summary>
-    /// Types of register/unregister of Crawler operation
-    ///	<para type="description">Enumeration of register or unregister of Crawler operation types.</para>
+    /// Types of Crawler operation (register/unregister/reindex)
+    ///	<para type="description">Enumeration of Crawler operation types.</para>
     /// </summary>
     public enum RegisterCrawlerOperationType
     {
@@ -29,6 +29,11 @@
         /// <summary>
         /// Unregister of Crawler
         /// </summary>
-        unregister
+        unregister,
+
+        /// <summary>
+        /// Reindex of Crawler
+        /// </summary>
+        reindex
     }
 }

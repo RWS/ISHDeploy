@@ -30,14 +30,30 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
     /// <para>This command registers the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
+    /// <example>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -UnRegisterAll -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <para>This command unregisters the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -ReIndex -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <para>This command does reindex of the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -FullTextIndex -Cleanup</code>
+    /// <para>This command cleans up all cache and temporary files of Crawler for specified deployment.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
     [Cmdlet(VerbsLifecycle.Invoke, "ISHMaintenance")]
     public sealed class InvokeISHMaintenanceCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
-        /// <para type="description">Maintenance the Crawler service.  Registering the Crawler for 'TrisoftInfoShareIndex' on 'UADEVVMASKYMENK'.</para>
+        /// <para type="description">Maintenance the Crawler service. Registering the Crawler for 'TrisoftInfoShareIndex' on 'UADEVVMASKYMENK'.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Maintenance the Crawler service", ParameterSetName = "Register")]
-        [Parameter(Mandatory = true, HelpMessage = "Maintenance the Crawler service", ParameterSetName = "Unregister")]
+        [Parameter(Mandatory = true, HelpMessage = "Register the Crawler", ParameterSetName = "Register")]
+        [Parameter(Mandatory = true, HelpMessage = "Unregister the Crawler", ParameterSetName = "UnRegisterAll")]
+        [Parameter(Mandatory = true, HelpMessage = "Reindex the Crawler", ParameterSetName = "ReIndex")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter Crawler { get; set; }
 
@@ -49,19 +65,48 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
         public SwitchParameter Register { get; set; }
 
         /// <summary>
-        /// <para type="description">Register the Crawler.</para>
+        /// <para type="description">Unregister the Crawler.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "Register the Crawler", ParameterSetName = "Unregister")]
+        [Parameter(Mandatory = true, HelpMessage = "Unregister the Crawler", ParameterSetName = "UnRegisterAll")]
         [ValidateNotNullOrEmpty]
         public SwitchParameter UnRegisterAll { get; set; }
+
+        /// <summary>
+        /// <para type="description">Reindex the Crawler.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Reindex the Crawler", ParameterSetName = "ReIndex")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter ReIndex { get; set; }
 
         /// <summary>
         /// <para type="description">The TridkApp key to registrate the Crawler for it.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to registrate the Crawler for it", ParameterSetName = "Register")]
-        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to registrate the Crawler for it", ParameterSetName = "Unregister")]
+        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to unregister the Crawler for it", ParameterSetName = "UnRegisterAll")]
+        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to reindex the Crawler for it", ParameterSetName = "ReIndex")]
         [ValidateNotNullOrEmpty]
         public string CrawlerTridkApp { get; set; } = "InfoShareBuilders";
+
+        /// <summary>
+        /// <para type="description">The ReIndex card type.</para>
+        /// </summary>
+        [Parameter(Mandatory = false, HelpMessage = "The ReIndex card type", ParameterSetName = "ReIndex")]
+        [ValidateNotNullOrEmpty]
+        public string ReIndexCardType { get; set; } = "ISHAll";
+
+        /// <summary>
+        /// <para type="description">Cleanup FullTextIndex.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Cleanup FullTextIndex", ParameterSetName = "CleanupSolrLucene")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter FullTextIndex { get; set; }
+
+        /// <summary>
+        /// <para type="description">Cleanup FullTextIndex.</para>
+        /// </summary>
+        [Parameter(Mandatory = true, HelpMessage = "Cleanup FullTextIndex", ParameterSetName = "CleanupSolrLucene")]
+        [ValidateNotNullOrEmpty]
+        public SwitchParameter Cleanup { get; set; }
 
         /// <summary>
         /// Executes cmdlet
@@ -72,15 +117,20 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
             switch (ParameterSetName)
             {
                 case "Register":
-                    operation = new InvokeISHMaintenanceRegisterCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.register, CrawlerTridkApp);
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.register, CrawlerTridkApp);
                     break;
-                case "Unregister":
-                    operation = new InvokeISHMaintenanceRegisterCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.unregister, CrawlerTridkApp);
+                case "UnRegisterAll":
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.unregister, CrawlerTridkApp);
+                    break;
+                case "ReIndex":
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, CrawlerTridkApp, ReIndexCardType);
+                    break;
+                case "CleanupSolrLucene":
+                    operation = new InvokeISHMaintenanceCleanUpSolrLuceneOperation(Logger, ISHDeployment);
                     break;
             }
 
             operation.Run();
-
         }
     }
 }

@@ -28,7 +28,7 @@ namespace ISHDeploy.Data.Managers
     /// <summary>
     /// Allows to run powershell scripts from c# code.
     /// </summary>
-    /// <seealso cref="IWebAdministrationManager" />
+    /// <seealso cref="IPowerShellManager" />
     public class PowerShellManager : IPowerShellManager
     {
         /// <summary>
@@ -37,7 +37,7 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebAdministrationManager"/> class.
+        /// Initializes a new instance of the <see cref="IPowerShellManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public PowerShellManager(ILogger logger)

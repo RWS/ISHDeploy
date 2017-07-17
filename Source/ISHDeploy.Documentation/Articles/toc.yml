@@ -18,6 +18,10 @@
     href: ../obj/doc/articles/Components/Managing and tracking components.md
   - name: Scaling the components
     href: ../obj/doc/articles/Components/Scaling the components.md
+- name: Manage state
+  items:
+  - name: Starting and stopping
+    href: ../obj/doc/articles/State/Starting and stopping.md
 - name: Working with ISHCM web UI features
   items:
   - name: Toggling Web Components

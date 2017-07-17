@@ -50,6 +50,14 @@ This release is focused on adding cmdlet that help configure core aspects of a d
 		  - **Scaling the components**. **[New]**
 		- Within **new** section **Manage components** in tutorials:
 		  - **Scaling the services**. **[Deleted]**
+1. Credentials
+	1. Cmdlets
+		- `Start-ISHDeployment`. **[New]**
+		- `Stop-ISHDeployment`. **[New]**
+		- `Restart-ISHDeployment`. **[New]**
+    1. Tutorials
+		- Within **new** section **Manage state** in tutorials:
+		  - **Starting and stopping**. **[New]**
 1. ISHSTS
     1. Cmdlets
 		- `Set-ISHSTSConfiguration` will not create and initialize the database of ISHSTS when not available. **[Update]**

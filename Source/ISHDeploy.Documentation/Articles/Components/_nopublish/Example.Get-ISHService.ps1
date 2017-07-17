@@ -1,0 +1,4 @@
+﻿Get-ISHServiceCrawler -ISHDeployment $deploymentName
+Get-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+Get-ISHServiceBackgroundTask -ISHDeployment $deploymentName

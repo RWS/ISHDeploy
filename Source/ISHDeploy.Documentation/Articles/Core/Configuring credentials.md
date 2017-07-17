@@ -30,22 +30,22 @@ $deploymentName="InfoShare"
 
 In this example we use the `localuser` that is already present in the operating system's registry.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHOSUser.Local.ps1)
+CopyCodeBlock(_nopublish\Credentials\Example.Set-ISHOSUser.Local.ps1)
 
 In this example we use the `domainuser` already present in the `DOMAIN` active directory.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHOSUser.Domain.ps1)
+CopyCodeBlock(_nopublish\Credentials\Example.Set-ISHOSUser.Domain.ps1)
 
 ## Setting the ServiceUser
 
 `Set-ISHServiceUser` sets the credential of the deployment's *ServiceUser*. The referenced user must be valid in Content Manager's user repository.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHServiceUser.ps1)
+CopyCodeBlock(_nopublish\Credentials\Example.Set-ISHServiceUser.ps1)
 
 ## Setting the Actor
 
 `Set-ISHActor` sets the credential of the deployment's *Actor*. The referenced user must be valid on the configured Security Token Service (STS). In case the STS is ISHSTS, then the referenced user must be valid in Content Manager's user repository.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHActor.ps1)
+CopyCodeBlock(_nopublish\Credentials\Example.Set-ISHActor.ps1)
 
 **Notice** that in the Vanilla deployment the actor's credential are same as with the credential of the *ServiceUser* but it could be different if desired.

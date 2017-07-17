@@ -12,6 +12,12 @@
     href: ../obj/doc/articles/Core/Integrating with a database.md
   - name: Configuring credentials
     href: ../obj/doc/articles/Core/Configuring credentials.md
+- name: Manage components
+  items:
+  - name: Managing and tracking components
+    href: ../obj/doc/articles/Components/Managing and tracking components.md
+  - name: Scaling the components
+    href: ../obj/doc/articles/Components/Scaling the components.md
 - name: Working with ISHCM web UI features
   items:
   - name: Toggling Web Components
@@ -54,5 +60,3 @@
     href: ../obj/doc/articles/Translation/Exporting translation jobs to the file system.md
   - name: Configuring the services
     href: ../obj/doc/articles/Translation/Configuring the services.md
-  - name: Scaling the services
-    href: ../obj/doc/articles/Translation/Scaling the services.md

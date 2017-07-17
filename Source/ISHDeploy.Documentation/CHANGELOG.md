@@ -58,6 +58,12 @@ This release is focused on adding cmdlet that help configure core aspects of a d
     1. Tutorials
 		- Within **new** section **Manage state** in tutorials:
 		  - **Starting and stopping**. **[New]**
+1. Maintenance
+	1. Cmdlets
+		- `Invoke-ISHMaintenance`. **[New]**
+    1. Tutorials
+		- Within section **Work with core deployment configuration** in tutorials:
+		  - **Configuring and maintaining the search capability**. **[New]**
 1. ISHSTS
     1. Cmdlets
 		- `Set-ISHSTSConfiguration` will not create and initialize the database of ISHSTS when not available. **[Update]**

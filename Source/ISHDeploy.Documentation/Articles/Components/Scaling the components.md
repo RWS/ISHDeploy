@@ -9,7 +9,7 @@ Not all components are scalable. The following components are the ones that can 
 - TranslationOrganizer.
 - BackgroundTask. This component is scaled per role.
 
-In general, scaling is applied by setting the `-Count` parameter for the respected cmdlet of each component. 
+In general, scaling is applied by setting the `-Count` parameter for each related cmdlet of each component. 
 
 Let's take a look in the following example for component **TranslationBuilder**. Similar principals apply for the rest of the components.
 
@@ -59,15 +59,18 @@ CopyCodeBlock(_nopublish\Example.Get-ISHService.ps1)
 Name                                           Status                 Type
 ----                                           ------                 ----
 Trisoft InfoShareSQL Crawler One              Stopped              Crawler
+Trisoft InfoShareSQL Crawler Two              Stopped              Crawler
 Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder
+Trisoft InfoShareSQL TranslationBuilder Two   Stopped   TranslationBuilder
 Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer
-
-
+Trisoft InfoShareSQL TranslationOrganizer Two Stopped TranslationOrganizer
 
 Name                                            Status           Type Sequence Role   
 ----                                            ------           ---- -------- ----   
 Trisoft InfoShareSQL BackgroundTask One        Stopped BackgroundTask        1 Default
-Trisoft InfoShareSQL BackgroundTask custom One Stopped BackgroundTask        1 Custom 
+Trisoft InfoShareSQL BackgroundTask Two        Stopped BackgroundTask        2 Default
+Trisoft InfoShareSQL BackgroundTask Custom One Stopped BackgroundTask        1 Custom 
+Trisoft InfoShareSQL BackgroundTask Custom Two Stopped BackgroundTask        2 Custom 
 ```
 
 

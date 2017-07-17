@@ -8,7 +8,7 @@ This tutorial explains how to configure credentials for a deployment. The creden
 | ServiceUser | Content Manager (ISH) | This is a Content Manager user that is used from the deployment for certain batch operations | 
 | Actor | Security Token Service (STS) | This is a user that is used to drive authentication with identity delegation |
 
-**Notice** that the module will assume that the given credential are valid for their respected scope and only configure the deployment to use them. The module will not validate the credential validity.
+**Notice** that the module will assume that the given credential are valid for their scope and only configure the deployment to use them. The module will not validate the credential validity.
 
 **Tip** to update the password per target type, use the following cmdlet while keeping the username the same.
 

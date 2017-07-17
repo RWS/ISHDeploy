@@ -14,12 +14,12 @@ A component expresses a logical grouping of processes that are responsible to ex
 - TranslationOrganizer.
 - BackgroundTask. This component is tracked per role.
 
-Each components can be enabled or disabled with cmdlets offered by the module. Additionally the module offers respected cmdlets to retrieve the state of each component.
+Each components can be enabled or disabled with cmdlets offered by the module. Additionally the module offers related cmdlets to retrieve the state of each component.
 
 The enabled or disabled state of a component expresses what happens when a deployment is started. 
 
-- When disabled, then the component's respected processes will not start. 
-- When enabled, then the component's respected processes will start.
+- When disabled, then the component's related processes will not start. 
+- When enabled, then the component's related processes will start.
 
 ## Set deploymentName variable
 First set deploymentName variable.

@@ -37,7 +37,7 @@ $scriptBlockCleanTmpFolder = {
 }
 
 $scriptBlockGetNetBIOSDomain = {
-    $domain =@(nbtstat -n | select-string -Pattern '^\s*(\w+)\s*<(00|1[BCDE]){1}>\s+GROUP' -AllMatches | % { $_.Matches.Groups[1].Value} | select -Unique)[0]
+    $domain =(Get-WmiObject Win32_ComputerSystem).Domain.Split('.')[0].ToUpper()
     $principal = $domain+"\"+$env:computername+"$"
     return $principal
 }
@@ -117,8 +117,7 @@ Describe "Testing ISHIntegrationDBSTSSQLServerConfiguration"{
         
         RemotePathCheck "$packagePath\$testFileName" | Should be $true
         
-        $Mdfile = Get-Content "$packagePath\$testFileName"
-        [System.String]$content = [System.String]::Join("", $Mdfile)
+        $content = [IO.File]::ReadAllText("$packagePath\$testFileName")
         $content.Contains("USE [MASTER]") | Should be $true
         $content.Contains("CREATE LOGIN [$principal] FROM WINDOWS WITH DEFAULT_DATABASE=[$database]") | Should be $true
     }

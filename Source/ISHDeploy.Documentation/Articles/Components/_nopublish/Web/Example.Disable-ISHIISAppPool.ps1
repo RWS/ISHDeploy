@@ -1,0 +1,1 @@
+﻿Disable-ISHIISAppPool -ISHDeployment $deploymentName

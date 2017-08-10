@@ -13,9 +13,7 @@ $deploymentName="InfoShare"
 
 `Get-ISHIntegrationDB` cmdlet extracts information regarding the deployment's database integration.
 
-```
-Get-ISHIntegrationDB -ISHDeployment $deploymentName
-```
+CopyCodeBlock(_nopublish\IntegrationDB\Example.Get-ISHIntegrationDB.ps1)
 
 would output 
 
@@ -37,18 +35,16 @@ The `Set-ISHIntegrationDB` sets the deployment's database integration. Valid tar
 
 In this example we want to connect with a database e.g. `ISHDatabase` hosted on a SQL Server 2014 e.g `MSSQLServer`. The example has two variations, one with username/password security and one using SQL Server's integrated security.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationDB.SQL.Raw.ps1)
+CopyCodeBlock(_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.SQL.Raw.ps1)
 
 ### Oracle
 
 In this example we want to connect with a service e.g. `ISHDatabase` hosted on an Oracle Server e.g `OracleServer`.
 
-CopyCodeBlock(_nopublish\Example.Set-ISHIntegrationDB.Oracle.Raw.ps1)
+CopyCodeBlock(_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.Oracle.Raw.ps1)
 
 ## Testing the database integration
 
 `Test-ISHIntegrationDB` cmdlet tests if the deployment's database integration is valid. **Notice** that when an `oracle` engine is defined, then the `Test-ISHIntegrationDB` will skip and just raise a warning.
 
-```
-Test-ISHIntegrationDB -ISHDeployment $deploymentName
-```
+CopyCodeBlock(_nopublish\IntegrationDB\Example.Test-ISHIntegrationDB.ps1)

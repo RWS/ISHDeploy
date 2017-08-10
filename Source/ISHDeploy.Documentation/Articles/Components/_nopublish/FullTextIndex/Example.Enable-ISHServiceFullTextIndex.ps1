@@ -1,0 +1,1 @@
+﻿Enable-ISHServiceFullTextIndex -ISHDeployment $deploymentName

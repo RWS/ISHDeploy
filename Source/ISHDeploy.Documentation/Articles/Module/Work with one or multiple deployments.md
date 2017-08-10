@@ -33,7 +33,7 @@ Get-ISHDeployment -Name InfoShare
 This outputs the following
 
 ```text 
-SoftwareVersion : 12.0.2929.1
+SoftwareVersion : {SoftwareCMVersion}
 Name            : InfoShare
 AppPath         : C:\InfoShare\App
 WebPath         : C:\InfoShare\Web
@@ -44,6 +44,7 @@ WebAppNameCM    : ishcm
 WebAppNameWS    : ishws
 WebAppNameSTS   : ishsts
 WebSiteName     : Default Web Site
+Status          : Started
 ```
  
 If the `projectsuffix` was not empty then concatenate it after `InfoShare`. For example

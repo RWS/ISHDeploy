@@ -1,0 +1,1 @@
+﻿Invoke-ISHMaintenance -ISHDeployment $deploymentName -Cleanup -FullTextIndex

@@ -1,0 +1,1 @@
+﻿Disable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName

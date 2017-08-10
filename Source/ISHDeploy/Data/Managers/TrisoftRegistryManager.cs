@@ -153,7 +153,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                return ISHDeploymentStatus.Running;
+                return ISHDeploymentStatus.Started;
             }
         }
 

@@ -1,0 +1,1 @@
+﻿Get-ISHDeployment | Select-Object Name,Status 

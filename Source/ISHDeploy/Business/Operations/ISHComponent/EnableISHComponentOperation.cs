@@ -75,7 +75,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             foreach (var component in orderedComponentsCollection)
             {
-                if (ishDeployment.Status == ISHDeploymentStatus.Running)
+                if (ishDeployment.Status == ISHDeploymentStatus.Started)
                 {
                     switch (component.Name)
                     {

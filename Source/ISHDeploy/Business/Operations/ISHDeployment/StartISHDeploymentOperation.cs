@@ -48,7 +48,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         {
             IOperation operation;
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
-            ishDeployment.Status = ISHDeploymentStatus.Running;
+            ishDeployment.Status = ISHDeploymentStatus.Started;
             if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
             {
                 var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
@@ -65,7 +65,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             Invoker = new ActionInvoker(Logger, "Starting of enabled components", operation.Invoker.GetActions());
 
-            Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Running));
+            Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Started));
         }
 
         /// <summary>

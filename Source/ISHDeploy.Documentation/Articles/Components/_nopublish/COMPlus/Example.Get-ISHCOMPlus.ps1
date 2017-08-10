@@ -1,0 +1,1 @@
+﻿Get-ISHCOMPlus -ISHDeployment $deploymentName

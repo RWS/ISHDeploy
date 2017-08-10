@@ -193,6 +193,14 @@ Describe "Testing Get-ISHDeployment"{
         $inputparameters = Get-InputParameters $testingDeploymentName
         $deploy.WebSiteName -eq $inputparameters["websitename"] | Should be true
     }
+    
+
+    It "Get-ISHDeployment returns Status as `"Started`""{
+        #Arrange
+        $deploy = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        $inputparameters = Get-InputParameters $testingDeploymentName
+        $deploy.Status -eq "Started" | Should be true
+    }
 
     It "Get-ISHDeployment sets default deployment"{
         #Arrange

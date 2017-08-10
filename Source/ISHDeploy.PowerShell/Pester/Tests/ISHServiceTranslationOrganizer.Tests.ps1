@@ -117,6 +117,19 @@ $scriptBlockReadTargetXML = {
 
     return $result
 }
+$scriptBlockGetISHServiceTranslationOrganizer = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Get-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployName
+}
+
 function remoteReadTargetXML() {
 
     #read all files that are touched with commandlet
@@ -344,8 +357,13 @@ Describe "Testing ISHServiceTranslationOrganizer"{
 
         $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = "WindowsMixed";IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params} | Should Throw "When IssuerBindingType is of the Windows type, then Credentials cannot be specified"
-        
-       
     }
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+
+    It "Get ISHServiceTranslationOrganizer response should not contains Role property"{       
+        #Act
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $service.Role | Should be $null
+    }
+    
+    UndoDeploymentBackToVanila $testingDeploymentName $true
 }

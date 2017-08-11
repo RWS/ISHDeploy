@@ -26,17 +26,17 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
     /// <para type="description">The Invoke-ISHMaintenance cmdlet maintenances Crawler or FullTextIndex services.</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -Register -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -Register</code>
     /// <para>This command registers the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -UnRegisterAll -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -UnRegisterAll</code>
     /// <para>This command unregisters the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -ReIndex -CrawlerTridkApp "InfoShareBuilders"</code>
+    /// <code>PS C:\>Invoke-ISHMaintenance -ISHDeployment $deployment -Crawler -ReIndex</code>
     /// <para>This command does reindex of the Crawler for 'TrisoftInfoShareIndex' for specified deployment.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>

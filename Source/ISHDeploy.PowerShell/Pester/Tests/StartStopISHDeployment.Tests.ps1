@@ -238,7 +238,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-        $checkDeployment.Status | Should be "Running"
+        $checkDeployment.Status | Should be "Started"
 
     }
 

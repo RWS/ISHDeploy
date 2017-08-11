@@ -151,21 +151,53 @@ namespace ISHDeploy.Data.Managers
             foreach (var type in types)
             {
                 string serviceNameAlias = $"{deploymentName} {type}";
+
                 services.AddRange(
                     ServiceController.GetServices()
                         .Where(x => x.ServiceName.Contains(serviceNameAlias))
-                        .Select(service => new ISHWindowsService {
-                            Name = service.ServiceName,
-                            Type = type,
-                            Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
-                            Sequence =
-                                service.ServiceName.EndsWith(serviceNameAlias) ?
-                                1 :
-                                (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
-                            Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
-                        })
+                        .Select(service =>
+                            type == ISHWindowsServiceType.BackgroundTask ?
+                                new ISHBackgroundTaskWindowsService
+                                {
+                                    Name = service.ServiceName,
+                                    Type = type,
+                                    Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
+                                    Sequence =
+                                        service.ServiceName.EndsWith(serviceNameAlias) ?
+                                        1 :
+                                        (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
+                                    Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
+                                } 
+                                :
+                                new ISHWindowsService
+                                {
+                                    Name = service.ServiceName,
+                                    Type = type,
+                                    Status = (ISHWindowsServiceStatus)Enum.Parse(typeof(ISHWindowsServiceStatus), service.Status.ToString()),
+                                    Sequence =
+                                        service.ServiceName.EndsWith(serviceNameAlias) ?
+                                        1 :
+                                        (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last())
+                                }
+                            )
                         .ToList());
             }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Gets all BackgroundTask windows services.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The BackgroundTask windows services of deployment of specified type.
+        /// </returns>
+        public IEnumerable<ISHBackgroundTaskWindowsService> GetISHBackgroundTaskWindowsServices(string deploymentName)
+        {
+            var services =
+                GetServices(deploymentName, ISHWindowsServiceType.BackgroundTask)
+                    .Select(x => x as ISHBackgroundTaskWindowsService);
 
             return services;
         }
@@ -235,7 +267,7 @@ namespace ISHDeploy.Data.Managers
             {
                 pathToExecutable = managementObject.GetPropertyValue("PathName").ToString();
 
-                if (service.Type == ISHWindowsServiceType.BackgroundTask)
+                if (service is ISHBackgroundTaskWindowsService)
                 {
                     if (string.IsNullOrEmpty(role))
                     {
@@ -250,7 +282,7 @@ namespace ISHDeploy.Data.Managers
 
                     if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        newServiceName = newServiceName.Replace($"{service.Type} {service.Role}", service.Type.ToString());
+                        newServiceName = newServiceName.Replace($"{service.Type} {((ISHBackgroundTaskWindowsService)service).Role}", service.Type.ToString());
                     }
 
                     pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);

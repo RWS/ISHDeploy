@@ -126,7 +126,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
             var components = new ISHComponentsCollection(true);
-            var backgroundTaskServices = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.BackgroundTask);
+            var backgroundTaskServices = _windowsServiceManager.GetISHBackgroundTaskWindowsServices(deploymentName);
             foreach (var backgroundTaskService in backgroundTaskServices)
             {
                 if (!components.Components.Any(x => string.Equals(x.Role, backgroundTaskService.Role, StringComparison.CurrentCultureIgnoreCase)))

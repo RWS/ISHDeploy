@@ -14,34 +14,17 @@
  * limitations under the License.
  */
 
-using ISHDeploy.Common.Enums;
 
 namespace ISHDeploy.Common.Models
 {
     /// <summary>
-    /// <para type="description">Represents the installed windows services that deployment is used.</para>
+    /// <para type="description">Represents the installed BackgroundTask windows service that deployment is used.</para>
     /// </summary>
-    public class ISHWindowsService
+    public class ISHBackgroundTaskWindowsService : ISHWindowsService
     {
         /// <summary>
-        /// The name of windows service.
+        /// The role of BackgroundTask service.
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The status of windows service.
-        /// </summary>
-        public ISHWindowsServiceStatus Status{ get; set; }
-
-        /// <summary>
-        /// The type of windows service.
-        /// </summary>
-        public ISHWindowsServiceType Type { get; set; }
-
-        /// <summary>
-        /// The sequence of windows service.
-        /// </summary>
-        public int Sequence { get; set; }
-
+        public string Role { get; set; }
     }
 }

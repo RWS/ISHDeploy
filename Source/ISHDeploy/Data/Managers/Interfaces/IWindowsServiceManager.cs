@@ -49,6 +49,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
 
         /// <summary>
+        /// Gets all BackgroundTask windows services.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The BackgroundTask windows services of deployment of specified type.
+        /// </returns>
+        IEnumerable<ISHBackgroundTaskWindowsService> GetISHBackgroundTaskWindowsServices(string deploymentName);
+
+        /// <summary>
         /// Removes specific windows service
         /// </summary>
         /// <param name="serviceName">Name of the windows service.</param>

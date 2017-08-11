@@ -74,7 +74,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 role = DefaultRoleName;
             }
 
-            List<Models.ISHWindowsService> services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask).Where(x => Equals(x.Role.ToLower(), role.ToLower())).ToList();
+            var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name).Where(x => Equals(x.Role.ToLower(), role.ToLower())).ToList();
+
             if (services.Count() > amount)
             {
                 // Remove extra services
@@ -97,8 +98,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 var service = services.FirstOrDefault(serv => serv.Sequence == 1);
                 if (service == null)
                 {
-                    service =
-                        serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.BackgroundTask).FirstOrDefault();
+                    service = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name).FirstOrDefault();
 
                     //If there are no services at all, we need to create a service to make it a template, and later delete it
                     if (service == null)
@@ -109,7 +109,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
                         Invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, RegWindowsServicesRegistryPathPattern, InputParameters.OSUser, InputParameters.OSPassword));
 
-                        service = new Models.ISHWindowsService { Name = backedUpWindowsService.Name, Sequence = 1, Status = ISHWindowsServiceStatus.Stopped, Role = role, Type = ISHWindowsServiceType.BackgroundTask };
+                        service = new Models.ISHBackgroundTaskWindowsService { Name = backedUpWindowsService.Name, Sequence = 1, Status = ISHWindowsServiceStatus.Stopped, Role = role, Type = ISHWindowsServiceType.BackgroundTask };
 
                         // Keep the template service in case if we need to create services with the role "Default"
                         if (!string.Equals(service.Role, DefaultRoleName, StringComparison.CurrentCultureIgnoreCase))
@@ -118,7 +118,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         else
                         {
-                            services = new List<Models.ISHWindowsService> { service };
+                            services = new List<Models.ISHBackgroundTaskWindowsService> { service };
                         }
                     }
                 }

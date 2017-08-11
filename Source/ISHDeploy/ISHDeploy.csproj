@@ -340,6 +340,7 @@
     <Compile Include="Common\Models\Backup\PropertyCollection.cs" />
     <Compile Include="Common\Models\Backup\ISHWindowsServiceBackupCollection.cs" />
     <Compile Include="Common\Models\Backup\ISHWindowsServiceBackup.cs" />
+    <Compile Include="Common\Models\ISHBackgroundTaskWindowsService.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHFieldMetadata.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\ISHLanguageToTmsLanguageMapping.cs" />
     <Compile Include="Common\Models\TranslationOrganizer\FileSystemConfigurationSection.cs" />

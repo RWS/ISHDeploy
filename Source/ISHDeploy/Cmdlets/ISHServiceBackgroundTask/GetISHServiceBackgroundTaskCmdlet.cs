@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Management.Automation;
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
@@ -57,7 +56,7 @@ namespace ISHDeploy.Cmdlets.ISHServiceBackgroundTask
         {
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var services = serviceManager.GetServices(ISHDeployment.Name, ISHWindowsServiceType.BackgroundTask);
+            var services = serviceManager.GetISHBackgroundTaskWindowsServices(ISHDeployment.Name);
 
             if (string.IsNullOrEmpty(Role))
             {

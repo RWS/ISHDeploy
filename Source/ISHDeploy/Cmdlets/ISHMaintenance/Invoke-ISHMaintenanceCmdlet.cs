@@ -79,15 +79,6 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
         public SwitchParameter ReIndex { get; set; }
 
         /// <summary>
-        /// <para type="description">The TridkApp key to registrate the Crawler for it.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to registrate the Crawler for it", ParameterSetName = "Register")]
-        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to unregister the Crawler for it", ParameterSetName = "UnRegisterAll")]
-        [Parameter(Mandatory = false, HelpMessage = "The TridkApp key to reindex the Crawler for it", ParameterSetName = "ReIndex")]
-        [ValidateNotNullOrEmpty]
-        public string CrawlerTridkApp { get; set; } = "InfoShareBuilders";
-
-        /// <summary>
         /// <para type="description">The ReIndex card type.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The ReIndex card type", ParameterSetName = "ReIndex")]
@@ -117,13 +108,13 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
             switch (ParameterSetName)
             {
                 case "Register":
-                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.register, CrawlerTridkApp);
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.register);
                     break;
                 case "UnRegisterAll":
-                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.unregister, CrawlerTridkApp);
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, RegisterCrawlerOperationType.unregister);
                     break;
                 case "ReIndex":
-                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, CrawlerTridkApp, ReIndexCardType);
+                    operation = new InvokeISHMaintenanceCrawlerOperation(Logger, ISHDeployment, ReIndexCardType);
                     break;
                 case "CleanupSolrLucene":
                     operation = new InvokeISHMaintenanceCleanUpSolrLuceneOperation(Logger, ISHDeployment);

@@ -429,6 +429,11 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected string SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath { get; }
 
+        /// <summary>
+        /// The name of registry folder with Crawler's settings
+        /// </summary>
+        protected string CrawlerTridkApplicationName { get; }
+
         #endregion
 
         /// <summary>
@@ -512,6 +517,8 @@ namespace ISHDeploy.Business.Operations
             SolrLuceneCatalogCrawlerFileCacheAllVersionsFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\AllVersions");
             SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\LatestVersion");
             SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\ISHReusableObject");
+
+            CrawlerTridkApplicationName = $"InfoShareBuilders{InputParameters.ProjectSuffix}";
 
             #endregion
         }

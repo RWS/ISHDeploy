@@ -141,6 +141,8 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
 
+            var ishDeploymentStatus = ISHDeploymentStatus.Started;
+
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
 
@@ -149,12 +151,13 @@ namespace ISHDeploy.Data.Managers
             var status = historyItem?.GetValue(ISHDeploymentStatusRegValue);
             if (status != null)
             {
-                return (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
+                _logger.WriteDebug("ISHDeployment status", status);
+                ishDeploymentStatus = (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
             }
-            else
-            {
-                return ISHDeploymentStatus.Started;
-            }
+
+            _logger.WriteVerbose($"The status of ISHDeployment is {ishDeploymentStatus}");
+
+            return ishDeploymentStatus;
         }
 
         /// <summary>

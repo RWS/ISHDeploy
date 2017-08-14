@@ -80,7 +80,7 @@ namespace ISHDeploy.Cmdlets
         /// <param name="message">Verbose message.</param>
         public void WriteVerbose(string message)
         {
-            _cmdlet.WriteVerbose(message);
+            _cmdlet.WriteVerbose(AddDateAndCmdletNameToMessage(message));
         }
 
         /// <summary>
@@ -140,7 +140,17 @@ namespace ISHDeploy.Cmdlets
         /// <param name="message">Debug message.</param>
         public void WriteDebug(string message)
         {
-            _cmdlet.WriteDebug($"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}");
+            _cmdlet.WriteDebug(AddDateAndCmdletNameToMessage(message));
+        }
+
+        /// <summary>
+        /// Add date and name of cmdlet to the message
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>Message with date and cmdlet's name</returns>
+        private string AddDateAndCmdletNameToMessage(string message)
+        {
+            return $"{DateTime.Now.ToString("yyyyMMdd HH:mm:ss.fff")} {_cmdlet.MyInvocation.InvocationName} {message}";
         }
 
         /// <summary>

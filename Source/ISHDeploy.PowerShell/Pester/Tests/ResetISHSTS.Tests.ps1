@@ -142,15 +142,6 @@ Describe "Testing Reset-ISHSTS"{
         }
     }
     #>
-    It "Reset ISH STS when DB not exists"{
-        if (Test-Path $dbPath){
-            Remove-Item $dbPath
-        }
-         
-        Test-Path $dbPath | Should be $False
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockResetISHSTS -Session $session -ArgumentList $testingDeploymentName} | Should Not Throw 
-
-    }
     
      It "Reset ISH STS writes proper history"{
         #Act

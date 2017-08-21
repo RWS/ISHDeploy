@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration.Install;
 using System.Linq;
 using System.Management;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -235,11 +236,12 @@ namespace ISHDeploy.Data.Managers
         public void RemoveWindowsService(string serviceName)
         {
             StopWindowsService(serviceName);
-            _psManager.InvokeEmbeddedResourceAsScriptWithResult("ISHDeploy.Data.Resources.Uninstall-WindowsService.ps1",
-                new Dictionary<string, string>
-                {
-                    { "$name", serviceName }
-                });
+            var serviceInstallerObj = new ServiceInstaller
+            {
+                Context = new InstallContext("<<log file path>>", null),
+                ServiceName = serviceName
+            };
+            serviceInstallerObj.Uninstall(null);
         }
 
         /// <summary>

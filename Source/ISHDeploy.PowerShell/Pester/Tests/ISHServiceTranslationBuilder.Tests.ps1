@@ -33,9 +33,7 @@ $scriptBlockSetISHServiceTranslationBuilder = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy @parameters
-
+    Set-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName @parameters
 }
 
 $scriptBlockGetISHServiceTranslationBuilder = {
@@ -48,9 +46,7 @@ $scriptBlockGetISHServiceTranslationBuilder = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy
-
+    Get-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
 }
 
 
@@ -64,9 +60,7 @@ $scriptBlockEnableISHServiceTranslationBuilder = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeploy
-
+    Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
 }
 #endregion
 
@@ -107,7 +101,6 @@ function remoteReadTargetXML() {
     $global:JobProcessingTimeoutFromFile = $result["JobProcessingTimeout"]
     $global:JobPollingIntervalFromFile = $result["JobPollingInterval"]
     $global:PendingJobPollingIntervalFromFile = $result["PendingJobPollingInterval"]
-
 }
 
 

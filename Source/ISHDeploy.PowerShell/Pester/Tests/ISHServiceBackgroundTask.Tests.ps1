@@ -141,11 +141,11 @@ Describe "Testing ISHServiceBackgroundTask"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
         $Services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
         $Services.Count | Should be 3
-
      }
 
      It "Set ISHServiceBackgroundTask sets default role by default"{
         #Arrange
+        Start-Sleep -Milliseconds 1000
         $params = @{Count = 3}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
         $Services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName

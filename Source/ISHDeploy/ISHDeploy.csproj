@@ -358,6 +358,7 @@
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\RemoveISHBackgroundTaskComponentAction.cs" />
     <Compile Include="Data\Actions\ISHProject\AddISHBackgroundTaskComponentAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\RemoveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Process\StartProcessAction.cs" />

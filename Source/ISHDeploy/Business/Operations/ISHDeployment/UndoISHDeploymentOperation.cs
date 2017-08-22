@@ -353,6 +353,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Remove Author\ASP\Custom
             Invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
+
+            // Removes the status of deployment from Registry
+            Invoker.AddAction(new RemoveISHDeploymentStatusAction(ishDeployment.Name));
         }
 
         /// <summary>

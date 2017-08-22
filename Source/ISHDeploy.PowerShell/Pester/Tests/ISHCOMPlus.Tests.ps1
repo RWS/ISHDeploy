@@ -19,8 +19,7 @@ $scriptBlockEnableISHCOMPlus = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Enable-ISHCOMPlus -ISHDeployment $ishDeploy
+    Enable-ISHCOMPlus -ISHDeployment $ishDeployName
 }
 
 $scriptBlockDisableISHCOMPlus = {
@@ -31,8 +30,7 @@ $scriptBlockDisableISHCOMPlus = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Disable-ISHCOMPlus -ISHDeployment $ishDeploy
+    Disable-ISHCOMPlus -ISHDeployment $ishDeployName
 }
 
 $scriptBlockGetISHComponent = {
@@ -45,9 +43,7 @@ $scriptBlockGetISHComponent = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHComponent -ISHDeployment $ishDeploy
-
+    Get-ISHComponent -ISHDeployment $ishDeployName
 }
 
 $scriptBlockGetCOMState = {

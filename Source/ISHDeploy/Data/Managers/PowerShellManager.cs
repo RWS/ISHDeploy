@@ -57,7 +57,7 @@ namespace ISHDeploy.Data.Managers
         public object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null, string actionDescription = null)
         {
             var result = new List<object>();
-            using (var ps = PowerShell.Create())
+            using (var ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
                 // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
                 using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourceName))

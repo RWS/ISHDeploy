@@ -33,9 +33,7 @@ $scriptBlockSetISHServiceBackgroundTask = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHServiceBackgroundTask -ISHDeployment $ishDeploy @parameters
-
+    Set-ISHServiceBackgroundTask -ISHDeployment $ishDeployName @parameters
 }
 
 $scriptBlockGetISHServiceBackgroundTask = {
@@ -48,9 +46,7 @@ $scriptBlockGetISHServiceBackgroundTask = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHServiceBackgroundTask -ISHDeployment $ishDeploy
-
+    Get-ISHServiceBackgroundTask -ISHDeployment $ishDeployName
 }
 
 $scriptBlockEnableISHServiceBackgroundTask = {
@@ -81,9 +77,7 @@ $scriptBlockDisableISHServiceBackgroundTask = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Disable-ISHServiceBackgroundTask -ISHDeployment $ishDeploy
-
+    Disable-ISHServiceBackgroundTask -ISHDeployment $ishDeployName
 }
 
 
@@ -126,7 +120,6 @@ function remoteReadTargetXML() {
     $global:JobProcessingTimeoutFromFile = $result["JobProcessingTimeout"]
     $global:JobPollingIntervalFromFile = $result["JobPollingInterval"]
     $global:PendingJobPollingIntervalFromFile = $result["PendingJobPollingInterval"]
-
 }
 
 
@@ -141,7 +134,6 @@ Describe "Testing ISHServiceBackgroundTask"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
         $Services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
         $Services.Count | Should be 3
-
      }
 
      It "Set ISHServiceBackgroundTask sets default role by default"{
@@ -153,7 +145,6 @@ Describe "Testing ISHServiceBackgroundTask"{
             $Service.Role | Should be "Default"
         }
         $Services.Count | Should be 3
-
      }
 
       It "Enable-ISHServiceBackgroundTask Disabled BackgroundTask Service"{

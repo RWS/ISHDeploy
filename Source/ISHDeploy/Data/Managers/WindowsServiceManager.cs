@@ -238,7 +238,7 @@ namespace ISHDeploy.Data.Managers
             StopWindowsService(serviceName);
             var serviceInstallerObj = new ServiceInstaller
             {
-                Context = new InstallContext("<<log file path>>", null),
+                Context = new InstallContext(),
                 ServiceName = serviceName
             };
             serviceInstallerObj.Uninstall(null);

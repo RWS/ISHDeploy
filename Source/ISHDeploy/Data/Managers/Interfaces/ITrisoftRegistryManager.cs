@@ -54,6 +54,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status);
 
         /// <summary>
+        /// Removes the status of deployment from Registry.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        void RemoveISHDeploymentStatus(string projectSuffix);
+
+        /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                dataAggregateHelper.GetComponents(ishDeployment.Name);
 
             // Reorder Components Collection (make sure the lucene service start first and then the crawler)
-            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>(); ;
+            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
             if (components.Contains(ISHComponentName.Crawler))
             {
                 orderedComponentsCollection.Add(componentsCollection.Components.FirstOrDefault(x => x.Name == ISHComponentName.SolrLucene));
@@ -111,8 +111,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         case ISHComponentName.COMPlus:
                             // Check if this operation has implications for several Deployments
                             IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute
-                                ();
+                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
                             var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
                             var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();

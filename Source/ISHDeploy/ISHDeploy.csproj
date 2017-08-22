@@ -72,6 +72,7 @@
       <HintPath>C:\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
@@ -358,6 +359,7 @@
     <Compile Include="Data\Actions\File\FileCopyAndReplacePlaceholdersAction.cs" />
     <Compile Include="Data\Actions\ISHProject\RemoveISHBackgroundTaskComponentAction.cs" />
     <Compile Include="Data\Actions\ISHProject\AddISHBackgroundTaskComponentAction.cs" />
+    <Compile Include="Data\Actions\ISHProject\RemoveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHDeploymentStatusAction.cs" />
     <Compile Include="Data\Actions\ISHProject\SaveISHComponentAction.cs" />
     <Compile Include="Data\Actions\Process\StartProcessAction.cs" />
@@ -539,7 +541,6 @@
     <EmbeddedResource Include="Data\Resources\Templates\SQL\GrantComputerAccountPermissions.sql" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsAuthenticationFeatureEnabled.ps1" />
     <EmbeddedResource Include="Data\Resources\Install-WindowsService.ps1" />
-    <EmbeddedResource Include="Data\Resources\Uninstall-WindowsService.ps1" />
     <EmbeddedResource Include="Data\Resources\Set-WindowsServiceCredentials.ps1" />
     <EmbeddedResource Include="Data\Resources\Check-WindowsServiceEnabled.ps1" />
     <None Include="packages.config">

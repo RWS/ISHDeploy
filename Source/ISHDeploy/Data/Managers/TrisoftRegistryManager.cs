@@ -167,12 +167,29 @@ namespace ISHDeploy.Data.Managers
         /// <param name="status">The status of deployment.</param>
         public void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status)
         {
-            _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
+            _logger.WriteDebug("Save the status of deployment", projectSuffix);
 
             var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
             var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            var historyItem = GetHistoryFolderRegKey(projectRegKey);
+            var historyItem = GetHistoryFolderRegKey(projectRegKey, true);
             Registry.SetValue(historyItem.Name, ISHDeploymentStatusRegValue, status);
+        }
+
+        /// <summary>
+        /// Removes the status of deployment from Registry.
+        /// </summary>
+        /// <param name="projectSuffix">The project suffix.</param>
+        public void RemoveISHDeploymentStatus(string projectSuffix)
+        {
+            _logger.WriteDebug("Remove the status of deployment from Registry", projectSuffix);
+
+            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
+            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
+            var historyItem = GetHistoryFolderRegKey(projectRegKey, true);
+            if (historyItem.GetValue(ISHDeploymentStatusRegValue) != null)
+            {
+                historyItem.DeleteValue(ISHDeploymentStatusRegValue, false);
+            }
         }
 
         /// <summary>
@@ -219,8 +236,9 @@ namespace ISHDeploy.Data.Managers
         /// Gets the history folder registry key.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>
+        /// <param name="writable">Is registry key writable. Fales by default</param>
         /// <returns>Registry history folder key.</returns>
-        private RegistryKey GetHistoryFolderRegKey(RegistryKey projectRegKey)
+        private RegistryKey GetHistoryFolderRegKey(RegistryKey projectRegKey, bool writable = false)
         {
             var currentInstallvalue = projectRegKey?.GetValue(CurrentRegName).ToString();
 
@@ -240,7 +258,7 @@ namespace ISHDeploy.Data.Managers
                 return null;
             }
 
-            return historyRegKey.OpenSubKey(installFolderRegKey);
+            return historyRegKey.OpenSubKey(installFolderRegKey, writable);
         }
 
         /// <summary>

@@ -15,18 +15,16 @@
  */
 
 using ISHDeploy.Common;
-using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces.Actions;
 using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Data.Actions.ISHProject
 {
-
     /// <summary>
-    /// Saves the status of deployment.
+    /// Removes the status of deployment from Registry.
     /// </summary>
     /// <seealso cref="IRestorableAction" />
-    public class SaveISHDeploymentStatusAction : IAction, IRestorableAction
+    public class RemoveISHDeploymentStatusAction : IAction
     {
         /// <summary>
         /// The data aggregate helper
@@ -38,42 +36,15 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         private readonly string _projectName;
 
-        /// <summary>
-        /// The previous status of deployment
-        /// </summary>
-        private ISHDeploymentStatus _previousStatus;
 
         /// <summary>
-        /// The new status of deployment
-        /// </summary>
-        private readonly ISHDeploymentStatus _newStatus;
-
-        /// <summary>
-        /// Initializes new instance of the <see cref="SaveISHDeploymentStatusAction"/>
+        /// Initializes new instance of the <see cref="RemoveISHDeploymentStatusAction"/>
         /// </summary>
         /// <param name="projectName">The deployment name</param>
-        /// <param name="status">The deployment status</param>
-        public SaveISHDeploymentStatusAction(string projectName, ISHDeploymentStatus status)
+        public RemoveISHDeploymentStatusAction(string projectName)
         {
             _trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _projectName = projectName;
-            _newStatus = status;
-        }
-
-        /// <summary>
-        ///	Creates backup of the asset.
-        /// </summary>
-        public void Backup()
-        {
-            _previousStatus = _trisoftRegistryManager.GetISHDeploymentStatus(_projectName);
-        }
-
-        /// <summary>
-        ///	Reverts an asset to initial state.
-        /// </summary>
-        public void Rollback()
-        {
-            _trisoftRegistryManager.SaveISHDeploymentStatus(_projectName, _previousStatus);
         }
 
         /// <summary>
@@ -81,7 +52,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public void Execute()
         {
-            _trisoftRegistryManager.SaveISHDeploymentStatus(_projectName, _newStatus);
+            _trisoftRegistryManager.RemoveISHDeploymentStatus(_projectName);
         }
     }
 }

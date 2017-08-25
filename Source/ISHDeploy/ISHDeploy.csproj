@@ -353,6 +353,8 @@
     <Compile Include="Common\Models\ISHComponentsCollection.cs" />
     <Compile Include="Data\Actions\Asserts\WriteVerboseAction.cs" />
     <Compile Include="Data\Actions\COMPlus\DisableCOMPlusComponentAction.cs" />
+    <Compile Include="Data\Actions\COMPlus\ShutdownCOMPlusComponentAction.cs" />
+    <Compile Include="Data\Actions\COMPlus\StartCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\EnableCOMPlusComponentAction.cs" />
     <Compile Include="Data\Actions\COMPlus\OpenPortAction.cs" />
     <Compile Include="Data\Actions\COMPlus\SetCOMPlusCredentialsAction.cs" />

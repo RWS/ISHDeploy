@@ -39,7 +39,15 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <param name="doOutput">Do output.</param>
         /// <returns>State of COM+ component</returns>
-        bool CheckCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true);
+        bool IsCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true);
+
+        /// <summary>
+        /// Check COM+ component is enabled or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
+        /// <returns>State of COM+ component</returns>
+        bool IsComPlusComponentRunning(string comPlusComponentName, bool doOutput = true);
 
         /// <summary>
         /// Enable COM+ components
@@ -54,6 +62,18 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void DisableCOMPlusComponents(string comPlusComponentName);
 
         /// <summary>
+        /// Shutdown COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void ShutdownCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Start COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void StartCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
         /// Gets all COM+ components.
         /// </summary>
         /// <returns>
@@ -66,5 +86,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="port">The number of port.</param>
         void GloballyOpenPort(int port);
+
+        /// <summary>
+        /// Gets Com+ component by name
+        /// </summary>
+        /// <param name="comPlusComponentName"></param>
+        /// <returns>Com+ component as <see cref="ISHCOMPlusComponent" /></returns>
+        ISHCOMPlusComponent GetCOMPlusComponentByName(string comPlusComponentName);
     }
 }

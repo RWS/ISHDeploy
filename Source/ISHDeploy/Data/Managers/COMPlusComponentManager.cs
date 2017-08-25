@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using COMAdmin;
-using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
@@ -39,18 +38,18 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// The powershell manager.
+        /// The COMAdminCatalog.
         /// </summary>
-        private readonly IPowerShellManager _psManager;
+        private readonly ICOMAdminCatalog _comAdminCatalog;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
+        /// Initializes a new instance of the <see cref="COMPlusComponentManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public COMPlusComponentManager(ILogger logger)
         {
             _logger = logger;
-            _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
+            _comAdminCatalog = (ICOMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
         }
         
         /// <summary>
@@ -63,9 +62,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Set COM+ component credentials", comPlusComponentName);
 
-            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
-
-            var applications = comAdminCatalog.GetCollection("Applications");
+            var applications = _comAdminCatalog.GetCollection("Applications");
             applications.Populate();
             foreach (ICatalogObject applicationInstance in applications)
             {
@@ -89,9 +86,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Com+ component as <see cref="ICatalogObject" /></returns>
         private ICatalogObject GetComPlusComponentByName(string comPlusComponentName)
         {
-            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
-
-            var applications = comAdminCatalog.GetCollection("Applications");
+            var applications = _comAdminCatalog.GetCollection("Applications");
             applications.Populate();
             foreach (ICatalogObject applicationInstance in applications)
             {
@@ -111,7 +106,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <param name="doOutput">Do output.</param>
         /// <returns>State of COM+ component</returns>
-        public bool CheckCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true)
+        public bool IsCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true)
         {
             if (doOutput)
             {
@@ -131,6 +126,35 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Check is Com+ component running or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
+        /// <returns>True if COM+ is running</returns>
+        public bool IsComPlusComponentRunning(string comPlusComponentName, bool doOutput = true)
+        {
+            if (doOutput)
+            {
+                _logger.WriteDebug("Check COM+ component is running or not", comPlusComponentName);
+            }
+
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+
+            var appCollection = (ICatalogCollection)_comAdminCatalog.GetCollection("ApplicationInstances");
+            appCollection.Populate();
+
+            var isRunning = appCollection.Cast<ICatalogObject>().Any(app => applicationInstance.Key == app.Value["Application"].ToString());
+
+            if (doOutput)
+            {
+                _logger.WriteVerbose(
+                    $"COM+ component `{comPlusComponentName}` is {(isRunning ? "Running" : "Stopped")}");
+            }
+
+            return isRunning;
+        }
+
+        /// <summary>
         /// Enable COM+ components
         /// </summary>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
@@ -138,8 +162,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Enable COM+ component");
 
-            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
-            var isEnabled = (bool)applicationInstance.Value["IsEnabled"];
+            var isEnabled = IsCOMPlusComponentEnabled(comPlusComponentName);
             
             if (isEnabled)
             {
@@ -147,9 +170,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
-
-                var applications = comAdminCatalog.GetCollection("Applications");
+                var applications = _comAdminCatalog.GetCollection("Applications");
                 applications.Populate();
                 foreach (ICatalogObject application in applications)
                 {
@@ -176,14 +197,11 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Disable COM+ component");
 
-            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
-            var isEnabled = (bool)applicationInstance.Value["IsEnabled"];
+            var isEnabled = IsCOMPlusComponentEnabled(comPlusComponentName);
 
             if (isEnabled)
             {
-                var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
-
-                var applications = comAdminCatalog.GetCollection("Applications");
+                var applications = _comAdminCatalog.GetCollection("Applications");
                 applications.Populate();
                 foreach (ICatalogObject application in applications)
                 {
@@ -206,6 +224,44 @@ namespace ISHDeploy.Data.Managers
                 _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` was already disabled");
             }
         }
+        
+        /// <summary>
+        /// Shutdown COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        public void ShutdownCOMPlusComponents(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Shutdown COM+ component");
+            
+            if (IsComPlusComponentRunning(comPlusComponentName))
+            {
+                _comAdminCatalog.ShutdownApplication(comPlusComponentName);
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been stopped");
+            }
+            else
+            {
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` was already stopped");
+            }
+        }
+
+        /// <summary>
+        /// Starts COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        public void StartCOMPlusComponents(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Shutdown COM+ component");
+
+            if (IsComPlusComponentRunning(comPlusComponentName))
+            {
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` was already started");
+            }
+            else
+            {
+                _comAdminCatalog.StartApplication(comPlusComponentName);
+                _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been started");
+            }
+        }
 
         /// <summary>
         /// Gets all COM+ components.
@@ -218,10 +274,8 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteDebug("Get COM+ components");
 
             var components = new List<ISHCOMPlusComponent>();
-
-            var comAdminCatalog = (COMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
-
-            var applications = comAdminCatalog.GetCollection("Applications");
+            
+            var applications = _comAdminCatalog.GetCollection("Applications");
             applications.Populate();
             foreach (ICatalogObject applicationInstance in applications)
             {
@@ -241,6 +295,32 @@ namespace ISHDeploy.Data.Managers
             }
 
             return components;
+        }
+
+        /// <summary>
+        /// Gets Com+ component by name
+        /// </summary>
+        /// <param name="comPlusComponentName"></param>
+        /// <returns>Com+ component as <see cref="ISHCOMPlusComponent" /></returns>
+        public ISHCOMPlusComponent GetCOMPlusComponentByName(string comPlusComponentName)
+        {
+            _logger.WriteDebug("Get COM+ component");
+
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+
+            if (applicationInstance != null)
+            {
+                new ISHCOMPlusComponent
+                {
+                    Name = applicationInstance.Name,
+                    Status = ((bool)applicationInstance.Value["IsEnabled"])
+                            ? ISHCOMPlusComponentStatus.Enabled
+                            : ISHCOMPlusComponentStatus.Disabled,
+                    ActivationType = (ISHCOMPlusActivationType)applicationInstance.Value["Activation"]
+                };
+            }
+
+            return null;
         }
 
         /// <summary>

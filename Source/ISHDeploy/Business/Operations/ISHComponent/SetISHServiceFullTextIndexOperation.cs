@@ -73,48 +73,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="port">The target lucene port.</param>
-        /// <param name="portRegistryValueName">The name of port value in registry.</param>
-        /// <param name="solrLuceneStopKey">The StopKey.</param>
-        public SetISHServiceFullTextIndexOperation(ILogger logger, Models.ISHDeployment ishDeployment, int port, RegistryValueName portRegistryValueName, string solrLuceneStopKey = "") :
+        public SetISHServiceFullTextIndexOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-
-            if (portRegistryValueName != RegistryValueName.SolrLuceneServicePort &&
-                portRegistryValueName != RegistryValueName.SolrLuceneStopPort)
-            {
-                throw new AggregateException($"Operation does not support such RegistryValueName value: {portRegistryValueName}");
-            }
-
-            Invoker = new ActionInvoker(logger, $"Setting of target lucene {portRegistryValueName} port of {ISHWindowsServiceType.SolrLucene} windows services");
+            Invoker = new ActionInvoker(logger, $"Setting of target lucene port of {ISHWindowsServiceType.SolrLucene} windows services");
 
             // Make sure Vanilla backup of all windows services exists
             Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-            // Change RegistryValue and do vanilla backup, if vanilla value has not been saved yet
-            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = portRegistryValueName, Value = port }, VanillaRegistryValuesFilePath));
-
-            if (portRegistryValueName == RegistryValueName.SolrLuceneServicePort)
-            {
-                var registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
-                var currentLuceneUri =
-                    new Uri(
-                        registryManager.GetRegistryValue(RegInfoShareBuildersRegistryElement,
-                            RegistryValueName.SolrLuceneBaseUrl).ToString());
-
-                var newUriAsString = currentLuceneUri.ToString().Replace(currentLuceneUri.Port.ToString(), port.ToString());
-                var newUri = new Uri(newUriAsString);
-
-                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
-                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
-            }
-            else
-            {
-                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneStopKey, Value = solrLuceneStopKey }, VanillaRegistryValuesFilePath));
-            }
-
-            // Open port
-            Invoker.AddAction(new OpenPortAction(logger, port));
 
             // Remove dependencies between Crawler and SolrLucene
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
@@ -126,6 +91,54 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 // There is no need to backup the vanilla value of the registry, since the service will be completely re-created in case of Undo
                 Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
             }
+        }
+
+        /// <summary>
+        /// Add actions to set ServicePort
+        /// </summary>
+        /// <param name="port">The target lucene ServicePort.</param>
+        public void AddSolrLuceneServicePortSetActions(int port)
+        {
+            string newPortAsString = port.ToString();
+            Invoker.AddAction(new SetRegistryValueAction(Logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneServicePort, Value = newPortAsString }, VanillaRegistryValuesFilePath));
+
+            var registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            var currentLuceneUri =
+                new Uri(
+                    registryManager.GetRegistryValue(RegInfoShareBuildersRegistryElement,
+                        RegistryValueName.SolrLuceneBaseUrl).ToString());
+
+            var newUriAsString = currentLuceneUri.ToString().Replace(currentLuceneUri.Port.ToString(), newPortAsString);
+            var newUri = new Uri(newUriAsString);
+
+            Invoker.AddAction(new SetRegistryValueAction(Logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
+            Invoker.AddAction(new SetRegistryValueAction(Logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = newUri }, VanillaRegistryValuesFilePath));
+
+            Invoker.AddAction(new OpenPortAction(Logger, port));
+        }
+
+        /// <summary>
+        /// Add actions to set StopPort
+        /// </summary>
+        /// <param name="port">The target lucene port.</param>
+        /// <param name="solrLuceneStopKey">The StopKey.</param>
+        public void AddSolrLuceneStopPortSetActions(int port, string solrLuceneStopKey)
+        {
+            string newPortAsString = port.ToString();
+            Invoker.AddAction(new SetRegistryValueAction(Logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneStopPort, Value = newPortAsString }, VanillaRegistryValuesFilePath));
+
+            if (!string.IsNullOrEmpty(solrLuceneStopKey))
+            {
+                Invoker.AddAction(new SetRegistryValueAction(Logger,
+                    new RegistryValue
+                    {
+                        Key = RegInfoShareBuildersRegistryElement,
+                        ValueName = RegistryValueName.SolrLuceneStopKey,
+                        Value = solrLuceneStopKey
+                    }, VanillaRegistryValuesFilePath));
+            }
+
+            Invoker.AddAction(new OpenPortAction(Logger, port));
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace ISHDeploy.Data.Managers.Interfaces
         bool IsCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true);
 
         /// <summary>
-        /// Check COM+ component is enabled or not
+        /// Check COM+ component is running or not
         /// </summary>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
         /// <param name="doOutput">Do output.</param>

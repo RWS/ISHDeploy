@@ -179,30 +179,23 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-            // Stop COM+ components
             var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
-            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+            // Rolling back credentials for COM+ component
             if (!SkipRecycle)
             {
-                foreach (var comPlusComponent in comPlusComponents)
+                if (doRollbackOfOSUserAndOSPassword)
                 {
                     Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+                        "The rolling back of credentials for COM+ components has implications across all deployments."));
 
                     Invoker.AddAction(
-                            new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                            new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
+
+                    // Rolling back credentials for COM+ component
+                    Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName,
+                        vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
+                        vanillaInputParameters.OSPassword));
                 }
-            }
-
-            if (doRollbackOfOSUserAndOSPassword)
-            {
-                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                    "The rolling back of credentials for COM+ components has implications across all deployments."));
-
-                // Rolling back credentials for COM+ component
-                Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author",
-                    vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
-                    vanillaInputParameters.OSPassword));
             }
 
             // Rolling back changes for Web folder
@@ -340,9 +333,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
-                
+
                 // Enable COM+ components
-                foreach (var comPlusComponent in comPlusComponents)
+                var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+                foreach (var comPlusComponent in comPlusComponents.Where(x => x.Status == ISHCOMPlusComponentStatus.Disabled))
                 {
                     Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                         $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
@@ -350,6 +344,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     Invoker.AddAction(
                             new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                 }
+
+                Invoker.AddAction(
+                    new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
             }
 
 			// Removing Backup folder

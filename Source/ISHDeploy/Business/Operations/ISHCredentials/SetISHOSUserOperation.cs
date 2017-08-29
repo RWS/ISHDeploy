@@ -69,10 +69,14 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                 "The setting of credentials for COM+ components has implications across all deployments."));
 
-            // Set new credentials for COM+ component
-            Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, "Trisoft-InfoShare-Author", userName, currentOSUserName, password, currentOSPassword));
+            // Stop COM+ cmponent
+            Invoker.AddAction(
+                new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
 
-            // Stop Application pools
+            // Set new credentials for COM+ component
+            Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName, userName, currentOSUserName, password, currentOSPassword));
+
+          // Stop Application pools
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
@@ -216,6 +220,10 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
             Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
             Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+
+            // Start Trisoft-InfoShare-Author COM+ application
+            Invoker.AddAction(
+                    new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
 
             // Stop services that are running
             // TODO: Add support of all other services and components

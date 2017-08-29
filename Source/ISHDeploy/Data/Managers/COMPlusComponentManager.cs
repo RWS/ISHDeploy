@@ -298,32 +298,6 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Gets Com+ component by name
-        /// </summary>
-        /// <param name="comPlusComponentName"></param>
-        /// <returns>Com+ component as <see cref="ISHCOMPlusComponent" /></returns>
-        public ISHCOMPlusComponent GetCOMPlusComponentByName(string comPlusComponentName)
-        {
-            _logger.WriteDebug("Get COM+ component");
-
-            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
-
-            if (applicationInstance != null)
-            {
-                new ISHCOMPlusComponent
-                {
-                    Name = applicationInstance.Name,
-                    Status = ((bool)applicationInstance.Value["IsEnabled"])
-                            ? ISHCOMPlusComponentStatus.Enabled
-                            : ISHCOMPlusComponentStatus.Disabled,
-                    ActivationType = (ISHCOMPlusActivationType)applicationInstance.Value["Activation"]
-                };
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Opens port
         /// </summary>
         /// <param name="port">The number of port.</param>

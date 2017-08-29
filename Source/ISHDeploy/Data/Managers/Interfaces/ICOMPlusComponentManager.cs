@@ -86,12 +86,5 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// </summary>
         /// <param name="port">The number of port.</param>
         void GloballyOpenPort(int port);
-
-        /// <summary>
-        /// Gets Com+ component by name
-        /// </summary>
-        /// <param name="comPlusComponentName"></param>
-        /// <returns>Com+ component as <see cref="ISHCOMPlusComponent" /></returns>
-        ISHCOMPlusComponent GetCOMPlusComponentByName(string comPlusComponentName);
     }
 }

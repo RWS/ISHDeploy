@@ -155,7 +155,7 @@ namespace ISHDeploy.Data.Managers
                         component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName);
                         break;
                     case ISHComponentName.COMPlus:
-                        component.IsEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
+                        component.IsEnabled = _comPlusComponentManager.IsCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
                         break;
                     case ISHComponentName.TranslationOrganizer:
                         serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationOrganizer).First().Name;

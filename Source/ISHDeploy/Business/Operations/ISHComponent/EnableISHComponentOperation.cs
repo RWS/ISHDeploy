@@ -60,17 +60,19 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var componentsCollection =
                dataAggregateHelper.GetComponents(ishDeployment.Name);
 
-            // Reorder Components Collection (make sure the lucene service start first and then the crawler)
+            // Reorder Components Collection (make sure the lucene service start first and then the crawler
+            // and IIS pools before COM+ components)
             List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
             if (components.Contains(ISHComponentName.Crawler))
             {
-                orderedComponentsCollection.Add(componentsCollection.Components.FirstOrDefault(x => x.Name == ISHComponentName.SolrLucene));
-
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.SolrLucene));
+                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.SolrLucene));
             }
-            else
+
+            orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
+
+            if (components.Contains(ISHComponentName.COMPlus))
             {
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name)));
+                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 
             foreach (var component in orderedComponentsCollection)
@@ -129,6 +131,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 {
                                     Invoker.AddAction(new WriteVerboseAction(Logger, () => (true), $"COM+ component `{comPlusComponent.Name}` was already enabled"));
                                 }
+                            }
+
+                            if (!comPlusComponentManager.IsComPlusComponentRunning(TrisoftInfoShareAuthorComPlusApplicationName))
+                            {
+                                Invoker.AddAction(
+                                    new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                             }
                             break;
                         case ISHComponentName.Crawler:

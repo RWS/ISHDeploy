@@ -69,19 +69,41 @@ $scriptBlockGetCOMState = {
     return $result
 }
 
-function GetComObjectState() {
-
-    #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCOMState -Session $session -ArgumentList $filePath
+$scriptBlockGetCOMRunningOrNot = {
+    param (
+        $testingDeployment
+    )
+    $result = @{}
+    $comAdmin = New-Object -com ("COMAdmin.COMAdminCatalog.1")
+    $catalog = New-Object -com COMAdmin.COMAdminCatalog 
+    $applications = $catalog.getcollection("Applications") 
+    $applications.populate()
     
-    #get variables and nodes from files
+    $trisoftInfoShareAuthorApplication = $applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
+    
+    $applicationsInstances = $catalog.getcollection("ApplicationInstances") 
+    $applicationsInstances.populate() 
 
+    foreach ($component in $applicationsInstances)
+    {
+        if ($component.Value("Application") -EQ $trisoftInfoShareAuthorApplication.Key)
+        {
+            return $true
+        }
+    }
 
-   $global:AuthorApplication =$result["AuthorApplication"]  
-   $global:ISOApplication = $result["ISOApplication"] 
-   $global:UtilitiesApplication = $result["UtilitiesApplication"]
-   $global:TriDKApplication = $result["TriDKApplication"]  
+    return $false
+}
+
+function GetComObjectState() {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCOMState -Session $session -ArgumentList $testingDeployment
+    
+    $global:AuthorApplication =$result["AuthorApplication"]  
+    $global:ISOApplication = $result["ISOApplication"] 
+    $global:UtilitiesApplication = $result["UtilitiesApplication"]
+    $global:TriDKApplication = $result["TriDKApplication"]  
    
+    $global:AuthorApplicationIsRunning = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCOMRunningOrNot -Session $session -ArgumentList $testingDeployment 
 }
 #endregion
 
@@ -105,7 +127,7 @@ Describe "Testing ISHCOMPlus"{
         $ISOApplication | Should be False 
         $UtilitiesApplication | Should be False 
         $TriDKApplication | Should be False 
-        
+        $AuthorApplicationIsRunning | Should be False  
     }
     
     It "Enable ISHCOMPlus enables Com+"{
@@ -127,6 +149,7 @@ Describe "Testing ISHCOMPlus"{
         $ISOApplication | Should be True 
         $UtilitiesApplication | Should be True 
         $TriDKApplication | Should be True
+        $AuthorApplicationIsRunning | Should be True 
     }
     
     It "Enable ISHCOMPlus writes history"{       

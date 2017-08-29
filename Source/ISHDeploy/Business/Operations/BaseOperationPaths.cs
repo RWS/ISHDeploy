@@ -31,6 +31,11 @@ namespace ISHDeploy.Business.Operations
     public abstract partial class BaseOperationPaths
     {
         /// <summary>
+        /// The name of Trisoft-InfoShare-Author COM+ application
+        /// </summary>
+        protected const string TrisoftInfoShareAuthorComPlusApplicationName = "Trisoft-InfoShare-Author";
+
+        /// <summary>
         /// The logger.
         /// </summary>
         protected ILogger Logger;

@@ -60,18 +60,20 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var componentsCollection =
                 dataAggregateHelper.GetComponents(ishDeployment.Name);
 
-            // Reorder Components Collection (make sure the crawler service stops first and then the lucene)
-            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>(); ;
+            // Reorder Components Collection (make sure the crawler service stops first and then the lucene
+            // and COM+ components before IIS pools)
+            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
+            if (components.Contains(ISHComponentName.COMPlus))
+            {
+                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.COMPlus));
+            }
+
             if (components.Contains(ISHComponentName.SolrLucene))
             {
-                orderedComponentsCollection.Add(componentsCollection.Components.FirstOrDefault(x => x.Name == ISHComponentName.Crawler));
+                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.Crawler));
+            }
 
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.Crawler));
-            }
-            else
-            {
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name)));
-            }
+            orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
 
             foreach (var component in orderedComponentsCollection)
             {
@@ -108,6 +110,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
                         var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
                         var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+
+                        if (comPlusComponentManager.IsComPlusComponentRunning(TrisoftInfoShareAuthorComPlusApplicationName))
+                        {
+                            Invoker.AddAction(
+                                new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
+                        }
+
                         foreach (var comPlusComponent in comPlusComponents)
                         {
                             if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Enabled)

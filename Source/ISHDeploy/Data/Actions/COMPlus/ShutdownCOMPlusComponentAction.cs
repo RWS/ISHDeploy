@@ -23,10 +23,10 @@ using ISHDeploy.Common.Interfaces.Actions;
 namespace ISHDeploy.Data.Actions.COMPlus
 {
     /// <summary>
-    /// Disable COM+ component.
+    /// Shutdown COM+ component.
     /// </summary>
     /// <seealso cref="IRestorableAction" />
-    public class DisableCOMPlusComponentAction : BaseAction, IRestorableAction
+    public class ShutdownCOMPlusComponentAction : BaseAction, IRestorableAction
     {
         /// <summary>
         /// The name of COM+ component.
@@ -38,18 +38,17 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         private readonly ICOMPlusComponentManager _comPlusComponentManager;
 
-
         /// <summary>
         /// The COM+ component manager
         /// </summary>
-        private bool _comPlusComponentWasEnabled;
+        private bool _comPlusComponentWasStarted;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DisableCOMPlusComponentAction"/> class.
+        /// Initializes a new instance of the <see cref="ShutdownCOMPlusComponentAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
-        public DisableCOMPlusComponentAction(ILogger logger, string comPlusComponentName)
+        public ShutdownCOMPlusComponentAction(ILogger logger, string comPlusComponentName)
             : base(logger)
         {
             _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
@@ -61,7 +60,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Backup()
         {
-            _comPlusComponentWasEnabled = _comPlusComponentManager.IsCOMPlusComponentEnabled(_comPlusComponentName, false);
+            _comPlusComponentWasStarted = _comPlusComponentManager.IsComPlusComponentRunning(_comPlusComponentName, false);
         }
 
         /// <summary>
@@ -69,11 +68,11 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public override void Execute()
         {
-            _comPlusComponentManager.DisableCOMPlusComponents(_comPlusComponentName);
+            _comPlusComponentManager.ShutdownCOMPlusComponents(_comPlusComponentName);
 
-            if (_comPlusComponentManager.IsCOMPlusComponentEnabled(_comPlusComponentName))
+            if (_comPlusComponentManager.IsComPlusComponentRunning(_comPlusComponentName))
             {
-                throw new Exception($"COM+ component `{_comPlusComponentName}` has not been disabled");
+                throw new Exception($"COM+ component `{_comPlusComponentName}` has not been stopped");
             }
         }
 
@@ -82,13 +81,13 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Rollback()
         {
-            if (_comPlusComponentWasEnabled)
+            if (_comPlusComponentWasStarted)
             {
-                _comPlusComponentManager.EnableCOMPlusComponents(_comPlusComponentName);
+                _comPlusComponentManager.StartCOMPlusComponents(_comPlusComponentName);
             }
             else
             {
-                _comPlusComponentManager.DisableCOMPlusComponents(_comPlusComponentName);
+                _comPlusComponentManager.ShutdownCOMPlusComponents(_comPlusComponentName);
             }
         }
     }

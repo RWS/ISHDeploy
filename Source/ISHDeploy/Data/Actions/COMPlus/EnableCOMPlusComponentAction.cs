@@ -45,7 +45,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         private bool _comPlusComponentWasEnabled;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetCOMPlusCredentialsAction"/> class.
+        /// Initializes a new instance of the <see cref="EnableCOMPlusComponentAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="comPlusComponentName">The name of COM+ component.</param>
@@ -61,7 +61,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public void Backup()
         {
-            _comPlusComponentWasEnabled = _comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName, false);
+            _comPlusComponentWasEnabled = _comPlusComponentManager.IsCOMPlusComponentEnabled(_comPlusComponentName, false);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         {
             _comPlusComponentManager.EnableCOMPlusComponents(_comPlusComponentName);
 
-            if (!_comPlusComponentManager.CheckCOMPlusComponentEnabled(_comPlusComponentName))
+            if (!_comPlusComponentManager.IsCOMPlusComponentEnabled(_comPlusComponentName))
             {
                 throw new Exception($"COM+ component `{_comPlusComponentName}` has not been enabled");
             }

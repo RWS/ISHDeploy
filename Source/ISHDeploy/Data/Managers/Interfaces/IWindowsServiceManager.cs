@@ -39,14 +39,23 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void StopWindowsService(string serviceName);
 
         /// <summary>
-        /// Gets all windows services of specified type.
+        /// Gets all windows services of deployment of specified type.
         /// </summary>
-        /// <param name="types">Types of deployment service.</param>
         /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
         IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
+
+        /// <summary>
+        /// Gets all windows services of deployment of all types.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The all windows services of deployment.
+        /// </returns>
+        IEnumerable<ISHWindowsService> GetAllServices(string deploymentName);
 
         /// <summary>
         /// Gets all BackgroundTask windows services.

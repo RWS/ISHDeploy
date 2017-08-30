@@ -17,8 +17,6 @@
 using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHComponent;
-using ISHDeploy.Common.Enums;
-using ISHDeploy.Common.Interfaces;
 
 namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
 {
@@ -35,13 +33,18 @@ namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -Port 8081 -ServicePort</code>
+    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -ServicePort 8081</code>
     /// <para>This command changes the target port of instances of SolrLucene services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     /// <example>
-    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -Port 8081 -StopPort -StopKey "somepasswordtostoplucene"</code>
-    /// <para>This command changes the target StopPort anf StopKey of instances of SolrLucene services.
+    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -StopPort 8081 -StopKey "somepasswordtostoplucene"</code>
+    /// <para>This command changes the target StopPort and StopKey of instances of SolrLucene services.
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    /// <example>
+    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -ServicePort 8081 -StopPort 8082 -StopKey "somepasswordtostoplucene"</code>
+    /// <para>This command changes the target ServicePort, also StopPort and StopKey of instances of SolrLucene services.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHServiceFullTextIndex")]
@@ -55,31 +58,23 @@ namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
         public Uri Uri { get; set; }
 
         /// <summary>
-        /// <para type="description">The target lucene port.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The target lucene port", ParameterSetName = "ServicePort")]
-        [Parameter(Mandatory = true, HelpMessage = "The target lucene port", ParameterSetName = "StopPort")]
-        [ValidateNotNullOrEmpty]
-        public int Port { get; set; }
-
-        /// <summary>
         /// <para type="description">The target lucene ServicePort.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The target lucene service port", ParameterSetName = "ServicePort")]
+        [Parameter(Mandatory = false, HelpMessage = "The target lucene ServicePort", ParameterSetName = "Port")]
         [ValidateNotNullOrEmpty]
-        public SwitchParameter ServicePort { get; set; }
+        public int ServicePort { get; set; }
 
         /// <summary>
         /// <para type="description">The target lucene StopPort.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The target lucene stop port", ParameterSetName = "StopPort")]
+        [Parameter(Mandatory = false, HelpMessage = "The target lucene StopPort", ParameterSetName = "Port")]
         [ValidateNotNullOrEmpty]
-        public SwitchParameter StopPort { get; set; }
+        public int StopPort { get; set; }
 
         /// <summary>
         /// <para type="description">The target lucene StopKey.</para>
         /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The target lucene StopKey", ParameterSetName = "StopPort")]
+        [Parameter(Mandatory = false, HelpMessage = "The target lucene StopKey", ParameterSetName = "Port")]
         [ValidateNotNullOrEmpty]
         public string StopKey { get; set; }
 
@@ -88,21 +83,25 @@ namespace ISHDeploy.Cmdlets.ISHServiceFullTextIndex
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            IOperation operation = null;
             switch (ParameterSetName)
             {
                 case "Uri":
-                    operation = new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment, Uri);
+                    (new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment, Uri)).Run();
                     break;
-                case "ServicePort":
-                    operation = new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment, Port, RegistryValueName.SolrLuceneServicePort);
-                    break;
-                case "StopPort":
-                    operation = new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment, Port, RegistryValueName.SolrLuceneStopPort, StopKey);
+                case "Port":
+                    var operation = new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment);
+                    if (MyInvocation.BoundParameters.ContainsKey("ServicePort"))
+                    {
+                        operation.AddSolrLuceneServicePortSetActions(ServicePort);
+                    }
+
+                    if (MyInvocation.BoundParameters.ContainsKey("StopPort"))
+                    {
+                        operation.AddSolrLuceneStopPortSetActions(StopPort, StopKey);
+                    }
+                    operation.Run();
                     break;
             }
-            
-            operation.Run();
         }
     }
 }

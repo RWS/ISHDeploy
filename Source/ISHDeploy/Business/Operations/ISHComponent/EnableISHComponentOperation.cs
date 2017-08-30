@@ -212,10 +212,16 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (component != null)
             {
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                if (ishDeployment.Status == ISHDeploymentStatus.Started)
                 {
-                    Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                    var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                    foreach (
+                        var service in
+                            services.Where(
+                                x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                    }
                 }
             }
             else

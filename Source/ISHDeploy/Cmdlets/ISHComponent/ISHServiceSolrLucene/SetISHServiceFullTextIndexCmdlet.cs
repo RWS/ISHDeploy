@@ -20,17 +20,13 @@ using ISHDeploy.Business.Operations.ISHComponent;
 namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceSolrLucene
 {
     /// <summary>
-    /// <para type="synopsis">Sets target lucene Uri.</para>
+    /// <para type="synopsis">Sets target lucene ServicePort and/or StopPort.</para>
     /// <para type="description">The Set-ISHServiceFullTextIndex cmdlet sets target lucene Uri.</para>
     /// <para type="link">Enable-ISHServiceFullTextIndex</para>
     /// <para type="link">Disable-ISHServiceFullTextIndex</para>
     /// <para type="link">Get-ISHServiceFullTextIndex</para>
+    /// <para type="link">Set-ISHIntegrationFullTextIndex</para>
     /// </summary>
-    /// <example>
-    /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -Uri "http://127.0.0.1:8080/solr/"</code>
-    /// <para>This command changes the target Uri of instances of SolrLucene services.
-    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
-    /// </example>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceFullTextIndex -ISHDeployment $deployment -ServicePort 8081</code>
     /// <para>This command changes the target port of instances of SolrLucene services.
@@ -49,13 +45,6 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceSolrLucene
     [Cmdlet(VerbsCommon.Set, "ISHServiceFullTextIndex")]
     public sealed class SetISHServiceSolrLuceneCmdlet : BaseHistoryEntryCmdlet
     {
-        ///// <summary>
-        ///// <para type="description">The target lucene Uri.</para>
-        ///// </summary>
-        //[Parameter(Mandatory = true, HelpMessage = "The target lucene Uri", ParameterSetName = "Uri")]
-        //[ValidateNotNullOrEmpty]
-        //public Uri Uri { get; set; }
-
         /// <summary>
         /// <para type="description">The target lucene ServicePort.</para>
         /// </summary>
@@ -82,24 +71,17 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceSolrLucene
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            //switch (ParameterSetName)
-            //{
-            //    case "Uri":
-            //        (new SetISHServiceFullTextIndexOperation(Logger, ISHDeployment, Uri)).Run();
-            //        break;
-            //    case "Port":
-                    var operation = new SetISHServiceSolrLuceneOperation(Logger, ISHDeployment);
-                    if (MyInvocation.BoundParameters.ContainsKey("ServicePort"))
-                    {
-                        operation.AddSolrLuceneServicePortSetActions(ServicePort);
-                    }
+            var operation = new SetISHServiceSolrLuceneOperation(Logger, ISHDeployment);
+            if (MyInvocation.BoundParameters.ContainsKey("ServicePort"))
+            {
+                operation.AddSolrLuceneServicePortSetActions(ServicePort);
+            }
 
-                    if (MyInvocation.BoundParameters.ContainsKey("StopPort"))
-                    {
-                        operation.AddSolrLuceneStopPortSetActions(StopPort, StopKey);
-                    }
-                    operation.Run();
-            //}
+            if (MyInvocation.BoundParameters.ContainsKey("StopPort"))
+            {
+                operation.AddSolrLuceneStopPortSetActions(StopPort, StopKey);
+            }
+            operation.Run();
         }
     }
 }

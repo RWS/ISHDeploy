@@ -122,6 +122,7 @@
     <Compile Include="Business\Operations\ISHComponent\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHCOMPlusCmdlet.cs" />
+    <Compile Include="Cmdlets\ISHComponent\ISHServiceSolrLucene\SetISHIntegrationFullTextIndexCmdlet.cs" />
     <Compile Include="Cmdlets\ISHCredentials\SetISHActorCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\DisableISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\EnableISHCOMPlusCmdlet.cs" />

@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.Directory;
-using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.WebAdministration;
-using ISHDeploy.Data.Actions.WindowsServices;
-using ISHDeploy.Data.Managers.Interfaces;
-using System.Linq;
 using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
+using ISHDeploy.Data.Actions.Directory;
+using ISHDeploy.Data.Actions.File;
 using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.Registry;
+using ISHDeploy.Data.Actions.WebAdministration;
+using ISHDeploy.Data.Actions.WindowsServices;
+using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.Web.Administration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -119,16 +119,20 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var doRollbackOfOSUserAndOSPassword = currentOSUserName != vanillaInputParameters.OSUser ||
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
+            // Stop all WindowsServices 
+            var services = serviceManager.GetAllServices(
+		        ishDeployment.Name).ToList();
+            foreach (var service in services)
+            {
+                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+            }
+
             // Rollback of WindowsServices 
             // If VanillaPropertiesOfWindowsServicesFilePath exists recreate ISH windows services
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
 		    {
-		        var services = serviceManager.GetServices(
-		            ishDeployment.Name,
-		            (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType))).ToList();
 		        foreach (var service in services)
 		        {
-		            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
 		            Invoker.AddAction(new RemoveWindowsServiceAction(Logger, service));
 		        }
 
@@ -145,10 +149,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // or do rollback of OSUser credentials if it is needed 
             else if (doRollbackOfOSUserAndOSPassword)
             {
-                var services = serviceManager.GetServices(
-                     ishDeployment.Name,
-                     (ISHWindowsServiceType[])Enum.GetValues(typeof(ISHWindowsServiceType))).ToList();
-
                 foreach (var service in services)
                 {
                     Invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, 

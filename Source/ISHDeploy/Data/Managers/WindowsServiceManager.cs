@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Gets all windows services of specified type.
+        /// Gets all windows services of deployment of specified type.
         /// </summary>
         /// <param name="deploymentName">ISH deployment name.</param>
         /// <param name="types">Types of deployment service.</param>
@@ -185,6 +185,18 @@ namespace ISHDeploy.Data.Managers
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Gets all windows services of deployment of all types.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The all windows services of deployment.
+        /// </returns>
+        public IEnumerable<ISHWindowsService> GetAllServices(string deploymentName)
+        {
+            return GetServices(deploymentName, (ISHWindowsServiceType[]) Enum.GetValues(typeof (ISHWindowsServiceType)));
         }
 
         /// <summary>

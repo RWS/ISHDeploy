@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Business.Operations.ISHComponent;
@@ -60,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             else
             {
                 operation = new EnableISHComponentOperation(logger, ishDeployment, false,
-                    (ISHComponentName[])Enum.GetValues(typeof(ISHComponentName)));
+                    new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray());
             }
 
             Invoker = new ActionInvoker(Logger, "Starting of enabled components", operation.Invoker.GetActions());

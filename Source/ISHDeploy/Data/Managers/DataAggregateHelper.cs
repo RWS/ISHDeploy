@@ -214,7 +214,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>The collection of windows services with all properties needed for their recreation</returns>
         public ISHWindowsServiceBackupCollection GetISHWindowsServiceBackupCollection(string deploymentName)
         {
-            var services = _windowsServiceManager.GetServices(deploymentName, (ISHWindowsServiceType[])Enum.GetValues(typeof(ISHWindowsServiceType)));
+            var services = _windowsServiceManager.GetAllServices(deploymentName);
             var backup = new ISHWindowsServiceBackupCollection();
             foreach (var service in services)
             {

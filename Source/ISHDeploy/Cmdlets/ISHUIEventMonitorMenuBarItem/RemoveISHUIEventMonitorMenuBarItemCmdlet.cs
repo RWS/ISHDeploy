@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using ISHDeploy.Business.Operations.ISHUIEventMonitorTab;
+using ISHDeploy.Business.Operations.ISHUIEventMonitorMenuBarItem;
 using System.Management.Automation;
 
 namespace ISHDeploy.Cmdlets.ISHUIEventMonitorMenuBarItem

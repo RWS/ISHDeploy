@@ -49,7 +49,7 @@ namespace ISHDeploy.Data.Managers
         public COMPlusComponentManager(ILogger logger)
         {
             _logger = logger;
-            _comAdminCatalog = (ICOMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog.1"));
+            _comAdminCatalog = new COMAdminCatalog();
         }
         
         /// <summary>

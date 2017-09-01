@@ -90,6 +90,7 @@
     <None Include="Articles\Components\_nopublish\Web\Example.Disable-ISHIISAppPool.ps1" />
     <None Include="Articles\Components\_nopublish\Web\Example.Enable-ISHIISAppPool.ps1" />
     <None Include="Articles\Components\_nopublish\Web\Example.Get-ISHIISAppPool.ps1" />
+    <None Include="Articles\Core\Configuring and maintaining the search capability.md" />
     <None Include="Articles\Core\Configuring credentials.md" />
     <None Include="Articles\Core\Integrating with a database.md" />
     <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHActor.ps1" />
@@ -102,6 +103,11 @@
     <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.SQL.ps1" />
     <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.SQL.Raw.ps1" />
     <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Test-ISHIntegrationDB.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Invoke-ISHMaintenance.Crawler.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Invoke-ISHMaintenance.FullTextIndex.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHIntegrationFullTextIndex.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHServiceFullTextIndex.ps1" />
     <None Include="Articles\ISHCM\_nopublish\03.CreateButtonBarItem - Full.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateButtonBarItem.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateSearchMenuBarItem.ps1" />

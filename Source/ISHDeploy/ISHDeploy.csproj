@@ -377,10 +377,13 @@
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Exceptions\DocumentAlreadyContainsElementException.cs" />
     <Compile Include="Data\Exceptions\ISHWindowsServiceTimeoutException.cs" />
+    <Compile Include="Data\Managers\COMAdminCatalogWrapperSingleton.cs" />
+    <Compile Include="Data\Managers\Interfaces\INetworkManager.cs" />
+    <Compile Include="Data\Managers\Interfaces\ICOMPlusComponentManager.cs" />
+    <Compile Include="Data\Managers\NetworkManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IProcessManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IPowerShellManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IDatabaseManager.cs" />
-    <Compile Include="Data\Managers\Interfaces\ICOMPlusComponentManager.cs" />
     <Compile Include="Data\Managers\Interfaces\IWindowsServiceManager.cs" />
     <Compile Include="Data\Managers\ProcessManager.cs" />
     <Compile Include="Data\Managers\PowerShellManager.cs" />
@@ -562,7 +565,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="NetFwTypeLib">
       <Guid>{58FBCF7C-E7A9-467C-80B3-FC65E8FCCA08}</Guid>

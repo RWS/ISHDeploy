@@ -52,10 +52,8 @@ $scriptBlockGetCOMState = {
     )
 
     $result = @{}
-    $comAdmin = New-Object -com ("COMAdmin.COMAdminCatalog.1")
-    $catalog = New-Object -com COMAdmin.COMAdminCatalog 
-    $applications = $catalog.getcollection("Applications") 
-    $applications.populate()
+    $catalog = [ISHDeploy.Data.Managers.COMAdminCatalogWrapperSingleton]::Instance
+    $applications = $catalog.GetApplications()
     $trisoftInfoShareAuthorApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
     $trisoftInfoShareAuthorISOApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-AuthorIso"
     $trisoftInfoShareUtilitiesApplication=$applications|Where-Object -Property Name -EQ "Trisoft-Utilities"
@@ -74,15 +72,12 @@ $scriptBlockGetCOMRunningOrNot = {
         $testingDeployment
     )
     $result = @{}
-    $comAdmin = New-Object -com ("COMAdmin.COMAdminCatalog.1")
-    $catalog = New-Object -com COMAdmin.COMAdminCatalog 
-    $applications = $catalog.getcollection("Applications") 
-    $applications.populate()
+    $catalog = [ISHDeploy.Data.Managers.COMAdminCatalogWrapperSingleton]::Instance
+    $applications = $catalog.GetApplications()
     
     $trisoftInfoShareAuthorApplication = $applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
     
-    $applicationsInstances = $catalog.getcollection("ApplicationInstances") 
-    $applicationsInstances.populate() 
+    $applicationsInstances = $catalog.GetApplicationInstances()
 
     foreach ($component in $applicationsInstances)
     {

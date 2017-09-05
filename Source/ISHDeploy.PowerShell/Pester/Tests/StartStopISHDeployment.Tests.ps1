@@ -111,10 +111,8 @@ $scriptBlockGetCOMState = {
     )
 
     $result = @{}
-    $comAdmin = New-Object -com ("COMAdmin.COMAdminCatalog.1")
-    $catalog = New-Object -com COMAdmin.COMAdminCatalog 
-    $applications = $catalog.getcollection("Applications") 
-    $applications.populate()
+    $catalog = [ISHDeploy.Data.Managers.COMAdminCatalogWrapperSingleton]::Instance
+    $applications = $catalog.GetApplications()
     $trisoftInfoShareAuthorApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
     $trisoftInfoShareAuthorISOApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-AuthorIso"
     $trisoftInfoShareUtilitiesApplication=$applications|Where-Object -Property Name -EQ "Trisoft-Utilities"
@@ -309,7 +307,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $pools.Count | Should be 0  
 
     }
-	It "Enabling components on stopeed deployment should not start components"{
+	It "Enabling components on stopped deployment should not start components"{
          #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
@@ -336,5 +334,5 @@ Describe "Testing Start and Stop ISH Deployment"{
     }
 
     #>
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+     UndoDeploymentBackToVanila $testingDeploymentName
 }

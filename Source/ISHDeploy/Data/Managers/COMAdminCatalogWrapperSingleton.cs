@@ -56,7 +56,7 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private COMAdminCatalogWrapperSingleton()
         {
-            _comAdminCatalog = new COMAdminCatalogClass();
+            _comAdminCatalog = (ICOMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog"));
         }
 
         /// <summary>

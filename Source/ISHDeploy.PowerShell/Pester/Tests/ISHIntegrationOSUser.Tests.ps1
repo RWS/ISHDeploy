@@ -42,11 +42,9 @@ $scriptBlockGetUsers = {
     }
     $ishServices=Get-Service -Name "Trisoft $ishDeploy*"
 
-    # COMPlus
-    $comAdmin = New-Object -com ("COMAdmin.COMAdminCatalog.1")
-    $catalog = New-Object -com COMAdmin.COMAdminCatalog 
-    $applications = $catalog.getcollection("Applications") 
-    $applications.populate()
+    # COMPlus    
+    $catalog = [ISHDeploy.Data.Managers.COMAdminCatalogWrapperSingleton]::Instance
+    $applications = $catalog.GetApplications()
     $trisoftInfoShareAuthorApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
     
     foreach ($pool in $ishAppPools){
@@ -75,9 +73,7 @@ $scriptBlockSetISHOSUser = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHOSUser -ISHDeployment $ishDeploy -Credential $credentials
-
+    Set-ISHOSUser -ISHDeployment $ishDeployName -Credential $credentials
 }
 #endregion
 
@@ -92,7 +88,7 @@ function remoteGetUsers() {
 
 Describe "Testing ISHOSUser"{
     BeforeEach {
-        UndoDeploymentBackToVanila $testingDeploymentName $true
+        UndoDeploymentBackToVanila $testingDeploymentName
     }
 
     It "Set ISHOSUser set's user correctly"{       
@@ -149,5 +145,5 @@ Describe "Testing ISHOSUser"{
         #Act
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHOSUser -Session $session -ArgumentList $testingDeploymentName, (New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "TestPassword`"" -AsPlainText -Force))) -ErrorAction Stop }| Should Throw "The identity or password set on the application is not valid"
     }
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+     UndoDeploymentBackToVanila $testingDeploymentName
 }

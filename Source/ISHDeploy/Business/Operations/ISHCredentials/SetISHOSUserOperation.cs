@@ -73,10 +73,28 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             Invoker.AddAction(
                 new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
 
+            // Stop services that are running
+            // TODO: Add support of all other services and components
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var runningServiceNames = serviceManager.GetServices(
+                ishDeployment.Name,
+                ISHWindowsServiceType.BackgroundTask,
+                ISHWindowsServiceType.Crawler,
+                ISHWindowsServiceType.SolrLucene,
+                ISHWindowsServiceType.TranslationBuilder,
+                ISHWindowsServiceType.TranslationOrganizer).
+                Where(service => service.Status == ISHWindowsServiceStatus.Running).ToList();
+
+            // Stop services that are running
+            foreach (var service in runningServiceNames)
+            {
+                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+            }
+
             // Set new credentials for COM+ component
             Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName, userName, currentOSUserName, password, currentOSPassword));
 
-          // Stop Application pools
+            // Stop Application pools
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
             Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
@@ -216,33 +234,15 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSPasswordXPath, password));
 
-            // Start Application pools
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
-
             // Start Trisoft-InfoShare-Author COM+ application
             Invoker.AddAction(
                     new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
 
-            // Stop services that are running
-            // TODO: Add support of all other services and components
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var runningServiceNames = serviceManager.GetServices(
-                ishDeployment.Name,
-                ISHWindowsServiceType.BackgroundTask,
-                ISHWindowsServiceType.Crawler,
-                ISHWindowsServiceType.SolrLucene,
-                ISHWindowsServiceType.TranslationBuilder,
-                ISHWindowsServiceType.TranslationOrganizer).
-                Where(service => service.Status == ISHWindowsServiceStatus.Running).ToList();
-
-            // Stop services that are running
-            foreach (var service in runningServiceNames)
-            {
-                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-            }
-
+            // Start Application pools
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+            
             // Set new credentials for all services
             foreach (var service in serviceManager.GetServices(
                 ishDeployment.Name,

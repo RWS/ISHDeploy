@@ -22,7 +22,6 @@ using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Managers.Interfaces;
-using NetFwTypeLib;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -38,18 +37,19 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// The COMAdminCatalog.
+        /// The COMAdminCatalogWrapper.
         /// </summary>
-        private readonly ICOMAdminCatalog _comAdminCatalog;
+        private readonly COMAdminCatalogWrapperSingleton _comAdminCatalogWrapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="COMPlusComponentManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public COMPlusComponentManager(ILogger logger)
+        /// <param name="comAdminCatalogWrapper">The COMAdminCatalog wrapper.</param>
+        public COMPlusComponentManager(ILogger logger, COMAdminCatalogWrapperSingleton comAdminCatalogWrapper)
         {
             _logger = logger;
-            _comAdminCatalog = (ICOMAdminCatalog)Activator.CreateInstance(Type.GetTypeFromProgID("COMAdmin.COMAdminCatalog"));
+            _comAdminCatalogWrapper = comAdminCatalogWrapper;
         }
 
         /// <summary>
@@ -62,8 +62,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger.WriteDebug("Set COM+ component credentials", comPlusComponentName);
 
-            var applications = (ICatalogCollection)_comAdminCatalog.GetCollection("Applications");
-            applications.Populate();
+            var applications = _comAdminCatalogWrapper.GetApplications();
             foreach (ICatalogObject applicationInstance in applications)
             {
                 if (string.Equals(applicationInstance.Name.ToString(), comPlusComponentName,
@@ -86,9 +85,7 @@ namespace ISHDeploy.Data.Managers
         /// <returns>Com+ component as <see cref="ICatalogObject" /></returns>
         private ICatalogObject GetComPlusComponentByName(string comPlusComponentName)
         {
-            var applications = (ICatalogCollection)_comAdminCatalog.GetCollection("Applications");
-            applications.Populate();
-            foreach (ICatalogObject applicationInstance in applications)
+            foreach (ICatalogObject applicationInstance in _comAdminCatalogWrapper.GetApplications())
             {
                 if (string.Equals(applicationInstance.Name.ToString(), comPlusComponentName,
                     StringComparison.CurrentCultureIgnoreCase))
@@ -96,7 +93,7 @@ namespace ISHDeploy.Data.Managers
                     return applicationInstance;
                 }
             }
-
+            
             return null;
         }
 
@@ -139,9 +136,8 @@ namespace ISHDeploy.Data.Managers
             }
 
             var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
-
-            var appCollection = (ICatalogCollection)_comAdminCatalog.GetCollection("ApplicationInstances");
-            appCollection.Populate();
+            
+            var appCollection = _comAdminCatalogWrapper.GetApplicationInstances();
 
             var isRunning = appCollection.Cast<ICatalogObject>().Any(app => applicationInstance.Key.ToString() == app.Value["Application"].ToString());
 
@@ -170,8 +166,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                var applications = (ICatalogCollection)_comAdminCatalog.GetCollection("Applications");
-                applications.Populate();
+                var applications = _comAdminCatalogWrapper.GetApplications();
                 foreach (ICatalogObject application in applications)
                 {
                     if (string.Equals(application.Name.ToString(), comPlusComponentName,
@@ -186,6 +181,7 @@ namespace ISHDeploy.Data.Managers
                 {
                     _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been enabled");
                 }
+                
             }
         }
 
@@ -201,8 +197,7 @@ namespace ISHDeploy.Data.Managers
 
             if (isEnabled)
             {
-                var applications = (ICatalogCollection)_comAdminCatalog.GetCollection("Applications");
-                applications.Populate();
+                var applications = _comAdminCatalogWrapper.GetApplications();
                 foreach (ICatalogObject application in applications)
                 {
                     if (string.Equals(application.Name.ToString(), comPlusComponentName,
@@ -232,10 +227,9 @@ namespace ISHDeploy.Data.Managers
         public void ShutdownCOMPlusComponents(string comPlusComponentName)
         {
             _logger.WriteDebug("Shutdown COM+ component");
-
             if (IsComPlusComponentRunning(comPlusComponentName))
             {
-                _comAdminCatalog.ShutdownApplication(comPlusComponentName);
+                _comAdminCatalogWrapper.ShutdownApplication(comPlusComponentName);
                 _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been stopped");
             }
             else
@@ -258,7 +252,7 @@ namespace ISHDeploy.Data.Managers
             }
             else
             {
-                _comAdminCatalog.StartApplication(comPlusComponentName);
+                _comAdminCatalogWrapper.StartApplication(comPlusComponentName);
                 _logger.WriteVerbose($"COM+ component `{comPlusComponentName}` has been started");
             }
         }
@@ -275,9 +269,7 @@ namespace ISHDeploy.Data.Managers
 
             var components = new List<ISHCOMPlusComponent>();
 
-            var applications = (ICatalogCollection)_comAdminCatalog.GetCollection("Applications");
-            applications.Populate();
-            foreach (ICatalogObject applicationInstance in applications)
+            foreach (ICatalogObject applicationInstance in _comAdminCatalogWrapper.GetApplications())
             {
                 string componentName = applicationInstance.Name.ToString();
                 if (componentName.StartsWith("Trisoft"))
@@ -286,43 +278,15 @@ namespace ISHDeploy.Data.Managers
                         new ISHCOMPlusComponent
                         {
                             Name = componentName,
-                            Status = ((bool)applicationInstance.Value["IsEnabled"])
+                            Status = ((bool) applicationInstance.Value["IsEnabled"])
                                 ? ISHCOMPlusComponentStatus.Enabled
                                 : ISHCOMPlusComponentStatus.Disabled,
-                            ActivationType = (ISHCOMPlusActivationType)applicationInstance.Value["Activation"]
+                            ActivationType = (ISHCOMPlusActivationType) applicationInstance.Value["Activation"]
                         });
                 }
             }
 
             return components;
-        }
-
-        /// <summary>
-        /// Opens port
-        /// </summary>
-        /// <param name="port">The number of port.</param>
-        public void GloballyOpenPort(int port)
-        {
-            _logger.WriteDebug("Open port", port);
-
-            INetFwMgr icfMgr = (INetFwMgr)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwMgr"));
-
-            INetFwOpenPort portClass = (INetFwOpenPort)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FWOpenPort"));
-
-            // Get the current profile
-            INetFwProfile profile = icfMgr.LocalPolicy.CurrentProfile;
-
-            // Set the port properties
-            portClass.Scope = NET_FW_SCOPE_.NET_FW_SCOPE_ALL;
-            portClass.Enabled = true;
-            portClass.Protocol = NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP;
-            portClass.Name = "ISHDeploy port opening";
-            portClass.Port = port;
-
-            // Add the port to the ICF Permissions List
-            profile.GloballyOpenPorts.Add(portClass);
-
-            _logger.WriteVerbose($"The port `{port}` has been opened");
         }
     }
 }

@@ -129,12 +129,19 @@ $scriptBlockGetAppPoolState = {
 
 Describe "Testing ISHIISAppPool"{
     BeforeEach {
-        UndoDeploymentBackToVanila $testingDeploymentName $true
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
     }
 
     It "Disable ISHIISAppPool disables AppPools"{
 
         #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
+         #Assert
+        $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -149,13 +156,6 @@ Describe "Testing ISHIISAppPool"{
     It "Enable ISHIISAppPool enables AppPools"{
 
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
-         #Assert
-        $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
-        ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
-
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -174,6 +174,6 @@ Describe "Testing ISHIISAppPool"{
         $history.Contains('Enable-ISHIISAppPool') | Should be "True"
 
     }
-    #>
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+    
+    Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
 }

@@ -29,7 +29,6 @@ using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.Web.Administration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models = ISHDeploy.Common.Models;
@@ -72,6 +71,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+
+            // Get all ISH windows services
+            var services = serviceManager.GetAllServices(
+                ishDeployment.Name).ToList();
+
             // Remove redundant files from BIN
             Invoker.AddAction(new DirectoryBinReturnToVanila(
                 logger, 
@@ -82,12 +87,32 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Disable internal STS login (remove directory) 
             Invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
 
+
+            // Check if this operation has implications for several Deployments
+            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+            // Disable and stop all ISH components
             if (!SkipRecycle)
             {
-                // Stop Application pools before undo
+                // Stop all WindowsServices 
+                foreach (var service in services)
+                {
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                }
+
+                // Stop COM+ component
+                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                           "The rolling back of credentials for COM+ components has implications across all deployments."));
+
+                Invoker.AddAction(
+                        new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
+
+                // Stop Application pools
                 Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
                 Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
                 Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+
                 // Cleaning up STS App_Data folder
                 Invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
             }
@@ -119,15 +144,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var doRollbackOfOSUserAndOSPassword = currentOSUserName != vanillaInputParameters.OSUser ||
                                                   currentOSPassword != vanillaInputParameters.OSPassword;
 
-            // Stop all WindowsServices 
-            var services = serviceManager.GetAllServices(
-		        ishDeployment.Name).ToList();
-            foreach (var service in services)
-            {
-                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-            }
-
-            // Rollback of WindowsServices 
+            // Rollback of WindowsServices  
             // If VanillaPropertiesOfWindowsServicesFilePath exists recreate ISH windows services
             if (_fileManager.FileExists(VanillaPropertiesOfWindowsServicesFilePath))
 		    {
@@ -170,12 +187,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                     Invoker.AddAction(new SetRegistryValueAction(logger, registryValue));
                 }
             }
-
-            // Check if this operation has implications for several Deployments
-            IEnumerable<Models.ISHDeployment> ishDeployments = null;
-            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-
-            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            
             // Rolling back credentials for COM+ component
             if (!SkipRecycle)
             {
@@ -183,10 +195,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
                 {
                     Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                         "The rolling back of credentials for COM+ components has implications across all deployments."));
-
-                    Invoker.AddAction(
-                            new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
-
+                    
                     // Rolling back credentials for COM+ component
                     Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName,
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword,
@@ -318,6 +327,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             #endregion
 
+            // Enable and start Application pools and COM+ component
             if (!SkipRecycle)
             {
                 // Recycling Application pools after undo
@@ -343,6 +353,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
                 Invoker.AddAction(
                     new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
+
+                // Waiting until files becomes unlocked
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
             }
 
 			// Removing Backup folder

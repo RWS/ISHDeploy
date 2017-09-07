@@ -28,9 +28,9 @@ namespace ISHDeploy.Data.Actions.COMPlus
     public class OpenPortAction : BaseAction
     {
         /// <summary>
-        /// The COM+ component manager
+        /// The network management
         /// </summary>
-        private readonly ICOMPlusComponentManager _comPlusComponentManager;
+        private readonly INetworkManager _netManager;
 
         /// <summary>
         /// The port number
@@ -46,7 +46,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
             : base(logger)
         {
             _port = port;
-            _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            _netManager = ObjectFactory.GetInstance<INetworkManager>();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public override void Execute()
         {
-            _comPlusComponentManager.GloballyOpenPort(_port);
+            _netManager.GloballyOpenPort(_port);
         }
     }
 }

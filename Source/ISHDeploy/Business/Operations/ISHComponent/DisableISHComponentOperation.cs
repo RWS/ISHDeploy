@@ -21,9 +21,11 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.ISHProject;
+using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -138,6 +140,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         foreach (var service in services)
                         {
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                            // Remove dependencies between Crawler and SolrLucene
+                            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
                         }
                         break;
                     case ISHComponentName.SolrLucene:

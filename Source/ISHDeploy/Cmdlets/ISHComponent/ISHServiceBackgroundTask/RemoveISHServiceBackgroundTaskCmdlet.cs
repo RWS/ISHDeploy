@@ -13,40 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-﻿using System.Management.Automation;
-﻿using ISHDeploy.Business.Operations.ISHComponent;
+
+using System.Management.Automation;
+using ISHDeploy.Business.Operations.ISHComponent;
 
 namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceBackgroundTask
 {
     /// <summary>
-    /// <para type="synopsis">Disables BackgroundTask windows service.</para>
-    /// <para type="description">The Disable-ISHServiceBackgroundTask cmdlet disables BackgroundTask windows service.</para>
+    /// <para type="synopsis">Removes BackgroundTask windows service.</para>
+    /// <para type="description">The Remove-ISHServiceBackgroundTask cmdlet removes all BackgroundTask windows services of specified role.</para>
     /// <para type="link">Enable-ISHServiceBackgroundTask</para>
-    /// <para type="link">Set-ISHServiceBackgroundTask</para>
+    /// <para type="link">Disable-ISHServiceBackgroundTask</para>
     /// <para type="link">Get-ISHServiceBackgroundTask</para>
-    /// <para type="link">Remove-ISHServiceBackgroundTask</para>
+    /// <para type="link">Set-ISHServiceBackgroundTask</para>
     /// </summary>
     /// <example>
-    /// <code>PS C:\>Disable-ISHServiceBackgroundTask -ISHDeployment $deployment</code>
-    /// <para>This command disables BackgroundTask windows service.
+    /// <code>PS C:\>Remove-ISHServiceBackgroundTask -ISHDeployment $deployment</code>
+    /// <para>This command removes all instances of BackgroundTask windows services of Default role.
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
-    [Cmdlet(VerbsLifecycle.Disable, "ISHServiceBackgroundTask")]
-    public sealed class DisableISHServiceBackgroundTaskBuilderCmdlet : BaseHistoryEntryCmdlet
+    /// <example>
+    /// <code>PS C:\>Remove-ISHServiceBackgroundTask -ISHDeployment $deployment -Role "PublishOnly"</code>
+    /// <para>This command removes all instances of BackgroundTask windows services with role "PublishOnly".
+    /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
+    /// </example>
+    [Cmdlet(VerbsCommon.Remove, "ISHServiceBackgroundTask")]
+    public sealed class RemoveISHServiceBackgroundTaskCmdlet : BaseHistoryEntryCmdlet
     {
         /// <summary>
         /// <para type="description">The role of BackgroundTask services.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The BackgroundTask role")]
         [ValidateNotNullOrEmpty]
-        public string Role { get; set; } = "Default";
+        public string Role { get; set; }
 
         /// <summary>
         /// Executes cmdlet
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, Role);
+            var operation = new SetISHServiceBackgroundTaskAmountOperation(Logger, ISHDeployment, 0, Role);
 
             operation.Run();
         }

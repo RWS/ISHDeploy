@@ -24,6 +24,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceBackgroundTask
     /// <para type="link">Disable-ISHServiceBackgroundTask</para>
     /// <para type="link">Set-ISHServiceBackgroundTask</para>
     /// <para type="link">Get-ISHServiceBackgroundTask</para>
+    /// <para type="link">Remove-ISHServiceBackgroundTask</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Enable-ISHServiceBackgroundTask -ISHDeployment $deployment</code>

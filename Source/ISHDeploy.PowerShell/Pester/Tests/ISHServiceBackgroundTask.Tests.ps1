@@ -80,7 +80,19 @@ $scriptBlockDisableISHServiceBackgroundTask = {
     Disable-ISHServiceBackgroundTask -ISHDeployment $ishDeployName
 }
 
+$scriptBlockRemoveISHServiceBackgroundTask = {
+    param (
+        $ishDeployName,
+        $parameters
 
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Remove-ISHServiceBackgroundTask -ISHDeployment $ishDeployName @parameters
+}
 #endregion
 
 
@@ -127,7 +139,7 @@ Describe "Testing ISHServiceBackgroundTask"{
     BeforeEach {
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
-
+    
      It "Set ISHServiceBackgroundTask sets amount of services"{
         #Arrange
         $params = @{Count = 3}
@@ -237,7 +249,19 @@ Describe "Testing ISHServiceBackgroundTask"{
         $Services.Count | Should be 3
 
      }
+     It "Set ISHServiceBackgroundTask does not allow 0 as count value"{
+        #Arrange
+        $params = @{Count = 0}
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params} | Should Throw "Cannot validate argument on parameter 'Count'"
+     }
 
+     It "Remove ISHServiceBackgroundTask removes services"{
+        #Arrange
+        $params = @{}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $Services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        $Services.Count | Should be 0
+     }
      Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

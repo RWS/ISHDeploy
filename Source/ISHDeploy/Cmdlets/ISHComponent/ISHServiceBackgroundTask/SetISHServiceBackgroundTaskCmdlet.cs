@@ -25,6 +25,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceBackgroundTask
     /// <para type="link">Enable-ISHServiceBackgroundTask</para>
     /// <para type="link">Disable-ISHServiceBackgroundTask</para>
     /// <para type="link">Get-ISHServiceBackgroundTask</para>
+    /// <para type="link">Remove-ISHServiceBackgroundTask</para>
     /// </summary>
     /// <example>
     /// <code>PS C:\>Set-ISHServiceBackgroundTask -ISHDeployment $deployment -Count 2</code>
@@ -44,7 +45,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceBackgroundTask
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The number of BackgroundTask services in the system")]
         [ValidateNotNullOrEmpty]
-        [ValidateRange(0, 10)]
+        [ValidateRange(1, 10)]
         public int Count { get; set; }
 
         /// <summary>

@@ -152,7 +152,7 @@ Describe "Testing Copy-ISHCMFile"{
     It "Copy-ISHCMFile replace installtool input parameters"{
 		#Arrange
         New-Item -Path $uncPackagePath -Name $customFileName -Force -type file | Out-Null
-        $testFileContent = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, @{Original = $true; } | Select-Object -ExpandProperty Name|ForEach-Object {"#!#installtool:$($_.ToUpperInvariant())#!#"}|Out-File (Join-path $uncPackagePath $customFileName) -Force
+        $testFileContent = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetParameters -Session $session -ArgumentList $testingDeploymentName, @{Original = $true; } | Select-Object -ExpandProperty Name|ForEach-Object {if ($_.ToUpperInvariant() -ne "PARAMETERSSOURCEPATH") {"#!#installtool:$($_.ToUpperInvariant())#!#"}}|Out-File (Join-path $uncPackagePath $customFileName) -Force
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockCopyISHCMFile -Session $session -ArgumentList $testingDeploymentName, $customFileName, "ToCustom"
         #Assert

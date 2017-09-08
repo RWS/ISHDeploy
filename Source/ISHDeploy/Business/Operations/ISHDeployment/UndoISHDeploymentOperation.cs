@@ -361,13 +361,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             }
 
 			// Removing Backup folder
-			Invoker.AddAction(new DirectoryRemoveAction(logger, ISHDeploymentProgramDataFolderPath));
+			Invoker.AddAction(new DirectoryRemoveAction(logger, PathToISHDeploymentProgramDataFolder));
 
             // Remove Author\ASP\Custom
             Invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
-
-            // Removes the status of deployment from Registry
-            Invoker.AddAction(new RemoveISHDeploymentStatusAction(ishDeployment.Name));
         }
 
         /// <summary>

@@ -90,7 +90,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to C:\ProgramData\ISHDeploy.X.X.X folder
         /// </summary>
-        protected string ISHDeploymentProgramDataFolderPath { get; }
+        protected string PathToISHDeploymentProgramDataFolder { get; }
 
         /// <summary>
         /// Url for STS path
@@ -454,12 +454,11 @@ namespace ISHDeploy.Business.Operations
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths
-            var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            ISHDeploymentProgramDataFolderPath = Path.Combine(programData, moduleName, ishDeployment.Name);
-            PackagesFolderPath = Path.Combine(ISHDeploymentProgramDataFolderPath, "Packages");
+            PathToISHDeploymentProgramDataFolder = dataAggregateHelper.GetPathToISHDeploymentProgramDataFolder(ishDeployment.Name);
+            HistoryFilePath = Path.Combine(PathToISHDeploymentProgramDataFolder, "History.ps1");
+            BackupFolderPath = Path.Combine(PathToISHDeploymentProgramDataFolder, "Backup");
+            PackagesFolderPath = Path.Combine(PathToISHDeploymentProgramDataFolder, "Packages");
             PackagesFolderUNCPath = ConvertLocalFolderPathToUNCPath(PackagesFolderPath);
-            BackupFolderPath = Path.Combine(ISHDeploymentProgramDataFolderPath, "Backup");
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
@@ -475,7 +474,6 @@ namespace ISHDeploy.Business.Operations
             WebNameSTS = Path.Combine(WebFolderPath, "InfoShareSTS");
             WebNameSTSAppData = Path.Combine(WebNameSTS, "App_Data");
             InputParametersFilePath = new ISHFilePath(InputParameters.FilePath.Replace("inputparameters.xml", string.Empty), BackupFolderPath, "inputparameters.xml");
-            HistoryFilePath = Path.Combine(ISHDeploymentProgramDataFolderPath, "History.ps1");
             AuthorASPTreeHtmPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
             EventMonitorMenuBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
             FeedSDLLiveContentConfigPath = new ISHFilePath(DataFolderPath, BackupDataFolderPath, @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
@@ -504,7 +502,7 @@ namespace ISHDeploy.Business.Operations
             IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
             // To avoid possible problems in the future (if ISHComponent model change) decided to add the version to the file name,
             // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
-            CurrentISHComponentStatesFilePath = new ISHFilePath(ISHDeploymentProgramDataFolderPath, ISHDeploymentProgramDataFolderPath, @"current.ISHComponent.states.v1.xml");
+            CurrentISHComponentStatesFilePath = new ISHFilePath(PathToISHDeploymentProgramDataFolder, PathToISHDeploymentProgramDataFolder, @"current.ISHComponent.states.v1.xml");
 
             var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             RegInfoShareAuthorRegistryElement =

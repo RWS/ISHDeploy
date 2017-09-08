@@ -31,7 +31,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// The data aggregate helper
         /// </summary>
-        private ITrisoftRegistryManager _trisoftRegistryManager;
+        private readonly IDataAggregateHelper _dataAggregateHelper;
 
         /// <summary>
         /// The data aggregate helper
@@ -55,7 +55,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="status">The deployment status</param>
         public SaveISHDeploymentStatusAction(string projectName, ISHDeploymentStatus status)
         {
-            _trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _projectName = projectName;
             _newStatus = status;
         }
@@ -65,7 +65,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public void Backup()
         {
-            _previousStatus = _trisoftRegistryManager.GetISHDeploymentStatus(_projectName);
+            _previousStatus = _dataAggregateHelper.GetISHDeploymentStatus(_projectName);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public void Rollback()
         {
-            _trisoftRegistryManager.SaveISHDeploymentStatus(_projectName, _previousStatus);
+            _dataAggregateHelper.SaveISHDeploymentStatus(_projectName, _previousStatus);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public void Execute()
         {
-            _trisoftRegistryManager.SaveISHDeploymentStatus(_projectName, _newStatus);
+            _dataAggregateHelper.SaveISHDeploymentStatus(_projectName, _newStatus);
         }
     }
 }

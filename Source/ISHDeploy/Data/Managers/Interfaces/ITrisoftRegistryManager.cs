@@ -40,26 +40,6 @@ namespace ISHDeploy.Data.Managers.Interfaces
         IEnumerable<RegistryKey> GetInstalledProjectsKeys(string expectedSuffix = null);
 
         /// <summary>
-        /// Gets the status of deployment.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <returns>Status of deployments</returns>
-        ISHDeploymentStatus GetISHDeploymentStatus(string projectSuffix);
-
-        /// <summary>
-        /// Saves the status of deployment.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <param name="status">The status of deployment.</param>
-        void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status);
-
-        /// <summary>
-        /// Removes the status of deployment from Registry.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        void RemoveISHDeploymentStatus(string projectSuffix);
-
-        /// <summary>
         /// Gets the inputparameters.xml file path.
         /// </summary>
         /// <param name="projectRegKey">The deployment registry key.</param>

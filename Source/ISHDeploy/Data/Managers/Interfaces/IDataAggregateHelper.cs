@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
 
@@ -24,6 +25,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
     /// </summary>
     public interface IDataAggregateHelper
     {
+        /// <summary>
+        /// Returns path to ISHDeployment module ProgramData folder (such as "C:\ProgramData\ISHDeploy.12.x.x\InfoShareXXX")
+        /// </summary>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>The path to special folder where the module store temp data and original (vanilla) properties of specified environment</returns>
+        string GetPathToISHDeploymentProgramDataFolder(string deploymentName);
+
         /// <summary>
         /// Returns input parameters
         /// </summary>
@@ -58,5 +66,19 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="deploymentName">The name of deployment.</param>
         /// <returns>The collection of windows services with all properties needed for their recreation</returns>
         ISHWindowsServiceBackupCollection GetISHWindowsServiceBackupCollection(string deploymentName);
+
+        /// <summary>
+        /// Gets the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>Status of deployments</returns>
+        ISHDeploymentStatus GetISHDeploymentStatus(string deploymentName);
+
+        /// <summary>
+        /// Saves the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <param name="status">The status of deployment.</param>
+        void SaveISHDeploymentStatus(string deploymentName, ISHDeploymentStatus status);
     }
 }

@@ -61,12 +61,7 @@ namespace ISHDeploy.Data.Managers
         /// The version registry value name
         /// </summary>
         private const string VersionRegValue = "Version";
-
-        /// <summary>
-        /// The ISHDeploymentStatus registry value name
-        /// </summary>
-        private const string ISHDeploymentStatusRegValue = "ISHDeploymentStatus";
-
+        
         #endregion
 
         /// <summary>
@@ -130,66 +125,6 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"Registry keys for {(string.IsNullOrEmpty(projectName) ? "installed projects" : $"project `{projectName}`")} have been retrieved");
             return installedProjectsKeys;
-        }
-
-        /// <summary>
-        /// Gets the status of deployment.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <returns>Status of deployments</returns>
-        public ISHDeploymentStatus GetISHDeploymentStatus(string projectSuffix)
-        {
-            _logger.WriteDebug("Retrieve the status of deployment", projectSuffix);
-
-            var ishDeploymentStatus = ISHDeploymentStatus.Started;
-
-            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
-            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-
-            var historyItem = GetHistoryFolderRegKey(projectRegKey);
-
-            var status = historyItem?.GetValue(ISHDeploymentStatusRegValue);
-            if (status != null)
-            {
-                _logger.WriteDebug("ISHDeployment status", status);
-                ishDeploymentStatus = (ISHDeploymentStatus)Enum.Parse(typeof(ISHDeploymentStatus), status.ToString());
-            }
-
-            _logger.WriteVerbose($"The status of ISHDeployment is {ishDeploymentStatus}");
-
-            return ishDeploymentStatus;
-        }
-
-        /// <summary>
-        /// Saves the status of deployment.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        /// <param name="status">The status of deployment.</param>
-        public void SaveISHDeploymentStatus(string projectSuffix, ISHDeploymentStatus status)
-        {
-            _logger.WriteDebug("Save the status of deployment", projectSuffix);
-
-            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
-            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            var historyItem = GetHistoryFolderRegKey(projectRegKey, true);
-            Registry.SetValue(historyItem.Name, ISHDeploymentStatusRegValue, status);
-        }
-
-        /// <summary>
-        /// Removes the status of deployment from Registry.
-        /// </summary>
-        /// <param name="projectSuffix">The project suffix.</param>
-        public void RemoveISHDeploymentStatus(string projectSuffix)
-        {
-            _logger.WriteDebug("Remove the status of deployment from Registry", projectSuffix);
-
-            var installProjectsRegKeys = GetInstalledProjectsKeys(projectSuffix);
-            var projectRegKey = installProjectsRegKeys.SingleOrDefault(x => x.Name.Split('\\').Last() == projectSuffix);
-            var historyItem = GetHistoryFolderRegKey(projectRegKey, true);
-            if (historyItem.GetValue(ISHDeploymentStatusRegValue) != null)
-            {
-                historyItem.DeleteValue(ISHDeploymentStatusRegValue, false);
-            }
         }
 
         /// <summary>

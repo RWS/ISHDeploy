@@ -104,7 +104,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
                     SoftwareVersion = version
                 };
 
-                ishProject.Status = _registryManager.GetISHDeploymentStatus(ishProject.Name);
+                ishProject.Status = _dataAggregateHelper.GetISHDeploymentStatus(ishProject.Name);
 
                 result.Add(ishProject);
             }

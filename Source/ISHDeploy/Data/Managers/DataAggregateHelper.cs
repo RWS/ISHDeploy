@@ -68,6 +68,20 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         private readonly IWindowsServiceManager _windowsServiceManager;
 
+        /// <summary>
+        /// The path to ProgramData folder
+        /// </summary>
+        private readonly string _pathToProgramDataFolder;
+
+        /// <summary>
+        /// The module name
+        /// </summary>
+        private readonly string _moduleName;
+
+        /// <summary>
+        /// The name of file where the module keep the status of deployment
+        /// </summary>
+        private const string ISHDeploymentStatusFileName = "ISHDeploymentStatus.dat";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemplateManager"/> class.
@@ -76,12 +90,24 @@ namespace ISHDeploy.Data.Managers
         public DataAggregateHelper(ILogger logger)
         {
             _logger = logger;
+            _pathToProgramDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            _moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             _webAdministrationManage = ObjectFactory.GetInstance<IWebAdministrationManager>();
             _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
             _windowsServiceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+        }
+
+        /// <summary>
+        /// Returns path to ISHDeployment module of specified environment in ProgramData folder (such as "C:\ProgramData\ISHDeploy.12.x.x\{deploymentName}")
+        /// </summary>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>The path to special folder where the module store temp data and original (vanilla) properties of specified environment</returns>
+        public string GetPathToISHDeploymentProgramDataFolder(string deploymentName)
+        {
+            return Path.Combine(_pathToProgramDataFolder, _moduleName, deploymentName);
         }
 
         /// <summary>
@@ -229,6 +255,43 @@ namespace ISHDeploy.Data.Managers
             }
 
             return backup;
+        }
+
+        /// <summary>
+        /// Gets the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>Status of deployments</returns>
+        public ISHDeploymentStatus GetISHDeploymentStatus(string deploymentName)
+        {
+            _logger.WriteDebug("Retrieve the status of deployment", deploymentName);
+
+            // Default status
+            var ishDeploymentStatus = ISHDeploymentStatus.Started;
+
+            // Retrieve the real status of deployment
+            var pathToFileWithDeploymentStatus = Path.Combine(GetPathToISHDeploymentProgramDataFolder(deploymentName), ISHDeploymentStatusFileName);
+            if (_fileManager.FileExists(pathToFileWithDeploymentStatus))
+            {
+                return _fileManager.ReadObjectFromFile<ISHDeploymentStatus>(pathToFileWithDeploymentStatus);
+            }
+
+            _logger.WriteVerbose($"The status of ISHDeployment is {ishDeploymentStatus}");
+
+            return ishDeploymentStatus;
+        }
+
+        /// <summary>
+        /// Saves the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <param name="status">The status of deployment.</param>
+        public void SaveISHDeploymentStatus(string deploymentName, ISHDeploymentStatus status)
+        {
+            _logger.WriteDebug("Save the status of deployment", deploymentName);
+
+            var pathToFileWithDeploymentStatus = Path.Combine(GetPathToISHDeploymentProgramDataFolder(deploymentName), ISHDeploymentStatusFileName);
+            _fileManager.SaveObjectToFile(pathToFileWithDeploymentStatus, status);
         }
     }
 }

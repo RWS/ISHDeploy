@@ -62,24 +62,16 @@ namespace ISHDeploy.Data.Managers
         /// <param name="serviceName">Name of the windows service.</param>
         public void StartWindowsService(string serviceName)
         {
-            try
+            _logger.WriteDebug("Start Windows service", serviceName);
+            var service = new ServiceController(serviceName);
+            if (service.Status != ServiceControllerStatus.Running)
             {
-                _logger.WriteDebug("Start Windows service", serviceName);
-                var service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Running)
-                {
-                    service.Start();
-                    WaitForStatus(service, ServiceControllerStatus.Running);
-                    _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
-                }
-                else
-                {
-                    _logger.WriteVerbose($"Windows service `{serviceName}` was already started");
-                }
+                service.Start();
+                _logger.WriteVerbose($"Windows service `{serviceName}` has been started");
             }
-            catch (System.ServiceProcess.TimeoutException ex)
+            else
             {
-                throw new ISHWindowsServiceTimeoutException(serviceName, ex);
+                _logger.WriteVerbose($"Windows service `{serviceName}` was already started");
             }
         }
 
@@ -89,51 +81,16 @@ namespace ISHDeploy.Data.Managers
         /// <param name="serviceName">Name of the windows service.</param>
         public void StopWindowsService(string serviceName)
         {
-            try
+            _logger.WriteDebug("Stop Windows service", serviceName);
+            var service = new ServiceController(serviceName);
+            if (service.Status != ServiceControllerStatus.Stopped)
             {
-                _logger.WriteDebug("Stop Windows service", serviceName);
-                var service = new ServiceController(serviceName);
-                if (service.Status != ServiceControllerStatus.Stopped)
-                {
-                    service.Stop();
-                    WaitForStatus(service, ServiceControllerStatus.Stopped);
-                    _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
-                }
-                else
-                {
-                    _logger.WriteVerbose($"Windows service `{serviceName}` was already stopped");
-                }
+                service.Stop();
+                _logger.WriteVerbose($"Windows service `{serviceName}` has been stopped");
             }
-            catch (Exception ex)
+            else
             {
-                _logger.WriteError(ex.InnerException);
-            }
-        }
-
-        /// <summary>
-        /// Waiting of windows service status
-        /// </summary>
-        /// <param name="service">The windows service controller</param>
-        /// <param name="status">The service status</param>
-        private void WaitForStatus(ServiceController service, ServiceControllerStatus status)
-        {
-            int numberOfTries = 0;
-            while (service.Status != status && numberOfTries < 6)
-            {
-                try
-                {
-                    service.WaitForStatus(status, TimeSpan.FromMinutes(5));
-                }
-                catch (Exception)
-                {
-                    _logger.WriteVerbose($"The service `{service.DisplayName}` does not change the status for too long");
-                    numberOfTries++;
-
-                    if (service.Status != status && numberOfTries >= 6)
-                    {
-                        throw;
-                    }
-                }
+                _logger.WriteVerbose($"Windows service `{serviceName}` was already stopped");
             }
         }
 

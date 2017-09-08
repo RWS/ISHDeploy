@@ -73,9 +73,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             if (components.Contains(ISHComponentName.SolrLucene))
             {
                 orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.Crawler));
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
             }
-
-            orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
+            else
+            {
+                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.COMPlus));
+            }
 
             foreach (var component in orderedComponentsCollection)
             {
@@ -136,6 +139,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.Crawler:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                         foreach (var service in services)
                         {

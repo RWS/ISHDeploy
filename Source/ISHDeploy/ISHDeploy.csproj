@@ -376,7 +376,6 @@
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />
     <Compile Include="Data\Exceptions\DocumentAlreadyContainsElementException.cs" />
-    <Compile Include="Data\Exceptions\ISHWindowsServiceTimeoutException.cs" />
     <Compile Include="Data\Managers\COMAdminCatalogWrapperSingleton.cs" />
     <Compile Include="Data\Managers\Interfaces\INetworkManager.cs" />
     <Compile Include="Data\Managers\Interfaces\ICOMPlusComponentManager.cs" />

@@ -15,11 +15,11 @@ $deploymentName="InfoShare"
 
 ## Configuring the FullTextIndex component
 
-`Set-ISHServiceFullTextIndex` cmdlet will configure the ports required to operate by the underlying process. Changing these port values is not typical and it is required only when the deployment's default ports are already reserved.
+`Set-ISHServiceFullTextIndex` cmdlet will configure the port required to operate by the underlying process. Changing these port values is not typical and it is required only when the deployment's default ports are already reserved.
 
 CopyCodeBlock(_nopublish\Search\Example.Set-ISHServiceFullTextIndex.ps1)
 
-The script will set the querying and stop ports for the process to `8080` and `8079` respectively. It will also make sure that a proper firewall rule is configured in the operating system.
+The script will set the querying port for the process to `8080` respectively. It will also make sure that a proper firewall rule is configured in the operating system.
 
 ## Configuring the Crawler component
 

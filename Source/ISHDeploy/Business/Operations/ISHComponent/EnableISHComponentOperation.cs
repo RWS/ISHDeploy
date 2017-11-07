@@ -271,7 +271,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
                             foreach (var backgroundTaskService in backgroundTaskServices)
                             {
-                                if (backgroundTaskService.Role == component.Role)
+                                if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     Invoker.AddAction(new StartWindowsServiceAction(Logger, backgroundTaskService));
                                 }

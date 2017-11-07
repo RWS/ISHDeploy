@@ -175,7 +175,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
         #region Private methods
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnableISHComponentOperation"/> class.
+        /// Initializes the necessary actions for enabling the specified components
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>

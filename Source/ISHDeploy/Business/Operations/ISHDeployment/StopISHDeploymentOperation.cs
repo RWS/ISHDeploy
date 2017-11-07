@@ -58,7 +58,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             }
             else
             {
-                components = new Models.ISHComponentsCollection(true).Components.ToArray());
+                components = new Models.ISHComponentsCollection(true).Components.ToArray();
             }
 
             IOperation operation = new DisableISHComponentOperation(logger, ishDeployment, false, components);

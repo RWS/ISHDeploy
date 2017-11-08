@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Operations\ISHComponent\StartISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\StopISHComponentOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\GetISHIISAppPoolOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\SetISHBuildersRegistryValueOperation.cs" />

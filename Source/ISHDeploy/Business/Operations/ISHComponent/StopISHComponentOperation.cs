@@ -83,9 +83,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Stopped.</param>
-        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, string backgroundTaskRole) :
+        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
@@ -108,16 +107,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             else
             {
                 throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
-            }
-
-            if (changeStateOfComponentsInTrackingFile)
-            {
-                Invoker.AddAction(
-                    new SaveISHComponentAction(
-                        Logger,
-                        CurrentISHComponentStatesFilePath,
-                        component.Role,
-                        false));
             }
         }
 

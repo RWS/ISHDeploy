@@ -51,7 +51,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var components =
                 dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
 
-            IOperation operation = new EnableISHComponentOperation(logger, ishDeployment, false, components);
+            IOperation operation = new StartISHComponentOperation(logger, ishDeployment, components);
             Invoker = new ActionInvoker(Logger, "Starting of enabled components", operation.Invoker.GetActions());
 
             Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Started));

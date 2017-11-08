@@ -21,12 +21,9 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.ISHProject;
-using ISHDeploy.Data.Actions.Registry;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
@@ -88,7 +85,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+
+            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
+
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             var componentsCollection =
@@ -98,23 +98,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (component != null)
             {
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                }
+                Invoker.AddAction(
+                    new SaveISHComponentAction(
+                        Logger,
+                        CurrentISHComponentStatesFilePath,
+                        component.Role,
+                        false));
             }
-            else
-            {
-                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
-            }
-
-            Invoker.AddAction(
-                new SaveISHComponentAction(
-                    Logger,
-                    CurrentISHComponentStatesFilePath,
-                    component.Role,
-                    false));
         }
 
         /// <summary>
@@ -134,6 +124,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <param name="components">Ordered list with the components to be disabled.</param>
         private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
         {
+            // Stop components
             var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
 
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
@@ -188,32 +179,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             }
         }
 
-        /// <summary>
-        /// Reorder Components Collection (make sure the crawler service stops first and then the lucene
-        /// and COM+ components before IIS pools)
-        /// </summary>
-        /// <param name="components"></param>
-        /// <returns>Reoredered collection of components</returns>
-        private IEnumerable<Models.ISHComponent> ReorderComponentsCollection(IEnumerable<Models.ISHComponent> components)
-        {
-            var orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
-            {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
-            }
-
-            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
-            {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.Crawler));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
-            }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
-
-            return orderedComponentsCollection;
-        }
         #endregion
 
     }

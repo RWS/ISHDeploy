@@ -53,7 +53,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             }
             else
             {
-                return dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+                return dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
             }
         }
     }

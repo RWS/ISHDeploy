@@ -52,7 +52,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
             {
                 var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-                var componentsCollection = dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+                var componentsCollection = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
 
                 components = componentsCollection.Components.Where(x => x.IsEnabled).ToArray();
             }

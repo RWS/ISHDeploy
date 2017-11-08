@@ -59,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             var componentsCollection =
-                dataAggregateHelper.GetComponents(ishDeployment.Name);
+                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name);
 
             // Reorder Components Collection (make sure the crawler service stops first and then the lucene
             // and COM+ components before IIS pools)
@@ -131,7 +131,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             var componentsCollection =
-                dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
 
             var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
 

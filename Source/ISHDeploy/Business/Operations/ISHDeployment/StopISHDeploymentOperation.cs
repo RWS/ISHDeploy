@@ -49,7 +49,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
+                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
 
             IOperation operation = new StopISHComponentOperation(logger, ishDeployment, components);
             Invoker = new ActionInvoker(Logger, "Stopping of enabled components", operation.Invoker.GetActions());

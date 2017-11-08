@@ -54,7 +54,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components) :
             base(logger, ishDeployment)
         {
-            Invoker = new ActionInvoker(logger, "Disabling of components");
+            Invoker = new ActionInvoker(logger, "Stopping of components");
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
             // Reorder Components Collection (make sure the crawler service stops first and then the lucene
@@ -163,7 +163,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
             base(logger, ishDeployment)
         {
-            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
+            Invoker = new ActionInvoker(logger, $"Stopping of BackgroundTask component with role `{backgroundTaskRole}`");
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 

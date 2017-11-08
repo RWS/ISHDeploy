@@ -45,21 +45,11 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public StopISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             ishDeployment.Status = ISHDeploymentStatus.Stopped;
 
-            Models.ISHComponent[] components;
-            if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
-            {
-                var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-                var componentsCollection = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-                components = componentsCollection.Components.Where(x => x.IsEnabled).ToArray();
-            }
-            else
-            {
-                components = new Models.ISHComponentsCollection(true).Components.ToArray();
-            }
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var components =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
 
             IOperation operation = new DisableISHComponentOperation(logger, ishDeployment, false, components);
             Invoker = new ActionInvoker(Logger, "Stopping of enabled components", operation.Invoker.GetActions());

@@ -49,10 +49,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="componentsNames">Names of components to be Disabled.</param>
         /// <remarks>Don't use this method for background task services</remarks>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] componentsNames) :
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, params ISHComponentName[] componentsNames) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Disabling of components");
@@ -61,7 +60,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var components =
                 dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)); ;
 
-            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, components);
+            InitializeActions(logger, ishDeployment, components);
         }
 
         /// <summary>
@@ -69,15 +68,14 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Array of components to be disabled.</param>
         /// <remarks>Don't use this method for background task services</remarks>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, Models.ISHComponent[] components) :
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, Models.ISHComponent[] components) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Disabling of components");
 
-            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, components);
+            InitializeActions(logger, ishDeployment, components);
         }
 
         /// <summary>
@@ -85,9 +83,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, string backgroundTaskRole) :
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
@@ -112,15 +109,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
             }
 
-            if (changeStateOfComponentsInTrackingFile)
-            {
-                Invoker.AddAction(
-                    new SaveISHComponentAction(
-                        Logger,
-                        CurrentISHComponentStatesFilePath,
-                        component.Role,
-                        false));
-            }
+            Invoker.AddAction(
+                new SaveISHComponentAction(
+                    Logger,
+                    CurrentISHComponentStatesFilePath,
+                    component.Role,
+                    false));
         }
 
         /// <summary>
@@ -137,126 +131,59 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Ordered list with the components to be disabled.</param>
-        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, IEnumerable<Models.ISHComponent> components)
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
         {
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
 
-            var orderedComponentsCollection = ReorderComponentsCollection(components);
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
-            foreach (var component in orderedComponentsCollection)
+            foreach (var component in components)
             {
-                IEnumerable<Models.ISHWindowsService> services;
-
-                switch (component.Name)
+                if (component.Name == ISHComponentName.COMPlus)
                 {
-                    case ISHComponentName.CM:
-                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
-                        break;
-                    case ISHComponentName.WS:
-                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-                        break;
-                    case ISHComponentName.STS:
-                        Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-                        break;
-                    case ISHComponentName.TranslationBuilder:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
-                        foreach (var service in services)
+                    // Check if this operation has implications for several Deployments
+                    IEnumerable<Models.ISHDeployment> ishDeployments = null;
+                    new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+
+                    var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+                    var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+
+                    foreach (var comPlusComponent in comPlusComponents)
+                    {
+                        if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Enabled)
                         {
-                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.TranslationOrganizer:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
-                        foreach (var service in services)
-                        {
+                            Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                                $"The disabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+
                             Invoker.AddAction(
-                                new StopWindowsServiceAction(Logger, service));
+                                new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
                         }
-                        break;
-                    case ISHComponentName.COMPlus:
-                        // Check if this operation has implications for several Deployments
-                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-
-                        var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
-                        var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
-
-                        if (comPlusComponentManager.IsComPlusComponentRunning(TrisoftInfoShareAuthorComPlusApplicationName))
+                        else
                         {
-                            Invoker.AddAction(
-                                new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
+                            Invoker.AddAction(new WriteVerboseAction(Logger, () => (true),
+                                $"COM+ component `{comPlusComponent.Name}` was already disabled"));
                         }
-
-                        foreach (var comPlusComponent in comPlusComponents)
-                        {
-                            if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Enabled)
-                            {
-                                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                                    $"The disabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
-
-                                Invoker.AddAction(
-                                    new DisableCOMPlusComponentAction(Logger, comPlusComponent.Name));
-                            }
-                            else
-                            {
-                                Invoker.AddAction(new WriteVerboseAction(Logger, () => (true), $"COM+ component `{comPlusComponent.Name}` was already disabled"));
-                            }
-                        }
-                        break;
-                    case ISHComponentName.Crawler:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                            // Remove dependencies between Crawler and SolrLucene
-                            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
-                        }
-                        break;
-                    case ISHComponentName.SolrLucene:
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                        }
-                        break;
-                    case ISHComponentName.BackgroundTask:
-                        var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                        foreach (var backgroundTaskService in backgroundTaskServices)
-                        {
-                            if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                Invoker.AddAction(new StopWindowsServiceAction(Logger, backgroundTaskService));
-                            }
-                        }
-                        break;
-                    default:
-                        Logger.WriteDebug($"Unsupported component type: {component.Name}");
-                        break;
+                    }
                 }
 
-                if (changeStateOfComponentsInTrackingFile)
+                if (component.Name == ISHComponentName.BackgroundTask)
                 {
-                    if (component.Name == ISHComponentName.BackgroundTask)
-                    {
-                        Invoker.AddAction(
-                            new SaveISHComponentAction(
-                                Logger,
-                                CurrentISHComponentStatesFilePath,
-                                component.Role,
-                                false));
-                    }
-                    else
-                    {
-                        Invoker.AddAction(
-                            new SaveISHComponentAction(
-                                Logger,
-                                CurrentISHComponentStatesFilePath,
-                                component.Name,
-                                false));
-                    }
+                    Invoker.AddAction(
+                        new SaveISHComponentAction(
+                            Logger,
+                            CurrentISHComponentStatesFilePath,
+                            component.Role,
+                            false));
+                }
+                else
+                {
+                    Invoker.AddAction(
+                        new SaveISHComponentAction(
+                            Logger,
+                            CurrentISHComponentStatesFilePath,
+                            component.Name,
+                            false));
                 }
             }
         }

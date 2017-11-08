@@ -46,7 +46,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceBackgroundTask
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, Role);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, Role);
 
             operation.Run();
         }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
@@ -24,7 +23,6 @@ using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.ISHProject;
-using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
@@ -57,73 +55,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var components =
                 dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)); ;
 
-            InitializeActions(logger, ishDeployment, components);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="components">Array of components to be disabled.</param>
-        /// <remarks>Don't use this method for background task services</remarks>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, Models.ISHComponent[] components) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, "Disabling of components");
-
-            InitializeActions(logger, ishDeployment, components);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
-
-            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
-
-            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-
-            var componentsCollection =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
-
-            if (component != null)
-            {
-                Invoker.AddAction(
-                    new SaveISHComponentAction(
-                        Logger,
-                        CurrentISHComponentStatesFilePath,
-                        component.Role,
-                        false));
-            }
-        }
-
-        /// <summary>
-        /// Runs current operation.
-        /// </summary>
-        public void Run()
-        {
-            Invoker.Invoke();
-        }
-
-        #region Private methods
-        /// <summary>
-        /// Initializes the necessary actions for disabling the specified components
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="components">Ordered list with the components to be disabled.</param>
-        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
-        {
             // Stop components
             var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
 
@@ -179,7 +110,44 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
 
+            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
+
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+            var componentsCollection =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                Invoker.AddAction(
+                    new SaveISHComponentAction(
+                        Logger,
+                        CurrentISHComponentStatesFilePath,
+                        component.Role,
+                        false));
+            }
+        }
+
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            Invoker.Invoke();
+        }
     }
 }

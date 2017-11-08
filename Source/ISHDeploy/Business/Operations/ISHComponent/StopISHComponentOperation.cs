@@ -49,87 +49,31 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="componentsNames">Names of components to be Stopped.</param>
-        /// <remarks>Don't use this method for background task services</remarks>
-        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, params ISHComponentName[] componentsNames) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, "Disabling of components");
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-
-            var components =
-                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)); ;
-
-            InitializeActions(logger, ishDeployment, components);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="components">Array of components to be stopped.</param>
         /// <remarks>Don't use this method for background task services</remarks>
         public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Disabling of components");
-
-            InitializeActions(logger, ishDeployment, components);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Stopped.</param>
-        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-            var componentsCollection =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
-
-            if (component != null)
+            // Reorder Components Collection (make sure the crawler service stops first and then the lucene
+            // and COM+ components before IIS pools)
+            var orderedComponentsCollection = new List<Models.ISHComponent>();
+            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
             {
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                }
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
+            }
+
+            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
+            {
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.Crawler));
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
             }
             else
             {
-                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
             }
-        }
-
-        /// <summary>
-        /// Runs current operation.
-        /// </summary>
-        public void Run()
-        {
-            Invoker.Invoke();
-        }
-
-        #region Private methods
-        /// <summary>
-        /// Initializes the necessary actions for disabling the specified components
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="components">Ordered list with the components to be Stopped.</param>
-        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
-        {
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-
-            var orderedComponentsCollection = ReorderComponentsCollection(components);
 
             foreach (var component in orderedComponentsCollection)
             {
@@ -211,32 +155,43 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         }
 
         /// <summary>
-        /// Reorder Components Collection (make sure the crawler service stops first and then the lucene
-        /// and COM+ components before IIS pools)
+        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
         /// </summary>
-        /// <param name="components"></param>
-        /// <returns>Reoredered collection of components</returns>
-        private IEnumerable<Models.ISHComponent> ReorderComponentsCollection(IEnumerable<Models.ISHComponent> components)
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Stopped.</param>
+        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
+            base(logger, ishDeployment)
         {
-            var orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
-            {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
-            }
+            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
+            var componentsCollection =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
             {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.Crawler));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
+                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                }
             }
             else
             {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
             }
-
-            return orderedComponentsCollection;
         }
-        #endregion
 
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            Invoker.Invoke();
+        }
     }
 }

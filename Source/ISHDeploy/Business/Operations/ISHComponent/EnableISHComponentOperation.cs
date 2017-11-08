@@ -50,37 +50,19 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
-        /// <param name="components">Names of components to be enabled.</param>
+        /// <param name="componentsNames">Names of components to be enabled.</param>
         /// <remarks>Don't use this method for background task services</remarks>
-        public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] components) :
+        public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] componentsNames) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Enabling of components");
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-            var componentsCollection =
-               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name);
+            var components =
+               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name));
 
-            // Reorder Components Collection (make sure the lucene service start first and then the crawler
-            // and IIS pools before COM+ components)
-            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Contains(ISHComponentName.Crawler))
-            {
-                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.SolrLucene));
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
-            }
-            else
-            {
-                orderedComponentsCollection.AddRange(componentsCollection.Components.Where(x => components.Contains(x.Name) && x.Name != ISHComponentName.COMPlus));
-            }
-
-            if (components.Contains(ISHComponentName.COMPlus))
-            {
-                orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.COMPlus));
-            }
-
-            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, orderedComponentsCollection);
+            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, components);
         }
 
         /// <summary>
@@ -94,26 +76,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Enabling of components");
-
-            // Reorder Components Collection (make sure the lucene service start first and then the crawler
-            // and IIS pools before COM+ components)
-            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Any(x => x.Name == ISHComponentName.Crawler))
-            {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
-            }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
-
-            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
-            {
-                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
-            }
-
-            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, orderedComponentsCollection);
+            
+            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, components);
         }
 
         /// <summary>
@@ -174,6 +138,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         }
 
         #region Private methods
+
         /// <summary>
         /// Initializes the necessary actions for enabling the specified components
         /// </summary>
@@ -181,15 +146,18 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Ordered list with the components to be enabled.</param>
-        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, List<Models.ISHComponent> components)
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, IEnumerable<Models.ISHComponent> components)
         {
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            IEnumerable<Models.ISHWindowsService> services;
 
-            foreach (var component in components)
+            var orderedComponentsCollection = ReorderComponentsCollection(components);
+
+            foreach (var component in orderedComponentsCollection)
             {
                 if (ishDeployment.Status == ISHDeploymentStatus.Started)
                 {
+                    IEnumerable<Models.ISHWindowsService> services;
+
                     switch (component.Name)
                     {
                         case ISHComponentName.CM:
@@ -305,6 +273,33 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Reorder Components Collection (make sure the lucene service start first and then the crawler
+        /// and IIS pools before COM+ components)
+        /// </summary>
+        /// <param name="components"></param>
+        /// <returns>Reoredered collection of components</returns>
+        private IEnumerable<Models.ISHComponent> ReorderComponentsCollection(IEnumerable<Models.ISHComponent> components)
+        {
+            var orderedComponentsCollection = new List<Models.ISHComponent>();
+            if (components.Any(x => x.Name == ISHComponentName.Crawler))
+            {
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
+            }
+            else
+            {
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
+            }
+
+            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
+            {
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
+            }
+
+            return orderedComponentsCollection;
         }
         #endregion
     }

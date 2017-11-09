@@ -60,7 +60,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             foreach (var component in components)
             {
-                if (ishDeployment.Status == ISHDeploymentStatus.Started && component.Name == ISHComponentName.COMPlus)
+                if (component.Name == ISHComponentName.COMPlus)
                 {
                     // Check if this operation has implications for several Deployments
                     IEnumerable<Models.ISHDeployment> ishDeployments = null;

@@ -38,8 +38,7 @@ $scriptBlockEnableISHCOMPlus = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Enable-ISHCOMPlus -ISHDeployment $ishDeploy
+    Enable-ISHCOMPlus -ISHDeployment $ishDeployName
 }
 
 $scriptBlockDisableISHCOMPlus = {
@@ -50,8 +49,7 @@ $scriptBlockDisableISHCOMPlus = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Disable-ISHCOMPlus -ISHDeployment $ishDeploy
+    Disable-ISHCOMPlus -ISHDeployment $ishDeployName
 }
 
 $scriptBlockGetISHComponent = {
@@ -64,8 +62,7 @@ $scriptBlockGetISHComponent = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Get-ISHComponent -ISHDeployment $ishDeploy
+    Get-ISHComponent -ISHDeployment $ishDeployName
 
 }
 
@@ -77,8 +74,7 @@ $scriptBlockStartISHDeployment = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Start-ISHDeployment -ISHDeployment $ishDeploy
+    Start-ISHDeployment -ISHDeployment $ishDeployName
 }
 
 $scriptBlockStopISHDeployment = {
@@ -89,8 +85,7 @@ $scriptBlockStopISHDeployment = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Stop-ISHDeployment -ISHDeployment $ishDeploy
+    Stop-ISHDeployment -ISHDeployment $ishDeployName
 }
 
 $scriptBlockRestartISHDeployment = {
@@ -101,8 +96,7 @@ $scriptBlockRestartISHDeployment = {
         $DebugPreference=$Using:DebugPreference
         $VerbosePreference=$Using:VerbosePreference 
     }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Restart-ISHDeployment -ISHDeployment $ishDeploy
+    Restart-ISHDeployment -ISHDeployment $ishDeployName
 }
 
 $scriptBlockGetCOMState = {
@@ -118,11 +112,27 @@ $scriptBlockGetCOMState = {
     $trisoftInfoShareUtilitiesApplication=$applications|Where-Object -Property Name -EQ "Trisoft-Utilities"
     $trisoftInfoShareTriDKApplication=$applications|Where-Object -Property Name -EQ "Trisoft-TriDK"
     
-    $result["AuthorApplication"] = $trisoftInfoShareAuthorApplication.Value("IsEnabled")
-    $result["ISOApplication"] = $trisoftInfoShareAuthorISOApplication.Value("IsEnabled")
-    $result["UtilitiesApplication"] = $trisoftInfoShareUtilitiesApplication.Value("IsEnabled")
-    $result["TriDKApplication"] = $trisoftInfoShareTriDKApplication.Value("IsEnabled")
+    $result["AuthorApplicationIsEnabled"] = $trisoftInfoShareAuthorApplication.Value("IsEnabled")
+    $result["ISOApplicationIsEnabled"] = $trisoftInfoShareAuthorISOApplication.Value("IsEnabled")
+    $result["UtilitiesApplicationIsEnabled"] = $trisoftInfoShareUtilitiesApplication.Value("IsEnabled")
+    $result["TriDKApplicationIsEnabled"] = $trisoftInfoShareTriDKApplication.Value("IsEnabled")
 
+    $comAdminCatalog = New-Object -com ("COMAdmin.COMAdminCatalog.1")
+    $oapplications = $comAdminCatalog.getcollection("Applications") 
+    $oapplications.populate()
+    foreach ($oapplication in $oapplications){ 
+        if ($oapplication.Name.ToString() -Match "Trisoft-InfoShare-Author")
+        {        
+            $skeyappli = $oapplication.key 
+            $oappliInstances = $oapplications.getcollection("ApplicationInstances", $skeyappli) 
+            $oappliInstances.populate() 
+            If ($oappliInstances.count -eq 0) { 
+                $result["AuthorApplicationIsStarted"] = $false
+            } Else{ 
+                $result["AuthorApplicationIsStarted"] = $true
+            }
+        }
+    }
     return $result
 }
 
@@ -146,10 +156,11 @@ function GetComObjectState() {
     #get variables and nodes from files
 
 
-   $global:AuthorApplication =$result["AuthorApplication"]  
-   $global:ISOApplication = $result["ISOApplication"] 
-   $global:UtilitiesApplication = $result["UtilitiesApplication"]
-   $global:TriDKApplication = $result["TriDKApplication"]  
+   $global:AuthorApplicationIsEnabled =$result["AuthorApplicationIsEnabled"]  
+   $global:ISOApplicationIsEnabled = $result["ISOApplicationIsEnabled"] 
+   $global:UtilitiesApplicationIsEnabled = $result["UtilitiesApplicationIsEnabled"]
+   $global:TriDKApplicationIsEnabled = $result["TriDKApplicationIsEnabled"]  
+   $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"] 
    
 }
 
@@ -193,20 +204,21 @@ $scriptBlockGetAppPoolState = {
 
 Describe "Testing Start and Stop ISH Deployment"{
     BeforeEach {
-        UndoDeploymentBackToVanila $testingDeploymentName $true
+        UndoDeploymentBackToVanila $testingDeploymentName
     }
 
-    It "Stop ISHDeployment stops deployment"{
+    It "Stop ISHDeployment should stop deployment"{
 
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
         #Assert
         
         GetComObjectState
-        $AuthorApplication | Should be False  
-        $ISOApplication | Should be False 
-        $UtilitiesApplication | Should be False 
-        $TriDKApplication | Should be False 
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be False
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0    
@@ -214,54 +226,57 @@ Describe "Testing Start and Stop ISH Deployment"{
         $checkDeployment.Status | Should be "Stopped"    
     }
     
-    It "Start ISHDeployment stops deployment"{
+    It "Start of stopped ISHDeployment should start deployment"{
 
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
         #Assert
         
         GetComObjectState
-        $AuthorApplication | Should be False  
-        $ISOApplication | Should be False 
-        $UtilitiesApplication | Should be False 
-        $TriDKApplication | Should be False 
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be False
+
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
 
         GetComObjectState
-        $AuthorApplication | Should be True  
-        $ISOApplication | Should be True
-        $UtilitiesApplication | Should be True 
-        $TriDKApplication | Should be True
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be True
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started"
-
     }
 
-    It "Restart ISHDeployment restarts deployment"{
-        #Act
+    It "Restart of stopped ISHDeployment should start deployment"{
+         #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        #Assert
+        
         GetComObjectState
-        $AuthorApplication | Should be True  
-        $ISOApplication | Should be True
-        $UtilitiesApplication | Should be True 
-        $TriDKApplication | Should be True
-
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 3
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be False
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRestartISHDeployment -Session $session -ArgumentList $testingDeploymentName
         #Assert
         GetComObjectState
-        $AuthorApplication | Should be True  
-        $ISOApplication | Should be True
-        $UtilitiesApplication | Should be True 
-        $TriDKApplication | Should be True
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be True
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3
-
     }
 
     It "Start ISHDeployment on already started deployment"{
@@ -271,19 +286,21 @@ Describe "Testing Start and Stop ISH Deployment"{
         #Assert
         
         GetComObjectState
-        $AuthorApplication | Should be True  
-        $ISOApplication | Should be True
-        $UtilitiesApplication | Should be True 
-        $TriDKApplication | Should be True
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be True
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
 
         GetComObjectState
-        $AuthorApplication | Should be True  
-        $ISOApplication | Should be True
-        $UtilitiesApplication | Should be True 
-        $TriDKApplication | Should be True
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be True
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3
@@ -298,15 +315,16 @@ Describe "Testing Start and Stop ISH Deployment"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
         #Assert
         GetComObjectState
-        $AuthorApplication | Should be False  
-        $ISOApplication | Should be False 
-        $UtilitiesApplication | Should be False 
-        $TriDKApplication | Should be False 
+        $AuthorApplicationIsEnabled | Should be False  
+        $ISOApplicationIsEnabled | Should be False 
+        $UtilitiesApplicationIsEnabled | Should be False 
+        $TriDKApplicationIsEnabled | Should be False
+        $AuthorApplicationIsStarted | Should be False
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0  
-
     }
+
 	It "Enabling components on stopped deployment should not start components"{
          #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
@@ -315,10 +333,11 @@ Describe "Testing Start and Stop ISH Deployment"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
 
         GetComObjectState
-        $AuthorApplication | Should be False  
-        $ISOApplication | Should be False 
-        $UtilitiesApplication | Should be False 
-        $TriDKApplication | Should be False 
+        $AuthorApplicationIsEnabled | Should be False  
+        $ISOApplicationIsEnabled | Should be False 
+        $UtilitiesApplicationIsEnabled | Should be False 
+        $TriDKApplicationIsEnabled | Should be False 
+        $AuthorApplicationIsStarted | Should be False
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0      
@@ -327,12 +346,12 @@ Describe "Testing Start and Stop ISH Deployment"{
 		#Assert
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
 		GetComObjectState
-        $AuthorApplication | Should be False  
-        $ISOApplication | Should be False 
-        $UtilitiesApplication | Should be False 
-        $TriDKApplication | Should be False
+        $AuthorApplicationIsEnabled | Should be True  
+        $ISOApplicationIsEnabled | Should be True 
+        $UtilitiesApplicationIsEnabled | Should be True 
+        $TriDKApplicationIsEnabled | Should be True
+        $AuthorApplicationIsStarted | Should be False
     }
 
-    #>
-     UndoDeploymentBackToVanila $testingDeploymentName
+    UndoDeploymentBackToVanila $testingDeploymentName
 }

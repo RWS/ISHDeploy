@@ -72,7 +72,6 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             // Get all ISH windows services
@@ -93,7 +92,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-            // Disable and stop all ISH components
+            // Stop all ISH components
             if (!SkipRecycle)
             {
                 // Stop all components

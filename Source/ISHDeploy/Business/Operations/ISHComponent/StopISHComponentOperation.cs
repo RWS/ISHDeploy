@@ -106,19 +106,14 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.COMPlus:
-                        var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+                        // Check if this operation has implications for several Deployments
+                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
+                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+                        Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                            $"The stopping of COM+ component `{TrisoftInfoShareAuthorComPlusApplicationName}` has implications across all deployments."));
 
-                        if (comPlusComponentManager.IsComPlusComponentRunning(TrisoftInfoShareAuthorComPlusApplicationName))
-                        {
-                            // Check if this operation has implications for several Deployments
-                            IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-                            Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                                $"The stopping of COM+ component `{TrisoftInfoShareAuthorComPlusApplicationName}` has implications across all deployments."));
-
-                            Invoker.AddAction(
-                                new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
-                        }
+                        Invoker.AddAction(
+                            new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                         break;
                     case ISHComponentName.Crawler:
                         Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));

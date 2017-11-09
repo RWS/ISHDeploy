@@ -116,5 +116,60 @@ namespace ISHDeploy.Data.Managers
 
             return result.Count == 1 ? result[0] : result;
         }
+
+
+        /// <summary>
+        /// Invokes powershell script
+        /// </summary>
+        /// <param name="script">powershell script.</param>
+        /// <param name="actionDescription">Description of action to add this information if powershell script running is failed.</param>
+        /// Return the result in the case of casting failure
+        /// <returns>An object of specified type that converted from PSObject</returns>
+        public object InvokeScriptWithResult(string script, string actionDescription = null)
+        {
+            var result = new List<object>();
+            using (var ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            {
+                ps.AddScript(script);
+                ps.AddParameter("NoProfile");
+
+                // Add results
+                result.AddRange(ps.Invoke());
+
+                // Add Verboses, Warnings and Exceptions
+                foreach (var verbose in ps.Streams.Verbose.ReadAll())
+                {
+                    _logger.WriteVerbose(verbose.Message);
+                }
+
+                foreach (var warning in ps.Streams.Warning.ReadAll())
+                {
+                    _logger.WriteWarning(warning.Message);
+                }
+
+                bool isFailed = false;
+                var exceptions = new StringBuilder();
+                foreach (var error in ps.Streams.Error.ReadAll())
+                {
+                    isFailed = true;
+                    exceptions.AppendLine(error.Exception.Message);
+                }
+
+                if (isFailed)
+                {
+                    if (string.IsNullOrEmpty(actionDescription))
+                    {
+                        throw new Exception(exceptions.ToString());
+                    }
+                    else
+                    {
+                        _logger.WriteDebug($"{actionDescription} is failed.");
+                        throw new Exception($"{exceptions}");
+                    }
+                }
+            }
+
+            return result.Count == 1 ? result[0] : result;
+        }
     }
 }

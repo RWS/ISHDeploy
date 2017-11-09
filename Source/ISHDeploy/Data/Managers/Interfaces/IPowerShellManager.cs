@@ -32,5 +32,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Return the result in the case of casting failure
         /// <returns>An object of specified type that converted from PSObject</returns>
         object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null, string actionDescription = null);
+
+        /// <summary>
+        /// Invokes powershell script
+        /// </summary>
+        /// <param name="script">powershell script.</param>
+        /// <param name="actionDescription">Description of action to add this information if powershell script running is failed.</param>
+        /// Return the result in the case of casting failure
+        /// <returns>An object of specified type that converted from PSObject</returns>
+        object InvokeScriptWithResult(string script, string actionDescription = null);
     }
 }

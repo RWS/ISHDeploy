@@ -26,7 +26,6 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
-using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -36,6 +35,7 @@ namespace ISHDeploy.Data.Managers
     /// <seealso cref="IWindowsServiceManager" />
     public class WindowsServiceManager : IWindowsServiceManager
     {
+
         /// <summary>
         /// The logger.
         /// </summary>
@@ -358,6 +358,26 @@ namespace ISHDeploy.Data.Managers
               { null, null, null, null, null, null, userName, password, null, null, null });
 
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been changed");
+        }
+
+        /// <summary>
+        /// Set the startup type of the windows service (Manual, Automatic, Automatic (Delayed start),...)
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <param name="startupType">The new startup type of the service.</param>
+        public void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType)
+        {
+            string startMode;
+            if (startupType == ISHWindowsServiceStartupType.AutomaticDelayedStart)
+            {
+                // Set-Service will always set it to "Automatic (Delayed start)" instead of just "Automatic"
+                startMode = "Automatic";
+            }
+            else
+            {
+                startMode = "Manual";
+            }
+            _psManager.InvokeScriptWithResult($"Set-Service -Name \"{serviceName}\" -StartupType {startMode}");
         }
 
         /// <summary>

@@ -146,6 +146,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                        Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                     }
                 }
             }
@@ -210,6 +211,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             foreach (var service in services)
                             {
                                 Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                             }
                             break;
                         case ISHComponentName.TranslationOrganizer:
@@ -217,8 +219,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 ISHWindowsServiceType.TranslationOrganizer);
                             foreach (var service in services)
                             {
-                                Invoker.AddAction(
-                                    new StartWindowsServiceAction(Logger, service));
+                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                             }
                             break;
                         case ISHComponentName.COMPlus:
@@ -257,7 +259,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             {
                                 // Remove dependencies between Crawler and SolrLucene
                                 Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
+
                                 Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                             }
                             break;
                         case ISHComponentName.SolrLucene:
@@ -265,6 +269,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             foreach (var service in services)
                             {
                                 Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                             }
                             break;
                         case ISHComponentName.BackgroundTask:
@@ -274,6 +279,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     Invoker.AddAction(new StartWindowsServiceAction(Logger, backgroundTaskService));
+                                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, backgroundTaskService, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                                 }
                             }
                             break;

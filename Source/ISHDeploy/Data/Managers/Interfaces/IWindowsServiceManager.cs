@@ -103,6 +103,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void SetWindowsServiceCredentials(string serviceName, string userName, string password);
 
         /// <summary>
+        /// Set the startup type of the windows service (Manual, Automatic, Automatic (Delayed start),...)
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <param name="startupType">The new startup type of the service.</param>
+        void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType);
+
+        /// <summary>
         /// Check windows service is Started or not
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>

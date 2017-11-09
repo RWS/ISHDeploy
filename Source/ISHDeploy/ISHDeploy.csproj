@@ -173,6 +173,7 @@
     <Compile Include="Common\Enums\ISHComponentName.cs" />
     <Compile Include="Common\Enums\ISHCOMPlusComponentStatus.cs" />
     <Compile Include="Common\Enums\ISHDeploymentStatus.cs" />
+    <Compile Include="Common\Enums\ISHWindowsServiceStartupType.cs" />
     <Compile Include="Common\Enums\RegisterCrawlerOperationType.cs" />
     <Compile Include="Common\Enums\WebConfigurationProperty.cs" />
     <Compile Include="Common\Enums\ApplicationPoolProperty.cs" />
@@ -372,6 +373,7 @@
     <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceCredentialsAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\CloneWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\RemoveWindowsServiceAction.cs" />
+    <Compile Include="Data\Actions\WindowsServices\SetWindowsServiceStartupTypeAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\WindowsServiceVanillaBackUpAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StopWindowsServiceAction.cs" />
     <Compile Include="Data\Actions\WindowsServices\StartWindowsServiceAction.cs" />

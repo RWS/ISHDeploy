@@ -26,6 +26,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
+using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -35,6 +36,10 @@ namespace ISHDeploy.Data.Managers
     /// <seealso cref="IWindowsServiceManager" />
     public class WindowsServiceManager : IWindowsServiceManager
     {
+        /// <summary>
+        /// Registry path for the windows services
+        /// </summary>
+        private readonly string WindowsServicesRegistryPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\";
 
         /// <summary>
         /// The logger.
@@ -367,17 +372,17 @@ namespace ISHDeploy.Data.Managers
         /// <param name="startupType">The new startup type of the service.</param>
         public void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType)
         {
-            string startMode;
+            int startMode;
             if (startupType == ISHWindowsServiceStartupType.AutomaticDelayedStart)
             {
-                // Set-Service will always set it to "Automatic (Delayed start)" instead of just "Automatic"
-                startMode = "Automatic";
+                startMode = (int)ServiceStartMode.Automatic;
+                Registry.SetValue($"{WindowsServicesRegistryPath}{serviceName}", "DelayedAutostart", 1, RegistryValueKind.DWord);
             }
             else
             {
-                startMode = "Manual";
+                startMode = (int)ServiceStartMode.Manual;
             }
-            _psManager.InvokeScriptWithResult($"Set-Service -Name \"{serviceName}\" -StartupType {startMode}");
+            Registry.SetValue($"{WindowsServicesRegistryPath}{serviceName}", "Start", startMode, RegistryValueKind.DWord);
         }
 
         /// <summary>

@@ -44,17 +44,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <returns>Collection with parameters for Content Manager deployments.</returns>
         public ISHComponentsCollection Run()
         {
-            var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-            if (!fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
-            {
-                return new ISHComponentsCollection(true);
-            }
-            else
-            {
-                return dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
-            }
+            var componentsCollection =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            return componentsCollection;
         }
     }
 }

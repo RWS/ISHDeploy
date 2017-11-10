@@ -169,6 +169,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Enabling of BackgroundTask component with role `{backgroundTaskRole}`");
+
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
@@ -179,16 +180,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (component != null)
             {
-                if (ishDeployment.Status == ISHDeploymentStatus.Started)
+                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                foreach (
+                    var service in
+                        services.Where(
+                            x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
                 {
-                    var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                    foreach (
-                        var service in
-                            services.Where(
-                                x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                    }
+                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.AutomaticDelayedStart));
                 }
             }
             else
@@ -202,6 +200,11 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     CurrentISHComponentStatesFilePath,
                     component.Role,
                     true));
+
+            // Start components
+            var startOperation = new StartISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
+
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
         }
 
         /// <summary>

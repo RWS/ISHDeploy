@@ -175,11 +175,28 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
             var componentsCollection =
                 dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
 
             var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                foreach (
+                    var service in
+                        services.Where(
+                            x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Manual));
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+            }
 
             if (component != null)
             {

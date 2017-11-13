@@ -288,14 +288,15 @@ Describe "Testing ISHServiceBackgroundTask"{
         $Services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
         $Services.Count | Should be 0
      }
-
+     
      It "Enabling and disabling BackgroundTask Service with role Console" {
         #Enable-ISHServiceBackgroundTask with role "Default"
         $params = @{Role = "Default"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
-
-        $services.Count | Should be 1
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
         $services[0].Status | Should be "Running"
         $Services[0].Role | Should be "Default"
 
@@ -359,7 +360,7 @@ Describe "Testing ISHServiceBackgroundTask"{
         }
 
      }
-
+     
      It "Removing BackgroundTask Service with role Console" {
         #Add background task with role "Console"
         $params = @{Role = "Console"; Count= "2"}
@@ -376,9 +377,11 @@ Describe "Testing ISHServiceBackgroundTask"{
         $params = @{Role = "Console"}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
         $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
-        $allServices.Count | Should be 1
+        if ($allServices.GetType().BaseType.Name -ne "Object"){
+            $allServices.Count | Should be 1
+        }
      }
-
+     
      Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

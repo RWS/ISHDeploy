@@ -118,7 +118,19 @@ namespace ISHDeploy.Data.Actions.WindowsServices
 
             if (_service.Status == ISHWindowsServiceStatus.Running)
             {
-                _serviceManager.StartWindowsService(newServiceName);
+                if (_service.Type == ISHWindowsServiceType.BackgroundTask)
+                {
+                    // Only start the service if the role is the same
+                    var backgroundTaskService = (ISHBackgroundTaskWindowsService)_service;
+                    if (backgroundTaskService.Role.Equals(_role, System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _serviceManager.StartWindowsService(newServiceName);
+                    }
+                }
+                else
+                {
+                    _serviceManager.StartWindowsService(newServiceName);
+                }
             }
         }
     }

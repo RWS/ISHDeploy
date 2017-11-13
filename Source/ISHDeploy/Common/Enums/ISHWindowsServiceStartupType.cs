@@ -19,10 +19,16 @@ namespace ISHDeploy.Common.Enums
     /// <summary>
     /// Startup type for windows services
     /// </summary>
-#pragma warning disable 1591
     public enum ISHWindowsServiceStartupType
     {
+        /// <summary>
+        /// The windows service can only be started manually by the user
+        /// </summary>
         Manual,
-        AutomaticDelayedStart
+        /// <summary>
+        /// The windows service will start automatically whenever the server reboots.
+        /// Note: The windows service will be always set to delayed start as well!
+        /// </summary>
+        Automatic
     }
 }

@@ -159,7 +159,7 @@ namespace ISHDeploy.Data.Managers
                                         1 :
                                         (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
                                     Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
-                                } 
+                                }
                                 :
                                 new ISHWindowsService
                                 {
@@ -373,9 +373,11 @@ namespace ISHDeploy.Data.Managers
         public void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType)
         {
             int startMode;
-            if (startupType == ISHWindowsServiceStartupType.AutomaticDelayedStart)
+            if (startupType == ISHWindowsServiceStartupType.Automatic)
             {
                 startMode = (int)ServiceStartMode.Automatic;
+
+                // Note: The windows service is always set to delayed start.
                 Registry.SetValue($"{WindowsServicesRegistryPath}{serviceName}", "DelayedAutostart", 1, RegistryValueKind.DWord);
             }
             else

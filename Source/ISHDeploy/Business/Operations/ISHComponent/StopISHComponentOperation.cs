@@ -65,15 +65,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 
-            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
+            if (components.Any(x => x.Name == ISHComponentName.Crawler))
             {
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.Crawler));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
             }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
+
+            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
 
             foreach (var component in orderedComponentsCollection)
             {

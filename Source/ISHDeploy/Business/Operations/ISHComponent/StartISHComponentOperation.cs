@@ -55,21 +55,20 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             
-            // Reorder Components Collection (make sure the lucene service start first and then the crawler
-            // and IIS pools before COM+ components)
+            // Reorder Components Collection
             var orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Any(x => x.Name == ISHComponentName.Crawler))
+
+            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
             {
+                // IF SolrLucene is present, make sure to start it before starting the Crawler
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
             }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
+
+            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
 
             if (components.Any(x => x.Name == ISHComponentName.COMPlus))
             {
+                // IF COM+ applications are present, make sure to start the IIS pools first.
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 

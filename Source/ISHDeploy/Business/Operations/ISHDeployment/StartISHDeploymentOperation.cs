@@ -45,23 +45,23 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public StartISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            IOperation operation;
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             ishDeployment.Status = ISHDeploymentStatus.Started;
+
+            Models.ISHComponent[] components;
             if (fileManager.FileExists(CurrentISHComponentStatesFilePath.AbsolutePath))
             {
                 var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
                 var componentsCollection = dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
 
-                operation = new EnableISHComponentOperation(logger, ishDeployment, false,
-                    componentsCollection.Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray());
+                components = componentsCollection.Components.Where(x => x.IsEnabled).ToArray();
             }
             else
             {
-                operation = new EnableISHComponentOperation(logger, ishDeployment, false,
-                    new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray());
+                components = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).ToArray();
             }
 
+            IOperation operation = new EnableISHComponentOperation(logger, ishDeployment, false, components);
             Invoker = new ActionInvoker(Logger, "Starting of enabled components", operation.Invoker.GetActions());
 
             Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Started));

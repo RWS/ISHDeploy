@@ -51,13 +51,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
         /// <param name="components">Names of components to be enabled.</param>
+        /// <remarks>Don't use this method for background task services</remarks>
         public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, params ISHComponentName[] components) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Enabling of components");
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            IEnumerable<Models.ISHWindowsService> services;
 
             var componentsCollection =
                dataAggregateHelper.GetComponents(ishDeployment.Name);
@@ -80,7 +80,113 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 orderedComponentsCollection.Add(componentsCollection.Components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 
-            foreach (var component in orderedComponentsCollection)
+            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, orderedComponentsCollection);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
+        /// <param name="components">Array with the components to be enabled.</param>
+        public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, Models.ISHComponent[] components) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, "Enabling of components");
+
+            // Reorder Components Collection (make sure the lucene service start first and then the crawler
+            // and IIS pools before COM+ components)
+            List<Models.ISHComponent> orderedComponentsCollection = new List<Models.ISHComponent>();
+            if (components.Any(x => x.Name == ISHComponentName.Crawler))
+            {
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
+            }
+            else
+            {
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
+            }
+
+            if (components.Any(x => x.Name == ISHComponentName.COMPlus))
+            {
+                orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
+            }
+
+            InitializeActions(logger, ishDeployment, changeStateOfComponentsInTrackingFile, orderedComponentsCollection);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
+        public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, string backgroundTaskRole) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"Enabling of BackgroundTask component with role `{backgroundTaskRole}`");
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+            var componentsCollection =
+               dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                if (ishDeployment.Status == ISHDeploymentStatus.Started)
+                {
+                    var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                    foreach (
+                        var service in
+                            services.Where(
+                                x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+            }
+
+            if (changeStateOfComponentsInTrackingFile)
+            {
+                Invoker.AddAction(
+                    new SaveISHComponentAction(
+                        Logger,
+                        CurrentISHComponentStatesFilePath,
+                        component.Role,
+                        true));
+            }
+        }
+
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            Invoker.Invoke();
+        }
+
+        #region Private methods
+        /// <summary>
+        /// Initializes the necessary actions for enabling the specified components
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
+        /// <param name="components">Ordered list with the components to be enabled.</param>
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, List<Models.ISHComponent> components)
+        {
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            IEnumerable<Models.ISHWindowsService> services;
+
+            foreach (var component in components)
             {
                 if (ishDeployment.Status == ISHDeploymentStatus.Started)
                 {
@@ -162,11 +268,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             }
                             break;
                         case ISHComponentName.BackgroundTask:
-                            services = serviceManager.GetServices(ishDeployment.Name,
-                                ISHWindowsServiceType.BackgroundTask);
-                            foreach (var service in services)
+                            var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                            foreach (var backgroundTaskService in backgroundTaskServices)
                             {
-                                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                                if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    Invoker.AddAction(new StartWindowsServiceAction(Logger, backgroundTaskService));
+                                }
                             }
                             break;
                         default:
@@ -198,62 +306,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 }
             }
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EnableISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="changeStateOfComponentsInTrackingFile">Change state of components in tracking file.</param>
-        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
-        public EnableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool changeStateOfComponentsInTrackingFile, string backgroundTaskRole) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, $"Enabling of BackgroundTask component with role `{backgroundTaskRole}`");
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-
-            var componentsCollection =
-               dataAggregateHelper.ReadComponentsFromFile(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
-
-            if (component != null)
-            {
-                if (ishDeployment.Status == ISHDeploymentStatus.Started)
-                {
-                    var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                    foreach (
-                        var service in
-                            services.Where(
-                                x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-                    }
-                }
-            }
-            else
-            {
-                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
-            }
-
-            if (changeStateOfComponentsInTrackingFile)
-            {
-                Invoker.AddAction(
-                    new SaveISHComponentAction(
-                        Logger,
-                        CurrentISHComponentStatesFilePath,
-                        component.Role,
-                        true));
-            }
-        }
-
-        /// <summary>
-        /// Runs current operation.
-        /// </summary>
-        public void Run()
-        {
-            Invoker.Invoke();
-        }
+        #endregion
     }
 }

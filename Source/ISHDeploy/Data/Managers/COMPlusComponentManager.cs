@@ -75,7 +75,7 @@ namespace ISHDeploy.Data.Managers
             }
             applications.SaveChanges();
 
-            _logger.WriteVerbose($"Credentials for the COM+ component `{comPlusComponentName}` has been chenged");
+            _logger.WriteVerbose($"Credentials for the COM+ component `{comPlusComponentName}` has been changed");
         }
 
         /// <summary>

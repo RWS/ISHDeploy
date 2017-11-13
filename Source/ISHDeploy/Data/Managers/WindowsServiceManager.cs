@@ -357,7 +357,7 @@ namespace ISHDeploy.Data.Managers
             mo.InvokeMethod("Change", new object[]
               { null, null, null, null, null, null, userName, password, null, null, null });
 
-            _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been chenged");
+            _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been changed");
         }
 
         /// <summary>

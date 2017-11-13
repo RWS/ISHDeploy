@@ -325,7 +325,7 @@ namespace ISHDeploy.Data.Managers
 
                 manager.CommitChanges();
 
-                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been chenged");
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been changed");
             }
         }
 

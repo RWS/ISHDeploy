@@ -46,7 +46,7 @@ namespace ISHDeploy.Cmdlets.ISHMaintenance
     /// Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsLifecycle.Invoke, "ISHMaintenance")]
-    public sealed class InvokeISHMaintenanceCmdlet : BaseHistoryEntryCmdlet
+    public sealed class InvokeISHMaintenanceCmdlet : BaseISHDeploymentAdminRightsCmdlet
     {
         /// <summary>
         /// <para type="description">Maintenance the Crawler service. Registering the Crawler for 'TrisoftInfoShareIndex' on 'UADEVVMASKYMENK'.</para>

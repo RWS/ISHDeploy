@@ -56,10 +56,95 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             Invoker = new ActionInvoker(logger, "Disabling of components");
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var components =
+                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToArray();
+
+            InitializeActions(Logger, ishDeployment, components);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="components">List with the components to be disabled.</param>
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, "Disabling of components");
+            InitializeActions(Logger, ishDeployment, components);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
+        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
+
+            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
+
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
-            var components =
-                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)); ;
+            var componentsCollection =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                foreach (
+                    var service in
+                        services.Where(
+                            x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Manual));
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+            }
+
+            if (component != null)
+            {
+                Invoker.AddAction(
+                    new SaveISHComponentAction(
+                        Logger,
+                        CurrentISHComponentStatesFilePath,
+                        component.Role,
+                        false));
+            }
+        }
+
+        /// <summary>
+        /// Runs current operation.
+        /// </summary>
+        public void Run()
+        {
+            Invoker.Invoke();
+        }
+
+
+        #region Private methods
+        /// <summary>
+        /// Initializes the actions of the <see cref="DisableISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="components">List with the components to be disabled.</param>
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
+        {
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
             // Stop components
             var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
@@ -97,6 +182,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.TranslationBuilder:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
                         foreach (var service in services)
                         {
@@ -104,6 +191,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.TranslationOrganizer:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
                         foreach (var service in services)
                         {
@@ -111,6 +200,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.Crawler:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                         foreach (var service in services)
                         {
@@ -121,6 +212,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.SolrLucene:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
                         foreach (var service in services)
                         {
@@ -128,6 +221,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.BackgroundTask:
+                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
                         var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
                         foreach (var backgroundTaskService in backgroundTaskServices)
                         {
@@ -159,62 +254,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 }
             }
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DisableISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Disabled.</param>
-        public DisableISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, $"Disabling of BackgroundTask component with role `{backgroundTaskRole}`");
-
-            var stopOperation = new StopISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
-
-            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-
-            var componentsCollection =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
-
-            if (component != null)
-            {
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (
-                    var service in
-                        services.Where(
-                            x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Manual));
-                }
-            }
-            else
-            {
-                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
-            }
-
-            if (component != null)
-            {
-                Invoker.AddAction(
-                    new SaveISHComponentAction(
-                        Logger,
-                        CurrentISHComponentStatesFilePath,
-                        component.Role,
-                        false));
-            }
-        }
-
-        /// <summary>
-        /// Runs current operation.
-        /// </summary>
-        public void Run()
-        {
-            Invoker.Invoke();
-        }
+        #endregion
     }
 }

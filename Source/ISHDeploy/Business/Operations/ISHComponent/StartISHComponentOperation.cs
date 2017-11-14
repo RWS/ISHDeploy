@@ -120,7 +120,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                             break;
                         case ISHComponentName.Crawler:
-                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
                             services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                             foreach (var service in services)
                             {

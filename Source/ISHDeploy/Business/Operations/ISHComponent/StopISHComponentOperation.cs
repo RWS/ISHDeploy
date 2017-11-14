@@ -113,13 +113,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                         break;
                     case ISHComponentName.Crawler:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                         foreach (var service in services)
                         {
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                            // Remove dependencies between Crawler and SolrLucene
-                            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
                         }
                         break;
                     case ISHComponentName.SolrLucene:

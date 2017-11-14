@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
@@ -69,35 +70,17 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
                 "The setting of credentials for COM+ components has implications across all deployments."));
 
-            // Stop COM+ cmponent
-            Invoker.AddAction(
-                new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
 
-            // Stop services that are running
-            // TODO: Add support of all other services and components
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var runningServiceNames = serviceManager.GetServices(
-                ishDeployment.Name,
-                ISHWindowsServiceType.BackgroundTask,
-                ISHWindowsServiceType.Crawler,
-                ISHWindowsServiceType.SolrLucene,
-                ISHWindowsServiceType.TranslationBuilder,
-                ISHWindowsServiceType.TranslationOrganizer).
-                Where(service => service.Status == ISHWindowsServiceStatus.Running).ToList();
+            // Stop all components
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var componentsNeedToBeStopped =
+                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
 
-            // Stop services that are running
-            foreach (var service in runningServiceNames)
-            {
-                Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-            }
+            IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
             // Set new credentials for COM+ component
             Invoker.AddAction(new SetCOMPlusCredentialsAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName, userName, currentOSUserName, password, currentOSPassword));
-
-            // Stop Application pools
-            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
 
             // WS
             Invoker.AddAction(new SetApplicationPoolPropertyAction(
@@ -234,16 +217,8 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
 
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.OSPasswordXPath, password));
 
-            // Start Trisoft-InfoShare-Author COM+ application
-            Invoker.AddAction(
-                    new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
-
-            // Start Application pools
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
-            
             // Set new credentials for all services
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             foreach (var service in serviceManager.GetServices(
                 ishDeployment.Name,
                 ISHWindowsServiceType.BackgroundTask,
@@ -255,11 +230,12 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
                 Invoker.AddAction(new SetWindowsServiceCredentialsAction(Logger, service.Name, userName, currentOSUserName, password, currentOSPassword));
             }
 
-            // Run services that should be run
-            foreach (var service in runningServiceNames)
-            {
-                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
-            }
+            // Start all components that should be started
+            var componentsThatShouldBeStarted =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
+
+            IOperation operation = new StartISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
+            Invoker.AddActionsRange(operation.Invoker.GetActions());
         }
 
         /// <summary>

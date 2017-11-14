@@ -109,7 +109,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         foreach (var service in services)
                         {
                             // Remove dependencies between Crawler and SolrLucene
-                            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
+                            Invoker.AddAction(new RemoveWindowsServiceDependencyAction(Logger, service));
 
                             Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
                         }

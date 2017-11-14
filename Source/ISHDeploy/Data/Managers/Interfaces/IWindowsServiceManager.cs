@@ -110,6 +110,12 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType);
 
         /// <summary>
+        /// Remove (all) dependencies for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        void RemoveWindowsServiceDependency(string serviceName);
+
+        /// <summary>
         /// Check windows service is Started or not
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>

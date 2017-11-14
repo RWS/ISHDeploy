@@ -32,7 +32,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
     /// <summary>
     /// Set windows service startyp type (Manual, Automatic (Delayed start), Automatic,...)
     /// </summary>
-    class SetWindowsServiceStartupTypeAction : BaseAction
+    public class SetWindowsServiceStartupTypeAction : BaseAction
     {
         /// <summary>
         /// The name of deployment service.
@@ -50,7 +50,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly ISHWindowsServiceStartupType _startupType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetWindowsServiceCredentialsAction"/> class.
+        /// Initializes a new instance of the <see cref="SetWindowsServiceStartupTypeAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The deployment service</param>

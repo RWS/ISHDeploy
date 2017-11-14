@@ -86,6 +86,16 @@ namespace ISHDeploy.Business.Invokers
         }
 
         /// <summary>
+        /// Adds range of actions into invocation list
+        /// </summary>
+        /// <param name="actions">An range of actions to invoke <see cref="T:ISHDeploy.Interfaces.Actions.IAction"/>.</param>
+        public void AddActionsRange(IEnumerable<IAction> actions)
+        {
+            Debug.Assert(actions != null, "Actions cannot be null");
+            _actions.AddRange(actions);
+        }
+
+        /// <summary>
         /// Executes sequence of actions one by one.
         /// </summary>
         public void Invoke()

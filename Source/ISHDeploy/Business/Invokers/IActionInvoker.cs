@@ -31,6 +31,12 @@ namespace ISHDeploy.Business.Invokers
         void AddAction(IAction action);
 
         /// <summary>
+        /// Adds range of actions into invocation list
+        /// </summary>
+        /// <param name="actions">An range of actions to invoke <see cref="T:ISHDeploy.Interfaces.Actions.IAction"/>.</param>
+        void AddActionsRange(IEnumerable<IAction> actions);
+
+        /// <summary>
         /// Invokes actions sequence execution
         /// </summary>
         void Invoke();

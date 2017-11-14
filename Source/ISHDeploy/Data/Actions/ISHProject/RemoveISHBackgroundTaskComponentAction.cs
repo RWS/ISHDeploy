@@ -72,7 +72,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public override void Execute()
         {
-            var componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
+            var componentsCollection = _dataAggregateHelper.GetExpectedStateOfComponents(FilePath);
 
             var component = componentsCollection[ISHComponentName.BackgroundTask, _role];
             componentsCollection.Components.Remove(component);

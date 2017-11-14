@@ -144,11 +144,11 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Returns all components of deployment
+        /// Return actual state of components
         /// </summary>
         /// <param name="deploymentName">The Content Manager deployment name.</param>
-        /// <returns>The collection of components for specified deployment</returns>
-        public ISHComponentsCollection GetComponents(string deploymentName)
+        /// <returns>The collection of components for specified deployment with their actual state</returns>
+        public ISHComponentsCollection GetActualStateOfComponents(string deploymentName)
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
             var components = new ISHComponentsCollection(true);
@@ -220,17 +220,15 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Returns all components of deployment which were saved in a file 
+        /// Return the state of the components that should be in the system now
         /// </summary>
-        /// <param name="filePath">The path to file.</param>
-        /// <returns>The collection of components readed from file</returns>
-        public ISHComponentsCollection ReadComponentsFromFile(string filePath)
+        /// <param name="filePath">The path to file with saved states of all components of deployment.</param>
+        /// <returns>The collection of components with their states. If the file with saved states does not exist then return the default (vanilla) state.</returns>
+        public ISHComponentsCollection GetExpectedStateOfComponents(string filePath)
         {
-            if (!_fileManager.FileExists(filePath))
-            {
-                return new ISHComponentsCollection(true);
-            }
-            return _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
+            return !_fileManager.FileExists(filePath) ? 
+                new ISHComponentsCollection(true) : 
+                _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
         }
 
         /// <summary>

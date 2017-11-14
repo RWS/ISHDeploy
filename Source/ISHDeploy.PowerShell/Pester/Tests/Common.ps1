@@ -179,9 +179,7 @@ $scriptBlockUndoDeployment = {
     
     # Sets a value indicating whether skip recycle or not. For integration test perspective only. Please, see https://jira.sdl.com/browse/TS-11329
     [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $skipRecycling
-
-    $ishDeploy = Get-ISHDeployment -Name $deployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
+    Undo-ISHDeployment -ISHDeployment $deployName
 }
 
 function UndoDeploymentBackToVanila {
@@ -193,31 +191,6 @@ function UndoDeploymentBackToVanila {
     ) 
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName, $skipRecycling
-
-    if ($skipRecycling -eq $false){
-
-        $i = 0
-        $doesDBFileExist = Test-Path $dbPath
-
-        if ($doesDBFileExist -ne $true) {
-            Write-Debug "$dbPath does not exist"
-            WebRequestToSTS $testingDeploymentName
-            Start-Sleep -Milliseconds 1000
-        }
-
-        $doesDBFileExist = Test-Path $dbPath
-        while($doesDBFileExist -ne $true)
-        {
-            Start-Sleep -Milliseconds 7000
-            $doesDBFileExist = Test-Path $dbPath
-
-            if ($i -ge 2)
-            {
-                $doesDBFileExist | Should be $true
-            }
-            $i++
-        }
-    }
 }
 
 #remove item remotely

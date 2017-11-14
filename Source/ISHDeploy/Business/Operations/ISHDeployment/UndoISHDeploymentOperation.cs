@@ -31,6 +31,7 @@ using ISHDeploy.Data.Managers.Interfaces;
 using Microsoft.Web.Administration;
 using System.Collections.Generic;
 using System.Linq;
+using ISHDeploy.Business.Operations.ISHComponent;
 using Models = ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Business.Operations.ISHDeployment
@@ -71,7 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             // Get all ISH windows services
             var services = serviceManager.GetAllServices(
@@ -87,31 +88,19 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Disable internal STS login (remove directory) 
             Invoker.AddAction(new DirectoryRemoveAction(Logger, InternalSTSFolderToChange));
 
-
             // Check if this operation has implications for several Deployments
             IEnumerable<Models.ISHDeployment> ishDeployments = null;
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-            // Disable and stop all ISH components
+            // Stop all ISH components
             if (!SkipRecycle)
             {
-                // Stop all WindowsServices 
-                foreach (var service in services)
-                {
-                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                }
+                // Stop all components
+                var componentsNeedToBeStopped =
+                    dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
 
-                // Stop COM+ component
-                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                           "The rolling back of credentials for COM+ components has implications across all deployments."));
-
-                Invoker.AddAction(
-                        new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
-
-                // Stop Application pools
-                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.WSAppPoolName));
-                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-                Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.CMAppPoolName));
+                IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
+                Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
                 // Cleaning up STS App_Data folder
                 Invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
@@ -330,30 +319,12 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Enable and start Application pools and COM+ component
             if (!SkipRecycle)
             {
-                // Recycling Application pools after undo
-                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+                // Enable and start all components that should be started
+                var componentsThatShouldBeStarted = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray();
 
-                // Waiting until files becomes unlocked
-                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
-                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
-                Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareWSWebConfigPath));
-
-                // Enable COM+ components
-                var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
-                foreach (var comPlusComponent in comPlusComponents.Where(x => x.Status == ISHCOMPlusComponentStatus.Disabled))
-                {
-                    Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
-
-                    Invoker.AddAction(
-                            new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
-                }
-
-                Invoker.AddAction(
-                    new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
-
+                IOperation enableComponentsOperation = new EnableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
+                Invoker.AddActionsRange(enableComponentsOperation.Invoker.GetActions());
+                
                 // Waiting until files becomes unlocked
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));

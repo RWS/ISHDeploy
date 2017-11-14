@@ -192,30 +192,30 @@ function UndoDeploymentBackToVanila {
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName, $skipRecycling
 
-    #if ($skipRecycling -eq $false){
+    if ($skipRecycling -eq $false){
 
-    #    $i = 0
-    #    $doesDBFileExist = Test-Path $dbPath
+        $i = 0
+        $doesDBFileExist = Test-Path $dbPath
 
-    #    if ($doesDBFileExist -ne $true) {
-    #        Write-Debug "$dbPath does not exist"
-    #        WebRequestToSTS $testingDeploymentName
-    #        Start-Sleep -Milliseconds 1000
-    #    }
+        if ($doesDBFileExist -ne $true) {
+            Write-Debug "$dbPath does not exist"
+            WebRequestToSTS $testingDeploymentName
+            Start-Sleep -Milliseconds 1000
+        }
 
-    #    $doesDBFileExist = Test-Path $dbPath
-    #    while($doesDBFileExist -ne $true)
-    #    {
-    #        Start-Sleep -Milliseconds 7000
-    #        $doesDBFileExist = Test-Path $dbPath
+        $doesDBFileExist = Test-Path $dbPath
+        while($doesDBFileExist -ne $true)
+        {
+            Start-Sleep -Milliseconds 7000
+            $doesDBFileExist = Test-Path $dbPath
 
-    #        if ($i -ge 2)
-    #        {
-    #            $doesDBFileExist | Should be $true
-    #        }
-    #        $i++
-    #    }
-    #}
+            if ($i -ge 2)
+            {
+                $doesDBFileExist | Should be $true
+            }
+            $i++
+        }
+    }
 }
 
 #remove item remotely

@@ -107,7 +107,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// </summary>
         public override void Execute()
         {
-            var componentsCollection = _dataAggregateHelper.ReadComponentsFromFile(FilePath);
+            var componentsCollection = _dataAggregateHelper.GetExpectedStateOfComponents(FilePath);
 
             if (_componentName == ISHComponentName.BackgroundTask)
             {

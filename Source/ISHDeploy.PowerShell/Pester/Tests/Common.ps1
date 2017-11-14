@@ -179,9 +179,7 @@ $scriptBlockUndoDeployment = {
     
     # Sets a value indicating whether skip recycle or not. For integration test perspective only. Please, see https://jira.sdl.com/browse/TS-11329
     [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $skipRecycling
-
-    $ishDeploy = Get-ISHDeployment -Name $deployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
+    Undo-ISHDeployment -ISHDeployment $deployName
 }
 
 function UndoDeploymentBackToVanila {

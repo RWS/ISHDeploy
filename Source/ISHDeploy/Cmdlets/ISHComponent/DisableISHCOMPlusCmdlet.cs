@@ -41,7 +41,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.COMPlus);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.COMPlus);
 
             operation.Run();
         }

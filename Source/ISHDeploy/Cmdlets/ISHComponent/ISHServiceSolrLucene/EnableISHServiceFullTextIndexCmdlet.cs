@@ -39,7 +39,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceSolrLucene
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.SolrLucene);
+            var operation = new EnableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.SolrLucene);
 
             operation.Run();
         }

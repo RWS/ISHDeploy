@@ -39,7 +39,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceCrawler
         /// </summary>
         public override void ExecuteCmdlet()
         {
-            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, true, ISHComponentName.Crawler);
+            var operation = new DisableISHComponentOperation(Logger, ISHDeployment, ISHComponentName.Crawler);
 
             operation.Run();
         }

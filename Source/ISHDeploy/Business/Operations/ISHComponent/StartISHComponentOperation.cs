@@ -64,7 +64,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
             }
 
-            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
+                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
 
             if (components.Any(x => x.Name == ISHComponentName.COMPlus))
             {
@@ -110,12 +110,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             }
                             break;
                         case ISHComponentName.COMPlus:
-                            // Check if this operation has implications for several Deployments
-                            IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-
-                            Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                                        $"The starting of COM+ component `{TrisoftInfoShareAuthorComPlusApplicationName}` has implications across all deployments."));
                             Invoker.AddAction(
                                 new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                             break;

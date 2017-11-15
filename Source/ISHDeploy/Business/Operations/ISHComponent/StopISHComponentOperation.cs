@@ -22,9 +22,7 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;
-using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
-using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
@@ -103,12 +101,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         }
                         break;
                     case ISHComponentName.COMPlus:
-                        // Check if this operation has implications for several Deployments
-                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
-                        Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                            $"The stopping of COM+ component `{TrisoftInfoShareAuthorComPlusApplicationName}` has implications across all deployments."));
-
                         Invoker.AddAction(
                             new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                         break;

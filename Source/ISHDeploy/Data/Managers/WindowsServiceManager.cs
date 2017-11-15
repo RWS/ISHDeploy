@@ -26,7 +26,6 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
-using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -36,11 +35,6 @@ namespace ISHDeploy.Data.Managers
     /// <seealso cref="IWindowsServiceManager" />
     public class WindowsServiceManager : IWindowsServiceManager
     {
-        /// <summary>
-        /// Registry path for the windows services
-        /// </summary>
-        private readonly string WindowsServicesRegistryPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\";
-
         /// <summary>
         /// The logger.
         /// </summary>
@@ -52,6 +46,11 @@ namespace ISHDeploy.Data.Managers
         private readonly IPowerShellManager _psManager;
 
         /// <summary>
+        /// The Trisoft registry manager.
+        /// </summary>
+        private readonly ITrisoftRegistryManager _trisoftRegistryManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -59,6 +58,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
+            _trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
         }
 
         /// <summary>
@@ -382,11 +382,11 @@ namespace ISHDeploy.Data.Managers
 
             if (startupType == ISHWindowsServiceStartupType.Automatic)
             {
-                string registryKey = $"{WindowsServicesRegistryPath}{serviceName}";
-                if (Registry.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
+                string registryKey = $@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{serviceName}";
+                if (_trisoftRegistryManager.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
                 {
                     // Note: The windows service is always set to delayed start.
-                    Registry.SetValue(registryKey, "DelayedAutostart", 1, RegistryValueKind.DWord);
+                    _trisoftRegistryManager.SetValue(registryKey, "DelayedAutostart", 1);
                 }
             }
 

@@ -429,6 +429,38 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets all dependencies for the windows services of deployment of specified type.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="serviceType">Type of deployment service.</param>
+        /// <returns>
+        /// The dependencies for the specified type.
+        /// </returns>
+        public IEnumerable<string> GetDependencies(string deploymentName, ISHWindowsServiceType serviceType)
+        {
+            var dependencies = new List<string>();
+
+            var services = GetServices(deploymentName, serviceType);
+            foreach (var service in services)
+            {
+                object result = Registry.LocalMachine.OpenSubKey("SYSTEM").OpenSubKey("CurrentControlSet").OpenSubKey("Services").OpenSubKey(service.Name).GetValue(RegistryValueName.DependOnService.ToString());
+                if (result != null)
+                {
+                    string[] dependsOnServices = (string[])result;
+                    foreach (var dependency in dependsOnServices)
+                    {
+                        if (dependency != String.Empty && !dependencies.Contains(dependency))
+                        {
+                            dependencies.Add(dependency);
+                        }
+                    }
+                }
+            }
+
+            return dependencies;
+        }
+
+        /// <summary>
         /// Gets properties of windows service
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>

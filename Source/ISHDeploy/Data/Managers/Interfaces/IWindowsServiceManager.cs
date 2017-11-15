@@ -110,6 +110,16 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType);
 
         /// <summary>
+        /// Gets all dependencies for the windows services of deployment of specified type.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="serviceType">Type of deployment service.</param>
+        /// <returns>
+        /// The dependencies for the specified type.
+        /// </returns>
+         IEnumerable<string> GetDependencies(string deploymentName, ISHWindowsServiceType serviceType);
+
+        /// <summary>
         /// Remove (all) dependencies for the windows service
         /// </summary>
         /// <param name="serviceName">The name of windows service.</param>

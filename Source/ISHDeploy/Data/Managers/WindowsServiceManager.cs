@@ -380,11 +380,8 @@ namespace ISHDeploy.Data.Managers
             string fullServiceName = $"Win32_Service.Name='{serviceName}'";
             ManagementObject managementObject = new ManagementObject(fullServiceName);
 
-            string startMode;
             if (startupType == ISHWindowsServiceStartupType.Automatic)
             {
-                startMode = "Automatic";
-
                 string registryKey = $"{WindowsServicesRegistryPath}{serviceName}";
                 if (Registry.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
                 {
@@ -392,16 +389,13 @@ namespace ISHDeploy.Data.Managers
                     Registry.SetValue(registryKey, "DelayedAutostart", 1, RegistryValueKind.DWord);
                 }
             }
-            else
-            {
-                startMode = "Manual";
-            }
 
             object result = managementObject.InvokeMethod("Change", new object[]
-                { null, null, null, null, startMode, null, null, null, null, null, null });
+                { null, null, null, null, startupType, null, null, null, null, null, null });
+
             if ((uint)result != 0)
             {
-                throw new Exception($"Setting start mode '{startMode}' for the service '{serviceName}' failed with {result}");
+                throw new Exception($"Setting start mode '{startupType}' for the service '{serviceName}' failed with {result}");
             }
             _logger.WriteVerbose($"Startup type for the service '{serviceName}' has been changed");
         }
@@ -417,7 +411,7 @@ namespace ISHDeploy.Data.Managers
             string fullServiceName = $"Win32_Service.Name='{serviceName}'";
             ManagementObject managementObject = new ManagementObject(fullServiceName);
 
-            string[] dependencies = new string[] { "" };
+            string[] dependencies = { "" };
 
             object result = managementObject.InvokeMethod("Change", new object[]
               { null, null, null, null, null, null, null, null, null, null, dependencies });

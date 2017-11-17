@@ -323,7 +323,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             if (!SkipRecycle)
             {
                 // Enable and start all components that should be started
-                var componentsThatShouldBeStarted = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).Select(x => x.Name).ToArray();
+                var componentsThatShouldBeStarted = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).ToArray();
 
                 IOperation enableComponentsOperation = new EnableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
                 Invoker.AddActionsRange(enableComponentsOperation.Invoker.GetActions());

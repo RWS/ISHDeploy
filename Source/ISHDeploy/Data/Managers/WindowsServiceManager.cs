@@ -26,7 +26,6 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
-using Microsoft.Win32;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -36,11 +35,6 @@ namespace ISHDeploy.Data.Managers
     /// <seealso cref="IWindowsServiceManager" />
     public class WindowsServiceManager : IWindowsServiceManager
     {
-        /// <summary>
-        /// Registry path for the windows services
-        /// </summary>
-        private readonly string WindowsServicesRegistryPath = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\";
-
         /// <summary>
         /// The logger.
         /// </summary>
@@ -52,6 +46,11 @@ namespace ISHDeploy.Data.Managers
         private readonly IPowerShellManager _psManager;
 
         /// <summary>
+        /// The Trisoft registry manager.
+        /// </summary>
+        private readonly ITrisoftRegistryManager _trisoftRegistryManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -59,6 +58,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
+            _trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
         }
 
         /// <summary>
@@ -380,28 +380,22 @@ namespace ISHDeploy.Data.Managers
             string fullServiceName = $"Win32_Service.Name='{serviceName}'";
             ManagementObject managementObject = new ManagementObject(fullServiceName);
 
-            string startMode;
             if (startupType == ISHWindowsServiceStartupType.Automatic)
             {
-                startMode = "Automatic";
-
-                string registryKey = $"{WindowsServicesRegistryPath}{serviceName}";
-                if (Registry.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
+                string registryKey = $@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{serviceName}";
+                if (_trisoftRegistryManager.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
                 {
                     // Note: The windows service is always set to delayed start.
-                    Registry.SetValue(registryKey, "DelayedAutostart", 1, RegistryValueKind.DWord);
+                    _trisoftRegistryManager.SetValue(registryKey, "DelayedAutostart", 1);
                 }
-            }
-            else
-            {
-                startMode = "Manual";
             }
 
             object result = managementObject.InvokeMethod("Change", new object[]
-                { null, null, null, null, startMode, null, null, null, null, null, null });
+                { null, null, null, null, startupType, null, null, null, null, null, null });
+
             if ((uint)result != 0)
             {
-                throw new Exception($"Setting start mode '{startMode}' for the service '{serviceName}' failed with {result}");
+                throw new Exception($"Setting start mode '{startupType}' for the service '{serviceName}' failed with {result}");
             }
             _logger.WriteVerbose($"Startup type for the service '{serviceName}' has been changed");
         }
@@ -417,7 +411,7 @@ namespace ISHDeploy.Data.Managers
             string fullServiceName = $"Win32_Service.Name='{serviceName}'";
             ManagementObject managementObject = new ManagementObject(fullServiceName);
 
-            string[] dependencies = new string[] { "" };
+            string[] dependencies = { "" };
 
             object result = managementObject.InvokeMethod("Change", new object[]
               { null, null, null, null, null, null, null, null, null, null, dependencies });

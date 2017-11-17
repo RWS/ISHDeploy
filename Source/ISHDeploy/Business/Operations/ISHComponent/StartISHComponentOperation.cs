@@ -21,9 +21,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.COMPlus;
-using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -64,7 +62,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
             }
 
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
+            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
 
             if (components.Any(x => x.Name == ISHComponentName.COMPlus))
             {

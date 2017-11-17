@@ -16,7 +16,6 @@
 ﻿using System;
 using System.Collections.Generic;
 ﻿using ISHDeploy.Common.Enums;
-﻿using ISHDeploy.Common.Models;
 ﻿using ISHDeploy.Common.Models.Backup;
 ﻿using Microsoft.Win32;
 
@@ -86,6 +85,17 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Properties from one registry key.
         /// </returns>
         PropertyCollection GetValues(IEnumerable<string> namesOfValues, string sourceLocalMachineSubKeyName);
+
+        /// <summary>
+        /// Gets value from one registry key
+        /// </summary>
+        /// <param name="keyName">The name of registry key.</param>
+        /// <param name="valueName">The name of value.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>
+        /// Value from one registry key.
+        /// </returns>
+        object GetValue(string keyName, string valueName, object defaultValue);
 
         /// <summary>
         /// Sets value in registry key

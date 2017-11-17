@@ -148,7 +148,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
 		        foreach (var service in backedUpWindowsServices.Services)
 		        {
-                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service, RegWindowsServicesRegistryPathPattern,
+                    Invoker.AddAction(new InstallWindowsServiceAction(Logger, service,
                         vanillaInputParameters.OSUser, vanillaInputParameters.OSPassword));
                 }
 		    }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
@@ -389,12 +388,7 @@ namespace ISHDeploy.Business.Operations
         /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\\Tridk\TridkApp\InfoShareBuilders..." element of registry.
         /// </summary>
         protected string RegInfoShareBuildersRegistryElement { get; }
-
-        /// <summary>
-        /// Gets the pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}".
-        /// </summary>
-        protected string RegWindowsServicesRegistryPathPattern { get; }
-
+        
         /// <summary>
         /// The path to ~\App\Crawler\Bin\crawler.exe
         /// </summary>
@@ -504,8 +498,6 @@ namespace ISHDeploy.Business.Operations
                 $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
             RegInfoShareBuildersRegistryElement =
                 $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
-
-            RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
 
             CrawlerExeFilePath = Path.Combine(AppFolderPath, @"Crawler\Bin\crawler.exe");
 

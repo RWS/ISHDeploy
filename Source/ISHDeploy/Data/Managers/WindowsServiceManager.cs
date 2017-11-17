@@ -36,6 +36,11 @@ namespace ISHDeploy.Data.Managers
     public class WindowsServiceManager : IWindowsServiceManager
     {
         /// <summary>
+        /// Gets the pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}".
+        /// </summary>
+        private const string RegWindowsServicesRegistryPathPattern = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{0}";
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger _logger;
@@ -382,11 +387,11 @@ namespace ISHDeploy.Data.Managers
 
             if (startupType == ISHWindowsServiceStartupType.Automatic)
             {
-                string registryKey = $@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{serviceName}";
-                if (_trisoftRegistryManager.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
+                string registryKey = GetWindowsServicesRegistryKey(serviceName);
+                if (_trisoftRegistryManager.GetRegistryValue(registryKey, RegistryValueName.DelayedAutostart) != null)
                 {
                     // Note: The windows service is always set to delayed start.
-                    _trisoftRegistryManager.SetValue(registryKey, "DelayedAutostart", 1);
+                    _trisoftRegistryManager.SetValue(registryKey, RegistryValueName.DelayedAutostart, 1);
                 }
             }
 
@@ -437,7 +442,7 @@ namespace ISHDeploy.Data.Managers
             var services = GetServices(deploymentName, serviceType);
             foreach (var service in services)
             {
-                object result = Registry.LocalMachine.OpenSubKey("SYSTEM").OpenSubKey("CurrentControlSet").OpenSubKey("Services").OpenSubKey(service.Name).GetValue(RegistryValueName.DependOnService.ToString());
+                object result = _trisoftRegistryManager.GetRegistryValue(GetWindowsServicesRegistryKey(service.Name), RegistryValueName.DependOnService);
                 if (result != null)
                 {
                     string[] dependsOnServices = (string[])result;
@@ -484,6 +489,18 @@ namespace ISHDeploy.Data.Managers
 
             _logger.WriteVerbose($"Properties for service `{serviceName}` has been got");
             return result;
+        }
+        
+        /// <summary>
+        /// Gets registry key for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Registry key for the windows service.
+        /// </returns>
+        public string GetWindowsServicesRegistryKey(string serviceName)
+        {
+            return string.Format(RegWindowsServicesRegistryPathPattern, serviceName);
         }
     }
 }

@@ -142,5 +142,14 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// Properties of windows service.
         /// </returns>
         PropertyCollection GetWindowsServiceProperties(string serviceName);
+
+        /// <summary>
+        /// Gets registry key for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Registry key for the windows service.
+        /// </returns>
+        string GetWindowsServicesRegistryKey(string serviceName);
     }
 }

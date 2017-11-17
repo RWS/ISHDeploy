@@ -267,6 +267,25 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
+        /// Gets value from registry key
+        /// </summary>
+        /// <param name="keyName">The name of registry key.</param>
+        /// <param name="valueName">The name of value.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>
+        /// Value from registry key.
+        /// </returns>
+        public object GetValue(string keyName, string valueName, object defaultValue)
+        {
+            _logger.WriteDebug($"Get value `{valueName}` from `{keyName}` registry key");
+
+            var result = Registry.GetValue(keyName, valueName, defaultValue);
+
+            _logger.WriteVerbose($"The value  `{valueName}` from `{keyName}` registry has been got");
+            return result;
+        }
+
+        /// <summary>
         /// Sets value in registry key
         /// </summary>
         /// <param name="keyName">The registry key name.</param>

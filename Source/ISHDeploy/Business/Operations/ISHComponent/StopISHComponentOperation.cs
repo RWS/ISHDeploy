@@ -21,9 +21,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.COMPlus;
-using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -63,15 +61,12 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 
-            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
+            if (components.Any(x => x.Name == ISHComponentName.Crawler))
             {
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.Crawler));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
             }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
+
+            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.Crawler && x.Name != ISHComponentName.COMPlus));
 
             foreach (var component in orderedComponentsCollection)
             {
@@ -108,13 +103,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             new ShutdownCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                         break;
                     case ISHComponentName.Crawler:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                         foreach (var service in services)
                         {
                             Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                            // Remove dependencies between Crawler and SolrLucene
-                            Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
                         }
                         break;
                     case ISHComponentName.SolrLucene:

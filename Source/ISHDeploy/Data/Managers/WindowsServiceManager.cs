@@ -26,7 +26,6 @@ using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
-using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -47,6 +46,11 @@ namespace ISHDeploy.Data.Managers
         private readonly IPowerShellManager _psManager;
 
         /// <summary>
+        /// The Trisoft registry manager.
+        /// </summary>
+        private readonly ITrisoftRegistryManager _trisoftRegistryManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindowsServiceManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
@@ -54,6 +58,7 @@ namespace ISHDeploy.Data.Managers
         {
             _logger = logger;
             _psManager = ObjectFactory.GetInstance<IPowerShellManager>();
+            _trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
         }
 
         /// <summary>
@@ -154,7 +159,7 @@ namespace ISHDeploy.Data.Managers
                                         1 :
                                         (int)Enum.Parse(typeof(ISHWindowsServiceSequence), service.ServiceName.Split(' ').Last()),
                                     Role = type == ISHWindowsServiceType.BackgroundTask ? GetWindowsServiceProperties(service.ServiceName).Properties.Single(x => x.Name == "PathName").Value.ToString().Split(' ').Last() : string.Empty
-                                } 
+                                }
                                 :
                                 new ISHWindowsService
                                 {
@@ -351,13 +356,70 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteDebug("Set windows service credentials", serviceName);
 
             string fullServiceName = $"Win32_Service.Name='{serviceName}'";
+            ManagementObject managementObject = new ManagementObject(fullServiceName);
 
-            ManagementObject mo = new ManagementObject(fullServiceName);
-            
-            mo.InvokeMethod("Change", new object[]
+            object result = managementObject.InvokeMethod("Change", new object[]
               { null, null, null, null, null, null, userName, password, null, null, null });
-
+            if ((uint)result != 0)
+            {
+                throw new Exception($"Setting credentials for the service '{serviceName}' failed with {result}");
+            }
             _logger.WriteVerbose($"Credentials for the service `{serviceName}` has been changed");
+        }
+
+        /// <summary>
+        /// Set the startup type of the windows service (Manual, Automatic, Automatic (Delayed start),...)
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <param name="startupType">The new startup type of the service.</param>
+        public void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType)
+        {
+            _logger.WriteDebug("Set windows service startup type", serviceName);
+
+            // Set the start mode (Manual or Automatic)
+            string fullServiceName = $"Win32_Service.Name='{serviceName}'";
+            ManagementObject managementObject = new ManagementObject(fullServiceName);
+
+            if (startupType == ISHWindowsServiceStartupType.Automatic)
+            {
+                string registryKey = $@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{serviceName}";
+                if (_trisoftRegistryManager.GetValue(registryKey, "DelayedAutostart", 0).ToString() == "0")
+                {
+                    // Note: The windows service is always set to delayed start.
+                    _trisoftRegistryManager.SetValue(registryKey, "DelayedAutostart", 1);
+                }
+            }
+
+            object result = managementObject.InvokeMethod("Change", new object[]
+                { null, null, null, null, startupType, null, null, null, null, null, null });
+
+            if ((uint)result != 0)
+            {
+                throw new Exception($"Setting start mode '{startupType}' for the service '{serviceName}' failed with {result}");
+            }
+            _logger.WriteVerbose($"Startup type for the service '{serviceName}' has been changed");
+        }
+
+        /// <summary>
+        /// Remove (all) dependencies for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        public void RemoveWindowsServiceDependency(string serviceName)
+        {
+            _logger.WriteDebug("Remove dependencies of the service", serviceName);
+
+            string fullServiceName = $"Win32_Service.Name='{serviceName}'";
+            ManagementObject managementObject = new ManagementObject(fullServiceName);
+
+            string[] dependencies = { "" };
+
+            object result = managementObject.InvokeMethod("Change", new object[]
+              { null, null, null, null, null, null, null, null, null, null, dependencies });
+            if ((uint)result != 0)
+            {
+                throw new Exception($"Removing dependencies for the service '{serviceName}' failed with {result}");
+            }
+            _logger.WriteVerbose($"Dependencies of the service '{serviceName}' have been removed");
         }
 
         /// <summary>

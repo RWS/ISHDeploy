@@ -21,9 +21,7 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.COMPlus;
-using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
@@ -55,21 +53,20 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             
-            // Reorder Components Collection (make sure the lucene service start first and then the crawler
-            // and IIS pools before COM+ components)
+            // Reorder Components Collection
             var orderedComponentsCollection = new List<Models.ISHComponent>();
-            if (components.Any(x => x.Name == ISHComponentName.Crawler))
+
+            if (components.Any(x => x.Name == ISHComponentName.SolrLucene))
             {
+                // IF SolrLucene is present, make sure to start it before starting the Crawler
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.SolrLucene));
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
             }
-            else
-            {
-                orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.COMPlus));
-            }
+
+            orderedComponentsCollection.AddRange(components.Where(x => x.Name != ISHComponentName.SolrLucene && x.Name != ISHComponentName.COMPlus));
 
             if (components.Any(x => x.Name == ISHComponentName.COMPlus))
             {
+                // IF COM+ applications are present, make sure to start the IIS pools first.
                 orderedComponentsCollection.Add(components.First(x => x.Name == ISHComponentName.COMPlus));
             }
 
@@ -115,12 +112,9 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                                 new StartCOMPlusComponentAction(Logger, TrisoftInfoShareAuthorComPlusApplicationName));
                             break;
                         case ISHComponentName.Crawler:
-                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
                             services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                             foreach (var service in services)
                             {
-                                // Remove dependencies between Crawler and SolrLucene
-                                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
                                 Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
                             }
                             break;

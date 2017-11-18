@@ -117,6 +117,8 @@ $scriptBlockGetCOMState = {
     $result["UtilitiesApplicationIsEnabled"] = $trisoftInfoShareUtilitiesApplication.Value("IsEnabled")
     $result["TriDKApplicationIsEnabled"] = $trisoftInfoShareTriDKApplication.Value("IsEnabled")
 
+    Start-Sleep -Milliseconds 3000
+
     $comAdminCatalog = New-Object -com ("COMAdmin.COMAdminCatalog.1")
     $oapplications = $comAdminCatalog.getcollection("Applications") 
     $oapplications.populate()

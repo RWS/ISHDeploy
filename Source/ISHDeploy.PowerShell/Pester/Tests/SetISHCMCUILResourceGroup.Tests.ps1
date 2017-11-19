@@ -68,6 +68,7 @@ function readTargetXML() {
             $recourceGroupName,
             $recourceGroupPath
     )
+    
 	[xml]$config = Get-Content $uncConfigPath -ErrorAction SilentlyContinue
 	
 	$global:resourceGroup = $config.configuration.resourceGroups.ResourceGroup | ? {$_.NAME -eq $recourceGroupName}
@@ -131,16 +132,22 @@ Describe "Testing Set-ISHCMCUILResourceGroup"{
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"} | Should Throw "Could not find file"
     }
 
-    It "Set-ISHCMCUILResourceGroup updates entry in config filer"{
+    It "Set-ISHCMCUILResourceGroup updates entry in config file"{
 		#Arrange
         New-Item -Path $uncCustomFolderPath -Name "Custom" -ItemType directory -Force
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test.js" -Force -type file |Out-Null
         New-Item -Path "$uncCustomFolderPath\Custom" -Name "test2.js" -Force -type file |Out-Null
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test.js"
+        
+        Start-Sleep -Milliseconds 3000
+        
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test.js"
         $result | Should be "Set"
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHCMCUILResourceGroup -Session $session -ArgumentList $testingDeploymentName, "test", "test2.js"
         #Assert
+        
+        Start-Sleep -Milliseconds 3000
+
         $result = readTargetXML -recourceGroupName test -recourceGroupPath "test2.js"
         $result | Should be "Set"
     }

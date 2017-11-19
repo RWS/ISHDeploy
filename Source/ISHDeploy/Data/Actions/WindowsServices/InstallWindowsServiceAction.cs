@@ -17,7 +17,6 @@
 using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-using ISHDeploy.Common.Models;
 using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Actions.WindowsServices
@@ -43,11 +42,6 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
-        /// The pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}"
-        /// </summary>
-        private readonly string _regPathPattern;
-
-        /// <summary>
         /// The windows service userName
         /// </summary>
         private readonly string _userName;
@@ -62,17 +56,15 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The service.</param>
-        /// <param name="regPathPattern">The pattern of registry path to the "HKEY_LOCAL_MACHINESYSTEM\CurrentControlSet\Services\{0}".</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        public InstallWindowsServiceAction(ILogger logger, ISHWindowsServiceBackup service, string regPathPattern, string userName, string password)
+        public InstallWindowsServiceAction(ILogger logger, ISHWindowsServiceBackup service, string userName, string password)
             : base(logger)
         {
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
-            _regPathPattern = regPathPattern;
             _userName = userName;
             _password = password;
         }
@@ -86,7 +78,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
 
             foreach (var prop in _service.RegistryManagerProperties.Properties)
             {
-                _registryManager.SetValue(string.Format(_regPathPattern, _service.Name), prop.Name, prop.Value);
+                _registryManager.SetValue(_serviceManager.GetWindowsServicesRegistryKey(_service.Name), prop.Name, prop.Value);
             }
         }
     }

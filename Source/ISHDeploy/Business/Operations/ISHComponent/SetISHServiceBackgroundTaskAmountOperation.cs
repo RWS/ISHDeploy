@@ -107,7 +107,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         var backedUpWindowsService = fileManager.ReadObjectFromFile<ISHWindowsServiceBackupCollection>(
                                 VanillaPropertiesOfWindowsServicesFilePath).Services.FirstOrDefault(x => x.Name.Contains(ISHWindowsServiceType.BackgroundTask.ToString()));
 
-                        Invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, RegWindowsServicesRegistryPathPattern, InputParameters.OSUser, InputParameters.OSPassword));
+                        Invoker.AddAction(new InstallWindowsServiceAction(Logger, backedUpWindowsService, InputParameters.OSUser, InputParameters.OSPassword));
 
                         service = new Models.ISHBackgroundTaskWindowsService { Name = backedUpWindowsService.Name, Sequence = 1, Status = ISHWindowsServiceStatus.Stopped, Role = role, Type = ISHWindowsServiceType.BackgroundTask };
 

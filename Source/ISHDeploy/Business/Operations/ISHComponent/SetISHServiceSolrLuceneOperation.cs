@@ -15,10 +15,11 @@
  */
 
 using System;
+using System.Linq;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
-﻿using ISHDeploy.Common.Interfaces;
+using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.COMPlus;
 using ISHDeploy.Data.Actions.Registry;
@@ -48,8 +49,20 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         public SetISHServiceSolrLuceneOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri uri) :
             base(logger, ishDeployment)
         {
-
             Invoker = new ActionInvoker(logger, $"Setting of target lucene Uri of {ISHWindowsServiceType.SolrLucene} windows services");
+
+            // Make sure the Crawler is not running before updating the URI
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var enabledCrawlerComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.Crawler && x.IsEnabled).ToArray();
+            if (enabledCrawlerComponents.Count() > 0)
+            {
+                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the Crawler components must be disabled.");
+            }
+            var enabledSolrLuceneComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.SolrLucene && x.IsEnabled).ToArray();
+            if (enabledSolrLuceneComponents.Count() > 0)
+            {
+                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the SolrLucene components must be disabled.");
+            }
 
             // Make sure Vanilla backup of all windows services exists
             Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
@@ -58,13 +71,17 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareAuthorRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
             Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = RegInfoShareBuildersRegistryElement, ValueName = RegistryValueName.SolrLuceneBaseUrl, Value = uri }, VanillaRegistryValuesFilePath));
 
-            // Remove dependencies between Crawler and SolrLucene
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
-
-            foreach (var service in services)
+            // Local SolrLucene should have a base URL like: http://127.0.0.1:8080/solr/
+            if (!uri.ToString().StartsWith("http://127.0.0.1:"))
             {
-                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
+                // IF the Crawler is not referencing a local SolrLucene, remove dependencies between Crawler and SolrLucene
+                var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+                var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+
+                foreach (var service in services)
+                {
+                    Invoker.AddAction(new RemoveWindowsServiceDependencyAction(Logger, service));
+                }
             }
         }
 
@@ -80,17 +97,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             // Make sure Vanilla backup of all windows services exists
             Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-            // Remove dependencies between Crawler and SolrLucene
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
-
-            foreach (var service in services)
-            {
-                // Change RegistryValue for Crawler services.
-                // There is no need to backup the vanilla value of the registry, since the service will be completely re-created in case of Undo
-                Invoker.AddAction(new SetRegistryValueAction(logger, new RegistryValue { Key = string.Format(RegWindowsServicesRegistryPathPattern, service.Name), ValueName = RegistryValueName.DependOnService, Value = string.Empty }));
-            }
         }
 
         /// <summary>

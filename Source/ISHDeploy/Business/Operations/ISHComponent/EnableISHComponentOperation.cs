@@ -27,8 +27,6 @@ using ISHDeploy.Data.Actions.ISHProject;
 using ISHDeploy.Data.Actions.WindowsServices;
 using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
-using ISHDeploy.Data.Actions.Registry;
-using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Business.Operations.ISHComponent
 {
@@ -57,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
-               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToArray();
+               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
 
             InitializeActions(logger, ishDeployment, components);
         }
@@ -72,7 +70,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Enabling of components");
-            InitializeActions(logger, ishDeployment, components);
+            InitializeActions(logger, ishDeployment, components.ToList());
         }
 
         /// <summary>
@@ -140,9 +138,25 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="components">List with the components to be enabled.</param>
-        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components)
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment, List<Models.ISHComponent> components)
         {
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+
+            if (components.Any(x => x.Name == ISHComponentName.Crawler)  && !components.Any(x => x.Name == ISHComponentName.SolrLucene))
+            {
+                var dependencies = serviceManager.GetDependencies(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+                if (dependencies.Count() > 0)
+                {
+                    // Check if SolrLucene is already enabled, otherwise add SolrLucene to the components to enable
+                    var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+                    var solrLuceneComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.SolrLucene).ToArray();
+                    if (!solrLuceneComponents.Any(y => y.IsEnabled))
+                    {
+                        components.AddRange(solrLuceneComponents);
+                    }
+                }
+            }
 
             foreach (var component in components)
             {
@@ -197,9 +211,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
                         foreach (var service in services)
                         {
-                            // Remove dependencies between Crawler and SolrLucene
-                            Invoker.AddAction(new RemoveWindowsServiceDependencyAction(Logger, service));
-
                             Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
                         }
                         break;

@@ -63,6 +63,11 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// SolrLuceneStopKey
         /// </summary>
-        SolrLuceneStopKey
+        SolrLuceneStopKey,
+
+        /// <summary>
+        /// DelayedAutostart
+        /// </summary>
+        DelayedAutostart
     }
 }

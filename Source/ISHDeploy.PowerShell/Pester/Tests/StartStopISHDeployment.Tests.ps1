@@ -105,8 +105,9 @@ $scriptBlockGetCOMState = {
     )
 
     $result = @{}
-    $catalog = [ISHDeploy.Data.Managers.COMAdminCatalogWrapperSingleton]::Instance
-    $applications = $catalog.GetApplications()
+    $comAdminCatalog = New-Object -com ("COMAdmin.COMAdminCatalog.1")
+    $applications = $comAdminCatalog.getcollection("Applications") 
+    $applications.populate()
     $trisoftInfoShareAuthorApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-Author"
     $trisoftInfoShareAuthorISOApplication=$applications|Where-Object -Property Name -EQ "Trisoft-InfoShare-AuthorIso"
     $trisoftInfoShareUtilitiesApplication=$applications|Where-Object -Property Name -EQ "Trisoft-Utilities"
@@ -116,22 +117,14 @@ $scriptBlockGetCOMState = {
     $result["ISOApplicationIsEnabled"] = $trisoftInfoShareAuthorISOApplication.Value("IsEnabled")
     $result["UtilitiesApplicationIsEnabled"] = $trisoftInfoShareUtilitiesApplication.Value("IsEnabled")
     $result["TriDKApplicationIsEnabled"] = $trisoftInfoShareTriDKApplication.Value("IsEnabled")
-
-    $comAdminCatalog = New-Object -com ("COMAdmin.COMAdminCatalog.1")
-    $oapplications = $comAdminCatalog.getcollection("Applications") 
-    $oapplications.populate()
-    foreach ($oapplication in $oapplications){ 
-        if ($oapplication.Name.ToString() -Match "Trisoft-InfoShare-Author")
-        {        
-            $skeyappli = $oapplication.key 
-            $oappliInstances = $oapplications.getcollection("ApplicationInstances", $skeyappli) 
-            $oappliInstances.populate() 
-            If ($oappliInstances.count -eq 0) { 
-                $result["AuthorApplicationIsStarted"] = $false
-            } Else{ 
-                $result["AuthorApplicationIsStarted"] = $true
-            }
-        }
+         
+    $skeyappli = $trisoftInfoShareAuthorApplication.key 
+    $appliInstances = $applications.getcollection("ApplicationInstances", $skeyappli) 
+    $appliInstances.populate() 
+    If ($appliInstances.count -eq 0) { 
+        $result["AuthorApplicationIsStarted"] = $false
+    } Else{ 
+        $result["AuthorApplicationIsStarted"] = $true
     }
     return $result
 }
@@ -155,12 +148,11 @@ function GetComObjectState() {
     
     #get variables and nodes from files
 
-
-   $global:AuthorApplicationIsEnabled =$result["AuthorApplicationIsEnabled"]  
-   $global:ISOApplicationIsEnabled = $result["ISOApplicationIsEnabled"] 
-   $global:UtilitiesApplicationIsEnabled = $result["UtilitiesApplicationIsEnabled"]
-   $global:TriDKApplicationIsEnabled = $result["TriDKApplicationIsEnabled"]  
-   $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"] 
+    $global:AuthorApplicationIsEnabled =$result["AuthorApplicationIsEnabled"]  
+    $global:ISOApplicationIsEnabled = $result["ISOApplicationIsEnabled"] 
+    $global:UtilitiesApplicationIsEnabled = $result["UtilitiesApplicationIsEnabled"]
+    $global:TriDKApplicationIsEnabled = $result["TriDKApplicationIsEnabled"]  
+    $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"] 
    
 }
 

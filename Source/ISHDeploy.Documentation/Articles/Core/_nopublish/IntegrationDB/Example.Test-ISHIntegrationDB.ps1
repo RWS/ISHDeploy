@@ -1,1 +1,1 @@
-﻿Get-ISHIntegrationDB -ISHDeployment $deploymentName
+﻿Test-ISHIntegrationDB -ISHDeployment $deploymentName

@@ -2,14 +2,21 @@
 	$targetPC = $null,
 	$testingDeployment = "InfoShare",
     [Parameter(Mandatory=$true)]
-    $testDataFilePath,
+    $testDataFileUri,
 	$outputFile
 	)
 
-& "$PSScriptRoot\Helpers\Init-TestData.ps1" -dataFilePath $testDataFilePath
 
 $DebugPreference = "SilentlyContinue"
 $VerbosePreference = "SilentlyContinue"
+
+$client = New-Object System.Net.Webclient
+$uri = [System.Uri]$testDataFileUri
+$json = $client.DownloadString($uri.AbsoluteUri) 
+
+$jsonData = $json | ConvertFrom-Json;
+
+Set-Variable TestData -Value $jsonData -Scope Global -Force
 
 $session = $null
 if($targetPC){

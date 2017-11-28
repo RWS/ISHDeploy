@@ -15,9 +15,9 @@
  */
 
 using ISHDeploy.Common;
-using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
-﻿using ISHDeploy.Common.Interfaces.Actions;
+using ISHDeploy.Common.Interfaces.Actions;
+using ISHDeploy.Data.Managers.Interfaces;
 
 namespace ISHDeploy.Data.Actions.WebAdministration
 {
@@ -31,7 +31,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// The Application Pool name.
         /// </summary>
         private readonly string _appPoolName;
-        
+
         /// <summary>
         /// The web Administration manager
         /// </summary>
@@ -63,7 +63,7 @@ namespace ISHDeploy.Data.Actions.WebAdministration
         /// </summary>
         public void Backup()
         {
-            
+
         }
 
         /// <summary>

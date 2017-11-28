@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
@@ -85,6 +86,71 @@ namespace ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation
                     logger,
                     filePath,
                     worldServerConfiguration));
+            }
+            else
+            {
+                throw new DocumentAlreadyContainsElementException(exceptionMessage);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetISHIntegrationWorldServerOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="worldServerConfiguration">The world server configuration.</param>
+        /// <param name="isExternalJobMaxTotalUncompressedSizeBytesSpecified">Is ExternalJobMaxTotalUncompressedSizeBytes specified.</param>
+        /// <param name="isRetriesOnTimeoutSpecified">Is RetriesOnTimeout specified.</param>
+        /// <param name="httpTimeout">The HTTP timeout (Used for REST client only).</param>
+        /// <param name="exceptionMessage">The error message.</param>
+        public SetISHIntegrationWorldServerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, BaseXMLElement worldServerConfiguration, bool isExternalJobMaxTotalUncompressedSizeBytesSpecified, bool isRetriesOnTimeoutSpecified, TimeSpan httpTimeout, string exceptionMessage) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, "Setting configuration of WorldServer");
+
+            var filePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, worldServerConfiguration.RelativeFilePath);
+            var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
+
+            if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath) || !xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, TranslationOrganizerConfig.WorldServerNodeXPath))
+            {
+                if (xmlConfigManager.DoesSingleNodeExist(filePath.AbsolutePath, worldServerConfiguration.XPath)
+                    && (!isExternalJobMaxTotalUncompressedSizeBytesSpecified
+                        || !isRetriesOnTimeoutSpecified))
+                {
+                    if (!isExternalJobMaxTotalUncompressedSizeBytesSpecified)
+                    {
+                        int currentExternalJobMaxTotalUncompressedSizeBytes =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.externalJobMaxTotalUncompressedSizeBytes}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).ExternalJobMaxTotalUncompressedSizeBytes =
+                            currentExternalJobMaxTotalUncompressedSizeBytes;
+                    }
+
+                    if (!isRetriesOnTimeoutSpecified)
+                    {
+                        int currentRetriesOnTimeout =
+                            int.Parse(xmlConfigManager.GetValue(filePath.AbsolutePath,
+                                $"{worldServerConfiguration.XPath}/@{WorldServerConfigurationSetting.retriesOnTimeout}"));
+
+                        ((WorldServerConfigurationSection)worldServerConfiguration).RetriesOnTimeout =
+                            currentRetriesOnTimeout;
+                    }
+                }
+
+                Invoker.AddAction(new SetElementAction(
+                   logger,
+                   filePath,
+                   worldServerConfiguration,
+                   true,
+                   exceptionMessage));
+
+                Invoker.AddAction(
+                        new SetAttributeValueAction(Logger,
+                        filePath,
+                        $"{worldServerConfiguration.XPath}/@httpTimeout",
+                        httpTimeout.ToString(@"hh\:mm\:ss\.fff"),
+                        true));
             }
             else
             {

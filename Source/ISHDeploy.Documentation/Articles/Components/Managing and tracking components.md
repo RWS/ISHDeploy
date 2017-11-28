@@ -316,14 +316,14 @@ CopyCodeBlock(_nopublish\BackgroundTask\Example.Disable-ISHServiceBackgroundTask
 
 The module offers the following cmdlets to add and remove a new custom BackgroundTask component.
 
-- `Add-ISHServiceBackgroundTask`
+- `Set-ISHServiceBackgroundTask`
 - `Remove-ISHServiceBackgroundTask`
 
-Once a new custom BackgroundTask component is registered, the above cmdlets apply by explicitly specifying the `-Role` parameter
+In this context, `Set-ISHServiceBackgroundTask` is used to register a new service for a custom role. Once a new custom BackgroundTask component is registered, the above cmdlets apply by explicitly specifying the `-Role` parameter.
 
 Here is an example:
 
-CopyCodeBlock(_nopublish\BackgroundTask\Example.Add-ISHServiceBackgroundTask.ps1)
+CopyCodeBlock(_nopublish\BackgroundTask\Example.Set-ISHServiceBackgroundTask.ps1)
 
 ```text
 Name                                            Status           Type Sequence Role   

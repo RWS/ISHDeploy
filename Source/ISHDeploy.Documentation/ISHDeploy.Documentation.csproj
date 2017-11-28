@@ -60,7 +60,7 @@
   <ItemGroup>
     <None Include="Articles\Components\Managing and tracking components.md" />
     <None Include="Articles\Components\Scaling the components.md" />
-    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Add-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Set-ISHServiceBackgroundTask.ps1" />
     <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Disable-ISHServiceBackgroundTask.ps1" />
     <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Enable-ISHServiceBackgroundTask.ps1" />
     <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Get-ISHServiceBackgroundTask.ps1" />
@@ -90,7 +90,7 @@
     <None Include="Articles\Components\_nopublish\Web\Example.Disable-ISHIISAppPool.ps1" />
     <None Include="Articles\Components\_nopublish\Web\Example.Enable-ISHIISAppPool.ps1" />
     <None Include="Articles\Components\_nopublish\Web\Example.Get-ISHIISAppPool.ps1" />
-    <None Include="Articles\Core\Configuring and maintaining the search capability.md" />
+    <None Include="Articles\Core\Configuring and maintaining search.md" />
     <None Include="Articles\Core\Configuring credentials.md" />
     <None Include="Articles\Core\Integrating with a database.md" />
     <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHActor.ps1" />

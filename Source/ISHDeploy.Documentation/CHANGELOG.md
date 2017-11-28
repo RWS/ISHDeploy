@@ -4,13 +4,16 @@
 
 This release is focused on adding cmdlet that help configure core aspects of a deployment.
 
+1. General 
+    1. Cmdlets
+		- `Get-ISHDeploymentParameters` . **[Update]**
 1. Integration Database
 	1. Cmdlets
 		- `Get-ISHIntegrationDB`. **[New]**
 		- `Set-ISHIntegrationDB`. **[New]**
 		- `Test-ISHIntegrationDB`. **[New]**
     1. Tutorials
-		- Within **new** section **Work with core deployment configuration** in tutorials: **[New]**
+		- Within **new** section **Work with core deployment configuration** in tutorials:
 		  - **Integrating with a database**. **[New]**
 1. Credentials
 	1. Cmdlets
@@ -42,15 +45,17 @@ This release is focused on adding cmdlet that help configure core aspects of a d
 		- `Enable-ISHServiceBackgroundTask`. **[New]**
 		- `Disable-ISHServiceBackgroundTask`. **[New]**
 		- `Set-ISHServiceBackgroundTask`. **[New]**
-		- `Add-ISHServiceBackgroundTask`. **[New]**
+		- `Set-ISHServiceBackgroundTask`. **[New]**
 		- `Remove-ISHServiceBackgroundTask`. **[New]**
+		- `Set-ISHIntegrationFullTextIndex`. **[New]** 
+		- `Invoke-ISHMaintenance`. **[New]**
     1. Tutorials
 		- Within **new** section **Manage components** in tutorials:
 		  - **Managing and tracking components**. **[New]**
 		  - **Scaling the components**. **[New]**
-		- Within **new** section **Manage components** in tutorials:
-		  - **Scaling the services**. **[Deleted]**
-1. Credentials
+		- Within **new** section **Work with core deployment configuration** in tutorials:
+		  - **Configuring and maintaining search**. **[New]**
+1. State management
 	1. Cmdlets
 		- `Start-ISHDeployment`. **[New]**
 		- `Stop-ISHDeployment`. **[New]**
@@ -58,12 +63,6 @@ This release is focused on adding cmdlet that help configure core aspects of a d
     1. Tutorials
 		- Within **new** section **Manage state** in tutorials:
 		  - **Starting and stopping**. **[New]**
-1. Maintenance
-	1. Cmdlets
-		- `Invoke-ISHMaintenance`. **[New]**
-    1. Tutorials
-		- Within section **Work with core deployment configuration** in tutorials:
-		  - **Configuring and maintaining the search capability**. **[New]**
 1. ISHSTS
     1. Cmdlets
 		- `Set-ISHSTSConfiguration` will not create and initialize the database of ISHSTS when not available. **[Update]**

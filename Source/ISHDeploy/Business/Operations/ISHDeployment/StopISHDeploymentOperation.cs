@@ -45,13 +45,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public StopISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            ishDeployment.Status = ISHDeploymentStatus.Stopped;
+            ishDeployment.Status = ISHDeploymentStatus.Stopping;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
                 dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
 
-            IOperation operation = new StopISHComponentOperation(logger, ishDeployment, components);
+            IOperation operation = new DisableISHComponentOperation(logger, ishDeployment, components);
             Invoker = new ActionInvoker(Logger, "Stopping of enabled components", operation.Invoker.GetActions());
 
             Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Stopped));

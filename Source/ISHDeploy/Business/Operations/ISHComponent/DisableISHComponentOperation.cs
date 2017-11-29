@@ -159,11 +159,11 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             // Stop components
             var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
-
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
             foreach (var component in components)
             {
+                // Disable component
                 IEnumerable<Models.ISHWindowsService> services;
                 switch (component.Name)
                 {
@@ -242,23 +242,27 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         break;
                 }
 
-                if (component.Name == ISHComponentName.BackgroundTask)
+                if (ishDeployment.Status != ISHDeploymentStatus.Starting && ishDeployment.Status != ISHDeploymentStatus.Stopping)
                 {
-                    Invoker.AddAction(
-                        new SaveISHComponentAction(
-                            Logger,
-                            CurrentISHComponentStatesFilePath,
-                            component.Role,
-                            false));
-                }
-                else
-                {
-                    Invoker.AddAction(
-                        new SaveISHComponentAction(
-                            Logger,
-                            CurrentISHComponentStatesFilePath,
-                            component.Name,
-                            false));
+                    // [SCTCM-302] Don't change the 'IsEnabled' flag while the deployment is in the process of stopping (or starting)
+                    if (component.Name == ISHComponentName.BackgroundTask)
+                    {
+                        Invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                component.Role,
+                                false));
+                    }
+                    else
+                    {
+                        Invoker.AddAction(
+                            new SaveISHComponentAction(
+                                Logger,
+                                CurrentISHComponentStatesFilePath,
+                                component.Name,
+                                false));
+                    }
                 }
             }
         }

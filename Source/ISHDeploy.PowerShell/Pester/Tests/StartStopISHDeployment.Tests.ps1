@@ -129,7 +129,6 @@ $scriptBlockGetCOMState = {
     return $result
 }
 
-
 $scriptBlockDisableISHIISAppPool = {
     param (
         $ishDeployName
@@ -140,20 +139,6 @@ $scriptBlockDisableISHIISAppPool = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Disable-ISHIISAppPool -ISHDeployment $ishDeploy
-}
-function GetComObjectState() {
-
-    #read all files that are touched with commandlet
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCOMState -Session $session -ArgumentList $filePath
-    
-    #get variables and nodes from files
-
-    $global:AuthorApplicationIsEnabled =$result["AuthorApplicationIsEnabled"]  
-    $global:ISOApplicationIsEnabled = $result["ISOApplicationIsEnabled"] 
-    $global:UtilitiesApplicationIsEnabled = $result["UtilitiesApplicationIsEnabled"]
-    $global:TriDKApplicationIsEnabled = $result["TriDKApplicationIsEnabled"]  
-    $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"] 
-   
 }
 
 $scriptBlockGetAppPoolState = {
@@ -190,6 +175,103 @@ $scriptBlockGetAppPoolState = {
         }
     return $result
 }
+
+$scriptBlockEnableISHServiceTranslationBuilder = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Enable-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
+}
+
+$scriptBlockDisableISHServiceTranslationBuilder = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Disable-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
+}
+
+#endregion
+
+#region Assist Functions
+
+function GetComObjectState() {
+
+    #read all files that are touched with commandlet
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetCOMState -Session $session -ArgumentList $filePath
+    
+    #get variables and nodes from files
+
+    $global:AuthorApplicationIsEnabled =$result["AuthorApplicationIsEnabled"]  
+    $global:ISOApplicationIsEnabled = $result["ISOApplicationIsEnabled"] 
+    $global:UtilitiesApplicationIsEnabled = $result["UtilitiesApplicationIsEnabled"]
+    $global:TriDKApplicationIsEnabled = $result["TriDKApplicationIsEnabled"]  
+    $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"]   
+}
+
+
+function CheckStoppedVanillaDeployment() {
+    $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+    $checkDeployment.Status | Should be "Stopped" 
+
+    GetComObjectState
+    $AuthorApplicationIsEnabled | Should be False  
+    $ISOApplicationIsEnabled | Should be False 
+    $UtilitiesApplicationIsEnabled | Should be False 
+    $TriDKApplicationIsEnabled | Should be False
+    $AuthorApplicationIsStarted | Should be False     
+
+    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+    $pools.Count | Should be 0   
+     
+    $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+    ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+}
+
+function CheckStartedVanillaDeployment() {
+    $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+    $checkDeployment.Status | Should be "Started" 
+
+    GetComObjectState
+    $AuthorApplicationIsEnabled | Should be True  
+    $ISOApplicationIsEnabled | Should be True 
+    $UtilitiesApplicationIsEnabled | Should be True 
+    $TriDKApplicationIsEnabled | Should be True
+    $AuthorApplicationIsStarted | Should be True     
+
+    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+    #$pools.Count | Should be 3   
+     
+    $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+    ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"
+}
 #endregion
 
 
@@ -203,100 +285,48 @@ Describe "Testing Start and Stop ISH Deployment"{
 
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-        #Assert
-        
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be False
 
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 0    
-        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-        $checkDeployment.Status | Should be "Stopped"    
+        #Assert
+        CheckStoppedVanillaDeployment
     }
     
     It "Start of stopped ISHDeployment should start deployment"{
 
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName        
+
         #Assert
-        
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be False
-
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be True
-
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 3
-        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-        $checkDeployment.Status | Should be "Started"
+        CheckStartedVanillaDeployment
     }
 
     It "Restart of stopped ISHDeployment should start deployment"{
          #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-        #Assert
-        
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be False
-        
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRestartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-        #Assert
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be True
 
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 3
+        #Assert
+        CheckStoppedVanillaDeployment
+        
+         #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRestartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        #Assert
+        CheckStartedVanillaDeployment
     }
 
     It "Start ISHDeployment on already started deployment"{
 
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
         #Assert
-        
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be True
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 3
+        CheckStartedVanillaDeployment
+
+        #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
 
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be True
-
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 3
-
+        #Assert
+        CheckStartedVanillaDeployment
     }
 
 	It "Start ISHDeployment should not start disabled components"{
@@ -304,45 +334,116 @@ Describe "Testing Start and Stop ISH Deployment"{
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
 
+        #Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+
+        GetComObjectState
+        $AuthorApplicationIsEnabled | Should be False  
+        $ISOApplicationIsEnabled | Should be False 
+        $UtilitiesApplicationIsEnabled | Should be False 
+        $TriDKApplicationIsEnabled | Should be False
+        $AuthorApplicationIsStarted | Should be False     
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0   
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        
+        #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        #Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+
+        GetComObjectState
+        $AuthorApplicationIsEnabled | Should be False  
+        $ISOApplicationIsEnabled | Should be False 
+        $UtilitiesApplicationIsEnabled | Should be False 
+        $TriDKApplicationIsEnabled | Should be False
+        $AuthorApplicationIsStarted | Should be False     
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0   
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+    }
+
+	It "Enabling components on stopped deployment should not start components"{
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+		$checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped"
+
+        GetComObjectState
+        $AuthorApplicationIsEnabled | Should be False  
+        $ISOApplicationIsEnabled | Should be False 
+        $UtilitiesApplicationIsEnabled | Should be False 
+        $TriDKApplicationIsEnabled | Should be False
+        $AuthorApplicationIsStarted | Should be False     
+
+        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools.Count | Should be 0   
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
+
         #Assert
         GetComObjectState
         $AuthorApplicationIsEnabled | Should be False  
         $ISOApplicationIsEnabled | Should be False 
         $UtilitiesApplicationIsEnabled | Should be False 
         $TriDKApplicationIsEnabled | Should be False
-        $AuthorApplicationIsStarted | Should be False
+        $AuthorApplicationIsStarted | Should be False     
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 0  
-    }
-
-	It "Enabling components on stopped deployment should not start components"{
-         #Act
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
-
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
-        GetComObjectState
-        $AuthorApplicationIsEnabled | Should be False  
-        $ISOApplicationIsEnabled | Should be False 
-        $UtilitiesApplicationIsEnabled | Should be False 
-        $TriDKApplicationIsEnabled | Should be False 
-        $AuthorApplicationIsStarted | Should be False
-
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-        $pools.Count | Should be 0      
-		$checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
-        $checkDeployment.Status | Should be "Stopped"
-		#Assert
-		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
-		GetComObjectState
-        $AuthorApplicationIsEnabled | Should be True  
-        $ISOApplicationIsEnabled | Should be True 
-        $UtilitiesApplicationIsEnabled | Should be True 
-        $TriDKApplicationIsEnabled | Should be True
-        $AuthorApplicationIsStarted | Should be False
+        $pools.Count | Should be 0   
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
     }
 
     UndoDeploymentBackToVanila $testingDeploymentName

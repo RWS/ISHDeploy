@@ -33,19 +33,6 @@ $scriptBlockDisableISHCOMPlus = {
     Disable-ISHCOMPlus -ISHDeployment $ishDeployName
 }
 
-$scriptBlockGetISHComponent = {
-    param (
-        $ishDeployName
-
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-
-    Get-ISHComponent -ISHDeployment $ishDeployName
-}
-
 $scriptBlockGetCOMState = {
     param (
         $testingDeployment

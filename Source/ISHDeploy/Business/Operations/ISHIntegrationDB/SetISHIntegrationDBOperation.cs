@@ -24,6 +24,7 @@ using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
 using ISHDeploy.Data.Managers.Interfaces;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
@@ -60,17 +61,29 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, databaseType.ToString()));
 
+            Func<ISHDeploy.Common.Models.ISHComponent, bool> enabledAndDependOnConnectionString = x =>
+            {
+                return x.IsEnabled && (
+                    x.Name == ISHComponentName.CM ||
+                    x.Name == ISHComponentName.WS ||
+                    x.Name == ISHComponentName.STS ||
+                    x.Name == ISHComponentName.COMPlus ||
+                    x.Name == ISHComponentName.BackgroundTask ||
+                    x.Name == ISHComponentName.Crawler ||
+                    x.Name == ISHComponentName.TranslationBuilder);
+            };
+
             // Stop all components
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var componentsNeedToBeStopped = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name)
-                .Components.Where(x => x.IsEnabled && x.Name != ISHComponentName.SolrLucene).ToArray();
+                .Components.Where(enabledAndDependOnConnectionString).ToArray();
 
             IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
             // Start all components that should be started
             var componentsThatShouldBeStarted = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath)
-                .Components.Where(x => x.IsEnabled && x.Name != ISHComponentName.SolrLucene).ToArray();
+                .Components.Where(enabledAndDependOnConnectionString).ToArray();
 
             IOperation operation = new StartISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
             Invoker.AddActionsRange(operation.Invoker.GetActions());

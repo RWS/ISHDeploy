@@ -133,7 +133,6 @@ namespace ISHDeploy.Data.Managers
             }
             catch (Exception ex)
             {
-                _logger.WriteError(ex);
                 throw;
             }
         }

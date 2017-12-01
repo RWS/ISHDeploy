@@ -103,6 +103,7 @@ Describe "Testing ISHCOMPlus"{
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
 
         GetComObjectState
         $AuthorApplication | Should be False  
@@ -119,12 +120,14 @@ Describe "Testing ISHCOMPlus"{
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
         
 
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($comp | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
 
         GetComObjectState
         $AuthorApplication | Should be True  

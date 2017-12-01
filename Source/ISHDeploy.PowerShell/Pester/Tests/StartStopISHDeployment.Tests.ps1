@@ -292,7 +292,7 @@ function CheckStartedVanillaDeployment() {
     $AuthorApplicationIsStarted | Should be True     
 
     $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
-    #$pools.Count | Should be 3   
+    $pools.Count | Should be 3   
      
     $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
     ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"

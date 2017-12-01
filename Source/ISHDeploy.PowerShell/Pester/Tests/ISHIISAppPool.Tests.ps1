@@ -139,15 +139,21 @@ Describe "Testing ISHIISAppPool"{
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
         
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($comp | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
 
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0
@@ -160,8 +166,11 @@ Describe "Testing ISHIISAppPool"{
          #Assert
         $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($comp | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
         ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($comp | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
         ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($comp | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
         
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 3

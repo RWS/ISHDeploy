@@ -281,18 +281,23 @@ namespace ISHDeploy.Data.Managers
                 {
                     if (string.IsNullOrEmpty(role))
                     {
-                        throw new ArgumentException("Role cann't be null or empty string");
+                        throw new ArgumentException("Role can't be null or empty string");
                     }
 
-                    if (!newServiceName.ToLower().Contains(role.ToLower()) && !string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                    // At this moment, the newServiceName contains something like Trisoft InfoShareXXX BackgroundTask RoleZZ Two
+                    var serviceTypeIndex = newServiceName.IndexOf(service.Type.ToString());  // service.Type.ToString() in this case would be "BackgroundTask"
+                    if (serviceTypeIndex > -1)
                     {
-                        newServiceName = newServiceName.Replace(service.Type.ToString(),
-                            $"{service.Type} {role}");
-                    }
-
-                    if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        newServiceName = newServiceName.Replace($"{service.Type} {((ISHBackgroundTaskWindowsService)service).Role}", service.Type.ToString());
+                        string namePrefix = newServiceName.Substring(0, serviceTypeIndex + service.Type.ToString().Length);
+                        // The namePrefix now contains something like Trisoft InfoShareXXX BackgroundTask
+                        if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            newServiceName = namePrefix + " " + ((ISHWindowsServiceSequence)sequence).ToString();
+                        }
+                        else
+                        {
+                            newServiceName = namePrefix + " " + role.ToString() + " " + ((ISHWindowsServiceSequence)sequence).ToString();
+                        }
                     }
 
                     pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);

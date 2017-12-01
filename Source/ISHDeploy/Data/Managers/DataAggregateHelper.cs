@@ -146,24 +146,14 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// Return actual state of components
         /// </summary>
+        /// <param name="filePath">The path to file with saved states of all components of deployment.</param>
         /// <param name="deploymentName">The Content Manager deployment name.</param>
         /// <returns>The collection of components for specified deployment with their actual state</returns>
-        public ISHComponentsCollection GetActualStateOfComponents(string deploymentName)
+        public ISHComponentsCollection GetActualStateOfComponents(string filePath, string deploymentName)
         {
             _logger.WriteDebug("Get components and their states", deploymentName);
-            var components = new ISHComponentsCollection(true);
+            var components = GetExpectedStateOfComponents(filePath);
             var backgroundTaskServices = _windowsServiceManager.GetISHBackgroundTaskWindowsServices(deploymentName);
-            foreach (var backgroundTaskService in backgroundTaskServices)
-            {
-                if (!components.Components.Any(x => string.Equals(x.Role, backgroundTaskService.Role, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    components.Components.Add(new ISHComponent { Name = ISHComponentName.BackgroundTask, Role = backgroundTaskService.Role });
-                }
-            }
-            components.Components.RemoveAll(
-                x => x.Name == ISHComponentName.BackgroundTask &&
-                    !backgroundTaskServices.Any(
-                        bt => string.Equals(bt.Role, x.Role, StringComparison.CurrentCultureIgnoreCase)));
 
             var inputParameters = GetInputParameters(deploymentName);
             var serviceName = string.Empty;
@@ -172,36 +162,36 @@ namespace ISHDeploy.Data.Managers
                 switch (component.Name)
                 {
                     case ISHComponentName.CM:
-                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName);
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName);
                         break;
                     case ISHComponentName.WS:
-                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName);
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName);
                         break;
                     case ISHComponentName.STS:
-                        component.IsEnabled = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName);
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName);
                         break;
                     case ISHComponentName.COMPlus:
-                        component.IsEnabled = _comPlusComponentManager.IsCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
+                        component.IsRunning = _comPlusComponentManager.IsCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
                         break;
                     case ISHComponentName.TranslationOrganizer:
                         serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationOrganizer).First().Name;
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.TranslationBuilder:
                         serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationBuilder).First().Name;
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.Crawler:
                         serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.Crawler).First().Name;
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.BackgroundTask:
                         serviceName = backgroundTaskServices.First(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)).Name;
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                     case ISHComponentName.SolrLucene:
                         serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.SolrLucene).Single().Name;
-                        component.IsEnabled = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
                         break;
                 }
             }

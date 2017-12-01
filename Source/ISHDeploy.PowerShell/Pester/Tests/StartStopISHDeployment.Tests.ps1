@@ -176,6 +176,19 @@ $scriptBlockGetAppPoolState = {
     return $result
 }
 
+$scriptBlockGetISHServiceTranslationBuilder = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Get-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
+}
+
 $scriptBlockEnableISHServiceTranslationBuilder = {
     param (
         $ishDeployName
@@ -202,6 +215,18 @@ $scriptBlockDisableISHServiceTranslationBuilder = {
     Disable-ISHServiceTranslationBuilder -ISHDeployment $ishDeployName
 }
 
+$scriptBlockGetTranslationBuilderServiceState = {
+    param (
+        $testingDeployment
+    )
+
+    $result = @{}
+    $service = Get-WmiObject Win32_Service -filter "name like 'Trisoft InfoShare%TranslationBuilder One'"
+    $result["StartupType"] = $service.StartMode
+    $result["Status"] = $service.State
+    return $result
+}
+
 #endregion
 
 #region Assist Functions
@@ -220,7 +245,6 @@ function GetComObjectState() {
     $global:AuthorApplicationIsStarted = $result["AuthorApplicationIsStarted"]   
 }
 
-
 function CheckStoppedVanillaDeployment() {
     $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
     $checkDeployment.Status | Should be "Stopped" 
@@ -237,14 +261,23 @@ function CheckStoppedVanillaDeployment() {
      
     $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
     ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
 }
 
 function CheckStartedVanillaDeployment() {
@@ -263,14 +296,23 @@ function CheckStartedVanillaDeployment() {
      
     $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
     ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
     ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
     ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
     ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+    ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
     ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
     ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
-    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+    ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
 }
 #endregion
 
@@ -350,14 +392,23 @@ Describe "Testing Start and Stop ISH Deployment"{
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
         
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
@@ -378,14 +429,23 @@ Describe "Testing Start and Stop ISH Deployment"{
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
     }
 
 	It "Enabling components on stopped deployment should not start components"{
@@ -411,14 +471,23 @@ Describe "Testing Start and Stop ISH Deployment"{
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
 
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
@@ -436,14 +505,409 @@ Describe "Testing Start and Stop ISH Deployment"{
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
         ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False" 
+    }
+
+    It "Enable TranslationBuilder on started deployment"{
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Running"
+
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Auto"
+        $serviceState["Status"] | Should be "Running"
+    }
+
+    It "Enable TranslationBuilder on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+        
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+    }
+
+    It "Disable TranslationBuilder after enabling on started deployment"{
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Running"
+
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Auto"
+        $serviceState["Status"] | Should be "Running"
+
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+    }
+
+    It "Disable TranslationBuilder after enabling on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+        
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+                
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+        
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+    }
+  
+    It "Stop deployment after enabling TranslationBuilder on started deployment"{
+        #Act
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Running"
+
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Auto"
+        $serviceState["Status"] | Should be "Running"
+
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+    }
+
+    It "Start deployment after enabling TranslationBuilder on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Stopped" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Stopped"
+        
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Manual"
+        $serviceState["Status"] | Should be "Stopped"
+
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
+        $checkDeployment.Status | Should be "Started" 
+     
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        ($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+        ($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+        ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
+
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
+        if ($services.GetType().BaseType.Name -ne "Object"){
+            $services.Count | Should be 1
+        }
+        $services[0].Status | Should be "Running"
+        
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState["StartupType"] | Should be "Auto"
+        $serviceState["Status"] | Should be "Running"
+
     }
 
     UndoDeploymentBackToVanila $testingDeploymentName

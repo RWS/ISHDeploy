@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
-               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
+               dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
 
             InitializeActions(logger, ishDeployment, components);
         }
@@ -118,20 +118,23 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
             }
 
-            Invoker.AddAction(
-                new SaveISHComponentAction(
-                    Logger,
-                    CurrentISHComponentStatesFilePath,
-                    component.Role,
-                    true));
-
+            bool isRunning = false;
             if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
             {
                 // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
                 var startOperation = new StartISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
 
                 Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+                isRunning = true;
             }
+
+            Invoker.AddAction(
+                new SaveISHComponentAction(
+                    Logger,
+                    CurrentISHComponentStatesFilePath,
+                    component.Role,
+                    true, 
+                    isRunning));
         }
 
         /// <summary>
@@ -161,7 +164,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     // Check if SolrLucene is already enabled, otherwise add SolrLucene to the components to enable
                     var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-                    var solrLuceneComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.SolrLucene).ToArray();
+                    var solrLuceneComponents = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.Name == ISHComponentName.SolrLucene).ToArray();
                     if (!solrLuceneComponents.Any(y => y.IsEnabled))
                     {
                         components.AddRange(solrLuceneComponents);
@@ -256,35 +259,37 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     Logger.WriteWarning($"The component '{component.Name}' will only be marked as enabled. The component '{component.Name}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
                 }
 
-                if (!component.IsEnabled)
+                bool isRunning = false;
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
                 {
-                    // [SCTCM-302] The component was already marked as enabled
+                    isRunning = true;
+                }
 
-                    if (component.Name == ISHComponentName.BackgroundTask)
-                    {
-                        Invoker.AddAction(
-                            new SaveISHComponentAction(
-                                Logger,
-                                CurrentISHComponentStatesFilePath,
-                                component.Role,
-                                true));
-                    }
-                    else
-                    {
-                        Invoker.AddAction(
-                            new SaveISHComponentAction(
-                                Logger,
-                                CurrentISHComponentStatesFilePath,
-                                component.Name,
-                                true));
-                    }
+                if (component.Name == ISHComponentName.BackgroundTask)
+                {
+                    Invoker.AddAction(
+                        new SaveISHComponentAction(
+                            Logger,
+                            CurrentISHComponentStatesFilePath,
+                            component.Role,
+                            true,
+                            isRunning));
+                }
+                else
+                {
+                    Invoker.AddAction(
+                        new SaveISHComponentAction(
+                            Logger,
+                            CurrentISHComponentStatesFilePath,
+                            component.Name,
+                            true,
+                            isRunning));
                 }
             }
 
             if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
             {
                 // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
-
                 var startOperation = new StartISHComponentOperation(logger, ishDeployment, components);
                 Invoker.AddActionsRange(startOperation.Invoker.GetActions());
             }

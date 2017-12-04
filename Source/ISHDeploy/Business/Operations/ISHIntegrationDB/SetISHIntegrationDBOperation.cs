@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Linq;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
+using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.Backup;
 using ISHDeploy.Data.Actions.Registry;
 using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
+using ISHDeploy.Data.Managers.Interfaces;
+using System;
 
 namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 {
@@ -42,7 +47,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
         /// <param name="connectionString">Connection string to check.</param>
         /// <param name="databaseType">The type of Database.</param>
         public SetISHIntegrationDBOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string connectionString, DatabaseType databaseType)
-             :base(logger, ishDeployment)
+             : base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, $"Set connection to database with {connectionString} connection string.");
 
@@ -56,10 +61,32 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ConnectionStringXPath, connectionString));
             Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.DatabaseTypeXPath, databaseType.ToString()));
 
-            // restart services
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.WSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.CMAppPoolName, true));
+            Func<ISHDeploy.Common.Models.ISHComponent, bool> enabledAndDependOnConnectionString = x =>
+            {
+                return x.IsEnabled && (
+                    x.Name == ISHComponentName.CM ||
+                    x.Name == ISHComponentName.WS ||
+                    x.Name == ISHComponentName.STS ||
+                    x.Name == ISHComponentName.COMPlus ||
+                    x.Name == ISHComponentName.BackgroundTask ||
+                    x.Name == ISHComponentName.Crawler ||
+                    x.Name == ISHComponentName.TranslationBuilder);
+            };
+
+            // Stop all components
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var componentsNeedToBeStopped = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name)
+                .Components.Where(enabledAndDependOnConnectionString).ToArray();
+
+            IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
+            Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
+
+            // Start all components that should be started
+            var componentsThatShouldBeStarted = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath)
+                .Components.Where(enabledAndDependOnConnectionString).ToArray();
+
+            IOperation operation = new StartISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
+            Invoker.AddActionsRange(operation.Invoker.GetActions());
         }
 
         /// <summary>

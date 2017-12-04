@@ -110,8 +110,7 @@ function Get-ConnectionString
 
 
 Describe "Testing ISHIntegrationDB"{
-    BeforeEach {
-        
+    BeforeEach {        
         UndoDeploymentBackToVanila $testingDeploymentName $true
     }
 
@@ -139,7 +138,6 @@ Describe "Testing ISHIntegrationDB"{
         
         $connectionStringAuthorFromRegistry| Should be $stringFromCommandlet.RawConnectionString
         $connectionStringBuilderFromRegistry| Should be $stringFromCommandlet.RawConnectionString
-
     }
 
     It "Set ISHIntegrationDBn don't throw error on Oracle"{       
@@ -174,5 +172,24 @@ Describe "Testing ISHIntegrationDB"{
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         $history.Contains('Set-ISHIntegrationDB -ISHDeployment $deploymentName') | Should be "True"     
     }
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+
+    It "Set ISHIntegrationDB restarts of web application pools"{       
+        # Get web application pool start times
+        $appPoolStartTimes1 = Get-AppPoolStartTime
+        
+        #Act
+        
+        $params = @{ConnectionString = $testConnectionString; Engine = $testDBType; Raw=$true}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationDB -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        # Get web application pool start times
+        $appPoolStartTimes2 = Get-AppPoolStartTime
+        
+        (get-date $appPoolStartTimes1["cm"]) -gt (get-date $appPoolStartTimes2["cm"])  | Should Be $false
+        (get-date $appPoolStartTimes1["ws"]) -gt (get-date $appPoolStartTimes2["ws"])  | Should Be $false
+        (get-date $appPoolStartTimes1["sts"]) -gt (get-date $appPoolStartTimes2["sts"])  | Should Be $false
+    }
+
+    UndoDeploymentBackToVanila $testingDeploymentName $true
 }

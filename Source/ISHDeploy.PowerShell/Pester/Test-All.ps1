@@ -29,17 +29,26 @@ $result = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDep
 
 #Switch $ENV:PublishPackageToTest variable to prevent publishing on Nexus
 if ($result.FailedCount -ne 0) {
-    Write-Host ""
-    Write-Host "------------------------------------------------------------------------------------------------"
-    Write-HOST "No Publishing to Nexus will be made because some tests failed"
-	Write-Host "------------------------------------------------------------------------------------------------"
-	Write-Host ""
-	if ($session) {
-		Remove-PSSession $session
-	}
-    throw "Test errors $result.FailedCount detected"
-}
+    
+    $testsToRerun = $result.TestResult | where {$_.Result -eq “Failed” } | select -ExpandProperty "Describe" | Get-Unique
 
+    $testsToRerun | Foreach {
+        $retestedResult = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -PassThru -TestName $_
+        if ($retestedResult.FailedCount -ne 0) {
+
+            Write-Host ""
+            Write-Host "------------------------------------------------------------------------------------------------"
+            Write-HOST "No Publishing to Nexus will be made because some tests failed"
+	        Write-Host "------------------------------------------------------------------------------------------------"
+	        Write-Host ""
+	        if ($session) {
+		        Remove-PSSession $session
+	        }
+
+            throw "Test errors $result.FailedCount detected"
+        }
+     }
+}
 
 if ($session) {
     Remove-PSSession $session

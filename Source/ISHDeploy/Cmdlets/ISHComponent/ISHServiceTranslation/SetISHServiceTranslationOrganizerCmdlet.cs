@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using System.ServiceModel.Security;
 using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation;
@@ -62,7 +61,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
     /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHServiceTranslationOrganizer")]
-    public sealed class SetISHServiceTranslationOrganizerCmdlet : BaseHistoryEntryCmdlet
+    public sealed class SetISHServiceTranslationOrganizerCmdlet : BasePSCredentialCmdlet
     {
         /// <summary>
         /// <para type="description">The path to dump folder.</para>
@@ -179,7 +178,10 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The credential to get access to ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
-        public PSCredential Credential { get; set; }
+        public override PSCredential Credential
+        {
+            set { base.Credential = value; }
+        }
 
         /// <summary>
         /// Executes cmdlet
@@ -273,8 +275,8 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
                     issuerEndpointUri,
                     MyInvocation.BoundParameters.ContainsKey("ISHWSCertificateValidationMode") ? ISHWSCertificateValidationMode.ToString() : null,
                     MyInvocation.BoundParameters.ContainsKey("ISHWSDnsIdentity") ? ISHWSDnsIdentity : null,
-                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Credential.UserName : null,
-                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)) : null);
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? CredentialUserName : null,
+                    IssuerBindingType == BindingType.UserNameMixed && MyInvocation.BoundParameters.ContainsKey("Credential") ? CredentialPassword : null);
 
 
                 operation.Run();

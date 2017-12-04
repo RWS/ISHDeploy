@@ -15,7 +15,6 @@
  */
 
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHCredentials;
 
 namespace ISHDeploy.Cmdlets.ISHCredentials
@@ -33,15 +32,8 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
     /// Parameter $credential is a set of security credentials, such as a user name and a password.
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHOSUser")]
-    public sealed class SetISHOSUserCmdlet : BaseHistoryEntryCmdlet
+    public sealed class SetISHOSUserCmdlet : BasePSCredentialCmdlet
     {
-        /// <summary>
-        /// <para type="description">The credential of OS user.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The credential of OS user")]
-        [ValidateNotNullOrEmpty]
-        public PSCredential Credential { get; set; }
-
         /// <summary>
         /// Executes cmdlet
         /// </summary>
@@ -50,8 +42,8 @@ namespace ISHDeploy.Cmdlets.ISHCredentials
             var operation = new SetISHOSUserOperation(
                 Logger,
                 ISHDeployment,
-                Credential.UserName,
-                Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)));
+                CredentialUserName,
+                CredentialPassword);
 
             operation.Run();
         }

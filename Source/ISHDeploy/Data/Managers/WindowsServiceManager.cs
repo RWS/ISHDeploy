@@ -285,19 +285,14 @@ namespace ISHDeploy.Data.Managers
                     }
 
                     // At this moment, the newServiceName contains something like Trisoft InfoShareXXX BackgroundTask RoleZZ Two
-                    var serviceTypeIndex = newServiceName.IndexOf(service.Type.ToString());  // service.Type.ToString() in this case would be "BackgroundTask"
+                    var serviceTypeIndex = newServiceName.IndexOf(service.Type.ToString(), StringComparison.Ordinal);  // service.Type.ToString() in this case would be "BackgroundTask"
                     if (serviceTypeIndex > -1)
                     {
                         string namePrefix = newServiceName.Substring(0, serviceTypeIndex + service.Type.ToString().Length);
                         // The namePrefix now contains something like Trisoft InfoShareXXX BackgroundTask
-                        if (string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            newServiceName = namePrefix + " " + ((ISHWindowsServiceSequence)sequence).ToString();
-                        }
-                        else
-                        {
-                            newServiceName = namePrefix + " " + role.ToString() + " " + ((ISHWindowsServiceSequence)sequence).ToString();
-                        }
+                        newServiceName = string.Equals(role, "default", StringComparison.CurrentCultureIgnoreCase) ? 
+                            $"{namePrefix} {((ISHWindowsServiceSequence)sequence)}" : 
+                            $"{namePrefix} {role} {((ISHWindowsServiceSequence)sequence)}";
                     }
 
                     pathToExecutable = pathToExecutable.Replace(service.Name, newServiceName);

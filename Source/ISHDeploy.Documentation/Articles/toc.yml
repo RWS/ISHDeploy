@@ -12,8 +12,8 @@
     href: ../obj/doc/articles/Core/Integrating with a database.md
   - name: Configuring credentials
     href: ../obj/doc/articles/Core/Configuring credentials.md
-  - name: Configuring and maintaining the search capability
-    href: ../obj/doc/articles/Core/Configuring and maintaining the search capability.md
+  - name: Configuring and maintaining search
+    href: ../obj/doc/articles/Core/Configuring and maintaining search.md
 - name: Manage components
   items:
   - name: Managing and tracking components

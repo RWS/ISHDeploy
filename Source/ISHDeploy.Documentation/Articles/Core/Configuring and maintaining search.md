@@ -1,4 +1,4 @@
-﻿# Configuring and maintaining the search capability
+﻿# Configuring and maintaining search
  
 This tutorial explains how to work with cmdlets that configure the search capability of a deployment. 
 
@@ -27,7 +27,7 @@ All Crawler components in a stack must refer to the same index. The identity of 
 
 CopyCodeBlock(_nopublish\Search\Example.Set-ISHServiceCrawler.ps1)
 
-## Configuring the deployment
+## Integrating with an external full text index service
 
 `Set-ISHIntegrationFullTextIndex` cmdlet will configure on the deployment the url of the location of the FullTextIndex component.
 
@@ -35,7 +35,7 @@ CopyCodeBlock(_nopublish\Search\Example.Set-ISHIntegrationFullTextIndex.ps1)
 
 When setting this value, Crawler will not depend on the default local FullTextIndex component to upload the crawled data. For this reason, the invocation of `Set-ISHIntegrationFullTextIndex` removes from the Crawler component the dependency to the FullTextIndex one. `Undo-ISHDeployment` will revert those changes.
 
-## Maintenance of Crawler component
+## Maintenance of the Crawler component
 
 `Invoke-ISHMaintenance` cmdlet provides the following maintenance actions for the Crawler component.
 
@@ -46,7 +46,7 @@ When setting this value, Crawler will not depend on the default local FullTextIn
 
 CopyCodeBlock(_nopublish\Search\Example.Invoke-ISHMaintenance.Crawler.ps1)
 
-## Maintenance of Crawler component
+## Maintenance of the FullTextIndex component
 
 `Invoke-ISHMaintenance` cmdlet provides the following maintenance actions for the FullTextIndex component.
 

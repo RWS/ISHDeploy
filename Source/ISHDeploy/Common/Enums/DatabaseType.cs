@@ -31,6 +31,10 @@ namespace ISHDeploy.Common.Enums
         /// <summary>
         /// Microsoft SqlServer 2014
         /// </summary>
-        sqlserver2014
+        sqlserver2014,
+        /// <summary>
+        /// Microsoft SqlServer 2016
+        /// </summary>
+        sqlserver2016
     }
 }

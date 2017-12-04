@@ -330,8 +330,8 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             if (!SkipRecycle)
             {
                 // Enable and start components that are enabled in Vanilla
-                IOperation stopOperation = new EnableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
-                Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
+                IOperation enableComponentsOperation = new EnableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
+                Invoker.AddActionsRange(enableComponentsOperation.Invoker.GetActions());
 
                 // Waiting until files becomes unlocked
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));

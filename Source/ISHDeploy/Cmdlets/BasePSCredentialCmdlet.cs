@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
 
@@ -29,25 +30,47 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         [Parameter(Mandatory = true, HelpMessage = "The credential that will be set")]
         [ValidateNotNullOrEmpty]
-        public virtual PSCredential Credential { private get; set; }
+        public virtual PSCredential Credential { get; set; }
 
         /// <summary>
         /// <para type="description">The user name.</para>
         /// </summary>
-        protected string CredentialUserName { get; }
+        protected string CredentialUserName { get; private set; }
 
         /// <summary>
         /// <para type="description">The password.</para>
         /// </summary>
-        protected string CredentialPassword { get; }
+        protected string CredentialPassword { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Overrides BeginProcessing from base Cmdlet class with additinal debug information
         /// </summary>
-        protected BasePSCredentialCmdlet()
+        protected override void BeginProcessing()
         {
-            CredentialUserName = Credential.UserName;
+            CredentialUserName = NormalizeUserName(Credential.UserName);
             CredentialPassword = Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password));
+            base.BeginProcessing();
+        }
+
+        /// <summary>
+        /// UserName normalization
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        private string NormalizeUserName(string userName)
+        {
+            if (userName.StartsWith(@".\"))
+            {
+                Logger.WriteWarning($@"Credentials normalization.Replaced .\ with {Environment.MachineName}");
+                return userName.Replace(".", Environment.MachineName);
+            }
+            else if (userName.IndexOf(@"\", StringComparison.Ordinal) < 0)
+            {
+                Logger.WriteWarning($"Credentials normalization.Prefixed with {Environment.MachineName}");
+                return $@"{Environment.MachineName}\{userName}";
+            }
+
+            return userName;
         }
     }
 }

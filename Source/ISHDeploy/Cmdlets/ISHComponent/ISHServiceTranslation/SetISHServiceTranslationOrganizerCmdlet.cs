@@ -178,10 +178,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The credential to get access to ISHWS", ParameterSetName = "ISHWS")]
         [ValidateNotNullOrEmpty]
-        public override PSCredential Credential
-        {
-            set { base.Credential = value; }
-        }
+        public override PSCredential Credential { get; set; }
 
         /// <summary>
         /// Executes cmdlet

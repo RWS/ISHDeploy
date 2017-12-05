@@ -36,7 +36,7 @@ Describe "Testing ISHMaintanance"{
         #Act
         $debugMessage = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockInvokeISHMaintanance -Session $session -ArgumentList $testingDeploymentName, $params
         #Arrange
-        $debugMessage -like "*Invalid commandline arguments: use*" | Should be $false
+        $debugMessage.Contains("Invalid commandline arguments: use") | Should be $false
         $debugMessage -like "*Reindexing was completed for the current catalog*" | Should be $true
         $DebugPreference = $oldDebugPreference
     }

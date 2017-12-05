@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
             {
                 reindexCardType = "ISHAll";
             }
-            
+
             Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{RegisterCrawlerOperationType.reindex} \"{CrawlerTridkApplicationName}\" {reindexCardType}"));
         }
 

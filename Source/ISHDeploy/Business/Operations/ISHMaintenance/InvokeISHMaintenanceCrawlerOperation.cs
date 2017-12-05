@@ -43,7 +43,7 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
         {
             Invoker = new ActionInvoker(logger, $"{operationType}ing the Crawler for '{CrawlerTridkApplicationName}'");
 
-            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{operationType}"));
+            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{operationType} \"{CrawlerTridkApplicationName}\""));
         }
 
         /// <summary>
@@ -51,18 +51,18 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="reindexCardType">The card type to reindex.</param>
+        /// <param name="reindexCardType">The reindex card type.</param>
         public InvokeISHMaintenanceCrawlerOperation(ILogger logger, Common.Models.ISHDeployment ishDeployment, string reindexCardType) :
             base(logger, ishDeployment)
         {
+            Invoker = new ActionInvoker(logger, $"Registering the Crawler for '{CrawlerTridkApplicationName}'");
+
             if (string.IsNullOrEmpty(reindexCardType))
             {
                 reindexCardType = "ISHAll";
             }
 
-            Invoker = new ActionInvoker(logger, $"Starting a Crawler reindex for card type '{reindexCardType}' for '{CrawlerTridkApplicationName}'");
-
-            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{RegisterCrawlerOperationType.reindex} {reindexCardType}"));
+            Invoker.AddAction(new StartProcessAction(Logger, CrawlerExeFilePath, $"--{RegisterCrawlerOperationType.reindex} \"{CrawlerTridkApplicationName}\" {reindexCardType}"));
         }
 
         /// <summary>

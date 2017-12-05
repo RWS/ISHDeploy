@@ -78,7 +78,7 @@
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIISAppPool.Tests.ps1" />
-    <None Include="Pester\Tests\ISHIntegrationDBTests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationDB.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationOSUser.Tests.ps1" />
     <None Include="Pester\Tests\ISHServiceBackgroundTask.Tests.ps1" />
     <None Include="Pester\Tests\ISHServiceCrawler.Tests.ps1" />

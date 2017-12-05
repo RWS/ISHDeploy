@@ -73,12 +73,14 @@ $scriptBlockGetConnectionString = {
         $projectName 
     )
 
-    $RegistryTridkPath = "SOFTWARE\\Trisoft\\Tridk\\TridkApp"
+    $StringRegistryTridkPath = "SOFTWARE\Trisoft\Tridk\TridkApp"
     if ([System.Environment]::Is64BitOperatingSystem)
     {
-        $RegistryTridkPath = "SOFTWARE\\Wow6432Node\\Trisoft\\Tridk\\TridkApp"
+        $StringRegistryTridkPath = "SOFTWARE\Wow6432Node\Trisoft\Tridk\TridkApp"
     }
-    [Microsoft.Win32.RegistryKey]$RegistryTridkPath = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($RegistryTridkPath);
+    
+    [Microsoft.Win32.RegistryKey]$RegistryTridkPath = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($StringRegistryTridkPath);
+
     $suffix= $projectName.Replace("InfoShare", "")
     $connectAuthor = $RegistryTridkPath.OpenSubKey("InfoShareAuthor$suffix").GetValue("Connect")
     $dbTypeAuthor = $RegistryTridkPath.OpenSubKey("InfoShareAuthor$suffix").GetValue("ComponentName")

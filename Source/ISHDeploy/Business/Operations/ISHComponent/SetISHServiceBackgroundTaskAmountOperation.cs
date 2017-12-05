@@ -67,7 +67,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var currentComponentsState = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name);
+            var currentComponentsState = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
 
             if (string.IsNullOrEmpty(role) || string.Equals(role, DefaultRoleName, StringComparison.CurrentCultureIgnoreCase))
             {

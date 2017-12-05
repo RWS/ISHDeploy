@@ -72,7 +72,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             foreach (var component in orderedComponentsCollection)
             {
-                if (ishDeployment.Status == ISHDeploymentStatus.Started)
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
                 {
                     IEnumerable<Models.ISHWindowsService> services;
 
@@ -140,6 +140,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             break;
                     }
                 }
+                else
+                {
+                    Logger.WriteWarning($"The component '{component.Name}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
+                }
             }
         }
 
@@ -163,7 +167,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (component != null)
             {
-                if (ishDeployment.Status == ISHDeploymentStatus.Started)
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
                 {
                     var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
                     foreach (
@@ -173,6 +177,10 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     {
                         Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
                     }
+                }
+                else
+                {
+                    Logger.WriteWarning($"The background task with role '{backgroundTaskRole}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
                 }
             }
             else

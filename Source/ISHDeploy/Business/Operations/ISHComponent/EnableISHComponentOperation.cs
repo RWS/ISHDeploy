@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
-               dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
+               dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
 
             InitializeActions(logger, ishDeployment, components);
         }
@@ -94,15 +94,23 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             if (component != null)
             {
-                Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (
-                    var service in
-                        services.Where(
-                            x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
                 {
-                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
+                    // [SCTCM-302] Only enable and start the background task service when the deployment is started or in the process of starting
+                    Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                    var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                    foreach (
+                        var service in
+                            services.Where(
+                                x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
+                    }
+                }
+                else
+                {
+                    Logger.WriteWarning($"The background task with role '{backgroundTaskRole}' will only be marked as enabled. The component '{component.Name}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
                 }
             }
             else
@@ -110,17 +118,23 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
             }
 
+            bool isRunning = false;
+            if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
+            {
+                // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
+                var startOperation = new StartISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
+
+                Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+                isRunning = true;
+            }
+
             Invoker.AddAction(
                 new SaveISHComponentAction(
                     Logger,
                     CurrentISHComponentStatesFilePath,
                     component.Role,
-                    true));
-
-            // Start components
-            var startOperation = new StartISHComponentOperation(logger, ishDeployment, backgroundTaskRole);
-
-            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+                    true, 
+                    isRunning));
         }
 
         /// <summary>
@@ -150,7 +164,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     // Check if SolrLucene is already enabled, otherwise add SolrLucene to the components to enable
                     var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-                    var solrLuceneComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.SolrLucene).ToArray();
+                    var solrLuceneComponents = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.Name == ISHComponentName.SolrLucene).ToArray();
                     if (!solrLuceneComponents.Any(y => y.IsEnabled))
                     {
                         components.AddRange(solrLuceneComponents);
@@ -160,81 +174,95 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             foreach (var component in components)
             {
-                IEnumerable<Models.ISHWindowsService> services;
-                switch (component.Name)
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
                 {
-                    case ISHComponentName.COMPlus:
-                        // Check if this operation has implications for several Deployments
-                        IEnumerable<Models.ISHDeployment> ishDeployments = null;
-                        new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
+                    // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
+                    IEnumerable<Models.ISHWindowsService> services;
+                    switch (component.Name)
+                    {
+                        case ISHComponentName.COMPlus:
+                            // Check if this operation has implications for several Deployments
+                            IEnumerable<Models.ISHDeployment> ishDeployments = null;
+                            new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
-                        var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
-                        var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
-                        foreach (var comPlusComponent in comPlusComponents)
-                        {
-                            if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
+                            var comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+                            var comPlusComponents = comPlusComponentManager.GetCOMPlusComponents();
+                            foreach (var comPlusComponent in comPlusComponents)
                             {
-                                Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
-                                    $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
+                                if (comPlusComponent.Status == ISHCOMPlusComponentStatus.Disabled)
+                                {
+                                    Invoker.AddAction(new WriteWarningAction(Logger, () => (ishDeployments.Count() > 1),
+                                        $"The enabling of COM+ component `{comPlusComponent.Name}` has implications across all deployments."));
 
-                                Invoker.AddAction(
-                                    new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                                    Invoker.AddAction(
+                                        new EnableCOMPlusComponentAction(Logger, comPlusComponent.Name));
+                                }
+                                else
+                                {
+                                    Invoker.AddAction(new WriteVerboseAction(Logger, () => (true),
+                                        $"COM+ component `{comPlusComponent.Name}` was already enabled"));
+                                }
                             }
-                            else
+                            break;
+                        case ISHComponentName.TranslationBuilder:
+                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
+                            foreach (var service in services)
                             {
-                                Invoker.AddAction(new WriteVerboseAction(Logger, () => (true),
-                                    $"COM+ component `{comPlusComponent.Name}` was already enabled"));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
                             }
-                        }
-                        break;
-                    case ISHComponentName.TranslationBuilder:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+                            break;
+                        case ISHComponentName.TranslationOrganizer:
+                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
 
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationBuilder);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
-                        }
-                        break;
-                    case ISHComponentName.TranslationOrganizer:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
-                        }
-                        break;
-                    case ISHComponentName.Crawler:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
-                        }
-                        break;
-                    case ISHComponentName.SolrLucene:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-                        services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
-                        foreach (var service in services)
-                        {
-                            Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
-                        }
-                        break;
-                    case ISHComponentName.BackgroundTask:
-                        Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
-
-                        var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                        foreach (var backgroundTaskService in backgroundTaskServices)
-                        {
-                            if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.TranslationOrganizer);
+                            foreach (var service in services)
                             {
-                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, backgroundTaskService, ISHWindowsServiceStartupType.Automatic));
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
                             }
-                        }
-                        break;
+                            break;
+                        case ISHComponentName.Crawler:
+                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.Crawler);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
+                            }
+                            break;
+                        case ISHComponentName.SolrLucene:
+                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                            services = serviceManager.GetServices(ishDeployment.Name, ISHWindowsServiceType.SolrLucene);
+                            foreach (var service in services)
+                            {
+                                Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, service, ISHWindowsServiceStartupType.Automatic));
+                            }
+                            break;
+                        case ISHComponentName.BackgroundTask:
+                            Invoker.AddAction(new WindowsServiceVanillaBackUpAction(logger, VanillaPropertiesOfWindowsServicesFilePath, ishDeployment.Name));
+
+                            var backgroundTaskServices = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                            foreach (var backgroundTaskService in backgroundTaskServices)
+                            {
+                                if (backgroundTaskService.Role.Equals(component.Role, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    Invoker.AddAction(new SetWindowsServiceStartupTypeAction(Logger, backgroundTaskService, ISHWindowsServiceStartupType.Automatic));
+                                }
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    Logger.WriteWarning($"The component '{component.Name}' will only be marked as enabled. The component '{component.Name}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
+                }
+
+                bool isRunning = false;
+                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
+                {
+                    isRunning = true;
                 }
 
                 if (component.Name == ISHComponentName.BackgroundTask)
@@ -244,7 +272,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Logger,
                             CurrentISHComponentStatesFilePath,
                             component.Role,
-                            true));
+                            true,
+                            isRunning));
                 }
                 else
                 {
@@ -253,14 +282,17 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Logger,
                             CurrentISHComponentStatesFilePath,
                             component.Name,
-                            true));
+                            true,
+                            isRunning));
                 }
             }
 
-            // Start components
-            var startOperation = new StartISHComponentOperation(logger, ishDeployment, components);
-
-            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+            if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
+            {
+                // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
+                var startOperation = new StartISHComponentOperation(logger, ishDeployment, components);
+                Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+            }
         }
         #endregion
     }

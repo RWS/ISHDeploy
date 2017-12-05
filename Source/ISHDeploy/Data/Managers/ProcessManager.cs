@@ -116,7 +116,7 @@ namespace ISHDeploy.Data.Managers
             try
             {
                 var process = Process.GetProcessById(processID);
-                if (process != null && String.Compare(process.ProcessName, processName, true) == 0)
+                if (process != null && string.Compare(process.ProcessName, processName, true) == 0)
                 {
                     _logger.WriteDebug($"Stopping process '{processName}' (processId={processID}) ");
                     process.Kill();
@@ -130,10 +130,6 @@ namespace ISHDeploy.Data.Managers
             catch (ArgumentException)
             {
                 _logger.WriteDebug($"The process '{processName}' with processId={processID} was already stopped.");
-            }
-            catch (Exception ex)
-            {
-                throw;
             }
         }
     }

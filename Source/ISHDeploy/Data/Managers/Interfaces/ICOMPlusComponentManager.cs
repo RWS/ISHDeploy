@@ -80,5 +80,13 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// The list of COM+ components.
         /// </returns>
         IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents();
+
+        /// <summary>
+        /// Gets the list of process ids of the dllhost.exe processes that are running the given COM+ application
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <returns>The process ids of the dllhost.exe processes that are running the given COM+ application</returns>
+        List<int> GetCOMPlusProcessIds(string comPlusComponentName);
+
     }
 }

@@ -63,7 +63,7 @@ Describe "Testing ISHMaintanance"{
         #Act
         $debugMessage = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockInvokeISHMaintanance -Session $session -ArgumentList $testingDeploymentName, $params
         #Arrange
-        $debugMessage -like "All registered crawlers for * are successful unregistered.*" | Should be $true
+        $debugMessage -like "*All registered crawlers for * are successful unregistered.*" | Should be $true
         $DebugPreference = $oldDebugPreference
     }
 

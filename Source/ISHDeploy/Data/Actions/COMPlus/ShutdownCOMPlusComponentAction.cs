@@ -19,6 +19,8 @@ using ISHDeploy.Common;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Interfaces.Actions;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace ISHDeploy.Data.Actions.COMPlus
 {
@@ -39,6 +41,11 @@ namespace ISHDeploy.Data.Actions.COMPlus
         private readonly ICOMPlusComponentManager _comPlusComponentManager;
 
         /// <summary>
+        /// The process manager
+        /// </summary>
+        private readonly IProcessManager _processManager;
+
+        /// <summary>
         /// The COM+ component manager
         /// </summary>
         private bool _comPlusComponentWasStarted;
@@ -52,6 +59,7 @@ namespace ISHDeploy.Data.Actions.COMPlus
             : base(logger)
         {
             _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            _processManager = ObjectFactory.GetInstance<IProcessManager>();
             _comPlusComponentName = comPlusComponentName;
         }
 
@@ -68,7 +76,16 @@ namespace ISHDeploy.Data.Actions.COMPlus
         /// </summary>
         public override void Execute()
         {
-            _comPlusComponentManager.ShutdownCOMPlusComponents(_comPlusComponentName);
+            List<int> processIds = _comPlusComponentManager.GetCOMPlusProcessIds(_comPlusComponentName);
+
+           _comPlusComponentManager.ShutdownCOMPlusComponents(_comPlusComponentName);
+
+            Thread.Sleep(1000);
+            
+            foreach (var processId in processIds)
+            { 
+                _processManager.Kill(processId, "dllhost");
+            }
 
             if (_comPlusComponentManager.IsComPlusComponentRunning(_comPlusComponentName))
             {

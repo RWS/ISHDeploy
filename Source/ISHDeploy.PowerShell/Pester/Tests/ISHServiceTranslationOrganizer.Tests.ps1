@@ -388,7 +388,7 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $servicePasswordFromFile| Should be $testPassword
     }
     
-    It "Set ISHServiceTranslationOrganizer change credentials normalization"{
+    It "Set ISHServiceTranslationOrganizer credentials normalization"{
         $testUsername = ".\test.User.Name"
         $testPassword = "testPassword"
         $secpasswd = ConvertTo-SecureString $testPassword -AsPlainText -Force

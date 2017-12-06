@@ -47,7 +47,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
             var componentsCollection =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+                dataAggregateHelper.GetActualStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath, IshDeployment.Name);
 
             return componentsCollection;
         }

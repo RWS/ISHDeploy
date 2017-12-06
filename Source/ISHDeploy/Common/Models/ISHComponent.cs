@@ -32,10 +32,16 @@ namespace ISHDeploy.Common.Models
         public ISHComponentName Name { get; set; }
 
         /// <summary>
-        /// The state of InfoShare component.
+        /// The InfoShare component enabled or not?
         /// </summary>
         [XmlAttribute("IsEnabled")]
         public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Is the InfoShare component running or not?
+        /// </summary>
+        [XmlAttribute("IsRunning")]
+        public bool IsRunning { get; set; }
 
         /// <summary>
         /// The role of BackgroundTask.

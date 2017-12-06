@@ -77,7 +77,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             var component = componentsCollection[ISHComponentName.BackgroundTask, _role];
             if (component == null)
             {
-                component = new ISHComponent { Name = ISHComponentName.BackgroundTask, Role = _role, IsEnabled = false };
+                component = new ISHComponent { Name = ISHComponentName.BackgroundTask, Role = _role, IsEnabled = false, IsRunning = false };
                 componentsCollection.Components.Add(component);
             }
             else

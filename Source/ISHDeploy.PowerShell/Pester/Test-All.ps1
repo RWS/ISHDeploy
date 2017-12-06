@@ -23,7 +23,7 @@ if($targetPC){
 	$session = New-PSSession -ComputerName $targetPC
 }
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$testsFolder = Join-Path $executingScriptDirectory "Tests\StartStopISHDeployment.Tests.ps1" 
+$testsFolder = Join-Path $executingScriptDirectory "Tests" 
 
 $result = Invoke-Pester -Script @{Path = $testsFolder;Parameters = @{'testingDeploymentName' = $testingDeployment; 'session' = $session} } -OutputFormat NUnitXml -OutputFile $outputFile -PassThru
 

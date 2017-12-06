@@ -53,15 +53,16 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             // Make sure the Crawler is not running before updating the URI
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var enabledCrawlerComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.Crawler && x.IsEnabled).ToArray();
+            var actualStateOfComponents = dataAggregateHelper.GetActualStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath, ishDeployment.Name);
+            var enabledCrawlerComponents = actualStateOfComponents.Components.Where(x => x.Name == ISHComponentName.Crawler && x.IsRunning).ToArray();
             if (enabledCrawlerComponents.Count() > 0)
             {
-                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the Crawler components must be disabled.");
+                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the Crawler components must be stopped.");
             }
-            var enabledSolrLuceneComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.SolrLucene && x.IsEnabled).ToArray();
+            var enabledSolrLuceneComponents = actualStateOfComponents.Components.Where(x => x.Name == ISHComponentName.SolrLucene && x.IsRunning).ToArray();
             if (enabledSolrLuceneComponents.Count() > 0)
             {
-                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the SolrLucene components must be disabled.");
+                throw new InvalidOperationException($"Before updating the URI of the Full Text Index the SolrLucene components must be stopped.");
             }
 
             // Make sure Vanilla backup of all windows services exists

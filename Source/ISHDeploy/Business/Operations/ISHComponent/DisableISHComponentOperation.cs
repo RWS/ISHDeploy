@@ -55,7 +55,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
-                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
 
             InitializeActions(Logger, ishDeployment, components);
         }
@@ -120,6 +120,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         Logger,
                         CurrentISHComponentStatesFilePath,
                         component.Role,
+                        false, 
                         false));
             }
         }
@@ -152,18 +153,18 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     // Check if Crawler is already disabled, otherwise add Crawler to the components to disabled
                     var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
-                    var enabledCrawlerComponents = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.Name == ISHComponentName.Crawler && x.IsEnabled).ToArray();
+                    var enabledCrawlerComponents = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.Name == ISHComponentName.Crawler && x.IsEnabled).ToArray();
                     components.AddRange(enabledCrawlerComponents);
                 }
             }
 
             // Stop components
             var stopOperation = new StopISHComponentOperation(logger, ishDeployment, components);
-
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
             foreach (var component in components)
             {
+                // Disable component
                 IEnumerable<Models.ISHWindowsService> services;
                 switch (component.Name)
                 {
@@ -242,6 +243,13 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                         break;
                 }
 
+                var isEnabled = component.IsEnabled;
+                if (ishDeployment.Status != ISHDeploymentStatus.Starting && ishDeployment.Status != ISHDeploymentStatus.Stopping)
+                {
+                    // [SCTCM-302] Don't change the 'IsEnabled' flag while the deployment is in the process of stopping (or starting)
+                    isEnabled = false;
+                }
+
                 if (component.Name == ISHComponentName.BackgroundTask)
                 {
                     Invoker.AddAction(
@@ -249,6 +257,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Logger,
                             CurrentISHComponentStatesFilePath,
                             component.Role,
+                            isEnabled,
                             false));
                 }
                 else
@@ -258,6 +267,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                             Logger,
                             CurrentISHComponentStatesFilePath,
                             component.Name,
+                            isEnabled,
                             false));
                 }
             }

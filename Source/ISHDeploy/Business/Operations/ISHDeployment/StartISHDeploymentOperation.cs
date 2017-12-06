@@ -45,13 +45,13 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public StartISHDeploymentOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-            ishDeployment.Status = ISHDeploymentStatus.Started;
+            ishDeployment.Status = ISHDeploymentStatus.Starting;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var components =
                 dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
 
-            IOperation operation = new StartISHComponentOperation(logger, ishDeployment, components);
+            IOperation operation = new EnableISHComponentOperation(logger, ishDeployment, components);
             Invoker = new ActionInvoker(Logger, "Starting of enabled components", operation.Invoker.GetActions());
 
             Invoker.AddAction(new SaveISHDeploymentStatusAction(ishDeployment.Name, ISHDeploymentStatus.Started));

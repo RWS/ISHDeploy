@@ -74,6 +74,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
 
+            // Make sure the deployment is 'marked' as started, when the UNDO is finished the deployment should be started
+            ishDeployment.Status = ISHDeploymentStatus.Started;
+
             // Get all ISH windows services
             var services = serviceManager.GetAllServices(
                 ishDeployment.Name).ToList();
@@ -93,13 +96,20 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             new GetISHDeploymentsAction(logger, string.Empty, result => ishDeployments = result).Execute();
 
             // Stop all ISH components
+            var componentsThatShouldBeStarted = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).ToArray();
             if (!SkipRecycle)
             {
-                // Stop all components
-                var componentsNeedToBeStopped =
-                    dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
+                var componentNamesThatShouldBeStarted = componentsThatShouldBeStarted.Select(x => x.Name).ToList();
 
-                IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
+                var expectedStateOfComponents = dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => x.IsEnabled).ToArray();
+                var componentsThatShouldBeDisabled = expectedStateOfComponents.Where(x => !componentNamesThatShouldBeStarted.Contains(x.Name)).ToArray();
+
+                // Disable all components that should not be enabled in Vanilla
+                IOperation disableOperation = new DisableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeDisabled);
+                Invoker.AddActionsRange(disableOperation.Invoker.GetActions());
+
+                // Stop components that are enabled in Vanilla
+                IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
                 Invoker.AddActionsRange(stopOperation.Invoker.GetActions());
 
                 // Cleaning up STS App_Data folder
@@ -319,12 +329,10 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             // Enable and start Application pools and COM+ component
             if (!SkipRecycle)
             {
-                // Enable and start all components that should be started
-                var componentsThatShouldBeStarted = new Models.ISHComponentsCollection(true).Components.Where(x => x.IsEnabled).ToArray();
-
+                // Enable and start components that are enabled in Vanilla
                 IOperation enableComponentsOperation = new EnableISHComponentOperation(logger, ishDeployment, componentsThatShouldBeStarted);
                 Invoker.AddActionsRange(enableComponentsOperation.Invoker.GetActions());
-                
+
                 // Waiting until files becomes unlocked
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareAuthorWebConfigPath));
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));

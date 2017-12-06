@@ -47,6 +47,11 @@ namespace ISHDeploy.Data.Actions.ISHProject
         private readonly bool _isComponentEnabled;
 
         /// <summary>
+        /// Is the component running or not?
+        /// </summary>
+        private readonly bool _isComponentRunning;
+
+        /// <summary>
         /// The BackgroundTask role
         /// </summary>
         private readonly string _role;
@@ -59,7 +64,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="filePath">Path to file that will be modified</param>
         /// <param name="componentName">The InfoShare component name</param>
         /// <param name="isEnabled">The status of Component. True if Enabled</param>
-        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled)
+        /// <param name="isRunning">Is the component running or not?</param>
+        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, ISHComponentName componentName, bool isEnabled, bool isRunning)
             : base(logger, filePath)
         {
             if (componentName == ISHComponentName.BackgroundTask)
@@ -70,6 +76,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _componentName = componentName;
             _isComponentEnabled = isEnabled;
+            _isComponentRunning = isRunning;
         }
 
         /// <summary>
@@ -79,12 +86,14 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <param name="filePath">Path to file that will be modified</param>
         /// <param name="role">The BackgroundTask role</param>
         /// <param name="isEnabled">The status of BackgroundTask component. True if Enabled</param>
-        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, string role, bool isEnabled)
+        /// <param name="isRunning">Is the component running or not?</param>
+        public SaveISHComponentAction(ILogger logger, ISHFilePath filePath, string role, bool isEnabled, bool isRunning)
             : base(logger, filePath)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             _componentName = ISHComponentName.BackgroundTask;
             _isComponentEnabled = isEnabled;
+            _isComponentRunning = isRunning;
             _role = role;
         }
 
@@ -114,17 +123,19 @@ namespace ISHDeploy.Data.Actions.ISHProject
                 var component = componentsCollection[_componentName, _role];
                 if (component == null)
                 {
-                    component = new ISHComponent { Name = _componentName, Role = _role, IsEnabled = _isComponentEnabled };
+                    component = new ISHComponent { Name = _componentName, Role = _role, IsEnabled = _isComponentEnabled, IsRunning = _isComponentRunning};
                     componentsCollection.Components.Add(component);
                 }
                 else
                 {
                     component.IsEnabled = _isComponentEnabled;
+                    component.IsRunning = _isComponentRunning;
                 }
             }
             else
             {
                 componentsCollection[_componentName].IsEnabled = _isComponentEnabled;
+                componentsCollection[_componentName].IsRunning = _isComponentRunning;
             }
             _dataAggregateHelper.SaveComponents(FilePath, componentsCollection);
         }

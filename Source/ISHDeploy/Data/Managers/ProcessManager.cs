@@ -50,7 +50,7 @@ namespace ISHDeploy.Data.Managers
         /// <param name="arguments">The arguments</param>
         public void Start(string filePath, string arguments = "")
         {
-            _logger.WriteDebug($"Start executive file `{filePath}` with parameters `{arguments}`");
+            _logger.WriteDebug($"Start execute of file `{filePath}` with parameters `{arguments}`");
 
             using (var process = new Process())
             {
@@ -102,6 +102,35 @@ namespace ISHDeploy.Data.Managers
                 }
             }
             _logger.WriteVerbose($"The process `{filePath}` has been finished");
+        }
+
+        /// <summary>
+        /// Kills a process if it has the given id and name
+        /// </summary>
+        /// <param name="processID">Process ID</param>
+        /// <param name="processName">Process Name</param>
+        public void Kill(int processID, string processName)
+        {
+            _logger.WriteDebug($"Trying to stop process '{processName}' (processId={processID}) ");
+
+            try
+            {
+                var process = Process.GetProcessById(processID);
+                if (process != null && string.Compare(process.ProcessName, processName, true) == 0)
+                {
+                    _logger.WriteDebug($"Stopping process '{processName}' (processId={processID}) ");
+                    process.Kill();
+                    _logger.WriteVerbose($"Stopped process '{processName}' (processId={processID}) ");
+                }
+                else
+                {
+                    _logger.WriteDebug($"The process '{processName}' with processId={processID} was already stopped.");
+                }
+            }
+            catch (ArgumentException)
+            {
+                _logger.WriteDebug($"The process '{processName}' with processId={processID} was already stopped.");
+            }
         }
     }
 }

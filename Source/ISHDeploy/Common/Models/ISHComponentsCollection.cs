@@ -73,6 +73,11 @@ namespace ISHDeploy.Common.Models
                             name == ISHComponentName.WS ||
                             name == ISHComponentName.STS ||
                             name == ISHComponentName.COMPlus),
+                        IsRunning = (
+                            name == ISHComponentName.CM ||
+                            name == ISHComponentName.WS ||
+                            name == ISHComponentName.STS ||
+                            name == ISHComponentName.COMPlus),
                         Role = name == ISHComponentName.BackgroundTask ? "Default" : null
                     });
                 }

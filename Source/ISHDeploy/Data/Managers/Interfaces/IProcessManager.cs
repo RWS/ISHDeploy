@@ -27,5 +27,11 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="filePath">The path to executive file.</param>
         /// <param name="arguments">The arguments</param>
         void Start(string filePath, string arguments = "");
+        /// <summary>
+        /// Kills a process if it has the given id and name
+        /// </summary>
+        /// <param name="processID">Process Id</param>
+        /// <param name="processName">Process Name</param>
+        void Kill(int processID, string processName);
     }
 }

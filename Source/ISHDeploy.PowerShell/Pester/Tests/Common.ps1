@@ -469,3 +469,40 @@ $scriptBlockGetISHComponent = {
     Get-ISHComponent -ISHDeployment $ishDeploy
 
 }
+
+$scriptBlockGetAppPoolStartTime = {
+    param (
+        $testingDeployment
+    )
+
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameCM)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameWS)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameSTS)
+    
+    $result = @{}
+    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
+    foreach ($line in $array) {
+        $splitedLine = $line.split(" ")
+        $processIdAsString = $splitedLine[1]
+        $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
+        if ($splitedLine[2] -match $cmAppPoolName)
+        {
+            $result["cm"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $wsAppPoolName)
+        {
+            $result["ws"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $stsAppPoolName)
+        {
+            $result["sts"] = (Get-Process -Id $processId).StartTime
+        }
+    }
+    
+    return $result
+}
+
+function Get-AppPoolStartTime {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
+    return $result
+}

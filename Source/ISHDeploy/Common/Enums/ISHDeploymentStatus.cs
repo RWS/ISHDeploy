@@ -24,6 +24,8 @@ namespace ISHDeploy.Common.Enums
     public enum ISHDeploymentStatus
     {
         Started,
-        Stopped
+        Starting,
+        Stopped,
+        Stopping
     }
 }

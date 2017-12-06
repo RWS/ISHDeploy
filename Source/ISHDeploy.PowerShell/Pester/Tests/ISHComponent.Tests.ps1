@@ -60,25 +60,53 @@ Describe "Testing ISHComponent"{
     It "Get ISHComponent returns default value"{
 
         #Act
-        $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
          #Assert
-        ($comp | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
-        ($comp | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
-        ($comp | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
-        ($comp | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
-        ($comp | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
-        ($comp | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").Role | Should be "Default"
+		($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+		($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
     }
     
     It "Enable components commandlets change state of component"{       
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName, $params
 
-        $comp = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
-        ($comp | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+		($components | Where-Object -Property Name -EQ "CM").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "CM").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "WS").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "WS").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "STS").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "STS").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "COMPlus").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "COMPlus").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "BackgroundTask").Role | Should be "Default"
+		($components | Where-Object -Property Name -EQ "Crawler").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "Crawler").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "SolrLucene").IsEnabled | Should be "False"
+		($components | Where-Object -Property Name -EQ "SolrLucene").IsRunning | Should be "False"
+		($components | Where-Object -Property Name -EQ "TranslationBuilder").IsEnabled | Should be "True"
+		($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
+		($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
+		($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
     }
     
      UndoDeploymentBackToVanila $testingDeploymentName $true

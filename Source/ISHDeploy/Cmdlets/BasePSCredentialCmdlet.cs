@@ -62,7 +62,7 @@ namespace ISHDeploy.Cmdlets
             if (userName.StartsWith(@".\"))
             {
                 Logger.WriteWarning($@"Credentials normalization.Replaced .\ with {Environment.MachineName}");
-                return userName.Replace(".", Environment.MachineName);
+                return $@"{Environment.MachineName}{userName.Substring(2)}";
             }
             else if (userName.IndexOf(@"\", StringComparison.Ordinal) < 0)
             {

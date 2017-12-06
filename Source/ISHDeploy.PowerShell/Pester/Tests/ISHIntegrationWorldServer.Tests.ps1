@@ -105,6 +105,20 @@ function remoteReadTargetXML() {
 
 }
 
+$scriptBlockGetRemoteComputerName = {
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    return $env:COMPUTERNAME
+}
+
+function getRemoteComputerName() {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRemoteComputerName -Session $session
+
+    $global:RemoteComputerName = $result
+}
 
 Describe "Testing ISHIntegrationWorldServer"{
     BeforeEach {
@@ -127,11 +141,12 @@ Describe "Testing ISHIntegrationWorldServer"{
         
         #Assert
         remoteReadTargetXML
-        
+                
+        getRemoteComputerName
 
         $NameFromFile | Should be $Name
         $UriFromFile | Should be $Uri
-        $UserNameFromFile | Should be $testUsername
+        $UserNameFromFile | Should be "$RemoteComputerName\$testUsername"
         $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize
@@ -285,9 +300,10 @@ Describe "Testing ISHIntegrationWorldServer"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
         
         remoteReadTargetXML
+        getRemoteComputerName
         $NameFromFile | Should be $Name
         $UriFromFile | Should be $Uri
-        $UserNameFromFile | Should be $testUsername
+        $UserNameFromFile | Should be "$RemoteComputerName\$testUsername"
         $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize

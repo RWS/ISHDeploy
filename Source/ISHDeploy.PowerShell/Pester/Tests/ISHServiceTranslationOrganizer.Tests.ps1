@@ -387,6 +387,29 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $serviceUsernameFromFile| Should be "$RemoteComputerName\$testUsername"
         $servicePasswordFromFile| Should be $testPassword
     }
+    
+    It "Set ISHServiceTranslationOrganizer change credentials normalization"{
+        $testUsername = ".\test.User.Name"
+        $testPassword = "testPassword"
+        $secpasswd = ConvertTo-SecureString $testPassword -AsPlainText -Force
+        $testCreds = New-Object System.Management.Automation.PSCredential ($testUsername, $secpasswd)
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        getRemoteComputerName
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+        $serviceUsernameFromFile| Should be "$RemoteComputerName\test.User.Name"
+        $servicePasswordFromFile| Should be $testPassword
+    }
 
     UndoDeploymentBackToVanila $testingDeploymentName $true
 }

@@ -259,11 +259,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                     Logger.WriteWarning($"The component '{component.Name}' will only be marked as enabled. The component '{component.Name}' will not be started, because the deployment '{ishDeployment.Name}' is not started");
                 }
 
-                bool isRunning = false;
-                if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
-                {
-                    isRunning = true;
-                }
+                bool isRunning = ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting;
 
                 if (component.Name == ISHComponentName.BackgroundTask)
                 {

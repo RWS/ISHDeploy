@@ -221,7 +221,7 @@ $scriptBlockGetTranslationBuilderServiceState = {
     )
 
     $result = @{}
-    $service = Get-WmiObject Win32_Service -filter "name like 'Trisoft InfoShare%TranslationBuilder One'"
+    $service = Get-WmiObject Win32_Service -filter "name like 'Trisoft $testingDeployment TranslationBuilder One'"
     $result["StartupType"] = $service.StartMode
     $result["Status"] = $service.State
     return $result
@@ -324,69 +324,69 @@ Describe "Testing Start and Stop ISH Deployment"{
     }
 
     It "Stop ISHDeployment should stop deployment"{
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         CheckStoppedVanillaDeployment
     }
     
     It "Start of stopped ISHDeployment should start deployment"{
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName        
-
+    
         #Assert
         CheckStartedVanillaDeployment
     }
-
+    
     It "Restart of stopped ISHDeployment should start deployment"{
          #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         CheckStoppedVanillaDeployment
         
          #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRestartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         CheckStartedVanillaDeployment
     }
-
+    
     It "Start ISHDeployment on already started deployment"{
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         CheckStartedVanillaDeployment
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         CheckStartedVanillaDeployment
     }
-
+    
 	It "Start ISHDeployment should not start disabled components"{
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
-
+    
         GetComObjectState
         $AuthorApplicationIsEnabled | Should be False  
         $ISOApplicationIsEnabled | Should be False 
         $UtilitiesApplicationIsEnabled | Should be False 
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
-
+    
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0   
      
@@ -412,18 +412,18 @@ Describe "Testing Start and Stop ISH Deployment"{
         
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
-
+    
         GetComObjectState
         $AuthorApplicationIsEnabled | Should be False  
         $ISOApplicationIsEnabled | Should be False 
         $UtilitiesApplicationIsEnabled | Should be False 
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
-
+    
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0   
      
@@ -452,20 +452,20 @@ Describe "Testing Start and Stop ISH Deployment"{
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHIISAppPool -Session $session -ArgumentList $testingDeploymentName
-
+    
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
 		$checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped"
-
+    
         GetComObjectState
         $AuthorApplicationIsEnabled | Should be False  
         $ISOApplicationIsEnabled | Should be False 
         $UtilitiesApplicationIsEnabled | Should be False 
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
-
+    
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0   
      
@@ -488,10 +488,10 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHCOMPlus -Session $session -ArgumentList $testingDeploymentName
-
+    
         #Assert
         GetComObjectState
         $AuthorApplicationIsEnabled | Should be False  
@@ -499,7 +499,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $UtilitiesApplicationIsEnabled | Should be False 
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
-
+    
         $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
         $pools.Count | Should be 0   
      
@@ -558,7 +558,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         }
         $services[0].Status | Should be "Running"
 
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Auto"
         $serviceState["Status"] | Should be "Running"
     }
@@ -567,7 +567,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped" 
@@ -591,22 +591,22 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
         
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
     }
-
+    
     It "Disable TranslationBuilder after enabling on started deployment"{
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
@@ -630,20 +630,20 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Running"
-
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+    
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Auto"
         $serviceState["Status"] | Should be "Running"
-
+    
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
@@ -667,23 +667,23 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
-
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+    
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
     }
-
+    
     It "Disable TranslationBuilder after enabling on stopped deployment"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped" 
@@ -707,20 +707,20 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
         
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
                 
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped" 
@@ -744,22 +744,22 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
         
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
     }
-  
+    
     It "Stop deployment after enabling TranslationBuilder on started deployment"{
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
@@ -783,20 +783,20 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Running"
-
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+    
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Auto"
         $serviceState["Status"] | Should be "Running"
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped" 
@@ -820,23 +820,23 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
-
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+    
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
     }
-
+    
     It "Start deployment after enabling TranslationBuilder on stopped deployment"{
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Stopped" 
@@ -860,20 +860,20 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "False"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Stopped"
         
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Manual"
         $serviceState["Status"] | Should be "Stopped"
-
+    
         #Act
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
-
+    
 		#Assert
         $checkDeployment = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetDeployment -Session $session -ArgumentList $testingDeploymentName
         $checkDeployment.Status | Should be "Started" 
@@ -897,17 +897,17 @@ Describe "Testing Start and Stop ISH Deployment"{
         ($components | Where-Object -Property Name -EQ "TranslationBuilder").IsRunning | Should be "True"
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsEnabled | Should be "False"  
         ($components | Where-Object -Property Name -EQ "TranslationOrganizer").IsRunning | Should be "False"
-
+    
         $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationBuilder -Session $session -ArgumentList $testingDeploymentName
         if ($services.GetType().BaseType.Name -ne "Object"){
             $services.Count | Should be 1
         }
         $services[0].Status | Should be "Running"
         
-        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $filePath
+        $serviceState = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetTranslationBuilderServiceState -Session $session -ArgumentList $testingDeploymentName
         $serviceState["StartupType"] | Should be "Auto"
         $serviceState["Status"] | Should be "Running"
-
+    
     }
 
     UndoDeploymentBackToVanila $testingDeploymentName

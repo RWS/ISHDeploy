@@ -47,8 +47,14 @@ namespace ISHDeploy.Cmdlets
         /// </summary>
         protected override void BeginProcessing()
         {
-            CredentialUserName = NormalizeUserName(Credential.UserName);
-            CredentialPassword = Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password));
+            // In successors classes this property can be overridden and can be marked as NOT mandatory, so can be null in this method
+            if (Credential != null)
+            {
+                CredentialUserName = NormalizeUserName(Credential.UserName);
+                CredentialPassword =
+                    Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password));
+            }
+
             base.BeginProcessing();
         }
 

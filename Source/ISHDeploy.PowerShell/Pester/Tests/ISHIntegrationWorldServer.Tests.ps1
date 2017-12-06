@@ -105,21 +105,6 @@ function remoteReadTargetXML() {
 
 }
 
-$scriptBlockGetRemoteComputerName = {
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-
-    return $env:COMPUTERNAME
-}
-
-function getRemoteComputerName() {
-    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRemoteComputerName -Session $session
-
-    $global:RemoteComputerName = $result
-}
-
 Describe "Testing ISHIntegrationWorldServer"{
     BeforeEach {
         ArtifactCleaner -filePath $filePath -fileName "TranslationOrganizer.exe.config"

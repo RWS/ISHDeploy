@@ -506,3 +506,18 @@ function Get-AppPoolStartTime {
     $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
     return $result
 }
+
+$scriptBlockGetRemoteComputerName = {
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    return $env:COMPUTERNAME
+}
+
+function getRemoteComputerName() {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRemoteComputerName -Session $session
+
+    $global:RemoteComputerName = $result
+}

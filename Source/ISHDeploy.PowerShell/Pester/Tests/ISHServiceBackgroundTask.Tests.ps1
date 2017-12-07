@@ -382,6 +382,28 @@ Describe "Testing ISHServiceBackgroundTask"{
         }
      }
      
+	 It "[SCTCM-310] Background tasks are created with proper names" {
+        #Creating list of Background tasks with custom roles
+			foreach($role in @("Default","Single","Multi","Custom1","Custom2")){
+				if($role -ne "Default")
+				{
+				    $params = @{Role = $role; Count= "1"}
+					Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+				}
+				else
+				{
+					$params = @{Role = $role}
+					 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+					Write-Verbose "Removed BackgroundTask with $role role service"
+				}
+			}
+			$allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+			#Check if all services are created without word SINGLE in name
+			foreach ($service in $allServices){
+				$service.Name -like "*Single*" | Should be $false
+			}
+     }
+
      Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true
 }

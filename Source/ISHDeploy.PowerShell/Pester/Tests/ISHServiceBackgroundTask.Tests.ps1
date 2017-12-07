@@ -660,7 +660,7 @@ Describe "Testing ISHServiceBackgroundTask"{
         $defaultComponent.IsEnabled | Should be "False"
         $defaultComponent.IsRunning | Should be "False"
      }
-
+     
 	 It "[SCTCM-310] Background tasks are created with proper names" {
         #Creating list of Background tasks with custom roles
 			foreach($role in @("Default","Single","Multi","Custom1","Custom2")){
@@ -678,9 +678,13 @@ Describe "Testing ISHServiceBackgroundTask"{
 			}
 			$allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
 			#Check if all services are created without word SINGLE in name
+			$singleCount = 0
 			foreach ($service in $allServices){
-				$service.Name -like "*Single*" | Should be $false
+				if ($service.Name -like "*Single*"){
+					$singleCount = $singleCount + 1
+				}
 			}
+			$singleCount -eq 1 | Should be $true
      }
      Start-Sleep -Seconds 20
      UndoDeploymentBackToVanila $testingDeploymentName $true

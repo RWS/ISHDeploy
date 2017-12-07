@@ -3,6 +3,10 @@
 ## stable-1.4
 
 This release is focused on adding cmdlet that help configure core aspects of a deployment.
+Also in this release, the version strategy of the module has been changed. Now the module will support all intermediate versions of Content Manager, therefore, only the major number of CM versions should be considered to find an appropriate version of the ISHDeploy module. 
+As an example, now the ISHDeploy.12.0 module can be used for Content Manager of versions 12.0.0, 12.0.1, 12.0.3, 12.0.4 and 12.0.5 respectively.
+
+List of changes in the module cmdlets:
 
 1. General 
     1. Cmdlets

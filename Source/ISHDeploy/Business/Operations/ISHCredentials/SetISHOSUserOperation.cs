@@ -74,7 +74,8 @@ namespace ISHDeploy.Business.Operations.ISHCredentials
             // Stop all components
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             var componentsNeedToBeStopped =
-                dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name).Components.Where(x => x.IsEnabled).ToArray();
+                dataAggregateHelper.GetActualStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath, ishDeployment.Name)
+                .Components.Where(x => x.IsRunning).ToArray();
 
             IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);
             Invoker.AddActionsRange(stopOperation.Invoker.GetActions());

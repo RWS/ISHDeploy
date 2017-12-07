@@ -75,7 +75,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationDB
 
             // Stop all components
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            var componentsNeedToBeStopped = dataAggregateHelper.GetActualStateOfComponents(ishDeployment.Name)
+            var componentsNeedToBeStopped = dataAggregateHelper.GetActualStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath, ishDeployment.Name)
                 .Components.Where(enabledAndDependOnConnectionString).ToArray();
 
             IOperation stopOperation = new StopISHComponentOperation(logger, ishDeployment, componentsNeedToBeStopped);

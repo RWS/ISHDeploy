@@ -43,6 +43,10 @@ namespace ISHDeploy.Business.Operations
         /// Input parameters
         /// </summary>
         protected InputParameters InputParameters { get; }
+        /// <summary>
+        /// The InfoShare deployment
+        /// </summary>
+        protected Models.ISHDeployment IshDeployment { get; }
 
         #region Paths
 
@@ -439,6 +443,7 @@ namespace ISHDeploy.Business.Operations
         protected BaseOperationPaths(ILogger logger, Models.ISHDeployment ishDeployment)
         {
             Logger = logger;
+            IshDeployment = ishDeployment;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);

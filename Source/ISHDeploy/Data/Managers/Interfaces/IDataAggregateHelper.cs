@@ -42,9 +42,10 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <summary>
         /// Return actual state of components
         /// </summary>
+        /// <param name="filePath">The path to file with saved states of all components of deployment.</param> 
         /// <param name="deploymentName">The Content Manager deployment name.</param>
         /// <returns>The collection of components for specified deployment with their actual state</returns>
-        ISHComponentsCollection GetActualStateOfComponents(string deploymentName);
+        ISHComponentsCollection GetActualStateOfComponents(string filePath, string deploymentName);
 
         /// <summary>
         /// Save all components of deployment

@@ -138,7 +138,7 @@ namespace ISHDeploy.Data.Managers
             var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
             
             var appCollection = _comAdminCatalogWrapper.GetApplicationInstances();
-
+            
             var isRunning = appCollection.Cast<ICatalogObject>().Any(app => applicationInstance.Key.ToString() == app.Value["Application"].ToString());
 
             if (doOutput)
@@ -281,12 +281,37 @@ namespace ISHDeploy.Data.Managers
                             Status = ((bool) applicationInstance.Value["IsEnabled"])
                                 ? ISHCOMPlusComponentStatus.Enabled
                                 : ISHCOMPlusComponentStatus.Disabled,
-                            ActivationType = (ISHCOMPlusActivationType) applicationInstance.Value["Activation"]
+                            ActivationType = (ISHCOMPlusActivationType) applicationInstance.Value["Activation"]                            
                         });
                 }
             }
 
             return components;
+        }
+
+        /// <summary>
+        /// Gets the list of process ids of the dllhost.exe processes that are running the given COM+ application
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <returns>The process ids of the dllhost.exe processes that are running the given COM+ application</returns>
+        public List<int> GetCOMPlusProcessIds(string comPlusComponentName)
+        {
+            _logger.WriteDebug($"Getting process ids running COM+ component '{comPlusComponentName}'");
+
+            var result = new List<int>();
+
+            var applicationInstance = GetComPlusComponentByName(comPlusComponentName);
+
+            var appCollection = _comAdminCatalogWrapper.GetApplicationInstances();
+
+            foreach (var runningApp in appCollection.Cast<ICatalogObject>().Where(app => applicationInstance.Key.ToString() == app.Value["Application"].ToString()))
+            {
+                result.Add(Convert.ToInt32(runningApp.Value["ProcessID"].ToString()));
+            }
+
+            _logger.WriteDebug($"{result.Count} processes are running COM+ component '{comPlusComponentName}'");
+
+            return result;
         }
     }
 }

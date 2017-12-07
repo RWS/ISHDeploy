@@ -106,7 +106,6 @@ $scriptBlockRemoveISHServiceBackgroundTask = {
     Remove-ISHServiceBackgroundTask -ISHDeployment $ishDeployName @parameters
 }
 
-
 $scriptBlockStartISHDeployment = {
     param (
         $ishDeployName
@@ -117,6 +116,17 @@ $scriptBlockStartISHDeployment = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Start-ISHDeployment -ISHDeployment $ishDeploy
+}
+
+$scriptBlockStopISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Stop-ISHDeployment -ISHDeployment $ishDeployName
 }
 
 #endregion
@@ -311,6 +321,16 @@ Describe "Testing ISHServiceBackgroundTask"{
         {
             $service.Status | Should be "Stopped"
         }
+          
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $components
+
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "False"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "True"
+        $defaultComponent.IsRunning | Should be "True"
 
         #Start deployment
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
@@ -326,6 +346,14 @@ Describe "Testing ISHServiceBackgroundTask"{
                 $service.Status | Should be "Running"
             }
         }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "False"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "True"
+        $defaultComponent.IsRunning | Should be "True"
+
 
         #Enable background services with role Console
         $params = @{Role = "Console"}
@@ -342,6 +370,14 @@ Describe "Testing ISHServiceBackgroundTask"{
                 $service.Status | Should be "Running"
             }
         }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "True"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "True"
+        $defaultComponent.IsRunning | Should be "True"
+
 
         #Disable background services with role Console
         $params = @{Role = "Console"}
@@ -358,7 +394,13 @@ Describe "Testing ISHServiceBackgroundTask"{
                 $service.Status | Should be "Running"
             }
         }
-
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "False"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "True"
+        $defaultComponent.IsRunning | Should be "True"
      }
      
      It "Removing BackgroundTask Service with role Console" {
@@ -381,27 +423,242 @@ Describe "Testing ISHServiceBackgroundTask"{
             $allServices.Count | Should be 1
         }
      }
-     
-	 It "[SCTCM-310] Background tasks are created with proper names" {
-        #Creating list of Background tasks with custom roles
-			foreach($role in @("Default","Single","Multi","Custom1","Custom2")){
-				if($role -ne "Default")
-				{
-				    $params = @{Role = $role; Count= "1"}
-					Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
-				}
-				else
-				{
-					$params = @{Role = $role}
-					 Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockRemoveISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
-					Write-Verbose "Removed BackgroundTask with $role role service"
-				}
-			}
-			$allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
-			#Check if all services are created without word SINGLE in name
-			foreach ($service in $allServices){
-				$service.Name -like "*Single*" | Should be $false
-			}
+    
+     It "Enable BackgroundTask Service with role Console on started deployment"{
+        #Act
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            if ($service.Role -eq "Console")
+            {
+                $service.Status | Should be "Running"
+            }
+            else
+            {
+                $service.Status | Should be "Stopped"
+            }
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "True"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+     }
+
+     It "Enable BackgroundTask Service with role Console on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+     }
+    
+     It "Disable BackgroundTask Service with role Console after enabling on started deployment"{
+        #Act
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            if ($service.Role -eq "Console")
+            {
+                $service.Status | Should be "Running"
+            }
+            else
+            {
+                $service.Status | Should be "Stopped"
+            }
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "True"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+
+        #Act
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "False"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+     }
+  
+     It "Disable BackgroundTask Service with role Console after enabling on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+
+        #Act
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockDisableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "False"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+    }
+    
+     It "Stop deployment after enabling BackgroundTask Service with role Console on started deployment"{
+        #Act
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            if ($service.Role -eq "Console")
+            {
+                $service.Status | Should be "Running"
+            }
+            else
+            {
+                $service.Status | Should be "Stopped"
+            }
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "True"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+     }
+  
+     It "Start deployment after enabling BackgroundTask Service with role Console on stopped deployment"{
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+        $params = @{Role = "Console"; Count= "1"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+        $params = @{Role = "Console"}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName, $params
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            $service.Status | Should be "Stopped"
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "False"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
+
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStartISHDeployment -Session $session -ArgumentList $testingDeploymentName
+
+		#Assert
+        $allServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceBackgroundTask -Session $session -ArgumentList $testingDeploymentName
+        foreach ($Service in $allServices)
+        {
+            if ($service.Role -eq "Console")
+            {
+                $service.Status | Should be "Running"
+            }
+            else
+            {
+                $service.Status | Should be "Stopped"
+            }
+        }
+        $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
+        $consoleComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Console"}
+        $consoleComponent.IsEnabled | Should be "True"
+        $consoleComponent.IsRunning | Should be "True"
+        $defaultComponent = $components | where-object {$_.Name -eq "BackgroundTask" -and $_.Role -eq "Default"}
+        $defaultComponent.IsEnabled | Should be "False"
+        $defaultComponent.IsRunning | Should be "False"
      }
 
      Start-Sleep -Seconds 20

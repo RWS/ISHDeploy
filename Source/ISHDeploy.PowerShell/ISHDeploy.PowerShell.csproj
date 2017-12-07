@@ -71,13 +71,14 @@
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
+    <None Include="Pester\Tests\InvokeISHMaintanance.Tests.ps1" />
     <None Include="Pester\Tests\ISHCOMPlus.Tests.ps1" />
     <None Include="Pester\Tests\ISHActorUser.Tests.ps1" />
     <None Include="Pester\Tests\ISHComponent.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\ISHIISAppPool.Tests.ps1" />
-    <None Include="Pester\Tests\ISHIntegrationDBTests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationDB.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationOSUser.Tests.ps1" />
     <None Include="Pester\Tests\ISHServiceBackgroundTask.Tests.ps1" />
     <None Include="Pester\Tests\ISHServiceCrawler.Tests.ps1" />

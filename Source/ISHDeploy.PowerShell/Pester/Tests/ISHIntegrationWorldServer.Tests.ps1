@@ -105,7 +105,6 @@ function remoteReadTargetXML() {
 
 }
 
-
 Describe "Testing ISHIntegrationWorldServer"{
     BeforeEach {
         ArtifactCleaner -filePath $filePath -fileName "TranslationOrganizer.exe.config"
@@ -127,11 +126,12 @@ Describe "Testing ISHIntegrationWorldServer"{
         
         #Assert
         remoteReadTargetXML
-        
+                
+        getRemoteComputerName
 
         $NameFromFile | Should be $Name
         $UriFromFile | Should be $Uri
-        $UserNameFromFile | Should be $testUsername
+        $UserNameFromFile | Should be "$RemoteComputerName\$testUsername"
         $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize
@@ -285,9 +285,10 @@ Describe "Testing ISHIntegrationWorldServer"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationWorldServer -Session $session -ArgumentList $testingDeploymentName, $params
         
         remoteReadTargetXML
+        getRemoteComputerName
         $NameFromFile | Should be $Name
         $UriFromFile | Should be $Uri
-        $UserNameFromFile | Should be $testUsername
+        $UserNameFromFile | Should be "$RemoteComputerName\$testUsername"
         $PasswordFromFile | Should be $testPassword 
         $RetriesOnTimeutFromFile | Should be $RetriesOnTimeout 
         $MaxJobSizeFromFile | Should be $MaxJobSize

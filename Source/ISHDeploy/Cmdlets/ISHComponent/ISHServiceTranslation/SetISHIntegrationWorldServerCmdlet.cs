@@ -15,7 +15,6 @@
  */
 
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
@@ -36,7 +35,7 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
     /// Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationWorldServerMapping cmdlet.</para>
     /// </example>
     [Cmdlet(VerbsCommon.Set, "ISHIntegrationWorldServer")]
-    public sealed class SetISHIntegrationWorldServerCmdlet : BaseHistoryEntryCmdlet
+    public sealed class SetISHIntegrationWorldServerCmdlet : BasePSCredentialCmdlet
     {
         /// <summary>
         /// <para type="description">The name (alias) of WorldServer.</para>
@@ -51,13 +50,6 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
         [Parameter(Mandatory = true, HelpMessage = "The Uri to WorldServer")]
         [ValidateNotNullOrEmpty]
         public string Uri { get; set; }
-
-        /// <summary>
-        /// <para type="description">The credential to get access to WorldServer.</para>
-        /// </summary>
-        [Parameter(Mandatory = true, HelpMessage = "The credential to get access to WorldServer")]
-        [ValidateNotNullOrEmpty]
-        public PSCredential Credential { get; set; }
 
         /// <summary>
         /// <para type="description">The max value of total size in bytes of uncompressed external job.</para>
@@ -88,8 +80,8 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
             var worldServerConfiguration = new WorldServerConfigurationSection(
                 Name,
                 Uri,
-                Credential.UserName,
-                Marshal.PtrToStringUni(Marshal.SecureStringToGlobalAllocUnicode(Credential.Password)),
+                CredentialUserName,
+                CredentialPassword,
                 MaximumJobSize,
                 RetriesOnTimeout,
                 Mappings);

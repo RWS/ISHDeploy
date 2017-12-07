@@ -122,6 +122,7 @@
     <Compile Include="Business\Operations\ISHComponent\ISHServiceTranslation\SetISHIntegrationWorldServerOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\ISHServiceTranslation\SetISHServiceTranslationOrganizerOperation.cs" />
     <Compile Include="Business\Operations\ISHComponent\ISHServiceTranslation\SetISHServiceTranslationBuilderOperation.cs" />
+    <Compile Include="Cmdlets\BasePSCredentialCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHIISAppPoolCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\GetISHCOMPlusCmdlet.cs" />
     <Compile Include="Cmdlets\ISHComponent\ISHServiceBackgroundTask\RemoveISHServiceBackgroundTaskCmdlet.cs" />

@@ -1,6 +1,6 @@
 # Introduction
 
-**{ModuleName}** is a PowerShell module that enables the **code as configuration** concept for [SDL](https://sdl.com/)'s [Knowledge Center {ReleaseYear}](http://www.sdl.com/xml/) **Content Manager {SupportedCMVersion}** service. 
+**{ModuleName}** is a PowerShell module that enables the **code as configuration** concept for [SDL](https://sdl.com/)'s [{MarketingReleaseName} ({SupportedCMVersion})](http://www.sdl.com/software-and-services/tridion-dx/tridion-docs.html) **Content Manager {SupportedCMVersion}** service. 
 With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: 
 
 - Query all available deployments.

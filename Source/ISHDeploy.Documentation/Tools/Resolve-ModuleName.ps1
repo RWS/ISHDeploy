@@ -1,7 +1,7 @@
 ﻿param (
     [Parameter(Mandatory=$true)]
     [string]
-    $ReleaseYear,
+    $MarketingReleaseName,
     [Parameter(Mandatory=$true)]
     [string]
     $SupportedCMVersion,
@@ -27,8 +27,8 @@ try
 		Write-Debug "Loading $($_.FullName)"
 		$content = $_|Get-Content
 		Write-Verbose "Loaded $($_.FullName)"
-		$content=$content -replace "{ModuleName}",$moduleName
-        $content=$content -replace "{ReleaseYear}",$ReleaseYear
+		$content=$content -replace "{ModuleName}", $moduleName
+        $content=$content -replace "{MarketingReleaseName}", $MarketingReleaseName
         $content=$content -replace "{SupportedCMVersion}",$SupportedCMVersion
         $content=$content -replace "{SupportedCMVersionMajor}",$supportedCMVersionMajor
         $content=$content -replace "{SupportedCMVersionMinor}",$supportedCMVersionMinor

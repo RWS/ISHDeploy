@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Common.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
@@ -42,9 +43,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		{
 			Invoker = new ActionInvoker(logger, "Reset STS database");
 
-            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            var stoptOperation = new StopISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(stoptOperation.Invoker.GetActions());
+
             Invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+
+            var startOperation = new StartISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+
             Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 

@@ -16,6 +16,7 @@
 
 using System;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Common;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Certificate;
@@ -55,10 +56,10 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             Invoker = new ActionInvoker(logger, "Setting of STS token signing certificate and type of authentication");
 
-            AddActionsToStopSTSApplicationPool();
+            AddActionsToStopSTSApplicationPool(ishDeployment);
             AddActionsToSetTokenSigningCertificate(thumbprint);
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
-            AddActionsToStartSTSApplicationPool();
+            AddActionsToStartSTSApplicationPool(ishDeployment);
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         {
             Invoker = new ActionInvoker(logger, "Setting of STS token signing certificate");
 
-            AddActionsToStopSTSApplicationPool();
+            AddActionsToStopSTSApplicationPool(ishDeployment);
             AddActionsToSetTokenSigningCertificate(thumbprint);
 
             string authenticationType = string.Empty;
@@ -84,7 +85,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
                 var applicationPoolUser = $@"IIS AppPool\{InputParameters.STSAppPoolName}";
                 AddActionsToSetCertificateFilePermission(applicationPoolUser, GetNormalizedThumbprint(thumbprint));
             }
-            AddActionsToStartSTSApplicationPool();
+            AddActionsToStartSTSApplicationPool(ishDeployment);
         }
 
         /// <summary>
@@ -100,9 +101,9 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 
             Invoker = new ActionInvoker(logger, "Setting of STS authentication type");
 
-            AddActionsToStopSTSApplicationPool();
+            AddActionsToStopSTSApplicationPool(ishDeployment);
             AddActionsToSetAuthenticationType(ishDeployment, authenticationType);
-            AddActionsToStartSTSApplicationPool();
+            AddActionsToStartSTSApplicationPool(ishDeployment);
         }
 
         /// <summary>
@@ -123,9 +124,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// Adds the stop STS application pool action.
         /// </summary>
-        private void AddActionsToStopSTSApplicationPool()
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        private void AddActionsToStopSTSApplicationPool(Models.ISHDeployment ishDeployment)
         {
-            Invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
+            var stoptOperation = new StopISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(stoptOperation.Invoker.GetActions());
         }
 
         /// <summary>
@@ -139,7 +142,6 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             var subjectThumbprint = string.Empty;
             (new GetCertificateSubjectByThumbprintAction(Logger, thumbprint, result => subjectThumbprint = result)).Execute();
 
-            Invoker.AddAction(new StopApplicationPoolAction(Logger, InputParameters.STSAppPoolName));
             Invoker.AddAction(new SetAttributeValueAction(Logger, InfoShareSTSConfigPath, InfoShareSTSConfig.CertificateThumbprintAttributeXPath, thumbprint));
 
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
@@ -273,13 +275,11 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         /// <summary>
         /// Adds start STS application pool action.
         /// </summary>
-        private void AddActionsToStartSTSApplicationPool()
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        private void AddActionsToStartSTSApplicationPool(Models.ISHDeployment ishDeployment)
         {
-            // Recycling Application pool for STS
-            Invoker.AddAction(new RecycleApplicationPoolAction(Logger, InputParameters.STSAppPoolName, true));
-
-            // Waiting until files becomes unlocked
-            Invoker.AddAction(new FileWaitUnlockAction(Logger, InfoShareSTSWebConfigPath));
+            var startOperation = new StartISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
         }
 
         /// <summary>

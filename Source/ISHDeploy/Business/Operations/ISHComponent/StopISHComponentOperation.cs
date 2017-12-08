@@ -45,12 +45,76 @@ namespace ISHDeploy.Business.Operations.ISHComponent
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="componentsNames">Names of components to be enabled.</param>
+        /// <remarks>Don't use this method for background task services</remarks>
+        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, params ISHComponentName[] componentsNames) :
+            base(logger, ishDeployment)
+        {
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+            var components =
+               dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath).Components.Where(x => componentsNames.Contains(x.Name)).ToList();
+
+            Invoker = new ActionInvoker(logger, "Stopping of components");
+
+            InitializeActions(logger, ishDeployment, components);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
         /// <param name="components">Array of components to be stopped.</param>
         /// <remarks>Don't use this method for background task services</remarks>
         public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, IEnumerable<Models.ISHComponent> components) :
             base(logger, ishDeployment)
         {
             Invoker = new ActionInvoker(logger, "Stopping of components");
+
+            InitializeActions(logger, ishDeployment, components);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Stopped.</param>
+        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
+            base(logger, ishDeployment)
+        {
+            Invoker = new ActionInvoker(logger, $"Stopping of BackgroundTask component with role `{backgroundTaskRole}`");
+            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
+
+            var componentsCollection =
+                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
+
+            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
+
+            if (component != null)
+            {
+                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
+                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Initializes actions of the <see cref="StopISHComponentOperation"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="ishDeployment">The instance of the deployment.</param>
+        /// <param name="components">Array with the components to be Startd.</param>
+        private void InitializeActions(ILogger logger, Models.ISHDeployment ishDeployment,
+            IEnumerable<Models.ISHComponent> components)
+        {
             var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
 
             // Reorder Components Collection (make sure the crawler service stops first and then the lucene
@@ -133,37 +197,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StopISHComponentOperation"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="ishDeployment">The instance of the deployment.</param>
-        /// <param name="backgroundTaskRole">The role of BackgroundTask component to be Stopped.</param>
-        public StopISHComponentOperation(ILogger logger, Models.ISHDeployment ishDeployment, string backgroundTaskRole) :
-            base(logger, ishDeployment)
-        {
-            Invoker = new ActionInvoker(logger, $"Stopping of BackgroundTask component with role `{backgroundTaskRole}`");
-            var serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-
-            var componentsCollection =
-                dataAggregateHelper.GetExpectedStateOfComponents(CurrentISHComponentStatesFilePath.AbsolutePath);
-
-            var component = componentsCollection[ISHComponentName.BackgroundTask, backgroundTaskRole];
-
-            if (component != null)
-            {
-                var services = serviceManager.GetISHBackgroundTaskWindowsServices(ishDeployment.Name);
-                foreach (var service in services.Where(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    Invoker.AddAction(new StopWindowsServiceAction(Logger, service));
-                }
-            }
-            else
-            {
-                throw new ArgumentException($"The BackgroundTask component with role `{backgroundTaskRole}` does not exist");
-            }
-        }
 
         /// <summary>
         /// Runs current operation.

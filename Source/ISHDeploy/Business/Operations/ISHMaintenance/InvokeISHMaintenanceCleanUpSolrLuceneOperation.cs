@@ -61,10 +61,14 @@ namespace ISHDeploy.Business.Operations.ISHMaintenance
             Invoker.AddAction(new FileCleanDirectoryAction(logger, SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath));
             Invoker.AddAction(new FileCleanDirectoryAction(logger, SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath));
 
-            // Start Crawler and SolrLucene services
-            foreach (var service in services)
+            if (ishDeployment.Status == ISHDeploymentStatus.Started ||
+                ishDeployment.Status == ISHDeploymentStatus.Starting)
             {
-                Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                // Start Crawler and SolrLucene services
+                foreach (var service in services)
+                {
+                    Invoker.AddAction(new StartWindowsServiceAction(Logger, service));
+                }
             }
         }
 

@@ -18,11 +18,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.Asserts;
 using ISHDeploy.Data.Actions.DataBase;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.SQL;
 using Models = ISHDeploy.Common.Models;
@@ -60,13 +60,14 @@ namespace ISHDeploy.Business.Operations.ISHSTS
             (new FileExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, returnResult => isDataBaseFileExist = returnResult)).Execute();
             if (!isDataBaseFileExist)
             {
-                Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
+                var startOperation = new StartISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+                Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+
                 Invoker.AddAction(new SqlCompactEnsureDataBaseExistsAction(logger, InfoShareSTSDataBasePath.AbsolutePath, $"{InputParameters.BaseUrl}/{InputParameters.STSWebAppName}"));
                 Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSDataBasePath));
             }
 
-            string relyingPartyTypePrefix;
-            relyingPartyTypePrefix = relyingPartyType == RelyingPartyType.None ? Regex.Match(name, @"^(?<prefix>[A-Z]+)\:").Groups["prefix"].Value : relyingPartyType.ToString();
+            var relyingPartyTypePrefix = relyingPartyType == RelyingPartyType.None ? Regex.Match(name, @"^(?<prefix>[A-Z]+)\:").Groups["prefix"].Value : relyingPartyType.ToString();
 
             if (!string.IsNullOrEmpty(relyingPartyTypePrefix))
             {

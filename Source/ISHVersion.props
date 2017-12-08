@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ReleaseYear>Knowledge Center 2016</ReleaseYear>
+    <MarketingReleaseName>Knowledge Center 2016</MarketingReleaseName>
     <SupportedCMVersion>12.0</SupportedCMVersion>
     <SoftwareCMVersion>TBA</SoftwareCMVersion>
     <MinPowerShellVersion>3.0</MinPowerShellVersion>

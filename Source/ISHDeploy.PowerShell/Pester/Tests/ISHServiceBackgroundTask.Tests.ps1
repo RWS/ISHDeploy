@@ -106,29 +106,6 @@ $scriptBlockRemoveISHServiceBackgroundTask = {
     Remove-ISHServiceBackgroundTask -ISHDeployment $ishDeployName @parameters
 }
 
-$scriptBlockStartISHDeployment = {
-    param (
-        $ishDeployName
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Start-ISHDeployment -ISHDeployment $ishDeploy
-}
-
-$scriptBlockStopISHDeployment = {
-    param (
-        $ishDeployName
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Stop-ISHDeployment -ISHDeployment $ishDeployName
-}
-
 #endregion
 
 

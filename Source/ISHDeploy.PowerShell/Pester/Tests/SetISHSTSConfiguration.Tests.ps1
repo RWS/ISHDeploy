@@ -177,7 +177,7 @@ Describe "Testing Set-ISHSTSConfiguration"{
         }
 	}
 
-	It "Undo-ISHDeployment switches windows authentication in iis "{      
+	It "Undo-ISHDeployment switches windows authentication in iis"{      
         #Act
 		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "Windows"
         $property = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetWebConfigurationProperty -Session $session -ArgumentList $testingDeploymentName
@@ -187,7 +187,20 @@ Describe "Testing Set-ISHSTSConfiguration"{
 		$property = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetWebConfigurationProperty -Session $session -ArgumentList $testingDeploymentName
 		
 		$property| Should be False
-        
+    }
+    
+    It "Set-ISHSTSConfiguration should not start STS if deployment is stopped"{       
+	    
+        $pools = GetAppPoolState
+        $pools.Count | Should be 3 
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName 
+        #Act
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHSTSConfiguration -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "UsernamePassword"
+        #Assert
+
+        $pools = GetAppPoolState
+        $pools.Count | Should be 0 
     }
 }
 

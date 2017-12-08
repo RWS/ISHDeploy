@@ -521,3 +521,77 @@ function getRemoteComputerName() {
 
     $global:RemoteComputerName = $result
 }
+
+$scriptBlockStartISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Start-ISHDeployment -ISHDeployment $ishDeploy
+}
+
+$scriptBlockStopISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Stop-ISHDeployment -ISHDeployment $ishDeployName
+}
+
+$scriptBlockRestartISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Restart-ISHDeployment -ISHDeployment $ishDeployName
+}
+
+$scriptBlockGetAppPoolState = {
+    param (
+        $testingDeployment,
+        $webAppCMName,
+        $webAppWSName,
+        $webAppSTSName
+    )
+
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $webAppCMName)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $webAppWSName)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $webAppSTSName)
+    
+    $result = @{}
+
+    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
+    foreach ($line in $array) {
+            $splitedLine = $line.split(" ")
+            $processIdAsString = $splitedLine[1]
+            $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
+            if ($splitedLine[2] -match $cmAppPoolName)
+            {
+                $result["CM"] = "$cmAppPoolName started 1"
+            } 
+            if ($splitedLine[2] -match $wsAppPoolName)
+            {
+                $result["WS"] = "$wsAppPoolName started 2"
+            }
+            if ($splitedLine[2] -match $stsAppPoolName)
+            {
+                $result["STS"] = "$stsAppPoolName started 3"
+            }
+        }
+    return $result
+}
+
+function GetAppPoolState() {
+    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $testingDeployment.WebAppNameCM, $testingDeployment.WebAppNameWS, $testingDeployment.WebAppNameSTS 
+    return $pools
+}

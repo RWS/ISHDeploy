@@ -17,11 +17,11 @@ using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Data.Actions.Certificate;
 using ISHDeploy.Data.Actions.DataBase;
-using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Data.Actions.XmlFile;
 using System.ServiceModel.Security;
+using ISHDeploy.Business.Operations.ISHComponent;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Managers.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
@@ -71,8 +71,8 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
                             string.Join(", ", InfoShareSTSDataBase.GetSvcPaths(InputParameters.BaseUrl, InputParameters.WebAppNameWS)))));
             }
 
-            // Stop STS Application pool before updating RelyingParties 
-            Invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
+            var stoptOperation = new StopISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(stoptOperation.Invoker.GetActions());
 
             // thumbprint
             Invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.CertificateReferenceFindValueAttributeXPath, thumbprint));
@@ -91,11 +91,8 @@ namespace ISHDeploy.Business.Operations.ISHAPIWCFService
                 Invoker.AddAction(new SetElementValueAction(Logger, InputParametersFilePath, InputParametersXml.ServiceCertificateValidationModeXPath, validationMode.ToString()));
             }
 
-            // Recycling Application pool for STS
-            Invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-
-            // Waiting until files becomes unlocked
-            Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+            var startOperation = new StartISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
         }
 
         /// <summary>

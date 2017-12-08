@@ -283,12 +283,8 @@ namespace ISHDeploy.Business.Operations.ISHComponent
                 }
             }
 
-            if (ishDeployment.Status == ISHDeploymentStatus.Started || ishDeployment.Status == ISHDeploymentStatus.Starting)
-            {
-                // [SCTCM-302] Only enable and start the components when the deployment is started or in the process of starting
-                var startOperation = new StartISHComponentOperation(logger, ishDeployment, components);
-                Invoker.AddActionsRange(startOperation.Invoker.GetActions());
-            }
+            var startOperation = new StartISHComponentOperation(logger, ishDeployment, components);
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
         }
         #endregion
     }

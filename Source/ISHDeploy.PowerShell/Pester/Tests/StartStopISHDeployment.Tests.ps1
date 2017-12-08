@@ -17,15 +17,6 @@ $xmlAppPath = "\\$computerName\$xmlAppPath"
 $xmlDataPath = $dataPath.replace(":", "$")
 $xmlDataPath = "\\$computerName\$xmlDataPath"
 
-#$userName = Get-TestDataValue “testDomainUserName”
-#$userPassword = Get-TestDataValue "testDomainUserPassword"
-
-#$secpasswd = ConvertTo-SecureString “$userPassword” -AsPlainText -Force
-#$testCreds = New-Object System.Management.Automation.PSCredential ($userName, $secpasswd)
-
-$webAppCMName =  $testingDeployment.WebAppNameCM
-$webAppWSName =  $testingDeployment.WebAppNameWS
-$webAppSTSName =  $testingDeployment.WebAppNameSTS
 #endregion
 
 #region Script Blocks
@@ -64,39 +55,6 @@ $scriptBlockGetISHComponent = {
 
     Get-ISHComponent -ISHDeployment $ishDeployName
 
-}
-
-$scriptBlockStartISHDeployment = {
-    param (
-        $ishDeployName
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Start-ISHDeployment -ISHDeployment $ishDeployName
-}
-
-$scriptBlockStopISHDeployment = {
-    param (
-        $ishDeployName
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Stop-ISHDeployment -ISHDeployment $ishDeployName
-}
-
-$scriptBlockRestartISHDeployment = {
-    param (
-        $ishDeployName
-    )
-    if($PSSenderInfo) {
-        $DebugPreference=$Using:DebugPreference
-        $VerbosePreference=$Using:VerbosePreference 
-    }
-    Restart-ISHDeployment -ISHDeployment $ishDeployName
 }
 
 $scriptBlockGetCOMState = {
@@ -139,41 +97,6 @@ $scriptBlockDisableISHIISAppPool = {
     }
     $ishDeploy = Get-ISHDeployment -Name $ishDeployName
     Disable-ISHIISAppPool -ISHDeployment $ishDeploy
-}
-
-$scriptBlockGetAppPoolState = {
-    param (
-        $testingDeployment,
-        $webAppCMName,
-        $webAppWSName,
-        $webAppSTSName
-    )
-
-    $cmAppPoolName = ("TrisoftAppPool{0}" -f $webAppCMName)
-    $wsAppPoolName = ("TrisoftAppPool{0}" -f $webAppWSName)
-    $stsAppPoolName = ("TrisoftAppPool{0}" -f $webAppSTSName)
-    
-    $result = @{}
-
-    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
-    foreach ($line in $array) {
-            $splitedLine = $line.split(" ")
-            $processIdAsString = $splitedLine[1]
-            $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
-            if ($splitedLine[2] -match $cmAppPoolName)
-            {
-                $result["CM"] = "$cmAppPoolName started 1"
-            } 
-            if ($splitedLine[2] -match $wsAppPoolName)
-            {
-                $result["WS"] = "$wsAppPoolName started 2"
-            }
-            if ($splitedLine[2] -match $stsAppPoolName)
-            {
-                $result["STS"] = "$stsAppPoolName started 3"
-            }
-        }
-    return $result
 }
 
 $scriptBlockGetISHServiceTranslationBuilder = {
@@ -256,7 +179,7 @@ function CheckStoppedVanillaDeployment() {
     $TriDKApplicationIsEnabled | Should be False
     $AuthorApplicationIsStarted | Should be False     
 
-    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+    $pools = GetAppPoolState
     $pools.Count | Should be 0   
      
     $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -291,7 +214,7 @@ function CheckStartedVanillaDeployment() {
     $TriDKApplicationIsEnabled | Should be True
     $AuthorApplicationIsStarted | Should be True     
 
-    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+    $pools = GetAppPoolState
     $pools.Count | Should be 3   
      
     $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -387,7 +310,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
     
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools = GetAppPoolState
         $pools.Count | Should be 0   
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -424,7 +347,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
     
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools = GetAppPoolState
         $pools.Count | Should be 0   
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -466,7 +389,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
     
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools = GetAppPoolState
         $pools.Count | Should be 0   
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName
@@ -500,7 +423,7 @@ Describe "Testing Start and Stop ISH Deployment"{
         $TriDKApplicationIsEnabled | Should be False
         $AuthorApplicationIsStarted | Should be False     
     
-        $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $webAppCMName, $webAppWSName, $webAppSTSName
+        $pools = GetAppPoolState
         $pools.Count | Should be 0   
      
         $components = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHComponent -Session $session -ArgumentList $testingDeploymentName

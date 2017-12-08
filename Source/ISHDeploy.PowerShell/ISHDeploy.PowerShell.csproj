@@ -62,7 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Pester\Helpers\Init-TestData.ps1" />
     <None Include="Pester\Test-All.ps1" />
     <None Include="Pester\Tests\ClearISHDeploymentHistory.Tests.ps1" />
     <None Include="Pester\Tests\Common.ps1" />
@@ -72,8 +71,19 @@
     <None Include="Pester\Tests\GetISHHistory.Tests.ps1" />
     <None Include="Pester\Tests\GetISHPackageFolder.Tests.ps1" />
     <None Include="Pester\Tests\GetISHParameters.Tests.ps1" />
+    <None Include="Pester\Tests\InvokeISHMaintanance.Tests.ps1" />
+    <None Include="Pester\Tests\ISHCOMPlus.Tests.ps1" />
+    <None Include="Pester\Tests\ISHActorUser.Tests.ps1" />
+    <None Include="Pester\Tests\ISHComponent.Tests.ps1" />
     <None Include="Pester\Tests\ISHContentEditor.Tests.ps1" />
     <None Include="Pester\Tests\ISHDeployment.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIISAppPool.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationDB.Tests.ps1" />
+    <None Include="Pester\Tests\ISHIntegrationOSUser.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceBackgroundTask.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceCrawler.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceFullTextIndex.Tests.ps1" />
+    <None Include="Pester\Tests\ISHServiceUser.Tests.ps1" />
     <None Include="Pester\Tests\ISHTranslationFileSystemExport.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationSTSCertificate.Tests.ps1" />
     <None Include="Pester\Tests\ISHIntegrationDBSTSSQLServerConfiguration.Tests.ps1" />
@@ -97,8 +107,8 @@
     <None Include="Pester\Tests\SetISHCMCUILResourceGroup.Tests.ps1" />
     <None Include="Pester\Tests\SetISHSTSConfiguration.Tests.ps1" />
     <None Include="Pester\Tests\SetWSFederationConfiguration.Tests.ps1" />
+    <None Include="Pester\Tests\StartStopISHDeployment.Tests.ps1" />
     <None Include="Pester\Tests\UndoISHDeployment.Tests.ps1" />
-    <None Include="Publish\Publish-Module.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

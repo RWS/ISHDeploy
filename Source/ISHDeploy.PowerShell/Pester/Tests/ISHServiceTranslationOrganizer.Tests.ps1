@@ -44,9 +44,7 @@ $scriptBlockSetISHServiceTranslationOrganizer = {
         $VerbosePreference=$Using:VerbosePreference 
     }
 
-    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
-    Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeploy @parameters
-
+    Set-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployName @parameters
 }
 
 $scriptBlockGetISHServiceTranslationOrganizer = {
@@ -117,6 +115,19 @@ $scriptBlockReadTargetXML = {
 
     return $result
 }
+$scriptBlockGetISHServiceTranslationOrganizer = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    Get-ISHServiceTranslationOrganizer -ISHDeployment $ishDeployName
+}
+
 function remoteReadTargetXML() {
 
     #read all files that are touched with commandlet
@@ -152,7 +163,6 @@ Describe "Testing ISHServiceTranslationOrganizer"{
 
     It "Set ISHServiceTranslationOrganizer with all parameters"{       
         #Act
-
         $params = @{DumpFolder = $DumpFolder;MaxTranslationJobItemsUpdatedInOneCall = $MaxTranslationJobItemsUpdatedInOneCall;SystemTaskInterval = $SystemTaskInterval;AttemptsBeforeFailOnRetrieval = $AttemptsBeforeFailOnRetrieval;UpdateLeasedByPerNumberOfItems = $UpdateLeasedByPerNumberOfItems;RetriesOnTimeout = $RetriesOnTimeout;JobPollingInterval= $JobPollingInterval;PendingJobPollingInterval = $PendingJobPollingInterval}
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
         
@@ -238,35 +248,38 @@ Describe "Testing ISHServiceTranslationOrganizer"{
         $TranslationServices.Count | Should be 3
 
      }
-	 #It "Set ISHServiceTranslationOrganizer downscales amount of services"{
-  #      #Arrange
-  #      $params = @{Count = 3}
-  #      Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
-  #      $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-  #      $TranslationServices.Count | Should be 3
-		#Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-		#$params2 = @{Count = 2}
-		#Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params2
-  #      #Timeout added because of Windows procedure of stopping and removing services
-  #      Start-Sleep -Seconds 60
-  #      $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-  #      $TranslationServices.Count | Should be 2
-  #   }
+	
+<#	
+	 #Commented temporary to allow red and blue teams have working builds
+	 It "Set ISHServiceTranslationBuilde downscales amount of services"{
+        #Arrange
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+		$params2 = @{Count = 2}
+		Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params2
+        #Timeout added because of Windows procedure of stopping and removing services
+        Start-Sleep -Seconds 20
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 2
+     }
 
-  #   It "Set ISHServiceTranslationOrganizer saves service state after clonning"{
-  #      #Arrange
-  #      Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-  #      $params = @{Count = 3}
-  #      Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
-  #      #Timeout added because of Windows procedure of stopping and removing services
-  #      Start-Sleep -Seconds 60
-  #      $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
-  #      $TranslationServices.Count | Should be 3
-		#foreach($service in $TranslationServices){
-  #          $service.Status -eq "Running" | Should be $true
-  #      }
+     It "Set ISHServiceTranslationOrganizer saves service state after clonning"{
+        #Arrange
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $params = @{Count = 3}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        #Timeout added because of Windows procedure of stopping and removing services
+        Start-Sleep -Seconds 60
+        $TranslationServices = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $TranslationServices.Count | Should be 3
+		foreach($service in $TranslationServices){
+            $service.Status -eq "Running" | Should be $true
+        }
 		
-  #   }
+  } #>
 
   It "Set ISHServiceTranslationOrganizer changes hosted parameters"{       
         #Act
@@ -344,8 +357,59 @@ Describe "Testing ISHServiceTranslationOrganizer"{
 
         $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = "WindowsMixed";IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
         {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params} | Should Throw "When IssuerBindingType is of the Windows type, then Credentials cannot be specified"
-        
-       
     }
-     UndoDeploymentBackToVanila $testingDeploymentName $true
+
+    It "Get ISHServiceTranslationOrganizer response should not contains Role property"{       
+        #Act
+        $services = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName
+        $service.Role | Should be $null
+    }
+    
+    It "Set ISHServiceTranslationOrganizer change credentials"{       
+        $testUsername = "testUserName"
+        $testPassword = "testPassword"
+        $secpasswd = ConvertTo-SecureString $testPassword -AsPlainText -Force
+        $testCreds = New-Object System.Management.Automation.PSCredential ($testUsername, $secpasswd)
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        getRemoteComputerName
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+        $serviceUsernameFromFile| Should be "$RemoteComputerName\$testUsername"
+        $servicePasswordFromFile| Should be $testPassword
+    }
+    
+    It "Set ISHServiceTranslationOrganizer credentials normalization"{
+        $testUsername = ".\test.User.Name"
+        $testPassword = "testPassword"
+        $secpasswd = ConvertTo-SecureString $testPassword -AsPlainText -Force
+        $testCreds = New-Object System.Management.Automation.PSCredential ($testUsername, $secpasswd)
+
+        $params = @{ISHWS = $ISHWS;ISHWSCertificateValidationMode = $ISHWSCertificateValidationMode;ISHWSDnsIdentity = $ISHWSDnsIdentity;IssuerBindingType  = $IssuerBindingType;IssuerEndpoint  = $IssuerEndpoint; Credential = $testCreds}
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHServiceTranslationOrganizer -Session $session -ArgumentList $testingDeploymentName, $params
+        
+        #Assert
+        remoteReadTargetXML
+        
+        getRemoteComputerName
+        
+        $ISHWSFromFile | Should be $ISHWS
+        $ISHWSCertificateValidationModeFromFile | Should be $ISHWSCertificateValidationMode
+        $ISHWSDnsIdentityFromFile | Should be $ISHWSDnsIdentity
+        $IssuerBindingTypeFromFile | Should be $IssuerBindingType
+        $IssuerEndpointFromFile | Should be $IssuerEndpoint
+        $serviceUsernameFromFile| Should be "$RemoteComputerName\test.User.Name"
+        $servicePasswordFromFile| Should be $testPassword
+    }
+
+    UndoDeploymentBackToVanila $testingDeploymentName $true
 }

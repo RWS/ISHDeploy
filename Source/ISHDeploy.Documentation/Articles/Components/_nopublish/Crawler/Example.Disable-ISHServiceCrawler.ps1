@@ -1,0 +1,1 @@
+﻿Disable-ISHServiceCrawler -ISHDeployment $deploymentName

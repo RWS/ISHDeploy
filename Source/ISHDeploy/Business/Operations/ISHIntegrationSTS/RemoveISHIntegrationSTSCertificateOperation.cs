@@ -30,7 +30,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
-		private readonly IActionInvoker _invoker;
+		public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -41,18 +41,18 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         public RemoveISHIntegrationSTSCertificateOperation(ILogger logger, Models.ISHDeployment ishDeployment, string issuer) :
             base(logger, ishDeployment)
 		{
-			_invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
+			Invoker = new ActionInvoker(logger, "Remove certificate credentials based on issuer name");
 
 			// Author web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfigPath, 
+			Invoker.AddAction(new RemoveNodesAction(logger, InfoShareAuthorWebConfigPath, 
 				String.Format(InfoShareAuthorWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
         
 			// WS web Config
-			_invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfigPath, 
+			Invoker.AddAction(new RemoveNodesAction(logger, InfoShareWSWebConfigPath, 
 				String.Format(InfoShareWSWebConfig.IdentityTrustedIssuersByNameXPath, issuer)));
 
             // STS web Config
-            _invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfigPath,
+            Invoker.AddAction(new RemoveNodesAction(logger, InfoShareSTSWebConfigPath,
 				String.Format(InfoShareSTSWebConfig.ServiceBehaviorsTrustedUserByNameXPath, issuer)));
 		}
 
@@ -61,7 +61,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
 		/// </summary>
 		public void Run()
 		{
-			_invoker.Invoke();
+			Invoker.Invoke();
 		}
 	}
 }

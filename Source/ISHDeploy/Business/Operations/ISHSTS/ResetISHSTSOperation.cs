@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 using ISHDeploy.Business.Invokers;
+using ISHDeploy.Business.Operations.ISHComponent;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Actions.File;
-using ISHDeploy.Data.Actions.WebAdministration;
 using ISHDeploy.Common.Interfaces;
 using Models = ISHDeploy.Common.Models;
 
@@ -30,7 +31,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// <summary>
 		/// The actions invoker
 		/// </summary>
-		private readonly IActionInvoker _invoker;
+		public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
@@ -40,12 +41,17 @@ namespace ISHDeploy.Business.Operations.ISHSTS
         public ResetISHSTSOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
 		{
-			_invoker = new ActionInvoker(logger, "Reset STS database");
+			Invoker = new ActionInvoker(logger, "Reset STS database");
 
-            _invoker.AddAction(new StopApplicationPoolAction(logger, InputParameters.STSAppPoolName));
-            _invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
-            _invoker.AddAction(new RecycleApplicationPoolAction(logger, InputParameters.STSAppPoolName, true));
-            _invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
+            var stoptOperation = new StopISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(stoptOperation.Invoker.GetActions());
+
+            Invoker.AddAction(new FileCleanDirectoryAction(logger, WebNameSTSAppData));
+
+            var startOperation = new StartISHComponentOperation(Logger, ishDeployment, ISHComponentName.STS);
+            Invoker.AddActionsRange(startOperation.Invoker.GetActions());
+
+            Invoker.AddAction(new FileWaitUnlockAction(logger, InfoShareSTSWebConfigPath));
         }
 
 		/// <summary>
@@ -53,7 +59,7 @@ namespace ISHDeploy.Business.Operations.ISHSTS
 		/// </summary>
 		public void Run()
 		{
-			_invoker.Invoke();
+			Invoker.Invoke();
 		}
 	}
 }

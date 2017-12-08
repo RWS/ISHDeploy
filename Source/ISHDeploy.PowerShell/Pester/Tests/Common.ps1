@@ -85,7 +85,9 @@ $scriptBlockGetInputParameters = {
 	$result["servicecertificatevalidationmode"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatevalidationmode']/currentvalue")[0].InnerText
 	$result["servicecertificatesubjectname"] = $inputParameters.SelectNodes("inputconfig/param[@name='servicecertificatesubjectname']/currentvalue")[0].InnerText
 	$result["issuerwstrustendpointurl_normalized"] = $inputParameters.SelectNodes("inputconfig/param[@name='issuerwstrustendpointurl_normalized']/currentvalue")[0].InnerText
-
+	$result["serviceusername"] = $inputParameters.SelectNodes("inputconfig/param[@name='serviceusername']/currentvalue")[0].InnerText
+	$result["actorusername"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorusername']/currentvalue")[0].InnerText
+	$result["actoruserpassword"] = $inputParameters.SelectNodes("inputconfig/param[@name='issueractorpassword']/currentvalue")[0].InnerText
     return $result
     
 }
@@ -177,9 +179,7 @@ $scriptBlockUndoDeployment = {
     
     # Sets a value indicating whether skip recycle or not. For integration test perspective only. Please, see https://jira.sdl.com/browse/TS-11329
     [ISHDeploy.Business.Operations.ISHDeployment.UndoISHDeploymentOperation]::SkipRecycle = $skipRecycling
-
-    $ishDeploy = Get-ISHDeployment -Name $deployName
-    Undo-ISHDeployment -ISHDeployment $ishDeploy
+    Undo-ISHDeployment -ISHDeployment $deployName
 }
 
 function UndoDeploymentBackToVanila {
@@ -191,31 +191,6 @@ function UndoDeploymentBackToVanila {
     ) 
 
     Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockUndoDeployment -Session $session -ArgumentList $deploymentName, $skipRecycling
-
-    if ($skipRecycling -eq $false){
-
-        $i = 0
-        $doesDBFileExist = Test-Path $dbPath
-
-        if ($doesDBFileExist -ne $true) {
-            Write-Debug "$dbPath does not exist"
-            WebRequestToSTS $testingDeploymentName
-            Start-Sleep -Milliseconds 1000
-        }
-
-        $doesDBFileExist = Test-Path $dbPath
-        while($doesDBFileExist -ne $true)
-        {
-            Start-Sleep -Milliseconds 7000
-            $doesDBFileExist = Test-Path $dbPath
-
-            if ($i -ge 2)
-            {
-                $doesDBFileExist | Should be $true
-            }
-            $i++
-        }
-    }
 }
 
 #remove item remotely
@@ -478,4 +453,145 @@ $scriptBlockNewISHIntegrationTMSTemplate = {
 
     New-ISHIntegrationTMSTemplate  @parameters
 
+}
+
+$scriptBlockGetISHComponent = {
+    param (
+        $ishDeployName
+
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Get-ISHComponent -ISHDeployment $ishDeploy
+
+}
+
+$scriptBlockGetAppPoolStartTime = {
+    param (
+        $testingDeployment
+    )
+
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameCM)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameWS)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameSTS)
+    
+    $result = @{}
+    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
+    foreach ($line in $array) {
+        $splitedLine = $line.split(" ")
+        $processIdAsString = $splitedLine[1]
+        $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
+        if ($splitedLine[2] -match $cmAppPoolName)
+        {
+            $result["cm"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $wsAppPoolName)
+        {
+            $result["ws"] = (Get-Process -Id $processId).StartTime
+        }
+        if ($splitedLine[2] -match $stsAppPoolName)
+        {
+            $result["sts"] = (Get-Process -Id $processId).StartTime
+        }
+    }
+    
+    return $result
+}
+
+function Get-AppPoolStartTime {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
+    return $result
+}
+
+$scriptBlockGetRemoteComputerName = {
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+
+    return $env:COMPUTERNAME
+}
+
+function getRemoteComputerName() {
+    $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetRemoteComputerName -Session $session
+
+    $global:RemoteComputerName = $result
+}
+
+$scriptBlockStartISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    $ishDeploy = Get-ISHDeployment -Name $ishDeployName
+    Start-ISHDeployment -ISHDeployment $ishDeploy
+}
+
+$scriptBlockStopISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Stop-ISHDeployment -ISHDeployment $ishDeployName
+}
+
+$scriptBlockRestartISHDeployment = {
+    param (
+        $ishDeployName
+    )
+    if($PSSenderInfo) {
+        $DebugPreference=$Using:DebugPreference
+        $VerbosePreference=$Using:VerbosePreference 
+    }
+    Restart-ISHDeployment -ISHDeployment $ishDeployName
+}
+
+$scriptBlockGetAppPoolState = {
+    param (
+        $testingDeployment,
+        $webAppCMName,
+        $webAppWSName,
+        $webAppSTSName
+    )
+
+    $cmAppPoolName = ("TrisoftAppPool{0}" -f $webAppCMName)
+    $wsAppPoolName = ("TrisoftAppPool{0}" -f $webAppWSName)
+    $stsAppPoolName = ("TrisoftAppPool{0}" -f $webAppSTSName)
+    
+    $result = @{}
+
+    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
+    foreach ($line in $array) {
+            $splitedLine = $line.split(" ")
+            $processIdAsString = $splitedLine[1]
+            $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
+            if ($splitedLine[2] -match $cmAppPoolName)
+            {
+                $result["CM"] = "$cmAppPoolName started 1"
+            } 
+            if ($splitedLine[2] -match $wsAppPoolName)
+            {
+                $result["WS"] = "$wsAppPoolName started 2"
+            }
+            if ($splitedLine[2] -match $stsAppPoolName)
+            {
+                $result["STS"] = "$stsAppPoolName started 3"
+            }
+        }
+    return $result
+}
+
+function GetAppPoolState() {
+    $pools = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolState -Session $session -ArgumentList $testingDeploymentName, $testingDeployment.WebAppNameCM, $testingDeployment.WebAppNameWS, $testingDeployment.WebAppNameSTS 
+    return $pools
 }

@@ -24,9 +24,9 @@ Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 
 The module is available in [PowerShell gallery](https://www.powershellgallery.com/items?q=ISHDeploy&x=0&y=0). 
 
-The PowerShell module name matches the specific version of [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/) release version. For example 
-- **ISHDeploy.12.0.0** targets the release of **12.0.0**
-- **ISHDeploy.12.0.1** targets the release of **12.0.1**
+The PowerShell module name matches the specific major number of release version of [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/). For example 
+- **ISHDeploy.12.0** targets the release of **12.0.0**, **12.0.1**, **12.0.3**, **12.0.4**, **12.0.5**
+- **ISHDeploy.13.0** targets the release of **13.0.0**
 
 Every cmdlet provides rich help that can be explored with the `Get-Help` PowerShell command.
 

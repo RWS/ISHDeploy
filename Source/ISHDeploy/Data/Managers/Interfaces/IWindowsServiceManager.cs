@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using ISHDeploy.Common.Enums;
 using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Managers.Interfaces
 {
@@ -38,14 +39,32 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void StopWindowsService(string serviceName);
 
         /// <summary>
-        /// Gets all windows services of specified type.
+        /// Gets all windows services of deployment of specified type.
         /// </summary>
-        /// <param name="types">Types of deployment service.</param>
         /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="types">Types of deployment service.</param>
         /// <returns>
         /// The windows services of deployment of specified type.
         /// </returns>
         IEnumerable<ISHWindowsService> GetServices(string deploymentName, params ISHWindowsServiceType[] types);
+
+        /// <summary>
+        /// Gets all windows services of deployment of all types.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The all windows services of deployment.
+        /// </returns>
+        IEnumerable<ISHWindowsService> GetAllServices(string deploymentName);
+
+        /// <summary>
+        /// Gets all BackgroundTask windows services.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <returns>
+        /// The BackgroundTask windows services of deployment of specified type.
+        /// </returns>
+        IEnumerable<ISHBackgroundTaskWindowsService> GetISHBackgroundTaskWindowsServices(string deploymentName);
 
         /// <summary>
         /// Removes specific windows service
@@ -60,6 +79,77 @@ namespace ISHDeploy.Data.Managers.Interfaces
         /// <param name="sequence">The sequence of new service.</param>
         /// <param name="userName">The user name.</param>
         /// <param name="password">The password.</param>
-        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password);
+        /// <param name="role">The role of BackgroundTask service.</param>
+        string CloneWindowsService(ISHWindowsService service, int sequence, string userName, string password, string role);
+
+        /// <summary>
+        /// Creates windows service
+        /// </summary>
+        /// <param name="service">The windows service to be created.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>
+        /// The name of new service that have been created.
+        /// </returns>
+        void InstallWindowsService(ISHWindowsServiceBackup service, string userName, string password);
+
+        /// <summary>
+        /// Set windows service credentials
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+
+        void SetWindowsServiceCredentials(string serviceName, string userName, string password);
+
+        /// <summary>
+        /// Set the startup type of the windows service (Manual, Automatic, Automatic (Delayed start),...)
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <param name="startupType">The new startup type of the service.</param>
+        void SetWindowsServiceStartupType(string serviceName, ISHWindowsServiceStartupType startupType);
+
+        /// <summary>
+        /// Gets all dependencies for the windows services of deployment of specified type.
+        /// </summary>
+        /// <param name="deploymentName">ISH deployment name.</param>
+        /// <param name="serviceType">Type of deployment service.</param>
+        /// <returns>
+        /// The dependencies for the specified type.
+        /// </returns>
+         IEnumerable<string> GetDependencies(string deploymentName, ISHWindowsServiceType serviceType);
+
+        /// <summary>
+        /// Remove (all) dependencies for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        void RemoveWindowsServiceDependency(string serviceName);
+
+        /// <summary>
+        /// Check windows service is Started or not
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// True if the state of windows service is Manual or Auto.
+        /// </returns>
+        bool IsWindowsServiceStarted(string serviceName);
+
+        /// <summary>
+        /// Gets properties of windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Properties of windows service.
+        /// </returns>
+        PropertyCollection GetWindowsServiceProperties(string serviceName);
+
+        /// <summary>
+        /// Gets registry key for the windows service
+        /// </summary>
+        /// <param name="serviceName">The name of windows service.</param>
+        /// <returns>
+        /// Registry key for the windows service.
+        /// </returns>
+        string GetWindowsServicesRegistryKey(string serviceName);
     }
 }

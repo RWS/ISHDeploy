@@ -1,0 +1,1 @@
+﻿Get-ISHServiceFullTextIndex -ISHDeployment $deploymentName

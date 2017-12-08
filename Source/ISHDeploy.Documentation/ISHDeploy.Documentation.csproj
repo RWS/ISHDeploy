@@ -58,6 +58,56 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Articles\Components\Managing and tracking components.md" />
+    <None Include="Articles\Components\Scaling the components.md" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Set-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Disable-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Enable-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Get-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Remove-ISHServiceBackgroundTask.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Set-ISHServiceBackgroundTask.Custom.ps1" />
+    <None Include="Articles\Components\_nopublish\BackgroundTask\Example.Set-ISHServiceBackgroundTask.Default.ps1" />
+    <None Include="Articles\Components\_nopublish\COMPlus\Example.Disable-ISHCOMPlus.ps1" />
+    <None Include="Articles\Components\_nopublish\COMPlus\Example.Enable-ISHCOMPlus.ps1" />
+    <None Include="Articles\Components\_nopublish\COMPlus\Example.Get-ISHCOMPlus.ps1" />
+    <None Include="Articles\Components\_nopublish\Crawler\Example.Disable-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Components\_nopublish\Crawler\Example.Enable-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Components\_nopublish\Crawler\Example.Get-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Components\_nopublish\Crawler\Example.Set-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Components\_nopublish\Example.Get-ISHComponent.ps1" />
+    <None Include="Articles\Components\_nopublish\Example.Get-ISHService.ps1" />
+    <None Include="Articles\Components\_nopublish\FullTextIndex\Example.Disable-ISHServiceFullTextIndex.ps1" />
+    <None Include="Articles\Components\_nopublish\FullTextIndex\Example.Enable-ISHServiceFullTextIndex.ps1" />
+    <None Include="Articles\Components\_nopublish\FullTextIndex\Example.Get-ISHServiceFullTextIndex.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationBuilder\Example.Disable-ISHServiceTranslationBuilder.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationBuilder\Example.Enable-ISHServiceTranslationBuilder.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationBuilder\Example.Get-ISHServiceTranslationBuilder.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationBuilder\Example.Set-ISHServiceTranslationBuilder.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationOrganizer\Example.Disable-ISHServiceTranslationOrganizer.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationOrganizer\Example.Enable-ISHServiceTranslationOrganizer.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationOrganizer\Example.Get-ISHServiceTranslationOrganizer.ps1" />
+    <None Include="Articles\Components\_nopublish\TranslationOrganizer\Example.Set-ISHServiceTranslationOrganizer.ps1" />
+    <None Include="Articles\Components\_nopublish\Web\Example.Disable-ISHIISAppPool.ps1" />
+    <None Include="Articles\Components\_nopublish\Web\Example.Enable-ISHIISAppPool.ps1" />
+    <None Include="Articles\Components\_nopublish\Web\Example.Get-ISHIISAppPool.ps1" />
+    <None Include="Articles\Core\Configuring and maintaining search.md" />
+    <None Include="Articles\Core\Configuring credentials.md" />
+    <None Include="Articles\Core\Integrating with a database.md" />
+    <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHActor.ps1" />
+    <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHOSUser.Domain.ps1" />
+    <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHOSUser.Local.ps1" />
+    <None Include="Articles\Core\_nopublish\Credentials\Example.Set-ISHServiceUser.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Get-ISHIntegrationDB.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.Oracle.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.Oracle.Raw.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.SQL.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Set-ISHIntegrationDB.SQL.Raw.ps1" />
+    <None Include="Articles\Core\_nopublish\IntegrationDB\Example.Test-ISHIntegrationDB.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Invoke-ISHMaintenance.Crawler.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Invoke-ISHMaintenance.FullTextIndex.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHIntegrationFullTextIndex.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHServiceCrawler.ps1" />
+    <None Include="Articles\Core\_nopublish\Search\Example.Set-ISHServiceFullTextIndex.ps1" />
     <None Include="Articles\ISHCM\_nopublish\03.CreateButtonBarItem - Full.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateButtonBarItem.ps1" />
     <None Include="Articles\ISHCM\_nopublish\01.CreateSearchMenuBarItem.ps1" />
@@ -103,12 +153,16 @@
     <None Include="Articles\Module\Work with one deployment.md" />
     <None Include="Articles\Module\Work with files and packages.md" />
     <None Include="Articles\Module\Work with one or multiple deployments.md" />
+    <None Include="Articles\State\Starting and stopping.md" />
+    <None Include="Articles\State\_nopublish\Example.Get-ISHDeployment.ps1" />
+    <None Include="Articles\State\_nopublish\Example.Restart-ISHDeployment.ps1" />
+    <None Include="Articles\State\_nopublish\Example.Start-ISHDeployment.ps1" />
+    <None Include="Articles\State\_nopublish\Example.Stop-ISHDeployment.ps1" />
     <None Include="Articles\toc.yml" />
     <None Include="Articles\Translation\Exporting translation jobs to the file system.md" />
     <None Include="Articles\Translation\Configuring the services.md" />
     <None Include="Articles\Translation\Integrating translation jobs with SDL TMS.md" />
     <None Include="Articles\Translation\Integrating translation jobs with SDL World Server.md" />
-    <None Include="Articles\Translation\Scaling the services.md" />
     <None Include="Articles\Translation\_nopublish\Example.New-ISHFieldMetadata.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.New-ISHIntegrationTMSMapping.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.New-ISHIntegrationTMSTemplate.ps1" />
@@ -117,12 +171,9 @@
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHIntegrationWorldServer.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHTranslationFileSystemExport.RequestMetadata.ps1" />
     <None Include="Articles\Translation\_nopublish\Example.Set-ISHTranslationFileSystemExport.ps1" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Enable-ISHServiceTranslation.ps1" />
     <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationOrganizer.Template.ps1" />
     <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationOrganizer.ps1" />
     <None Include="Articles\Translation\_nopublish\Vanilla.Set-ISHServiceTranslationBuilder.ps1" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Get-ISHServiceTranslation.ps1" />
-    <None Include="Articles\Translation\_nopublish\Vanilla.Scale Up.Set-ISHServiceTranslation.ps1" />
     <None Include="index.md" />
     <None Include="Tools\Copy-RootItems.ps1" />
     <None Include="Tools\Copy-Changelog.ps1" />
@@ -140,9 +191,7 @@
     <None Include="Tools\Resolve-ModuleName.ps1" />
     <None Include="web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Articles\Web site\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Articles\Module\_nopublish\Work with files and packages.plantuml" />
     <Content Include="Articles\IntegrationSTS\Integration\All.Zone.Clients.png" />
@@ -156,7 +205,7 @@
     <PostBuildEvent>%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Export-Markdown.ps1" -ModuleDir "$(SolutionDir)ISHDeploy\$(OutDir)\" -ModuleName "$(ModuleName)" -ExportPath "$(ProjectDir)obj\doc\commands" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Resolve-Markdown.ps1" -SourcePath "$(ProjectDir)Articles" -ExportPath "$(ProjectDir)obj\doc\articles" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Tools\Copy-RootItems.ps1" -Verbose
-%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -ReleaseYear "$(ReleaseYear)" -SupportedCMVersion "$(SupportedCMVersion)" -SoftwareCMVersion "$(SoftwareCMVersion)" -Verbose
+%25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Tools\Resolve-ModuleName.ps1" -MarketingReleaseName "$(MarketingReleaseName)" -SupportedCMVersion "$(SupportedCMVersion)" -SoftwareCMVersion "$(SoftwareCMVersion)" -Verbose
 %25WINDIR%25\SysNative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -File "$(ProjectDir)Tools\Copy-Changelog.ps1" -ExportPath "$(ProjectDir)obj\doc" -Verbose</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets" Condition="Exists('..\packages\docfx.msbuild.2.4.0\build\docfx.msbuild.targets')" />

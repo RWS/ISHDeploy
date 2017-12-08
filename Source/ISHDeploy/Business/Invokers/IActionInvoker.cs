@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System.Collections.Generic;
 using ISHDeploy.Common.Interfaces.Actions;
 
 namespace ISHDeploy.Business.Invokers
@@ -29,8 +31,20 @@ namespace ISHDeploy.Business.Invokers
         void AddAction(IAction action);
 
         /// <summary>
+        /// Adds range of actions into invocation list
+        /// </summary>
+        /// <param name="actions">An range of actions to invoke <see cref="T:ISHDeploy.Interfaces.Actions.IAction"/>.</param>
+        void AddActionsRange(IEnumerable<IAction> actions);
+
+        /// <summary>
         /// Invokes actions sequence execution
         /// </summary>
         void Invoke();
+
+        /// <summary>
+        /// Gets list of actions
+        /// </summary>
+        /// <returns>List of actions</returns>
+        IEnumerable<IAction> GetActions();
     }
 }

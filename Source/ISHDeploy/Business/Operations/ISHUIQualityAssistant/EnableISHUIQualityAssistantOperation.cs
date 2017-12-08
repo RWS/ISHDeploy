@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableISHUIQualityAssistantOperation"/> class.
@@ -39,11 +39,11 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         public EnableISHUIQualityAssistantOperation(ILogger logger, Models.ISHDeployment ishDeployment) :
             base(logger, ishDeployment)
         {
-			_invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
+			Invoker = new ActionInvoker(logger, "Enabling of InfoShare Enrich integration for Content Editor");
 
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfig));
-			_invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegration));
-            _invoker.AddAction(new InsertBeforeNodeAction(logger, XopusBlueLionPluginWebCconfigPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigJsonMimeMapXPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
+			Invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusBluelionConfigXmlPath, XopusBluelionConfigXml.EnrichIntegrationBluelionConfig));
+			Invoker.AddAction(new UncommentNodesByInnerPatternAction(logger, XopusConfigXmlPath, XopusConfigXml.EnrichIntegration));
+            Invoker.AddAction(new InsertBeforeNodeAction(logger, XopusBlueLionPluginWebCconfigPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigJsonMimeMapXPath, XopusBlueLionPluginWebCconfig.EnrichBluelionWebConfigRemoveJsonMimeMapXmlString));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace ISHDeploy.Business.Operations.ISHUIQualityAssistant
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

@@ -120,7 +120,7 @@ namespace ISHDeploy.Data.Actions
 		/// <summary>
 		/// Verify that back up file for vanilla instance is exists
 		/// </summary>
-		public void EnsureVanillaBackUpExists()
+		public virtual void EnsureVanillaBackUpExists()
 		{
 			if (FileManager.FileExists(FilePath))
 			{

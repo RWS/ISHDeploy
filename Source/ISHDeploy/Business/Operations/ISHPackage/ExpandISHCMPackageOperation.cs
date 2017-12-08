@@ -39,7 +39,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// The file manager
@@ -65,23 +65,23 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _toBinary = toBinary;
 
-            _invoker = new ActionInvoker(logger, "Extract ISHCM files.");
+            Invoker = new ActionInvoker(logger, "Extract ISHCM files.");
 
             #region Ensure the list of vanilla files has been saved as file
 
-            if (_toBinary && !_fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            if (_toBinary && !_fileManager.FileExists(VanillaFilesOfWebAuthorAspBinFolderFilePath))
             {
                 _fileManager.EnsureDirectoryExists(BackupFolderPath);
 
                 var fullFileList = _fileManager.GetFileSystemEntries(
                     AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-                xmlConfigManager.SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+                xmlConfigManager.SerializeToFile(VanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
             }
 
             #endregion
 
-            string[] listOfIgnoreFilesInBinFolder = _toBinary ? xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath) : null;
+            string[] listOfIgnoreFilesInBinFolder = _toBinary ? xmlConfigManager.Deserialize<string[]>(VanillaFilesOfWebAuthorAspBinFolderFilePath) : null;
 
             var inputParameters =
                 xmlConfigManager.GetAllInputParamsValues(InputParametersFilePath.AbsolutePath);
@@ -108,18 +108,18 @@ namespace ISHDeploy.Business.Operations.ISHPackage
 
                     if (_toBinary && listOfIgnoreFilesInBinFolder != null && listOfIgnoreFilesInBinFolder.Any(y => y == destinationFilePath))
                     {
-                        _invoker.AddAction(new WriteWarningAction(Logger, () => (true),
+                        Invoker.AddAction(new WriteWarningAction(Logger, () => (true),
                             $"Skip file {destinationFilePath}, because it present in vanilla version."));
                     }
                     else
                     {
                         bool destinationFileExists = _fileManager.FileExists(destinationFilePath);
 
-                        _invoker.AddAction(new FileCopyAndReplacePlaceholdersAction(Logger, unzippedFilePath,
+                        Invoker.AddAction(new FileCopyAndReplacePlaceholdersAction(Logger, unzippedFilePath,
                             destinationFilePath,
                             inputParameters));
 
-                        _invoker.AddAction(new WriteWarningAction(Logger, () => (destinationFileExists),
+                        Invoker.AddAction(new WriteWarningAction(Logger, () => (destinationFileExists),
                             $"File {destinationFilePath} has been overritten."));
                     }
                 });
@@ -127,7 +127,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                 unzippedFolders.Add(unzipFolderPath);
             });
 
-            unzippedFolders.ForEach(x => _invoker.AddAction(new DirectoryRemoveAction(Logger, x)));
+            unzippedFolders.ForEach(x => Invoker.AddAction(new DirectoryRemoveAction(Logger, x)));
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
 
         /// <summary>

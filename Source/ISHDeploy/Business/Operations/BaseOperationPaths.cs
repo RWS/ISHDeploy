@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
@@ -31,6 +30,11 @@ namespace ISHDeploy.Business.Operations
     public abstract partial class BaseOperationPaths
     {
         /// <summary>
+        /// The name of Trisoft-InfoShare-Author COM+ application
+        /// </summary>
+        protected const string TrisoftInfoShareAuthorComPlusApplicationName = "Trisoft-InfoShare-Author";
+
+        /// <summary>
         /// The logger.
         /// </summary>
         protected ILogger Logger;
@@ -39,6 +43,10 @@ namespace ISHDeploy.Business.Operations
         /// Input parameters
         /// </summary>
         protected InputParameters InputParameters { get; }
+        /// <summary>
+        /// The InfoShare deployment
+        /// </summary>
+        protected Models.ISHDeployment IshDeployment { get; }
 
         #region Paths
 
@@ -85,7 +93,7 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to C:\ProgramData\ISHDeploy.X.X.X folder
         /// </summary>
-        protected string ISHDeploymentProgramDataFolderPath { get; }
+        protected string PathToISHDeploymentProgramDataFolder { get; }
 
         /// <summary>
         /// Url for STS path
@@ -224,7 +232,17 @@ namespace ISHDeploy.Business.Operations
         /// <summary>
         /// The path to file with list of vanilla files in ~\Web\Author\ASP\bin folder.
         /// </summary>
-        protected string ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
+        protected string VanillaFilesOfWebAuthorAspBinFolderFilePath { get; }
+
+        /// <summary>
+        /// The path to file with list of vanilla properties of all windows services of deployment.
+        /// </summary>
+        protected string VanillaPropertiesOfWindowsServicesFilePath { get; }
+
+        /// <summary>
+        /// The path to file with list of vanilla registry values of deployment.
+        /// </summary>
+        protected string VanillaRegistryValuesFilePath { get; }
 
         /// <summary>
         /// The path to Web back up folder
@@ -354,6 +372,71 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath TranslationOrganizerConfigFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to ~\App\Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1
+        /// </summary>
+        protected ISHFilePath SDLISHADFSv3RPInstallPSFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\IncParam.asp
+        /// </summary>
+        protected ISHFilePath IncParamAspFilePath { get; }
+
+        /// <summary>
+        /// The path to file with current states of all InfoShare components.
+        /// </summary>
+        protected ISHFilePath CurrentISHComponentStatesFilePath { get; }
+
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\Tridk\TridkApp\InfoShareAuthor..." element of registry.
+        /// </summary>
+        protected string RegInfoShareAuthorRegistryElement { get; }
+
+        /// <summary>
+        /// Gets the path to the "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Trisoft\\Tridk\TridkApp\InfoShareBuilders..." element of registry.
+        /// </summary>
+        protected string RegInfoShareBuildersRegistryElement { get; }
+        
+        /// <summary>
+        /// The path to ~\App\Crawler\Bin\crawler.exe
+        /// </summary>
+        protected string CrawlerExeFilePath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\
+        /// </summary>
+        protected string SolrLuceneCatalogFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\AllVersions\
+        /// </summary>
+        protected string SolrLuceneCatalogAllVersionsFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\LatestVersion\
+        /// </summary>
+        protected string SolrLuceneCatalogLatestVersionFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\AllVersions\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheAllVersionsFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\LatestVersion\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath { get; }
+
+        /// <summary>
+        /// The path to folder ~\Data\TrisoftSolrLucene\SolrLuceneCatalog\CrawlerFileCache\ISHReusableObject\
+        /// </summary>
+        protected string SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath { get; }
+
+        /// <summary>
+        /// The name of registry folder with Crawler's settings
+        /// </summary>
+        protected string CrawlerTridkApplicationName { get; }
+
         #endregion
 
         /// <summary>
@@ -364,21 +447,23 @@ namespace ISHDeploy.Business.Operations
         protected BaseOperationPaths(ILogger logger, Models.ISHDeployment ishDeployment)
         {
             Logger = logger;
+            IshDeployment = ishDeployment;
 
             var dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
             InputParameters = dataAggregateHelper.GetInputParameters(ishDeployment.Name);
 
             #region Paths
-            var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            ISHDeploymentProgramDataFolderPath = Path.Combine(programData, moduleName, ishDeployment.Name);
-            PackagesFolderPath = Path.Combine(ISHDeploymentProgramDataFolderPath, "Packages");
+            PathToISHDeploymentProgramDataFolder = dataAggregateHelper.GetPathToISHDeploymentProgramDataFolder(ishDeployment.Name);
+            HistoryFilePath = Path.Combine(PathToISHDeploymentProgramDataFolder, "History.ps1");
+            BackupFolderPath = Path.Combine(PathToISHDeploymentProgramDataFolder, "Backup");
+            PackagesFolderPath = Path.Combine(PathToISHDeploymentProgramDataFolder, "Packages");
             PackagesFolderUNCPath = ConvertLocalFolderPathToUNCPath(PackagesFolderPath);
-            BackupFolderPath = Path.Combine(ISHDeploymentProgramDataFolderPath, "Backup");
             BackupWebFolderPath = Path.Combine(BackupFolderPath, "Web");
             BackupAppFolderPath = Path.Combine(BackupFolderPath, "App");
             BackupDataFolderPath = Path.Combine(BackupFolderPath, "Data");
-            ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            VanillaFilesOfWebAuthorAspBinFolderFilePath = Path.Combine(BackupFolderPath, "vanilla.web.author.asp.bin.xml");
+            VanillaPropertiesOfWindowsServicesFilePath = Path.Combine(BackupFolderPath, "vanilla.windows.services.properties.dat");
+            VanillaRegistryValuesFilePath = Path.Combine(BackupFolderPath, "vanilla.registry.values.dat");
             WebFolderPath = Path.Combine(InputParameters.WebPath, $"Web{InputParameters.ProjectSuffix}");
             AuthorAspUIFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\UI");
             AuthorAspBinFolderPath = Path.Combine(WebFolderPath, @"Author\ASP\bin");
@@ -388,7 +473,6 @@ namespace ISHDeploy.Business.Operations
             WebNameSTS = Path.Combine(WebFolderPath, "InfoShareSTS");
             WebNameSTSAppData = Path.Combine(WebNameSTS, "App_Data");
             InputParametersFilePath = new ISHFilePath(InputParameters.FilePath.Replace("inputparameters.xml", string.Empty), BackupFolderPath, "inputparameters.xml");
-            HistoryFilePath = Path.Combine(ISHDeploymentProgramDataFolderPath, "History.ps1");
             AuthorASPTreeHtmPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
             EventMonitorMenuBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
             FeedSDLLiveContentConfigPath = new ISHFilePath(DataFolderPath, BackupDataFolderPath, @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
@@ -413,6 +497,28 @@ namespace ISHDeploy.Business.Operations
             ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
             TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
+            SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");
+            IncParamAspFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\IncParam.asp");
+            // To avoid possible problems in the future (if ISHComponent model change) decided to add the version to the file name,
+            // so "current.ISHComponent.states.xml" becomes "current.ISHComponent.states.v1.xml"
+            CurrentISHComponentStatesFilePath = new ISHFilePath(PathToISHDeploymentProgramDataFolder, PathToISHDeploymentProgramDataFolder, @"current.ISHComponent.states.v1.xml");
+
+            var trisoftRegistryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            RegInfoShareAuthorRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareAuthor{InputParameters.ProjectSuffix}";
+            RegInfoShareBuildersRegistryElement =
+                $@"HKEY_LOCAL_MACHINE\{trisoftRegistryManager.RelativeTrisoftRegPath}\Tridk\TridkApp\InfoShareBuilders{InputParameters.ProjectSuffix}";
+
+            CrawlerExeFilePath = Path.Combine(AppFolderPath, @"Crawler\Bin\crawler.exe");
+
+            SolrLuceneCatalogFolderPath = Path.Combine(DataFolderPath, @"TrisoftSolrLucene\SolrLuceneCatalog");
+            SolrLuceneCatalogAllVersionsFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"AllVersions");
+            SolrLuceneCatalogLatestVersionFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"LatestVersion");
+            SolrLuceneCatalogCrawlerFileCacheAllVersionsFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\AllVersions");
+            SolrLuceneCatalogCrawlerFileCacheLatestVersionFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\LatestVersion");
+            SolrLuceneCatalogCrawlerFileCacheISHReusableObjectFolderPath = Path.Combine(SolrLuceneCatalogFolderPath, @"CrawlerFileCache\ISHReusableObject");
+
+            CrawlerTridkApplicationName = $"InfoShareBuilders{InputParameters.ProjectSuffix}";
 
             #endregion
         }

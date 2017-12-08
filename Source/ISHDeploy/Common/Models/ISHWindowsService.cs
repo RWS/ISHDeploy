@@ -42,5 +42,6 @@ namespace ISHDeploy.Common.Models
         /// The sequence of windows service.
         /// </summary>
         public int Sequence { get; set; }
+
     }
 }

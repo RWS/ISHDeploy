@@ -23,7 +23,7 @@ $absolutePath = $testingDeployment.WebPath
 #endregion
 
 #region Script Blocks
-$scriptBlockSetISHIntegrationSTSCertificate = {
+$scriptBlockSetISHAPIWCFServiceCertificate = {
     param (
         $ishDeployName,
         $thumbprint,
@@ -156,7 +156,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     It "Set-ISHAPIWCFServiceCertificate"{       
         #Act
         Start-Sleep -Milliseconds 7000
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
         #Assert
         remoteReadTargetXML -thumbprint $testThumbprint -ValidationMode "PeerOrChainTrust"
 
@@ -177,7 +177,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
         Rename-Item "$filepath\Web.config"  "_Web.config"
 
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop }| Should Throw "Could not find file"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop }| Should Throw "Could not find file"
         #Rollback
         Rename-Item "$filepath\_Web.config" "Web.config"
     }
@@ -185,12 +185,12 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
     It "Set-ISHAPIWCFServiceCertificate with wrong XML"{
         #Arrange
         # Running valid scenario commandlet to out files into backup folder before they will ba manually modified in test
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
         Rename-Item "$filepath\Web.config"  "_Web.config"
         New-Item "$filepath\Web.config" -type file |Out-Null
         
         #Act/Assert
-        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop}| Should Throw "Root element is missing"
+        {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -ErrorAction Stop}| Should Throw "Root element is missing"
         #Rollback
         Remove-Item "$filepath\Web.config"
         Rename-Item "$filepath\_Web.config" "Web.config"
@@ -198,7 +198,7 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
 
      It "Set-ISHAPIWCFServiceCertificate writes proper history"{
         #Act
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
         $history = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetHistory -Session $session -ArgumentList $testingDeploymentName
         
         #Assert
@@ -210,12 +210,28 @@ Describe "Testing Set-ISHAPIWCFServiceCertificate"{
 	It "Set-ISHAPIWCFServiceCertificate writes inputparameters"{       
         #Act
         Start-Sleep -Milliseconds 7000
-        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHIntegrationSTSCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
         #Assert
         $result = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetInputParameters -Session $session -ArgumentList $testingDeploymentName
 		$result["servicecertificatevalidationmode"] | Should be "PeerOrChainTrust"
 		$result["servicecertificatesubjectname"] | Should be "CN=testDNS"
 		$result["servicecertificatethumbprint"] -eq $testThumbprint | Should be $true
+    }
+
+    It "Set-ISHAPIWCFServiceCertificate should not start STS if deployment is stopped"{       
+        #Act
+        Start-Sleep -Milliseconds 7000
+        
+        $pools = GetAppPoolState
+        $pools.Count | Should be 3 
+        
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockStopISHDeployment -Session $session -ArgumentList $testingDeploymentName 
+
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockSetISHAPIWCFServiceCertificate -Session $session -ArgumentList $testingDeploymentName, $testThumbprint, "PeerOrChainTrust" -WarningVariable Warning
+        #Assert
+        
+        $pools = GetAppPoolState
+        $pools.Count | Should be 0 
     }
 }
 

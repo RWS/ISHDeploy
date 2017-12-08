@@ -2,7 +2,7 @@
   <PropertyGroup>
     <MarketingReleaseName>Knowledge Center 13</MarketingReleaseName>
     <SupportedCMVersion>13.0</SupportedCMVersion>
-    <SoftwareCMVersion>13.0.3510.0</SoftwareCMVersion>
+    <SoftwareCMVersion>TBA</SoftwareCMVersion>
     <MinPowerShellVersion>4.0</MinPowerShellVersion>
     <MinCLRVersion>4.0</MinCLRVersion>
     <MinDotNetVersion>4.5</MinDotNetVersion>

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CopyISHCMFileOperation"/> class.
@@ -52,18 +51,18 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         {
             var fileManager = ObjectFactory.GetInstance<IFileManager>();
             var xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
-            _invoker = new ActionInvoker(logger, "Copy ISHCM files.");
+            Invoker = new ActionInvoker(logger, "Copy ISHCM files.");
 
             #region Ensure the list of vanilla files has been saved as file
 
-            if (toBinary && !fileManager.FileExists(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath))
+            if (toBinary && !fileManager.FileExists(VanillaFilesOfWebAuthorAspBinFolderFilePath))
             {
                 fileManager.EnsureDirectoryExists(BackupFolderPath);
 
                 var fullFileList = fileManager.GetFileSystemEntries(
                     AuthorAspBinFolderPath, "*.*", SearchOption.AllDirectories);
 
-                xmlConfigManager.SerializeToFile(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
+                xmlConfigManager.SerializeToFile(VanillaFilesOfWebAuthorAspBinFolderFilePath, fullFileList);
             }
 
             #endregion
@@ -75,7 +74,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
             {
                 destinationDirectory = AuthorAspBinFolderPath;
 
-                ignoreFiles = xmlConfigManager.Deserialize<string[]>(ListOfVanillaFilesOfWebAuthorAspBinFolderFilePath);
+                ignoreFiles = xmlConfigManager.Deserialize<string[]>(VanillaFilesOfWebAuthorAspBinFolderFilePath);
             }
 
             var inputParameters =
@@ -94,21 +93,21 @@ namespace ISHDeploy.Business.Operations.ISHPackage
                     string destinationFilePath = Path.Combine(destinationDirectory, x);
                     if (ignoreFiles != null && ignoreFiles.Any(y => y == destinationFilePath))
                     {
-                        _invoker.AddAction(new WriteWarningAction(Logger,
+                        Invoker.AddAction(new WriteWarningAction(Logger,
                             () => (true),
                             $"Skip file {x}, because it present in vanilla version."));
                         return;
                     }
 
                     string destinatioFolderPath = Path.GetDirectoryName(destinationFilePath);
-                    _invoker.AddAction(new DirectoryEnsureExistsAction(Logger, destinatioFolderPath));
+                    Invoker.AddAction(new DirectoryEnsureExistsAction(Logger, destinatioFolderPath));
 
                     bool destinationFileExists = fileManager.FileExists(destinationFilePath);
 
-                    _invoker.AddAction(new FileCopyAndReplacePlaceholdersAction(
+                    Invoker.AddAction(new FileCopyAndReplacePlaceholdersAction(
                         logger, sourceFilePath, destinationFilePath, inputParameters));
 
-                    _invoker.AddAction(new WriteWarningAction(Logger, () => ( destinationFileExists ), $"File {destinationFilePath} has been overritten."));
+                    Invoker.AddAction(new WriteWarningAction(Logger, () => ( destinationFileExists ), $"File {destinationFilePath} has been overritten."));
                 });
         }
 
@@ -117,7 +116,7 @@ namespace ISHDeploy.Business.Operations.ISHPackage
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

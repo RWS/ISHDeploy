@@ -1,0 +1,1 @@
+﻿Enable-ISHServiceBackgroundTask -ISHDeployment $deploymentName

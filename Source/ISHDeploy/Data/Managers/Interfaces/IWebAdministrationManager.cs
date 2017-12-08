@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using ISHDeploy.Common.Enums;
+using ISHDeploy.Common.Models;
 using ISHDeploy.Data.Exceptions;
 
 namespace ISHDeploy.Data.Managers.Interfaces
@@ -51,15 +54,58 @@ namespace ISHDeploy.Data.Managers.Interfaces
         void DisableWindowsAuthentication(string webSiteName);
 
         /// <summary>
-        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// Sets application pool property
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        void SetApplicationPoolIdentityType(string applicationPoolName);
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <param name="value">The name of user.</param>
+        void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value);
 
         /// <summary>
-        /// Sets identity type of specific application pool as Custom account
+        /// Gets application pool property value
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        void SetSpecificUserIdentityType(string applicationPoolName);
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        object GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName);
+
+        /// <summary>
+        /// Sets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <param name="value">The value.</param>
+        void SetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName, object value);
+
+        /// <summary>
+        /// Gets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        object GetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName);
+
+        /// <summary>
+        /// Check application pool is Started or not
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <returns>
+        /// True if the state of application pool is Started.
+        /// </returns>
+        bool IsApplicationPoolStarted(string applicationPoolName);
+
+        /// <summary>
+        /// Gets all IIS application pool components.
+        /// </summary>
+        /// <returns>
+        /// The list of IIS application pool components.
+        /// </returns>
+        IEnumerable<ISHIISAppPoolComponent> GetAppPoolComponents(params string[] applicationPoolNames);
     }
 }

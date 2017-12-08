@@ -29,7 +29,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetISHIntegrationSTSWSFederationOperation"/> class.
@@ -40,10 +40,10 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         public SetISHIntegrationSTSWSFederationOperation(ILogger logger, Models.ISHDeployment ishDeployment, Uri endpoint) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
+            Invoker = new ActionInvoker(logger, "Setting of WSFederation configuration");
 
-            _invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
-            _invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
+            Invoker.AddAction(new SetAttributeValueAction(logger, InfoShareAuthorWebConfigPath, InfoShareAuthorWebConfig.FederationConfigurationXPath, InfoShareAuthorWebConfig.FederationConfigurationAttributeName, endpoint.ToString()));
+            Invoker.AddAction(new SetElementValueAction(logger, InputParametersFilePath, InputParametersXml.IssuerWSFederationEndpointUrlXPath, endpoint.ToString()));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace ISHDeploy.Business.Operations.ISHIntegrationSTS
         /// </summary>
         public void Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
         }
     }
 }

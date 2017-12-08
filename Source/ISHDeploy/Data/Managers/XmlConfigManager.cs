@@ -845,32 +845,22 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public string Serialize<T>(T value)
         {
-            try
-            {
-                var serializer = new XmlSerializer(value.GetType());
+            var serializer = new XmlSerializer(value.GetType());
 
-                XmlWriterSettings settings = new XmlWriterSettings();
-                //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-                settings.Indent = false;
-                settings.OmitXmlDeclaration = false;
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                using (StringWriter textWriter = new StringWriter())
+            XmlWriterSettings settings = new XmlWriterSettings();
+            //settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
+            settings.Indent = false;
+            settings.OmitXmlDeclaration = false;
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            using (StringWriter textWriter = new StringWriter())
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
                 {
-                    using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
-                    {
-                        serializer.Serialize(xmlWriter, value, ns);
-                    }
-                    return textWriter.ToString();
+                    serializer.Serialize(xmlWriter, value, ns);
                 }
-
+                return textWriter.ToString();
             }
-            catch (Exception ex)
-            {
-                var df = ex.Message;
-
-            }
-            return null;
         }
 
         /// <summary>
@@ -908,11 +898,11 @@ namespace ISHDeploy.Data.Managers
         /// <returns></returns>
         public void SerializeToFile<T>(string filePath, T data)
         {
-            using (var outputFile = File.Create(filePath))
-            {
-                var serializer = new XmlSerializer(typeof(T));
-                serializer.Serialize(outputFile, data);
-            }
+            var dataAsXmlString = Serialize(data);
+            var document = XDocument.Parse(dataAsXmlString);
+            document.Declaration = new XDeclaration("1.0", "utf-8", null);
+
+            _fileManager.Save(filePath, document);
         }
 
         /// <summary>

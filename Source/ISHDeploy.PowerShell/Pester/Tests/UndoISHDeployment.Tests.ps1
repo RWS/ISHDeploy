@@ -173,37 +173,7 @@ $scriptBlockSetISHSTSConfiguration = {
  
 }
 
-$scriptBlockGetAppPoolStartTime = {
-    param (
-        $testingDeployment
-    )
 
-    $cmAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameCM)
-    $wsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameWS)
-    $stsAppPoolName = ("TrisoftAppPool{0}" -f $testingDeployment.WebAppNameSTS)
-    
-    $result = @{}
-    [Array]$array = iex 'C:\Windows\system32\inetsrv\appcmd list wps'
-    foreach ($line in $array) {
-        $splitedLine = $line.split(" ")
-        $processIdAsString = $splitedLine[1]
-        $processId = $processIdAsString.Substring(1,$processIdAsString.Length-2)
-        if ($splitedLine[2] -match $cmAppPoolName)
-        {
-            $result["cm"] = (Get-Process -Id $processId).StartTime
-        }
-        if ($splitedLine[2] -match $wsAppPoolName)
-        {
-            $result["ws"] = (Get-Process -Id $processId).StartTime
-        }
-        if ($splitedLine[2] -match $stsAppPoolName)
-        {
-            $result["sts"] = (Get-Process -Id $processId).StartTime
-        }
-    }
-    
-    return $result
-}
 
 Describe "Testing Undo-ISHDeploymentHistory"{
     BeforeEach {
@@ -217,21 +187,10 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableExternalPreview -Session $session -ArgumentList $testingDeploymentName
         Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup  | Should Be "True"
         readTargetXML | Should Be "changedState"
-        # Get web application pool start times
-        $appPoolStartTimes1 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
 
         UndoDeploymentBackToVanila $testingDeploymentName
         
         WebRequestToSTS $testingDeploymentName
-
-        # Get web application pool start times
-        $appPoolStartTimes2 = Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockGetAppPoolStartTime -Session $session -ArgumentList $testingDeployment
-
-        (get-date $appPoolStartTimes1["cm"]) -gt (get-date $appPoolStartTimes2["cm"])  | Should Be $false
-        (get-date $appPoolStartTimes1["ws"]) -gt (get-date $appPoolStartTimes2["ws"])  | Should Be $false
-        (get-date $appPoolStartTimes1["sts"]) -gt (get-date $appPoolStartTimes2["sts"])  | Should Be $false
-
-
 
         RetryCommand -numberOfRetries 20 -command {Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup} -expectedResult $false | Should Be "False"
         
@@ -245,8 +204,25 @@ Describe "Testing Undo-ISHDeploymentHistory"{
         {UndoDeploymentBackToVanila $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
     }
 
-	It "Undo-IshHistory works when there is no backup"{
-        {UndoDeploymentBackToVanila $testingDeploymentName -WarningVariable Warning -ErrorAction Stop }| Should Not Throw
+	It "Undo-IshHistory restarts of web application pools"{
+		# Try enabling Quality Assistant for generating backup files
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableContentEditor -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableQA -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockEnableExternalPreview -Session $session -ArgumentList $testingDeploymentName
+        Invoke-CommandRemoteOrLocal -ScriptBlock $scriptBlockBackupFilesExist -Session $session -ArgumentList $backup  | Should Be "True"
+
+        $appPoolStartTimes1 = Get-AppPoolStartTime
+
+        UndoDeploymentBackToVanila $testingDeploymentName
+        
+        WebRequestToSTS $testingDeploymentName
+
+        # Get web application pool start times
+        $appPoolStartTimes2 = Get-AppPoolStartTime
+
+        (get-date $appPoolStartTimes1["cm"]) -gt (get-date $appPoolStartTimes2["cm"])  | Should Be $false
+        (get-date $appPoolStartTimes1["ws"]) -gt (get-date $appPoolStartTimes2["ws"])  | Should Be $false
+        (get-date $appPoolStartTimes1["sts"]) -gt (get-date $appPoolStartTimes2["sts"])  | Should Be $false
     }
 }
 

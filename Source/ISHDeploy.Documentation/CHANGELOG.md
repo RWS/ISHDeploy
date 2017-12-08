@@ -1,5 +1,77 @@
 # Release notes
 
+## stable-1.4
+
+This release is focused on adding cmdlet that help configure core aspects of a deployment.
+Also in this release, the version strategy of the module has been changed. Now the module will support all intermediate versions of Content Manager, therefore, only the major number of CM versions should be considered to find an appropriate version of the ISHDeploy module. 
+As an example, now the ISHDeploy.12.0 module can be used for Content Manager of versions 12.0.0, 12.0.1, 12.0.3, 12.0.4 and 12.0.5 respectively.
+
+List of changes in the module cmdlets:
+
+1. General 
+    1. Cmdlets
+		- `Get-ISHDeploymentParameters` . **[Update]**
+1. Integration Database
+	1. Cmdlets
+		- `Get-ISHIntegrationDB`. **[New]**
+		- `Set-ISHIntegrationDB`. **[New]**
+		- `Test-ISHIntegrationDB`. **[New]**
+    1. Tutorials
+		- Within **new** section **Work with core deployment configuration** in tutorials:
+		  - **Integrating with a database**. **[New]**
+1. Credentials
+	1. Cmdlets
+		- `Set-ISHOSUser`. **[New]**
+		- `Set-ISHOSUser`. **[New]**
+		- `Set-ISHServiceUser`. **[New]**
+		- `Set-ISHActor`. **[New]**
+    1. Tutorials
+		- Within **new** section **Work with core deployment configuration** in tutorials:
+		  - **Configuring credentials**. **[New]**
+1. Component management
+	1. Cmdlets
+		- `Get-ISHComponent`. **[New]**
+		- `Get-ISHIISAppPool`. **[New]**
+		- `Enable-ISHIISAppPool`. **[New]**
+		- `Disable-ISHIISAppPool`. **[New]**
+		- `Get-ISHCOMPlus`. **[New]**
+		- `Enable-ISHCOMPlus`. **[New]**
+		- `Disable-ISHCOMPlus`. **[New]**
+		- `Get-ISHServiceCrawler`. **[New]**
+		- `Enable-ISHServiceCrawler`. **[New]**
+		- `Disable-ISHServiceCrawler`. **[New]**
+		- `Set-ISHServiceCrawler`. **[New]**
+		- `Get-ISHServiceFullTextIndex`. **[New]**
+		- `Enable-ISHServiceFullTextIndex`. **[New]**
+		- `Disable-ISHServiceFullTextIndex`. **[New]**
+		- `Set-ISHServiceFullTextIndex`. **[New]**
+		- `Get-ISHServiceBackgroundTask`. **[New]**
+		- `Enable-ISHServiceBackgroundTask`. **[New]**
+		- `Disable-ISHServiceBackgroundTask`. **[New]**
+		- `Set-ISHServiceBackgroundTask`. **[New]**
+		- `Set-ISHServiceBackgroundTask`. **[New]**
+		- `Remove-ISHServiceBackgroundTask`. **[New]**
+		- `Set-ISHIntegrationFullTextIndex`. **[New]** 
+		- `Invoke-ISHMaintenance`. **[New]**
+    1. Tutorials
+		- Within **new** section **Manage components** in tutorials:
+		  - **Managing and tracking components**. **[New]**
+		  - **Scaling the components**. **[New]**
+		- Within **new** section **Work with core deployment configuration** in tutorials:
+		  - **Configuring and maintaining search**. **[New]**
+1. State management
+	1. Cmdlets
+		- `Start-ISHDeployment`. **[New]**
+		- `Stop-ISHDeployment`. **[New]**
+		- `Restart-ISHDeployment`. **[New]**
+    1. Tutorials
+		- Within **new** section **Manage state** in tutorials:
+		  - **Starting and stopping**. **[New]**
+1. ISHSTS
+    1. Cmdlets
+		- `Set-ISHSTSConfiguration` will not create and initialize the database of ISHSTS when not available. **[Update]**
+		- `Set-ISHAPIWCFServiceCertificate` will not create and initialize the database of ISHSTS when not available. **[Update]**
+
 ## stable-1.3
 
 This release is focused on adding cmdlets into the module that help configure and manager the translation services.

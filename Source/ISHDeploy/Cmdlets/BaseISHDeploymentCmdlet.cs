@@ -50,12 +50,12 @@ namespace ISHDeploy.Cmdlets
                 if (deployments.Count() == 1)
                 {
                     string errorMessage;
-                    if (!Validators.ValidateDeploymentVersion.CheckDeploymentVersion(deployments.First().SoftwareVersion, out errorMessage))
+                    if (!Validators.ValidateDeploymentVersion.CheckDeploymentVersion(deployments.Single().SoftwareVersion, out errorMessage))
                     {
                         throw new ValidationMetadataException(errorMessage);
                     }
 
-                    ISHDeployment = deployments.First();
+                    ISHDeployment = deployments.Single();
                 }
                 else
                 {

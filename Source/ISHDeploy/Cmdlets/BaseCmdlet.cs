@@ -44,12 +44,16 @@ namespace ISHDeploy.Cmdlets
             ObjectFactory.SetInstance<IPowerShellManager>(new PowerShellManager(Logger));
             ObjectFactory.SetInstance<IXmlConfigManager>(new XmlConfigManager(Logger));
             ObjectFactory.SetInstance<ITextConfigManager>(new TextConfigManager(Logger));
-            ObjectFactory.SetInstance<IRegistryManager>(new RegistryManager(Logger));
+            ObjectFactory.SetInstance<ITrisoftRegistryManager>(new TrisoftRegistryManager(Logger));
             ObjectFactory.SetInstance<ICertificateManager>(new CertificateManager(Logger));
             ObjectFactory.SetInstance<ITemplateManager>(new TemplateManager(Logger));
             ObjectFactory.SetInstance<IWebAdministrationManager>(new WebAdministrationManager(Logger));
-            ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
             ObjectFactory.SetInstance<IWindowsServiceManager>(new WindowsServiceManager(Logger));
+            ObjectFactory.SetInstance<IDatabaseManager>(new DatabaseManager(Logger));
+            ObjectFactory.SetInstance<ICOMPlusComponentManager>(new COMPlusComponentManager(Logger, COMAdminCatalogWrapperSingleton.Instance));
+            ObjectFactory.SetInstance<IDataAggregateHelper>(new DataAggregateHelper(Logger));
+            ObjectFactory.SetInstance<IProcessManager>(new ProcessManager(Logger));
+            ObjectFactory.SetInstance<INetworkManager>(new NetworkManager(Logger));
         }
 
         /// <summary>
@@ -109,6 +113,5 @@ namespace ISHDeploy.Cmdlets
             Logger.WriteDebug("finished.");
             base.EndProcessing();
         }
-
     }
 }

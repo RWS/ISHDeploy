@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.IO;
 using System.Linq;
 using ISHDeploy.Common;
+using ISHDeploy.Common.Enums;
 using ISHDeploy.Data.Exceptions;
 ﻿using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 ﻿using ISHDeploy.Common.Models;
+using ISHDeploy.Common.Models.Backup;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -37,7 +41,7 @@ namespace ISHDeploy.Data.Managers
         /// <summary>
         /// The registry manager.
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The XML configuration manager.
@@ -50,15 +54,60 @@ namespace ISHDeploy.Data.Managers
         private readonly IFileManager _fileManager;
 
         /// <summary>
+        /// The web administration manager.
+        /// </summary>
+        private readonly IWebAdministrationManager _webAdministrationManage;
+
+        /// <summary>
+        /// The COM+ component manager.
+        /// </summary>
+        private readonly ICOMPlusComponentManager _comPlusComponentManager;
+
+        /// <summary>
+        /// The windows service manager.
+        /// </summary>
+        private readonly IWindowsServiceManager _windowsServiceManager;
+
+        /// <summary>
+        /// The path to ProgramData folder
+        /// </summary>
+        private readonly string _pathToProgramDataFolder;
+
+        /// <summary>
+        /// The module name
+        /// </summary>
+        private readonly string _moduleName;
+
+        /// <summary>
+        /// The name of file where the module keep the status of deployment
+        /// </summary>
+        private const string ISHDeploymentStatusFileName = "ISHDeploymentStatus.dat";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TemplateManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public DataAggregateHelper(ILogger logger)
         {
             _logger = logger;
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _pathToProgramDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            _moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _xmlConfigManager = ObjectFactory.GetInstance<IXmlConfigManager>();
             _fileManager = ObjectFactory.GetInstance<IFileManager>();
+            _webAdministrationManage = ObjectFactory.GetInstance<IWebAdministrationManager>();
+            _comPlusComponentManager = ObjectFactory.GetInstance<ICOMPlusComponentManager>();
+            _windowsServiceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+        }
+
+        /// <summary>
+        /// Returns path to ISHDeployment module of specified environment in ProgramData folder (such as "C:\ProgramData\ISHDeploy.12.x.x\{deploymentName}")
+        /// </summary>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>The path to special folder where the module store temp data and original (vanilla) properties of specified environment</returns>
+        public string GetPathToISHDeploymentProgramDataFolder(string deploymentName)
+        {
+            return Path.Combine(_pathToProgramDataFolder, _moduleName, deploymentName);
         }
 
         /// <summary>
@@ -92,6 +141,145 @@ namespace ISHDeploy.Data.Managers
             _logger.WriteVerbose($"Input parameters for `{deploymentName}` deployment has been got");
 
             return inputParameters;
+        }
+
+        /// <summary>
+        /// Return actual state of components
+        /// </summary>
+        /// <param name="filePath">The path to file with saved states of all components of deployment.</param>
+        /// <param name="deploymentName">The Content Manager deployment name.</param>
+        /// <returns>The collection of components for specified deployment with their actual state</returns>
+        public ISHComponentsCollection GetActualStateOfComponents(string filePath, string deploymentName)
+        {
+            _logger.WriteDebug("Get components and their states", deploymentName);
+            var components = GetExpectedStateOfComponents(filePath);
+            var backgroundTaskServices = _windowsServiceManager.GetISHBackgroundTaskWindowsServices(deploymentName);
+
+            var inputParameters = GetInputParameters(deploymentName);
+            var serviceName = string.Empty;
+            foreach (var component in components)
+            {
+                switch (component.Name)
+                {
+                    case ISHComponentName.CM:
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.CMAppPoolName);
+                        break;
+                    case ISHComponentName.WS:
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.WSAppPoolName);
+                        break;
+                    case ISHComponentName.STS:
+                        component.IsRunning = _webAdministrationManage.IsApplicationPoolStarted(inputParameters.STSAppPoolName);
+                        break;
+                    case ISHComponentName.COMPlus:
+                        component.IsRunning = _comPlusComponentManager.IsCOMPlusComponentEnabled("Trisoft-InfoShare-Author");
+                        break;
+                    case ISHComponentName.TranslationOrganizer:
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationOrganizer).First().Name;
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        break;
+                    case ISHComponentName.TranslationBuilder:
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.TranslationBuilder).First().Name;
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        break;
+                    case ISHComponentName.Crawler:
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.Crawler).First().Name;
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        break;
+                    case ISHComponentName.BackgroundTask:
+                        serviceName = backgroundTaskServices.First(x => string.Equals(x.Role, component.Role, StringComparison.CurrentCultureIgnoreCase)).Name;
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        break;
+                    case ISHComponentName.SolrLucene:
+                        serviceName = _windowsServiceManager.GetServices(deploymentName, ISHWindowsServiceType.SolrLucene).Single().Name;
+                        component.IsRunning = _windowsServiceManager.IsWindowsServiceStarted(serviceName);
+                        break;
+                }
+            }
+
+            return components;
+        }
+
+        /// <summary>
+        /// Save all components of deployment
+        /// </summary>
+        /// <param name="filePath">The path to file.</param>
+        /// <param name="collection">The collection of components for specified deployment</param>
+        public void SaveComponents(string filePath, ISHComponentsCollection collection)
+        {
+            _xmlConfigManager.SerializeToFile(filePath, collection);
+        }
+
+        /// <summary>
+        /// Return the state of the components that should be in the system now
+        /// </summary>
+        /// <param name="filePath">The path to file with saved states of all components of deployment.</param>
+        /// <returns>The collection of components with their states. If the file with saved states does not exist then return the default (vanilla) state.</returns>
+        public ISHComponentsCollection GetExpectedStateOfComponents(string filePath)
+        {
+            return !_fileManager.FileExists(filePath) ? 
+                new ISHComponentsCollection(true) : 
+                _xmlConfigManager.Deserialize<ISHComponentsCollection>(filePath);
+        }
+
+        /// <summary>
+        /// Returns all windows services with all properties needed for their recreation
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>The collection of windows services with all properties needed for their recreation</returns>
+        public ISHWindowsServiceBackupCollection GetISHWindowsServiceBackupCollection(string deploymentName)
+        {
+            var services = _windowsServiceManager.GetAllServices(deploymentName);
+            var backup = new ISHWindowsServiceBackupCollection();
+            foreach (var service in services)
+            {
+                var registryPath = $@"SYSTEM\CurrentControlSet\Services\{service.Name}";
+                var namesOfValues = _registryManager.GetValueNames(registryPath);
+                backup.Services.Add(new ISHWindowsServiceBackup
+                {
+                    Name = service.Name,
+                    WindowsServiceManagerProperties = _windowsServiceManager.GetWindowsServiceProperties(service.Name),
+                    RegistryManagerProperties = _registryManager.GetValues(namesOfValues, registryPath)
+                });
+            }
+
+            return backup;
+        }
+
+        /// <summary>
+        /// Gets the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <returns>Status of deployments</returns>
+        public ISHDeploymentStatus GetISHDeploymentStatus(string deploymentName)
+        {
+            _logger.WriteDebug("Retrieve the status of deployment", deploymentName);
+
+            // Default status
+            var ishDeploymentStatus = ISHDeploymentStatus.Started;
+
+            // Retrieve the real status of deployment
+            var pathToFileWithDeploymentStatus = Path.Combine(GetPathToISHDeploymentProgramDataFolder(deploymentName), ISHDeploymentStatusFileName);
+            if (_fileManager.FileExists(pathToFileWithDeploymentStatus))
+            {
+                return _fileManager.ReadObjectFromFile<ISHDeploymentStatus>(pathToFileWithDeploymentStatus);
+            }
+
+            _logger.WriteVerbose($"The status of ISHDeployment is {ishDeploymentStatus}");
+
+            return ishDeploymentStatus;
+        }
+
+        /// <summary>
+        /// Saves the status of deployment.
+        /// </summary>
+        /// <param name="deploymentName">The name of deployment.</param>
+        /// <param name="status">The status of deployment.</param>
+        public void SaveISHDeploymentStatus(string deploymentName, ISHDeploymentStatus status)
+        {
+            _logger.WriteDebug("Save the status of deployment", deploymentName);
+
+            var pathToFileWithDeploymentStatus = Path.Combine(GetPathToISHDeploymentProgramDataFolder(deploymentName), ISHDeploymentStatusFileName);
+            _fileManager.SaveObjectToFile(pathToFileWithDeploymentStatus, status);
         }
     }
 }

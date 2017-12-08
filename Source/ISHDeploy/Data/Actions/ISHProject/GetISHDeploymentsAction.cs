@@ -39,7 +39,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
         /// <summary>
         /// The registry manager.
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The Content Manager deployment name.
@@ -56,7 +56,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             : base(logger, returnResult)
         {
             _dataAggregateHelper = ObjectFactory.GetInstance<IDataAggregateHelper>();
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _projectName = projectName;
         }
 
@@ -73,7 +73,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
 
             if (!installProjectsRegKeys.Any())
             {
-                if (_projectName != null)
+                if (!string.IsNullOrEmpty(_projectName))
                 {
                     throw new DeploymentNotFoundException($"Deployment with name {_projectName} is not found on the system");
                 }
@@ -88,7 +88,7 @@ namespace ISHDeploy.Data.Actions.ISHProject
             foreach (var projectRegKey in installProjectsRegKeys)
             {
                 var version = _registryManager.GetInstalledProjectVersion(projectRegKey);
-                var parameters = _dataAggregateHelper.GetInputParameters(projectRegKey.Name.Split(new[]{'\\'}).Last());
+                var parameters = _dataAggregateHelper.GetInputParameters(projectRegKey.Name.Split('\\').Last());
                 var ishProject = new ISHDeployment
                 {
                     Name = $"InfoShare{parameters.ProjectSuffix}",
@@ -103,6 +103,8 @@ namespace ISHDeploy.Data.Actions.ISHProject
                     WebSiteName = parameters.WebSiteName,
                     SoftwareVersion = version
                 };
+
+                ishProject.Status = _dataAggregateHelper.GetISHDeploymentStatus(ishProject.Name);
 
                 result.Add(ishProject);
             }

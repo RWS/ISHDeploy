@@ -31,7 +31,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <summary>
         /// The actions invoker
         /// </summary>
-        private readonly IActionInvoker _invoker;
+        public IActionInvoker Invoker { get; }
 
         /// <summary>
         /// Parameters 
@@ -49,9 +49,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         public GetISHDeploymentParametersOperation(ILogger logger, Models.ISHDeployment ishDeployment, bool original, bool changed, bool showPassword) :
             base(logger, ishDeployment)
         {
-            _invoker = new ActionInvoker(logger, "Getting parameters.");
+            Invoker = new ActionInvoker(logger, "Getting parameters.");
 
-            _invoker.AddAction(new GetISHDeploymentParametersAction (
+            Invoker.AddAction(new GetISHDeploymentParametersAction (
                 logger,
                 InputParametersFilePath.VanillaPath,
                 InputParametersFilePath.AbsolutePath,
@@ -67,7 +67,7 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
         /// <returns>Collection with parameters for Content Manager deployments.</returns>
         public IEnumerable<ISHDeploymentParameter> Run()
         {
-            _invoker.Invoke();
+            Invoker.Invoke();
 
             return _parameters;
         }

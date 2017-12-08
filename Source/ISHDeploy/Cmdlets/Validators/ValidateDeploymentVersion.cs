@@ -60,27 +60,27 @@ namespace ISHDeploy.Cmdlets.Validators
 		{
 			errorMessage = null;
 			var moduleName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-			var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor, deploymentVersion.Revision); // don't count about Build version.
+            var cmVersion = new Version(deploymentVersion.Major, deploymentVersion.Minor); // don't count about Build and Revision of version.
 
-			Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)\\.(?<Revision>\\d+)$");
-			Version moduleVersion;
-			if (regex.IsMatch(moduleName) &&
-	            Version.TryParse(regex.Replace(moduleName, "${MajorVersion}.${MinorVersion}.${Revision}"),
-		            out moduleVersion))
-			{
-				if (cmVersion.CompareTo(moduleVersion) != 0)
-				{
-					errorMessage = $"Module version `{moduleVersion}` does not correspond to deployment version `{deploymentVersion}`.";
-				}
-			}
-	        else
-	        {
-				// As if this method can be not only used in `ISHDeploy.Validators.ValidateDeploymentVersion.Validate` 
-				// it is not enought to return error message in case of not valid module.
-				throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
-			}
+            Regex regex = new Regex("^\\w+\\.(?<MajorVersion>\\d+)\\.(?<MinorVersion>\\d+)$");
+            Version moduleVersion;
+            if (regex.IsMatch(moduleName) &&
+                Version.TryParse(regex.Replace(moduleName, "${MajorVersion}.${MinorVersion}"),
+                    out moduleVersion))
+            {
+                if (cmVersion.CompareTo(moduleVersion) != 0)
+                {
+                    errorMessage = $"Module version `{moduleVersion}` does not correspond to deployment version `{deploymentVersion}`.";
+                }
+            }
+            else
+            {
+                // As if this method can be not only used in `ISHDeploy.Validators.ValidateDeploymentVersion.Validate` 
+                // it is not enought to return error message in case of not valid module.
+                throw new ValidationMetadataException($"Module name `{moduleName}` has different definition than expected.");
+            }
 
-			return string.IsNullOrEmpty(errorMessage);
+            return string.IsNullOrEmpty(errorMessage);
 		}
     }
 }

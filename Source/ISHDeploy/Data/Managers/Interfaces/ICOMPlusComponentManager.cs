@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2014 All Rights Reserved by the SDL Group.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System.Collections.Generic;
+using ISHDeploy.Common.Models;
+
+namespace ISHDeploy.Data.Managers.Interfaces
+{
+    /// <summary>
+    /// Implements COM+ component management.
+    /// </summary>
+    public interface ICOMPlusComponentManager
+    {
+        /// <summary>
+        /// Set COM+ component credentials
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+
+        void SetCOMPlusComponentCredentials(string comPlusComponentName, string userName, string password);
+
+        /// <summary>
+        /// Check COM+ component is enabled or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
+        /// <returns>State of COM+ component</returns>
+        bool IsCOMPlusComponentEnabled(string comPlusComponentName, bool doOutput = true);
+
+        /// <summary>
+        /// Check COM+ component is running or not
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <param name="doOutput">Do output.</param>
+        /// <returns>State of COM+ component</returns>
+        bool IsComPlusComponentRunning(string comPlusComponentName, bool doOutput = true);
+
+        /// <summary>
+        /// Enable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void EnableCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Disable COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void DisableCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Shutdown COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void ShutdownCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Start COM+ components
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        void StartCOMPlusComponents(string comPlusComponentName);
+
+        /// <summary>
+        /// Gets all COM+ components.
+        /// </summary>
+        /// <returns>
+        /// The list of COM+ components.
+        /// </returns>
+        IEnumerable<ISHCOMPlusComponent> GetCOMPlusComponents();
+
+        /// <summary>
+        /// Gets the list of process ids of the dllhost.exe processes that are running the given COM+ application
+        /// </summary>
+        /// <param name="comPlusComponentName">The name of COM+ component.</param>
+        /// <returns>The process ids of the dllhost.exe processes that are running the given COM+ application</returns>
+        List<int> GetCOMPlusProcessIds(string comPlusComponentName);
+
+    }
+}

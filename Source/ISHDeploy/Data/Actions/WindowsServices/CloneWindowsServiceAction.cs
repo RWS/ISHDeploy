@@ -42,7 +42,7 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// <summary>
         /// The registry manager
         /// </summary>
-        private readonly IRegistryManager _registryManager;
+        private readonly ITrisoftRegistryManager _registryManager;
 
         /// <summary>
         /// The sequence of new service
@@ -60,7 +60,12 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         private readonly string _password;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StartWindowsServiceAction"/> class.
+        /// The role of BackgroundTask service
+        /// </summary>
+        private readonly string _role;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CloneWindowsServiceAction"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="service">The deployment service.</param>
@@ -73,10 +78,32 @@ namespace ISHDeploy.Data.Actions.WindowsServices
             _service = service;
 
             _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
-            _registryManager = ObjectFactory.GetInstance<IRegistryManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
             _sequence = sequence;
             _userName = userName;
             _password = password;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CloneWindowsServiceAction"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="service">The deployment service.</param>
+        /// <param name="sequence">The sequence of new service.</param>
+        /// <param name="userName">The user name.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="role">The role of BackgroundTask service.</param>
+        public CloneWindowsServiceAction(ILogger logger, ISHWindowsService service, int sequence, string userName, string password, string role)
+            : base(logger)
+        {
+            _service = service;
+
+            _serviceManager = ObjectFactory.GetInstance<IWindowsServiceManager>();
+            _registryManager = ObjectFactory.GetInstance<ITrisoftRegistryManager>();
+            _sequence = sequence;
+            _userName = userName;
+            _password = password;
+            _role = role;
         }
 
         /// <summary>
@@ -84,14 +111,26 @@ namespace ISHDeploy.Data.Actions.WindowsServices
         /// </summary>
         public override void Execute()
         {
-            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password);
+            var newServiceName =_serviceManager.CloneWindowsService(_service, _sequence, _userName, _password, _role);
 
             var namesOfValues = _registryManager.GetValueNames($@"SYSTEM\CurrentControlSet\Services\{_service.Name}").Where(x => x != "Description" && x != "DisplayName" && x != "ImagePath");
             _registryManager.CopyValues(namesOfValues, $@"SYSTEM\CurrentControlSet\Services\{_service.Name}", $@"SYSTEM\CurrentControlSet\Services\{newServiceName}");
 
             if (_service.Status == ISHWindowsServiceStatus.Running)
             {
-                _serviceManager.StartWindowsService(newServiceName);
+                if (_service.Type == ISHWindowsServiceType.BackgroundTask)
+                {
+                    // Only start the service if the role is the same
+                    var backgroundTaskService = (ISHBackgroundTaskWindowsService)_service;
+                    if (backgroundTaskService.Role.Equals(_role, System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        _serviceManager.StartWindowsService(newServiceName);
+                    }
+                }
+                else
+                {
+                    _serviceManager.StartWindowsService(newServiceName);
+                }
             }
         }
     }

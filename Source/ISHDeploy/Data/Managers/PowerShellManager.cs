@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation;
 using System.Reflection;
+using System.Text;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
 
@@ -27,7 +28,7 @@ namespace ISHDeploy.Data.Managers
     /// <summary>
     /// Allows to run powershell scripts from c# code.
     /// </summary>
-    /// <seealso cref="IWebAdministrationManager" />
+    /// <seealso cref="IPowerShellManager" />
     public class PowerShellManager : IPowerShellManager
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace ISHDeploy.Data.Managers
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebAdministrationManager"/> class.
+        /// Initializes a new instance of the <see cref="IPowerShellManager"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public PowerShellManager(ILogger logger)
@@ -50,12 +51,13 @@ namespace ISHDeploy.Data.Managers
         /// </summary>
         /// <param name="embeddedResourceName">Name of embedded ps1 resource with powershell script.</param>
         /// <param name="parameters">Parameters to be passed to the script. Is <c>null</c> by defult</param>
+        /// <param name="actionDescription">Description of action to add this information if powershell script running is failed.</param>
         /// Return the result in the case of casting failure
         /// <returns>An object of specified type that converted from PSObject</returns>
-        public object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null)
+        public object InvokeEmbeddedResourceAsScriptWithResult(string embeddedResourceName, Dictionary<string, string> parameters = null, string actionDescription = null)
         {
             var result = new List<object>();
-            using (var ps = PowerShell.Create())
+            using (var ps = PowerShell.Create(RunspaceMode.CurrentRunspace))
             {
                 // Read Check-WindowsAuthenticationFeatureEnabled.ps1 script
                 using (var resourceReader = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResourceName))
@@ -68,27 +70,47 @@ namespace ISHDeploy.Data.Managers
                         {
                             foreach (var param in parameters)
                             {
-                                script = script.Replace(param.Key, param.Value);
+                                script = script.Replace(param.Key, param.Value.Replace("\"", "`\""));
                             }
                         }
                         ps.AddScript(script);
                         ps.AddParameter("NoProfile");
                     }
                 }
+                
+                // Add results
+                result.AddRange(ps.Invoke());
 
-                foreach (PSObject psResult in ps.Invoke())
+                // Add Verboses, Warnings and Exceptions
+                foreach (var verbose in ps.Streams.Verbose.ReadAll())
                 {
-                    foreach (var verbose in ps.Streams.Verbose.ReadAll())
-                    {
-                        _logger.WriteVerbose(verbose.Message);
-                    }
+                    _logger.WriteVerbose(verbose.Message);
+                }
 
-                    foreach (var warning in ps.Streams.Warning.ReadAll())
-                    {
-                        _logger.WriteWarning(warning.Message);
-                    }
+                foreach (var warning in ps.Streams.Warning.ReadAll())
+                {
+                    _logger.WriteWarning(warning.Message);
+                }
 
-                    result.Add(psResult);
+                bool isFailed = false;
+                var exceptions = new StringBuilder();
+                foreach (var error in ps.Streams.Error.ReadAll())
+                {
+                    isFailed = true;
+                    exceptions.AppendLine(error.Exception.Message);
+                }
+
+                if (isFailed)
+                {
+                    if (string.IsNullOrEmpty(actionDescription))
+                    {
+                        throw new Exception(exceptions.ToString());
+                    }
+                    else
+                    {
+                        _logger.WriteDebug($"{actionDescription} is failed.");
+                        throw new Exception($"{exceptions}");
+                    }
                 }
             }
 

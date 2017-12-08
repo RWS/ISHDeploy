@@ -87,10 +87,12 @@ namespace ISHDeploy.Data.Actions.ISHProject
             if (_original && _fileManager.FileExists(_originalFilePath))
             {
                 dictionary = _xmlConfigManager.GetAllInputParamsValues(_originalFilePath);
+                dictionary.Add("ParametersSourcePath", _originalFilePath);
             }
             else
             {
                 dictionary = _xmlConfigManager.GetAllInputParamsValues(_changedFilePath);
+                dictionary.Add("ParametersSourcePath", _changedFilePath);
 
                 // To show only difference
                 if (_changed)

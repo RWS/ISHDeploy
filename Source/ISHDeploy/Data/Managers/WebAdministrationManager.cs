@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 ﻿using System;
+﻿using System.Collections.Generic;
 ﻿using System.Linq;
 ﻿using ISHDeploy.Common;
+﻿using ISHDeploy.Common.Enums;
 ﻿using ISHDeploy.Data.Exceptions;
 ﻿using Microsoft.Web.Administration;
 using ISHDeploy.Data.Managers.Interfaces;
 using ISHDeploy.Common.Interfaces;
+﻿using ISHDeploy.Common.Models;
 
 namespace ISHDeploy.Data.Managers
 {
@@ -33,6 +36,16 @@ namespace ISHDeploy.Data.Managers
         /// The logger.
         /// </summary>
         private readonly ILogger _logger;
+
+        /// <summary>
+        /// The size of salt in bytes (keeping in range of the recommended size of 128-192 bits) 
+        /// </summary>
+        private const int SaltByteLength = 24;
+
+        /// <summary>
+        /// The size of the outputted hash of the password
+        /// </summary>
+        private const int DerivedKeyLength = 24;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebAdministrationManager"/> class.
@@ -110,16 +123,12 @@ namespace ISHDeploy.Data.Managers
                         throw new WindowsAuthenticationModuleIsNotInstalledException(
                             "WindowsAuthentication module has not been installed");
                     }
-
-                    var windowsAuthenticationSection = config.GetSection(
-                        "system.webServer/security/authentication/windowsAuthentication",
-                        locationPath);
-                    windowsAuthenticationSection["enabled"] = true;
-
-                    manager.CommitChanges();
-
-                    _logger.WriteVerbose("WindowsAuthentication has been enabled");
                 }
+                SetWebConfigurationProperty(webSiteName,
+                        "system.webServer/security/authentication/windowsAuthentication",
+                        WebConfigurationProperty.enabled, true);
+
+                _logger.WriteVerbose("WindowsAuthentication has been enabled");
             }
             else
             {
@@ -134,28 +143,17 @@ namespace ISHDeploy.Data.Managers
         /// <exception cref="WindowsAuthenticationModuleIsNotInstalledException"></exception>
         public void DisableWindowsAuthentication(string webSiteName)
         {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
-            {
-                _logger.WriteDebug("Disable WindowsAuthentication for site", webSiteName);
+            _logger.WriteDebug("Disable WindowsAuthentication for site", webSiteName);
+            SetWebConfigurationProperty(webSiteName, "system.webServer/security/authentication/windowsAuthentication",
+                WebConfigurationProperty.enabled, false);
 
-                var config = manager.GetApplicationHostConfiguration();
-                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
-
-                var windowsAuthenticationSection = config.GetSection(
-                    "system.webServer/security/authentication/windowsAuthentication",
-                    locationPath);
-                windowsAuthenticationSection["enabled"] = false;
-
-                manager.CommitChanges();
-
-                _logger.WriteVerbose("WindowsAuthentication has been disabled");
-            }
+            _logger.WriteVerbose("WindowsAuthentication has been disabled");
         }
 
         /// <summary>
         /// Determines whether IIS-WindowsAuthentication feature enabled or not.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>State of WindowsAuthenticationFeature</returns>
         private bool IsWindowsAuthenticationFeatureEnabled()
         {
             _logger.WriteDebug("Checking IIS-WindowsAuthentication feature is turned on or not");
@@ -228,7 +226,7 @@ namespace ISHDeploy.Data.Managers
                 System.Threading.Thread.Sleep(100);
                 i++;
 
-                if (i > 100)
+                if (i > 1000)
                 {
                     throw new TimeoutException($"Application pool `{appPool.Name}` for a long time does not change the state. The state is: {appPool.State}");
                 }
@@ -236,28 +234,25 @@ namespace ISHDeploy.Data.Managers
         }
 
         /// <summary>
-        /// Sets identity type of specific application pool as ApplicationPoolIdentity
+        /// Sets application pool property
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        public void SetApplicationPoolIdentityType(string applicationPoolName)
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <param name="value">The value.</param>
+        public void SetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName, object value)
         {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            using (var manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug("Set ApplicationPoolIdentity identity type", applicationPoolName);
-
                 var config = manager.GetApplicationHostConfiguration();
-
-
                 ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
 
                 ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
 
-                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
-                if (stsPoolElement != null)
+                var poolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (poolElement != null)
                 {
-                    var processModelElement =
-                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                    processModelElement.SetAttributeValue("identityType", "ApplicationPoolIdentity");
+                    var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                    processModelElement.SetAttributeValue(propertyName.ToString(), value);
                 }
                 else
                 {
@@ -265,42 +260,195 @@ namespace ISHDeploy.Data.Managers
                 }
 
                 manager.CommitChanges();
-                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName} has been changed");
             }
         }
 
         /// <summary>
-        /// Sets identity type of specific application pool as Custom account
+        /// Gets application pool property value
         /// </summary>
         /// <param name="applicationPoolName">Name of the application pool.</param>
-        public void SetSpecificUserIdentityType(string applicationPoolName)
+        /// <param name="propertyName">The name of ApplicationPool property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public object GetApplicationPoolProperty(string applicationPoolName, ApplicationPoolProperty propertyName)
         {
-            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            using (var manager = ServerManager.OpenRemote(Environment.MachineName))
             {
-                _logger.WriteDebug("Set application pool SpecificUser identity type", applicationPoolName);
-
                 var config = manager.GetApplicationHostConfiguration();
-
-
-                ConfigurationSection applicationPoolsSection = config.GetSection("system.applicationHost/applicationPools");
+                ConfigurationSection applicationPoolsSection =
+                    config.GetSection("system.applicationHost/applicationPools");
 
                 ConfigurationElementCollection applicationPoolsCollection = applicationPoolsSection.GetCollection();
 
-                var stsPoolElement = applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
-                if (stsPoolElement != null)
+                var poolElement =
+                    applicationPoolsCollection.SingleOrDefault(x => x["Name"].ToString() == applicationPoolName);
+                if (poolElement == null)
                 {
-                    var processModelElement =
-                        stsPoolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
-                    processModelElement.SetAttributeValue("identityType", "SpecificUser");
+                    throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
+                }
+
+                var processModelElement = poolElement.ChildElements.Single(x => x.ElementTagName == "processModel");
+                switch (propertyName)
+                {
+                    case ApplicationPoolProperty.identityType:
+                        return  (ProcessModelIdentityType)processModelElement.GetAttributeValue(propertyName.ToString());
+                    default:
+                        return processModelElement.GetAttributeValue(propertyName.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <param name="value">The value.</param>
+        public void SetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName, object value)
+        {
+            _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var section = config.GetSection(
+                    configurationXPath,
+                    locationPath);
+               
+                section[propertyName.ToString()] = value;
+
+                manager.CommitChanges();
+
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been changed");
+            }
+        }
+
+        /// <summary>
+        /// Gets web configuration property.
+        /// </summary>
+        /// <param name="webSiteName">Name of the web site.</param>
+        /// <param name="configurationXPath">The xPath to get configuration node.</param>
+        /// <param name="propertyName">The name of WebConfiguration property.</param>
+        /// <returns>
+        /// The value by property name.
+        /// </returns>
+        public object GetWebConfigurationProperty(string webSiteName, string configurationXPath, WebConfigurationProperty propertyName)
+        {
+            _logger.WriteDebug("Get WebConfiguration property for site", webSiteName, propertyName);
+            object value;
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                _logger.WriteDebug("Set WebConfiguration property for site", webSiteName, propertyName);
+
+                var config = manager.GetApplicationHostConfiguration();
+                var locationPath = config.GetLocationPaths().FirstOrDefault(x => x.Contains(webSiteName));
+
+                var section = config.GetSection(
+                    configurationXPath,
+                    locationPath);
+
+
+                value = section[propertyName.ToString()];
+                _logger.WriteVerbose($"WebConfiguration property {propertyName} for site `{webSiteName}` has been gotten");
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Check application pool is Started or not
+        /// </summary>
+        /// <param name="applicationPoolName">Name of the application pool.</param>
+        /// <returns>
+        /// True if the state of application pool is Started.
+        /// </returns>
+        public bool IsApplicationPoolStarted(string applicationPoolName)
+        {
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                ApplicationPool appPool = manager.ApplicationPools.FirstOrDefault(ap => ap.Name == applicationPoolName);
+
+                if (appPool != null)
+                {
+                    _logger.WriteDebug("Get application pool state", applicationPoolName);
+                    // Wait while application pool operation is completed
+                    if (appPool.State == ObjectState.Stopping || appPool.State == ObjectState.Starting)
+                    {
+                        WaitOperationCompleted(appPool);
+                    }
+
+                    var isStarted = appPool.State == ObjectState.Started;
+
+                    _logger.WriteVerbose($"Application pool `{applicationPoolName}` is {ObjectState.Started}");
+
+                    return isStarted;
                 }
                 else
                 {
                     throw new ArgumentException($"Application pool `{applicationPoolName}` does not exists.");
                 }
-
-                manager.CommitChanges();
-                _logger.WriteVerbose($"The identity type for application poll `{applicationPoolName}` has been changed");
             }
+        }
+
+        /// <summary>
+        /// Gets all IIS application pool components.
+        /// </summary>
+        /// <returns>
+        /// The list of IIS application pool components.
+        /// </returns>
+        public IEnumerable<ISHIISAppPoolComponent> GetAppPoolComponents(params string[] applicationPoolNames)
+        {
+            if (applicationPoolNames == null || !applicationPoolNames.Any())
+            {
+                throw new ArgumentException("The parameter `applicationPoolNames` does not contain any values");
+            }
+
+            _logger.WriteDebug("Get IIS application pool components");
+
+            var components = new List<ISHIISAppPoolComponent>();
+            using (ServerManager manager = ServerManager.OpenRemote(Environment.MachineName))
+            {
+                components.AddRange(
+                    manager.ApplicationPools.Where(ap => applicationPoolNames.Contains(ap.Name))
+                    .Select(appPool => 
+                        new ISHIISAppPoolComponent
+                        {
+                            ApplicationPoolName = appPool.Name,
+                            WebApplicationName = GetWebSiteByApplicationPoolName(manager, appPool.Name),
+                            Status = (ISHIISAppPoolComponentStatus) Enum.Parse(typeof (ISHIISAppPoolComponentStatus), appPool.State.ToString())
+                        }));
+            }
+
+            return components;
+        }
+
+        /// <summary>
+        /// Returns name of WebSite for specified Application Pool or an empty string if such pool does not exist
+        /// </summary>
+        /// <param name="manager">The server manager</param>
+        /// <param name="applicationPoolName">The name of IIS application pool</param>
+        /// <returns>The name of WebSite for specified Application Pool or an empty string if such pool does not exist</returns>
+        private string GetWebSiteByApplicationPoolName(ServerManager manager, string applicationPoolName)
+        {
+            var apps = new List<Application>();
+            manager.Sites.ToList().ForEach(site =>
+            {
+                apps.AddRange(site.Applications);
+            });
+            
+            var app = apps.FirstOrDefault(x => x.ApplicationPoolName == applicationPoolName);
+
+            if (app != null)
+            {
+                return app.Path.Remove(0, 1);
+            }
+              
+            return string.Empty;
         }
     }
 }

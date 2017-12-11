@@ -22,7 +22,7 @@ Set-ISHContentEditor -ISHDeployment $deploymentName -LicenseKey "$xopusLicenseKe
 Enable-ISHUIContentEditor -ISHDeployment $deploymentName
 ```
 
-The module is available in [PowerShell gallery](https://www.powershellgallery.com/packages/ISHDeploy.13.0/). 
+The module is available in [PowerShell gallery](https://www.powershellgallery.com/packages/ISHDeploy.12.0/). 
 
 The PowerShell module name matches the specific major number of release version of [SDL Knowledge Center](http://www.sdl.com/download/sdl-knowledge-center/60978/). For example: 
 - **ISHDeploy.12.0** targets the release of **12.0.0**, **12.0.1**, **12.0.3**, **12.0.4**, **12.0.5**
@@ -30,7 +30,7 @@ The PowerShell module name matches the specific major number of release version 
 
 Every cmdlet provides rich help that can be explored with the `Get-Help` PowerShell command.
 
-Additionally, a [documentation portal](https://sdl.github.io/ISHDeploy/13.0/) is available with the following content:
+Additionally, a [documentation portal](https://sdl.github.io/ISHDeploy/12.0/) is available with the following content:
 - Getting started information.
 - Article base on various subjects e.g. *Integration with security token service*.
 - The online equivelant of each cmdlet's help.  

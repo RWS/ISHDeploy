@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Managing and tracking components </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Managing and tracking components ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="managing-and-tracking-components">Managing and tracking components</h1>
+              
+<p>This tutorial explains how to manage and track the components of a Content Manager deployment.</p>
+<h2 id="component-composition-of-a-deployment">Component composition of a deployment</h2>
+<p>A component expresses a logical grouping of processes that are responsible to execute a specific flow of Content Manager. Each deployment is composed by the following components:</p>
+<ul>
+<li>Web.</li>
+<li>COM+.</li>
+<li>Crawler.</li>
+<li>FullTextIndex.</li>
+<li>TranslationBuilder.</li>
+<li>TranslationOrganizer.</li>
+<li>BackgroundTask. This component is tracked per role.</li>
+</ul>
+<p>Each components can be enabled or disabled with cmdlets offered by the module. Additionally the module offers related cmdlets to retrieve the state of each component.</p>
+<p>The enabled or disabled state of a component expresses what happens when a deployment is started. </p>
+<ul>
+<li>When disabled, then the component&#39;s related processes will not start. </li>
+<li>When enabled, then the component&#39;s related processes will start.</li>
+</ul>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="getting-the-overall-component-status">Getting the overall component status</h2>
+<p>The module offers two <code>Get-ISHComponent</code> cmdlet to help track all the components status. Per component, an additional set of cmdlets is offered to look deeper into the component.</p>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHComponent -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">                Name IsEnabled Role   
+                ---- --------- ----   
+                  CM      True        
+                  WS      True        
+                 STS      True        
+             COMPlus      True        
+      BackgroundTask     False Default
+             Crawler     False        
+          SolrLucene     False        
+  TranslationBuilder     False        
+TranslationOrganizer     False
+</code></pre><p><strong>Notice</strong> that is the state that the <code>Undo-ISHDeployment</code> will revert the deployment to.</p>
+<h2 id="managing-the-web-component">Managing the Web component</h2>
+<p>The module offers the following cmdlets to manage the Web component. The Web component groups the IIS application pools that drive the <strong>ISHCM</strong>, <strong>ISHWS</strong> and <strong>ISHSTS</strong> web applications.</p>
+<ul>
+<li><code>Get-ISHIISAppPool</code></li>
+<li><code>Enable-ISHIISAppPool</code></li>
+<li><code>Disable-ISHIISAppPool</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHIISAppPool -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">ApplicationPoolName     WebApplicationName  Status
+-------------------     ------------------  ------
+TrisoftAppPoolishcm     ishcm              Started
+TrisoftAppPoolishws     ishws              Started
+TrisoftAppPoolishsts    ishsts             Started
+</code></pre><p>To disable the Web component execute</p>
+<pre><code class="lang-powershell">Disable-ISHIISAppPool -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">ApplicationPoolName     WebApplicationName  Status
+-------------------     ------------------  ------
+TrisoftAppPoolishcm     ishcm              Stopped
+TrisoftAppPoolishws     ishws              Stopped
+TrisoftAppPoolishsts    ishsts             Stopped
+</code></pre><p>To enable the Web component execute</p>
+<pre><code class="lang-powershell">Enable-ISHIISAppPool -ISHDeployment $deploymentName
+</code></pre><h2 id="managing-the-com-component">Managing the COM+ component</h2>
+<p>The module offers the following cmdlets to manage the COM+ component.</p>
+<ul>
+<li><code>Get-ISHCOMPlus</code></li>
+<li><code>Enable-ISHCOMPlus</code></li>
+<li><code>Disable-ISHCOMPlus</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHCOMPlus -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                         Status     ActivationType
+----                         ------     --------------
+Trisoft-InfoShare-AuthorIso Enabled LibraryApplication
+Trisoft-Utilities           Enabled LibraryApplication
+Trisoft-TriDK               Enabled LibraryApplication
+Trisoft-InfoShare-Author    Enabled  ServerApplication
+</code></pre><p>To disable the COM+ component execute</p>
+<pre><code class="lang-powershell">Disable-ISHCOMPlus -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                          Status     ActivationType
+----                          ------     --------------
+Trisoft-InfoShare-AuthorIso Disabled LibraryApplication
+Trisoft-Utilities           Disabled LibraryApplication
+Trisoft-TriDK               Disabled LibraryApplication
+Trisoft-InfoShare-Author    Disabled  ServerApplication
+</code></pre><p>To enable the COM+ component execute</p>
+<pre><code class="lang-powershell">Enable-ISHCOMPlus -ISHDeployment $deploymentName
+</code></pre><p><strong>Notice</strong> that the COM+ components are shared among multiple deployments on the same server. That means that when modifying COM+ for a specific deployment, then other deployments on the same server are affected. For this reason each cmdlet emits warning messages such as </p>
+<pre><code class="lang-text">WARNING: The disabling of COM+ component `Trisoft-Utilities` has implications across all deployments.
+</code></pre><h2 id="managing-the-crawler-component">Managing the Crawler component</h2>
+<p>The module offers the following cmdlets to manage the Crawler component.</p>
+<ul>
+<li><code>Get-ISHServiceCrawler</code></li>
+<li><code>Enable-ISHServiceCrawler</code></li>
+<li><code>Disable-ISHServiceCrawler</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHServiceCrawler -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                              Status    Type Sequence
+----                              ------    ---- --------
+Trisoft InfoShareSQL Crawler One Stopped Crawler        1
+</code></pre><p>To enable the Crawler component execute</p>
+<pre><code class="lang-powershell">Enable-ISHServiceCrawler -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                              Status    Type Sequence
+----                              ------    ---- --------
+Trisoft InfoShareSQL Crawler One Started Crawler        1
+</code></pre><p><strong>Notice</strong> that by default the Crawler component depends on the FullTextIndex component and for this reason when enabling Crawler, the FullTextIndex component will be enabled also.</p>
+<p>To disable the Crawler component execute</p>
+<pre><code class="lang-powershell">Disable-ISHServiceCrawler -ISHDeployment $deploymentName
+</code></pre><h2 id="managing-the-fulltextindex-component">Managing the FullTextIndex component</h2>
+<p>The module offers the following cmdlets to manage the FullTextIndex component.</p>
+<ul>
+<li><code>Get-ISHServiceFullTextIndex</code></li>
+<li><code>Enable-ISHServiceFullTextIndex</code></li>
+<li><code>Disable-ISHServiceFullTextIndex</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHServiceFullTextIndex -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                    Status          Type Sequence
+----                                    ------          ---- --------
+Trisoft InfoShareSQL FullTextIndex One Stopped FullTextIndex        1
+</code></pre><p>To enable the FullTextIndex component execute</p>
+<pre><code class="lang-powershell">Enable-ISHServiceFullTextIndex -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                                    Status          Type Sequence
+----                                    ------          ---- --------
+Trisoft InfoShareSQL FullTextIndex One Started FullTextIndex        1
+</code></pre><p>To disable the FullTextIndex component execute</p>
+<pre><code class="lang-powershell">Disable-ISHServiceFullTextIndex -ISHDeployment $deploymentName
+</code></pre><h2 id="managing-the-translationbuilder-component">Managing the TranslationBuilder component</h2>
+<p>The module offers the following cmdlets to manage the TranslationBuilder component.</p>
+<ul>
+<li><code>Get-ISHServiceTranslationBuilder</code></li>
+<li><code>Enable-ISHServiceTranslationBuilder</code></li>
+<li><code>Disable-ISHServiceTranslationBuilder</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                         Status               Type Sequence
+----                                         ------               ---- --------
+Trisoft InfoShareSQL TranslationBuilder One Stopped TranslationBuilder        1
+</code></pre><p>To enable the TranslationBuilder component execute</p>
+<pre><code class="lang-powershell">Enable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                                         Status               Type Sequence
+----                                         ------               ---- --------
+Trisoft InfoShareSQL TranslationBuilder One Started TranslationBuilder        1
+</code></pre><p>To disable the TranslationBuilder component execute</p>
+<pre><code class="lang-powershell">Disable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+</code></pre><h2 id="managing-the-translationorganizer-component">Managing the TranslationOrganizer component</h2>
+<p>The module offers the following cmdlets to manage the ISHServiceTranslationOrganizer component.</p>
+<ul>
+<li><code>Get-ISHServiceTranslationOrganizer</code></li>
+<li><code>Enable-ISHServiceTranslationOrganizer</code></li>
+<li><code>Disable-ISHServiceTranslationOrganizer</code></li>
+</ul>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer        1
+</code></pre><p>To enable the TranslationOrganizer component execute</p>
+<pre><code class="lang-powershell">Enable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                                           Status                 Type Sequence
+----                                           ------                 ---- --------
+Trisoft InfoShareSQL TranslationOrganizer One Started TranslationOrganizer        1
+</code></pre><p>To disable the TranslationOrganizer component execute</p>
+<pre><code class="lang-powershell">Disable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+</code></pre><h2 id="managing-the-backgroundtask-default-role-component">Managing the BackgroundTask default role component</h2>
+<p>The module offers the following cmdlets to manage the BackgroundTask component.</p>
+<ul>
+<li><code>Get-ISHServiceBackgroundTask</code></li>
+<li><code>Enable-ISHServiceBackgroundTask</code></li>
+<li><code>Disable-ISHServiceBackgroundTask</code></li>
+</ul>
+<p>In comparison with the rest of the components, the BackgroundTask is a component per role. For this reason all related cmdlets offer the <code>-Role</code> parameter. </p>
+<p>By default, the Vanilla deployment is configured with the role <code>Default</code> and for this reason the <code>-Role</code> parameter is optional with default value <code>Default</code>.</p>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">Get-ISHServiceBackgroundTask -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                     Status           Type Sequence Role   
+----                                     ------           ---- -------- ----   
+Trisoft InfoShareSQL BackgroundTask One Stopped BackgroundTask        1 Default
+</code></pre><p>To enable the BackgroundTask component execute</p>
+<pre><code class="lang-powershell">Enable-ISHServiceBackgroundTask -ISHDeployment $deploymentName
+</code></pre><p>Then the state becomes </p>
+<pre><code class="lang-text">Name                                     Status           Type Sequence Role   
+----                                     ------           ---- -------- ----   
+Trisoft InfoShareSQL BackgroundTask One Started BackgroundTask        1 Default
+</code></pre><p>To disable the BackgroundTask component execute</p>
+<pre><code class="lang-powershell">Disable-ISHServiceBackgroundTask -ISHDeployment $deploymentName
+</code></pre><h2 id="adding-and-removing-a-custom-backgroundtask-component">Adding and removing a custom BackgroundTask component</h2>
+<p>The module offers the following cmdlets to add and remove a new custom BackgroundTask component.</p>
+<ul>
+<li><code>Set-ISHServiceBackgroundTask</code></li>
+<li><code>Remove-ISHServiceBackgroundTask</code></li>
+</ul>
+<p>In this context, <code>Set-ISHServiceBackgroundTask</code> is used to register a new service for a custom role. Once a new custom BackgroundTask component is registered, the above cmdlets apply by explicitly specifying the <code>-Role</code> parameter.</p>
+<p>Here is an example:</p>
+<pre><code class="lang-powershell">$customRole=&quot;Custom&quot;
+
+Set-ISHServiceBackgroundTask -ISHDeployment $deploymentName -Role $customRole -Count 1
+</code></pre><pre><code class="lang-text">Name                                            Status           Type Sequence Role   
+----                                            ------           ---- -------- ----   
+Trisoft InfoShareSQL BackgroundTask One        Stopped BackgroundTask        1 Default
+Trisoft InfoShareSQL BackgroundTask Custom One Stopped BackgroundTask        1 Custom
+</code></pre><p>With this extra custom component registered, the overall component would become.</p>
+<pre><code class="lang-text">
+                Name IsEnabled Role   
+                ---- --------- ----   
+                  CM     False        
+                  WS     False        
+                 STS     False        
+             COMPlus     False        
+      BackgroundTask     False Default
+             Crawler     False        
+          SolrLucene     False        
+  TranslationBuilder     False        
+TranslationOrganizer     False        
+      BackgroundTask     False Custom
+</code></pre><p>To remove the custom component execute</p>
+<pre><code class="lang-powershell">$customRole=&quot;Custom&quot;
+
+Remove-ISHServiceBackgroundTask -ISHDeployment $deploymentName -Role $customRole
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

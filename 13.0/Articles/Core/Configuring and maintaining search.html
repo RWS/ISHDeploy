@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Configuring and maintaining search </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Configuring and maintaining search ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="configuring-and-maintaining-search">Configuring and maintaining search</h1>
+              
+<p>This tutorial explains how to work with cmdlets that configure the search capability of a deployment. </p>
+<p>The search capability is powered by the <strong>Crawler</strong> and <strong>FullTextIndex</strong> components. The FullTextIndex is responsible for maintaining a slave database that is optimized for searching and Crawler will provide FullTextIndex with the data.</p>
+<p>When scaling Content Manager, the architecture requires that within the stack, there is only one deployment with the FullTextIndex component enabled and all other deployments point to this unique instance.</p>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="configuring-the-fulltextindex-component">Configuring the FullTextIndex component</h2>
+<p><code>Set-ISHServiceFullTextIndex</code> cmdlet will configure the port required to operate by the underlying process. Changing these port values is not typical and it is required only when the deployment&#39;s default ports are already reserved.</p>
+<pre><code class="lang-powershell">$servicePort=&quot;8080&quot;
+
+Set-ISHServiceFullTextIndex -ISHDeployment $deploymentName -ServicePort $servicePort
+</code></pre><p>The script will set the querying port for the process to <code>8080</code> respectively. It will also make sure that a proper firewall rule is configured in the operating system.</p>
+<h2 id="configuring-the-crawler-component">Configuring the Crawler component</h2>
+<p>All Crawler components in a stack must refer to the same index. The identity of the index is derived during installation and is unique to every server. When scaling the stack to multiple servers, the identity needs to be configured to a single value using the <code>Set-ISHServiceCrawler</code> cmdlet.</p>
+<pre><code class="lang-powershell"># Manually set the hostname
+$hostname=&quot;ish.example.com&quot;
+# As an alternative, derive the hostname from the deployment&#39;s configuration
+# $hostname=Get-ISHDeployment -ISHDeployment $deploymentName |Select-Object -ExpandProperty AccessHostName
+
+# Manually set the catalog
+$catalog=&quot;InfoShare&quot;
+# As an alternative, use the same name as with the deployment name
+# $catalog=$deploymentName
+
+Set-ISHServiceCrawler -ISHDeployment $deploymentName -Catalog $catalog -Hostname $hostname
+</code></pre><h2 id="integrating-with-an-external-full-text-index-service">Integrating with an external full text index service</h2>
+<p><code>Set-ISHIntegrationFullTextIndex</code> cmdlet will configure on the deployment the url of the location of the FullTextIndex component.</p>
+<pre><code class="lang-powershell">$fullTextIndexUri=&quot;http://fulltextindex.ish.example.com:9010&quot;
+
+Set-ISHIntegrationFullTextIndex -ISHDeployment $deploymentName -Uri $fullTextIndexUri
+</code></pre><p>When setting this value, Crawler will not depend on the default local FullTextIndex component to upload the crawled data. For this reason, the invocation of <code>Set-ISHIntegrationFullTextIndex</code> removes from the Crawler component the dependency to the FullTextIndex one. <code>Undo-ISHDeployment</code> will revert those changes.</p>
+<h2 id="maintenance-of-the-crawler-component">Maintenance of the Crawler component</h2>
+<p><code>Invoke-ISHMaintenance</code> cmdlet provides the following maintenance actions for the Crawler component.</p>
+<ul>
+<li><strong>Registration</strong>. From the Content Manager architecture, every Crawler&#39;s configuration must be first registered in the database.<ul>
+<li><strong>UnregisterAll</strong>. Use this action to remove all Crawler registrations from the stack. Typically before invoking <code>Set-ISHServiceCrawler</code> or in context of debugging.</li>
+<li><strong>Register</strong>. Use this action once in the stack, when a new common Crawler identity has been introduced with <code>Set-ISHServiceCrawler</code>.</li>
+</ul>
+</li>
+<li><strong>ReIndex</strong>. Use this action when the FullTextIndex component&#39;s data store is lost or it must be regenerated.</li>
+</ul>
+<pre><code class="lang-powershell"># Register with the crawler&#39;s current configuration
+Invoke-ISHMaintenance -ISHDeployment $deploymentName -Crawler -Register
+
+# Unregister all crawlers
+Invoke-ISHMaintenance -ISHDeployment $deploymentName -Crawler -UnRegisterAll
+
+# Start a full reindex
+Invoke-ISHMaintenance -ISHDeployment $deploymentName -Crawler -ReIndex
+</code></pre><h2 id="maintenance-of-the-fulltextindex-component">Maintenance of the FullTextIndex component</h2>
+<p><code>Invoke-ISHMaintenance</code> cmdlet provides the following maintenance actions for the FullTextIndex component.</p>
+<ul>
+<li><strong>CleanUp</strong>. Use this action to remove all data of the FullTextIndex component from the filesystem. Invoking the re-index action from the Crawler component&#39;s maintenance is expected.</li>
+</ul>
+<pre><code class="lang-powershell">Invoke-ISHMaintenance -ISHDeployment $deploymentName -Cleanup -FullTextIndex
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Scaling the components </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Scaling the components ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="scaling-the-components">Scaling the components</h1>
+              
+<p>This tutorial explains how to scale the components of a Content Manager deployment.</p>
+<p>Not all components are scalable. The following components are the ones that can be scaled:</p>
+<ul>
+<li>Crawler.</li>
+<li>TranslationBuilder.</li>
+<li>TranslationOrganizer.</li>
+<li>BackgroundTask. This component is scaled per role.</li>
+</ul>
+<p>In general, scaling is applied by setting the <code>-Count</code> parameter for each related cmdlet of each component. </p>
+<p>Let&#39;s take a look in the following example for component <strong>TranslationBuilder</strong>. Similar principals apply for the rest of the components.</p>
+<h2 id="set-deploymentname-variable">Set deploymentName variable</h2>
+<p>First set deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="scaling-the-crawler-component">Scaling the Crawler component</h2>
+<p>The following example scales this component to <code>2</code>.</p>
+<pre><code class="lang-powershell">Set-ISHServiceCrawler -ISHDeployment $deploymentName -Count 2
+</code></pre><h2 id="scaling-the-translationbuilder-component">Scaling the TranslationBuilder component</h2>
+<p>The following example scales this component to <code>2</code>.</p>
+<pre><code class="lang-powershell">Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -Count 2
+</code></pre><h2 id="scaling-the-translationorganizer-component">Scaling the TranslationOrganizer component</h2>
+<p>The following example scales this component to <code>2</code>.</p>
+<pre><code class="lang-powershell">Set-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName -Count 2
+</code></pre><h2 id="scaling-the-backgroundtask-default-role-component">Scaling the BackgroundTask default role component</h2>
+<p>The following example scales this component to <code>2</code>.</p>
+<pre><code class="lang-powershell">Set-ISHServiceBackgroundTask -ISHDeployment $deploymentName -Count 2
+</code></pre><h2 id="scaling-a-backgroundtask-custom-role-component">Scaling a BackgroundTask custom role component</h2>
+<p>Assuming a new <code>Custom</code> role BackgroundTask component is registered, the following example scales this component to <code>2</code>.</p>
+<pre><code class="lang-powershell">$customRole=&quot;Custom&quot;
+
+Set-ISHServiceBackgroundTask -ISHDeployment $deploymentName -Count 2 -Role $customRole
+</code></pre><h2 id="getting-an-holistic-overview-of-the-scaling-configuration">Getting an holistic overview of the scaling configuration</h2>
+<p>The following query gets the status of all services based on their scaling configuration</p>
+<pre><code class="lang-powershell">Get-ISHServiceCrawler -ISHDeployment $deploymentName
+Get-ISHServiceTranslationBuilder -ISHDeployment $deploymentName
+Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName
+Get-ISHServiceBackgroundTask -ISHDeployment $deploymentName
+</code></pre><pre><code class="lang-text">Name                                           Status                 Type
+----                                           ------                 ----
+Trisoft InfoShareSQL Crawler One              Stopped              Crawler
+Trisoft InfoShareSQL Crawler Two              Stopped              Crawler
+Trisoft InfoShareSQL TranslationBuilder One   Stopped   TranslationBuilder
+Trisoft InfoShareSQL TranslationBuilder Two   Stopped   TranslationBuilder
+Trisoft InfoShareSQL TranslationOrganizer One Stopped TranslationOrganizer
+Trisoft InfoShareSQL TranslationOrganizer Two Stopped TranslationOrganizer
+
+Name                                            Status           Type Sequence Role   
+----                                            ------           ---- -------- ----   
+Trisoft InfoShareSQL BackgroundTask One        Stopped BackgroundTask        1 Default
+Trisoft InfoShareSQL BackgroundTask Two        Stopped BackgroundTask        2 Default
+Trisoft InfoShareSQL BackgroundTask Custom One Stopped BackgroundTask        1 Custom 
+Trisoft InfoShareSQL BackgroundTask Custom Two Stopped BackgroundTask        2 Custom
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

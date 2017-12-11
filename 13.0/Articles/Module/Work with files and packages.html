@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Work with files and packages </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Work with files and packages ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="work-with-files-and-packages">Work with files and packages</h1>
+              
+<p>This article explains how to work with cmdlets that use files as input or output. All cmdlets use a <strong>FileName</strong> parameter and do not accept values with paths. 
+The location of the files is abstracted away and to copy form from/to it the module offers <a href="../../Commands/Get-ISHPackageFolderPath.html">Get-ISHPackageFolderPath</a>. </p>
+<h2 id="cmdlet-working-with-files">Cmdlet working with files</h2>
+<p>Some of the cmdlets of the module depend on a file for their operation or their output is too complicated to write into the console.</p>
+<p>The module uses a specific folder within <code>$env:ProgramData</code> referred to as the staging folder: </p>
+<ul>
+<li>All saved files from cmdlets are written in this location.</li>
+<li>All files that drive a cmdlet must first be uploaded in this location.</li>
+</ul>
+<p>To abstract the location away, the module provides the <code>Get-ISHPackageFolderPath</code> that returns the location in two possible formats:</p>
+<ul>
+<li>Local folder format e.g. <code>C:\ProgramData\ISHDeploy.X.0.Y\InfoShare\Packages</code></li>
+<li>UNC path format e.g. <code>\\COMPUTER\C$\ProgramData\ISHDeploy.X.0.Y\InfoShare\Packages</code>. This format is focused on scripts with remote targets.</li>
+</ul>
+<p>The following diagram visualizes the flow</p>
+<p><img src="Work%20with%20files%20and%20packages.png" alt=""></p>
+<h2 id="script-target-is-local">Script target is local</h2>
+<p>First get the package location.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+$location=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
+</code></pre><p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location
+</code></pre><p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP
+</code></pre><h2 id="script-target-is-remote">Script target is remote</h2>
+<p>In this case we work with a remote computer <code>$computerName=&quot;SERVER&quot;</code> where the module is deployed. 
+To keep the examples simple when using <code>Invoke-Command</code> the <code>$Using</code> pattern will be used to access local variables from the script block. </p>
+<p>PowerShell v5.0 offers new features with regards to working with files and remote sessions. Depending on the version there are two options.</p>
+<h3 id="powershell-v40">PowerShell v4.0</h3>
+<p>With PowerShell v4.0 we must work with UNC paths.</p>
+<p>First get the package location in UNC format.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+$location=Invoke-Command -ComputerName $computerName -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName -UNC}
+</code></pre><p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location
+</code></pre><p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP
+</code></pre><h3 id="powershell-v50">PowerShell v5.0</h3>
+<p>With PowerShell v5.0 we get the ability to drive a cmdlet such as <code>Copy-Item</code> with <code>-FromSession</code> and <code>-ToSession</code>. When using these parameters, also file paths are local to the from/to computer referenced by the session.</p>
+<p>First create a <code>PSSession</code>, then get the package location in local format.</p>
+<pre><code class="lang-powershell">$session=New-PSSession -ComputerName $computerName
+$deploymentName=&quot;InfoShare&quot;
+$location=Invoke-Command -Session $session -ScriptBlock {Get-ISHPackageFolderPath -ISHDeployment $Using:deploymentName}
+</code></pre><p>To upload a file from path <code>$inputFilePath</code> into the module package directory execute </p>
+<pre><code class="lang-powershell">Copy-Item $inputFilePath $location -ToSession $session
+</code></pre><p>To download a file with name <code>$fileName</code> saved by a module cmdlet to the temp directory execute</p>
+<pre><code>$sourcePath=Join-Path $location $fileName
+Copy-Item $sourcePath $env:TEMP -FromSession $session
+</code></pre><h2 id="applying-a-customization-into-the-deployment">Applying a customization into the deployment</h2>
+<p>Once the file(s) or package(s) are copied into the module&#39;s (<a href="../../Commands/Get-ISHPackageFolderPath.html">Get-ISHPackageFolderPath</a>) folder we need to push it into the correct location of the deployment. 
+The module offers a cmdlets for this process that offer a limited set of target locations within the deployment. 
+The reason is that the module tries to make a clear distinction between configuration and customization. 
+To control the surface of customization while maintaining an easy upgrade path the solution is to own the possible target locations.</p>
+<h3 id="apply-customization-to-ishcm-folder">Apply customization to ISHCM folder</h3>
+<p>Once the customization file(s) or package(s) is copied into the module&#39;s folder there are two options:</p>
+<ul>
+<li>To copy one or more files into the ISHCM use <code>Copy-ISHCMFile</code>.</li>
+<li>To expand one or more compressed files into the ISHCM use <code>Expand-ISHCMPackage</code>.</li>
+</ul>
+<p>The two cmdlets do exactly the same thing, with the difference being the type of the source. 
+The <code>Expand-ISHCMPackage</code> takes an compressed file (package) and copies the contents into the target location as the <code>Copy-ISHCMFile</code> would do.</p>
+<p>Both cmdlet&#39;s offer two target locations</p>
+<ul>
+<li>A <code>Custom</code> folder in ISHCM. Use this for custom asp, html, javascript and images.</li>
+<li>The <code>bin</code> folder in ISHCM. Use this for binary customization files such as an http module.</li>
+</ul>
+<p>The following example showcases how to a customization into the ISHCM custom folder. 
+The customization is represented in a zip file or its extracted content.</p>
+<p><strong>Example with files</strong></p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+
+$fileRelativePaths=@(
+    &quot;Extensions\custom.js&quot;
+    &quot;custom.asp&quot;
+    &quot;custom.png&quot;
+)
+
+#region Copy the files into the module&#39;s staging folder
+$targetUploadPath=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
+Copy-Item $fileRelativePaths $targetUploadPath
+#endregion
+
+#region Copy customization into ISHCM custom folder
+Copy-ISHCMFile -ISHDeployment $deploymentName -Filename $fileRelativePaths -ToCustom
+#endregion
+</code></pre><p><strong>Example with compressed packages</strong></p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+
+$packageRelativePaths=@(
+    &quot;customCM.zip&quot;
+)
+
+#region Copy the package into the module&#39;s staging folder
+$targetUploadPath=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
+Copy-Item $packageRelativePaths $targetUploadPath
+#endregion
+
+#region Expand customization into ISHCM custom folder
+Expand-ISHCMPackage -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
+#endregion
+</code></pre><p><code>Copy-ISHCMFile</code> and <code>Expand-ISHCMPackage</code> will first process input parameter meta-language in each file and the &quot;copy&quot; it at the target location. 
+For backwards compatible reasons, the <code>Copy-ISHCMFile</code> and <code>Expand-ISHCMPackage</code> will process each file, replace input parameters meta-language artifacts and the place in the correct location. 
+The input parameter meta-language is <code>#!#installtool:PARAMETERNAME#!#</code> where <code>PARAMETERNAME</code> must be in uppercase and it is retrieved from the current deployment&#39;s parameters. 
+To get an listing of the parameters and their values execute <code>Get-ISHDeploymentParameters</code>. </p>
+<p>For example, if to get to the ISHCM website&#39;s url use <code>#!#installtool:BASEURL#!#/#!#installtool:INFOSHAREAUTHORWEBAPPNAME#!#/</code>. This will be transformed into <code>https://ish.example.com/ISHCM/</code>.</p>
+<h2 id="modify-a-file-on-the-deployment-without-the-module">Modify a file on the deployment without the module</h2>
+<p>When necessary to modify a file of the deployment that is not controlled by the module, it&#39;s best practice to take a backup first using <code>Backup-ISHDeployment</code>. 
+It is advised to modify the target file with code that applies a delta when possible instead of overwriting. </p>
+<p>For example, before modifying the ISHCM&#39;s web config file take a backup like this</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+
+Backup-ISHDeployment -ISHDeployment $deploymentName -Web -Path &quot;Author\ASP\Web.config&quot;
+</code></pre><p>This process makes sure that when <code>Undo-ISHDeployment</code> is executed all original files modified by the module and explicitly requested for backup are reverted. 
+Any file modified beyond the module&#39;s knowledge will not be reverted when executing <code>Undo-ISHDeployment</code>.</p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

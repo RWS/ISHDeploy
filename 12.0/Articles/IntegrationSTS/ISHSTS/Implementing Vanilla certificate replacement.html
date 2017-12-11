@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Implementing Vanilla certificate replacement </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Implementing Vanilla certificate replacement ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../../index.html">
+                <img src="../../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="implementing-vanilla-certificate-replacement">Implementing Vanilla certificate replacement</h1>
+              
+<p>This article explains how to execute a certificate replacement when the referenced certificate expires with a Vanilla deployment.</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>Content Manager is installed on <code>ish.example.com</code> and ISHWS is installed on <code>ish.example.com/ISHWS</code>. 
+This deployment uses the embedded ISHSTS for authentication. 
+With a Vanilla deployment the referenced certificate serves multiple purposes:</p>
+<ul>
+<li>Service certificate in ISHWS</li>
+<li>Issuer certificate in ISHSTS</li>
+<li>The SSL certificate configured on the web site&#39;s HTTPS binding. This is not a prerequisite but it is a common used case.</li>
+</ul>
+<p>Let’s assume that the deployment was implemented on the 1st January 2016 and the used certificate thumbprint was <code>20160101.Thumbprint</code>. </p>
+<p>The certificate expires in one year, on the <strong>1st January 2017</strong>.</p>
+<p>On the 1st December 2016 the owner of the certificate receives an expiration reminder and creates a new certificate.</p>
+<p>When the certificate expires there is no true rollover and a downtime period is expected. The reasons are:</p>
+<ul>
+<li>The manner that the service certificate is used to identify the ISHWS soap endpoints. </li>
+<li>Once a change is made all established client session will become invalid.</li>
+</ul>
+<h1 id="certificate-rollover-execution">Certificate rollover execution</h1>
+<h2 id="new-service-certificate-becomes-available">New service certificate becomes available</h2>
+<p>On the 1st December 2016, a new certificate becomes available on the store with thumbprint <code>20161201.Thumbprint</code> but since it’s not being referenced it&#39;s not used.</p>
+<h2 id="day-of-scheduled-replacement">Day of scheduled replacement</h2>
+<p>On the 15th December 2016 the following sequence is executed:</p>
+<ol>
+<li>All users sign out.</li>
+<li>The current ISHSTS token signing certificate with thumbprint <code>20160101.Thumbprint</code> is replaced with the newer <code>20160101.Thumbprint</code> is replaced by the newer <code>20161201.Thumbprint</code>. The cmdlet for this step is <code>Set-ISHSTSConfiguration</code>. </li>
+<li>The current issuer validation configuration is extended with the new issuer certificate with thumbprint <code>20161201.Thumbprint</code>.The cmdlet for this step is <code>Set-ISHIntegrationSTSCertificate</code>. </li>
+<li>The current service certificate with thumbprint <code>20160101.Thumbprint</code> is replaced with the newer <code>20161201.Thumbprint</code>. The cmdlet for this step is <code>Set-ISHAPIWCFServiceCertificate</code>. </li>
+<li>Users sign in.</li>
+</ol>
+<p>This script replaces the existing certificate with the new one.</p>
+<pre><code class="lang-powershell">#Certificate details
+$certificateName=&quot;ISHSTS (20161201)&quot;
+$certificateThumbprint=&quot;20161201.Thumbprint&quot;
+
+# Set the ISHSTS token signing certificate
+# Execute before Set-ISHIntegrationSTSCertificate
+Set-ISHSTSConfiguration -ISHDeployment $deploymentName -TokenSigningCertificateThumbprint $certificateThumbprint
+
+# Set Token signing certificate
+# Execute after Set-ISHSTSConfiguration
+Set-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer $certificateName -Thumbprint $certificateThumbprint
+
+# Set service certificate
+Set-ISHAPIWCFServiceCertificate -ISHDeployment $deploymentName -Thumbprint $certificateThumbprint
+</code></pre><p>Please note that the order of execution between <code>Set-ISHIntegrationSTSCertificate</code> and <code>Set-ISHSTSConfiguration</code> must not be changed otherwise it might break the deployment.</p>
+<h2 id="remove-the-old-certificate">Remove the old certificate</h2>
+<p>As a cleanup process, all service providers should remove their old issuer certificate references.</p>
+<pre><code class="lang-powershell">Remove-ISHIntegrationSTSCertificate -ISHDeployment $deploymentName -Issuer &quot;Issuer&quot;
+</code></pre><p>The above removes any reference to the certificate with thumbprint <code>20161201.Thumbprint</code>, hence it can be removed from the store.</p>
+<h1 id="replace-the-web-sites-https-binding-ssl-certificate">Replace the web site&#39;s HTTPS binding SSL certificate</h1>
+<p>IIS is a web host engine and can support multiple web sites. 
+Content Manager creates application pools under a web site and lets IIS power the secure encryption on the network layer through an HTTPS binding. 
+Content Manager is not responsible for the secure encryption and therefore the module doesn&#39;t offer any specific cmdlet to manage the HTTPS certificate.
+A Content Manager vanilla deployment depends on one certificate which usually is the one that powers HTTPS on IIS.
+For this reason, replacement of the certificate referenced by Content Manager will overlap with the replacement of the one in IIS.
+This section explain how to extend the above process for IIS.</p>
+<p>When installing IIS, the <strong>WebAdministration</strong> module is also installed. This module offers cmdlets and providers that help manage IIS.</p>
+<p>There are many ways to create and configure a web site and its bindings in IIS. For this reason there is not one simple script that can update all possible bindings.
+The simplest case is the one offered with a default IIS installation and is summarized as:</p>
+<ul>
+<li>There is only the default Web Site configured on IIS.</li>
+<li>The site&#39;s binding has no host header or IP addresses specified.</li>
+</ul>
+<p>With this configuration the following script updates the certificate on the HTTPS binding to the new one with thumbprint <code>20161201.Thumbprint</code>.</p>
+<pre><code class="lang-powershell">$thumbprint=&quot;20161201.Thumbprint&quot;
+Get-ChildItem &quot;Cert:\LocalMachine\My\$thumbprint&quot; | Set-Item -Path &quot;IIS:\SslBindings\0.0.0.0!443&quot;
+</code></pre><p>If the web site was configured with a host header then the script becomes</p>
+<pre><code class="lang-powershell">$thumbprint=&quot;20161201.Thumbprint&quot;
+$hostHeader=&quot;example.com&quot;
+Get-ChildItem &quot;Cert:\LocalMachine\My\$thumbprint&quot; | Set-Item -Path &quot;IIS:\SslBindings\0.0.0.0!443!$hostHeader&quot; -SSLFlags 1
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

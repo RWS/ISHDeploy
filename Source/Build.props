@@ -8,7 +8,7 @@
     <ProductName>ISHDeploy</ProductName>
     <ModuleName>$(ProductName).$(SupportedCMVersion)</ModuleName>
     <ModuleTitle>SDL Trisoft $(ModuleName)</ModuleTitle>
-    <ModuleDescription>Deployment automation module for SDL Knowledge Center $(Year) Content Manager $(SupportedCMVersion) (LiveContent Architect, Trisoft InfoShare)</ModuleDescription>
+    <ModuleDescription>Deployment automation module for SDL $(MarketingReleaseName) Content Manager $(SoftwareCMVersion) (LiveContent Architect, Trisoft InfoShare)</ModuleDescription>
     <ModuleCompany>SDL plc</ModuleCompany>
     <ModuleProduct>SDL Knowledge Center $(ModuleName)</ModuleProduct>
     <ModuleCopyright>SDL plc. All rights reserved.</ModuleCopyright>

@@ -81,6 +81,9 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
             var services = serviceManager.GetAllServices(
                 ishDeployment.Name).ToList();
 
+            // For version 12.X.X only
+            DeleteExtensionsLoaderFile();
+
             // Remove redundant files from BIN
             Invoker.AddAction(new DirectoryBinReturnToVanila(
                 logger, 
@@ -344,6 +347,19 @@ namespace ISHDeploy.Business.Operations.ISHDeployment
 
             // Remove Author\ASP\Custom
             Invoker.AddAction(new DirectoryRemoveAction(logger, $@"{WebFolderPath}\Author\ASP\Custom"));
+        }
+
+        /// <summary>
+        /// Deletes ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js file if file exists.
+        /// </summary>
+        public void DeleteExtensionsLoaderFile()
+        {
+            if (_fileManager.FileExists(ExtensionsLoaderFilePath.AbsolutePath))
+            {
+                Logger.WriteDebug("Delete file", ExtensionsLoaderFilePath.RelativePath);
+
+                Invoker.AddAction(new FileDeleteAction(Logger, ExtensionsLoaderFilePath.AbsolutePath));
+            }
         }
 
         /// <summary>

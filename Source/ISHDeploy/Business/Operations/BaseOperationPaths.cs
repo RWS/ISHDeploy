@@ -205,7 +205,7 @@ namespace ISHDeploy.Business.Operations
         protected ISHFilePath EventMonitorMenuBarXmlPath { get; }
 
         /// <summary>
-        /// The path to ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config
+        /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
         protected ISHFilePath FeedSDLLiveContentConfigPath { get; }
 
@@ -326,7 +326,7 @@ namespace ISHDeploy.Business.Operations
         /// The path to ~\Web\Author\ASP\XSL\TopDocumentButtonbar.xml
         /// </summary>
         protected ISHFilePath TopDocumentButtonBarXmlPath { get; }
-        
+
         /// <summary>
         /// The path to ~\Web\Author\ASP\Trisoft.InfoShare.Client.config
         /// </summary>
@@ -357,6 +357,10 @@ namespace ISHDeploy.Business.Operations
         /// </summary>
         protected ISHFilePath CUIFConfigFilePath { get; }
 
+        /// <summary>
+        /// Gets the path to ~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js
+        /// </summary>
+        protected ISHFilePath ExtensionsLoaderFilePath { get; }
 
         /// <summary>
         /// Gets the path to ~\App\TranslationBuilder\Bin\TranslationBuilder.exe.config
@@ -471,7 +475,7 @@ namespace ISHDeploy.Business.Operations
             InputParametersFilePath = new ISHFilePath(InputParameters.FilePath.Replace("inputparameters.xml", string.Empty), BackupFolderPath, "inputparameters.xml");
             AuthorASPTreeHtmPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Tree.htm");
             EventMonitorMenuBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\EventMonitorMenuBar.xml");
-            FeedSDLLiveContentConfigPath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config");
+            FeedSDLLiveContentConfigPath = new ISHFilePath(DataFolderPath, BackupDataFolderPath, @"PublishingService\Tools\FeedSDLLiveContent.ps1.config");
             FolderButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\FolderButtonbar.xml");
             LicenceFolderPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\license\");
             InboxButtonBarXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\XSL\InboxButtonBar.xml");
@@ -490,6 +494,7 @@ namespace ISHDeploy.Business.Operations
             XopusBlueLionPluginWebCconfigPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\BlueLion-Plugin\web.config");
             XopusConfigXmlPath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\Editors\Xopus\config\config.xml");
             CUIFConfigFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Extensions\_config.xml");
+            ExtensionsLoaderFilePath = new ISHFilePath(WebFolderPath, BackupWebFolderPath, @"Author\ASP\UI\Helpers\ExtensionsLoader.js");
             TranslationBuilderConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationBuilder\Bin\TranslationBuilder.exe.config");
             TranslationOrganizerConfigFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"TranslationOrganizer\Bin\TranslationOrganizer.exe.config");
             SDLISHADFSv3RPInstallPSFilePath = new ISHFilePath(AppFolderPath, BackupAppFolderPath, @"Setup\STS\ADFS\Scripts\SDL.ISH-ADFSv3.0-RP-Install.ps1");

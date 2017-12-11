@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using ISHDeploy.Business.Invokers;
 using ISHDeploy.Common;
@@ -96,7 +95,7 @@ namespace ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation
                         new SetAttributeValueAction(Logger,
                         TranslationOrganizerConfigFilePath,
                         $"{tmsConfiguration.XPath}/@{parameter.Key}",
-                        HandleStringBeforeSaving(parameter.Key, parameter.Value),
+                        parameter.Value.ToString(),
                         true));
                 }
             }
@@ -104,22 +103,6 @@ namespace ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation
             {
                 throw new DocumentAlreadyContainsElementException(exceptionMessage);
             }
-        }
-
-        /// <summary>
-        /// Returns value in appropriate string format
-        /// </summary>
-        /// <param name="type">Type of setting</param>
-        /// <param name="value">The value</param>
-        /// <returns></returns>
-        private string HandleStringBeforeSaving(TmsConfigurationSetting type, object value)
-        {
-            if (type == TmsConfigurationSetting.httpTimeout)
-            {
-                return ((TimeSpan)value).ToString(@"hh\:mm\:ss\.fff");
-            }
-
-            return value.ToString();
         }
 
         /// <summary>

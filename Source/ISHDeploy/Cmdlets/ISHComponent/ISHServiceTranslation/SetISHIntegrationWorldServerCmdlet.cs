@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using System.Management.Automation;
 using ISHDeploy.Business.Operations.ISHComponent.ISHServiceTranslation;
-using ISHDeploy.Common.Interfaces;
 using ISHDeploy.Common.Models.TranslationOrganizer;
 
 namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
@@ -63,22 +61,9 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
         /// <para type="description">The number of retries on timeout.</para>
         /// </summary>
         [Parameter(Mandatory = false, HelpMessage = "The number of retries on timeout.")]
+        [ValidateNotNullOrEmpty]
         [ValidateRange(1, 30)]
         public int RetriesOnTimeout { get; set; } = 3;
-        
-        /// <summary>
-        /// <para type="description">The HTTP timeout (Used for REST client only).</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The HTTP timeout (Used for REST client only).")]
-        [ValidateNotNullOrEmpty]
-        public TimeSpan Timeout { get; set; }
-
-        /// <summary>
-        /// <para type="description">The type of the API Protocol.</para>
-        /// </summary>
-        [Parameter(Mandatory = false, HelpMessage = "The type of the API Protocol.", ParameterSetName = "SOAP")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter SOAP { get; set; }
 
         /// <summary>
         /// <para type="description">The mapping between trisoftLanguage and worldServerLocaleId.</para>
@@ -99,34 +84,14 @@ namespace ISHDeploy.Cmdlets.ISHComponent.ISHServiceTranslation
                 CredentialPassword,
                 MaximumJobSize,
                 RetriesOnTimeout,
-                SOAP.IsPresent ? "soap" : "rest",
                 Mappings);
 
-            string exceptionMessage =
-                "TranslationOrganizer.exe.config already contains settings for WorldServer. You should remove WorldServer configuration section first. To do this you can use Remove-ISHIntegrationWorldServer cmdlet.";
-
-            IOperation operation;
-            if (!SOAP.IsPresent && MyInvocation.BoundParameters.ContainsKey("Timeout"))
-            {
-                operation = new SetISHIntegrationWorldServerOperation(
-                    Logger, 
-                    ISHDeployment, 
-                    worldServerConfiguration,
-                    MyInvocation.BoundParameters.ContainsKey("MaximumJobSize"),
-                    MyInvocation.BoundParameters.ContainsKey("RetriesOnTimeout"),
-                    Timeout,
-                    exceptionMessage);
-            }
-            else
-            {
-                operation = new SetISHIntegrationWorldServerOperation(
-                    Logger, 
-                    ISHDeployment, 
-                    worldServerConfiguration,
-                    MyInvocation.BoundParameters.ContainsKey("MaximumJobSize"),
-                    MyInvocation.BoundParameters.ContainsKey("RetriesOnTimeout"),
-                    exceptionMessage);
-            }
+            var operation = new SetISHIntegrationWorldServerOperation(Logger,
+                ISHDeployment, 
+                worldServerConfiguration,
+                MyInvocation.BoundParameters.ContainsKey("MaximumJobSize"),
+                MyInvocation.BoundParameters.ContainsKey("RetriesOnTimeout"),
+                "TranslationOrganizer.exe.config already contains settings for WorldServer. You should remove WorldServer configuration section first. To do this you can use Remove-ISHIntegrationWorldServer cmdlet.");
 
             operation.Run();
         }

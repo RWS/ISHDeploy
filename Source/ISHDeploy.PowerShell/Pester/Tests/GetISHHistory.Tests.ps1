@@ -121,11 +121,10 @@ $scriptBlockGetParameters = {
 }
 
 function getExpectedHistory{
-$text = '# yyyyMMdd
-$deploymentName = ''InfoShare''
+$text = '$deploymentName = ''InfoShare''
 Disable-ISHUIQualityAssistant -ISHDeployment $deploymentName
 '
-  return $text.Replace("InfoShare", $testingDeployment.Name).Replace("yyyyMMdd", [System.DateTime]::Now.ToString("yyyyMMdd"))
+  return $text.Replace("InfoShare", $testingDeployment.Name)
 }
 
 # Restoring system to vanila state for not loosing files, touched in previous tests

@@ -21,7 +21,7 @@
     partial class BaseOperationPaths
     {
         /// <summary>
-        /// The path to ~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config
+        /// The path to ~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config
         /// </summary>
         protected class TemporarySTSConfigurationFileNames
         {

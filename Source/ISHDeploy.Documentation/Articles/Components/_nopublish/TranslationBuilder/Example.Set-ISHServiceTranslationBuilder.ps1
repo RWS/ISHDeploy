@@ -1,1 +1,0 @@
-﻿Set-ISHServiceTranslationBuilder -ISHDeployment $deploymentName -Count 2

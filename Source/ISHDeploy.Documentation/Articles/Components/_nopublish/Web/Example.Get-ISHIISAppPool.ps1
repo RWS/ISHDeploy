@@ -1,1 +1,0 @@
-﻿Get-ISHIISAppPool -ISHDeployment $deploymentName

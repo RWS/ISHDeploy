@@ -1,1 +1,0 @@
-﻿Get-ISHIntegrationDB -ISHDeployment $deploymentName

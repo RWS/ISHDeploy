@@ -1,1 +1,0 @@
-﻿Disable-ISHServiceFullTextIndex -ISHDeployment $deploymentName

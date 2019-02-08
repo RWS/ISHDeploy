@@ -1,1 +1,0 @@
-﻿Disable-ISHCOMPlus -ISHDeployment $deploymentName

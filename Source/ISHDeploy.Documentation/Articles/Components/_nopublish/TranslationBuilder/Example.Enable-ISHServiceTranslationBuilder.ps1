@@ -1,1 +1,0 @@
-﻿Enable-ISHServiceTranslationBuilder -ISHDeployment $deploymentName

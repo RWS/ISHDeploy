@@ -1,1 +1,0 @@
-﻿Disable-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName

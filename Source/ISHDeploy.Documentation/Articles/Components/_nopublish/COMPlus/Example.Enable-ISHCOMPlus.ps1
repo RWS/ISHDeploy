@@ -1,1 +1,0 @@
-﻿Enable-ISHCOMPlus -ISHDeployment $deploymentName

@@ -1,1 +1,0 @@
-﻿Get-ISHComponent -ISHDeployment $deploymentName

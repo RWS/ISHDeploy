@@ -1,1 +1,0 @@
-﻿Get-ISHServiceTranslationOrganizer -ISHDeployment $deploymentName

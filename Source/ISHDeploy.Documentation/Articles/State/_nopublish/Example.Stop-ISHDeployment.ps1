@@ -1,1 +1,0 @@
-﻿Stop-ISHDeployment -ISHDeployment $deploymentName

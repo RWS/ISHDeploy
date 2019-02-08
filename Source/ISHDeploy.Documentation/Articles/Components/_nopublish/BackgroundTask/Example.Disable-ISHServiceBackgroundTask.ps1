@@ -1,1 +1,0 @@
-﻿Disable-ISHServiceBackgroundTask -ISHDeployment $deploymentName

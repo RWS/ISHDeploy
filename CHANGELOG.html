@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Release notes </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Release notes ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">
+                <img src="sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="release-notes">Release notes</h1>
+              
+<h2 id="stable-16">stable-1.6</h2>
+<p>The main achievement of this release is that it is no longer necessary to install a separate version of the ISHDeploy module for the corresponding version of Content Manager deployment.
+Now the module has a single version and supports CM versions starting from 12.0.0 including 14.0.0.</p>
+<p>The list of differences in the work of cmdlets depending on the version of the CM:</p>
+<p><strong>Note:</strong> The symbol &quot;V&quot; - means that the version supports this feature or has difference from other versions of the CM</p>
+<pre><code>Cmdlet name                                | 12.0.* | 13.0.0-13.0.2 | Upcoming 13.0.3 | Features or differences 
+-------------------------------------------|--------|---------------|-----------------|-----------------------------------------------------------------------------
+Enable-ISHIISAppPool                       |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Disable-ISHIISAppPool                      |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Set-ISHAPIWCFServiceCertificate            |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Get-ISHIISAppPool                          |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Remove-ISHIntegrationSTSCertificate        |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Set-ISHOSUser                              |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Save-ISHIntegrationSTSConfigurationPackage |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Set-ISHIntegrationSTSCertificate           |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Set-ISHIntegrationSTSWSFederation          |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Get-ISHDeployment                          |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Get-ISHDeploymentParameters                |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Undo-ISHDeployment                         |    -   |        -      |        V        | Supporting of new CS web application for collaborative editing
+Undo-ISHDeployment                         |    V   |        -      |        -        | Removing of &#39;~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js&#39;
+Set-ISHCMCUILResourceGroup                 |    V   |        -      |        -        | Creates &#39;~\Web\Author\ASP\UI\Helpers\ExtensionsLoader.js&#39; file if it does not exist
+Set-ISHIntegrationDB                       |    -   |        V      |        V        | Changing of &#39;~\Asp\Database\Common\DatabaseIndependent\Examples\Full-Export\fullexport.xsl&#39;
+Set-ISHIntegrationTMS                      |    -   |        V      |        V        | Supporting of HttpTimeout parameter
+Set-ISHIntegrationTMS                      |    -   |        -      |        V        | Supporting of pair of Username and Password parameters
+Set-ISHIntegrationWorldServer              |    -   |        V      |        V        | Supporting of setting of ApiProtocol (SOAP switch parameter)
+Set-ISHIntegrationWorldServer              |    -   |        V      |        V        | Supporting of setting of Timeout (Timeout parameter can be set only for REST)
+Invoke-ISHMaintenance                      |    -   |        V      |        V        | The &#39;crawler.exe&#39; doesn&#39;t need a name of registry folder with Crawler&#39;s settings as entry parameter
+Set-ISHAPIWCFServiceCertificate            |    V   |        -      |        -        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHServiceUser                         |    V   |        -      |        -        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHIntegrationSTSWSTrust               |    V   |        -      |        -        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHSTSConfiguration                    |    V   |        -      |        -        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\Data\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHAPIWCFServiceCertificate            |    -   |        V      |        V        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHServiceUser                         |    -   |        V      |        V        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHIntegrationSTSWSTrust               |    -   |        V      |        V        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHSTSConfiguration                    |    -   |        V      |        V        | Path to &#39;FeedSDLLiveContent.ps1&#39; file is: &#39;~\App\Utilities\PublishingService\Tools\FeedSDLLiveContent.ps1.config&#39;
+Set-ISHAPIWCFServiceCertificate            |    V   |        V      |        -        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf&#39;
+Set-ISHActor                               |    V   |        V      |        -        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf&#39;
+Get-ISHSTSRelyingParty                     |    V   |        V      |        -        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf&#39;
+Set-ISHSTSRelyingParty                     |    V   |        V      |        -        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf&#39;
+Set-ISHSTSConfiguration                    |    V   |        V      |        -        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.2.sdf&#39;
+Set-ISHAPIWCFServiceCertificate            |    -   |        -      |        V        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.3.sdf&#39;
+Set-ISHActor                               |    -   |        -      |        V        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.3.sdf&#39;
+Get-ISHSTSRelyingParty                     |    -   |        -      |        V        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.3.sdf&#39;
+Set-ISHSTSConfiguration                    |    -   |        -      |        V        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.3.sdf&#39;
+Set-ISHSTSRelyingParty                     |    -   |        -      |        V        | Path to &#39;IdentityServerConfiguration&#39; file is: &#39;~\Web\InfoShareSTS\App_Data\IdentityServerConfiguration-2.3.sdf&#39;
+</code></pre><p>Other ISHDeploy cmdlets&#39;s changes:</p>
+<ol>
+<li><code>Set-ISHIntegrationDB</code> . <strong>[Update]</strong> 
+ <strong>Note:</strong> - The <code>-Raw</code> parameter is obsolete for ISHDeploy module since version 1.6</li>
+<li><code>Copy-ISHFile</code> . <strong>[New]</strong> </li>
+<li><code>Disable-ISHUICollectiveSpaces</code> . <strong>[New]</strong> </li>
+<li><code>Enable-ISHUICollectiveSpaces</code> . <strong>[New]</strong> </li>
+<li><code>Copy-ISHCMFile</code> . <strong>[Remove]</strong> </li>
+<li><code>Expand-ISHCMPackage</code> . <strong>[Remove]</strong> </li>
+</ol>
+<h2 id="stable-15">stable-1.5</h2>
+<p>In this release of the module, all work was related to improvements and correction of some bugs. Here are the most valuable ones:</p>
+<ol>
+<li><code>Set-ISHIntegrationTMS</code> . <strong>[Update]</strong> - support extra properties such as username/password and UseSsl for Content Manager of version 13.0.3 and higher</li>
+<li>Added of supporting of MSSQL Server 2017 for Content Manager of version 13.0.3 and higher</li>
+<li>Fixed an issue with adding of hostname as prefix to WorldServer username</li>
+</ol>
+<h2 id="stable-14">stable-1.4</h2>
+<p>This release is focused on adding cmdlet that help configure core aspects of a deployment.
+Also in this release, the version strategy of the module has been changed. Now the module will support all intermediate versions of Content Manager, therefore, only the major number of CM versions should be considered to find an appropriate version of the ISHDeploy module. 
+As an example, now the ISHDeploy.12.0 module can be used for Content Manager of versions 12.0.0, 12.0.1, 12.0.3, 12.0.4 and 12.0.5 respectively.</p>
+<p>List of changes in the module cmdlets:</p>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li><code>Get-ISHDeploymentParameters</code> . <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration Database<ol>
+<li>Cmdlets<ul>
+<li><code>Get-ISHIntegrationDB</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationDB</code>. <strong>[New]</strong></li>
+<li><code>Test-ISHIntegrationDB</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Within <strong>new</strong> section <strong>Work with core deployment configuration</strong> in tutorials:<ul>
+<li><strong>Integrating with a database</strong>. <strong>[New]</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Credentials<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHOSUser</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHOSUser</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceUser</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHActor</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Within <strong>new</strong> section <strong>Work with core deployment configuration</strong> in tutorials:<ul>
+<li><strong>Configuring credentials</strong>. <strong>[New]</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Component management<ol>
+<li>Cmdlets<ul>
+<li><code>Get-ISHComponent</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHIISAppPool</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHIISAppPool</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHIISAppPool</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHCOMPlus</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHCOMPlus</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHCOMPlus</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceCrawler</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceCrawler</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceCrawler</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceCrawler</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceFullTextIndex</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceFullTextIndex</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceFullTextIndex</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceFullTextIndex</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHServiceBackgroundTask</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationFullTextIndex</code>. <strong>[New]</strong> </li>
+<li><code>Invoke-ISHMaintenance</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Within <strong>new</strong> section <strong>Manage components</strong> in tutorials:<ul>
+<li><strong>Managing and tracking components</strong>. <strong>[New]</strong></li>
+<li><strong>Scaling the components</strong>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Within <strong>new</strong> section <strong>Work with core deployment configuration</strong> in tutorials:<ul>
+<li><strong>Configuring and maintaining search</strong>. <strong>[New]</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>State management<ol>
+<li>Cmdlets<ul>
+<li><code>Start-ISHDeployment</code>. <strong>[New]</strong></li>
+<li><code>Stop-ISHDeployment</code>. <strong>[New]</strong></li>
+<li><code>Restart-ISHDeployment</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Within <strong>new</strong> section <strong>Manage state</strong> in tutorials:<ul>
+<li><strong>Starting and stopping</strong>. <strong>[New]</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHSTSConfiguration</code> will not create and initialize the database of ISHSTS when not available. <strong>[Update]</strong></li>
+<li><code>Set-ISHAPIWCFServiceCertificate</code> will not create and initialize the database of ISHSTS when not available. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="stable-13">stable-1.3</h2>
+<p>This release is focused on adding cmdlets into the module that help configure and manager the translation services.</p>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>Fixed <code>Get-ISHDeployment</code> to return the actual path for the <code>WebPath</code>, <code>DataPath</code> and <code>AppPath</code>. 
+E.g for <code>WebPath</code> the value is <code>C:\InfoShare\Web</code> instead of <code>C:\InfoShare</code>.  <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentParameter</code> new parameters <code>-Name</code> and <code>-ValueOnly</code> simplify working with one parameter.  <strong>[Update]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>Minor corrections and enhancements on <strong>Work with one or multiple deployments</strong> tutorial.  <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration Translation<ol>
+<li>Cmdlets<ul>
+<li><code>Enable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationBuilder</code>. <strong>[New]</strong></li>
+<li><code>Enable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Disable-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Get-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHServiceTranslationOrganizer</code>. <strong>[New]</strong></li>
+<li><code>New-ISHFieldMetadata</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSMapping</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationTMSTemplate</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationTMS</code>. <strong>[New]</strong></li>
+<li><code>New-ISHIntegrationWorldServerMapping</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHIntegrationWorldServer</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHTranslationFileSystemExport</code>. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Tutorials<ul>
+<li>New section <strong>Work with translation services</strong> with tutorials: <strong>[New]</strong><ul>
+<li><strong>Integrating translation jobs with SDL World Server</strong>. <strong>[New]</strong></li>
+<li><strong>Integrating translation jobs with SDL TMS</strong>. <strong>[New]</strong></li>
+<li><strong>Exporting translation jobs to the file system</strong>. <strong>[New]</strong></li>
+<li><strong>Configuring the services</strong>. <strong>[New]</strong></li>
+<li><strong>Scaling the services</strong>. <strong>[New]</strong>          </li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Working with ISHCM web UI features<ol>
+<li>Tutorials<ul>
+<li><strong>Configuring ISHCM web UI button bars</strong>. Fixed an bug in the example when using splatting parameters <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="stable-12">stable-1.2</h2>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>For all cmdlets the &#39;-ISHDeployment&#39; parameter is now optional and calculated when omitted with the following reasoning:  <strong>[Update]</strong><ul>
+<li>When there is only one available deployment detected then this one will be used.</li>
+<li>Where there are more than one available deployments detected then the cmdlet will throw an error.</li>
+</ul>
+</li>
+<li>Improved cmdlet behavior when administrator privileges are required.</li>
+<li>History file is enhanced with script info meta language. </li>
+</ul>
+</li>
+<li>Documentation<ul>
+<li>Renamed items in the top bar to <strong>Tutorials</strong> and <strong>Cmdlet Documentation</strong>. <strong>[Update]</strong></li>
+<li>New items in the top bar for access to topics such as <strong>Getting started</strong> and <strong>Release notes</strong>. <strong>[Update]</strong></li>
+<li>New icon in top bar. <strong>[Update]</strong></li>
+<li>New tutorial on how to work with one deployment. <strong>[Update]</strong></li>
+<li>Renamed and extended tutorial <strong>Work with files</strong> to <strong>Work with files and packages</strong>. <strong>[Update]</strong></li>
+<li><strong>Getting Started</strong> has new information about required elevated administrator privileges. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Working with ISHCM web UI features<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUIButtonBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUIMainMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Move-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Remove-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHUISearchMenuBarItem</code>. <strong>[New]</strong></li>
+<li><code>Copy-ISHCMFile</code>. <strong>[New]</strong></li>
+<li><code>Expand-ISHCMPackage</code>. <strong>[New]</strong></li>
+<li><code>Set-ISHCMCUILResourceGroup</code>. <strong>[New]</strong></li>
+<li><code>Backup-ISHDeployment</code>. <strong>[New]</strong></li>
+<li>Renamed cmdlets for event monitor:  <strong>[Update]</strong><ul>
+<li>From <code>Set-ISHUIEventMonitorTab</code> to <code>Set-ISHUIEventMonitorMenuBarItem</code>.</li>
+<li>From <code>Move-ISHUIEventMonitorTab</code> to <code>Move-ISHUIEventMonitorMenuBarItem</code>.</li>
+<li>From <code>Remove-ISHUIEventMonitorTab</code> to <code>Remove-ISHUIEventMonitorMenuBarItem</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Documentation<ul>
+<li>Reorganize former &quot;Configuring features using the module&quot; tutorial into three more specialized. <strong>[Update]</strong><ul>
+<li>Toggling Web Components. <strong>[Update]</strong></li>
+<li>Configuring ISHCM web UI menu bars. <strong>[Update]</strong></li>
+<li>Configuring ISHCM web UI button bars. <strong>[New]</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration STS<ol>
+<li>Documentation<ul>
+<li>Fixed invalid parameter reference in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
+<li>Added remarks for the importance of execution order in PowerShell examples in tutorial <strong>Implementing Vanilla certificate replacement</strong>. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="stable-11">stable-1.1</h2>
+<p><strong>Summary of release</strong></p>
+<ul>
+<li>Control internal user authentication when the deployment is integrated with an external security token service (STS)</li>
+<li>Fine tune Cmdlets</li>
+<li>Bug fixing</li>
+<li>Solve previous known issue:
+&gt; When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the <code>Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows</code>.</li>
+</ul>
+<p><strong>Cmdlets and documentation changes</strong></p>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>Less warning messages. Warnings are issued when itпїЅs important to share. <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
+</ul>
+</li>
+<li>Documentation - Commands<ul>
+<li>Related links render as links and provide a quicker navigation experience. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration STS<ol>
+<li>Cmdlets<ul>
+<li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
+<li><code>Enable-ISHIntegrationSTSInternalAuthentication</code> and  <code>Disable-ISHIntegrationSTSInternalAuthentication</code> enable access for internal user authentication. <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Documentation - Articles<ul>
+<li>Security Token Service\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
+<li>Security Token Service\ADFS\Integrating with Security Token Service mentions how to enable internal user authentication. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li><code>Set-ISHSTSConfiguration</code> will force the initialization of ISHSTS&#39;s database. <strong>[Update]</strong></li>
+<li><code>Set-ISHSTSConfiguration</code> does check - is Windows Authentication feature installed on environment or not. <strong>[Update]</strong> </li>
+<li><code>Set-ISHSTSRelyingParty</code> parameter <code>-Realm</code> is required to be a proper url with schema. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>Known issues</strong></p>
+<ul>
+<li>Due to internal dependencies to the product, avoid sequencing first <code>Set-ISHIntegrationSTSCertificate</code> and then <code>Set-ISHSTSConfiguration</code> because they will break the deployment.</li>
+</ul>
+<h2 id="beta-09-pre-release">beta-0.9 (Pre-release)</h2>
+<ol>
+<li>Working with deployments<ol>
+<li>Cmdlets<ul>
+<li>All Get-ISH* cmdlets e.g. <code>Get-ISHDeployment</code> can be piped. e.g. <code>Get-ISHDeployment | ForEach-Object {$_}</code>. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Feature toggle<ol>
+<li>Cmdlets<ul>
+<li>Set-ISHUIEventMonitorTab can accept multiple user roles in parameter <code>-UserRole</code>. <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li>Set-ISHSTSConfiguration. (Fixed) <strong>[Update]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p><strong>Known issues</strong></p>
+<ul>
+<li>When the deployment is configured for light weight windows authentication, the described certificate rollover leaves the system broken. The workaround is to re-execute the <code>Set-ISHSTSConfiguration -ISHDeployment $deploymentName -AuthenticationType Windows</code>.</li>
+<li>Set-ISHSTSConfiguration does not check if the windows authentication module is installed on IIS.</li>
+</ul>
+<h2 id="alpha-02-pre-release">alpha-0.2 (Pre-release)</h2>
+<ol>
+<li>General <ol>
+<li>Cmdlets<ul>
+<li>All cmdlets accept also name as value for the <code>-ISHDeployment</code> parameter. e.g. <code>Enable-ISHUIContentEditor -ISHDeployment &quot;InfoShare&quot;</code>. <strong>[Update]</strong></li>
+<li><code>Get-ISHDeployment</code> returns the <code>WebSiteName</code> also. <strong>[Update]</strong></li>
+<li><code>Get-ISHDeploymentParameters</code> . <strong>[New]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>ISHSTS<ol>
+<li>Cmdlets<ul>
+<li>Reset-ISHSTS. <strong>[New]</strong></li>
+<li>Get-ISHSTSRelyingParty. <strong>[New]</strong></li>
+<li>Set-ISHSTSRelyingParty. <strong>[New]</strong></li>
+<li>Set-ISHSTSConfiguration. (Not working) <strong>[New]</strong></li>
+</ul>
+</li>
+<li>Articles<ul>
+<li>Work with Security Token Service\ISHSTS\Integrating 3rd party service providers. <strong>[New]</strong></li>
+<li>Work with Security Token Service\ISHSTS\Implementing light weight Windows Authentication. <strong>[New]</strong></li>
+<li>Work with Security Token Service\ISHSTS\Resetting ISHSTS. <strong>[New]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Security Token Service (STS)<ol>
+<li>Articles<ul>
+<li>Work with Security Token Service\Certificates rollover/replacement\Implementing certificate replacement. <strong>[New]</strong></li>
+<li>Work with Security Token Service\Certificates rollover/replacement\Implementing issuer certificate rollover with 3rd party STS. <strong>[Update]</strong></li>
+<li>Work with Security Token Service\Certificates rollover/replacement\Implementing service certificate replacement with 3rd party STS. <strong>[New]</strong></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="alpha-01-pre-release">alpha-0.1 (Pre-release)</h2>
+<p>Initial release</p>
+<ol>
+<li>Working with deployments<ol>
+<li>Cmdlets<ul>
+<li>Clear-ISHDeploymentHistory</li>
+<li>Get-ISHDeployment</li>
+<li>Get-ISHDeploymentHistory</li>
+<li>Get-ISHPackageFolderPath</li>
+<li>Undo-ISHDeployment</li>
+</ul>
+</li>
+<li>Articles<ul>
+<li>Work with deployments  </li>
+<li>Work with files</li>
+<li>Work with Get-ISHPackageFolderPath  </li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Feature toggle<ol>
+<li>Cmdlets<ul>
+<li>Disable-ISHExternalPreview</li>
+<li>Disable-ISHUIContentEditor</li>
+<li>Disable-ISHUIQualityAssistant</li>
+<li>Disable-ISHUITranslationJob</li>
+<li>Enable-ISHExternalPreview</li>
+<li>Enable-ISHUIContentEditor</li>
+<li>Enable-ISHUIQualityAssistant</li>
+<li>Enable-ISHUITranslationJob</li>
+<li>Move-ISHUIEventMonitorTab</li>
+<li>Remove-ISHUIEventMonitorTab</li>
+<li>Set-ISHUIEventMonitorTab</li>
+<li>Test-ISHContentEditor</li>
+</ul>
+</li>
+<li>Articles<ul>
+<li>Work with UI Features  </li>
+</ul>
+</li>
+</ol>
+</li>
+<li>Integration with Security Token Service (STS)<ol>
+<li>Cmdlets<ul>
+<li>Remove-ISHIntegrationSTSCertificate</li>
+<li>Save-ISHIntegrationSTSConfigurationPackage</li>
+<li>Set-ISHContentEditor</li>
+<li>Set-ISHIntegrationSTSCertificate</li>
+<li>Set-ISHIntegrationSTSWSFederation</li>
+<li>Set-ISHIntegrationSTSWSTrust</li>
+<li>Save-ISHIntegrationDBSTSSQLServerConfiguration</li>
+<li>Set-ISHAPIWCFServiceCertificate </li>
+</ul>
+</li>
+<li>Articles<ul>
+<li>Security Token Service\Integrating with Security Token Service</li>
+<li>Security Token Service\ADFS\Integrating with Security Token Service</li>
+<li>Security Token Service\Certificates\Implementing issuer certificate rollover</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

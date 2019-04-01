@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Integrating translation jobs with SDL World Server </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Integrating translation jobs with SDL World Server ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="integrating-translation-jobs-with-sdl-world-server">Integrating translation jobs with SDL World Server</h1>
+              
+<p>This tutorial explains how to configure an integration with <a href="http://www.sdl.com/solution/language/translation-management/worldserver/">SDL WorldServer</a>.</p>
+<h2 id="set-the-deploymentname-variable">Set the deploymentName variable</h2>
+<p>First set the deploymentName variable.</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="create-mappings-between-sdl-world-server-locales-and-content-manager-languages">Create mappings between SDL World Server locales and Content Manager languages</h2>
+<p>As <strong>SDL World Server</strong> and <strong>SDL Tridion Docs Content Manager</strong> use different identifiers for the languages, we need to create a mapping.</p>
+<p>Use the <code>New-ISHIntegrationWorldServerMapping</code> cmdlet to create one mapping. 
+Add multiple mappings into an array to describe all the necessary mappings. </p>
+<p>For example:</p>
+<pre><code class="lang-powershell"># Create an array of mappings
+
+$mappings=@(
+    New-ISHIntegrationWorldServerMapping -ISHLanguage en -WSLocaleID 1145
+    New-ISHIntegrationWorldServerMapping -ISHLanguage nl -WSLocaleID 1147
+    New-ISHIntegrationWorldServerMapping -ISHLanguage fr -WSLocaleID 1146
+    New-ISHIntegrationWorldServerMapping -ISHLanguage fo -WSLocaleID 1161
+    New-ISHIntegrationWorldServerMapping -ISHLanguage it -WSLocaleID 1162
+    New-ISHIntegrationWorldServerMapping -ISHLanguage es -WSLocaleID 1163
+    New-ISHIntegrationWorldServerMapping -ISHLanguage pt -WSLocaleID 1164
+    New-ISHIntegrationWorldServerMapping -ISHLanguage ru -WSLocaleID 1165
+    New-ISHIntegrationWorldServerMapping -ISHLanguage zh -WSLocaleID 1166
+    New-ISHIntegrationWorldServerMapping -ISHLanguage ja -WSLocaleID 1167
+    New-ISHIntegrationWorldServerMapping -ISHLanguage de -WSLocaleID 1168
+    New-ISHIntegrationWorldServerMapping -ISHLanguage ar -WSLocaleID 1170
+    New-ISHIntegrationWorldServerMapping -ISHLanguage fi -WSLocaleID 1171
+    New-ISHIntegrationWorldServerMapping -ISHLanguage no -WSLocaleID 1172
+)
+</code></pre><h2 id="configure-the-integration-with-sdl-worldserver">Configure the integration with SDL WorldServer</h2>
+<p>To configure the integration with SDL WorldServer, use the <code>Set-ISHIntegrationWorldServer</code> cmdlet. 
+The integration requires the following information:</p>
+<ul>
+<li>The URI for WorldServer&#39;s service.</li>
+<li>The credentials to access the WorldServer service.</li>
+<li>The mapping configuration created above.</li>
+</ul>
+<p><strong>Note:</strong> The optional parameter -MaximumJobSize corresponds to the parameter &quot;externalJobMaxTotalUncompressedSizeBytes&quot; from the WorldServer configuration section.</p>
+<pre><code class="lang-powershell"># Uri and credentials for SDL World Server
+$uri=&quot;http://worldserver.example.com:8080/ws/services&quot;
+$credential=Get-Credential -Message &quot;SDL WorldServer integration credential&quot; 
+
+# Set the integration
+Set-ISHIntegrationWorldServer -ISHDeployment $deploymentName -Name WorldServer -Uri $uri -Credential $credential -Mappings $mappings
+</code></pre><p><strong>Note:</strong> Content Manager requires that only one connector for SDL WorldServer is configured. </p>
+<h2 id="remove-the-integration-with-sdl-worldserver">Remove the integration with SDL WorldServer</h2>
+<p>Use <code>Remove-ISHIntegrationWorldServer  -ISHDeployment $deploymentName</code>.</p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

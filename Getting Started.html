@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Getting started </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Getting started ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">
+                <img src="sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="getting-started">Getting started</h1>
+              
+<h1 id="requirements">Requirements</h1>
+<h2 id="powershell-requirements">PowerShell requirements</h2>
+<p><a href="https://www.powershellgallery.com/packages/ISHDeploy/">ISHDeploy</a> requires PowerShell version 4.0 installed in the operating system.</p>
+<p>To quickly check your installed PowerShell version execute</p>
+<pre><code class="lang-powershell">$PSVersionTable
+</code></pre><p>A version 4.0 console would return </p>
+<pre><code class="lang-text">Name                           Value                                                                                   
+----                           -----                                                                                   
+PSVersion                      4.0                                                                                     
+WSManStackVersion              3.0                                                                                     
+SerializationVersion           1.1.0.1                                                                                 
+CLRVersion                     4.0.30319.42000                                                                         
+BuildVersion                   6.3.9600.17400                                                                          
+PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0}                                                                    
+PSRemotingProtocolVersion      2.2
+</code></pre><p>If your operating system has a PowerShell version earlier than 4.0 then install it following the instructions on <a href="http://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx">technet</a>.</p>
+<h2 id="powershellget-module">PowerShellGet module</h2>
+<p>To query and install modules from the PowerShell gallery, requires the <strong>PowerShellGet</strong> module. PowerShell version 5.0 has the <strong>PowerShellGet</strong> module available out of the box.</p>
+<p>To install the PowerShellGet module on PowerShell version 4.0, install the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=51451">Package Management</a> installer. </p>
+<h1 id="setting-up-powershellget">Setting up PowerShellGet</h1>
+<p>PowerShellGet provides a default repository registration for <a href="https://powershellgallery.com/">PowerShell Gallery</a>, therefore no action is necessary. 
+To verify that PowerShell gallery is registered correctly execute:</p>
+<pre><code class="lang-powershell">Get-PSRepository
+</code></pre><p>and the outcome should be</p>
+<pre><code class="lang-text">Name                      PackageManagementProvider InstallationPolicy   SourceLocation                                
+----                      ------------------------- ------------------   --------------                                
+PSGallery                 NuGet                     Untrusted            https://www.powershellgallery.com/api/v2/
+</code></pre><p>To register or unregister repositories use the <code>Register-PSRepository</code> and <code>Unregister-PSRepository</code> cmdlets respectively.</p>
+<h1 id="install-the-module">Install the module</h1>
+<p>The module is available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy/">here</a>. </p>
+<p>To install the module with administrative rights for all users execute</p>
+<pre><code class="lang-powershell">Install-Module ISHDeploy
+</code></pre><p>To install only for your user execute</p>
+<pre><code class="lang-powershell">Install-Module ISHDeploy -Scope CurrentUser
+</code></pre><h1 id="upgrading-the-module">Upgrading the module</h1>
+<p>Newer versions of the module will become available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy/">here</a>. </p>
+<p>To install a new version for all users execute</p>
+<pre><code class="lang-powershell"># All users. Requires administration rights
+Install-Module ISHDeploy -Force
+# Current user. No administration rights are required.
+Install-Module ISHDeploy -Scope CurrentUser -Force
+</code></pre><h1 id="verify-the-module-presence">Verify the module presence</h1>
+<p>To verify that the module is installed and check the version execute:</p>
+<pre><code class="lang-powershell">Get-Module ISHDeploy -ListAvailable |Format-Table Name,Version
+</code></pre><p>If the module is available then the result should be one line such as:</p>
+<pre><code class="lang-text">Name                                        Version
+----                                        -------
+ISHDeploy                                1.5
+</code></pre><h1 id="available-cmdlets">Available cmdlets</h1>
+<p>To retrieve all cmdlets offered by the module then execute:</p>
+<pre><code class="lang-powershell">Get-Command -Module ISHDeploy | Select-Object Name
+</code></pre><p>Each cmdlet offers support for the <code>Get-Help</code> cmdlet. Each cmdlet provides a full description, parameter syntax and examples. 
+To show the help of <code>Get-ISHDeployment</code> execute </p>
+<pre><code class="lang-powershell">Get-Help Get-ISHDeployment -Full
+</code></pre><h2 id="administrator-privileges-required">Administrator privileges required</h2>
+<p>The purpose of the module is to modify the files of a deployment.
+For this reason, most cmdlets require elevated administrator privileges. 
+Each cmdlet is optimized to validate upfront if the process has the necessary permissions and when not throw early.
+All cmdlets with verb <code>Get-</code> such as <code>Get-ISHDeployment</code> are exempt from this requirement as they do not modify any files.</p>
+<h1 id="the-documentation-portal">The documentation portal</h1>
+<p>Although the module contains help for each cmdlet from within the module, this documentation portal offers also the same content. 
+<a href="Commands/Get-ISHDeployment.html">Get-ISHDeployment</a> for example is the online equivalent for the PowerShell command <code>Get-Help Get-ISHDeployment -Full</code>.</p>
+<p>Additional to the cmdlets help, the documentation portal offers an article base where different subjects are analyzed and sample scripts are provided. 
+For example <a href="Articles/Module/Work%20with%20one%20or%20multiple%20deployments.html">Work with one or multiple deployments</a> explains how to work with the core cmdlets of the module against a specific deployment. 
+When there is only one deployment then it is possible to simplify the invocation of all cmdlets as explained in <a href="Articles/Module/Work%20with%20one%20deployment.html">Work with one deployment</a>.</p>
+<h1 id="open-source-and-feedback">Open source and feedback</h1>
+<p>The module&#39;s code and the content of this portal is available on <a href="https://github.com/sdl/ISHDeploy/">github</a>. </p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Copy-ISHFile </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Copy-ISHFile ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../index.html">
+                <img src="../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="copy-ishfile">Copy-ISHFile</h1>
+              
+<h2 id="synopsis">SYNOPSIS</h2>
+<p>Copies custom files to deployment directories and replaces parameters in files on values of the deployment.</p>
+<h2 id="syntax">SYNTAX</h2>
+<h3 id="cdsimilarfolder">CdSimilarFolder</h3>
+<pre><code>Copy-ISHFile -ishCD &lt;String&gt; [-Force] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="copyingasis">CopyingAsIs</h3>
+<pre><code>Copy-ISHFile -SourceFolderPath &lt;String&gt; -DestinationFolderPath &lt;String&gt; [-Force]
+ [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h2 id="description">DESCRIPTION</h2>
+<p>Will copy custom files to deployment directories and replace the placeholders of files with the corresponding values of the deployment.
+Replacement of values occurs only in files of certain extensions.
+Before you start working with deployment files, you need to stop the deployments processes, see: Stop-ISHDeployment and Start-ISHDeployment cmdlets.</p>
+<h2 id="examples">EXAMPLES</h2>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
+<pre><code>PS C:\&gt;Copy-ISHFile -ISHDeployment $deployment -ishCD &quot;c:\customfiles\&quot;
+</code></pre><p>The cmdlet copies all files from subfolders &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;, &quot;CustomerSpecificFiles&quot; of the root folder specified in the parameter -ishCD to appropriate deployment&#39;s folders.
+This means that the root folder should have similar to CD structure and can contain only subfolders: &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;, &quot;CustomerSpecificFiles&quot;.
+Note: the &quot;CustomerSpecificFiles&quot; folder must contain the &quot;FilesToCopy&quot; subfolder and the &quot;FilesToCopy&quot; folder can contain only folders &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;.
+The files of any other subfolder of the CD or of &quot;CustomerSpecificFiles/FilesToCopy&quot; folder will be ignored if the structure of folders does not correspond to above.
+The cmdlet also replaces the placeholders вЂ‹вЂ‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
+<pre><code>PS C:\&gt;Copy-ISHFile -ISHDeployment $deployment -SourceFolderPath &quot;c:\customfiles\Plugins&quot; -DestinationFolderPath &quot;C:\InfoShare\App\Plugins&quot;
+</code></pre><p>The cmdlet makes a copy of all the files from the folder specified in the parameter -SourceFolderPath to folder with path from parameter -DestinationFolderPath.
+The cmdlet also replaces the placeholders вЂ‹вЂ‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
+<h2 id="parameters">PARAMETERS</h2>
+<h3 id="-ishcd">-ishCD</h3>
+<p>The path to folder with custom files with the same structure as CD</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: CdSimilarFolder
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-sourcefolderpath">-SourceFolderPath</h3>
+<p>The path to folder with custom files</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: CopyingAsIs
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-destinationfolderpath">-DestinationFolderPath</h3>
+<p>The path to destination folder</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: CopyingAsIs
+Aliases: 
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-force">-Force</h3>
+<p>Replaces existing files</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
+<p>Specifies the name or instance of the Content Manager deployment.</p>
+<pre><code class="lang-yaml">Type: ISHDeployment
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h2 id="inputs">INPUTS</h2>
+<h2 id="outputs">OUTPUTS</h2>
+<h2 id="notes">NOTES</h2>
+<h2 id="related-links">RELATED LINKS</h2>
+<p><a href="Stop-ISHDeployment.html">Stop-ISHDeployment</a></p>
+<p><a href="Start-ISHDeployment.html">Start-ISHDeployment</a></p>
+<p><a href="../Articles/Customization/Work%20with%20files.html">../Articles/Customization/Work with files</a></p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

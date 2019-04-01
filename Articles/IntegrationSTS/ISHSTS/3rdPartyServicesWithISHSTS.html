@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Integrating third party service providers with ISHSTS </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Integrating third party service providers with ISHSTS ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../../index.html">
+                <img src="../../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="integrating-third-party-service-providers-with-ishsts">Integrating third party service providers with ISHSTS</h1>
+              
+<p>This article explains how to use the module&#39;s cmdlets to integrate third party service providers with the <strong>Security Token Service</strong> provided in the vanilla deployment (also referred to as <strong>ISHSTS</strong>).</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>Content Manager is installed on <code>ish.example.com</code> and ISHSTS is installed on <code>ish.example.com/ISHSTS</code>.</p>
+<p>A third party application is installed on <code>3rdparty.example.com</code> and needs to integrate with the Content Manager&#39;s ISHSTS. 
+In the context of this article, the third party service provider is a web application.</p>
+<p>When integrating a service provider with ISHSTS, each side requires specific information from the other.</p>
+<p>The service provider needs the following from ISHSTS:</p>
+<ul>
+<li>The WS Federation endpoint</li>
+<li>The token signing certificate. This is usually in the format of the thumbprint or the entire public key.</li>
+</ul>
+<p>ISHSTS needs the following from the service provider:</p>
+<ul>
+<li>An identifier for the service provider. This is usually the URL for the service provider. This value is used to create a relying party entry and has to be unique in the ISHSTS database.</li>
+<li>Claim composition in the token. </li>
+</ul>
+<p>Set the deploymentName variable:</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h1 id="configuring-ishsts-for-a-service-provider">Configuring ISHSTS for a service provider</h1>
+<p>To add a relying party, execute:</p>
+<pre><code class="lang-powershell">$name=&quot;3rd party&quot;
+$realm=&quot;https://3rdparty.example.com/&quot;
+# Add relying party
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm
+</code></pre><p>By default, ISHSTS will compose tokens with only the <code>NameIdentifier</code> of the <code>Subject</code> filled in. For example:</p>
+<pre><code class="lang-xml">&lt;saml:Subject&gt;
+    &lt;saml:NameIdentifier&gt;user@example.com&lt;/saml:NameIdentifier&gt;
+    &lt;saml:SubjectConfirmation&gt;
+        &lt;saml:ConfirmationMethod&gt;urn:oasis:names:tc:SAML:1.0:cm:bearer&lt;/saml:ConfirmationMethod&gt;
+    &lt;/saml:SubjectConfirmation&gt;
+&lt;/saml:Subject&gt;
+</code></pre><p>For the <strong>Collaborative Review</strong> and <strong>Quality Assistant</strong> service providers, the expected claim transformation rules are already implemented.</p>
+<p>For this purpose, the cmdlet <code>Set-ISHSTSRelyingParty</code> provides a set of parameters specific to each one. The mapping is in the following table:</p>
+<table>
+<thead>
+<tr>
+<th>Service provider</th>
+<th>Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content Delivery</td>
+<td><code>-LC</code></td>
+</tr>
+<tr>
+<td>Quality Assistant</td>
+<td><code>-BL</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example: </p>
+<ul>
+<li>to add a relying party for a review deployment of <strong>Collaborative Review</strong>, execute:</li>
+</ul>
+<pre><code class="lang-powershell">$name=&quot;Content Delivery&quot;
+$realm=&quot;https://review.lc.example.com/&quot;
+# Add relying party
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm -LC
+</code></pre><ul>
+<li>to add a relying party for a deployment of <strong>Quality Assistant</strong>, execute:</li>
+</ul>
+<pre><code class="lang-powershell">$name=&quot;Quality Assistant&quot;
+$realm=&quot;https://bl.example.com/&quot;
+# Add relying party
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm -BL
+</code></pre><h1 id="configuring-the-service-provider">Configuring the service provider</h1>
+<p>If the service provider can be auto-configured through a WS Federation metadata exchange endpoint, ISHSTS provides this on<code>https://ish.example.com/ISHSTS/FederationMetadata/2007-06/FederationMetadata.xml</code>. 
+In the alternative case, retrieve the information manually:</p>
+<ul>
+<li>The WS Federation endpoint is <code>https://ish.example.com/ISHSTS/issue/wsfed</code> and is also provided by the system on the <strong>Application Integration</strong> page <code>https://ish.example.com/ISHSTS/appintegration</code>.</li>
+<li>The token signing certificate is available in the <strong>Key Configuration</strong> administration page <code>https://ish.example.com/ISHSTS/Admin/KeyConfiguration</code>. On this page the subject name and the thumbprint are visible, but to retrieve the entire public key, you need to retrieve it from the certificate store of the operating system hosting Content Manager.</li>
+</ul>
+<p>To know which relying parties are available, use <code>Get-ISHSTSRelyingParty</code>. As with <code>Set-ISHSTSRelyingParty</code>, optional parameters for known service providers are supported.</p>
+<table>
+<thead>
+<tr>
+<th>Service provider</th>
+<th>Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content Manager</td>
+<td><code>-ISH</code></td>
+</tr>
+<tr>
+<td>Content Delivery</td>
+<td><code>-LC</code></td>
+</tr>
+<tr>
+<td>Quality Assistant</td>
+<td><code>-BL</code></td>
+</tr>
+</tbody>
+</table>
+<p>Here are a couple of examples:</p>
+<pre><code class="lang-powershell"># Get all relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName
+
+# Get only Knowledge Center specific relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -ISH -BL -LC
+
+# Get only Content Manager specific relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -ISH
+
+# Get only Content Delivery specific relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -LC
+
+# Get only Quality Assistant specific relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName -BL
+</code></pre><h1 id="a-combined-example-for-content-editor-quality-assistant-and-a-third-party-service-provider">A combined example for Content Editor, Quality Assistant and a third party service provider</h1>
+<p>This script adds three relying parties and then returns the set:</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+$name=&quot;third party&quot;
+$realm=&quot;https://3rdparty.example.com/&quot;
+
+#set the relying parties
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name $name -Realm $realm
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name &quot;Content Review&quot; -Realm &quot;https://lc.example.com/&quot; -LC
+Set-ISHSTSRelyingParty -ISHDeployment $deploymentName -Name &quot;Quality Assistant&quot; -Realm &quot;https://bl.example.com/&quot; -BL
+
+# get the relying parties
+Get-ISHSTSRelyingParty -ISHDeployment $deploymentName |Format-Table Name,Realm
+</code></pre><p>The script output:</p>
+<pre><code class="lang-text">Name                                                          Realm                                                                          
+----                                                          -----                                                                          
+3rd party                                                     https://3rdparty.example.com/
+BL: Quality Assistant                                         https://bl.example.com/
+ISH: ishcm@ish.example.com                                    https://ish.example.com/ishcm/                                 
+ISH: ishws@ish.example.com                                    https://ish.example.com/ishws/                                 
+ISH: Wcf/API/Application.svc@ish.example.com(https)           https://ish.example.com/ishws/Wcf/API/Application.svc          
+ISH: Wcf/API/ConditionManagement.svc@ish.example.com(https)   https://ish.example.com/ishws/Wcf/API/ConditionManagement.svc  
+ISH: Wcf/API20/Application.svc@ish.example.com(https)         https://ish.example.com/ishws/Wcf/API20/Application.svc        
+ISH: Wcf/API20/DocumentObj.svc@ish.example.com(https)         https://ish.example.com/ishws/Wcf/API20/DocumentObj.svc        
+ISH: Wcf/API20/EDT.svc@ish.example.com(https)                 https://ish.example.com/ishws/Wcf/API20/EDT.svc                
+ISH: Wcf/API20/Folder.svc@ish.example.com(https)              https://ish.example.com/ishws/Wcf/API20/Folder.svc             
+ISH: Wcf/API20/MetaDataAssist.svc@ish.example.com(https)      https://ish.example.com/ishws/Wcf/API20/MetaDataAssist.svc     
+ISH: Wcf/API20/OutputFormat.svc@ish.example.com(https)        https://ish.example.com/ishws/Wcf/API20/OutputFormat.svc       
+ISH: Wcf/API20/Publication.svc@ish.example.com(https)         https://ish.example.com/ishws/Wcf/API20/Publication.svc        
+ISH: Wcf/API20/PublicationOutput.svc@ish.example.com(https)   https://ish.example.com/ishws/Wcf/API20/PublicationOutput.svc  
+ISH: Wcf/API20/Reports.svc@ish.example.com(https)             https://ish.example.com/ishws/Wcf/API20/Reports.svc            
+ISH: Wcf/API20/Search.svc@ish.example.com(https)              https://ish.example.com/ishws/Wcf/API20/Search.svc             
+ISH: Wcf/API20/Settings.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API20/Settings.svc           
+ISH: Wcf/API20/Workflow.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API20/Workflow.svc           
+ISH: Wcf/API25/Application.svc@ish.example.com(https)         https://ish.example.com/ishws/Wcf/API25/Application.svc        
+ISH: Wcf/API25/Baseline.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API25/Baseline.svc           
+ISH: Wcf/API25/DocumentObj.svc@ish.example.com(https)         https://ish.example.com/ishws/Wcf/API25/DocumentObj.svc        
+ISH: Wcf/API25/EDT.svc@ish.example.com(https)                 https://ish.example.com/ishws/Wcf/API25/EDT.svc                
+ISH: Wcf/API25/EventMonitor.svc@ish.example.com(https)        https://ish.example.com/ishws/Wcf/API25/EventMonitor.svc       
+ISH: Wcf/API25/Folder.svc@ish.example.com(https)              https://ish.example.com/ishws/Wcf/API25/Folder.svc             
+ISH: Wcf/API25/ListOfValues.svc@ish.example.com(https)        https://ish.example.com/ishws/Wcf/API25/ListOfValues.svc       
+ISH: Wcf/API25/MetadataBinding.svc@ish.example.com(https)     https://ish.example.com/ishws/Wcf/API25/MetadataBinding.svc    
+ISH: Wcf/API25/OutputFormat.svc@ish.example.com(https)        https://ish.example.com/ishws/Wcf/API25/OutputFormat.svc       
+ISH: Wcf/API25/PublicationOutput.svc@ish.example.com(https)   https://ish.example.com/ishws/Wcf/API25/PublicationOutput.svc  
+ISH: Wcf/API25/Search.svc@ish.example.com(https)              https://ish.example.com/ishws/Wcf/API25/Search.svc             
+ISH: Wcf/API25/Settings.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API25/Settings.svc           
+ISH: Wcf/API25/TranslationJob.svc@ish.example.com(https)      https://ish.example.com/ishws/Wcf/API25/TranslationJob.svc     
+ISH: Wcf/API25/TranslationTemplate.svc@ish.example.com(https) https://ish.example.com/ishws/Wcf/API25/TranslationTemplate.svc
+ISH: Wcf/API25/User.svc@ish.example.com(https)                https://ish.example.com/ishws/Wcf/API25/User.svc               
+ISH: Wcf/API25/UserGroup.svc@ish.example.com(https)           https://ish.example.com/ishws/Wcf/API25/UserGroup.svc          
+ISH: Wcf/API25/UserRole.svc@ish.example.com(https)            https://ish.example.com/ishws/Wcf/API25/UserRole.svc           
+LC: Content Review                                            https://lc.example.com/
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

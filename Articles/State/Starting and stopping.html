@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Starting and stopping </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Starting and stopping ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../../index.html">
+                <img src="../../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="starting-and-stopping">Starting and stopping</h1>
+              
+<p>This tutorial explains how to start or stop a Content Manager deployment.</p>
+<p>A deployment offers components, and the module can manage and track them. When a deployment is stopped, all processes related to the deployment are also stopped. This means that the deployment&#39;s impact on the server is on the file system, the registry and gac. Enabling or disabling components, gives the module the knowledge of which processes to start or not based on the components configuration.</p>
+<p>The following workflow is advised when configuring a deployment:</p>
+<ol>
+<li>Stop the deployment.</li>
+<li>Execute any cmdlet that configured or customized the deployment.</li>
+<li>Start the deployment.</li>
+</ol>
+<p>Unless components were enabled or disabled during with the above flow, the deployment will effectively start only the processes that were running before the changes.</p>
+<h2 id="set-the-deploymentname-variable">Set the deploymentName variable</h2>
+<p>First set the deploymentName variable:</p>
+<pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
+</code></pre><h2 id="stop-a-deployment">Stop a deployment</h2>
+<p>To stop a deployment, use <code>Stop-ISHDeployment</code>. For example:</p>
+<pre><code class="lang-powershell">Stop-ISHDeployment -ISHDeployment $deploymentName
+</code></pre><p>Then the status of the deployment becomes <code>Stopped</code>. </p>
+<pre><code class="lang-powershell">Get-ISHDeployment | Select-Object Name,Status
+</code></pre><pre><code class="lang-text">Name        Status
+----        ------
+InfoShare  Stopped
+</code></pre><h2 id="start-a-deployment">Start a deployment</h2>
+<p>To start a deployment, use <code>Start-ISHDeployment</code>. For example:</p>
+<pre><code class="lang-powershell">Start-ISHDeployment -ISHDeployment $deploymentName
+</code></pre><p>Then the status of the deployment becomes <code>Started</code>. </p>
+<pre><code class="lang-powershell">Get-ISHDeployment | Select-Object Name,Status
+</code></pre><pre><code class="lang-text">Name        Status
+----        ------
+InfoShare  Started
+</code></pre><h2 id="restart-a-deployment">Restart a deployment</h2>
+<p>Sometimes it is necessary to restart all processes of a deployment. This flow would be a stop and then start, but the module offers one cmdlet <code>Restart-ISHDeployment</code> for both steps.</p>
+<p>To restart a deployment, execute: </p>
+<pre><code class="lang-powershell">Restart-ISHDeployment -ISHDeployment $deploymentName
+</code></pre>
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

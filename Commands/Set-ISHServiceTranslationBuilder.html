@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Set-ISHServiceTranslationBuilder </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Set-ISHServiceTranslationBuilder ">
+    <meta name="generator" content="docfx 2.4.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix">
+    <div id="wrapper">
+      <header>
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="../index.html">
+                <img src="../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+              <h1 id="set-ishservicetranslationbuilder">Set-ISHServiceTranslationBuilder</h1>
+              
+<h2 id="synopsis">SYNOPSIS</h2>
+<p>Sets translation builder windows service.</p>
+<h2 id="syntax">SYNTAX</h2>
+<h3 id="translationbuildersettings">TranslationBuilderSettings</h3>
+<pre><code>Set-ISHServiceTranslationBuilder [-MaxObjectsInOnePush &lt;Int32&gt;] [-MaxJobItemsCreatedInOneCall &lt;Int32&gt;]
+ [-CompletedJobLifeSpan &lt;TimeSpan&gt;] [-JobProcessingTimeout &lt;TimeSpan&gt;] [-JobPollingInterval &lt;TimeSpan&gt;]
+ [-PendingJobPollingInterval &lt;TimeSpan&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="translationbuildercount">TranslationBuilderCount</h3>
+<pre><code>Set-ISHServiceTranslationBuilder -Count &lt;Int32&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h2 id="description">DESCRIPTION</h2>
+<p>The Set-ISHServiceTranslationBuilder cmdlet sets translation builder windows service.</p>
+<h2 id="examples">EXAMPLES</h2>
+<h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
+<pre><code>PS C:\&gt;Set-ISHServiceTranslationBuilder -ISHDeployment $deployment -MaxObjectsInOnePush 1000
+</code></pre><p>This command enables the translation builder windows service.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
+<pre><code>PS C:\&gt;Set-ISHServiceTranslationBuilder -ISHDeployment $deployment -Count 2
+</code></pre><p>This command changes the amount of instances of services.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h2 id="parameters">PARAMETERS</h2>
+<h3 id="-maxobjectsinonepush">-MaxObjectsInOnePush</h3>
+<p>The maximum number of objects in one push.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-maxjobitemscreatedinonecall">-MaxJobItemsCreatedInOneCall</h3>
+<p>The maximum number of objects in one push.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-completedjoblifespan">-CompletedJobLifeSpan</h3>
+<p>The life period of completed job.</p>
+<pre><code class="lang-yaml">Type: TimeSpan
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 00:00:00
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-jobprocessingtimeout">-JobProcessingTimeout</h3>
+<p>The timeout of processing of job.</p>
+<pre><code class="lang-yaml">Type: TimeSpan
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 00:00:00
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-jobpollinginterval">-JobPollingInterval</h3>
+<p>The interval of polling of job.</p>
+<pre><code class="lang-yaml">Type: TimeSpan
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 00:00:00
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-pendingjobpollinginterval">-PendingJobPollingInterval</h3>
+<p>The interval of polling of pending job.</p>
+<pre><code class="lang-yaml">Type: TimeSpan
+Parameter Sets: TranslationBuilderSettings
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 00:00:00
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-count">-Count</h3>
+<p>The number of TranslationBuilder services in the system.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: TranslationBuilderCount
+Aliases: 
+
+Required: True
+Position: Named
+Default value: 0
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
+<p>Specifies the name or instance of the Content Manager deployment.</p>
+<pre><code class="lang-yaml">Type: ISHDeployment
+Parameter Sets: (All)
+Aliases: 
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h2 id="inputs">INPUTS</h2>
+<h2 id="outputs">OUTPUTS</h2>
+<h2 id="notes">NOTES</h2>
+<h2 id="related-links">RELATED LINKS</h2>
+<p><a href="Enable-ISHExternalPreview.html">Enable-ISHExternalPreview</a></p>
+
+            </article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>
+      				Copyright SDL plc. All rights reserved <br>
+      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
+      			</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

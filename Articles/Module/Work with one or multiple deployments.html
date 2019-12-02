@@ -200,10 +200,10 @@ When <code>-Name</code> is specified then the cmdlet will return one record matc
 When <code>-ValueOnly</code> is specified then the cmdlet will return only the value instead of the recordset.</p>
 <p>For example <code>Get-ISHDeploymentParameters -ISHDeployment $deploymentName -Name databasetype -ValueOnly</code> return just <code>sqlserver2014</code>.</p>
 <h2 id="developing-a-deployment">Developing a deployment</h2>
-<p>To help engineers write and debug scripts a cmdlet <code>Undo-ISHDeployment</code> is provided.</p>
+<p>To help engineers write and debug scripts a cmdlet <code>Undo-ISHFile</code> is provided.</p>
 <p>All cmdlets in this module track and keep a backup of all vanilla files being modified.
-This allows the module to undo all changes without the requirement to uninstall and then re-install.</p>
-<pre><code class="lang-powershell">Undo-ISHDeployment -ISHDeployment $deploymentName
+This allows the module to undo all file system changes without the requirement to uninstall and then re-install.</p>
+<pre><code class="lang-powershell">Undo-ISHFile -ISHDeployment $deploymentName
 </code></pre><h2 id="clear-history-artifacts">Clear history artifacts</h2>
 <p>Because the module&#39;s codebase is not connected with the <code>InstallTool.exe</code> when you uninstall the module&#39;s artifacts will not be removed.
 The <code>Clear-ISHDeploymentHistory</code> takes care of this by removing all artifacts. You must use this cmdlet before uninstalling.</p>

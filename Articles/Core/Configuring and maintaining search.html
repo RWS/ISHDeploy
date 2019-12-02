@@ -91,10 +91,10 @@ $catalog=&quot;InfoShare&quot;
 Set-ISHServiceCrawler -ISHDeployment $deploymentName -Catalog $catalog -Hostname $hostname
 </code></pre><h2 id="integrating-with-an-external-full-text-index-service">Integrating with an external full text index service</h2>
 <p>The <code>Set-ISHIntegrationFullTextIndex</code> cmdlet will configure, on the deployment, the URL of the location of the FullTextIndex component.</p>
-<pre><code class="lang-powershell">$fullTextIndexUri=&quot;http://fulltextindex.ish.example.com:9010&quot;
+<pre><code class="lang-powershell">$fullTextIndexUri=&quot;http://fulltextindex.ish.example.com:9010/Solr/&quot;
 
 Set-ISHIntegrationFullTextIndex -ISHDeployment $deploymentName -Uri $fullTextIndexUri
-</code></pre><p>When you set this value, the Crawler will not depend on the default local FullTextIndex component to upload the crawled data. For this reason, the invocation of <code>Set-ISHIntegrationFullTextIndex</code> removes the dependency to the FullTextIndex component from the Crawler component. <code>Undo-ISHDeployment</code> will revert those changes.</p>
+</code></pre><p>When you set this value, the Crawler will not depend on the default local FullTextIndex component to upload the crawled data. For this reason, the invocation of <code>Set-ISHIntegrationFullTextIndex</code> removes the dependency to the FullTextIndex component from the Crawler component.</p>
 <h2 id="maintenance-of-the-crawler-component">Maintenance of the Crawler component</h2>
 <p>The <code>Invoke-ISHMaintenance</code> cmdlet provides the following maintenance actions for the Crawler component:</p>
 <ul>

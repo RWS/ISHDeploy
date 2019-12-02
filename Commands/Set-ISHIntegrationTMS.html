@@ -72,18 +72,23 @@
  [-RetriesOnTimeout &lt;Int32&gt;] -Mappings &lt;ISHLanguageToTmsLanguageMapping[]&gt; -Templates &lt;TmsTemplate[]&gt;
  [-RequestMetadata &lt;ISHFieldMetadata[]&gt;] [-GroupMetadata &lt;ISHFieldMetadata[]&gt;] -ApiKey &lt;String&gt;
  -SecretKey &lt;String&gt; [-HttpTimeout &lt;TimeSpan&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="usercredentials">UserCredentials</h3>
+</code></pre><h3 id="pscredential">PSCredential</h3>
 <pre><code>Set-ISHIntegrationTMS -Name &lt;String&gt; -Uri &lt;String&gt; [-UseSsl &lt;Boolean&gt;] [-MaximumJobSize &lt;Int32&gt;]
  [-RetriesOnTimeout &lt;Int32&gt;] -Mappings &lt;ISHLanguageToTmsLanguageMapping[]&gt; -Templates &lt;TmsTemplate[]&gt;
  [-RequestMetadata &lt;ISHFieldMetadata[]&gt;] [-GroupMetadata &lt;ISHFieldMetadata[]&gt;] -Credential &lt;PSCredential&gt;
- [-HttpTimeout &lt;TimeSpan&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+ [-HttpTimeout &lt;TimeSpan&gt;] [-UserName &lt;String&gt;] [-UserPassword &lt;String&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="usernameuserpassword">UserName/UserPassword</h3>
+<pre><code>Set-ISHIntegrationTMS -Name &lt;String&gt; -Uri &lt;String&gt; [-UseSsl &lt;Boolean&gt;] [-MaximumJobSize &lt;Int32&gt;]
+ [-RetriesOnTimeout &lt;Int32&gt;] -Mappings &lt;ISHLanguageToTmsLanguageMapping[]&gt; -Templates &lt;TmsTemplate[]&gt;
+ [-RequestMetadata &lt;ISHFieldMetadata[]&gt;] [-GroupMetadata &lt;ISHFieldMetadata[]&gt;] [-HttpTimeout &lt;TimeSpan&gt;]
+ -UserName &lt;String&gt; -UserPassword &lt;String&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Set-ISHIntegrationTMS cmdlet sets configuration of TMS.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Set-ISHIntegrationTMS -ISHDeployment $deployment -Name &quot;ws1&quot; -Uri &quot;https:\\ws1.sd.com&quot; -MaximumJobSize 5242880 -RetriesOnTimeout 3 -ApiKey &quot;someApiKey&quot; -SecretKey &quot;someSecretKey&quot; -Mapping $mapping -Templates $templates
 </code></pre><p>This command enables the translation organizer windows service.
-The pair of -ApiKey and -SecretKey parameters вЂ‹вЂ‹is used for authorization with TMS server.
+The pair of -ApiKey and -SecretKey parameters â€‹â€‹is used for authorization with TMS server.
 Parameter -MaximumJobSize is the max value of total size in bytes of uncompressed external job.
 In the TMS configuration section, this parameter has name &quot;externalJobMaxTotalUncompressedSizeBytes&quot;.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
@@ -92,6 +97,15 @@ Parameter $mapping is a object with pair of properties, where ISHLanguage is Inf
 <pre><code>PS C:\&gt;Set-ISHIntegrationTMS -ISHDeployment $deployment -Name &quot;ws1&quot; -Uri &quot;https:\\ws1.sd.com&quot; -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Credential $credential -Mapping $mapping -Templates $templates
 </code></pre><p>This command enables the translation organizer windows service and does authorization with TMS server by using of pair of username and password values.
 Parameter $credential is PSCredential object with username and password which is supported starting from 13.0.3 version of CM.
+Parameter -MaximumJobSize is the max value of total size in bytes of uncompressed external job.
+In the TMS configuration section, this parameter has name &quot;externalJobMaxTotalUncompressedSizeBytes&quot;.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationTMSMapping cmdlet.</p>
+<h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
+<pre><code>PS C:\&gt;Set-ISHIntegrationTMS -ISHDeployment $deployment -Name &quot;ws1&quot; -Uri &quot;https:\\ws1.sd.com&quot; -MaximumJobSize 5242880 -RetriesOnTimeout 3 -UserName $userName -UserPassword $userPassword -Mapping $mapping -Templates $templates
+</code></pre><p>This command enables the translation organizer windows service and does authorization with TMS server by using of pair of username and password values.
+Parameter $userName is operation system&#39;s user name.
+Parameter $userPassword is operation system&#39;s user password.
 Parameter -MaximumJobSize is the max value of total size in bytes of uncompressed external job.
 In the TMS configuration section, this parameter has name &quot;externalJobMaxTotalUncompressedSizeBytes&quot;.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
@@ -105,7 +119,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-uri">-Uri</h3>
@@ -116,7 +130,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-usessl">-UseSsl</h3>
@@ -127,7 +141,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-maximumjobsize">-MaximumJobSize</h3>
@@ -160,7 +174,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-templates">-Templates</h3>
@@ -171,7 +185,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-requestmetadata">-RequestMetadata</h3>
@@ -182,7 +196,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-groupmetadata">-GroupMetadata</h3>
@@ -193,7 +207,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-apikey">-ApiKey</h3>
@@ -204,7 +218,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-secretkey">-SecretKey</h3>
@@ -215,19 +229,19 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-credential">-Credential</h3>
 <p>The user credential to get access to TMS.
 Supported since version 13.0.3 of CM</p>
 <pre><code class="lang-yaml">Type: PSCredential
-Parameter Sets: UserCredentials
+Parameter Sets: PSCredential
 Aliases: 
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-httptimeout">-HttpTimeout</h3>
@@ -242,6 +256,46 @@ Position: Named
 Default value: 00:00:00
 Accept pipeline input: False
 Accept wildcard characters: False
+</code></pre><h3 id="-username">-UserName</h3>
+<p>The operation system user&#39;s name.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: PSCredential
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><pre><code class="lang-yaml">Type: String
+Parameter Sets: UserName/UserPassword
+Aliases: 
+
+Required: True
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-userpassword">-UserPassword</h3>
+<p>The operation system user&#39;s password.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: PSCredential
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><pre><code class="lang-yaml">Type: String
+Parameter Sets: UserName/UserPassword
+Aliases: 
+
+Required: True
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
 <pre><code class="lang-yaml">Type: ISHDeployment
@@ -250,7 +304,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

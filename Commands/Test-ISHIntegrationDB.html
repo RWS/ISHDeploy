@@ -70,12 +70,10 @@
 <pre><code>Test-ISHIntegrationDB [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>This cmdlet check connection to database for certain environment and returns True if connection is Ok, or False if connection is invalid</p>
-<p>This cmdlet doesn&#39;t support check of connection if type of database of environment is Oracle.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Test-ISHIntegrationDB -ISHDeployment $deployment
 </code></pre><p>This cmdlet tests connection to database for certain environment and returns True if connection is Ok, or False if connection is invalid.
-This command doesn&#39;t support check of connection to Oracle database.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -86,7 +84,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

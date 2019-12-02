@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Set-ISHIntegrationSTSWSTrust </title>
+    <title>Set-ISHServiceFontoReview </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Set-ISHIntegrationSTSWSTrust ">
+    <meta name="title" content="Set-ISHServiceFontoReview ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,92 +62,29 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="set-ishintegrationstswstrust">Set-ISHIntegrationSTSWSTrust</h1>
+              <h1 id="set-ishservicefontoreview">Set-ISHServiceFontoReview</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Sets WSTrust configuration.</p>
+<p>Sets target port for Fonto Review.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Set-ISHIntegrationSTSWSTrust -Endpoint &lt;Uri&gt; -MexEndpoint &lt;Uri&gt; -BindingType &lt;BindingType&gt;
- [-IncludeInternalClients] [-ActorUsername &lt;String&gt;] [-ActorPassword &lt;String&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+<pre><code>Set-ISHServiceFontoReview -ServicePort &lt;Int32&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>The Set-ISHIntegrationSTSWSTrust cmdlet sets WSTrust configuration to Content Manager deployment.</p>
-<p>When -IncludeInternalClients is switched on then the -ActorUsername and -ActorPassword must be specified.</p>
+<p>The Set-ISHServiceFontoReview cmdlet sets target port for Fonto Review..</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint &quot;https://adfs.example.com/adfs/services/trust/13/windowsmixed&quot; -MexEndpoint &quot;https://adfs.example.com/adfs/services/trust/mex&quot; -BindingType &quot;WindowsMixed&quot; -Verbose
-</code></pre><p>This command configure WS to use specified Endpoint and MexEndpoint of STS server and sets type of authentication as WindowsMixed.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHIntegrationSTSWSTrust -ISHDeployment $deployment -Endpoint &quot;https://adfs.example.com/adfs/services/trust/13/windowsmixed&quot; -MexEndpoint &quot;https://adfs.example.com/adfs/services/trust/mex&quot; -BindingType &quot;WindowsMixed&quot; -IncludeInternalClients -Verbose
-</code></pre><p>This command configure WS to use specified Endpoint and MexEndpoint of STS server, sets type of authentication as WindowsMixed and sets internal clients credentials.
+<pre><code>PS C:\&gt;Set-ISHServiceFontoReview -ISHDeployment $deployment -ServicePort 8081
+</code></pre><p>This command sets the fonto review target port.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-endpoint">-Endpoint</h3>
-<p>Specifies the URL to issuer WSTrust endpoint.</p>
-<pre><code class="lang-yaml">Type: Uri
+<h3 id="-serviceport">-ServicePort</h3>
+<p>The target FontoReview port.</p>
+<pre><code class="lang-yaml">Type: Int32
 Parameter Sets: (All)
 Aliases: 
 
 Required: True
 Position: Named
-Default value: 
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-mexendpoint">-MexEndpoint</h3>
-<p>Specifies the URL to issuer WSTrust mexEndpoint.</p>
-<pre><code class="lang-yaml">Type: Uri
-Parameter Sets: (All)
-Aliases: 
-
-Required: True
-Position: Named
-Default value: 
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-bindingtype">-BindingType</h3>
-<p>Specifies the STS issuer authentication type.</p>
-<p>Possible values: UserNameMixed, WindowsMixed</p>
-<pre><code class="lang-yaml">Type: BindingType
-Parameter Sets: (All)
-Aliases: 
-Accepted values: UserNameMixed, WindowsMixed
-
-Required: True
-Position: Named
-Default value: UserNameMixed
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-includeinternalclients">-IncludeInternalClients</h3>
-<p>Specifies that STS -ActorUsername and -ActorPassword need to be updated.</p>
-<pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: 
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-actorusername">-ActorUsername</h3>
-<p>Specifies the STS actor Username.</p>
-<pre><code class="lang-yaml">Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: False
-Position: Named
-Default value: 
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-actorpassword">-ActorPassword</h3>
-<p>Specifies the STS actor password.</p>
-<pre><code class="lang-yaml">Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: False
-Position: Named
-Default value: 
+Default value: 0
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -165,12 +102,9 @@ Accept wildcard characters: False
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="Disable-ISHIntegrationSTSInternalAuthentication.html">Disable-ISHIntegrationSTSInternalAuthentication</a></p>
-<p><a href="Enable-ISHIntegrationSTSInternalAuthentication.html">Enable-ISHIntegrationSTSInternalAuthentication</a></p>
-<p><a href="Remove-ISHIntegrationSTSCertificate.html">Remove-ISHIntegrationSTSCertificate</a></p>
-<p><a href="Set-ISHIntegrationSTSCertificate.html">Set-ISHIntegrationSTSCertificate</a></p>
-<p><a href="Save-ISHIntegrationSTSConfigurationPackage.html">Save-ISHIntegrationSTSConfigurationPackage</a></p>
-<p><a href="Set-ISHIntegrationSTSWSFederation.html">Set-ISHIntegrationSTSWSFederation</a></p>
+<p><a href="Get-ISHServiceFontoReview.html">Get-ISHServiceFontoReview</a></p>
+<p><a href="Enable-ISHServiceFontoReview.html">Enable-ISHServiceFontoReview</a></p>
+<p><a href="Disable-ISHServiceFontoReview.html">Disable-ISHServiceFontoReview</a></p>
 
             </article>
           </div>

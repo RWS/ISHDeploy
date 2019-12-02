@@ -68,7 +68,7 @@
 <p>Copies custom files to deployment directories and replaces parameters in files on values of the deployment.</p>
 <h2 id="syntax">SYNTAX</h2>
 <h3 id="cdsimilarfolder">CdSimilarFolder</h3>
-<pre><code>Copy-ISHFile -ishCD &lt;String&gt; [-Force] [-ISHDeployment &lt;ISHDeployment&gt;]
+<pre><code>Copy-ISHFile -ISHCD &lt;String&gt; [-Force] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="copyingasis">CopyingAsIs</h3>
 <pre><code>Copy-ISHFile -SourceFolderPath &lt;String&gt; -DestinationFolderPath &lt;String&gt; [-Force]
  [-ISHDeployment &lt;ISHDeployment&gt;]
@@ -78,18 +78,18 @@ Replacement of values occurs only in files of certain extensions.
 Before you start working with deployment files, you need to stop the deployments processes, see: Stop-ISHDeployment and Start-ISHDeployment cmdlets.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Copy-ISHFile -ISHDeployment $deployment -ishCD &quot;c:\customfiles\&quot;
-</code></pre><p>The cmdlet copies all files from subfolders &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;, &quot;CustomerSpecificFiles&quot; of the root folder specified in the parameter -ishCD to appropriate deployment&#39;s folders.
+<pre><code>PS C:\&gt;Copy-ISHFile -ISHDeployment $deployment -ISHCD &quot;c:\customfiles\&quot;
+</code></pre><p>The cmdlet copies all files from subfolders &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;, &quot;CustomerSpecificFiles&quot; of the root folder specified in the parameter -ISHCD to appropriate deployment&#39;s folders.
 This means that the root folder should have similar to CD structure and can contain only subfolders: &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;, &quot;CustomerSpecificFiles&quot;.
 Note: the &quot;CustomerSpecificFiles&quot; folder must contain the &quot;FilesToCopy&quot; subfolder and the &quot;FilesToCopy&quot; folder can contain only folders &quot;Applications&quot;, &quot;Database&quot;, &quot;DocTypes&quot;, &quot;Websites&quot;.
 The files of any other subfolder of the CD or of &quot;CustomerSpecificFiles/FilesToCopy&quot; folder will be ignored if the structure of folders does not correspond to above.
-The cmdlet also replaces the placeholders вЂ‹вЂ‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
+The cmdlet also replaces the placeholders â€‹â€‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
 <h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
 <pre><code>PS C:\&gt;Copy-ISHFile -ISHDeployment $deployment -SourceFolderPath &quot;c:\customfiles\Plugins&quot; -DestinationFolderPath &quot;C:\InfoShare\App\Plugins&quot;
 </code></pre><p>The cmdlet makes a copy of all the files from the folder specified in the parameter -SourceFolderPath to folder with path from parameter -DestinationFolderPath.
-The cmdlet also replaces the placeholders вЂ‹вЂ‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
+The cmdlet also replaces the placeholders â€‹â€‹like &quot;#!#installtool:SomeValueName#!#&quot; in files with the corresponding parameters of specified deployment.</p>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-ishcd">-ishCD</h3>
+<h3 id="-ishcd">-ISHCD</h3>
 <p>The path to folder with custom files with the same structure as CD</p>
 <pre><code class="lang-yaml">Type: String
 Parameter Sets: CdSimilarFolder
@@ -97,7 +97,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-sourcefolderpath">-SourceFolderPath</h3>
@@ -108,7 +108,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-destinationfolderpath">-DestinationFolderPath</h3>
@@ -119,7 +119,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-force">-Force</h3>
@@ -141,7 +141,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

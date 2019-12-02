@@ -67,7 +67,12 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Enables Collective Spaces for Content Manager deployment.</p>
 <h2 id="syntax">SYNTAX</h2>
+<h3 id="draftspace">DraftSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="both">Both</h3>
+<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="reviewspace">ReviewSpace</h3>
+<pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Enable-ISHUICollectiveSpaces cmdlet enables Collective Spaces for Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -75,11 +80,30 @@
 <pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace
 </code></pre><p>This command enables Draft Space.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -ReviewSpace
+</code></pre><p>This command enables Review Space.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -ReviewSpace -DraftSpace
+</code></pre><p>This command enables Collective Spaces (both Review and Draft features).
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-draftspace">-DraftSpace</h3>
 <p>Switch parameter to enable Draft Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: DraftSpace, Both
+Aliases: 
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-reviewspace">-ReviewSpace</h3>
+<p>Switch parameter to enable Review Space for Content Manager deployment</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: Both, ReviewSpace
 Aliases: 
 
 Required: True
@@ -95,7 +119,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

@@ -94,7 +94,7 @@ Therefore you need to execute the following cmdlet before starting the copy:</p>
 <pre><code class="lang-powershell">Start-ISHDeployment -ISHDeployment $deploymentName
 </code></pre><h2 id="the-ability-to-rollback-and-backup">The ability to rollback and backup</h2>
 <p>The Copy-ISHFile cmdlet makes backup copies of deployment&#39;s vanilla files only, and tracks files that were not present in the deployment at the moment of installation. 
-So in case you run the Undo-ISHDeployment cmdlet, the backed up files will be copied back to the deployment, and the files that were not installed during deployment will be deleted.</p>
+So in case you run the Undo-ISHFile cmdlet, the backed up files will be copied back to the deployment, and the files that were not installed during deployment will be deleted.</p>
 <p>It is not possible to roll back the results of the Copy-ISHFile cmdlet only. This means that before running this cmdlet, it is recommended to make a full copy of all deployment&#39;s folders.
 This way, in case of failure, you will have the opportunity to roll back to the previous state of the deployment&#39;s file system.</p>
 

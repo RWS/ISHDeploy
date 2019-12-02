@@ -69,7 +69,9 @@
 <h2 id="syntax">SYNTAX</h2>
 <pre><code>Set-ISHIntegrationFullTextIndex -Uri &lt;Uri&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>The Set-ISHIntegrationFullTextIndex cmdlet sets target lucene Uri.</p>
+<p>The Set-ISHIntegrationFullTextIndex cmdlet sets target lucene Uri.
+Note: If you want to access the full text index remotely, you need to add a firewall rule to allow access to this port remotely.
+For example: New-NetFirewallRule -DisplayName &#39;ISHDeploy port:8080 opening&#39; -LocalPort 8080 -Protocol TCP -Action Allow</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
 <pre><code>PS C:\&gt;Set-ISHIntegrationFullTextIndex -ISHDeployment $deployment -Uri &quot;http://127.0.0.1:8080/solr/&quot;
@@ -84,7 +86,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -95,7 +97,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

@@ -79,8 +79,8 @@
 </code></pre><h3 id="ishws">ISHWS</h3>
 <pre><code>Set-ISHServiceTranslationOrganizer -ISHWS &lt;String&gt;
  [-ISHWSCertificateValidationMode &lt;X509CertificateValidationMode&gt;] [-ISHWSDnsIdentity &lt;String&gt;]
- -IssuerBindingType &lt;BindingType&gt; -IssuerEndpoint &lt;String&gt; [-Credential &lt;PSCredential&gt;]
- [-ISHDeployment &lt;ISHDeployment&gt;]
+ -IssuerBindingType &lt;BindingType&gt; -IssuerEndpoint &lt;String&gt; [-Credential &lt;PSCredential&gt;] [-UserName &lt;String&gt;]
+ [-UserPassword &lt;String&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Set-ISHServiceTranslationOrganizer cmdlet sets translation organizer windows service.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -97,15 +97,15 @@ Parameter $deployment is a deployment name or an instance of the Content Manager
 </code></pre><p>This command changes the amount of instances of services.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS &quot;http://example.com/InfoShareWS/&quot; -ISHWSCertificateValidationMode &quot;ChainTrust&quot;
-</code></pre><p>This command sets new ISHWS URL.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
 <pre><code>PS C:\&gt;Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS &quot;http://example.com/InfoShareWS/&quot; -IssuerBindingType &quot;WindowsMixed&quot; -IssuerEndpoint &quot;http://example.com/InfoShareSTS/issue/wstrust/mixed/windows&quot;
 </code></pre><p>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
+<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
 <pre><code>PS C:\&gt;Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS &quot;http://example.com/InfoShareWS/&quot; -IssuerBindingType &quot;UserNameMixed&quot; -IssuerEndpoint &quot;http://example.com/InfoShareSTS/issue/wstrust/mixed/username&quot; -Credential $credential
+</code></pre><p>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint and new credential.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
+<pre><code>PS C:\&gt;Set-ISHServiceTranslationOrganizer -ISHDeployment $deployment -ISHWS &quot;http://example.com/InfoShareWS/&quot; -IssuerBindingType &quot;UserNameMixed&quot; -IssuerEndpoint &quot;http://example.com/InfoShareSTS/issue/wstrust/mixed/username&quot; -UserName $userName -UserPassword $userPassword
 </code></pre><p>This command sets new ISHWS URL, the type of issuer binding, the issuer endpoint and new credential.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
@@ -117,7 +117,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-maxtranslationjobitemsupdatedinonecall">-MaxTranslationJobItemsUpdatedInOneCall</h3>
@@ -227,7 +227,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishwscertificatevalidationmode">-ISHWSCertificateValidationMode</h3>
@@ -251,7 +251,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-issuerbindingtype">-IssuerBindingType</h3>
@@ -275,7 +275,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-credential">-Credential</h3>
@@ -286,7 +286,29 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-username">-UserName</h3>
+<p>The operation system user&#39;s name.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: ISHWS
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-userpassword">-UserPassword</h3>
+<p>The operation system user&#39;s password.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: ISHWS
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -297,7 +319,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

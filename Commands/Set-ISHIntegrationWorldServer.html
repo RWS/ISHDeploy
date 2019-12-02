@@ -67,10 +67,18 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Sets configuration of WorldServer.</p>
 <h2 id="syntax">SYNTAX</h2>
+<h3 id="soap">SOAP</h3>
 <pre><code>Set-ISHIntegrationWorldServer -Name &lt;String&gt; -Uri &lt;String&gt; [-MaximumJobSize &lt;Int32&gt;]
  [-RetriesOnTimeout &lt;Int32&gt;] [-Timeout &lt;TimeSpan&gt;] [-SOAP]
- -Mappings &lt;ISHLanguageToWorldServerLocaleIdMapping[]&gt; -Credential &lt;PSCredential&gt;
- [-ISHDeployment &lt;ISHDeployment&gt;]
+ -Mappings &lt;ISHLanguageToWorldServerLocaleIdMapping[]&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="pscredential">PSCredential</h3>
+<pre><code>Set-ISHIntegrationWorldServer -Name &lt;String&gt; -Uri &lt;String&gt; [-MaximumJobSize &lt;Int32&gt;]
+ [-RetriesOnTimeout &lt;Int32&gt;] [-Timeout &lt;TimeSpan&gt;] -Mappings &lt;ISHLanguageToWorldServerLocaleIdMapping[]&gt;
+ -Credential &lt;PSCredential&gt; [-UserName &lt;String&gt;] [-UserPassword &lt;String&gt;] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="usernameuserpassword">UserName/UserPassword</h3>
+<pre><code>Set-ISHIntegrationWorldServer -Name &lt;String&gt; -Uri &lt;String&gt; [-MaximumJobSize &lt;Int32&gt;]
+ [-RetriesOnTimeout &lt;Int32&gt;] [-Timeout &lt;TimeSpan&gt;] -Mappings &lt;ISHLanguageToWorldServerLocaleIdMapping[]&gt;
+ [-Credential &lt;PSCredential&gt;] -UserName &lt;String&gt; -UserPassword &lt;String&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Set-ISHIntegrationWorldServer cmdlet sets configuration of WorldServer.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -82,6 +90,15 @@ In the WorldServer configuration section, this parameter has name &quot;external
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
 Parameter $credential is a set of security credentials, such as a user name and a password.
 Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationWorldServerMapping cmdlet.</p>
+<h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
+<pre><code>PS C:\&gt;Set-ISHIntegrationWorldServer -ISHDeployment $deployment -Name &quot;ws1&quot; -Uri &quot;https:\\ws1.sd.com&quot; -UserName $userName -UserPassword $userPassword -MaximumJobSize 5242880 -RetriesOnTimeout 3 -Mapping $mapping
+</code></pre><p>This command enables the translation organizer windows service.
+Parameter -MaximumJobSize is the max value of total size in bytes of uncompressed external job.
+In the WorldServer configuration section, this parameter has name &quot;externalJobMaxTotalUncompressedSizeBytes&quot;.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.
+Parameter $userName is operation system&#39;s user name.
+Parameter $userPassword is operation system&#39;s user password.
+Parameter $mapping is a object with pair of properties, where ISHLanguage is InfoShare language identifier retrieved from New-ISHIntegrationWorldServerMapping cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-name">-Name</h3>
 <p>The name (alias) of WorldServer.</p>
@@ -91,7 +108,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-uri">-Uri</h3>
@@ -102,7 +119,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-maximumjobsize">-MaximumJobSize</h3>
@@ -143,7 +160,7 @@ Accept wildcard characters: False
 <p>The type of the API Protocol.
 Supported since version 13.0.3 of CM</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: (All)
+Parameter Sets: SOAP
 Aliases: 
 
 Required: False
@@ -159,18 +176,67 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-credential">-Credential</h3>
 <p>The credential that will be set.</p>
 <pre><code class="lang-yaml">Type: PSCredential
-Parameter Sets: (All)
+Parameter Sets: PSCredential
 Aliases: 
 
 Required: True
 Position: Named
-Default value: None
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><pre><code class="lang-yaml">Type: PSCredential
+Parameter Sets: UserName/UserPassword
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-username">-UserName</h3>
+<p>The operation system user&#39;s name.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: PSCredential
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><pre><code class="lang-yaml">Type: String
+Parameter Sets: UserName/UserPassword
+Aliases: 
+
+Required: True
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-userpassword">-UserPassword</h3>
+<p>The operation system user&#39;s password.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: PSCredential
+Aliases: 
+
+Required: False
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><pre><code class="lang-yaml">Type: String
+Parameter Sets: UserName/UserPassword
+Aliases: 
+
+Required: True
+Position: Named
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -181,7 +247,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h2 id="inputs">INPUTS</h2>

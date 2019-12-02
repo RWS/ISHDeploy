@@ -57,9 +57,37 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="release-notes">Release notes</h1>
               
-<h2 id="stable-16">stable-1.6</h2>
+<h2 id="stable-20">stable-2.0</h2>
+<p>This release is focused on adding cmdlets that related to ReviewSpace and support .Net framework 4.7.2
+Now the module supports CM versions starting from 12.0.0 including 14.0.1.</p>
+<p>List of changes in the module cmdlets:</p>
+<pre><code>Cmdlet name                                | Status  | Description   
+-------------------------------------------|---------|------------------------------------------------------------------------------------------------
+Enable-ISHUICollectiveSpaces               |[Updated]| Added ReviewSpace support.
+Enable-ISHServiceFontoReview               |  [New]  | Enables fonto review windows service.
+Disable-ISHUICollectiveSpaces              |[Updated]| Added ReviewSpace support
+Disable-ISHServiceFontoReview              |  [New]  | Disables fonto review windows service.
+Get-ISHServiceFontoReview                  |  [New]  | Gets list of windows services for Fonto Review.
+Get-ISHFreePortNumber                      |  [New]  | Gets for the free port number in specified range.
+Set-ISHFontoSchemaExperience               |  [New]  | Creates the SchemaLocationConfig.xml and compiled schemas files in the &quot;Web\InfoShareCS\custom&quot; folder by using the Fonto Schema Compiler, so they can be used by Collective Spaces.
+Set-ISHServiceFontoReview                  |  [New]  | Sets target port for Fonto Review.
+Set-ISHOSUser                              |[Updated]| Login and password support added. Fonto rewiew service support added.
+Set-ISHServiceFullTextIndex                |[Updated]| Added port number validation. Removed adding a Firewall rule for opening port.
+Set-ISHServiceFontoReview                  |[Updated]| Added port number validation. 
+Set-ISHIntegrationTMS                      |[Updated]| Login and password support added.
+Set-ISHIntegrationWorldServer              |[Updated]| Login and password support added. 
+Set-ISHServiceTranslationOrganizer         |[Updated]| Login and password support added.
+Set-ISHActor                               |[Updated]| Login and password support added.
+Set-ISHServiceUser                         |[Updated]| Login and password support added.
+Test-ISHFontoSchemaExperience              |  [New]  | Tests that the files used to configure custom schemas and behavior for Collective Spaces are valid and can be parsed and converted properly for compilation with the Fonto Schema Compiler.
+Test-ISHFreePortNumber                     |  [New]  | Tests that the specified port can be used.
+Undo-ISHFile                               |  [New]  | Reverts to the original state changes made by Copy-ISHFile and other cmd-lets that changed configuration files of ISHDeployment.
+Undo-ISHDeployment                         |[Removed]|
+</code></pre><p>Other ISHDeploy cmdlets&#39;s changes:</p>
+<pre><code>1. Changed backups folders structure (Existing backups will be migrated to new destinations).
+</code></pre><h2 id="stable-16">stable-1.6</h2>
 <p>The main achievement of this release is that it is no longer necessary to install a separate version of the ISHDeploy module for the corresponding version of Content Manager deployment.
-Now the module has a single version and supports CM versions starting from 12.0.0 including 14.0.0.</p>
+Now the module has a single version and supports CM versions starting from 12.0.0 including 14.0.1.</p>
 <p>The list of differences in the work of cmdlets depending on the version of the CM:</p>
 <p><strong>Note:</strong> The symbol &quot;V&quot; - means that the version supports this feature or has difference from other versions of the CM</p>
 <pre><code>Cmdlet name                                | 12.0.* | 13.0.0-13.0.2 | Upcoming 13.0.3 | Features or differences 
@@ -373,7 +401,7 @@ E.g for <code>WebPath</code> the value is <code>C:\InfoShare\Web</code> instead 
 <ol>
 <li>General <ol>
 <li>Cmdlets<ul>
-<li>Less warning messages. Warnings are issued when itпїЅs important to share. <strong>[Update]</strong></li>
+<li>Less warning messages. Warnings are issued when itï¿½s important to share. <strong>[Update]</strong></li>
 <li><code>Get-ISHDeploymentHistory</code> returns less. Get-* cmdlets are ignored. <strong>[Update]</strong></li>
 </ul>
 </li>

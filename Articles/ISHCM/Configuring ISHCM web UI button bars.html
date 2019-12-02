@@ -165,20 +165,19 @@ Set-ISHCMCUILResourceGroup -ISHDeployment $deploymentName -Path $extensionRelati
 </ol>
 <pre><code class="lang-powershell">$deploymentName=&quot;InfoShare&quot;
 
-$zipFileName=&quot;Custom.zip&quot;
+$deployment = Get-ISHDeployment -Name $deploymentName
+$sourceFolderPath = &quot;C:\customFiles&quot;
+$destinationFolderPath = &quot;$($deployment.WebPath)\Author\ASP\Custom&quot;
 
 $fileRelativePaths=@(
     &quot;Extensions\namespace.custom1.js&quot;
     &quot;Images\custom1.png&quot;
 )
 
-#region Copy the package into the module&#39;s staging folder
-$targetUploadPath=Get-ISHPackageFolderPath -ISHDeployment $deploymentName
-Copy-Item $zipFileName $targetUploadPath
-#endregion
+#region Copy customization into CM
 
-#region Expand customization into ISHCM custom folder
-Expand-ISHCMFile -ISHDeployment $deploymentName -Filename $zipFileName -ToCustom
+Copy-ISHFile -ISHDeployment $deployment -SourceFolderPath $sourceFolderPath -DestinationFolderPath $destinationFolderPath
+
 #endregion
 
 #region register extention

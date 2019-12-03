@@ -133,35 +133,11 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-20">stable-2.0</h2>
-<p>This release is focused on adding cmdlets that related to ReviewSpace and support .Net framework 4.7.2
-Now the module supports CM versions starting from 12.0.0 including 14.0.1.</p>
-<p>List of changes in the module cmdlets:</p>
-<pre><code>Cmdlet name                                | Status  | Description   
--------------------------------------------|---------|------------------------------------------------------------------------------------------------
-Enable-ISHUICollectiveSpaces               |[Updated]| Added ReviewSpace support.
-Enable-ISHServiceFontoReview               |  [New]  | Enables fonto review windows service.
-Disable-ISHUICollectiveSpaces              |[Updated]| Added ReviewSpace support
-Disable-ISHServiceFontoReview              |  [New]  | Disables fonto review windows service.
-Get-ISHServiceFontoReview                  |  [New]  | Gets list of windows services for Fonto Review.
-Get-ISHFreePortNumber                      |  [New]  | Gets for the free port number in specified range.
-Set-ISHFontoSchemaExperience               |  [New]  | Creates the SchemaLocationConfig.xml and compiled schemas files in the &quot;Web\InfoShareCS\custom&quot; folder by using the Fonto Schema Compiler, so they can be used by Collective Spaces.
-Set-ISHServiceFontoReview                  |  [New]  | Sets target port for Fonto Review.
-Set-ISHOSUser                              |[Updated]| Login and password support added. Fonto rewiew service support added.
-Set-ISHServiceFullTextIndex                |[Updated]| Added port number validation. Removed adding a Firewall rule for opening port.
-Set-ISHServiceFontoReview                  |[Updated]| Added port number validation. 
-Set-ISHIntegrationTMS                      |[Updated]| Login and password support added.
-Set-ISHIntegrationWorldServer              |[Updated]| Login and password support added. 
-Set-ISHServiceTranslationOrganizer         |[Updated]| Login and password support added.
-Set-ISHActor                               |[Updated]| Login and password support added.
-Set-ISHServiceUser                         |[Updated]| Login and password support added.
-Test-ISHFontoSchemaExperience              |  [New]  | Tests that the files used to configure custom schemas and behavior for Collective Spaces are valid and can be parsed and converted properly for compilation with the Fonto Schema Compiler.
-Test-ISHFreePortNumber                     |  [New]  | Tests that the specified port can be used.
-Undo-ISHFile                               |  [New]  | Reverts to the original state changes made by Copy-ISHFile and other cmd-lets that changed configuration files of ISHDeployment.
-Undo-ISHDeployment                         |[Removed]|
-</code></pre><p>Other ISHDeploy cmdlets&#39;s changes:</p>
-<pre><code>1. Changed backups folders structure (Existing backups will be migrated to new destinations).
-</code></pre><p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
+<h2 id="stable-201">stable-2.0.1</h2>
+<p>This release contains a small change to the Set-ISHFontoSchemaExperience cmdlet. 
+Set-ISHFontoSchemaExperience, among other things, starts the Fonto Schema Compiler application and uploads the schemas to compile them.
+To avoid issues on systems under heavy load, which cause the Fonto Schema Compiler application to start slow, we now wait 30s instead of 10s before uploading the schemas.</p>
+<p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>
           </div>

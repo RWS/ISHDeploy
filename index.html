@@ -133,11 +133,16 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-201">stable-2.0.1</h2>
-<p>This release contains a small change to the Set-ISHFontoSchemaExperience cmdlet. 
-Set-ISHFontoSchemaExperience, among other things, starts the Fonto Schema Compiler application and uploads the schemas to compile them.
-To avoid issues on systems under heavy load, which cause the Fonto Schema Compiler application to start slow, we now wait 30s instead of 10s before uploading the schemas.</p>
-<p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
+<h2 id="stable-203">stable-2.0.3</h2>
+<p>This release contains a change in Set-ISHFontoSchemaExperience and is also focused on improving stability during restoring files. </p>
+<p>List of changes in the module cmdlets:</p>
+<pre><code>Cmdlet name                                | Status  | Description   
+-------------------------------------------|---------|------------------------------------------------------------------------------------------------
+Set-ISHFontoSchemaExperience               |[Updated]| Instead of waiting a fixed 30s after starting the Fonto Schema Compiler, we now do a health check call every 2s to determine whether the Compiler is started and ready to receive requests.
+Undo-ISHFile                               |[Updated]| Fixed file handling for deployments without project suffix.
+</code></pre><p>Other ISHDeploy cmdlets&#39;s changes:</p>
+<pre><code>1. Improved logging in cmdlets.
+</code></pre><p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>
           </div>

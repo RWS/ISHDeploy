@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Set-ISHFontoSchemaExperience </title>
+    <title>Get-ISHServiceFontoDocumentHistory </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Set-ISHFontoSchemaExperience ">
+    <meta name="title" content="Get-ISHServiceFontoDocumentHistory ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,38 +62,19 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="set-ishfontoschemaexperience">Set-ISHFontoSchemaExperience</h1>
+              <h1 id="get-ishservicefontodocumenthistory">Get-ISHServiceFontoDocumentHistory</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Creates the SchemaLocationConfig.xml and compiled schemas files in the &quot;Web\InfoShareCS\custom&quot; folder by using the Fonto Schema Compiler, so they can be used by Collective Spaces.</p>
+<p>Gets list of windows services for Fonto Document History.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Set-ISHFontoSchemaExperience [-ISHDeployment &lt;ISHDeployment&gt;]
+<pre><code>Get-ISHServiceFontoDocumentHistory [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>Before creating the SchemaLocationConfig.xml and compiling the schemas, this command first checks that:</p>
-<ul>
-<li>The catalog.xml, catalog-mapping.xml and schema files available in the &quot;Web\Author\ASP\DocTypes&quot; folder are valid, can be compiled and contain proper matching schema URN - DTD Public Id mappings.</li>
-<li>The behaviorConfig.xml available in the &quot;Web\InfoShareCS\custom&quot; location is valid against it&#39;s schema (behaviorConfig.xsd).</li>
-<li>The files can be converted and prepared in such a way they can be used as input to the schema compiler.</li>
-</ul>
-<p>Notes:</p>
-<ul>
-<li>Only the &quot;match&quot; XML elements in the catalog-mapping.xml that have a non-empty &quot;dtdpublicid&quot; attribute value and a &quot;xsdsystemid&quot; attribute value that starts with &quot;urn:&quot; will be taken into account and compiled.</li>
-<li>This cmdlet will create the &quot;SchemaLocationConfig.xml&quot; file in the &quot;Web\InfoShareCS\custom&quot; folder and the compiled schemas in the &quot;schemas&quot; subfolder in that folder.</li>
-<li>This cmdlet will also delete and create a &quot;CSTemp&quot; folder in the &quot;Web\InfoShareCS\custom&quot; folder to prepare files for the schema compiler.</li>
-<li>For CM versions >= 14.0.2, this cmdlet will also add additional configuration to optimize the handling of whitespace characters for Draft Space and Review Space:</li>
-</ul>
-<p>** Adds an &quot;xmlNormalization&quot; section to the &quot;Author&quot; and &quot;InfoShareCS&quot; &quot;web.config&quot; containing the elements for which to preserve whitespace and the list of inline elements</p>
-<p>** Recycles the application pool (TrisoftAppPoolISHCM).</p>
-<p>** Adds the &quot;xpath&quot; attribute value of any &quot;block&quot; element that has a &quot;type&quot; attribute containing &quot;candirectlycontaintext&quot; in the &quot;BehaviorConfig.xml&quot; to the Fonto Review service &quot;appsettings.json&quot; &quot;BlockTest&quot; value as an extra &quot; or &quot; clause.</p>
-<p>** Adds the &quot;xpath&quot; attribute value of any &quot;image&quot; element in the &quot;BehaviorConfig.xml&quot; to the Fonto Review service &quot;appsettings.json&quot; &quot;ObjectTest&quot; value as an extra &quot; or &quot; clause.</p>
-<p>** Restarts the Fonto Review service.</p>
-<ul>
-<li>This cmdlet will recycle the application pool (TrisoftAppPoolISHCS).</li>
-</ul>
+<p>The Get-ISHServiceFontoDocumentHistory cmdlet gets list of Fonto Document History windows services.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHFontoSchemaExperience -ISHDeployment $deployment
-</code></pre><p>Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<pre><code>PS C:\&gt;Get-ISHServiceFontoDocumentHistory -ISHDeployment $deployment
+</code></pre><p>This command shows the Fonto Document History windows services.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
@@ -110,6 +91,9 @@ Accept wildcard characters: False
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
+<p><a href="Set-ISHServiceFontoDocumentHistory.html">Set-ISHServiceFontoDocumentHistory</a></p>
+<p><a href="Enable-ISHServiceFontoDocumentHistory.html">Enable-ISHServiceFontoDocumentHistory</a></p>
+<p><a href="Disable-ISHServiceFontoDocumentHistory.html">Disable-ISHServiceFontoDocumentHistory</a></p>
 
             </article>
           </div>

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enable-ISHUICollectiveSpaces </title>
+    <title>Set-ISHServiceFontoDeltaXml </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enable-ISHUICollectiveSpaces ">
+    <meta name="title" content="Set-ISHServiceFontoDeltaXml ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,85 +62,53 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="enable-ishuicollectivespaces">Enable-ISHUICollectiveSpaces</h1>
+              <h1 id="set-ishservicefontodeltaxml">Set-ISHServiceFontoDeltaXml</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Enables Collective Spaces for Content Manager deployment.</p>
+<p>Sets target port for Fonto Delta Xml.</p>
 <h2 id="syntax">SYNTAX</h2>
-<h3 id="draftspace">DraftSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="draftspaceandreviewspace">DraftSpaceAndReviewSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="draftspaceanddocumenthistoryfordraftspace">DraftSpaceAndDocumentHistoryForDraftSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="all">All</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-DocumentHistoryForDraftSpace]
- [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="reviewspace">ReviewSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="reviewspaceanddocumenthistoryfordraftspace">ReviewSpaceAndDocumentHistoryForDraftSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="documenthistoryfordraftspace">DocumentHistoryForDraftSpace</h3>
-<pre><code>Enable-ISHUICollectiveSpaces [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+<h3 id="service-port">Service port</h3>
+<pre><code>Set-ISHServiceFontoDeltaXml -ServicePort &lt;Int32&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="configuration">Configuration</h3>
+<pre><code>Set-ISHServiceFontoDeltaXml -ServicePort &lt;Int32&gt; -Xmx &lt;String&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="heap-size">Heap Size</h3>
+<pre><code>Set-ISHServiceFontoDeltaXml -Xmx &lt;String&gt; [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>The Enable-ISHUICollectiveSpaces cmdlet enables Collective Spaces for Content Manager deployment.</p>
+<p>The Set-ISHServiceFontoDeltaXml cmdlet sets target port for Fonto Delta Xml.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace
-</code></pre><p>This command enables Draft Space.
+<pre><code>PS C:\&gt;Set-ISHServiceFontoDeltaXml -ISHDeployment $deployment -ServicePort 8010
+</code></pre><p>This command sets the Fonto Delta Xml target port.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-2------------">----------  EXAMPLE 2  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -ReviewSpace
-</code></pre><p>This command enables Review Space.
+<pre><code>PS C:\&gt;Set-ISHServiceFontoDeltaXml -ISHDeployment $deployment -Xmx 1024k
+</code></pre><p>This command sets maximum of heap size for internal java process of the Fonto Delta Xml.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Document History.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace
-</code></pre><p>This command enables Collective Spaces (both Review and Draft features).
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Draft Space and Document History.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Collective Spaces (both Review and Draft features) and Document History.
+<pre><code>PS C:\&gt;Set-ISHServiceFontoDeltaXml -ISHDeployment $deployment -Xmx 1024k -ServicePort 8010
+</code></pre><p>This command sets maximum of heap size for internal java process and target port of the Fonto Delta Xml.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-draftspace">-DraftSpace</h3>
-<p>Switch parameter to enable Draft Space for Content Manager deployment</p>
-<pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpace, DraftSpaceAndReviewSpace, DraftSpaceAndDocumentHistoryForDraftSpace, All
+<h3 id="-serviceport">-ServicePort</h3>
+<p>The target FontoDeltaXml port.</p>
+<pre><code class="lang-yaml">Type: Int32
+Parameter Sets: Service port, Configuration
 Aliases: 
 
 Required: True
 Position: Named
-Default value: False
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
-</code></pre><h3 id="-reviewspace">-ReviewSpace</h3>
-<p>Switch parameter to enable Review Space for Content Manager deployment</p>
-<pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpaceAndReviewSpace, All, ReviewSpace, ReviewSpaceAndDocumentHistoryForDraftSpace
+</code></pre><h3 id="-xmx">-Xmx</h3>
+<p>Maximum heap size of internal java process.</p>
+<pre><code class="lang-yaml">Type: String
+Parameter Sets: Configuration, Heap Size
 Aliases: 
 
 Required: True
 Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-</code></pre><h3 id="-documenthistoryfordraftspace">-DocumentHistoryForDraftSpace</h3>
-<p>Switch parameter to enable Document History for Content Manager deployment</p>
-<pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpaceAndDocumentHistoryForDraftSpace, All, ReviewSpaceAndDocumentHistoryForDraftSpace, DocumentHistoryForDraftSpace
-Aliases: 
-
-Required: True
-Position: Named
-Default value: False
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-ishdeployment">-ISHDeployment</h3>
@@ -158,7 +126,9 @@ Accept wildcard characters: False
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="Disable-ISHUICollectiveSpaces.html">Disable-ISHUICollectiveSpaces</a></p>
+<p><a href="Get-ISHServiceFontoDeltaXml.html">Get-ISHServiceFontoDeltaXml</a></p>
+<p><a href="Enable-ISHServiceFontoDeltaXml.html">Enable-ISHServiceFontoDeltaXml</a></p>
+<p><a href="Disable-ISHServiceFontoDeltaXml.html">Disable-ISHServiceFontoDeltaXml</a></p>
 
             </article>
           </div>

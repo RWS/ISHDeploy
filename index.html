@@ -57,7 +57,7 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="introduction">Introduction</h1>
               
-<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/software-and-services/tridion-dx/tridion-docs.html">Tridion Docs</a> starting from version 12.0.0 including 14.0.1. 
+<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/software-and-services/tridion-dx/tridion-docs.html">Tridion Docs</a> starting from version 12.0.0 including 14.0.2. 
 With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: </p>
 <ul>
 <li>Query all available deployments.</li>
@@ -133,15 +133,27 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-203">stable-2.0.3</h2>
-<p>This release contains a change in Set-ISHFontoSchemaExperience and is also focused on improving stability during restoring files. </p>
+<h2 id="stable-21">stable-2.1</h2>
+<p>This release is focused on handling of whitespace characters and configuration to allow better annotation repositioning for Draft Space and Review Space and adding cmdlets that are related to Review Space
+Now the module supports CM versions starting from 12.0.0 including 14.0.2.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
-Set-ISHFontoSchemaExperience               |[Updated]| Instead of waiting a fixed 30s after starting the Fonto Schema Compiler, we now do a health check call every 2s to determine whether the Compiler is started and ready to receive requests.
-Undo-ISHFile                               |[Updated]| Fixed file handling for deployments without project suffix.
-</code></pre><p>Other ISHDeploy cmdlets&#39;s changes:</p>
-<pre><code>1. Improved logging in cmdlets.
+Enable-ISHServiceFontoDeltaXml             |  [New]  | Enables Fonto Delta Xml windows service.
+Disable-ISHServiceFontoDeltaXml            |  [New]  | Disables Fonto Delta Xml windows service.
+Get-ISHServiceFontoDeltaXml                |  [New]  | Gets list of windows services for Fonto Delta Xml.
+Set-ISHServiceFontoDeltaXml                |  [New]  | Sets target port/memory limit for Fonto Delta Xml.
+Set-ISHOSUser                              |[Updated]| Fonto Delta Xml, Fonto Document History service support added.
+Enable-ISHServiceFontoDocumentHistory      |  [New]  | Enables Fonto Document History windows service.
+Disable-ISHServiceFontoDocumentHistory     |  [New]  | Disables Fonto Document History windows service.
+Get-ISHServiceFontoDocumentHistory         |  [New]  | Gets list of windows services for Fonto Document History.
+Set-ISHServiceFontoDocumentHistory         |  [New]  | Sets target port for Fonto Document History.
+Enable-ISHUICollectiveSpaces               |[Updated]| Added DocumentHistory support, added client tools configuration support.
+Disable-ISHUICollectiveSpaces              |[Updated]| Added DocumentHistory support, added client tools configuration support.
+Clear-ISHDeploymentHistory                 |[Updated]| Added ISHComponents state clean up.
+Set-ISHFontoSchemaExperience               |[Updated]| Added additional configuration to optimize the handling of whitespace characters 
+                                           |         | and configuration for better annotation repositioning for Draft Space and Review Space
+                                           |         | (Use get-help Set-ISHFontoSchemaExperience for more info)
 </code></pre><p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>

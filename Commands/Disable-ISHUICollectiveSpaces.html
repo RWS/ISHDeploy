@@ -69,10 +69,19 @@
 <h2 id="syntax">SYNTAX</h2>
 <h3 id="draftspace">DraftSpace</h3>
 <pre><code>Disable-ISHUICollectiveSpaces [-DraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="both">Both</h3>
+</code></pre><h3 id="draftspaceandreviewspace">DraftSpaceAndReviewSpace</h3>
 <pre><code>Disable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="draftspaceanddocumenthistoryfordraftspace">DraftSpaceAndDocumentHistoryForDraftSpace</h3>
+<pre><code>Disable-ISHUICollectiveSpaces [-DraftSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="all">All</h3>
+<pre><code>Disable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-DocumentHistoryForDraftSpace]
+ [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="reviewspace">ReviewSpace</h3>
 <pre><code>Disable-ISHUICollectiveSpaces [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="reviewspaceanddocumenthistoryfordraftspace">ReviewSpaceAndDocumentHistoryForDraftSpace</h3>
+<pre><code>Disable-ISHUICollectiveSpaces [-ReviewSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="documenthistoryfordraftspace">DocumentHistoryForDraftSpace</h3>
+<pre><code>Disable-ISHUICollectiveSpaces [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Disable-ISHUICollectiveSpaces cmdlet disables Collective Spaces for Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -85,14 +94,26 @@ Parameter $deployment is a deployment name or an instance of the Content Manager
 </code></pre><p>This command disables Review Space.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
-<pre><code>PS C:\&gt;Disable-ISHUICollectiveSpaces -ISHDeployment $deployment -ReviewSpace -DraftSpace
+<pre><code>PS C:\&gt;Disable-ISHUICollectiveSpaces -ISHDeployment $deployment -DocumentHistoryForDraftSpace
+</code></pre><p>This command disables Document History.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
+<pre><code>PS C:\&gt;Disable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace
 </code></pre><p>This command disables Collective Spaces (both Review and Draft features).
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
+<pre><code>PS C:\&gt;Disable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -DocumentHistoryForDraftSpace
+</code></pre><p>This command disables Draft Space and Document History.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
+<pre><code>PS C:\&gt;Disable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace -DocumentHistoryForDraftSpace
+</code></pre><p>This command disables Collective Spaces (both Review and Draft features) and Document History.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-draftspace">-DraftSpace</h3>
-<p>Switch parameter to enable Draft Space for Content Manager deployment</p>
+<p>Switch parameter to disable Draft Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpace, Both
+Parameter Sets: DraftSpace, DraftSpaceAndReviewSpace, DraftSpaceAndDocumentHistoryForDraftSpace, All
 Aliases: 
 
 Required: True
@@ -101,9 +122,20 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-reviewspace">-ReviewSpace</h3>
-<p>Switch parameter to enable Review Space for Content Manager deployment</p>
+<p>Switch parameter to disable Review Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: Both, ReviewSpace
+Parameter Sets: DraftSpaceAndReviewSpace, All, ReviewSpace, ReviewSpaceAndDocumentHistoryForDraftSpace
+Aliases: 
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-documenthistoryfordraftspace">-DocumentHistoryForDraftSpace</h3>
+<p>Switch parameter to disable Document History for Content Manager deployment</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: DraftSpaceAndDocumentHistoryForDraftSpace, All, ReviewSpaceAndDocumentHistoryForDraftSpace, DocumentHistoryForDraftSpace
 Aliases: 
 
 Required: True

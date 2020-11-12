@@ -88,6 +88,12 @@
 <p>** Adds the &quot;xpath&quot; attribute value of any &quot;image&quot; element in the &quot;BehaviorConfig.xml&quot; to the Fonto Review service &quot;appsettings.json&quot; &quot;ObjectTest&quot; value as an extra &quot; or &quot; clause.</p>
 <p>** Restarts the Fonto Review service.</p>
 <ul>
+<li>For CM versions >= 14.0.3, this cmdlet will also adapt the FDiff &quot;sx.xml&quot; configuration used by the Document History service if you have elements configured in the &quot;BehaviorConfig.xml&quot; file</li>
+</ul>
+<p><em>* Adds the &quot;xpath&quot; attributes (and &quot;elementname&quot; attributes prefixed with self::&quot;) configured in the &quot;BehaviorConfig.xml&quot; to the appropriate &quot;</em>Test&quot; attribute in the FDiff sx.xml configuration file if needed.
+(Note that xpaths containing &quot;self::*&quot; are excluded)</p>
+<p>** Restarts the Fonto Document History service.</p>
+<ul>
 <li>This cmdlet will recycle the application pool (TrisoftAppPoolISHCS).</li>
 </ul>
 <h2 id="examples">EXAMPLES</h2>

@@ -57,9 +57,27 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="release-notes">Release notes</h1>
               
-<h2 id="stable-21">stable-2.1</h2>
+<h2 id="stable-22">stable-2.2</h2>
+<p>This release is focused on handling WebApi and OApi, also starting from 14.0.3 DeltaXml is removed and replaced with FDiff.</p>
+<p>List of changes in the module cmdlets:</p>
+<pre><code>Cmdlet name                                | Status  | Description   
+-------------------------------------------|---------|------------------------------------------------------------------------------------------------
+*-ISHIntegrationDB                         |[Updated]| Added support sql server 2019. 
+Set-ISHIntegrationDB                       |[Updated]| Removed support sql server 2012. 
+Set-ISHIntegrationSTSWSFederation          |[Updated]| Added support WS WebApi, CS OApi. 
+Set-ISHIntegrationSTSCertificate           |[Updated]| Added support WS WebApi, CS OApi. 
+Remove-ISHIntegrationSTSCertificate        |[Updated]| Added support WS WebApi, CS OApi. 
+Set-ISHFontoSchemaExperience               |[Updated]| Extra checks for duplicate menuitem id&#39;s and non-existing menuitemref ref&#39;s added
+                                           |         | Extract error details from the Schema Compiler result in case of errors
+                                           |         | Adds the elements configured in the custom &quot;BehaviorConfig.xml&quot; to the appropriate &quot;*Test&quot; attribute in the FDiff &quot;sx.xml&quot; configuration file used by Document History if needed
+Enable-ISHServiceFontoDeltaXml             |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Disable-ISHServiceFontoDeltaXml            |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Get-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Set-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Set-ISHServiceCrawler                      |[Updated]| Added dependency to &quot;Trisoft InfoShare SolrLucene&quot; by the creation of an extra Crawler service                          
+</code></pre><h2 id="stable-21">stable-2.1</h2>
 <p>This release is focused on handling of whitespace characters and configuration to allow better annotation repositioning for Draft Space and Review Space and adding cmdlets that are related to Review Space
-Now the module supports CM versions starting from 12.0.0 including 14.0.2.</p>
+Now the module supports CM versions starting from 13.0.0 including 14.0.3.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
@@ -93,7 +111,7 @@ Set-ISHFontoSchemaExperience, among other things, starts the Fonto Schema Compil
 To avoid issues on systems under heavy load, which cause the Fonto Schema Compiler application to start slow, we now wait 30s instead of 10s before uploading the schemas.</p>
 <h2 id="stable-20">stable-2.0</h2>
 <p>This release is focused on adding cmdlets that are related to ReviewSpace and support .Net framework 4.7.2
-Now the module supports CM versions starting from 12.0.0 including 14.0.2.</p>
+Now the module supports CM versions starting from 13.0.0 including 14.0.3.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
@@ -121,7 +139,7 @@ Undo-ISHDeployment                         |[Removed]|
 <pre><code>1. Changed backups folders structure (Existing backups will be migrated to new destinations).
 </code></pre><h2 id="stable-16">stable-1.6</h2>
 <p>The main achievement of this release is that it is no longer necessary to install a separate version of the ISHDeploy module for the corresponding version of Content Manager deployment.
-Now the module has a single version and supports CM versions starting from 12.0.0 including 14.0.2.</p>
+Now the module has a single version and supports CM versions starting from 13.0.0 including 14.0.3.</p>
 <p>The list of differences in the work of cmdlets depending on the version of the CM:</p>
 <p><strong>Note:</strong> The symbol &quot;V&quot; - means that the version supports this feature or has difference from other versions of the CM</p>
 <pre><code>Cmdlet name                                | 12.0.* | 13.0.0-13.0.2 | Upcoming 13.0.3 | Features or differences 

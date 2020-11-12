@@ -57,7 +57,7 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="introduction">Introduction</h1>
               
-<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/software-and-services/tridion-dx/tridion-docs.html">Tridion Docs</a> starting from version 12.0.0 including 14.0.2. 
+<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for <a href="https://sdl.com/">SDL</a>&#39;s <a href="http://www.sdl.com/software-and-services/tridion-dx/tridion-docs.html">Tridion Docs</a> starting from version 13.0.0 including 14.0.3. 
 With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: </p>
 <ul>
 <li>Query all available deployments.</li>
@@ -133,27 +133,24 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-21">stable-2.1</h2>
-<p>This release is focused on handling of whitespace characters and configuration to allow better annotation repositioning for Draft Space and Review Space and adding cmdlets that are related to Review Space
-Now the module supports CM versions starting from 12.0.0 including 14.0.2.</p>
+<h2 id="stable-22">stable-2.2</h2>
+<p>This release is focused on handling WebApi and OApi, also starting from 14.0.3 DeltaXml is removed and replaced with FDiff.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
-Enable-ISHServiceFontoDeltaXml             |  [New]  | Enables Fonto Delta Xml windows service.
-Disable-ISHServiceFontoDeltaXml            |  [New]  | Disables Fonto Delta Xml windows service.
-Get-ISHServiceFontoDeltaXml                |  [New]  | Gets list of windows services for Fonto Delta Xml.
-Set-ISHServiceFontoDeltaXml                |  [New]  | Sets target port/memory limit for Fonto Delta Xml.
-Set-ISHOSUser                              |[Updated]| Fonto Delta Xml, Fonto Document History service support added.
-Enable-ISHServiceFontoDocumentHistory      |  [New]  | Enables Fonto Document History windows service.
-Disable-ISHServiceFontoDocumentHistory     |  [New]  | Disables Fonto Document History windows service.
-Get-ISHServiceFontoDocumentHistory         |  [New]  | Gets list of windows services for Fonto Document History.
-Set-ISHServiceFontoDocumentHistory         |  [New]  | Sets target port for Fonto Document History.
-Enable-ISHUICollectiveSpaces               |[Updated]| Added DocumentHistory support, added client tools configuration support.
-Disable-ISHUICollectiveSpaces              |[Updated]| Added DocumentHistory support, added client tools configuration support.
-Clear-ISHDeploymentHistory                 |[Updated]| Added ISHComponents state clean up.
-Set-ISHFontoSchemaExperience               |[Updated]| Added additional configuration to optimize the handling of whitespace characters 
-                                           |         | and configuration for better annotation repositioning for Draft Space and Review Space
-                                           |         | (Use get-help Set-ISHFontoSchemaExperience for more info)
+*-ISHIntegrationDB                         |[Updated]| Added support sql server 2019. 
+Set-ISHIntegrationDB                       |[Updated]| Removed support sql server 2012. 
+Set-ISHIntegrationSTSWSFederation          |[Updated]| Added support WS WebApi, CS OApi. 
+Set-ISHIntegrationSTSCertificate           |[Updated]| Added support WS WebApi, CS OApi. 
+Remove-ISHIntegrationSTSCertificate        |[Updated]| Added support WS WebApi, CS OApi. 
+Set-ISHFontoSchemaExperience               |[Updated]| Extra checks for duplicate menuitem id&#39;s and non-existing menuitemref ref&#39;s added
+                                           |         | Extract error details from the Schema Compiler result in case of errors
+                                           |         | Adds the elements configured in the custom &quot;BehaviorConfig.xml&quot; to the appropriate &quot;*Test&quot; attribute in the FDiff &quot;sx.xml&quot; configuration file used by Document History if needed
+Enable-ISHServiceFontoDeltaXml             |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Disable-ISHServiceFontoDeltaXml            |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Get-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Set-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
+Set-ISHServiceCrawler                      |[Updated]| Added dependency to &quot;Trisoft InfoShare SolrLucene&quot; by the creation of an extra Crawler service                          
 </code></pre><p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>

@@ -72,12 +72,12 @@
 <p>The Set-ISHIntegrationSTSWSFederation cmdlet sets WSFederation configuration to Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint &quot;https://adfs.example.com/adfs/ls/&quot;
-</code></pre><p>This command configure WS Federation to use specified Endpoint of STS server.
+<pre><code>PS C:\&gt;Set-ISHIntegrationSTSWSFederation -ISHDeployment $deployment -Endpoint &quot;https://adfs.example.corp/adfs/ls/&quot;
+</code></pre><p>This command configure WS Federation to use specified endpoint of STS server.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-endpoint">-Endpoint</h3>
-<p>Specifies the URL to issuer endpoint.</p>
+<p>Specifies the url of the Security Token Service.</p>
 <pre><code class="lang-yaml">Type: Uri
 Parameter Sets: (All)
 Aliases: 

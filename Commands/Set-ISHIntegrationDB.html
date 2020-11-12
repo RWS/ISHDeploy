@@ -72,7 +72,7 @@
 <p>This cmdlet change connection string to database for certain environment.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Set-ISHIntegrationDB -ISHDeployment $deployment -ConnectionString &quot;&quot; -Engine &quot;sqlserver2012&quot;
+<pre><code>PS C:\&gt;Set-ISHIntegrationDB -ISHDeployment $deployment -ConnectionString &quot;&quot; -Engine &quot;sqlserver2016&quot;
 </code></pre><p>This command sets connection string and type of database for certain environment.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
@@ -89,11 +89,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-engine">-Engine</h3>
 <p>The type of database.</p>
-<p>Possible values: oracle, sqlserver2012, sqlserver2014, sqlserver2016, sqlserver2017</p>
+<p>Possible values: oracle, sqlserver2012, sqlserver2014, sqlserver2016, sqlserver2017, sqlserver2019</p>
 <pre><code class="lang-yaml">Type: DatabaseType
 Parameter Sets: (All)
 Aliases: 
-Accepted values: oracle, sqlserver2012, sqlserver2014, sqlserver2016, sqlserver2017
+Accepted values: oracle, sqlserver2012, sqlserver2014, sqlserver2016, sqlserver2017, sqlserver2019
 
 Required: True
 Position: Named

@@ -57,7 +57,17 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="release-notes">Release notes</h1>
               
-<h2 id="stable-22">stable-2.2</h2>
+<h2 id="stable-221">stable-2.2.1</h2>
+<p>This release extends the inline elements that are generated for the whitespace handling</p>
+<p>List of changes in the module cmdlets:</p>
+<pre><code>Cmdlet name                                | Status  | Description   
+-------------------------------------------|---------|------------------------------------------------------------------------------------------------
+Set-ISHFontoSchemaExperience               |[Updated]| This cmdlet is updated so it will add any specialized elements that have a &quot;class&quot; attribute containing one of the 
+                                           |         | following strings (&quot; topic/cite &quot;, &quot; topic/indextermref &quot;, &quot; topic/keyword &quot;, &quot; topic/ph &quot;, &quot; topic/q &quot;, &quot; topic/state &quot;,
+                                           |         | &quot; topic/term &quot;, &quot; topic/text &quot;,&quot; topic/tm &quot;, &quot; topic/xref &quot;) in the whitespacehandling inlineelements section
+                                           |         | in the web.config of InfoShareCS. Before this change, only elements specialized from &quot; topic/ph &quot; were considered 
+                                           |         | to be inline elements.
+</code></pre><h2 id="stable-22">stable-2.2</h2>
 <p>This release is focused on handling WebApi and OApi, also starting from 14.0.3 DeltaXml is removed and replaced with FDiff.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   

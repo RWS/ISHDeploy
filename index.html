@@ -133,24 +133,16 @@ PSRemotingProtocolVersion      2.2
 </code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
-<h2 id="stable-22">stable-2.2</h2>
-<p>This release is focused on handling WebApi and OApi, also starting from 14.0.3 DeltaXml is removed and replaced with FDiff.</p>
+<h2 id="stable-221">stable-2.2.1</h2>
+<p>This release extends the inline elements that are generated for the whitespace handling</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
-*-ISHIntegrationDB                         |[Updated]| Added support sql server 2019. 
-Set-ISHIntegrationDB                       |[Updated]| Removed support sql server 2012. 
-Set-ISHIntegrationSTSWSFederation          |[Updated]| Added support WS WebApi, CS OApi. 
-Set-ISHIntegrationSTSCertificate           |[Updated]| Added support WS WebApi, CS OApi. 
-Remove-ISHIntegrationSTSCertificate        |[Updated]| Added support WS WebApi, CS OApi. 
-Set-ISHFontoSchemaExperience               |[Updated]| Extra checks for duplicate menuitem id&#39;s and non-existing menuitemref ref&#39;s added
-                                           |         | Extract error details from the Schema Compiler result in case of errors
-                                           |         | Adds the elements configured in the custom &quot;BehaviorConfig.xml&quot; to the appropriate &quot;*Test&quot; attribute in the FDiff &quot;sx.xml&quot; configuration file used by Document History if needed
-Enable-ISHServiceFontoDeltaXml             |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
-Disable-ISHServiceFontoDeltaXml            |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
-Get-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
-Set-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.0.3 DeltaXml is removed and replaced with FDiff, so this cmdlet is only supported on 14.0.2
-Set-ISHServiceCrawler                      |[Updated]| Added dependency to &quot;Trisoft InfoShare SolrLucene&quot; by the creation of an extra Crawler service                          
+Set-ISHFontoSchemaExperience               |[Updated]| This cmdlet is updated so it will add any specialized elements that have a &quot;class&quot; attribute containing one of the 
+                                           |         | following strings (&quot; topic/cite &quot;, &quot; topic/indextermref &quot;, &quot; topic/keyword &quot;, &quot; topic/ph &quot;, &quot; topic/q &quot;, &quot; topic/state &quot;,
+                                           |         | &quot; topic/term &quot;, &quot; topic/text &quot;,&quot; topic/tm &quot;, &quot; topic/xref &quot;) in the whitespacehandling inlineelements section
+                                           |         | in the web.config of InfoShareCS. Before this change, only elements specialized from &quot; topic/ph &quot; were considered 
+                                           |         | to be inline elements.
 </code></pre><p>Please review the module&#39;s entire <a href="CHANGELOG.html">history</a>.</p>
 
             </article>

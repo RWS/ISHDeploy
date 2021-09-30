@@ -1,4 +1,4 @@
-﻿ISHDeploy is considered SDL Tridion Docs Core product. Any bugs can be reported via "SDL Customer Support"
+﻿ISHDeploy is considered Tridion Docs Core product. Any bugs can be reported via "Customer Support"
 
 Additionally, a [documentation portal](https://rws.github.io/ISHDeploy/) is available with the following content:
 - Getting started information.

@@ -1,6 +1,51 @@
 ﻿div.sidetoc {
     width: 400px;
 }
+
+/* --------------------------------------------------------------
+https://github.com/RWS/rws.github.io/blob/master/_config.yml
+template colors, used site-wide via css colors:
+	black:          '#111111'
+	white:          '#f8f8f8'
+	blue:           '#49a7e9'
+	green:          '#9bcf2f'
+	purple:         '#c869bf'
+	orange:         '#fab125'
+	turquoise:      '#0fbfcf'
+	rws-white:      '#ffffff'
+	rws-black:      '#282C36'
+	rws-light-gray: '#F4F5F7'
+	rws-green:      '#008080'
+	rws-green-hover:'#006666'
+	background-light: '#ffffff'
+	text:           '#282C36'
+	text-gray:      '#979FB2'
+	text-light:     '#ffffff'
+	link:           '#008080'
+	link-hover:     '#006666'
+	border-light:   '#F4F5F7'
+	border-dark:    '#D9DBE1'
+-------------------------------------------------------------- */
+
+.navbar{background-color:#ffffff;border-color:#F4F5F7}
+.navbar-inverse{background-color:#ffffff;border-color:#F4F5F7}
+.navbar-inverse .navbar-nav>li>a,.navbar-inverse .navbar-text{color:#008080}
+.navbar-inverse .navbar-nav>li>a:focus,.navbar-inverse .navbar-nav>li>a:hover{color:#006666;background-color:transparent}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.active>a:focus,.navbar-inverse .navbar-nav>.active>a:hover{color:#006666;background-color:#ffffff}
+.navbar-inverse .navbar-nav>.disabled>a,.navbar-inverse .navbar-nav>.disabled>a:focus,.navbar-inverse .navbar-nav>.disabled>a:hover{color:#444;background-color:transparent}
+.navbar-inverse .navbar-toggle{border-color:#333}
+.navbar-inverse .navbar-toggle:focus,.navbar-inverse .navbar-toggle:hover{background-color:#333}
+.navbar-inverse .navbar-toggle .icon-bar{background-color:#ffffff}
+.navbar-inverse .navbar-collapse,.navbar-inverse .navbar-form{border-color:#101010}
+.navbar-inverse .navbar-nav>.open>a,.navbar-inverse .navbar-nav>.open>a:focus,.navbar-inverse .navbar-nav>.open>a:hover{color:#006666;background-color:#ffffff}
+@media (max-width:767px){.navbar-inverse .navbar-nav .open .dropdown-menu>.dropdown-header{border-color:#F4F5F7}
+.navbar-inverse .navbar-nav .open .dropdown-menu .divider{background-color:#ffffff}
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a{color:#008080}
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:focus,.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover{color:#006666;background-color:transparent}
+.navbar-inverse .navbar-nav .open .dropdown-menu>.active>a,.navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:focus,.navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:hover{color:#006666;background-color:#ffffff}
+.navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a,.navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:focus,.navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:hover{color:#444;background-color:transparent}
+}
+
 .container,.container-fluid{
 	width: auto;
 }

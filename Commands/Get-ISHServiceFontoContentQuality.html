@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Undo-ISHFile </title>
+    <title>Get-ISHServiceFontoContentQuality </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Undo-ISHFile ">
+    <meta name="title" content="Get-ISHServiceFontoContentQuality ">
     <meta name="generator" content="docfx 2.4.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -62,18 +62,19 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-              <h1 id="undo-ishfile">Undo-ISHFile</h1>
+              <h1 id="get-ishservicefontocontentquality">Get-ISHServiceFontoContentQuality</h1>
               
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>The Undo-ISHFile reverts to the original state changes made by Copy-ISHFile and other cmd-lets that changed configuration files of ISHDeployment.</p>
+<p>Gets list of windows services for Fonto Content Quality.</p>
 <h2 id="syntax">SYNTAX</h2>
-<pre><code>Undo-ISHFile [-ISHDeployment &lt;ISHDeployment&gt;]
+<pre><code>Get-ISHServiceFontoContentQuality [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
-<p>Will revert changed files to the original state and remove backups of this files.</p>
+<p>The Get-ISHServiceFontoContentQuality cmdlet gets list of Fonto Content Quality windows services.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="------------example-1------------">----------  EXAMPLE 1  ----------</h3>
-<pre><code>PS C:\&gt;Undo-ISHFile -ISHDeployment $deployment
-</code></pre><p>Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<pre><code>PS C:\&gt;Get-ISHServiceFontoContentQuality -ISHDeployment $deployment
+</code></pre><p>This command shows the Fonto Content Quality windows services.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-ishdeployment">-ISHDeployment</h3>
 <p>Specifies the name or instance of the Content Manager deployment.</p>
@@ -90,8 +91,9 @@ Accept wildcard characters: False
 <h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p><a href="Copy-ISHFile.html">Copy-ISHFile</a></p>
-<p><a href="../Articles/Customization/Work%20with%20files.html">../Articles/Customization/Work with files</a></p>
+<p><a href="Set-ISHServiceFontoContentQuality.html">Set-ISHServiceFontoContentQuality</a></p>
+<p><a href="Enable-ISHServiceFontoContentQuality.html">Enable-ISHServiceFontoContentQuality</a></p>
+<p><a href="Disable-ISHServiceFontoContentQuality.html">Disable-ISHServiceFontoContentQuality</a></p>
 
             </article>
           </div>

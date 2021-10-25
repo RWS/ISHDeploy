@@ -31,7 +31,7 @@
                 <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand" href="index.html">
-                <img src="sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+                <img src="logo_productname.png" alt="Tridion Docs" height="50" width="auto">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -57,7 +57,23 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="release-notes">Release notes</h1>
               
-<h2 id="stable-221">stable-2.2.1</h2>
+<h2 id="stable-230">stable-2.3.0</h2>
+<p>This release adds Content Quality functionality for Draft Space and Document History functionality for Review Space</p>
+<p>List of changes in the module cmdlets:</p>
+<pre><code>Cmdlet name                                | Status  | Description   
+-------------------------------------------|---------|------------------------------------------------------------------------------------------------
+Enable-ISHUICollectiveSpaces               |[Updated]| Starting from version 14.0.4, the Content Quality service will also be started when the -DraftSpace option is used
+                                           |         | + Added option -DocumentHistoryForReviewSpace (Only available starting from version 14.0.4)
+Disable-ISHUICollectiveSpaces              |[Updated]| Added option -DocumentHistoryForReviewSpace (Only available starting from version 14.0.4)
+Enable-ISHServiceFontoContentQuality       |[Added]  | Enables the Content Quality service (Only available starting from version 14.0.4)
+Disable-ISHServiceFontoContentQuality      |[Added]  | Disables the Content Quality service (Only available starting from version 14.0.4)
+Get-ISHServiceFontoContentQuality          |[Added]  | Gets properties of the Content Quality service (Only available starting from version 14.0.4)
+Set-ISHServiceFontoContentQuality          |[Added]  | Sets properties of the Content Quality service (Only available starting from version 14.0.4)
+Set-ISHFontoSchemaExperience               |[Updated]| Starting from version 14.0.4, this cmdlet will also generate the &quot;navtitleGeneration&quot; section 
+                                           |         | (which contains the allowed child elements for the &quot;navtitle&quot; element in the DITA maps and their specializations)
+                                           |         | in the &quot;Author&quot; and &quot;InfoShareCS&quot; web.config files based on the catalog-mapping.xml file, catalog files and the 
+                                           |         | schemas present in the &quot;DocTypes&quot; folder
+</code></pre><h2 id="stable-221">stable-2.2.1</h2>
 <p>This release extends the inline elements that are generated for the whitespace handling</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
@@ -68,7 +84,7 @@ Set-ISHFontoSchemaExperience               |[Updated]| This cmdlet is updated so
                                            |         | in the web.config of InfoShareCS. Before this change, only elements specialized from &quot; topic/ph &quot; were considered 
                                            |         | to be inline elements.
 </code></pre><h2 id="stable-22">stable-2.2</h2>
-<p>This release is focused on handling WebApi and OApi, also starting from 14.0.3 DeltaXml is removed and replaced with FDiff.</p>
+<p>This release is focused on handling WebApi and OApi, also starting from 14.0.4 DeltaXml is removed and replaced with FDiff.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
@@ -87,7 +103,7 @@ Set-ISHServiceFontoDeltaXml                |[Updated]| Starting from version 14.
 Set-ISHServiceCrawler                      |[Updated]| Added dependency to &quot;Trisoft InfoShare SolrLucene&quot; by the creation of an extra Crawler service                          
 </code></pre><h2 id="stable-21">stable-2.1</h2>
 <p>This release is focused on handling of whitespace characters and configuration to allow better annotation repositioning for Draft Space and Review Space and adding cmdlets that are related to Review Space
-Now the module supports CM versions starting from 13.0.0 including 14.0.3.</p>
+Now the module supports CM versions starting from 13.0.0 including 14.0.4.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
@@ -121,7 +137,7 @@ Set-ISHFontoSchemaExperience, among other things, starts the Fonto Schema Compil
 To avoid issues on systems under heavy load, which cause the Fonto Schema Compiler application to start slow, we now wait 30s instead of 10s before uploading the schemas.</p>
 <h2 id="stable-20">stable-2.0</h2>
 <p>This release is focused on adding cmdlets that are related to ReviewSpace and support .Net framework 4.7.2
-Now the module supports CM versions starting from 13.0.0 including 14.0.3.</p>
+Now the module supports CM versions starting from 13.0.0 including 14.0.4.</p>
 <p>List of changes in the module cmdlets:</p>
 <pre><code>Cmdlet name                                | Status  | Description   
 -------------------------------------------|---------|------------------------------------------------------------------------------------------------
@@ -149,7 +165,7 @@ Undo-ISHDeployment                         |[Removed]|
 <pre><code>1. Changed backups folders structure (Existing backups will be migrated to new destinations).
 </code></pre><h2 id="stable-16">stable-1.6</h2>
 <p>The main achievement of this release is that it is no longer necessary to install a separate version of the ISHDeploy module for the corresponding version of Content Manager deployment.
-Now the module has a single version and supports CM versions starting from 13.0.0 including 14.0.3.</p>
+Now the module has a single version and supports CM versions starting from 13.0.0 including 14.0.4.</p>
 <p>The list of differences in the work of cmdlets depending on the version of the CM:</p>
 <p><strong>Note:</strong> The symbol &quot;V&quot; - means that the version supports this feature or has difference from other versions of the CM</p>
 <pre><code>Cmdlet name                                | 12.0.* | 13.0.0-13.0.2 | Upcoming 13.0.3 | Features or differences 
@@ -654,10 +670,7 @@ E.g for <code>WebPath</code> the value is <code>C:\InfoShare\Web</code> instead 
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>
-      				Copyright SDL plc. All rights reserved <br>
-      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
-      			</span>
+            <span>Copyright (c) All Rights Reserved by the RWS Group for and on behalf of its affiliates and subsidiaries.</span>
           </div>
         </div>
       </footer>

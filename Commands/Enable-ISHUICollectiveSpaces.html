@@ -31,7 +31,7 @@
                 <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand" href="../index.html">
-                <img src="../sdl_logo_transparent.png" alt="SDL" height="50" width="auto">
+                <img src="../logo_productname.png" alt="Tridion Docs" height="50" width="auto">
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
@@ -73,15 +73,22 @@
 <pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="draftspaceanddocumenthistoryfordraftspace">DraftSpaceAndDocumentHistoryForDraftSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
-</code></pre><h3 id="all">All</h3>
+</code></pre><h3 id="draftspaceandreviewspaceanddocumenthistoryfordraftspace">DraftSpaceAndReviewSpaceAndDocumentHistoryForDraftSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-DocumentHistoryForDraftSpace]
  [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="all">All</h3>
+<pre><code>Enable-ISHUICollectiveSpaces [-DraftSpace] [-ReviewSpace] [-DocumentHistoryForDraftSpace]
+ [-DocumentHistoryForReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="reviewspace">ReviewSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="reviewspaceanddocumenthistoryfordraftspace">ReviewSpaceAndDocumentHistoryForDraftSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="reviewspaceanddocumenthistoryforreviewspace">ReviewSpaceAndDocumentHistoryForReviewSpace</h3>
+<pre><code>Enable-ISHUICollectiveSpaces [-ReviewSpace] [-DocumentHistoryForReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h3 id="documenthistoryfordraftspace">DocumentHistoryForDraftSpace</h3>
 <pre><code>Enable-ISHUICollectiveSpaces [-DocumentHistoryForDraftSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
+</code></pre><h3 id="documenthistoryforreviewspace">DocumentHistoryForReviewSpace</h3>
+<pre><code>Enable-ISHUICollectiveSpaces [-DocumentHistoryForReviewSpace] [-ISHDeployment &lt;ISHDeployment&gt;]
 </code></pre><h2 id="description">DESCRIPTION</h2>
 <p>The Enable-ISHUICollectiveSpaces cmdlet enables Collective Spaces for Content Manager deployment.</p>
 <h2 id="examples">EXAMPLES</h2>
@@ -95,25 +102,37 @@ Parameter $deployment is a deployment name or an instance of the Content Manager
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-3------------">----------  EXAMPLE 3  ----------</h3>
 <pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Document History.
+</code></pre><p>This command enables Document History for Draft Space.
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-4------------">----------  EXAMPLE 4  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DocumentHistoryForReviewSpace
+</code></pre><p>This command enables Document History for Review Space.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
 <pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace
 </code></pre><p>This command enables Collective Spaces (both Review and Draft features).
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
-<h3 id="------------example-5------------">----------  EXAMPLE 5  ----------</h3>
-<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Draft Space and Document History.
-Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h3 id="------------example-6------------">----------  EXAMPLE 6  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -DocumentHistoryForDraftSpace
+</code></pre><p>This command enables Draft Space and Document History for Draft Space.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-7------------">----------  EXAMPLE 7  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -ReviewSpace -DocumentHistoryForReviewSpace
+</code></pre><p>This command enables Review Space and Document History for Review Space.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-8------------">----------  EXAMPLE 8  ----------</h3>
 <pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace -DocumentHistoryForDraftSpace
-</code></pre><p>This command enables Collective Spaces (both Review and Draft features) and Document History.
+</code></pre><p>This command enables Collective Spaces (both Review and Draft features) and Document History for Draft Space.
+Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
+<h3 id="------------example-9------------">----------  EXAMPLE 9  ----------</h3>
+<pre><code>PS C:\&gt;Enable-ISHUICollectiveSpaces -ISHDeployment $deployment -DraftSpace -ReviewSpace -DocumentHistoryForDraftSpace -DocumentHistoryForReviewSpace
+</code></pre><p>This command enables Collective Spaces (both Review and Draft features) and Document History (for Draft and Review Space).
 Parameter $deployment is a deployment name or an instance of the Content Manager deployment retrieved from Get-ISHDeployment cmdlet.</p>
 <h2 id="parameters">PARAMETERS</h2>
 <h3 id="-draftspace">-DraftSpace</h3>
 <p>Switch parameter to enable Draft Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpace, DraftSpaceAndReviewSpace, DraftSpaceAndDocumentHistoryForDraftSpace, All
+Parameter Sets: DraftSpace, DraftSpaceAndReviewSpace, DraftSpaceAndDocumentHistoryForDraftSpace, DraftSpaceAndReviewSpaceAndDocumentHistoryForDraftSpace, All
 Aliases: 
 
 Required: True
@@ -124,7 +143,7 @@ Accept wildcard characters: False
 </code></pre><h3 id="-reviewspace">-ReviewSpace</h3>
 <p>Switch parameter to enable Review Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpaceAndReviewSpace, All, ReviewSpace, ReviewSpaceAndDocumentHistoryForDraftSpace
+Parameter Sets: DraftSpaceAndReviewSpace, DraftSpaceAndReviewSpaceAndDocumentHistoryForDraftSpace, All, ReviewSpace, ReviewSpaceAndDocumentHistoryForDraftSpace, ReviewSpaceAndDocumentHistoryForReviewSpace
 Aliases: 
 
 Required: True
@@ -133,9 +152,20 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 </code></pre><h3 id="-documenthistoryfordraftspace">-DocumentHistoryForDraftSpace</h3>
-<p>Switch parameter to enable Document History for Content Manager deployment</p>
+<p>Switch parameter to enable Document History for Draft Space for Content Manager deployment</p>
 <pre><code class="lang-yaml">Type: SwitchParameter
-Parameter Sets: DraftSpaceAndDocumentHistoryForDraftSpace, All, ReviewSpaceAndDocumentHistoryForDraftSpace, DocumentHistoryForDraftSpace
+Parameter Sets: DraftSpaceAndDocumentHistoryForDraftSpace, DraftSpaceAndReviewSpaceAndDocumentHistoryForDraftSpace, All, ReviewSpaceAndDocumentHistoryForDraftSpace, DocumentHistoryForDraftSpace
+Aliases: 
+
+Required: True
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+</code></pre><h3 id="-documenthistoryforreviewspace">-DocumentHistoryForReviewSpace</h3>
+<p>Switch parameter to enable Document History for Review Space for Content Manager deployment</p>
+<pre><code class="lang-yaml">Type: SwitchParameter
+Parameter Sets: All, ReviewSpaceAndDocumentHistoryForReviewSpace, DocumentHistoryForReviewSpace
 Aliases: 
 
 Required: True
@@ -184,10 +214,7 @@ Accept wildcard characters: False
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>
-      				Copyright SDL plc. All rights reserved <br>
-      				Contribute on <a href="https://github.com/sdl/ISHDeploy/">github</a>
-      			</span>
+            <span>Copyright (c) All Rights Reserved by the RWS Group for and on behalf of its affiliates and subsidiaries.</span>
           </div>
         </div>
       </footer>

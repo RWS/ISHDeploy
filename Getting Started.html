@@ -87,24 +87,24 @@ PSGallery                 NuGet                     Untrusted            https:/
 </code></pre><p>To register or unregister repositories use the <code>Register-PSRepository</code> and <code>Unregister-PSRepository</code> cmdlets respectively.</p>
 <h1 id="install-the-module">Install the module</h1>
 <p>The module is available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy/">here</a>. </p>
-<p>To install the module with administrative rights for all users execute</p>
-<pre><code class="lang-powershell">Install-Module ISHDeploy
-</code></pre><p>To install only for your user execute</p>
-<pre><code class="lang-powershell">Install-Module ISHDeploy -Scope CurrentUser
+<p>If you have administrator rights, you can install the module for all users, by running the following PowerShell command:</p>
+<pre><code class="lang-powershell">Install-Module ISHDeploy -RequiredVersion 2.3.0
+</code></pre><p>To install the module for the user who is currently logged in, run this command:</p>
+<pre><code class="lang-powershell">Install-Module ISHDeploy -Scope CurrentUser -RequiredVersion 2.3.0
 </code></pre><h1 id="upgrading-the-module">Upgrading the module</h1>
 <p>Newer versions of the module will become available on powershell gallery <a href="https://powershellgallery.com/packages/ISHDeploy/">here</a>. </p>
-<p>To install a new version for all users execute</p>
+<p>To install a new version, run one of the following commands:</p>
 <pre><code class="lang-powershell"># All users. Requires administration rights
-Install-Module ISHDeploy -Force
-# Current user. No administration rights are required.
-Install-Module ISHDeploy -Scope CurrentUser -Force
+Install-Module ISHDeploy -Force -RequiredVersion 2.3.0
+# Current user only. No administration rights are required.
+Install-Module ISHDeploy -Scope CurrentUser -Force -RequiredVersion 2.3.0
 </code></pre><h1 id="verify-the-module-presence">Verify the module presence</h1>
 <p>To verify that the module is installed and check the version execute:</p>
 <pre><code class="lang-powershell">Get-Module ISHDeploy -ListAvailable |Format-Table Name,Version
 </code></pre><p>If the module is available then the result should be one line such as:</p>
 <pre><code class="lang-text">Name                                        Version
 ----                                        -------
-ISHDeploy                                1.5
+ISHDeploy                                2.3.0
 </code></pre><h1 id="available-cmdlets">Available cmdlets</h1>
 <p>To retrieve all cmdlets offered by the module then execute:</p>
 <pre><code class="lang-powershell">Get-Command -Module ISHDeploy | Select-Object Name

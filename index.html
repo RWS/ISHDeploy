@@ -57,8 +57,9 @@
             <article class="content wrap" id="_content" data-uid="">
               <h1 id="introduction">Introduction</h1>
               
-<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for Tridion Docs (Knowledge Center Content Manager, LiveContent Architect, Trisoft InfoShare) starting from version 13.0.0 including 14.0.4. 
-With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: </p>
+<p><strong>ISHDeploy</strong> is a PowerShell module that enables the <strong>code as configuration</strong> concept for Tridion Docs (formerly known as Knowledge Center Content Manager, LiveContent Architect, Trisoft InfoShare) from version 13.0.0 up to and including 14.0.4.</p>
+<p>If you are using Tridion Docs 15 or higher, refer to the documentation for ISHDeploy as found in the Tridion Docs documentation on the <a href="https://docs.rws.com/">RWS Documentation Center</a>.</p>
+<p>With code as configuration, PowerShell authors develop scripts that configure Content Manager vanilla deployments over the following subjects: </p>
 <ul>
 <li>Query all available deployments.</li>
 <li>Basic deployment management:<ul>
@@ -101,10 +102,10 @@ With code as configuration, PowerShell authors develop scripts that configure Co
 </li>
 </ul>
 <h1 id="getting-started">Getting started</h1>
-<p><a href="https://www.powershellgallery.com/packages/ISHDeploy/">ISHDeploy</a> module is available to install from the <a href="https://www.powershellgallery.com/">PowerShell galery</a> and requires Windows PowerShell version 5.1.</p>
-<p>To install the ISHDeploy module execute</p>
-<pre><code class="lang-powershell">Install-Module ISHDeploy -Scope CurrentUser
-</code></pre><p>For more detailed information, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
+<p><a href="https://www.powershellgallery.com/packages/ISHDeploy/">ISHDeploy</a> module is available to install from the <a href="https://www.powershellgallery.com/">PowerShell gallery</a> and requires Windows PowerShell version 5.1.</p>
+<p>To install the ISHDeploy module for Tridion Docs 14 GA through 14 SP4, run the following PowerShell command:</p>
+<pre><code class="lang-powershell">Install-Module ISHDeploy -Scope CurrentUser -RequiredVersion 2.3.0</code></pre>
+<p>For more detailed information and further installation options, please read the <a href="Getting%20Started.html">getting started</a> page and the rest of the pages in this portal.</p>
 <h1 id="what-is-new-in-this-release">What is new in this release?</h1>
 <p>This version introduces the following changes in cmdlets and articles:</p>
 <h2 id="stable-230">stable-2.3.0</h2>
